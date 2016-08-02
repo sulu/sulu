@@ -294,6 +294,67 @@ class CollectionControllerTest extends SuluTestCase
     }
 
     /**
+     * @description Test GET all Collections with pagination and sorted by title
+     */
+    public function testcGetPaginated()
+    {
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection A', 'de' => 'Test Kollektion A']
+        );
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection C', 'de' => 'Test Kollektion C']
+        );
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection B', 'de' => 'Test Kollektion B']
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=1&limit=2',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(2, $response->pages);
+        $this->assertEquals(1, $response->page);
+        $this->assertEquals(2, $response->limit);
+        $this->assertEquals(4, $response->total);
+        $this->assertNotEmpty($response->_embedded->collections);
+        $this->assertCount(2, $response->_embedded->collections);
+        $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
+        $this->assertEquals('Test Collection A', $response->_embedded->collections[1]->title);
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=2&limit=2',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(2, $response->pages);
+        $this->assertEquals(2, $response->page);
+        $this->assertEquals(2, $response->limit);
+        $this->assertEquals(4, $response->total);
+        $this->assertNotEmpty($response->_embedded->collections);
+        $this->assertCount(2, $response->_embedded->collections);
+        $this->assertEquals('Test Collection B', $response->_embedded->collections[0]->title);
+        $this->assertEquals('Test Collection C', $response->_embedded->collections[1]->title);
+    }
+
+    /**
      * @description Test GET for non existing Resource (404)
      */
     public function testGetByIdNotExisting()

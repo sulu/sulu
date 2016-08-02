@@ -104,6 +104,11 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             Argument::any(),
             Argument::any()
         )->willReturn(new \ArrayIterator([]));
+        $this->collectionRepository->count(
+            0,
+            ['search' => 'test', 'locale' => 'de', 'systemCollections' => true],
+            null
+        )->willReturn(0);
 
         $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
     }
@@ -118,6 +123,11 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             Argument::any(),
             Argument::any()
         )->willReturn(new \ArrayIterator([]));
+        $this->collectionRepository->count(
+            0,
+            ['search' => 'test', 'locale' => 'de', 'systemCollections' => false],
+            null
+        )->willReturn(0);
 
         $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test'], false);
     }

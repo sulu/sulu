@@ -202,16 +202,18 @@ class CollectionManager implements CollectionManagerInterface
      */
     public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true)
     {
-        /** @var Paginator $collectionSet */
-        $collectionSet = $this->collectionRepository->findCollectionSet(
+        $filter = [
+            'offset' => $offset,
+            'limit' => $limit,
+            'search' => $search,
+            'locale' => $locale,
+            'systemCollections' => $systemCollections,
+        ];
+
+        /** @var CollectionEntity[] $entities */
+        $entities = $this->collectionRepository->findCollectionSet(
             $depth,
-            [
-                'offset' => $offset,
-                'limit' => $limit,
-                'search' => $search,
-                'locale' => $locale,
-                'systemCollections' => $systemCollections,
-            ],
+            $filter,
             null,
             $sortBy,
             $this->getCurrentUser(),
@@ -219,15 +221,15 @@ class CollectionManager implements CollectionManagerInterface
         );
 
         $collections = [];
-        /** @var CollectionEntity[] $entities */
-        $entities = iterator_to_array($collectionSet);
         foreach ($entities as $entity) {
             if ($entity->getParent() === null) {
                 $collections[] = $this->getApiEntity($entity, $locale, $entities);
             }
         }
 
-        $this->count = $collectionSet->count();
+        unset($filter['limit']);
+        unset($filter['offset']);
+        $this->count = $this->collectionRepository->count($depth, $filter);
 
         return $collections;
     }
