@@ -110,6 +110,7 @@ define(['services/husky/util'], function(util) {
             includeSubFoldersParameter: 'includeSubFolders',
             categoriesParameter: 'categories',
             categoryOperatorParameter: 'categoryOperator',
+            paramsParameter: 'params',
             tagsParameter: 'tags',
             tagOperatorParameter: 'tagOperator',
             sortByParameter: 'sortBy',
@@ -1165,6 +1166,7 @@ define(['services/husky/util'], function(util) {
             data[this.options.categoriesParameter] = this.overlayData.categories || [];
             data[this.options.categoryOperatorParameter] = this.overlayData.categoryOperator ||
                 this.options.preSelectedCategoryOperator;
+            data[this.options.paramsParameter] = JSON.stringify(this.options.property.params);
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
