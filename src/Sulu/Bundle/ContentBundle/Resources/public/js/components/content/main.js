@@ -914,7 +914,13 @@ define([
                             disabled: !this.data.published,
                             callback: this.unpublish.bind(this)
                         }
-                    }
+                    };
+
+                    editDropdown.divider = {
+                        options: {
+                            divider: true
+                        }
+                    };
                 }
 
                 if (SecurityChecker.hasPermission(this.data, 'delete') && !isHomeDocument(this.data)) {
@@ -1012,7 +1018,7 @@ define([
                         .fail(function () {
                             this.sandbox.emit(
                                 'sulu.labels.error.show',
-                                'labels.error.unpublish-desc',
+                                'labels.error.content-unpublish-desc',
                                 'labels.error'
                             );
                         }.bind(this));

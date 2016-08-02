@@ -691,10 +691,6 @@
                 <source>sulu-content.draft-label</source>
                 <target><![CDATA[Tu travailles à une ébauche sauvegarder en dernier par <b>%(user)s</b> à %(changed)s.]]></target>
             </trans-unit>
-            <trans-unit id="46" resname="sulu-content.unpublish">
-                <source>sulu-content.unpublish</source>
-                <target>Annuler publication</target>
-            </trans-unit>
             <trans-unit id="47" resname="labels.error.content-unpublish-desc">
                 <source>labels.error.content-unpublish-desc</source>
                 <target>La publication de la page n’a pas pu être anullée.</target>

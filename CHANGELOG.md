@@ -14,6 +14,7 @@ CHANGELOG for Sulu
     * FEATURE     #2681 [ContentBundle]       Fixed frontend resource locator generation for ghost pages
     * BUGFIX      #2712 [MediaBundle]         Added search to media selection
     * FEATURE     #2726 [PreviewBundle]       Don't allow symfony deprecations anymore
+    * FEATURE     #2717 [ContentBundle]       Removed or fixed some publishing translations
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
     * FEATURE     #2720 [DocumentManagerBundle] Don't allow symfony deprecations anymore
     * FEATURE     #2727 [RouteBundle]         Don't allow symfony deprecations anymore

@@ -691,10 +691,6 @@
                 <source>sulu-content.draft-label</source>
                 <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
             </trans-unit>
-            <trans-unit id="46" resname="sulu-content.unpublish">
-                <source>sulu-content.unpublish</source>
-                <target>Unpublish</target>
-            </trans-unit>
             <trans-unit id="47" resname="labels.error.content-unpublish-desc">
                 <source>labels.error.content-unpublish-desc</source>
                 <target>Page could not be unpublished.</target>
