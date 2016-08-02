@@ -282,6 +282,14 @@ class NodeControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
+    public function testGetNotExistingTree()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/not-existing-id?webspace=sulu_io&language=en&fields=title,order,published&tree=true');
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
     public function testGetGhostContent()
     {
         $document = $this->createPageDocument();

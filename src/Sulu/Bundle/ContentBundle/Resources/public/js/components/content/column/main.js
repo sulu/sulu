@@ -491,6 +491,7 @@ define([
                         typeName: 'type',
                         hasSubName: 'hasChildren',
                         url: this.getUrl(this.getLastSelected()),
+                        fallbackUrl: this.getUrl(),
                         actionIcon: getActionIcon.bind(this),
                         addButton: addButtonEnabler.bind(this),
                         data: [

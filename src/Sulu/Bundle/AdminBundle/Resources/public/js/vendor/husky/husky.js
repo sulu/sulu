@@ -41557,7 +41557,8 @@ define('__component__$password-fields@husky',[], function() {
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {String} [options.url] url to load data
+ * @params {String} [options.url] url to load data.
+ * @params {String} [options.fallbackUrl] url to load data from, when loading from the main url fails.
  * @params {String} [options.selected] id of selected element - needed to restore state
  * @params {String|Function} [options.actionIcon] icon class of action button
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
@@ -41599,6 +41600,7 @@ define('__component__$column-navigation@husky',[],function() {
 
     var defaults = {
             url: null,
+            fallbackUrl: null,
             prefilledData: null,
             selected: null,
             data: null,
@@ -41952,7 +41954,13 @@ define('__component__$column-navigation@husky',[],function() {
             if (!!this.options.prefilledData) {
                 this.handleResponse(this.options.prefilledData, 0);
             } else {
-                this.load(this.options.url, 0);
+                this.load(this.options.url, 0, function() {
+                    // when an error occured try again with the fallback url
+                    if (!!this.options.fallbackUrl) {
+                        this.initiallySelected = null;
+                        this.load(this.options.fallbackUrl, 0);
+                    }
+                }.bind(this));
             }
         },
 
@@ -41960,6 +41968,7 @@ define('__component__$column-navigation@husky',[],function() {
          * Initializes the class properties with their default-values
          */
         setProperties: function() {
+            this.initiallySelected = this.options.selected;
             this.$selectedElement = null;
             this.filledColumns = 0;
             this.columnLoadStarted = false;
@@ -42107,19 +42116,27 @@ define('__component__$column-navigation@husky',[],function() {
          * Loads data from a specific url and triggers the parsing
          * @param {String} url
          * @param {Number} columnNumber
+         * @param {Function} errorCallback
          */
-        load: function(url, columnNumber) {
+        load: function(url, columnNumber, errorCallback) {
             if (!!url) {
                 this.columnLoadStarted = true;
-                this.sandbox.util.load(url)
-                    .then(function(response) {
+                $.ajax({
+                    url: url,
+                    global: false,
+
+                    success: function(response) {
                         this.handleResponse(response, columnNumber);
-                    }.bind(this))
-                    .fail(function(error) {
+                    }.bind(this),
+
+                    error: function(jqXHR, error) {
                         this.columnLoadStarted = false;
                         this.sandbox.logger.error("An error occured while fetching data from: ", error);
-                    }.bind(this));
-
+                        if (typeof errorCallback === 'function') {
+                            errorCallback();
+                        }
+                    }.bind(this)
+                });
             } else {
                 this.sandbox.logger.log("husky.column.navigation -  url not set, aborted loading of data");
             }
@@ -42210,11 +42227,13 @@ define('__component__$column-navigation@husky',[],function() {
                 }
 
                 // if this node is the specified as selected in the options, we select it
-                if (!!this.options.selected && (this.options.selected === itemData[this.options.idName] || this.options.selected === itemData[this.options.pathName])) {
+                if (!!this.initiallySelected && (this.initiallySelected === itemData[this.options.idName] ||
+                    this.initiallySelected === itemData[this.options.pathName])
+                ) {
                     this.setElementSelected($item);
                     this.selected[number] = itemData;
                     lastSelected = itemData;
-                    this.options.selected = null;
+                    this.initiallySelected = null;
                 }
             }.bind(this));
 

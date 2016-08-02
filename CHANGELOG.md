@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #2687 [ContentBundle]       Made move- and copy-overlay width responsive
     * BUGFIX      #2708 [CategoryBundle]      Fixed locale bug for category keywords
+    * BUGFIX      #2736 [ContentBundle]       Made column-navigation load even when selected item is not accessible
     * BUGFIX      #2692 [AdminBundle]         Made url comparison in navigation use url parts an not characters (husky)
     * BUGFIX      #2738 [ContentBundle]       Fixed using non-existent AbstractKernel
     * ENHANCEMENT #2685 [ContentBundle]       Made internal links and smart content show unpublished nodes
