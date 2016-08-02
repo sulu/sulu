@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
@@ -54,10 +55,15 @@ class SmartContentItemController extends RestController
         $dataProviderPool = $this->get('sulu_content.smart_content.data_provider_pool');
         $provider = $dataProviderPool->get($providerAlias);
 
+        $params = array_merge(
+            $provider->getDefaultPropertyParameter(),
+            $this->getParams(json_decode($request->get('params', '{}'), true))
+        );
+
         // resolve datasource and items
         $data = $provider->resolveDataItems(
             $filters,
-            [],
+            $params,
             $options,
             (isset($filters['limitResult']) ? $filters['limitResult'] : null)
         );
@@ -65,5 +71,22 @@ class SmartContentItemController extends RestController
         $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
 
         return $this->handleView($this->view(new ItemCollectionRepresentation($items, $datasource)));
+    }
+
+    /**
+     * Returns property-parameter.
+     *
+     * @param array $params
+     *
+     * @return PropertyParameter[]
+     */
+    private function getParams(array $params)
+    {
+        $result = [];
+        foreach ($params as $name => $item) {
+            $result[$name] = new PropertyParameter($name, $item['value'], $item['type']);
+        }
+
+        return $result;
     }
 }

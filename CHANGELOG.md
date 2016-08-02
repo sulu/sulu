@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
+    * FEATURE     #2716 [ContentBundle]       Added params to smart-content-item-controller
     * ENHANCEMENT #2701 [PreviewBundle]       Replaced preview background-images with white background
 
 * 1.3.0-RC2 (2016-07-28)
