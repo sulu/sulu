@@ -8929,7 +8929,7 @@ a.btn-black, a.btn-highlight {
   color: #3e3e3e;
 }
 /* line 16, ../scss/modules/search.scss */
-.search-container.slide {
+.search-container.search-slide {
   -moz-transition: width 250ms;
   -o-transition: width 250ms;
   -webkit-transition: width 250ms;
