@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="tag.error.notUnique">
                 <source>tag.error.notUnique</source>
-                <target>The tag name is not unique!</target>
+                <target>Deze tag is niet uniek!</target>
             </trans-unit>
         </body>
     </file>

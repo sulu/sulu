@@ -4,11 +4,11 @@
         <body>
             <trans-unit id="1" resname="navigation.snippets">
                 <source>navigation.snippets</source>
-                <target>Snippets</target>
+                <target>Fragmenten</target>
             </trans-unit>
             <trans-unit id="2" resname="snippets.snippet.title">
                 <source>snippets.snippet.title</source>
-                <target>Snippets</target>
+                <target>Fragmenten</target>
             </trans-unit>
             <trans-unit id="3" resname="snippets.list.template">
                 <source>snippets.list.template</source>
@@ -20,47 +20,47 @@
             </trans-unit>
             <trans-unit id="5" resname="navigation.global-content">
                 <source>navigation.global-content</source>
-                <target>Global Content</target>
+                <target>Algemene inhoud</target>
             </trans-unit>
             <trans-unit id="6" resname="snippet-content.add">
                 <source>snippet-content.add</source>
-                <target>Choose snippet</target>
+                <target>Fragment selecteren</target>
             </trans-unit>
             <trans-unit id="9" resname="snippet.delete-referenced-by-following">
                 <source>snippet.delete-referenced-by-following</source>
-                <target>This snippet is referenced by the following pages:</target>
+                <target>Naar dit fragment wordt gerefereerd door volgende pagina's:</target>
             </trans-unit>
             <trans-unit id="10" resname="snippet.delete-confirm-text">
                 <source>snippet.delete-confirm-text</source>
-                <target>Are you sure you want to remove it?</target>
+                <target>Weet je zeker dat je het fragment wilt verwijderen?</target>
             </trans-unit>
             <trans-unit id="11" resname="snippet.delete-confirm-title">
                 <source>snippet.delete-confirm-title</source>
-                <target>Confirm delete</target>
+                <target>Bevestig verwijderen</target>
             </trans-unit>
             <trans-unit id="12" resname="snippet.delete-do-it">
                 <source>snippet.delete-do-it</source>
-                <target>Yes, I am sure</target>
+                <target>Ja, ik weet het zeker</target>
             </trans-unit>
             <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
                 <source>snippet.delete-no-snippets-selected</source>
-                <target>There are no snippets selected</target>
+                <target>Er zijn geen fragmenten geselecteerd</target>
             </trans-unit>
             <trans-unit id="14" resname="snippet-content.nosnippets-selected">
                 <source>snippet.delete-no-snippets-selected</source>
-                <target>No snippets selected</target>
+                <target>Geen fragmenten geselecteerd</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.index.snippet.title">
                 <source>search-overlay.index.snippet.title</source>
-                <target>Snippets</target>
+                <target>Fragmenten</target>
             </trans-unit>
             <trans-unit id="15" resname="content-navigation.webspace.snippets">
                 <source>content-navigation.webspace.general</source>
-                <target>Snippets</target>
+                <target>Fragmenten</target>
             </trans-unit>
             <trans-unit id="16" resname="snippets.defaults.default">
                 <source>snippets.defaults.default</source>
-                <target>Default</target>
+                <target>Standaard</target>
             </trans-unit>
             <trans-unit id="17" resname="snippets.defaults.type">
                 <source>snippets.defaults.type</source>
@@ -68,19 +68,19 @@
             </trans-unit>
             <trans-unit id="18" resname="snippet.delete-confirm-default-text">
                 <source>snippet.delete-confirm-default-text</source>
-                <target>This Snippet is used as webspace-default.</target>
+                <target>Dit fragment wordt gebruikt als standaard</target>
             </trans-unit>
             <trans-unit id="19" resname="snippet.changed-warning.title">
                 <source>snippet.changed-warning.title</source>
-                <target>Warning, content will be overwritten!</target>
+                <target>Pas op! De inhoud wordt overschreven</target>
             </trans-unit>
             <trans-unit id="20" resname="snippet.changed-warning.description">
                 <source>snippet.changed-warning.description</source>
-                <target>This snippet has been edited by another user. When you save the snippet this data will get lost.</target>
+                <target>Dit fragment is aangepast door een andere gebruiker.</target>
             </trans-unit>
             <trans-unit id="21" resname="snippet.changed-warning.ok-button">
                 <source>snippet.changed-warning.ok-button</source>
-                <target>Save snippet</target>
+                <target>Bewaar fragment</target>
             </trans-unit>
         </body>
     </file>

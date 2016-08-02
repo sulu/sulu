@@ -4,31 +4,31 @@
         <body>
             <trans-unit id="1" resname="sulu-document-manager.save-draft">
                 <source>sulu-document-manager.save-draft</source>
-                <target>Save as draft</target>
+                <target>Opslaan als concept</target>
             </trans-unit>
             <trans-unit id="2" resname="sulu-document-manager.save-publish">
                 <source>sulu-document-manager.save-publish</source>
-                <target>Save and publish</target>
+                <target>Opslaan en publiceren</target>
             </trans-unit>
             <trans-unit id="3" resname="sulu-document-manager.publish">
                 <source>sulu-document-manager.publish</source>
-                <target>Publish</target>
+                <target>Publiceren</target>
             </trans-unit>
             <trans-unit id="4" resname="sulu-document-manager.published-shadow">
                 <source>sulu-document-manager.published-shadow</source>
-                <target>The publishing state will be retrieved from the state of the main page.</target>
+                <target>De gepubliceerde status wordt bepaald aan de hand van de hoofdpagina.</target>
             </trans-unit>
             <trans-unit id="5" resname="sulu-document-manager.draft-label">
                 <source>sulu-document-manager.draft-label</source>
-                <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
+                 <target><![CDATA[Je werkt aan een concept, laatst opgeslagen: %(changed)s door <b>%(user)s</b>]]></target>
             </trans-unit>
             <trans-unit id="6" resname="sulu-document-manager.unpublish">
                 <source>sulu-document-manager.unpublish</source>
-                <target>Unpublish</target>
+                <target>Depubliceer</target>
             </trans-unit>
             <trans-unit id="7" resname="labels.error.unpublish-desc">
                 <source>labels.error.unpublish-desc</source>
-                <target>Page could not be unpublished.</target>
+                <target>De pagina kan niet gedepubliceerd worden.</target>
             </trans-unit>
         </body>
     </file>

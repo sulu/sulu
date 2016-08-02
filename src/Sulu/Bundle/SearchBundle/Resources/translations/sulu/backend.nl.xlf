@@ -4,23 +4,23 @@
         <body>
             <trans-unit id="e4b1406d7ka085ede200b7f5acb2d39e" resname="search-overlay.index.all.title">
                 <source>search-overlay.index.all.title</source>
-                <target>Everything</target>
+                <target>Alles</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder">
                 <source>search-overlay.placeholder.all</source>
-                <target>Search %s...</target>
+                <target>Zoek %s...</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede200b7f5656d39e" resname="search-overlay.asterix-info-text">
                 <source>search-overlay.asterix-info-text</source>
-                <target>Use (*) in your query as a placeholder for parts of a word.</target>
+                <target>Gebruik (*) in je zoekvraag als vervangend teken voor delen van een woord.</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede21265f5656d39e" resname="search-overlay.no-results-text">
                 <source>search-overlay.no-results-text</source>
-                <target>No documents could be found for your search term.</target>
+                <target>Geen documenten gevonden voor deze zoekterm.</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede21265f5656d30f" resname="search-overlay.documents-found">
                 <source>search-overlay.documents-found</source>
-                <target>Documents found:</target>
+                <target>Gevonden documenten:</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede21265f5656d30a" resname="navigation.search-section">
                 <source>navigation.search-section</source>

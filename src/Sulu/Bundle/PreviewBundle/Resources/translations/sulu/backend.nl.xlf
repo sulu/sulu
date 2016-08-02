@@ -24,19 +24,19 @@
             </trans-unit>
             <trans-unit id="6" resname="sulu.preview.no-preview">
                 <source>sulu.preview.no-preview</source>
-                <target>Preview not available</target>
+                <target>Preview niet beschikbaar</target>
             </trans-unit>
             <trans-unit id="7" resname="sulu.preview.no-defaults-provider">
                 <source>sulu.preview.no-defaults-provider</source>
-                <target>No "RouteDefaultsProvider" found.</target>
+                <target>Geen "RouteDefaultsProvider" gevonden.</target>
             </trans-unit>
             <trans-unit id="8" resname="sulu.preview.change-webspace">
                 <source>sulu.preview.change-webspace</source>
-                <target>Please change webspace.</target>
+                <target>Verander s.v.p. de webspace</target>
             </trans-unit>
             <trans-unit id="9" resname="sulu.preview.no-object-provider">
                 <source>sulu.preview.no-object-provider</source>
-                <target>No "ObjectProvider" found.</target>
+                <target>Geen "ObjectProvider" gevonden.</target>
             </trans-unit>
         </body>
     </file>

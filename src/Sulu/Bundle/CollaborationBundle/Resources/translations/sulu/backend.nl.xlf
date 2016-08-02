@@ -4,12 +4,10 @@
         <body>
             <trans-unit id="1" resname="collaboration.warning">
                 <source>content.collaboration.warning</source>
-                <target>
-                    <![CDATA[
-                    This page is currently used by: <strong>%s</strong><br/>
-                    Your changes might get lost and you could erase the work of another author.
-                    ]]>
-                </target>
+                <target><![CDATA[
++                    Deze pagina is in gebruik door: <strong>%s</strong><br/>
++                    Je wijzigingen gaan mogelijk verlorgen of je wist het werk een andere auteur.
++                    ]]></target>
             </trans-unit>
         </body>
     </file>
