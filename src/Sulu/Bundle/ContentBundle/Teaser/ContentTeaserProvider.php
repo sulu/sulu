@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Teaser;
 
+use Massive\Bundle\SearchBundle\Search\QueryHit;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * Teaser provider for content-pages.
@@ -21,16 +22,16 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 class ContentTeaserProvider implements TeaserProviderInterface
 {
     /**
-     * @var DocumentManagerInterface
+     * @var SearchManagerInterface
      */
-    private $documentManager;
+    private $searchManager;
 
     /**
-     * @param DocumentManagerInterface $documentManager
+     * @param SearchManagerInterface $searchManager
      */
-    public function __construct(DocumentManagerInterface $documentManager)
+    public function __construct(SearchManagerInterface $searchManager)
     {
-        $this->documentManager = $documentManager;
+        $this->searchManager = $searchManager;
     }
 
     /**
@@ -48,34 +49,31 @@ class ContentTeaserProvider implements TeaserProviderInterface
     {
         $statements = array_map(
             function ($item) {
-                return sprintf('[jcr:uuid] = "%s"', $item);
+                return sprintf('__id:"%s"', $item);
             },
             $ids
         );
 
-        $query = $this->documentManager->createQuery(
-            sprintf('SELECT * FROM [nt:unstructured] WHERE %s', implode(' OR ', $statements)),
-            $locale
-        );
-
         $result = [];
-        foreach ($query->execute() as $document) {
-            $excerptData = $document->getExtensionsData()['excerpt'];
-            $uuid = $document->getUuid();
-            $title = !empty($excerptData['title']) ? $excerptData['title'] : $document->getTitle();
-            $description = $excerptData['description'];
-            $more = $excerptData['more'];
-            $mediaId = $this->getMedia($excerptData['images']);
+        $searchResult = $this->searchManager
+            ->createSearch(implode(' OR ', $statements))
+            ->indexes($this->getPageIndexes())
+            ->execute();
+
+        /** @var QueryHit $item */
+        foreach ($searchResult as $item) {
+            $title = $item->getDocument()->getField('title')->getValue();
+            $excerptTitle = $item->getDocument()->getField('excerptTitle')->getValue();
 
             $result[] = new Teaser(
-                $uuid,
+                $item->getId(),
                 'content',
                 $locale,
-                $title,
-                $description,
-                $more,
-                $document->getResourceSegment(),
-                $mediaId
+                ('' !== $excerptTitle ? $excerptTitle : $title),
+                $item->getDocument()->getField('excerptDescription')->getValue(),
+                $item->getDocument()->getField('excerptMore')->getValue(),
+                $item->getDocument()->getField('__url')->getValue(),
+                $this->getMedia(json_decode($item->getDocument()->getField('excerptImages')->getValue(), true))
             );
         }
 
@@ -96,5 +94,20 @@ class ContentTeaserProvider implements TeaserProviderInterface
         }
 
         return $images['ids'][0];
+    }
+
+    /**
+     * Returns page indexes.
+     *
+     * @return array
+     */
+    private function getPageIndexes()
+    {
+        return array_filter(
+            $this->searchManager->getIndexNames(),
+            function ($index) {
+                return strpos($index, 'page_') === 0;
+            }
+        );
     }
 }

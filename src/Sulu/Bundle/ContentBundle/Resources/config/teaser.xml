@@ -11,7 +11,7 @@
         <!-- content provider -->
         <service id="sulu_content.teaser.provider.content"
                  class="Sulu\Bundle\ContentBundle\Teaser\ContentTeaserProvider">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="massive_search.search_manager"/>
 
             <tag name="sulu.teaser.provider" alias="content"/>
         </service>
