@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
+    * FEATURE     #2720 [DocumentManagerBundle] Don't allow symfony deprecations anymore
     * FEATURE     #2716 [ContentBundle]       Added params to smart-content-item-controller
     * BUGFIX      #2695 [MediaBundle]         Removed Paginator from CollectionRepository (mysql 5.7)
     * BUGFIX      #2695 [CategoryBundle]      Removed hasChildren field descriptor in categories (mysql 5.7)
