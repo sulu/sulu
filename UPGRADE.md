@@ -1,5 +1,15 @@
 # Upgrade
 
+## dev-develop
+
+### Address country is nullable
+
+To make it easier to migrate data the country in the address entity is now nullable in sulu.
+
+```sql
+ALTER TABLE co_addresses CHANGE idCountries idCountries INT DEFAULT NULL;
+```
+
 ## 1.3.0-RC2
 
 ### SearchController
