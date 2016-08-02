@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="543c99ff2964652633a5ca2169f22236" resname="content-navigation.category.details">
+                <source>content-navigation.category.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="143c99ff2964652633a5ca2169f22236" resname="category.categories.title">
+                <source>category.categories.title</source>
+                <target>Categories</target>
+            </trans-unit>
+            <trans-unit id="623c99ff2964652633a5ca2169f22236" resname="navigation.settings.categories">
+                <source>navigation.settings.categories</source>
+                <target>Categories</target>
+            </trans-unit>
+            <trans-unit id="143c99ff2964652133a5ca2169f22236" resname="search-overlay.index.category.title">
+                <source>search-overlay.index.category.title</source>
+                <target>Categories</target>
+            </trans-unit>
+            <trans-unit id="642c99ff2964652633a5ca2169f22236" resname="sulu.category.new-category">
+                <source>sulu.category.new-category</source>
+                <target>New category</target>
+            </trans-unit>
+            <trans-unit id="643999ff2964652633a5ca2169f22236" resname="sulu.category.category-name">
+                <source>sulu.category.category-name</source>
+                <target>Category name</target>
+            </trans-unit>
+            <trans-unit id="643999ff2964952633a5ca2169f22236" resname="sulu.category.category-key">
+                <source>sulu.category.category-key</source>
+                <target>Category key</target>
+            </trans-unit>
+            <trans-unit id="643a99ff2964652633a5ca2169f22236" resname="labels.success.category-save-desc">
+                <source>labels.success.category-save-desc</source>
+                <target>Category successfully saved</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22236" resname="labels.success.category-delete-desc">
+                <source>labels.success.category-delete-desc</source>
+                <target>Category successfully deleted</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2864653633a5ca2169f22236" resname="labels.error.category-unique-key">
+                <source>labels.error.category-unique-key</source>
+                <target>The category key has to be unique</target>
+            </trans-unit>
+            <trans-unit id="143d99ff2864653633a5ca2169f22236" resname="labels.success.category-save-error">
+                <source>labels.success.category-save-error</source>
+                <target>An error occurred while saving the category</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f22236" resname="sulu.category.no-categories-available">
+                <source>sulu.category.no-categories-available</source>
+                <target>No categories available</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11111" resname="sulu.category.keywords">
+                <source>sulu.category.keywords</source>
+                <target>Keywords</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11112" resname="sulu.category.keyword">
+                <source>sulu.category.keyword</source>
+                <target>Keyword</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11113" resname="sulu.category.used-multiple">
+                <source>sulu.category.used-multiple</source>
+                <target>Multiple usage</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11114" resname="sulu.category.keyword_conflict.title">
+                <source>sulu.category.keyword_conflict.title</source>
+                <target>Keyword is used multiple times</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11115" resname="sulu.category.keyword_conflict.message">
+                <source>sulu.category.keyword_conflict.message</source>
+                <target>Change keyword for all or create a new keyword?</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11116" resname="sulu.category.keyword_conflict.detach">
+                <source>sulu.category.keyword_conflict.detach</source>
+                <target>Create new keyword</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11117" resname="sulu.category.keyword_conflict.overwrite">
+                <source>sulu.category.keyword_conflict.overwrite</source>
+                <target>Overwrite</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

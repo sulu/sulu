@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="resource.filter.name">
+                <source>resource.filter.name</source>
+                <target>Filter title</target>
+            </trans-unit>
+            <trans-unit id="2" resname="resource.filter">
+                <source>resource.filter</source>
+                <target>Filter</target>
+            </trans-unit>
+            <trans-unit id="3" resname="resource.filter.conjunction">
+                <source>resource.filter.conjunction</source>
+                <target>Filter entries that apply to</target>
+            </trans-unit>
+            <trans-unit id="4" resname="resource.filter.context">
+                <source>resource.filter.context</source>
+                <target>Scope</target>
+            </trans-unit>
+            <trans-unit id="5" resname="resource.filter.conditions">
+                <source>resource.filter.conditions</source>
+                <target>Conditions</target>
+            </trans-unit>
+            <trans-unit id="6" resname="resource.filter.delete.warning">
+                <source>resource.filter.delete.warning</source>
+                <target>Do you really want to delete the selected filters? All data is going to be lost.</target>
+            </trans-unit>
+            <trans-unit id="7" resname="resource.filter.conjunction.or">
+                <source>resource.filter.conjunction.or</source>
+                <target>at least one condition</target>
+            </trans-unit>
+            <trans-unit id="8" resname="resource.filter.conjunction.and">
+                <source>resource.filter.conjunction.and</source>
+                <target>all conditions</target>
+            </trans-unit>
+            <trans-unit id="9" resname="resource.filter.add-condition">
+                <source>resource.filter.add-condition</source>
+                <target>Add condition</target>
+            </trans-unit>
+            <trans-unit id="10" resname="resource.filter.manage">
+                <source>resource.filter.manage</source>
+                <target>Manage filters</target>
+            </trans-unit>
+            <trans-unit id="11" resname="resource.filter.entries">
+                <source>resource.filter.entries</source>
+                <target>entries</target>
+            </trans-unit>
+            <trans-unit id="12" resname="resource.filter.resultText">
+                <source>resource.filter.resultText</source>
+                <target>match your filter</target>
+            </trans-unit>
+            <trans-unit id="13" resname="resource.filter.edit">
+                <source>resource.filter.edit</source>
+                <target>Edit filter</target>
+            </trans-unit>
+            <trans-unit id="14" resname="resource.filter.private">
+                <source>resource.filter.private</source>
+                <target>Private</target>
+            </trans-unit>
+            <trans-unit id="15" resname="resource.filter.error-loading">
+                <source>resource.filter.error-loading</source>
+                <target>Filter could not be assigned.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
