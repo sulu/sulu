@@ -88,6 +88,9 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
             'navigation' => [
                 'contexts' => [],
             ],
+            'resourceLocator' => [
+                'strategy' => 'tree',
+            ],
         ];
 
         $this->security->getSystem()->willReturn($expected['security']['system']);
@@ -114,6 +117,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->webspace->setTheme($this->theme);
+        $this->webspace->setResourceLocatorStrategy($expected['resourceLocator']['strategy']);
 
         $res = $this->webspace->toArray();
         $this->assertEquals($expected, $res);

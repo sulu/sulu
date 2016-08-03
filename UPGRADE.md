@@ -62,6 +62,8 @@ After:
 </templates>
 ```
 
+And the `resource-locator` node has moved from `portal` to `webspace`. 
+
 This change only affects the files which use the 1.1 version of the webspace
 schema definition.
 

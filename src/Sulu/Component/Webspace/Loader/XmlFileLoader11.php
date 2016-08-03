@@ -27,6 +27,23 @@ class XmlFileLoader11 extends XmlFileLoader10
     /**
      * {@inheritdoc}
      */
+    protected function parseXml($file)
+    {
+        $webspace = parent::parseXml($file);
+
+        $strategyNode = $this->xpath->query('/x:webspace/x:resource-locator/x:strategy')->item(0);
+        if (null !== $strategyNode) {
+            $webspace->setResourceLocatorStrategy($strategyNode->nodeValue);
+        } else {
+            $webspace->setResourceLocatorStrategy('tree');
+        }
+
+        return $webspace;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function generateDefaultTemplates(Webspace $webspace)
     {
         $expected = ['page', 'home'];

@@ -75,8 +75,6 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $portal->addLocalization($localizationFrCa);
         $portal->setDefaultLocalization($localizationEnUs);
 
-        $portal->setResourceLocatorStrategy('tree');
-
         $webspace = new Webspace();
         $webspace->addLocalization($localizationEnUs);
         $webspace->addLocalization($localizationFrCa);
@@ -94,6 +92,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspace->addPortal($portal);
         $webspace->setKey('default');
         $webspace->setName('Default');
+        $webspace->setResourceLocatorStrategy('tree');
         $webspace->addPortal($portal);
 
         $webspace->setNavigation(new Navigation([new NavigationContext('main', [])]));
@@ -166,6 +165,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($webspace['navigation']['contexts']));
         $this->assertEquals('main', $webspace['navigation']['contexts'][0]['key']);
         $this->assertEquals([], $webspace['navigation']['contexts'][0]['metadata']);
+        $this->assertEquals('tree', $webspace['resourceLocator']['strategy']);
 
         $portal = $webspace['portals'][0];
 
@@ -188,7 +188,6 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ca', $portal['localizations'][2]['country']);
         $this->assertEquals('fr', $portal['localizations'][2]['language']);
         $this->assertEquals(false, $portal['localizations'][2]['default']);
-        $this->assertEquals('tree', $portal['resourceLocator']['strategy']);
 
         $portalInformation = $collectionArray['portalInformations']['prod']['www.portal1.com'];
 
