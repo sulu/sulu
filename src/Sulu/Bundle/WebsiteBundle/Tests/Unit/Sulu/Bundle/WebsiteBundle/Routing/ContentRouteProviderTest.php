@@ -24,6 +24,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -52,6 +53,11 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
      * @var RlpStrategyInterface
      */
     private $rlpStrategy;
+
+    /**
+     * @var StrategyManagerInterface
+     */
+    private $rlpStrategyManager;
 
     /**
      * @var StructureManagerInterface
@@ -83,15 +89,18 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->rlpStrategy = $this->prophesize(RlpStrategyInterface::class);
+        $this->rlpStrategyManager = $this->prophesize(StrategyManagerInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
         $this->urlReplacer = $this->prophesize(ReplacerInterface::class);
 
+        $this->rlpStrategyManager->getStrategyByWebspaceKey(Argument::any())->willReturn($this->rlpStrategy->reveal());
+
         $this->contentRouteProvider = new ContentRouteProvider(
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->rlpStrategy->reveal(),
+            $this->rlpStrategyManager->reveal(),
             $this->structureManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->defaultLocaleProvider->reveal(),

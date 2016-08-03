@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
 
+use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\Content\Compat\Property;
@@ -18,6 +19,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * @group unit
@@ -40,13 +43,27 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $rlpStrategy;
 
+    /**
+     * @var StrategyManagerInterface
+     */
+    private $rlpStrategyManager;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
     protected function setUp()
     {
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->rlpStrategy = $this->prophesize(RlpStrategyInterface::class);
+        $this->rlpStrategyManager = $this->prophesize(StrategyManagerInterface::class);
+        $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
+
+        $this->rlpStrategyManager->getStrategyByWebspaceKey(Argument::any())->willReturn($this->rlpStrategy->reveal());
 
         $this->repository = new ResourceLocatorRepository(
-            $this->rlpStrategy->reveal(),
+            $this->rlpStrategyManager->reveal(),
             $this->structureManager->reveal()
         );
     }

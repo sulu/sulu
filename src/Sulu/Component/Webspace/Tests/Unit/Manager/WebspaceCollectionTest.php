@@ -92,7 +92,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspace->addPortal($portal);
         $webspace->setKey('default');
         $webspace->setName('Default');
-        $webspace->setResourceLocatorStrategy('tree');
+        $webspace->setResourceLocatorStrategy('tree_leaf_edit');
         $webspace->addPortal($portal);
 
         $webspace->setNavigation(new Navigation([new NavigationContext('main', [])]));
@@ -165,7 +165,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($webspace['navigation']['contexts']));
         $this->assertEquals('main', $webspace['navigation']['contexts'][0]['key']);
         $this->assertEquals([], $webspace['navigation']['contexts'][0]['metadata']);
-        $this->assertEquals('tree', $webspace['resourceLocator']['strategy']);
+        $this->assertEquals('tree_leaf_edit', $webspace['resourceLocator']['strategy']);
 
         $portal = $webspace['portals'][0];
 

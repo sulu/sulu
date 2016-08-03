@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -46,9 +46,9 @@ class ContentRouteProvider implements RouteProviderInterface
     private $documentInspector;
 
     /**
-     * @var RlpStrategyInterface
+     * @var StrategyManagerInterface
      */
-    private $rlpStrategy;
+    private $rlpStrategyManager;
 
     /**
      * @var StructureManagerInterface
@@ -73,7 +73,7 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * @param DocumentManagerInterface $documentManager
      * @param DocumentInspector $documentInspector
-     * @param RlpStrategyInterface $rlpStrategy
+     * @param StrategyManagerInterface $rlpStrategyManager
      * @param StructureManagerInterface $structureManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param DefaultLocaleProviderInterface $defaultLocaleProvider
@@ -82,7 +82,7 @@ class ContentRouteProvider implements RouteProviderInterface
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy,
+        StrategyManagerInterface $rlpStrategyManager,
         StructureManagerInterface $structureManager,
         RequestAnalyzerInterface $requestAnalyzer,
         DefaultLocaleProviderInterface $defaultLocaleProvider,
@@ -90,7 +90,7 @@ class ContentRouteProvider implements RouteProviderInterface
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
-        $this->rlpStrategy = $rlpStrategy;
+        $this->rlpStrategyManager = $rlpStrategyManager;
         $this->structureManager = $structureManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->defaultLocaleProvider = $defaultLocaleProvider;
@@ -147,11 +147,13 @@ class ContentRouteProvider implements RouteProviderInterface
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($portal->getWebspace()->getKey());
+
             try {
                 // load content by url ignore ending trailing slash
                 /** @var PageDocument $document */
                 $document = $this->documentManager->find(
-                    $this->rlpStrategy->loadByResourceLocator(
+                    $strategy->loadByResourceLocator(
                         rtrim($resourceLocator, '/'),
                         $portal->getWebspace()->getKey(),
                         $locale
@@ -237,8 +239,8 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * Find the route using the provided route name.
      *
-     * @param string $name       the route name to fetch
-     * @param array  $parameters DEPRECATED the parameters as they are passed
+     * @param string $name the route name to fetch
+     * @param array $parameters DEPRECATED the parameters as they are passed
      *                           to the UrlGeneratorInterface::generate call
      *
      * @return \Symfony\Component\Routing\Route
@@ -262,7 +264,7 @@ class ContentRouteProvider implements RouteProviderInterface
      * simple implementation could be to just repeatedly call
      * $this->getRouteByName() while catching and ignoring eventual exceptions.
      *
-     * @param array $names      the list of names to retrieve
+     * @param array $names the list of names to retrieve
      * @param array $parameters DEPRECATED the parameters as they are passed to
      *                          the UrlGeneratorInterface::generate call. (Only one array, not one
      *                          for each entry in $names
@@ -331,7 +333,7 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param Request            $request
+     * @param Request $request
      * @param PageBridge $content
      *
      * @return Route

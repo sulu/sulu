@@ -22,7 +22,6 @@
         <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
 
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
-        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
 
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
 
@@ -52,7 +51,7 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.rlp.strategy_manager"/>
             <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
 
@@ -87,7 +86,13 @@
         </service>
 
         <!-- rlp strategies -->
-        <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
+        <service id="sulu.content.rlp.strategy_manager"
+                 class="Sulu\Component\Content\Types\Rlp\Strategy\StrategyManager">
+            <argument type="collection"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        </service>
+        <service id="sulu.content.rlp.strategy.tree_leaf_edit"
+                 class="Sulu\Component\Content\Types\Rlp\Strategy\TreeLeafEditStrategy">
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu.content.structure_manager" />
@@ -95,6 +100,8 @@
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
+
+            <tag name="sulu.resource_locator.strategy" alias="tree_leaf_edit"/>
         </service>
 
         <!-- simple content types -->

@@ -164,7 +164,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('massiveart', $webspace->getTheme());
 
-        $this->assertEquals('tree', $webspace->getResourceLocatorStrategy());
+        $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
 
         $this->assertEquals(4, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
@@ -213,7 +213,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
 
         $this->assertEquals('Massive Art CA', $webspace->getPortals()[1]->getName());
-        $this->assertEquals('tree', $webspace->getResourceLocatorStrategy());
+        $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($webspace->getPortals()[1]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[1]->getLocalizations()[0]->getLanguage());
@@ -262,7 +262,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $webspace = $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_no_strategy.xml');
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
-        $this->assertEquals('tree', $webspace->getResourceLocatorStrategy());
+        $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
     }
 
     public function testLoadWithoutPortalLocalizations()

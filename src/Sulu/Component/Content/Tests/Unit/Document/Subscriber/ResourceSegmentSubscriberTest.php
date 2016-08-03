@@ -25,6 +25,7 @@ use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
@@ -54,6 +55,11 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
      * @var RlpStrategyInterface
      */
     private $rlpStrategy;
+
+    /**
+     * @var StrategyManagerInterface
+     */
+    private $rlpStrategyManager;
 
     /**
      * @var ResourceSegmentBehavior
@@ -108,11 +114,14 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->defaultSession = $this->prophesize(SessionInterface::class);
         $this->liveSession = $this->prophesize(SessionInterface::class);
 
+        $this->rlpStrategyManager = $this->prophesize(StrategyManagerInterface::class);
+        $this->rlpStrategyManager->getStrategyByWebspaceKey(Argument::any())->willReturn($this->rlpStrategy->reveal());
+
         $this->resourceSegmentSubscriber = new ResourceSegmentSubscriber(
             $this->encoder->reveal(),
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->rlpStrategy->reveal(),
+            $this->rlpStrategyManager->reveal(),
             $this->defaultSession->reveal(),
             $this->liveSession->reveal()
         );
@@ -179,6 +188,8 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
+
+        $this->documentInspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
 
         $this->document->getRedirectType()->willReturn(RedirectType::NONE);
         $event->getDocument()->willReturn($this->document->reveal());

@@ -34,7 +34,7 @@
             <name>test CMF AT</name>
             <key>testcmf_at</key>
             <resource-locator>
-                <strategy>tree</strategy>
+                <strategy>tree_leaf_edit</strategy>
             </resource-locator>
 
             <environments>

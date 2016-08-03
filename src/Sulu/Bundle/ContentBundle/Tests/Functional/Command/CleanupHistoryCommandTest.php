@@ -47,7 +47,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
     {
         $application = new Application($this->getContainer()->get('kernel'));
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree_leaf_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $cleanupCommand = new CleanupHistoryCommand();
@@ -150,7 +150,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
     public function dataProviderOnlyRoot()
     {
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree_leaf_edit');
 
         $webspaceKey = 'sulu_io';
         $locale = 'de';

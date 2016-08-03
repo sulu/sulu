@@ -20,7 +20,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
@@ -53,9 +53,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     private $documentInspector;
 
     /**
-     * @var RlpStrategyInterface
+     * @var StrategyManagerInterface
      */
-    private $rlpStrategy;
+    private $rlpStrategyManager;
 
     /**
      * @var SessionInterface
@@ -71,14 +71,14 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         PropertyEncoder $encoder,
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy,
+        StrategyManagerInterface $rlpStrategyManager,
         SessionInterface $defaultSession,
         SessionInterface $liveSession
     ) {
         $this->encoder = $encoder;
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
-        $this->rlpStrategy = $rlpStrategy;
+        $this->rlpStrategyManager = $rlpStrategyManager;
         $this->defaultSession = $defaultSession;
         $this->liveSession = $liveSession;
     }
@@ -274,7 +274,11 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     private function persistRoute(ResourceSegmentBehavior $document)
     {
-        $this->rlpStrategy->save($document, null);
+        $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey(
+            $this->documentInspector->getWebspace($document)
+        );
+
+        $strategy->save($document, null);
     }
 
     /**
@@ -297,6 +301,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
         $defaultNode = $this->defaultSession->getNode($path);
         $liveNode = $this->liveSession->getNode($path);
+
+        $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($webspaceKey);
 
         foreach ($locales as $locale) {
             $localizedDocument = $this->documentManager->find($uuid, $locale);
@@ -331,7 +337,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 // this happens on a move, but not on copy, because copy results in a draft page without url
                 if ($generateRoutes) {
                     $localizedDocument->setResourceSegment($liveNode->getPropertyValue($resourceSegmentPropertyName));
-                    $this->rlpStrategy->save($localizedDocument, null);
+                    $strategy->save($localizedDocument, null);
                     $localizedDocument->setResourceSegment($defaultNode->getPropertyValue($resourceSegmentPropertyName));
                 }
             }
@@ -354,11 +360,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         $webspaceKey,
         $locale
     ) {
-        $childPart = $this->rlpStrategy->getChildPart($node->getPropertyValue($resourceSegmentPropertyName));
+        $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($webspaceKey);
+        $childPart = $strategy->getChildPart($node->getPropertyValue($resourceSegmentPropertyName));
 
         $node->setProperty(
             $resourceSegmentPropertyName,
-            $this->rlpStrategy->generate($childPart, $parentUuid, $webspaceKey, $locale)
+            $strategy->generate($childPart, $parentUuid, $webspaceKey, $locale)
         );
     }
 }

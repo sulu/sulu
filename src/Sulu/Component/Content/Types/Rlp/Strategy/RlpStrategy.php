@@ -71,7 +71,6 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $documentManager;
 
     public function __construct(
-        $name,
         RlpMapperInterface $mapper,
         PathCleanupInterface $cleaner,
         StructureManagerInterface $structureManager,
@@ -80,7 +79,6 @@ abstract class RlpStrategy implements RlpStrategyInterface
         DocumentInspector $documentInspector,
         DocumentManagerInterface $documentManager
     ) {
-        $this->name = $name;
         $this->mapper = $mapper;
         $this->cleaner = $cleaner;
         $this->structureManager = $structureManager;

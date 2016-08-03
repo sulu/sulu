@@ -39,5 +39,13 @@ class SuluCoreBundle extends Bundle
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass('sulu_core.webspace.url_provider', 'sulu.webspace.url_provider')
         );
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass(
+                'sulu.content.rlp.strategy_manager',
+                'sulu.resource_locator.strategy',
+                0,
+                'alias'
+            )
+        );
     }
 }

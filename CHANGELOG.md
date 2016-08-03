@@ -37,6 +37,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2648 [HttpCacheBundle]     Purge cache when removing or unpublishing page
     * FEATURE     #2780 [ContentBundle]       Added images/icons of excerpt to search index
     * BUGFIX      #2777 [ContentBundle]       Fixed tooltip translations in column-navigation
+    * FEATURE     #2740 [Webspace]            Added replacable resource locator strategy
     * BUGFIX      #2685 [ContentBundle]       Fixed resource locator adaption for pages with ghost-ancestors
     * BUGFIX      #2758 [ContentBundle]       Fixed wrong disabeling of button in block type
     * FEATURE     #2761 [All]                 Added Dutch translation
@@ -67,7 +68,7 @@ CHANGELOG for Sulu
     * FEATURE     #2726 [PreviewBundle]       Don't allow symfony deprecations anymore
     * FEATURE     #2717 [ContentBundle]       Removed or fixed some publishing translations
     * ENHANCEMENT #2750 [WebsiteBundle]       Removed published checks from ContentRouteProvider
-    * ENHANCEMENT #2729 [Webpace]             Moved resource-locator node from portal to webspace
+    * ENHANCEMENT #2729 [Webspace]            Moved resource-locator node from portal to webspace
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
     * FEATURE     #2720 [DocumentManagerBundle] Don't allow symfony deprecations anymore
     * FEATURE     #2727 [RouteBundle]         Don't allow symfony deprecations anymore

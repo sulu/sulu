@@ -42,7 +42,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -93,9 +93,9 @@ class ContentMapper implements ContentMapperInterface
     private $extensionDataCache;
 
     /**
-     * @var RlpStrategyInterface
+     * @var RlpStrategyManagerInterface
      */
-    private $rlpStrategy;
+    private $rlpStrategyManager;
 
     /**
      * @var DocumentManager
@@ -133,7 +133,7 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        RlpStrategyInterface $rlpStrategy,
+        StrategyManagerInterface $rlpStrategyManager,
         NamespaceRegistry $namespaceRegistry
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -146,7 +146,7 @@ class ContentMapper implements ContentMapperInterface
         $this->inspector = $inspector;
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
-        $this->rlpStrategy = $rlpStrategy;
+        $this->rlpStrategyManager = $rlpStrategyManager;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
@@ -177,10 +177,12 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if (!$document instanceof ExtensionBehavior) {
-            throw new \RuntimeException(sprintf(
-                'Document of class "%s" must implement the ExtensionableBehavior if it is to be extended',
-                get_class($document)
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'Document of class "%s" must implement the ExtensionableBehavior if it is to be extended',
+                    get_class($document)
+                )
+            );
         }
 
         // save data of extensions
@@ -228,9 +230,12 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $children = $this->inspector->getChildren($parent, $options);
-        $children = $this->documentsToStructureCollection($children->toArray(), [
-            'exclude_ghost' => $excludeGhosts,
-        ]);
+        $children = $this->documentsToStructureCollection(
+            $children->toArray(),
+            [
+                'exclude_ghost' => $excludeGhosts,
+            ]
+        );
 
         if ($flat) {
             foreach ($children as $child) {
@@ -257,9 +262,13 @@ class ContentMapper implements ContentMapperInterface
      */
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
-        $document = $this->documentManager->find($uuid, $locale, [
-            'load_ghost_content' => $loadGhostContent,
-        ]);
+        $document = $this->documentManager->find(
+            $uuid,
+            $locale,
+            [
+                'load_ghost_content' => $loadGhostContent,
+            ]
+        );
 
         return $this->documentToStructure($document);
     }
@@ -352,10 +361,12 @@ class ContentMapper implements ContentMapperInterface
             $document = $parentDocument;
         }
 
-        throw new \RuntimeException(sprintf(
-            'Did not traverse an instance of HomeDocument when searching for desendants of document "%s"',
-            $uuid
-        ));
+        throw new \RuntimeException(
+            sprintf(
+                'Did not traverse an instance of HomeDocument when searching for desendants of document "%s"',
+                $uuid
+            )
+        );
     }
 
     /**
@@ -364,8 +375,8 @@ class ContentMapper implements ContentMapperInterface
      * hydrated.
      *
      * @param NodeInterface $node
-     * @param string        $localization
-     * @param string        $webspaceKey
+     * @param string $localization
+     * @param string $webspaceKey
      *
      * @return StructureInterface
      */
@@ -461,6 +472,9 @@ class ContentMapper implements ContentMapperInterface
 
         $document = $this->documentManager->find($uuid, $srcLocale);
         $parentDocument = $this->inspector->getParent($document);
+        if ($document instanceof ResourceSegmentBehavior) {
+            $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($webspaceKey);
+        }
 
         foreach ($destLocales as $destLocale) {
             $destDocument = $this->documentManager->find(
@@ -472,7 +486,7 @@ class ContentMapper implements ContentMapperInterface
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
-                $resourceLocator = $this->rlpStrategy->generate(
+                $resourceLocator = $strategy->generate(
                     $destDocument->getTitle(),
                     $this->inspector->getUuid($parentDocument),
                     $webspaceKey,
@@ -496,9 +510,13 @@ class ContentMapper implements ContentMapperInterface
     {
         $document = $this->documentManager->find($uuid, $locale);
         $this->documentManager->reorder($document, $beforeUuid);
-        $this->documentManager->persist($document, $locale, [
-            'user' => $userId,
-        ]);
+        $this->documentManager->persist(
+            $document,
+            $locale,
+            [
+                'user' => $userId,
+            ]
+        );
 
         return $this->documentToStructure($document);
     }
@@ -519,12 +537,14 @@ class ContentMapper implements ContentMapperInterface
         $currentPosition = array_search($document, $siblings) + 1;
 
         if ($countSiblings < $position || $position <= 0) {
-            throw new InvalidOrderPositionException(sprintf(
-                'Cannot order node "%s" at out-of-range position "%s", must be >= 0 && < %d"',
-                $this->inspector->getPath($document),
-                $position,
-                $countSiblings
-            ));
+            throw new InvalidOrderPositionException(
+                sprintf(
+                    'Cannot order node "%s" at out-of-range position "%s", must be >= 0 && < %d"',
+                    $this->inspector->getPath($document),
+                    $position,
+                    $countSiblings
+                )
+            );
         }
 
         if ($position === $countSiblings) {
@@ -722,8 +742,15 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return extracted data (configured by fields array) from node.
      */
-    private function getFieldsData(Row $row, NodeInterface $node, $document, $fields, $templateKey, $webspaceKey, $locale)
-    {
+    private function getFieldsData(
+        Row $row,
+        NodeInterface $node,
+        $document,
+        $fields,
+        $templateKey,
+        $webspaceKey,
+        $locale
+    ) {
         $fieldsData = [];
         foreach ($fields as $field) {
             // determine target for data in result array
@@ -740,7 +767,16 @@ class ContentMapper implements ContentMapperInterface
             if (!isset($target[$field['name']])) {
                 $target[$field['name']] = '';
             }
-            if (($data = $this->getFieldData($field, $row, $node, $document, $templateKey, $webspaceKey, $locale)) !== null) {
+            if (($data = $this->getFieldData(
+                    $field,
+                    $row,
+                    $node,
+                    $document,
+                    $templateKey,
+                    $webspaceKey,
+                    $locale
+                )) !== null
+            ) {
                 $target[$field['name']] = $data;
             }
         }
@@ -831,9 +867,13 @@ class ContentMapper implements ContentMapperInterface
 
     private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)
     {
-        $document = $this->documentManager->find($pathOrUuid, $locale, [
-            'load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
-        ]);
+        $document = $this->documentManager->find(
+            $pathOrUuid,
+            $locale,
+            [
+                'load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
+            ]
+        );
 
         if ($shouldExclude && $this->optionsShouldExcludeDocument($document, $options)) {
             return;
@@ -848,10 +888,13 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        $options = array_merge([
-            'exclude_ghost' => true,
-            'exclude_shadow' => true,
-        ], $options);
+        $options = array_merge(
+            [
+                'exclude_ghost' => true,
+                'exclude_shadow' => true,
+            ],
+            $options
+        );
 
         $state = $this->inspector->getLocalizationState($document);
 

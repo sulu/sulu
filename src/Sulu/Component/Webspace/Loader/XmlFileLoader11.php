@@ -35,7 +35,7 @@ class XmlFileLoader11 extends XmlFileLoader10
         if (null !== $strategyNode) {
             $webspace->setResourceLocatorStrategy($strategyNode->nodeValue);
         } else {
-            $webspace->setResourceLocatorStrategy('tree');
+            $webspace->setResourceLocatorStrategy('tree_leaf_edit');
         }
 
         return $webspace;

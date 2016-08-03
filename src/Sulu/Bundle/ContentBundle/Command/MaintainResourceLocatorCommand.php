@@ -106,7 +106,9 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
         $node = $session->getNodeByIdentifier($page->getUuid());
 
         /** @var RlpStrategyInterface $strategy */
-        $strategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $strategy = $this->getContainer()->get('sulu.content.rlp.strategy_manager')->getStrategyByWebspaceKey(
+            $webspace->getKey()
+        );
 
         /** @var ResourceLocator $resourceLocator */
         $resourceLocator = $this->getContainer()->get('sulu.content.type.resource_locator');
@@ -116,8 +118,7 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
         }
 
         $property = $page->getPropertyByTagName('sulu.rlp');
-        if (
-            $property->getContentTypeName() !== 'resource_locator' &&
+        if ($property->getContentTypeName() !== 'resource_locator' &&
             $page->getNodeType() !== Structure::NODE_TYPE_CONTENT
         ) {
             return;

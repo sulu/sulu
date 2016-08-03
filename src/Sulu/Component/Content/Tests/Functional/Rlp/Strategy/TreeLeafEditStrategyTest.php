@@ -19,7 +19,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class TreeStrategyTest extends SuluTestCase
+class TreeLeafEditStrategyTest extends SuluTestCase
 {
     /**
      * @var RlpStrategyInterface
@@ -43,10 +43,11 @@ class TreeStrategyTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree_leaf_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->session = $this->getContainer()->get('doctrine_phpcr.session');
+
 
         $this->initPhpcr();
     }

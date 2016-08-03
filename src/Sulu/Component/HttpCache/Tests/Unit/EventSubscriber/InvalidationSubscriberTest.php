@@ -22,6 +22,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -65,6 +66,11 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     private $rlpStrategy;
 
     /**
+     * @var StrategyManagerInterface
+     */
+    private $rlpStrategyManager;
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -81,14 +87,17 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->rlpStrategy = $this->prophesize(RlpStrategyInterface::class);
+        $this->rlpStrategyManager = $this->prophesize(StrategyManagerInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+
+        $this->rlpStrategyManager->getStrategyByWebspaceKey(Argument::any())->willReturn($this->rlpStrategy->reveal());
 
         $this->invalidationSubscriber = new InvalidationSubscriber(
             $this->pathHandler->reveal(),
             $this->structureHandler->reveal(),
             $this->structureManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->rlpStrategy->reveal(),
+            $this->rlpStrategyManager->reveal(),
             $this->webspaceManager->reveal(),
             $this->env
         );
