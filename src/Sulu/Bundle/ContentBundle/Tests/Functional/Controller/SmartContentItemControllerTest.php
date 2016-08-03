@@ -292,6 +292,34 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
     }
 
+    public function testGetItemsWithParams()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
+            '&provider=content&excluded=' . $this->johannes->getUuid() .
+            '&params={"max_per_page":{"value":"5","type":"string"},' .
+            '"properties":{"value":{"title":{"value":"title","type":"string"}},"type":"collection"}}'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
+            $result['datasource']
+        );
+        $this->assertEquals(
+            [
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas'],
+            ],
+            $result['_embedded']['items']
+        );
+    }
+
     public function testGetItemsLimit()
     {
         $client = $this->createAuthenticatedClient();
