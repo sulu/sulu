@@ -164,7 +164,7 @@ define([
                 CKEDITOR.dtd.div[this.tagName] = 1;
                 CKEDITOR.dtd.li[this.tagName] = 1;
                 CKEDITOR.dtd.p[this.tagName] = 1;
-                CKEDITOR.dtd.$block[this.tagName] = 1;
+                CKEDITOR.dtd.$inline[this.tagName] = 1;
                 CKEDITOR.dtd.$removeEmpty[this.tagName] = 1;
             },
 
