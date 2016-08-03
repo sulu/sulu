@@ -28000,6 +28000,40 @@ define('services/husky/util',['sprintf'], function(sprintf) {
             '"': '&quot;',
             "'": '&#39;',
             "/": '&#x2F;'
+        },
+
+        /**
+         * Calculates the number of matches parts of the first array
+         * have with parts of the second array
+         *
+         * @param {Array} parts1
+         * @param {Array} parts2
+         * @returns {number}
+         */
+        getSuccessfulMatches = function(parts1, parts2) {
+            var successfulMatches = 0, lastMatchedIndex = -1, partMatched, i, j;
+
+            // all parts of the first array are tried to match against a single part of the second array
+            for (i = 0; i < parts1.length; i++) {
+                partMatched = false;
+
+                // for each not matched part in the second array
+                for (j = lastMatchedIndex + 1; j < parts2.length; j++) {
+                    // try to match it with the current part of the first array
+                    if (parts1[i] === parts2[j]) {
+                        successfulMatches += 1;
+                        lastMatchedIndex = i;
+                        partMatched = true;
+                        break;
+                    }
+                }
+                // after a part is not matched the counting is finished
+                if (!partMatched) {
+                    break;
+                }
+            }
+
+            return successfulMatches;
         };
 
     function Util() {
@@ -28284,36 +28318,25 @@ define('services/husky/util',['sprintf'], function(sprintf) {
     };
 
     /**
-     * Returns a percentage (0 to 1) on how similar two strings are
-     * http://stackoverflow.com/questions/10473745/compare-strings-javascript-return-of-likely
+     * Compares two url, using their individual parts (sections between "/")
+     * The function tries to match each part of the first url to a part
+     * in the second url.
      *
-     * @param x {String} the first string
-     * @param y the {String} second string
-     * @returns {number} the percentage on how similar two strings are
+     * @param {String} matchUrl The url where each part is tried to match
+     * @param {String} toMatchUrl The url against which parts are matched
+     * @returns {number} The difference between the number of matched parts and not matched parts.
      */
-    Util.prototype.compareStrings = function(x, y) {
-        var simpleCompare = function(a, b) {
-            var lengthA = a.length;
-            var lengthB = b.length;
-            if (lengthA === 0 && lengthB === 0) {
-                return 1;
-            }
-            var equivalency = 0;
-            var minLength = (a.length > b.length) ? b.length : a.length;
-            var maxLength = (a.length < b.length) ? b.length : a.length;
+    Util.prototype.compareURIs = function(matchUrl, toMatchUrl) {
+        var matchParts = matchUrl.split('/'),
+            toMatchParts = toMatchUrl.split('/'),
+            successfulMatches,
+            countNotMatchedParts;
 
-            for (var i = 0; i < minLength; i++) {
-                if (a[i] == b[i]) {
-                    equivalency++;
-                }
-            }
+        successfulMatches = getSuccessfulMatches(matchParts, toMatchParts);
+        countNotMatchedParts = matchParts.length - successfulMatches;
 
-            return equivalency / maxLength;
-        };
-
-        // maximum of similarity from front to back and from back to front
-        return Math.max(simpleCompare(x,y), simpleCompare(x.split('').reverse().join(''), y.split('').reverse().join('')));
-    },
+        return successfulMatches - countNotMatchedParts;
+    };
 
     /**
      * Return a formatted string.
@@ -29819,7 +29842,7 @@ define('__component__$navigation@husky',[],function() {
                 if (!item || !item.action) {
                     return;
                 }
-                matchValue = this.sandbox.util.compareStrings(item.action, selectAction);
+                matchValue = this.sandbox.util.compareURIs(item.action, selectAction);
                 if (matchValue > maxMatchValue) {
                     matchItem = item;
                     maxMatchValue = matchValue;
