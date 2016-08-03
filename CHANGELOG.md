@@ -16,6 +16,7 @@ CHANGELOG for Sulu
     * FEATURE     #2716 [ContentBundle]       Added params to smart-content-item-controller
     * FEATURE     #2721 [GeneratorBundle]     Don't allow symfony deprecations anymore
     * FEATURE     #2728 [WebsocketBundle]     Don't allow symfony deprecations anymore
+    * ENHANCEMENT #2744 [All]                 Fix all calls to phpunits deprecated getMock and test against PHP 5.6/7.0
     * BUGFIX      #2695 [MediaBundle]         Removed Paginator from CollectionRepository (mysql 5.7)
     * FEATURE     #2722 [HttpCacheBundle]     Don't allow symfony deprecations anymore
     * BUGFIX      #2695 [CategoryBundle]      Removed hasChildren field descriptor in categories (mysql 5.7)

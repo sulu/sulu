@@ -54,7 +54,7 @@ class SearchIntegrationTest extends SuluTestCase
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();
-        $tagManager = $this->getMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
+        $tagManager = $this->createMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
 
         $this->mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);

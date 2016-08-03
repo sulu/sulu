@@ -20,8 +20,8 @@ class GeolocatorManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->geolocator = $this->getMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface');
+        $this->container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->geolocator = $this->createMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface');
 
         $this->manager = new GeolocatorManager($this->container);
     }

@@ -19,7 +19,7 @@ class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->manager = new ContentTypeManager($this->container);
 
         $this->manager->mapAliasToServiceId('content_1.alias', 'content_1.service.id');

@@ -105,7 +105,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2, $portalInformation3]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
@@ -170,7 +170,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
@@ -233,7 +233,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));

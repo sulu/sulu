@@ -20,7 +20,7 @@ class GeolocatorResponseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->response = new GeolocatorResponse();
-        $this->location = $this->getMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation');
+        $this->location = $this->createMock('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation');
     }
 
     public function testToArray()

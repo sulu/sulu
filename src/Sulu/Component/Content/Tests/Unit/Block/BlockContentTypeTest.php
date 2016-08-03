@@ -58,14 +58,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->contentTypeManager = $this->getMock(
-            'Sulu\Component\Content\ContentTypeManager',
-            ['get'],
-            [],
-            '',
-            false
-        );
-
+        $this->contentTypeManager = $this->getMockBuilder('Sulu\Component\Content\ContentTypeManager')
+            ->disableOriginalConstructor()
+            ->setMethods(['get'])
+            ->getMock();
         $this->blockContentType = new BlockContentType($this->contentTypeManager, 'not in use', 'i18n:');
 
         $this->contentTypeValueMap = [
@@ -126,7 +122,11 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareSingleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['getPropertyValue', 'hasProperty'], [], '', false);
+        $this->node = $this->getMockBuilder('\Jackalope\Node')
+            ->disableOriginalConstructor()
+            ->setMethods(['getPropertyValue', 'hasProperty'])
+            ->getMock();
+
         $data = [
             [
                 'type' => 'type1',
@@ -177,7 +177,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareSingleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['setProperty'], [], '', false);
+        $this->node = $this->getMockBuilder('\Jackalope\Node')
+            ->disableOriginalConstructor()
+            ->setMethods(['getPropertyValue', 'setProperty'])
+            ->getMock();
         $result = [];
         $this->node
             ->expects($this->any())
@@ -239,7 +242,11 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['getPropertyValue', 'hasProperty'], [], '', false);
+        $this->node = $this->getMockBuilder('\Jackalope\Node')
+            ->disableOriginalConstructor()
+            ->setMethods(['getPropertyValue', 'hasProperty'])
+            ->getMock();
+
         $data = [
             [
                 'type' => 'type1',
@@ -313,7 +320,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['setProperty'], [], '', false);
+        $this->node = $this->getMockBuilder('\Jackalope\Node')
+            ->disableOriginalConstructor()
+            ->setMethods(['getPropertyValue', 'setProperty'])
+            ->getMock();
         $result = [];
         $this->node
             ->expects($this->any())
@@ -397,7 +407,11 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['getPropertyValue', 'hasProperty'], [], '', false);
+        $this->node = $this->getMockBuilder('\Jackalope\Node')
+            ->disableOriginalConstructor()
+            ->setMethods(['getPropertyValue', 'hasProperty'])
+            ->getMock();
+
         $data = [
             [
                 'type' => 'type1',
@@ -458,7 +472,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['setProperty'], [], '', false);
+        $this->node = $this->getMockBuilder('\Jackalope\Node')
+            ->disableOriginalConstructor()
+            ->setMethods(['getPropertyValue', 'setProperty'])
+            ->getMock();
         $result = [];
         $this->node
             ->expects($this->any())
