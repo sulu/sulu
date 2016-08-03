@@ -14,6 +14,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2695 [MediaBundle]         Removed Paginator from CollectionRepository (mysql 5.7)
     * FEATURE     #2722 [HttpCacheBundle]     Don't allow symfony deprecations anymore
     * BUGFIX      #2695 [CategoryBundle]      Removed hasChildren field descriptor in categories (mysql 5.7)
+    * FEATURE     #2723 [MarkupBundle]        Don't allow symfony deprecations anymore
     * ENHANCEMENT #2701 [PreviewBundle]       Replaced preview background-images with white background
 
 * 1.3.0-RC2 (2016-07-28)
