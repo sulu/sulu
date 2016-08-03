@@ -84,7 +84,12 @@ class SmartContentItemController extends RestController
     {
         $result = [];
         foreach ($params as $name => $item) {
-            $result[$name] = new PropertyParameter($name, $item['value'], $item['type']);
+            $value = $item['value'];
+            if ($item['type'] === 'collection') {
+                $value = $this->getParams($value);
+            }
+
+            $result[$name] = new PropertyParameter($name, $value, $item['type']);
         }
 
         return $result;
