@@ -20,6 +20,7 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\HttpKernel\SuluKernel;
 
 /**
  * Provides structures for the MassiveSearch reindex process.
@@ -80,7 +81,7 @@ class StructureProvider implements LocalizedReindexProviderInterface
     {
         $document = $this->documentManager->find($this->inspector->getUuid($object), $locale);
 
-        if ($document instanceof WorkflowStageBehavior && $this->context === \AbstractKernel::CONTEXT_ADMIN) {
+        if ($document instanceof WorkflowStageBehavior && $this->context === SuluKernel::CONTEXT_ADMIN) {
             // set the workflowstage to test, so that the document will be indexed in the index for drafting
             // this change must not be persisted
             // is required because of the expression for the index name uses the workflowstage
