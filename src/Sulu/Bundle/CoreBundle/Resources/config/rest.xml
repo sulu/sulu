@@ -12,16 +12,16 @@
     </parameters>
 
     <services>
-        <service id="sulu_core.rest_helper" class="%sulu_core.rest_helper.class%" scope="request">
+        <service id="sulu_core.rest_helper" class="%sulu_core.rest_helper.class%">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%" scope="request">
+        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" scope="request">
-            <argument type="service" id="request"/>
+        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%">
+            <argument type="service" id="request_stack"/>
         </service>
 
         <service id="sulu_core.rest.exception_wrapper_handler" class="Sulu\Component\Rest\ExceptionWrapperHandler">
