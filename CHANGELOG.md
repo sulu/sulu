@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2738 [ContentBundle]       Fixed using non-existent AbstractKernel
     * ENHANCEMENT #2685 [ContentBundle]       Made internal links and smart content show unpublished nodes
     * BUGFIX      #2661 [ContentBundle]       Fixed ck-editor internal link visualization
     * FEATURE     #2681 [ContentBundle]       Fixed frontend resource locator generation for ghost pages
