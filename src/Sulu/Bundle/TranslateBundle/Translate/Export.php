@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
-use Sulu\Bundle\TranslateBundle\Translate\Dumper\JsonFileDumper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Translation\Dumper\FileDumper;
+use Symfony\Component\Translation\Dumper\JsonFileDumper;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -269,6 +269,7 @@ class Export
             [
                 'path' => $this->getPath(),
                 'default_locale' => self::DEFAULT_LOCALE,
+                'json_encoding' => 0,
             ]
         );
 
