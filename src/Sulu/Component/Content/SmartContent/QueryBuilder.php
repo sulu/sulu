@@ -198,7 +198,7 @@ class QueryBuilder extends ContentQueryBuilder
         $this->ids = isset($options['ids']) ? $options['ids'] : [];
         $this->config = isset($options['config']) ? $options['config'] : [];
         $this->excluded = isset($options['excluded']) ? $options['excluded'] : [];
-        $this->published = isset($options['published']) ? $options['published'] : true;
+        $this->published = isset($options['published']) ? $options['published'] : false;
     }
 
     /**

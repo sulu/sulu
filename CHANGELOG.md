@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2685 [ContentBundle]       Made internal links and smart content show unpublished nodes
     * BUGFIX      #2661 [ContentBundle]       Fixed ck-editor internal link visualization
     * FEATURE     #2681 [ContentBundle]       Fixed frontend resource locator generation for ghost pages
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
@@ -51,8 +52,6 @@ CHANGELOG for Sulu
     * BUGFIX      #2590 [CoreBundle]          Clear symfony cache before system collection initialization
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
-    * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
-    * BUGFIX      #2586 [AdminBundle]         fixed behat tests
     * ENHANCEMENT #2604 [ContentBundle]       Fixed publishing on excerpt tab and add excerpt js extension
     * BUGFIX      #2586 [AdminBundle]         Fixed behat tests
     * BUGFIX      #2588 [ContentBundle]       Made resource locator reload on every rlp.part change

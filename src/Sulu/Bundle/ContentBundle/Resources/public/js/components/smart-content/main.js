@@ -118,6 +118,8 @@ define(['services/husky/util'], function(util) {
             presentAsParameter: 'presentAs',
             limitResultParameter: 'limitResult',
             limitResultDisabled: false,
+            publishedStateKey: 'publishedState',
+            publishedKey: 'published',
             idKey: 'id',
             resultKey: 'items',
             datasourceKey: 'datasource',
@@ -202,6 +204,7 @@ define(['services/husky/util'], function(util) {
             contentItem: [
                 '<li data-id="<%= dataId %>">',
                 '    <span class="num"><%= num %></span>',
+                '    <span class="icons"><%= icons %></span>',
                 '<% if (!!image) { %>',
                 '    <span class="image"><img src="<%= image %>"/></span>',
                 '<% } %>',
@@ -212,6 +215,7 @@ define(['services/husky/util'], function(util) {
                 '<li data-id="<%= dataId %>">',
                 '    <a href="#" data-id="<%= dataId %>" data-webspace="<%= webspace %>" data-locale="<%= locale %>" class="link">',
                 '        <span class="num"><%= num %></span>',
+                '        <span class="icons"><%= icons %></span>',
                 '<% if (!!image) { %>',
                 '        <span class="image"><img src="<%= image %>"/></span>',
                 '<% } %>',
@@ -301,6 +305,13 @@ define(['services/husky/util'], function(util) {
                     '    <span class="desc"><%= limitResultToStr %></span>',
                     '    <input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
+                ].join('')
+            },
+
+            icons: {
+                draft: '<span class="draft-icon" title="<%= title %>"/>',
+                published: [
+                    '<span class="published-icon" title="<%= title %>"/>'
                 ].join('')
             }
         },
@@ -477,7 +488,8 @@ define(['services/husky/util'], function(util) {
                 chooseCategoriesOk: 'smart-content.choose-categories.ok',
                 chooseCategoriesCancel: 'smart-content.choose-categories.cancel',
                 clearButton: 'smart-content.clear',
-                saveButton: 'smart-content.save'
+                saveButton: 'smart-content.save',
+                unpublished: 'public.unpublished'
             };
 
             this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
@@ -620,7 +632,8 @@ define(['services/husky/util'], function(util) {
                         image: item[this.options.imageKey] || null,
                         webspace: this.options.webspace,
                         locale: this.options.locale,
-                        num: (index + 1)
+                        num: (index + 1),
+                        icons: this.getItemIcons(item)
                     }));
                 }.bind(this));
 
@@ -630,6 +643,32 @@ define(['services/husky/util'], function(util) {
                 this.$header.find('.no-content-message').html(this.sandbox.translate(this.translations.noContentFound));
                 this.$container.addClass(constants.noContentClass);
             }
+        },
+
+        /**
+         * Returns the icons of an item for given item data
+         *
+         * @param {Object} itemData The data of the item
+         * @returns {string} the html string of icons
+         */
+        getItemIcons: function(itemData) {
+            if (itemData[this.options.publishedStateKey] === undefined) {
+                return '';
+            }
+
+            var icons = '';
+            if (!itemData[this.options.publishedStateKey] && !!itemData[this.options.publishedKey]) {
+                icons += _.template(templates.icons.published, {
+                    title: this.sandbox.translate(this.translations.unpublished)
+                });
+            }
+            if (!itemData[this.options.publishedStateKey]) {
+                icons += _.template(templates.icons.draft, {
+                    title: this.sandbox.translate(this.translations.unpublished)
+                });
+            }
+
+            return icons;
         },
 
         /**
