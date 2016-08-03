@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2814 [MediaBundle]         Removed overlay from dropzone and implemented own overlay-style for dropzone (husky)
     * BUGFIX      #2817 [MediaBundle]         Made collection edit redirect to root collection when passed an invalid id
     * FEATURE     #2799 [MediaBundle]         Implemented tiles view for navigating through collections
+    * FEATURE     #2715 [ContentBundle]       Implemented teaser content-type
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
     * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 

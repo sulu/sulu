@@ -185,19 +185,33 @@ define(['underscore'], function(_) {
         },
 
         sortHandler: function(ids) {
-            this.setData(ids, false);
+            var data = this.getData();
+
+            data.items = _.map(ids, function(id) {
+                var parts = id.split(';');
+
+                return {
+                    type: parts[0],
+                    id: parts[1]
+                }
+            });
+
+            this.setData(data, false);
         },
 
         removeHandler: function(id) {
-            var data = this.getData().items || [],
+            var data = this.getData(),
+                items = data.items || [],
                 idParts = id.split(';');
 
-            for (var i = -1, length = data.length; ++i < length;) {
-                if (idParts[0] === data[i].type && idParts[1] === data[i].id) {
-                    data.splice(i, 1);
+            for (var i = -1, length = items.length; ++i < length;) {
+                if (idParts[0] === items[i].type && idParts[1] === items[i].id) {
+                    items.splice(i, 1);
                     break;
                 }
             }
+
+            data.items = items;
 
             this.setData(data, false);
         }
