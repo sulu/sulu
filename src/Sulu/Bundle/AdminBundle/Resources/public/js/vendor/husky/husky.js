@@ -36358,7 +36358,7 @@ define('__component__$search@husky',[], function() {
             slide: false
         },
         constants = {
-            slideClass: 'slide',
+            slideClass: 'search-slide',
             slideCollapsedClass: 'slide-collapsed',
             slideExpandedClass: 'slide-expanded'
         },
@@ -42263,13 +42263,13 @@ define('__component__$column-navigation@husky',[],function() {
                     if (!!data[this.options.publishedName]) {
                         this.sandbox.dom.append(
                             $container,
-                            '<span class="published-icon col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                            '<span class="published-icon col-icon" title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
                         );
                     }
 
                     this.sandbox.dom.append(
                         $container,
-                        '<span class="draft-icon col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                        '<span class="draft-icon col-icon" title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
                     );
                 }
             }

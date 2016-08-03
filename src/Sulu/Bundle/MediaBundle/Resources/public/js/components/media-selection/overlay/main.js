@@ -407,9 +407,7 @@ define([
                 fields,
                 {
                     el: this.$el.find('.list-toolbar-container'),
-                    showTitleAsTooltip: false,
                     instanceName: this.options.instanceName,
-                    hasSearch: false,
                     template: this.sandbox.sulu.buttons.get({
                         add: {
                             options: {
@@ -440,6 +438,7 @@ define([
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
                     instanceName: this.options.instanceName,
+                    searchFields: ['name', 'title', 'description'],
                     viewSpacingBottom: 180,
                     selectedCounter: false,
                     preselected: _.map(this.items, function(item) {
