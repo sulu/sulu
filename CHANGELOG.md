@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2738 [ContentBundle]       Fixed using non-existent AbstractKernel
     * ENHANCEMENT #2685 [ContentBundle]       Made internal links and smart content show unpublished nodes
     * BUGFIX      #2661 [ContentBundle]       Fixed ck-editor internal link visualization
+    * BUGFIX      #2745 [All]                 Remove SYMFONY_DEPRECATIONS_HELPER environment from AppVeyor config
     * ENHANCEMENT #2737 [TranslateBundle]     Remove symfony deprecations and don't allow them anymore
     * FEATURE     #2681 [ContentBundle]       Fixed frontend resource locator generation for ghost pages
     * BUGFIX      #2712 [MediaBundle]         Added search to media selection
