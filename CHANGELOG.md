@@ -15,6 +15,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2712 [MediaBundle]         Added search to media selection
     * FEATURE     #2726 [PreviewBundle]       Don't allow symfony deprecations anymore
     * FEATURE     #2717 [ContentBundle]       Removed or fixed some publishing translations
+    * ENHANCEMENT #2750 [WebsiteBundle]       Removed published checks from ContentRouteProvider
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
     * FEATURE     #2720 [DocumentManagerBundle] Don't allow symfony deprecations anymore
     * FEATURE     #2727 [RouteBundle]         Don't allow symfony deprecations anymore
