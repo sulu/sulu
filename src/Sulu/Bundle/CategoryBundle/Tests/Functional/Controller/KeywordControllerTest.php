@@ -108,6 +108,23 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($first['id'], $result['id']);
     }
 
+    public function testPostWithNotExistingCategoryTranslation()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/categories/' . $this->category1->getId() . '/keywords',
+            ['locale' => 'it', 'keyword' => 'my-keyword']
+        );
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals('my-keyword', $result['keyword']);
+        $this->assertEquals('it', $result['locale']);
+        $this->assertNotNull($result['id']);
+    }
+
     public function testPostExistingOtherCategory($keyword = 'Test', $locale = 'de')
     {
         $first = $this->testPost($keyword, $locale);
