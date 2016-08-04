@@ -890,6 +890,9 @@ define([
                             icon: 'floppy-o',
                             title: 'public.save',
                             disabled: true,
+                            callback: function() {
+                                this.sandbox.emit('sulu.toolbar.save', 'publish');
+                            }.bind(this),
                             dropdownItems: saveDropdown
                         }
                     };
