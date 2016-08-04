@@ -46,7 +46,7 @@
         "massive/build-bundle": "0.2.*",
         "matthiasnoback/symfony-config-test": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
-        "phpunit/phpunit": ">=4.8.0",
+        "phpunit/phpunit": "^5.4",
         "symfony/phpunit-bridge": "~2.8",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony/monolog-bundle": "2.4.*",

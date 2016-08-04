@@ -105,7 +105,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
         }
 
         foreach ($services as $service) {
-            $definition = new Definition($this->getMock($handlerClass));
+            $definition = new Definition($this->createMock($handlerClass));
             $definition->addTag('sulu_http_cache.handler', ['alias' => $service['alias']]);
             $this->setDefinition($service['service'], $definition);
         }

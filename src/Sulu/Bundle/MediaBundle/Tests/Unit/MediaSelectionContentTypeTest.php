@@ -30,7 +30,7 @@ class MediaSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->mediaManager = $this->getMock(MediaManagerInterface::class);
+        $this->mediaManager = $this->createMock(MediaManagerInterface::class);
 
         $this->mediaSelection = new MediaSelectionContentType(
             $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'

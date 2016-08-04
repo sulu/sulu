@@ -61,7 +61,7 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             $config['url_expression']
         );
 
-        $request = $this->getMock(Request::class);
+        $request = $this->createMock(Request::class);
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
@@ -113,7 +113,7 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             $config['redirect']
         );
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));

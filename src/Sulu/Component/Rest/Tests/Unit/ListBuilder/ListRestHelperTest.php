@@ -24,7 +24,7 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
+        $this->em = $this->createMock('Doctrine\Common\Persistence\ObjectManager');
     }
 
     public static function dataFieldsProvider()

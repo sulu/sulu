@@ -73,12 +73,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->mapper = $this->getMock(
-            'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            [],
-            ['test-mapper'],
-            'TestMapper'
-        );
+        $this->mapper = $this->getMockBuilder('Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper')
+            ->setConstructorArgs(['test-mapper'])
+            ->setMockClassName('TestMapper')
+            ->getMock();
         $this->mapper->expects($this->any())
             ->method('unique')
             ->will($this->returnCallback([$this, 'uniqueCallback']));
@@ -100,7 +98,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\Compat\StructureManagerInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
-        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', [], [], '', false);
+        $nodeHelper = $this->createMock('Sulu\Component\Util\SuluNodeHelper');
         $this->documentInspector = $this->getMockBuilder(DocumentInspector::class)
             ->disableOriginalConstructor()
             ->getMock();

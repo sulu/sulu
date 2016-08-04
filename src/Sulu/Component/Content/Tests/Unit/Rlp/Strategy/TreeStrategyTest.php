@@ -69,7 +69,7 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
 
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\Compat\StructureManagerInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
-        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', [], [], '', false);
+        $nodeHelper = $this->createMock('Sulu\Component\Util\SuluNodeHelper');
         $documentInspector = $this->getMockBuilder(DocumentInspector::class)
             ->disableOriginalConstructor()
             ->getMock();

@@ -15,7 +15,7 @@ class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetMediaUrlDefaultInline()
     {
-        $mediaMock = $this->getMock('Sulu\Bundle\MediaBundle\Api\Media', [], [], '', false);
+        $mediaMock = $this->createMock('Sulu\Bundle\MediaBundle\Api\Media');
         $mediaMock->expects($this->any())->method('getMimeType')->willReturn('application/pdf');
         $mediaMock->expects($this->any())->method('getUrl')->willReturn('http://sulu.lo/media/1');
 
@@ -27,7 +27,7 @@ class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMediaUrlDefaultAttachment()
     {
-        $mediaMock = $this->getMock('Sulu\Bundle\MediaBundle\Api\Media', [], [], '', false);
+        $mediaMock = $this->createMock('Sulu\Bundle\MediaBundle\Api\Media');
         $mediaMock->expects($this->any())->method('getMimeType')->willReturn('application/pdf');
         $mediaMock->expects($this->any())->method('getUrl')->willReturn('http://sulu.lo/media/1');
 
@@ -39,7 +39,7 @@ class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMediaUrlOtherMimeTypeDefaultInline()
     {
-        $mediaMock = $this->getMock('Sulu\Bundle\MediaBundle\Api\Media', [], [], '', false);
+        $mediaMock = $this->createMock('Sulu\Bundle\MediaBundle\Api\Media');
         $mediaMock->expects($this->any())->method('getMimeType')->willReturn('application/html');
         $mediaMock->expects($this->any())->method('getUrl')->willReturn('http://sulu.lo/media/1');
 
@@ -51,7 +51,7 @@ class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMediaUrlOtherMimeTypeDefaultAttachment()
     {
-        $mediaMock = $this->getMock('Sulu\Bundle\MediaBundle\Api\Media', [], [], '', false);
+        $mediaMock = $this->createMock('Sulu\Bundle\MediaBundle\Api\Media');
         $mediaMock->expects($this->any())->method('getMimeType')->willReturn('application/html');
         $mediaMock->expects($this->any())->method('getUrl')->willReturn('http://sulu.lo/media/1');
 
@@ -63,7 +63,7 @@ class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMediaUrlWithDispositionType()
     {
-        $mediaMock = $this->getMock('Sulu\Bundle\MediaBundle\Api\Media', [], [], '', false);
+        $mediaMock = $this->createMock('Sulu\Bundle\MediaBundle\Api\Media');
         $mediaMock->expects($this->any())->method('getMimeType')->willReturn('application/pdf');
         $mediaMock->expects($this->any())->method('getUrl')->willReturn('http://sulu.lo/media/1');
 

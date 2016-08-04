@@ -22,10 +22,10 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->nodeRepository = $this->getMock('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface');
-        $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
-        $this->suluProperty = $this->getMock('Sulu\Component\Content\Compat\PropertyInterface');
-        $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
+        $this->nodeRepository = $this->createMock('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface');
+        $this->phpcrNode = $this->createMock('PHPCR\NodeInterface');
+        $this->suluProperty = $this->createMock('Sulu\Component\Content\Compat\PropertyInterface');
+        $this->mapManager = $this->createMock('Sulu\Bundle\LocationBundle\Map\MapManager');
         $this->locationContent = new LocationContentType(
             $this->nodeRepository,
             'Foo:bar.html.twig',
