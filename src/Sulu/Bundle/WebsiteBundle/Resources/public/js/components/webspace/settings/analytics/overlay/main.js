@@ -34,6 +34,13 @@ define([
                     inputTemplate: input
                 },
                 {
+                    id: 'google_tag_manager',
+                    title: 'website.webspace.settings.type.google_tag_manager',
+                    input: 'input',
+                    labels: ['website.webspace.settings.key'],
+                    inputTemplate: input
+                },
+                {
                     id: 'piwik',
                     title: 'website.webspace.settings.type.piwik',
                     input: 'input',

@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="5" resname="website.webspace.settings.type.google">
                 <source>website.webspace.settings.type.google</source>
-                <target>Google</target>
+                <target>Google Analytics</target>
             </trans-unit>
             <trans-unit id="6" resname="website.webspace.settings.type.piwik">
                 <source>website.webspace.settings.type.piwik</source>
@@ -81,6 +81,10 @@
             <trans-unit id="13" resname="website.webspace.settings.site-id">
                 <source>website.webspace.settings.site-id</source>
                 <target>Site-ID</target>
+            </trans-unit>
+            <trans-unit id="14" resname="website.webspace.settings.type.google_tag_manager">
+                <source>website.webspace.settings.type.google_tag_manager</source>
+                <target>Google Tag Manager</target>
             </trans-unit>
         </body>
     </file>
