@@ -41,12 +41,12 @@
         </commands>
     </format>
     <format>
-        <name>190x</name>
+        <name>260x</name>
         <commands>
             <command>
                 <action>scale</action>
                 <parameters>
-                    <parameter name="x">190</parameter>
+                    <parameter name="x">260x</parameter>
                 </parameters>
             </command>
         </commands>

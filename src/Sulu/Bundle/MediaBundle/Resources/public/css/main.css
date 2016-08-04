@@ -34,93 +34,196 @@
   display: block;
 }
 
-/* line 37, ../scss/modules/collection.scss */
+/* line 40, ../scss/modules/collection.scss */
 .masonry-container .empty-list {
   background: none;
 }
-/* line 41, ../scss/modules/collection.scss */
+/* line 44, ../scss/modules/collection.scss */
 .masonry-container .masonry-grid {
   margin-bottom: -20px;
   position: relative;
   text-align: center;
 }
-/* line 46, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item {
-  width: 190px;
+/* line 50, ../scss/modules/collection.scss */
+.masonry-container .masonry-item {
+  box-shadow: 0 0 10px -10px rgba(0, 0, 0, 0.2);
+  width: 260px;
   background-color: #fff;
   border-radius: 3px;
   opacity: 1;
-  -moz-transition: opacity 100ms, top 100ms, left 100ms;
-  -o-transition: opacity 100ms, top 100ms, left 100ms;
-  -webkit-transition: opacity 100ms, top 100ms, left 100ms;
-  transition: opacity 100ms, top 100ms, left 100ms;
+  border: 1px solid #fff;
+  -moz-transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
+  -o-transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
+  -webkit-transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
+  transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
 }
-/* line 53, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item.loading {
+/* line 68, ../scss/modules/collection.scss */
+.masonry-container .masonry-item.loading {
   opacity: 0;
 }
-/* line 57, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-head {
-  background-color: #ddd;
-  width: 100%;
+/* line 72, ../scss/modules/collection.scss */
+.masonry-container .masonry-item .action-navigator, .masonry-container .masonry-item .download-navigator, .masonry-container .masonry-item .play-video-navigator {
+  cursor: pointer;
+  color: #000;
 }
-/* line 61, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-head .head-icon {
+/* line 77, ../scss/modules/collection.scss */
+.masonry-container .masonry-item .custom-checkbox {
+  width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 14px;
+  -moz-transition: width 80ms, margin 80ms;
+  -o-transition: width 80ms, margin 80ms;
+  -webkit-transition: width 80ms, margin 80ms;
+  transition: width 80ms, margin 80ms;
+}
+/* line 85, ../scss/modules/collection.scss */
+.masonry-container .masonry-item:hover {
+  box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.2);
+}
+/* line 88, ../scss/modules/collection.scss */
+.masonry-container .masonry-item:hover .custom-checkbox {
+  width: 15px;
+  margin-right: 8px;
+}
+/* line 93, ../scss/modules/collection.scss */
+.masonry-container .masonry-item:hover .masonry-info .icons {
+  display: block;
+}
+/* line 98, ../scss/modules/collection.scss */
+.masonry-container .masonry-item.selected {
+  box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.2);
+}
+/* line 100, ../scss/modules/collection.scss */
+.masonry-container .masonry-item.selected .custom-checkbox {
+  width: 15px;
+  margin-right: 8px;
+}
+/* line 106, ../scss/modules/collection.scss */
+.masonry-container .masonry-item.no-image .masonry-image {
+  background: #ddd;
+}
+/* line 111, ../scss/modules/collection.scss */
+.masonry-container .masonry-image {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+  background: url("../img/checked.gif") repeat;
+  position: relative;
+}
+/* line 119, ../scss/modules/collection.scss */
+.masonry-container .masonry-image .image-icon {
   color: white;
   font-size: 70px;
   margin: 30px;
 }
-/* line 67, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-head .head-image {
+/* line 125, ../scss/modules/collection.scss */
+.masonry-container .masonry-image .image {
+  position: relative;
+  left: 0;
   vertical-align: middle;
+  width: 258px;
+  border-radius: 0 0 3px 3px;
+  -moz-transition: width 200ms, height 200ms, left 200ms;
+  -o-transition: width 200ms, height 200ms, left 200ms;
+  -webkit-transition: width 200ms, height 200ms, left 200ms;
+  transition: width 200ms, height 200ms, left 200ms;
 }
-/* line 72, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-info {
+/* line 139, ../scss/modules/collection.scss */
+.masonry-container .masonry-image:hover .image {
+  width: 270px;
+  left: -5px;
+}
+/* line 146, ../scss/modules/collection.scss */
+.masonry-container .edit-hint {
   width: 100%;
-  height: 45px;
-  margin-top: 10px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
 }
-/* line 77, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-info span.description {
+/* line 155, ../scss/modules/collection.scss */
+.masonry-container .edit-hint::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: black;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 3px 3px;
+}
+/* line 168, ../scss/modules/collection.scss */
+.masonry-container .edit-hint span {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 24px;
+}
+/* line 175, ../scss/modules/collection.scss */
+.masonry-container .edit-hint:hover {
+  opacity: 1;
+}
+/* line 180, ../scss/modules/collection.scss */
+.masonry-container .masonry-info {
+  height: 80px;
+  text-align: left;
+  padding: 20px 20px 0 20px;
+  position: relative;
+}
+/* line 186, ../scss/modules/collection.scss */
+.masonry-container .masonry-info .main {
+  font-size: 0;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* line 193, ../scss/modules/collection.scss */
+.masonry-container .masonry-info .title {
+  font-size: 14px;
+}
+/* line 197, ../scss/modules/collection.scss */
+.masonry-container .masonry-info .description {
   font-size: 12px;
+  line-height: 12px;
   color: #999;
 }
-/* line 83, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-footer {
-  width: 100%;
-  height: 15px;
-  margin-bottom: 10px;
-  padding: 0 10px;
+/* line 203, ../scss/modules/collection.scss */
+.masonry-container .masonry-info .icons {
+  position: absolute;
+  bottom: 5px;
+  right: 20px;
+  display: none;
 }
-/* line 89, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-footer .footer-checkbox {
-  float: left;
-}
-/* line 93, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .masonry-footer .footer-icon {
-  position: relative;
-  top: 2px;
-  font-size: 17px;
-  float: right;
+/* line 210, ../scss/modules/collection.scss */
+.masonry-container .masonry-info .icons > * {
   margin-left: 5px;
-  cursor: pointer;
 }
-/* line 103, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item.action-navigator {
-  cursor: pointer;
-}
-/* line 107, ../scss/modules/collection.scss */
-.masonry-container .masonry-grid .masonry-item .action-navigator, .masonry-container .masonry-grid .masonry-item .download-navigator {
-  cursor: pointer;
-  color: #000;
+/* line 214, ../scss/modules/collection.scss */
+.masonry-container .masonry-info .badge {
+  margin-top: -11px;
+  margin-right: 3px;
 }
 
-/* line 116, ../scss/modules/collection.scss */
+/* line 222, ../scss/modules/collection.scss */
 .sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
 }
 
-/* line 122, ../scss/modules/collection.scss */
+/* line 228, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }

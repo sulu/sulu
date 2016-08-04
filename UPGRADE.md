@@ -12,6 +12,12 @@ to
 
 Also the `generateForUuid` method of the `RlpStrategyInterface` got removed.
 
+### 190x Image Format
+
+The image format "190x" got removed as it was only used in and old
+design. If this format is needed for a website please redefine it
+in the corresponding config file.
+
 ### Address country is nullable
 
 To make it easier to migrate data the country in the address entity is now nullable in sulu.
