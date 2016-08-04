@@ -20,6 +20,13 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu_admin.name%</argument>
         </service>
+        <service id="sulu_content.js_config.webspace_input_types"
+                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceInputTypesJsConfig">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+
+            <tag name="sulu.js_config"/>
+        </service>
 
         <!-- content -->
         <service id="sulu_content.content_navigation_provider" class="%sulu_content.content_navigation_provider.class%">

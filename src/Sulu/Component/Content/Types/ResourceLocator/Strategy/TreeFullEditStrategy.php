@@ -19,22 +19,20 @@ use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
-use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 /**
- * Base class for Resource Locator Path Strategy.
+ * Implements RLP Strategy "tree-full-edit".
+ *
+ * The generator uses the whole tree.
+ * The children will not be updated.
+ * Only the full resource-locator is editable.
  */
-abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterface
+class TreeFullEditStrategy implements ResourceLocatorStrategyInterface
 {
-    /**
-     * @var string name of strategy
-     */
-    protected $name;
-
     /**
      * @var ResourceLocatorMapperInterface
      */
@@ -70,6 +68,21 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
      */
     protected $documentManager;
 
+    /**
+     * @var ResourceLocatorGeneratorInterface
+     */
+    private $resourceLocatorGenerator;
+
+    /**
+     * @param ResourceLocatorMapperInterface $mapper
+     * @param PathCleanupInterface $cleaner
+     * @param StructureManagerInterface $structureManager
+     * @param ContentTypeManagerInterface $contentTypeManager
+     * @param SuluNodeHelper $nodeHelper
+     * @param DocumentInspector $documentInspector
+     * @param DocumentManagerInterface $documentManager
+     * @param ResourceLocatorGeneratorInterface $resourceLocatorGenerator
+     */
     public function __construct(
         ResourceLocatorMapperInterface $mapper,
         PathCleanupInterface $cleaner,
@@ -77,7 +90,8 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         ContentTypeManagerInterface $contentTypeManager,
         SuluNodeHelper $nodeHelper,
         DocumentInspector $documentInspector,
-        DocumentManagerInterface $documentManager
+        DocumentManagerInterface $documentManager,
+        ResourceLocatorGeneratorInterface $resourceLocatorGenerator
     ) {
         $this->mapper = $mapper;
         $this->cleaner = $cleaner;
@@ -86,14 +100,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $this->nodeHelper = $nodeHelper;
         $this->documentInspector = $documentInspector;
         $this->documentManager = $documentManager;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->name;
+        $this->resourceLocatorGenerator = $resourceLocatorGenerator;
     }
 
     /**
@@ -115,7 +122,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         }
 
         // get generated path from childClass
-        $path = $this->generatePath($title, $parentPath);
+        $path = $this->resourceLocatorGenerator->generate($title, $parentPath);
 
         // cleanup path
         $path = $this->cleaner->cleanup($path, $languageCode);
@@ -142,16 +149,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
 
         return $document;
     }
-
-    /**
-     * internal generator.
-     *
-     * @param $title
-     * @param $parentPath
-     *
-     * @return string
-     */
-    abstract protected function generatePath($title, $parentPath = null);
 
     /**
      * {@inheritdoc}
@@ -189,63 +186,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         }
 
         $this->mapper->save($document);
-
-        $this->adaptResourceLocators($document, $userId);
-    }
-
-    /**
-     * adopts resource locator of children by iteration.
-     *
-     * @param ResourceSegmentBehavior $document
-     * @param int $userId
-     */
-    private function adaptResourceLocators(ResourceSegmentBehavior $document, $userId)
-    {
-        if (!$document instanceof ChildrenBehavior) {
-            return;
-        }
-
-        $webspaceKey = $this->documentInspector->getWebspace($document);
-        $languageCode = $this->documentInspector->getLocale($document);
-
-        $node = $this->documentInspector->getNode($document);
-        $node->getSession()->save();
-
-        foreach ($document->getChildren() as $childDocument) {
-            // skip documents without assigned resource segment
-            if (!$childDocument instanceof ResourceSegmentBehavior
-                || !($currentResourceLocator = $childDocument->getResourceSegment())
-            ) {
-                $this->adaptResourceLocators($childDocument, $userId);
-                continue;
-            }
-
-            // build new resource segment based on parent changes
-            $parentUuid = $this->documentInspector->getUuid($document);
-            $childPart = $this->getChildPart($currentResourceLocator);
-            $newResourceLocator = $this->generate($childPart, $parentUuid, $webspaceKey, $languageCode);
-
-            // save new resource locator
-            $childNode = $this->documentInspector->getNode($childDocument);
-            $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
-            $template = $childNode->getPropertyValue($templatePropertyName);
-            $structure = $this->structureManager->getStructure($template);
-
-            $property = $structure->getPropertyByTagName('sulu.rlp');
-            $property->setValue($newResourceLocator);
-            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-            $translatedProperty = $this->nodeHelper->getTranslatedProperty($property, $languageCode);
-            $contentType->write($childNode, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
-
-            $childDocument->setResourceSegment($newResourceLocator);
-
-            // do not save routes if unpublished
-            if (!$childDocument->getPublished()) {
-                $this->adaptResourceLocators($childDocument, $userId);
-            } else {
-                $this->save($childDocument, $userId);
-            }
-        }
     }
 
     /**
@@ -302,5 +242,27 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChildPart($resourceSegment)
+    {
+        $divider = strrpos($resourceSegment, '/');
+
+        if ($divider === false) {
+            return $resourceSegment;
+        }
+
+        return substr($resourceSegment, $divider + 1);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInputType()
+    {
+        return self::INPUT_TYPE_FULL;
     }
 }

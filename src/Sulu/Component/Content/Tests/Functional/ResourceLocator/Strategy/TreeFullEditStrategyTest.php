@@ -19,7 +19,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class TreeLeafEditStrategyTest extends SuluTestCase
+class TreeFullEditStrategyTest extends SuluTestCase
 {
     /**
      * @var ResourceLocatorStrategyInterface
@@ -43,7 +43,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_leaf_edit');
+        $this->resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_full_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->session = $this->getContainer()->get('doctrine_phpcr.session');
@@ -64,21 +64,6 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->documentManager->publish($news, 'de');
         $this->documentManager->flush();
 
-        $news1 = $this->createDocument($news, 'news-1', '/news/news-1');
-        $this->documentManager->persist($news1, 'de');
-        $this->documentManager->publish($news1, 'de');
-        $this->documentManager->flush();
-
-        $sub1 = $this->createDocument($news1, 'sub-1', '/news/news-1/sub-1');
-        $this->documentManager->persist($sub1, 'de');
-        $this->documentManager->publish($sub1, 'de');
-        $this->documentManager->flush();
-
-        $sub2 = $this->createDocument($news1, 'sub-1', '/news/news-1/sub-2');
-        $this->documentManager->persist($sub2, 'de');
-        $this->documentManager->publish($sub2, 'de');
-        $this->documentManager->flush();
-
         // move route
         $news = $this->documentManager->find($news->getUuid(), 'de');
         $news->setResourceSegment('/test');
@@ -87,24 +72,15 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->session->refresh(false);
 
         // delete a history url
-        $this->resourceLocatorStrategy->deleteByPath('/news/news-1/sub-1', 'sulu_io', 'de');
-        $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
-        $this->assertTrue($rootNode->hasNode('news/news-1/sub-2'));
-        $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
-        $this->assertTrue($rootNode->hasNode('test/news-1/sub-2'));
-
-        // delete a normal url
-        $this->resourceLocatorStrategy->deleteByPath('/test/news-1/sub-2', 'sulu_io', 'de');
-        $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
-        $this->assertFalse($rootNode->hasNode('news/news-1/sub-2'));
-
-        $this->assertTrue($rootNode->hasNode('news/news-1'));
-        $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
-        $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
+        $this->resourceLocatorStrategy->deleteByPath('/news', 'sulu_io', 'de');
+        $this->assertFalse($rootNode->hasNode('news'));
+        $this->assertTrue($rootNode->hasNode('test'));
     }
 
     public function testChangeResourceSegment()
     {
+        $rootNode = $this->session->getNode('/cmf/sulu_io/routes/de');
+
         // create routes for content
         $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
@@ -116,31 +92,6 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $news1 = $this->createDocument($news, 'news-1', '/news/news-1');
         $this->documentManager->persist($news1, 'de');
         $this->documentManager->publish($news1, 'de');
-        $this->documentManager->flush();
-
-        $news1sub1 = $this->createDocument($news1, 'sub-1', '/news/news-1/sub-1');
-        $this->documentManager->persist($news1sub1, 'de');
-        $this->documentManager->publish($news1sub1, 'de');
-        $this->documentManager->flush();
-
-        $news1sub2 = $this->createDocument($news1, 'sub-2', '/news/news-1/sub-2');
-        $this->documentManager->persist($news1sub2, 'de');
-        $this->documentManager->publish($news1sub2, 'de');
-        $this->documentManager->flush();
-
-        $news2 = $this->createDocument($news, 'news-2', '/news/news-2');
-        $this->documentManager->persist($news2, 'de');
-        $this->documentManager->publish($news2, 'de');
-        $this->documentManager->flush();
-
-        $news2sub1 = $this->createDocument($news2, 'news-2', '/news/news-2/sub-1');
-        $this->documentManager->persist($news2sub1, 'de');
-        $this->documentManager->publish($news2sub1, 'de');
-        $this->documentManager->flush();
-
-        $news2sub2 = $this->createDocument($news2, 'news-2', '/news/news-2/sub-2');
-        $this->documentManager->persist($news2sub2, 'de');
-        $this->documentManager->publish($news2sub2, 'de');
         $this->documentManager->flush();
 
         // move route
@@ -155,41 +106,11 @@ class TreeLeafEditStrategyTest extends SuluTestCase
             $news->getUuid(),
             $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'sulu_io', 'de')
         );
-        $this->assertEquals(
-            $news1->getUuid(),
-            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-1', 'sulu_io', 'de')
-        );
-        $this->assertEquals(
-            $news1sub1->getUuid(),
-            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-1/sub-1', 'sulu_io', 'de')
-        );
-        $this->assertEquals(
-            $news1sub2->getUuid(),
-            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-1/sub-2', 'sulu_io', 'de')
-        );
-
-        $this->assertEquals(
-            $news2->getUuid(),
-            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-2', 'sulu_io', 'de')
-        );
-        $this->assertEquals(
-            $news2sub1->getUuid(),
-            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-2/sub-1', 'sulu_io', 'de')
-        );
-        $this->assertEquals(
-            $news2sub2->getUuid(),
-            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-2/sub-2', 'sulu_io', 'de')
-        );
+        $this->assertTrue($rootNode->hasNode('news/news-1'));
+        $this->assertFalse($rootNode->hasNode('test/news-1'));
 
         // check history
         $this->assertEquals('/test', $this->getRlForHistory('/news'));
-        $this->assertEquals('/test/news-1', $this->getRlForHistory('/news/news-1'));
-        $this->assertEquals('/test/news-1/sub-1', $this->getRlForHistory('/news/news-1/sub-1'));
-        $this->assertEquals('/test/news-1/sub-2', $this->getRlForHistory('/news/news-1/sub-2'));
-
-        $this->assertEquals('/test/news-2', $this->getRlForHistory('/news/news-2'));
-        $this->assertEquals('/test/news-2/sub-1', $this->getRlForHistory('/news/news-2/sub-1'));
-        $this->assertEquals('/test/news-2/sub-2', $this->getRlForHistory('/news/news-2/sub-2'));
     }
 
     public function testChangeResourceSegmentUnpublishedChildren()
@@ -269,7 +190,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
 
     public function testGetInputType()
     {
-        $this->assertEquals(ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF, $this->resourceLocatorStrategy->getInputType());
+        $this->assertEquals(ResourceLocatorStrategyInterface::INPUT_TYPE_FULL, $this->resourceLocatorStrategy->getInputType());
     }
 
     private function getRlForHistory($rl)

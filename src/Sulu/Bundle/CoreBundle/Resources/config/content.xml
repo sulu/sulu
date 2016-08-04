@@ -92,6 +92,8 @@
             <argument type="collection"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
+        <service id="sulu.content.resource_locator.strategy.tree_generator"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator"/>
         <service id="sulu.content.resource_locator.strategy.tree_leaf_edit"
                  class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy">
             <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
@@ -101,9 +103,24 @@
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy.tree_generator"/>
 
             <tag name="sulu.resource_locator.strategy" alias="tree_leaf_edit"/>
         </service>
+        <service id="sulu.content.resource_locator.strategy.tree_full_edit"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeFullEditStrategy">
+            <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy.tree_generator"/>
+
+            <tag name="sulu.resource_locator.strategy" alias="tree_full_edit"/>
+        </service>
+
         <!-- deprecated -->
         <service id="sulu.content.rlp.mapper.phpcr" alias="sulu.content.resource_locator.mapper.phpcr"/>
         <service id="sulu.content.rlp.strategy.tree" alias="sulu.content.resource_locator.strategy.tree_leaf_edit"/>

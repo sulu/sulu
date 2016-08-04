@@ -30,7 +30,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
+class TreeFullEditStrategyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface

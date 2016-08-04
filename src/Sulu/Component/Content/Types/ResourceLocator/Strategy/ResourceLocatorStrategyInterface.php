@@ -19,12 +19,8 @@ use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
  */
 interface ResourceLocatorStrategyInterface
 {
-    /**
-     * returns name of RLP Strategy (e.g. whole-tree).
-     *
-     * @return string
-     */
-    public function getName();
+    const INPUT_TYPE_LEAF = 'leaf';
+    const INPUT_TYPE_FULL = 'full';
 
     /**
      * Returns the child part from the given resource segment.
@@ -36,7 +32,7 @@ interface ResourceLocatorStrategyInterface
     public function getChildPart($resourceSegment);
 
     /**
-     * returns whole path for given title and parent-uuid.
+     * Returns whole path for given title and parent-uuid.
      *
      * @param string $title title of new node
      * @param string $parentUuid uuid of the parent of the new node
@@ -49,7 +45,7 @@ interface ResourceLocatorStrategyInterface
     public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * creates a new route for given path.
+     * Creates a new route for given path.
      *
      * @param ResourceSegmentBehavior $document
      * @param int $userId
@@ -59,7 +55,7 @@ interface ResourceLocatorStrategyInterface
     public function save(ResourceSegmentBehavior $document, $userId);
 
     /**
-     * returns path for given contentNode.
+     * Returns path for given contentNode.
      *
      * @param ResourceSegmentBehavior $document reference node
      *
@@ -68,7 +64,7 @@ interface ResourceLocatorStrategyInterface
     public function loadByContent(ResourceSegmentBehavior $document);
 
     /**
-     * returns path for given contentNode.
+     * Returns path for given contentNode.
      *
      * @param string $uuid uuid of contentNode
      * @param string $webspaceKey key of portal
@@ -80,7 +76,7 @@ interface ResourceLocatorStrategyInterface
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns history for given contentNode.
+     * Returns history for given contentNode.
      *
      * @param string $uuid uuid of contentNode
      * @param string $webspaceKey key of portal
@@ -92,7 +88,7 @@ interface ResourceLocatorStrategyInterface
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns the uuid of referenced content node.
+     * Returns the uuid of referenced content node.
      *
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
@@ -104,7 +100,7 @@ interface ResourceLocatorStrategyInterface
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * checks if path is valid.
+     * Checks if path is valid.
      *
      * @param string $path path of route
      * @param string $webspaceKey key of portal
@@ -116,7 +112,7 @@ interface ResourceLocatorStrategyInterface
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * deletes given resource locator node.
+     * Deletes given resource locator node.
      *
      * @param string $path of resource locator node
      * @param string $webspaceKey key of portal
@@ -124,4 +120,11 @@ interface ResourceLocatorStrategyInterface
      * @param string $segmentKey
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * Returns input-type for javscript-component.
+     *
+     * @return string
+     */
+    public function getInputType();
 }

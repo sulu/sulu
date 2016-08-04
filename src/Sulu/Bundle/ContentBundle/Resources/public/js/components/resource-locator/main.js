@@ -10,10 +10,10 @@
 /**
  * handles resource locator
  *
- * @class AutoComplete
+ * @class ResourceLocator
  * @constructor
  */
-define([], function() {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -21,7 +21,8 @@ define([], function() {
             instanceName: null,
             url: null,
             historyApi: null,
-            deleteApi: null
+            deleteApi: null,
+            webspaceKey: null
         },
 
         skeleton = function(options) {
@@ -160,8 +161,14 @@ define([], function() {
                     value = '';
                 }
             }
-            var parts = value.split('/'),
+            var parts, part;
+            if (getInputType(this.options.webspaceKey) === 'leaf') {
+                parts = value.split('/');
                 part = parts.pop();
+            } else {
+                parts = [];
+                part = value.substring(1);
+            }
 
             this.sandbox.dom.data(this.$el, 'part', part);
 
@@ -234,6 +241,10 @@ define([], function() {
                 var content = renderHistories.call(this, data._embedded.resourcelocators);
                 startOverlay.call(this, content);
             }.bind(this));
+        },
+
+        getInputType = function(webspaceKey) {
+            return Config.get('sulu_content.webspace_input_types')[webspaceKey];
         };
 
     return {
