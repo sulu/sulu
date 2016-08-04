@@ -43501,10 +43501,11 @@ define('__component__$ckeditor@husky',[], function() {
  * @params {String} [options.instanceName] instance name of the component
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
- * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'dropzone'
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'dropzone', 'wide', 'responsive-width'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
  * @params {Boolean} [options.displayHeader] Defines if overlay Header with title should be shown
- * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
+ * @params {Boolean} [options.contentSpacing] Defines if there should be a spacing between overlay borders and content
+ * @params {String} [options.type] The type of the overlay ('normal' or 'warning')
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
  * @params {Null|Number} [options.left] to fix the left position of the overlay. (px)
@@ -43552,6 +43553,7 @@ define('__component__$overlay@husky',[], function() {
             skin: '',
             supportKeyInput: true,
             displayHeader: true,
+            contentSpacing: true,
             propagateEvents: true,
             type: 'normal',
             cssClass: '',
@@ -43621,6 +43623,7 @@ define('__component__$overlay@husky',[], function() {
                 cssClass: 'alert',
                 removeOnClose: true,
                 openOnStart: true,
+                contentSpacing: false,
                 instanceName: 'alert',
                 buttons: [
                     {
@@ -43657,7 +43660,7 @@ define('__component__$overlay@husky',[], function() {
                 '           <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
                 '       </div>',
                 '   <% } %>',
-                '   <div class="overlay-content"></div>',
+                '   <div class="overlay-content <%= spacingClass %>"></div>',
                 '   <div class="overlay-footer">',
                 '   </div>',
                 '</div>'
@@ -44124,8 +44127,8 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.$el = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.overlaySkeleton,
                     {
-                        skin: this.options.skin,
-                        cssClass: this.options.cssClass || '',
+                        skin: (!!this.options.skin) ? this.options.skin : '',
+                        cssClass: (!!this.options.cssClass) ? this.options.cssClass : '',
                         overflowClass: (this.slides.length > 1) ? 'overflow-hidden' : ''
                     }
                 )
@@ -44153,7 +44156,8 @@ define('__component__$overlay@husky',[], function() {
                     subTitle: !!this.slides[slide].subTitle ? this.slides[slide].subTitle : null,
                     index: this.slides[slide].index,
                     cssClass: this.slides[slide].cssClass,
-                    displayHeader: this.options.displayHeader
+                    displayHeader: this.options.displayHeader,
+                    spacingClass: (!!this.options.contentSpacing) ? 'content-spacing' : ''
                 })
             );
             this.overlay.slides[slide].$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.slides[slide].$el);
