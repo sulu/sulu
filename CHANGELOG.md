@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2710 [All]                 Updated hateoas-bundle to version 1.2
     * BUGFIX      #2692 [AdminBundle]         Made url comparison in navigation use url parts an not characters (husky)
     * BUGFIX      #2738 [ContentBundle]       Fixed using non-existent AbstractKernel
     * ENHANCEMENT #2685 [ContentBundle]       Made internal links and smart content show unpublished nodes
