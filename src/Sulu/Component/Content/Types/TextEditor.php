@@ -72,7 +72,11 @@ class TextEditor extends SimpleContentType
     ) {
         $value = $property->getValue();
         if ($value !== null) {
-            $node->setProperty($property->getName(), $this->removeValidation($value));
+            $node->setProperty($property->getName(),
+                $this->removeValidation(
+                    $this->removeIllegalCharacters($value)
+                )
+            );
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
