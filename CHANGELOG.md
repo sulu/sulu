@@ -3,7 +3,8 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2759 [ContentBundle]       Fixed ok button translation for smart content overlay
-    * BUGFIX      #2676 [CoreBundle]          removed the user's system language as the default content language
+    * ENHANCEMENT #2755 [CoreBundle]          Extended path replacers
+    * BUGFIX      #2676 [CoreBundle]          Removed the user's system language as the default content language
     * BUGFIX      #2754 [ContentBundle]       Fixed PHPCR illegal characters exception
     * BUGFIX      #2757 [ContentBundle]       Deleting referenced pages also on public workspace
     * BUGFIX      #2751 [ContentBundle]       Fixed publishing for the settings tab
