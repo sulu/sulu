@@ -178,9 +178,9 @@
                 <source>smart-content.changed</source>
                 <target>Modifié (date)</target>
             </trans-unit>
-            <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.save">
-                <source>smart-content.save</source>
-                <target>Sauvegarder</target>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.apply">
+                <source>smart-content.apply</source>
+                <target>Importer</target>
             </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
                 <source>smart-content.clear</source>

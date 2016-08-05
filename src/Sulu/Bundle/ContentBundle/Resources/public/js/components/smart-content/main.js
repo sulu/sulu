@@ -488,7 +488,7 @@ define(['services/husky/util'], function(util) {
                 chooseCategoriesOk: 'smart-content.choose-categories.ok',
                 chooseCategoriesCancel: 'smart-content.choose-categories.cancel',
                 clearButton: 'smart-content.clear',
-                saveButton: 'smart-content.save',
+                applyButton: 'smart-content.apply',
                 unpublished: 'public.unpublished'
             };
 
@@ -794,7 +794,7 @@ define(['services/husky/util'], function(util) {
                             },
                             {
                                 type: 'ok',
-                                text: this.sandbox.translate(this.translations.saveButton),
+                                text: this.sandbox.translate(this.translations.applyButton),
                                 inactive: false,
                                 align: 'right'
                             }
