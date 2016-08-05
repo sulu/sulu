@@ -110,8 +110,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('Massive Art US', $portal->getName());
         $this->assertEquals('massiveart_us', $portal->getKey());
 
-        $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
-
         $this->assertEquals(4, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
@@ -142,8 +140,6 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('Massive Art CA', $portal->getName());
         $this->assertEquals('massiveart_ca', $portal->getKey());
-
-        $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
@@ -198,8 +194,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
 
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
-
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
@@ -229,8 +223,6 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
-
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
@@ -293,8 +285,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
 
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
-
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
@@ -340,8 +330,6 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
-
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
@@ -393,8 +381,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
 
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
-
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
@@ -440,8 +426,6 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
-
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
@@ -536,8 +520,6 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('Massive Art US', $portal->getName());
         $this->assertEquals('massiveart_us', $portal->getKey());
-
-        $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(4, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());

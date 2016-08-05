@@ -39,13 +39,14 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>sulu.io</name>
             <key>sulu_io</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="en"/>

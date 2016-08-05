@@ -17,6 +17,7 @@ CHANGELOG for Sulu
     * FEATURE     #2726 [PreviewBundle]       Don't allow symfony deprecations anymore
     * FEATURE     #2717 [ContentBundle]       Removed or fixed some publishing translations
     * ENHANCEMENT #2750 [WebsiteBundle]       Removed published checks from ContentRouteProvider
+    * ENHANCEMENT #2729 [Webpace]             Moved resource-locator node from portal to webspace
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
     * FEATURE     #2720 [DocumentManagerBundle] Don't allow symfony deprecations anymore
     * FEATURE     #2727 [RouteBundle]         Don't allow symfony deprecations anymore

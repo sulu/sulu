@@ -78,8 +78,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
             ['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
             $webspace->getDefaultTemplates()
         );
-
-        $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
+        $this->assertEquals('short', $webspace->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
@@ -165,7 +164,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('massiveart', $webspace->getTheme());
 
-        $this->assertEquals('tree', $webspace->getPortals()[0]->getResourceLocatorStrategy());
+        $this->assertEquals('tree', $webspace->getResourceLocatorStrategy());
 
         $this->assertEquals(4, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
@@ -214,7 +213,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
 
         $this->assertEquals('Massive Art CA', $webspace->getPortals()[1]->getName());
-        $this->assertEquals('tree', $webspace->getPortals()[1]->getResourceLocatorStrategy());
+        $this->assertEquals('tree', $webspace->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($webspace->getPortals()[1]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[1]->getLocalizations()[0]->getLanguage());
@@ -258,6 +257,14 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
+    public function testLoadNoStrategy()
+    {
+        $webspace = $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_no_strategy.xml');
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('tree', $webspace->getResourceLocatorStrategy());
+    }
+
     public function testLoadWithoutPortalLocalizations()
     {
         $webspace = $this->loader->load(
@@ -288,7 +295,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('sulu', $webspace->getTheme());
 
-        $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
+        $this->assertEquals('short', $webspace->getResourceLocatorStrategy());
 
         $this->assertEquals(3, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());

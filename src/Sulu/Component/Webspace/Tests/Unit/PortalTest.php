@@ -55,9 +55,6 @@ class PortalTest extends \PHPUnit_Framework_TestCase
         $expected = [
             'name' => 'foo',
             'key' => 'bar',
-            'resourceLocator' => [
-                'strategy' => 'hello',
-            ],
             'localizations' => [
                 ['foo'],
             ],
@@ -77,7 +74,6 @@ class PortalTest extends \PHPUnit_Framework_TestCase
 
         $this->portal->addEnvironment($this->environment->reveal());
         $this->portal->addLocalization($this->localization->reveal());
-        $this->portal->setResourceLocatorStrategy($expected['resourceLocator']['strategy']);
         $this->portal->setName($expected['name']);
         $this->portal->setKey($expected['key']);
 

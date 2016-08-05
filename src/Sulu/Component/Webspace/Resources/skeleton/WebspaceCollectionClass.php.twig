@@ -76,6 +76,7 @@ class {{ cache_class }} extends {{ base_class }}
         $navigation = new Navigation();
 {% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ _self.renderArray(context.metadata) }}));
 {% endfor %}        $webspace->setNavigation($navigation);
+        $webspace->setResourceLocatorStrategy('{{ webspace.resourceLocator.strategy }}');
 
 {% for portal in webspace.portals %}
 
@@ -83,7 +84,6 @@ class {{ cache_class }} extends {{ base_class }}
         $portal = new Portal();
         $portal->setName('{{ portal.name }}');
         $portal->setKey('{{ portal.key }}');
-        $portal->setResourceLocatorStrategy('{{ portal.resourceLocator.strategy }}');
         $portal->setWebspace($webspace);
 {% for localization in portal.localizations %}
 
