@@ -38,7 +38,8 @@ define(['filtersutil/toolbarExtensionHandler', 'css!suluresourcecss/main'], func
             sandbox.mvc.routes.push({
                 route: 'resource/filters/:type',
                 callback: function(type) {
-                    return '<div data-aura-component="filters@suluresource" data-aura-display="list" data-aura-type="' + type + '"/>';
+                    var locale = app.sandbox.sulu.getDefaultContentLocale();
+                    return '<div data-aura-component="filters@suluresource" data-aura-display="list" data-aura-type="' + type + '" data-aura-locale="' + locale + '"/>';
                 }
             });
 

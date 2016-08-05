@@ -83,12 +83,13 @@ define([
         startDatagrid: function() {
             var security = Config.get('sulu_security.contexts')['sulu.webspace_settings.' + this.data.key + '.custom-urls'],
                 buttons = {},
+                locale = this.sandbox.sulu.getDefaultContentLocale(),
                 components = [
                     {
                         name: 'datagrid@husky',
                         options: {
                             el: '#webspace-custom-url-list',
-                            url: CustomUrlManager.generateUrl(this.data, null, null),
+                            url: CustomUrlManager.generateUrl(this.data, null, null) + '?locale=' + locale,
                             resultKey: 'custom-urls',
                             actionCallback: this.edit.bind(this),
                             pagination: 'infinite-scroll',

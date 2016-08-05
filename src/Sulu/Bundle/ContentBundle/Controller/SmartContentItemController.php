@@ -43,7 +43,7 @@ class SmartContentItemController extends RestController
         $filters = array_filter($filters);
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace'),
-            'locale' => $this->getRequestParameter($request, 'locale', true),
+            'locale' => $this->getLocale($request),
         ];
 
         // resolve tags if they exists in filters
@@ -93,5 +93,13 @@ class SmartContentItemController extends RestController
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return $this->getRequestParameter($request, 'locale', true);
     }
 }

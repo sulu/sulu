@@ -19,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\DQL\Cast;
 use Sulu\Component\Rest\Exception\InvalidHashException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -96,6 +97,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     'exception' => [
                         'enabled' => true,
                         'codes' => [
+                            MissingParameterException::class => 400,
                             InvalidHashException::class => 409,
                             ObjectNotSupportedException::class => 406,
                         ],

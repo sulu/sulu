@@ -63,6 +63,7 @@ define([
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit');
+            this.sandbox.emit('husky.data-navigation.collections.set-locale', UserSettingsManager.getMediaLocale());
             this.updateDataNavigationAddButton();
 
             this.bindCustomEvents();
@@ -152,7 +153,10 @@ define([
          */
         startDatagrid: function() {
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'media', '/admin/api/media/fields',
+            var locale = UserSettingsManager.getMediaLocale();
+            this.sandbox.sulu.initListToolbarAndList.call(this,
+                'media',
+                '/admin/api/media/fields?locale=' + locale,
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
@@ -162,7 +166,7 @@ define([
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale(),
+                    url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + locale,
                     searchFields: ['name', 'title', 'description'],
                     view: UserSettingsManager.getMediaListView(),
                     pagination: UserSettingsManager.getMediaListPagination(),
@@ -195,7 +199,7 @@ define([
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
                             emptyIcon: 'fa-file-o',
-                            locale: UserSettingsManager.getMediaLocale()
+                            locale: locale
                         }
                     },
                     paginationOptions: {

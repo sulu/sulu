@@ -45,7 +45,10 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     {
         // TODO pagination
 
-        $result = $this->get('sulu_custom_urls.manager')->findList($webspaceKey, $this->getLocale($request));
+        $result = $this->get('sulu_custom_urls.manager')->findList(
+            $webspaceKey,
+            $this->getRequestParameter($request, 'locale', true)
+        );
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($result, self::$relationName),
@@ -67,7 +70,10 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function getAction($webspaceKey, $uuid, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->find($uuid, $this->getLocale($request));
+        $document = $this->get('sulu_custom_urls.manager')->find(
+            $uuid,
+            $this->getRequestParameter($request, 'locale', true)
+        );
 
         // FIXME without this target-document will not be loaded (for serialization)
         // - issue https://github.com/sulu-io/sulu-document-manager/issues/71
@@ -95,7 +101,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         $document = $this->get('sulu_custom_urls.manager')->create(
             $webspaceKey,
             $request->request->all(),
-            $this->getLocale($request)
+            $this->getRequestParameter($request, 'targetLocale', true)
         );
         $this->get('sulu_document_manager.document_manager')->flush();
 
@@ -122,7 +128,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         $document = $manager->save(
             $uuid,
             $request->request->all(),
-            $this->getLocale($request)
+            $this->getRequestParameter($request, 'targetLocale', true)
         );
         $manager->invalidate($document);
         $this->get('sulu_document_manager.document_manager')->flush();
@@ -205,5 +211,13 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspaceKey'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return;
     }
 }

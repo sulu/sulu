@@ -29,8 +29,7 @@ define([
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            instanceName: '',
-            locale: Husky.sulu.user.locale
+            instanceName: ''
         },
 
         constants = {
@@ -87,7 +86,9 @@ define([
          */
         initialize: function() {
             // extend defaults with options
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.options = this.sandbox.util.extend(true, {
+                locale: this.sandbox.sulu.getDefaultContentLocale()
+            }, defaults, this.options);
 
             if (!this.options.mediaIds) {
                 throw new Error('media-ids are not defined');
@@ -232,6 +233,7 @@ define([
             }));
 
             $categories = this.sandbox.dom.createElement(_.template(categoriesTemplate, {
+                categoryLocale: this.options.locale,
                 media: this.media,
                 translate: this.sandbox.translate
             }));

@@ -21,7 +21,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                 form: form,
                 urlList: '<div><div id="webspace-custom-urls-url-list-toolbar"/><div id="webspace-custom-urls-url-list"/></div>',
                 skeleton: '<div id="webspace-custom-urls-overlay"/>',
-                url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>',
+                url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>?locale=<%= locale %>',
                 routeUrl: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls/<%= id %>/routes?ids=<%= ids.join(",") %>'
             },
             translations: {
@@ -475,7 +475,11 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
             }
 
             this.sandbox.util.load(
-                this.templates.url({webspaceKey: this.options.webspace.key, id: this.options.id})
+                this.templates.url({
+                    webspaceKey: this.options.webspace.key,
+                    id: this.options.id,
+                    locale: this.sandbox.sulu.getDefaultContentLocale()
+                })
             ).then(function(data) {
                 deferred.resolve(data);
             });

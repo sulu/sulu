@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2676 [CoreBundle]          removed the user's system language as the default content language
     * BUGFIX      #2751 [ContentBundle]       Fixed publishing for the settings tab
     * ENHANCEMENT #2687 [ContentBundle]       Made move- and copy-overlay width responsive
     * BUGFIX      #2708 [CategoryBundle]      Fixed locale bug for category keywords

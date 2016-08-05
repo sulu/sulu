@@ -114,7 +114,9 @@ define([
                 media.set({id: mediaId});
 
                 media.fetch({
-                    data: (!!locale) ? {locale: locale} : null,
+                    data: {
+                        locale: locale
+                    },
                     success: function(response) {
                         Mediator.emit('sulu.medias.media.loaded', mediaId);
                         promise.resolve(response.toJSON());

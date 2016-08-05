@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/collection-manager', 'services/husky/mediator'], function(CollectionManager, Mediator) {
+define([
+    'services/sulumedia/collection-manager',
+    'services/sulumedia/user-settings-manager',
+    'services/husky/mediator'
+], function(CollectionManager, UserSettingsManager, Mediator) {
 
     'use strict';
 
@@ -114,6 +118,7 @@ define(['services/sulumedia/collection-manager', 'services/husky/mediator'], fun
         addCollection: function() {
             var collection = this.sandbox.form.getData(constants.newFormSelector);
             collection.parent = this.options.parent;
+            collection.locale = UserSettingsManager.getMediaLocale();
 
             CollectionManager.save(collection).done(function(collection) {
                 Mediator.emit('sulu.media.collection-create.created', collection);

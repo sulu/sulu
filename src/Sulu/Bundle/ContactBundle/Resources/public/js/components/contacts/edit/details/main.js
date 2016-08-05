@@ -93,7 +93,9 @@ define([
         render: function() {
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form', {
+                categoryLocale: this.sandbox.sulu.getDefaultContentLocale()
+            }));
             this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
             var formData = this.initContactData();
@@ -152,7 +154,7 @@ define([
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.contactAvatarCollection;
 
-                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.getDefaultContentLocale());
                 
                 // if possible, change the title of the avatar to the name of the contact
                 if (!!data.fullName) {

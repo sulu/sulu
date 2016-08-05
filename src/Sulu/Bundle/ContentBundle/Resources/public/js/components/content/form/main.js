@@ -191,7 +191,9 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                     content: this.data,
                     options: this.options
                 },
-                context = this.sandbox.util.extend({}, defaults),
+                context = this.sandbox.util.extend({}, defaults, {
+                    categoryLocale: this.options.language
+                }),
                 tpl = this.sandbox.util.template(template, context);
 
             this.sandbox.dom.html(this.formId, tpl);
