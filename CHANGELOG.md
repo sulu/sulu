@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2760 [MediaBundle]         Added missing locale to media move action
     * ENHANCEMENT #2759 [ContentBundle]       Fixed ok button translation for smart content overlay
     * ENHANCEMENT #2755 [CoreBundle]          Extended path replacers
     * BUGFIX      #2676 [CoreBundle]          Removed the user's system language as the default content language
