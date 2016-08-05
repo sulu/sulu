@@ -1,5 +1,5 @@
 {% block main %}
-{{ block('pages') }}
+    {{ block('pages') }}
 {% endblock main %}
 
 {% if false %} {# avoid output of block directly #}
@@ -7,6 +7,7 @@
     {%- block pages -%}
         {%- for document in documents -%}
             {% spaceless %}
+                {% set settings = document.settings %}
                 {% set content = document.content %}
                 {% set extensions = document.extensions %}
                 {% set prefix = '' %}
@@ -16,9 +17,9 @@
 
     {# Output page #}
     {% block page %}
-        {{- block('template_model') -}}
         {{- block('content') -}}
         {{- block('extensions') -}}
+        {{- block('settings') -}}
     {% endblock page %}
 
     {# Output content #}
@@ -38,6 +39,12 @@
         {%- endfor -%}
     {%- endblock extensions -%}
 
+    {# Output settings #}
+    {%- block settings -%}
+        {% set properties = settings %}
+        {{- block('properties') -}}
+    {%- endblock settings -%}
+
     {# Output properties #}
     {%- block properties -%}
         {%- for property in properties -%}
@@ -55,16 +62,6 @@
             {%- endif -%}
         {%- endfor -%}
     {%- endblock properties -%}
-
-    {# Output template #}
-    {%- block template_model -%}
-        {% spaceless %}
-            {% set name = 'template' %}
-            {% set options = {translate: false} %}
-            {% set value = document.structureType %}
-            {% set type = '' %}
-        {% endspaceless %}{{- block('view') -}}
-    {%- endblock template_model -%}
 
     {# Output model #}
     {%- block model -%}

@@ -56,7 +56,7 @@ class Webspace implements WebspaceInterface
     /**
      * @var WebspaceFormatImportInterface[]
      */
-    protected $fileParser = [];
+    protected $formatFilePaths = [];
 
     /**
      * @var ContentImportManagerInterface
@@ -97,7 +97,7 @@ class Webspace implements WebspaceInterface
      */
     public function add($service, $format)
     {
-        $this->fileParser[$format] = $service;
+        $this->formatFilePaths[$format] = $service;
     }
 
     /**
@@ -110,6 +110,7 @@ class Webspace implements WebspaceInterface
      * @param ExtensionManagerInterface $extensionManager
      * @param ContentImportManagerInterface $contentImportManager
      * @param LoggerInterface $logger
+     * @param WebspaceFormatImportInterface $xliff12
      */
     public function __construct(
         DocumentManager $documentManager,
@@ -120,7 +121,8 @@ class Webspace implements WebspaceInterface
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ContentImportManagerInterface $contentImportManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        WebspaceFormatImportInterface $xliff12
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -131,6 +133,7 @@ class Webspace implements WebspaceInterface
         $this->extensionManager = $extensionManager;
         $this->contentImportManager = $contentImportManager;
         $this->logger = $logger;
+        $this->add($xliff12, '1.2.xliff');
     }
 
     /**
@@ -427,11 +430,11 @@ class Webspace implements WebspaceInterface
      */
     protected function getParser($format)
     {
-        if (!isset($this->fileParser[$format])) {
+        if (!isset($this->formatFilePaths[$format])) {
             throw new WebspaceFormatImporterNotFoundException($format);
         }
 
-        return $this->fileParser[$format];
+        return $this->formatFilePaths[$format];
     }
 
     /**

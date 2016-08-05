@@ -27,7 +27,6 @@ class SuluContentBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new ContentExportCompilerPass());
-        $container->addCompilerPass(new ContentImportCompilerPass());
         $container->addCompilerPass(new SecurityPass());
         $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
         $container->addCompilerPass(new WebspacesPass());

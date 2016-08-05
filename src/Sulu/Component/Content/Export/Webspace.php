@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,6 +16,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -43,6 +45,11 @@ class Webspace implements WebspaceInterface
     protected $structureManager;
 
     /**
+     * @var ExtensionManagerInterface
+     */
+    protected $extensionManager;
+
+    /**
      * @var ContentExportManagerInterface
      */
     protected $contentExportManager;
@@ -57,6 +64,7 @@ class Webspace implements WebspaceInterface
      * @param DocumentManager $documentManager
      * @param DocumentInspector $documentInspector
      * @param StructureManagerInterface $structureManager
+     * @param ExtensionManagerInterface $extensionManager
      * @param ContentExportManagerInterface $contentExportManager
      * @param array $formatFilePaths
      */
@@ -65,6 +73,7 @@ class Webspace implements WebspaceInterface
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ContentExportManagerInterface $contentExportManager,
         array $formatFilePaths
     ) {
@@ -72,6 +81,7 @@ class Webspace implements WebspaceInterface
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->contentExportManager = $contentExportManager;
         $this->formatFilePaths = $formatFilePaths;
     }
@@ -132,12 +142,13 @@ class Webspace implements WebspaceInterface
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
             $extensionData = $this->getExtensionData($document, $format);
+            $settingData = $this->getSettingData($document, $format);
 
             $documentData[] = [
                 'uuid' => $document->getUuid(),
                 'locale' => $document->getLocale(),
-                'structureType' => $document->getStructureType(),
                 'content' => $contentData,
+                'settings' => $settingData,
                 'extensions' => $extensionData,
             ];
         }
@@ -185,9 +196,7 @@ class Webspace implements WebspaceInterface
         $contentData = [];
 
         foreach ($properties as $property) {
-            if (
-                $this->contentExportManager->hasExport($property->getType(), $format)
-            ) {
+            if ($this->contentExportManager->hasExport($property->getType(), $format)) {
                 $propertyValue = $propertyValues[$property->getName()];
                 if ($property instanceof BlockMetadata) {
                     $data = $this->getBlockPropertyData($property, $propertyValue, $format);
@@ -211,12 +220,12 @@ class Webspace implements WebspaceInterface
      */
     protected function getPropertyData(PropertyMetadata $property, $propertyValue, $format)
     {
-        return [
-            'name' => $property->getName(),
-            'value' => $this->contentExportManager->export($property->getType(), $propertyValue),
-            'type' => $property->getType(),
-            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
-        ];
+        return $this->createProperty(
+            $property->getName(),
+            $this->contentExportManager->export($property->getType(), $propertyValue),
+            $this->contentExportManager->getOptions($property->getType(), $format),
+            $property->getType()
+        );
     }
 
     /**
@@ -241,22 +250,49 @@ class Webspace implements WebspaceInterface
                 $format
             );
 
-            $block['type'] = [
-                'name' => 'type',
-                'value' => $blockType,
-                'type' => $property->getType() . '_type',
-                'options' => $this->contentExportManager->getOptions($property->getType(), $format),
-            ];
+            $block['type'] = $this->createProperty(
+                'type',
+                $blockType,
+                $this->contentExportManager->getOptions($property->getType(), $format),
+                $property->getType() . '_type'
+            );
 
             $children[] = $block;
         }
 
-        return [
-            'name' => $property->getName(),
-            'type' => $property->getType(),
-            'children' => $children,
-            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
+        return $this->createProperty(
+            $property->getName(),
+            null,
+            $this->contentExportManager->getOptions($property->getType(), $format),
+            $property->getType(),
+            $children
+        );
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @param array $options
+     * @param string $type
+     * @param array $children
+     *
+     * @return array
+     */
+    protected function createProperty($name, $value = null, $options = [], $type = '', $children = null)
+    {
+        $property = [
+            'name' => $name,
+            'type' => $type,
+            'options' => $options,
         ];
+
+        if ($children) {
+            $property['children'] = $children;
+        } else {
+            $property['value'] = $value;
+        }
+
+        return $property;
     }
 
     /**
@@ -271,7 +307,7 @@ class Webspace implements WebspaceInterface
 
         foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
             /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */
-            $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+            $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
 
             if ($extension instanceof ExportExtensionInterface) {
                 $extensionData[$extensionName] = $extension->export($extensionProperties, $format);
@@ -279,6 +315,77 @@ class Webspace implements WebspaceInterface
         }
 
         return $extensionData;
+    }
+
+    /**
+     * @param BasePageDocument $document
+     * @param string $format
+     *
+     * @return array
+     */
+    protected function getSettingData(BasePageDocument $document, $format)
+    {
+        if ($created = $document->getCreated()) {
+            $created = $created->format('c');
+        }
+
+        if ($changed = $document->getChanged()) {
+            $changed = $changed->format('c');
+        }
+
+        if ($published = $document->getPublished()) {
+            $published = $published->format('c');
+        }
+
+        $settingOptions = [];
+        if ($format === '1.2.xliff') {
+            $settingOptions = ['translate' => false];
+        }
+
+        return [
+            'structureType' => $this->createProperty('structureType', $document->getStructureType(), $settingOptions),
+            'published' => $this->createProperty('published', $published, $settingOptions),
+            'created' => $this->createProperty('created', $created, $settingOptions),
+            'changed' => $this->createProperty('changed', $changed, $settingOptions),
+            'creator' => $this->createProperty('creator', $document->getCreator(), $settingOptions),
+            'changer' => $this->createProperty('changer', $document->getChanger(), $settingOptions),
+            'locale' => $this->createProperty('locale', $document->getLocale(), $settingOptions),
+            'navigationContexts' => $this->createProperty(
+                'navigationContexts',
+                json_encode($document->getNavigationContexts()),
+                $settingOptions
+            ),
+            'permissions' => $this->createProperty(
+                'permissions',
+                json_encode($document->getPermissions()),
+                $settingOptions
+            ),
+            'shadowLocale' => $this->createProperty('shadowLocale', $document->getShadowLocale(), $settingOptions),
+            'originalLocale' => $this->createProperty(
+                'originalLocale',
+                $document->getOriginalLocale(),
+                $settingOptions
+            ),
+            'resourceSegment' => $this->createProperty(
+                'resourceSegment',
+                $document->getResourceSegment(),
+                $settingOptions
+            ),
+            'webspaceName' => $this->createProperty('webspaceName', $document->getWebspaceName(), $settingOptions),
+            'redirectExternal' => $this->createProperty(
+                'redirectExternal',
+                $document->getRedirectExternal(),
+                $settingOptions
+            ),
+            'redirectType' => $this->createProperty('redirectType', $document->getRedirectType(), $settingOptions),
+            'redirectTarget' => $this->createProperty(
+                'redirectTarget',
+                $document->getRedirectTarget(),
+                $settingOptions
+            ),
+            'workflowStage' => $this->createProperty('workflowStage', $document->getWorkflowStage(), $settingOptions),
+            'path' => $this->createProperty('path', $document->getPath(), $settingOptions),
+        ];
     }
 
     /**
@@ -377,7 +484,7 @@ class Webspace implements WebspaceInterface
             }
 
             if (!empty($wheres)) {
-                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ', $wheres) . ')';
+                return ($not ? 'NOT ' : '') . '(' . implode(' OR ', $wheres) . ')';
             }
         }
     }

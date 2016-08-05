@@ -17,6 +17,7 @@ use Sulu\Bundle\LocationBundle\Map\MapManager;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Symfony\Component\Intl\Intl;
 use Sulu\Component\Content\ContentTypeExportInterface;
 

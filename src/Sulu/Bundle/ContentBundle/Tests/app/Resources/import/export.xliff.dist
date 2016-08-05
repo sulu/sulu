@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <!-- WebspaceKey: sulu_lo -->
-    <file source-language="de" datatype="plaintext" original="f7df9533-daa0-45b3-ab52-54ca30991bc0">
+    <file source-language="de" datatype="plaintext" original="%uuid_page_0%">
         <body>
             <!-- title: text_line -->
             <trans-unit id="0" resname="title">
@@ -214,7 +214,7 @@
             </trans-unit>
         </body>
     </file>
-        <file source-language="de" datatype="plaintext" original="f7df9533-daa0-45b3-ab52-54ca30991bc1">
+        <file source-language="de" datatype="plaintext" original="%uuid_page_1%">
         <body>
             <!-- title: text_line -->
             <trans-unit id="36" resname="title">

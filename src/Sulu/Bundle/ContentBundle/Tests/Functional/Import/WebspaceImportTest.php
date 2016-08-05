@@ -11,6 +11,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Import;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests for the Webspace Export class.
@@ -39,6 +40,7 @@ class WebspaceImportTest extends SuluTestCase
     public function testImport12Xliff()
     {
         $this->prepareData();
+        $this->prepareImportData();
 
         $importData = [
             'webspaceKey' => 'sulu_io',
@@ -60,17 +62,44 @@ class WebspaceImportTest extends SuluTestCase
             $successes,
             2
         );
+
+        $this->removeImportFile();
+    }
+
+    private function removeImportFile()
+    {
+        $fs = new Filesystem();
+        $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
+
+        $fs->remove($path);
+    }
+
+    private function prepareImportData()
+    {
+        $fs = new Filesystem();
+        $distPath = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff.dist';
+        $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
+
+        try {
+            $fs->copy($distPath, $path);
+
+            $distContent = file_get_contents($path, true);
+            $newContent = str_replace('%uuid_page_0%', $this->pages[0]->getUuid(), $distContent);
+            $newContent = str_replace('%uuid_page_1%', $this->pages[1]->getUuid(), $distContent);
+
+            file_put_contents($path, $newContent);
+        } catch (IOExceptionInterface $e) {
+            echo "An error occurred while copy distfile ".$e->getPath();
+        }
     }
 
     private function prepareData()
     {
         $this->pages[0] = $this->createPage([
-            'title' => 'test 0',
-            'uuid' => 'f7df9533-daa0-45b3-ab52-54ca30991bc0'
+            'title' => 'test 0'
         ]);
         $this->pages[1] = $this->createPage([
-            'title' => 'test 1',
-            'uuid' => 'f7df9533-daa0-45b3-ab52-54ca30991bc1'
+            'title' => 'test 1'
         ]);
 
         // TODO: set correct uuid from export-file
@@ -80,8 +109,6 @@ class WebspaceImportTest extends SuluTestCase
 
         $this->documentManager->persist($this->pages[1], 'de');
         $this->documentManager->flush();
-
-        var_dump($this->pages[0]->getUuid());
     }
 
     /**
