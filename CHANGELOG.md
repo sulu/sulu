@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2754 [ContentBundle]       Fixed PHPCR illegal characters exception
     * BUGFIX      #2751 [ContentBundle]       Fixed publishing for the settings tab
     * ENHANCEMENT #2687 [ContentBundle]       Made move- and copy-overlay width responsive
     * BUGFIX      #2708 [CategoryBundle]      Fixed locale bug for category keywords
