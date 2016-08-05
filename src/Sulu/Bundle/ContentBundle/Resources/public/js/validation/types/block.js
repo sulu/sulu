@@ -228,7 +228,7 @@ define([
                     if (this.getMinOccurs() !== this.getMaxOccurs()) {
                         this.initSelectComponent(selectData);
                     } else {
-                        Husky.dom.remove(this.$addButton);
+                        this.$addButton.remove();
                     }
 
                     this.bindDomEvents();
@@ -240,7 +240,7 @@ define([
                 },
 
                 getChildren: function() {
-                    return this.$el.children();
+                    return this.$el.children().filter(':not(script)');
                 },
 
                 getMinOccurs: function() {
@@ -312,6 +312,8 @@ define([
                                     $element = $removeButton.closest('.' + this.propertyName + '-element');
 
                                 if (this.canRemove()) {
+                                    Husky.stop($element.find('*'));
+                                    Husky.stop($element);
                                     $element.remove();
                                     this.checkFullAndEmpty();
                                 }
@@ -486,7 +488,7 @@ define([
 
                 getValue: function() {
                     var data = [];
-                    Husky.dom.children(this.$el).filter(':not(script)').each(function(index, $element) {
+                    this.$el.children().filter(':not(script)').each(function(index, $element) {
                         data.push(Husky.form.getObject($element).mapper.getData());
                     });
 
