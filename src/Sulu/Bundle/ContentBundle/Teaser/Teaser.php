@@ -174,4 +174,43 @@ class Teaser
     {
         return $this->attributes;
     }
+
+    /**
+     * Merges given data with this teaser.
+     *
+     * @param array $item
+     *
+     * @return Teaser
+     */
+    public function merge(array $item)
+    {
+        return new self(
+            $this->id,
+            $this->type,
+            $this->locale,
+            $this->getValue('title', $item, $this->getTitle()),
+            $this->getValue('description', $item, $this->getDescription()),
+            $this->getValue('moreText', $item, $this->getMoreText()),
+            $this->getValue('url', $item, $this->getUrl()),
+            $this->getValue('mediaId', $item, $this->getMediaId())
+        );
+    }
+
+    /**
+     * Returns array-value by name or default value.
+     *
+     * @param string $name
+     * @param array $item
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    private function getValue($name, array $item, $default)
+    {
+        if (!array_key_exists($name, $item)) {
+            return $default;
+        }
+
+        return $item[$name];
+    }
 }

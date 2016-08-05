@@ -44,7 +44,7 @@ class TeaserManager implements TeaserManagerInterface
         list($sortedIds, $positions) = $this->sortItems($items);
         foreach ($sortedIds as $type => $typeIds) {
             $teasers = $this->providerPool->getProvider($type)->find($typeIds, $locale);
-            $result = $this->sortTeasers($teasers, $result, $positions);
+            $result = $this->sortTeasers($teasers, $result, $positions, $items);
         }
 
         ksort($result);
@@ -61,10 +61,16 @@ class TeaserManager implements TeaserManagerInterface
      *
      * @return array
      */
-    private function sortTeasers(array $teasers, array $result, array $positions)
+    private function sortTeasers(array $teasers, array $result, array $positions, array $items)
     {
         foreach ($teasers as $teaser) {
-            $result[$positions[sprintf('%s;%s', $teaser->getType(), $teaser->getId())]] = $teaser;
+            $index = $positions[sprintf('%s;%s', $teaser->getType(), $teaser->getId())];
+            $result[$index] = $teaser;
+
+            $item = $items[$index];
+            if (['type', 'id'] !== array_keys($item)) {
+                $result[$index] = $result[$index]->merge($item);
+            }
         }
 
         return $result;
