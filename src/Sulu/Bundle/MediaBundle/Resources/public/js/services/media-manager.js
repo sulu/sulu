@@ -48,19 +48,22 @@ define([
          * Move media to collection
          * @param mediaId media to move
          * @param collectionId collection to move media to
+         * @param locale the locale for the return value of the collection
          * @returns {*}
          */
-        moveMedia = function(mediaId, collectionId) {
+        moveMedia = function(mediaId, collectionId, locale) {
             var promise = $.Deferred();
 
-            Util.save('/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId, 'POST')
-                .done(function() {
-                    Mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
-                    Mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
-                    promise.resolve();
-                }.bind(this)).fail(function() {
-                    promise.reject();
-                }.bind(this));
+            Util.save(
+                '/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId + '&locale=' + locale,
+                'POST'
+            ).done(function() {
+                Mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
+                Mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
+                promise.resolve();
+            }.bind(this)).fail(function() {
+                promise.reject();
+            }.bind(this));
 
 
             return promise;
@@ -182,9 +185,10 @@ define([
          * Move medias to a collection
          * @param mediaIds
          * @param collectionId
+         * @param locale The locale for the return value of the media
          * @returns {*}
          */
-        move: function(mediaIds, collectionId) {
+        move: function(mediaIds, collectionId, locale) {
             if (!$.isArray(mediaIds)) {
                 mediaIds = [mediaIds];
             }
@@ -193,7 +197,7 @@ define([
                 promise = $.Deferred();
 
             Util.each(mediaIds, function(index, mediaId) {
-                requests.push(moveMedia(mediaId, collectionId));
+                requests.push(moveMedia(mediaId, collectionId, locale));
             }.bind(this));
 
             $.when.apply(null, requests).done(function() {

@@ -369,7 +369,7 @@ define([
          */
         moveMedia: function(collection) {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                MediaManager.move(ids, collection.id);
+                MediaManager.move(ids, collection.id, UserSettingsManager.getMediaLocale());
             }.bind(this));
         },
 
