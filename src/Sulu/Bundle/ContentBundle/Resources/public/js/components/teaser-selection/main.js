@@ -13,7 +13,7 @@
  * @class TeaserSelection
  * @constructor
  */
-define(['underscore'], function(_) {
+define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, itemForm) {
 
     'use strict';
 
@@ -38,15 +38,24 @@ define(['underscore'], function(_) {
             },
             templates: {
                 url: '/admin/api/teasers?ids=<%= ids.join(",") %>',
-                contentItem: '<% if (!!media) { %><span class="image"><img src="<%= media %>"/></span><% } %><span class="value"><%= title %></span>',
-                presentAsButton: '<span class="fa-eye present-as teaser-selection icon right border"><span class="selected-text"></span><span class="dropdown-toggle"></span></span>'
+                item: item,
+                itemForm: itemForm,
+                presentAsButton: '<span class="fa-eye present-as icon right border"><span class="selected-text"></span><span class="dropdown-toggle"></span></span>'
+            },
+            translations: {
+                edit: 'sulu-content.teaser.edit',
+                edited: 'sulu-content.teaser.edited',
+                reset: 'sulu-content.teaser.reset',
+                apply: 'sulu-content.teaser.apply',
+                cancel: 'sulu-content.teaser.cancel',
+                uploadDescription: 'sulu-content.teaser.upload-description'
             }
         },
 
         renderDropdown = function() {
             var $container = $('<div/>');
             this.$addButton.parent().append($container);
-            this.$addButton.append('<span class="dropdown-toggle teaser-selection"/>');
+            this.$addButton.append('<span class="dropdown-toggle"/>');
 
             this.sandbox.start([
                 {
@@ -77,6 +86,7 @@ define(['underscore'], function(_) {
             _.each(this.options.presentAs, function(item) {
                 if (item.id === presentAs) {
                     $presentAsText.text(item.name);
+
                     return false;
                 }
             });
@@ -151,7 +161,7 @@ define(['underscore'], function(_) {
                                     data.push(item);
                                 },
                                 deselectCallback: function(item) {
-                                    data = _.without(data,  _.findWhere(data, item));
+                                    data = _.without(data, _.findWhere(data, item));
                                 }
                             },
                             type.componentOptions
@@ -159,6 +169,110 @@ define(['underscore'], function(_) {
                     }
                 ]);
             }.bind(this));
+        },
+
+        bindDomEvents = function() {
+            this.$el.on('click', '.edit-teaser', function(e) {
+                showEdit.call(this, $(e.currentTarget).parents('li'));
+
+                return false;
+            }.bind(this));
+
+            this.$el.on('click', '.cancel-teaser-edit', function(e) {
+                hideEdit.call(this, $(e.currentTarget).parents('li'));
+
+                return false;
+            }.bind(this));
+
+            this.$el.on('click', '.reset-teaser-edit', function(e) {
+                reset.call(this, $(e.currentTarget).parents('li'));
+
+                return false;
+            }.bind(this));
+
+            this.$el.on('click', '.apply-teaser-edit', function(e) {
+                apply.call(this, $(e.currentTarget).parents('li'));
+
+                return false;
+            }.bind(this));
+        },
+
+        showEdit = function($element) {
+            var $view = $element.find('.view'),
+                $edit = $element.find('.edit'),
+                item = this.getItem($element.data('id')),
+                apiItem = this.getApiItem($element.data('id')),
+                $descriptionContainer = $edit.find('.description-container'),
+                $editorContainer = $('<textarea class="form-element component description"></textarea>');
+
+            $descriptionContainer.children().remove();
+            $descriptionContainer.append($editorContainer);
+
+            $view.addClass('hidden');
+            $edit.removeClass('hidden');
+
+            $edit.find('.title').val(item.title || '');
+            $edit.find('.description').val(item.description || '');
+            $edit.find('.moreText').val(item.moreText || '');
+
+            this.sandbox.start([
+                {
+                    name: 'ckeditor@husky',
+                    options: {
+                        el: $editorContainer,
+                        placeholder: this.cleanupText(apiItem.description),
+                        autoStart: false
+                    }
+                }
+            ]);
+        },
+
+        hideEdit = function($element) {
+            $element.find('.view').removeClass('hidden');
+            $element.find('.edit').addClass('hidden');
+
+            stopEditComponents.call(this, $element);
+        },
+
+        apply = function($element) {
+            var $view = $element.find('.view'),
+                $edit = $element.find('.edit'),
+                item = {
+                    title: $edit.find('.title').val() || null,
+                    description: $edit.find('.description').val() || null,
+                    moreText: $edit.find('.moreText').val() || null
+                };
+
+            item = _.omit(item, _.filter(_.keys(item), function(key) {
+                return item[key] === null;
+            }));
+
+            hideEdit.call(this, $element);
+
+            item = this.mergeItem($element.data('id'), item);
+            item = _.defaults(item, this.getApiItem($element.data('id')));
+
+            $view.find('.title').text(item.title);
+            $view.find('.description').text(this.cleanupText(item.description));
+        },
+
+        reset = function($element) {
+            var $view = $element.find('.view'),
+                id = $element.data('id'),
+                apiItem = this.getApiItem(id),
+                item = this.getItem(id);
+
+            hideEdit.call(this, $element);
+
+            item = _.omit(item, ['title', 'description', 'moreText', 'mediaId']);
+
+            this.setItem(id, item);
+            $view.find('.title').text(apiItem.title);
+            $view.find('.description').text(this.cleanupText(apiItem.description));
+        },
+
+        stopEditComponents = function($element) {
+            this.sandbox.stop($element.find('.component'));
         };
 
     return {
@@ -166,13 +280,19 @@ define(['underscore'], function(_) {
 
         defaults: defaults,
 
+        apiItems: {},
+
         initialize: function() {
+            this.$el.addClass('teaser-selection');
+
             this.render();
             renderDropdown.call(this);
 
             if (0 < this.options.presentAs.length) {
                 renderPresentAs.call(this);
             }
+
+            bindDomEvents.call(this);
         },
 
         getUrl: function(data) {
@@ -183,8 +303,22 @@ define(['underscore'], function(_) {
             return this.templates.url({ids: ids});
         },
 
+        cleanupText: function(text) {
+            return $('<div>').html('<div>' + text + '</div>').text();
+        },
+
         getItemContent: function(item) {
-            return this.templates.contentItem(item);
+            this.apiItems[item.teaserId] = item;
+            item = _.defaults(this.getItem(item.teaserId), item);
+
+            return this.templates.item(
+                _.defaults({
+                    translations: this.translations,
+                    descriptionText: this.cleanupText(item.description),
+                    types: this.options.types,
+                    translate: this.sandbox.translate
+                }, item)
+            );
         },
 
         sortHandler: function(ids) {
@@ -218,6 +352,55 @@ define(['underscore'], function(_) {
             data.items = items;
 
             this.setData(data, false);
+        },
+
+        getItem: function(id) {
+            var items = this.getData().items || [],
+                parts = id.split(';');
+
+            return _.find(items, function(item) {
+                return item.type === parts[0] && item.id === parts[1];
+            });
+        },
+
+        getApiItem: function(id) {
+            return this.apiItems[id] || null;
+        },
+
+        mergeItem: function(id, item) {
+            var data = this.getData(),
+                items = data.items || [],
+                parts = id.split(';');
+
+            data.items = _.map(items, function(oldItem) {
+                if (oldItem.type !== parts[0] || oldItem.id !== parts[1]) {
+                    return oldItem;
+                }
+
+                return _.defaults(item, oldItem);
+            });
+
+            this.setData(data, false);
+
+            return this.getItem(id);
+        },
+
+        setItem: function(id, item) {
+            var data = this.getData(),
+                items = data.items || [],
+                parts = id.split(';');
+
+            data.items = _.map(items, function(oldItem) {
+                if (oldItem.type !== parts[0] || oldItem.id !== parts[1]) {
+                    return oldItem;
+                }
+
+                return item;
+            });
+
+            this.setData(data, false);
+
+            return this.getItem(id);
         }
     };
 });

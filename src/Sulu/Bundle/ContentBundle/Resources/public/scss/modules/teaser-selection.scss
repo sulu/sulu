@@ -1,9 +1,13 @@
 .teaser-selection {
-    &.dropdown-toggle::after {
+    .white-box .content {
+        max-height: inherit;
+    }
+
+    .dropdown-toggle::after {
         border-top: 6px solid #fff;
     }
 
-    &.present-as.icon {
+    .present-as.icon {
         width: auto;
         padding-left: 10px;
         padding-right: 10px;
@@ -16,5 +20,72 @@
 
     .husky-overlay-container.type-content .overlay-content {
         margin: 0px;
+    }
+
+    .image .image-content {
+        font-size: 50px;
+        color: #ddd;
+        position: relative;
+        top: 5px;
+    }
+
+    .view {
+        .value {
+            float: left;
+            width: 350px;
+
+            .image {
+                float: left;
+            }
+
+            .description {
+                line-height: 14px;
+                margin-top: -10px;
+                margin-bottom: 0;
+                font-size: 12px;
+            }
+        }
+
+        .type {
+            float: left;
+            width: 140px;
+        }
+
+        .options {
+            float: left;
+            line-height: 50px;
+        }
+
+        &::after {
+            clear: both;
+        }
+    }
+
+    .move, .num, .remove {
+        vertical-align: top;
+        line-height: 50px;
+    }
+
+    .remove {
+        top: inherit !important;
+        margin-top: 5px !important;
+    }
+
+    a.btn {
+        display: inline-block;
+    }
+}
+
+.teaser-selection-container {
+    .view, .edit {
+        display: inline-block;
+
+        .hidden {
+            display: none;
+        }
+    }
+
+    .edit {
+        width: 90%;
     }
 }

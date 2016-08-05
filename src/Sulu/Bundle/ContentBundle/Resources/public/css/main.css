@@ -429,21 +429,89 @@
 }
 
 /* line 2, ../scss/modules/teaser-selection.scss */
-.teaser-selection.dropdown-toggle::after {
-  border-top: 6px solid #fff;
+.teaser-selection .white-box .content {
+  max-height: inherit;
 }
 /* line 6, ../scss/modules/teaser-selection.scss */
-.teaser-selection.present-as.icon {
+.teaser-selection .dropdown-toggle::after {
+  border-top: 6px solid #fff;
+}
+/* line 10, ../scss/modules/teaser-selection.scss */
+.teaser-selection .present-as.icon {
   width: auto;
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 11, ../scss/modules/teaser-selection.scss */
-.teaser-selection.present-as.icon .selected-text {
+/* line 15, ../scss/modules/teaser-selection.scss */
+.teaser-selection .present-as.icon .selected-text {
   font-size: 14px;
   padding-left: 5px;
 }
-/* line 17, ../scss/modules/teaser-selection.scss */
+/* line 21, ../scss/modules/teaser-selection.scss */
 .teaser-selection .husky-overlay-container.type-content .overlay-content {
   margin: 0px;
+}
+/* line 25, ../scss/modules/teaser-selection.scss */
+.teaser-selection .image .image-content {
+  font-size: 50px;
+  color: #ddd;
+  position: relative;
+  top: 5px;
+}
+/* line 33, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .value {
+  float: left;
+  width: 350px;
+}
+/* line 37, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .value .image {
+  float: left;
+}
+/* line 41, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .value .description {
+  line-height: 14px;
+  margin-top: -10px;
+  margin-bottom: 0;
+  font-size: 12px;
+}
+/* line 49, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .type {
+  float: left;
+  width: 140px;
+}
+/* line 54, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .options {
+  float: left;
+  line-height: 50px;
+}
+/* line 59, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view::after {
+  clear: both;
+}
+/* line 64, ../scss/modules/teaser-selection.scss */
+.teaser-selection .move, .teaser-selection .num, .teaser-selection .remove {
+  vertical-align: top;
+  line-height: 50px;
+}
+/* line 69, ../scss/modules/teaser-selection.scss */
+.teaser-selection .remove {
+  top: inherit !important;
+  margin-top: 5px !important;
+}
+/* line 74, ../scss/modules/teaser-selection.scss */
+.teaser-selection a.btn {
+  display: inline-block;
+}
+
+/* line 80, ../scss/modules/teaser-selection.scss */
+.teaser-selection-container .view, .teaser-selection-container .edit {
+  display: inline-block;
+}
+/* line 83, ../scss/modules/teaser-selection.scss */
+.teaser-selection-container .view .hidden, .teaser-selection-container .edit .hidden {
+  display: none;
+}
+/* line 88, ../scss/modules/teaser-selection.scss */
+.teaser-selection-container .edit {
+  width: 90%;
 }
