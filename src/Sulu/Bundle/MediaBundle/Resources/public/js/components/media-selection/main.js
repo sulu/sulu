@@ -24,6 +24,7 @@ define(['underscore'], function(_) {
             resultKey: 'media',
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
+            singleSelect: false,
             types: null,
             navigateEvent: 'sulu.router.navigate',
             locale: '',
@@ -75,7 +76,7 @@ define(['underscore'], function(_) {
                 if (fallbackLocale) {
                     content.push('    <span class="badge">', fallbackLocale, '</span>');
                 }
-                
+
                 content.push(
                     '    <span class="title">', title, '</span>',
                     '</a>'
@@ -147,7 +148,8 @@ define(['underscore'], function(_) {
                         return {id: id};
                     }),
                     removeOnClose: false,
-                    autoStart: false,
+                    openOnStart: false,
+                    singleSelect: this.options.singleSelect,
                     removeable: false,
                     types: this.options.types,
                     locale: this.options.locale,

@@ -121,8 +121,6 @@ define([
                                     openOnStart: true,
                                     singleSelect: true,
                                     saveCallback: function(items) {
-                                        sandbox.stop($element);
-
                                         link.id = items[0].id;
                                         link.title = !!link.title ? link.title : items[0].title;
 

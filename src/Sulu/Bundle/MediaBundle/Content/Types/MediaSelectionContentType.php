@@ -48,6 +48,7 @@ class MediaSelectionContentType extends ComplexContentType
         return [
             'types' => new PropertyParameter('types', null),
             'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'top'),
+            'single' => new PropertyParameter('single', false),
             'displayOptions' => new PropertyParameter(
                 'displayOptions',
                 [
@@ -166,7 +167,13 @@ class MediaSelectionContentType extends ComplexContentType
             $this->mediaManager
         );
 
-        return $container->getData();
+        $data = $container->getData();
+
+        if ($params['single']->getValue()) {
+            return isset($data[0]) ? $data[0] : null;
+        }
+
+        return $data;
     }
 
     /**

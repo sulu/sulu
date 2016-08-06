@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2763 [MediaBundle]         Added single media selection to content type
     * BUGFIX      #2760 [MediaBundle]         Added missing locale to media move action
     * ENHANCEMENT #2759 [ContentBundle]       Fixed ok button translation for smart content overlay
     * ENHANCEMENT #2755 [CoreBundle]          Extended path replacers
