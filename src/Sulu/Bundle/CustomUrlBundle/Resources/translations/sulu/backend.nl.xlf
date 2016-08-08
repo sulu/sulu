@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="content-navigation.webspace.custom-url">
+                <source>content-navigation.webspace.custom-url</source>
+                <target>Eigen URL</target>
+            </trans-unit>
+            <trans-unit id="2" resname="custom-urls.webspace.settings.edit.title">
+                <source>custom-urls.webspace.settings.edit.title</source>
+                <target>Eigen URL</target>
+            </trans-unit>
+            <trans-unit id="3" resname="custom-urls.urls-title">
+                <source>custom-urls.urls-title</source>
+                <target>URL Geschiedenis</target>
+            </trans-unit>
+            <trans-unit id="4" resname="custom-urls.activated">
+                <source>custom-urls.activated</source>
+                <target>Geactiveerd</target>
+            </trans-unit>
+            <trans-unit id="5" resname="custom-urls.base-domain">
+                <source>custom-urls.base-domain</source>
+                <target>Basisdomein</target>
+            </trans-unit>
+            <trans-unit id="6" resname="custom-urls.custom-url">
+                <source>custom-urls.custom-url</source>
+                <target>Custom URL</target>
+            </trans-unit>
+            <trans-unit id="7" resname="custom-urls.target">
+                <source>custom-urls.target</source>
+                <target>Doelpagina</target>
+            </trans-unit>
+            <trans-unit id="8" resname="custom-urls.target-locale">
+                <source>custom-urls.target-locale</source>
+                <target>Lokalisatie</target>
+            </trans-unit>
+            <trans-unit id="9" resname="custom-urls.canonical">
+                <source>custom-urls.canonical</source>
+                <target>Canonische URL</target>
+            </trans-unit>
+            <trans-unit id="10" resname="custom-urls.canonical.description">
+                <source>custom-urls.canonical.description</source>
+                 <target>Wanneer canonische URL is ingeschakeld wordt alleen de gelinkte pagina geïndexeerd.</target>
+            </trans-unit>
+            <trans-unit id="11" resname="custom-urls.redirect">
+                <source>custom-urls.redirect</source>
+                <target>Doorverwijspagina</target>
+            </trans-unit>
+            <trans-unit id="12" resname="custom-urls.redirect.description">
+                <source>custom-urls.redirect.description</source>
+                <target>De custom URL zal doorgestuurd worden naar de URL van de gelinkte pagina.</target>
+            </trans-unit>
+            <trans-unit id="13" resname="custom-urls.no-index">
+                <source>custom-urls.no-index</source>
+                <target>No Index</target>
+            </trans-unit>
+            <trans-unit id="14" resname="custom-urls.no-index.description">
+                <source>custom-urls.no-index.description</source>
+                <target>Pagina wordt niet geïndexeerd door zoekmachines.</target>
+            </trans-unit>
+            <trans-unit id="15" resname="custom-urls.no-follow">
+                <source>custom-urls.no-follow</source>
+                <target>No Follow</target>
+            </trans-unit>
+            <trans-unit id="16" resname="custom-urls.no-follow.description">
+                <source>custom-urls.no-follow.description</source>
+                <target>Links op deze pagina worden niet gevolgd door zoekmachines.</target>
+            </trans-unit>
+            <trans-unit id="17" resname="custom-urls.history">
+                <source>custom-urls.history</source>
+                <target>Geschiedenis</target>
+            </trans-unit>
+            <trans-unit id="18" resname="custom-urls.choose-target.cancel">
+                <source>custom-urls.choose-target.cancel</source>
+                <target>Terug</target>
+            </trans-unit>
+            <trans-unit id="19" resname="custom-urls.target-title">
+                <source>custom-urls.target-title</source>
+                <target>Doelpagina (Titel)</target>
+            </trans-unit>
+            <trans-unit id="20" resname="custom-urls.no-target">
+                <source>custom-urls.no-target</source>
+                <target>Doelpagina niet beschikbaar.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="custom-urls.custom-url.default-value">
+                <source>custom-urls.custom-url.default-value</source>
+                <target>Maak een keuze...</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

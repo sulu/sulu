@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2761 [All]                 Added Dutch translation
     * FEATURE     #2748 [AdminBundle]         Added Twig blocks to be able to use inheritance 
 
 * 1.3.0-RC3 (2016-08-08)
