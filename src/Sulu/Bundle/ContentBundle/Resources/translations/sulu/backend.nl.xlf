@@ -182,10 +182,6 @@
                 <source>smart-content.apply</source>
                 <target>Toepassen</target>
             </trans-unit>
-            <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.save">
-                <source>smart-content.save</source>
-                <target>Opslaan</target>
-            </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
                 <source>smart-content.clear</source>
                 <target>Velden resetten</target>
@@ -694,10 +690,6 @@
             <trans-unit id="45" resname="sulu-content.draft-label">
                 <source>sulu-content.draft-label</source>
                <target><![CDATA[Je werkt aan een concept, als laatst: %(changed)s bewaard door <b>%(user)s</b>]]></target>
-            </trans-unit>
-            <trans-unit id="46" resname="sulu-content.unpublish">
-                <source>sulu-content.unpublish</source>
-                <target>Depubliceren</target>
             </trans-unit>
             <trans-unit id="47" resname="labels.error.content-unpublish-desc">
                 <source>labels.error.content-unpublish-desc</source>

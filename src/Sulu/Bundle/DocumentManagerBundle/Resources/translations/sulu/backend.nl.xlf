@@ -14,10 +14,6 @@
                 <source>sulu-document-manager.publish</source>
                 <target>Publiceren</target>
             </trans-unit>
-            <trans-unit id="4" resname="sulu-document-manager.published-shadow">
-                <source>sulu-document-manager.published-shadow</source>
-                <target>De gepubliceerde status wordt bepaald aan de hand van de hoofdpagina.</target>
-            </trans-unit>
             <trans-unit id="5" resname="sulu-document-manager.draft-label">
                 <source>sulu-document-manager.draft-label</source>
                  <target><![CDATA[Je werkt aan een concept, laatst opgeslagen: %(changed)s door <b>%(user)s</b>]]></target>
@@ -25,10 +21,6 @@
             <trans-unit id="6" resname="sulu-document-manager.unpublish">
                 <source>sulu-document-manager.unpublish</source>
                 <target>Depubliceer</target>
-            </trans-unit>
-            <trans-unit id="7" resname="labels.error.unpublish-desc">
-                <source>labels.error.unpublish-desc</source>
-                <target>De pagina kan niet gedepubliceerd worden.</target>
             </trans-unit>
         </body>
     </file>
