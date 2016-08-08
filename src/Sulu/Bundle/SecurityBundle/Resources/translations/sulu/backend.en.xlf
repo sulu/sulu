@@ -126,7 +126,6 @@
                 <source>security.warning</source>
                 <target>To see the changes of the security settings the system has to be reloaded.</target>
             </trans-unit>
-
             <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
                 <source>sulu-security.role.removed</source>
                 <target>Role deleted successfully</target>
@@ -134,6 +133,30 @@
             <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
                 <source>sulu-security.role.saved</source>
                 <target>Role saved successfully</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236l" resname="security.permissions.view">
+                <source>security.permissions.view</source>
+                <target>View</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236z" resname="security.permissions.add">
+                <source>security.permissions.add</source>
+                <target>Add</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236c" resname="security.permissions.edit">
+                <source>security.permissions.edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236q" resname="security.permissions.delete">
+                <source>security.permissions.delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236t" resname="security.permissions.security">
+                <source>security.permissions.security</source>
+                <target>Security</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236x" resname="security.permissions.live">
+                <source>security.permissions.live</source>
+                <target>Live</target>
             </trans-unit>
         </body>
     </file>

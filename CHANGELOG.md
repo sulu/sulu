@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2774 [SecurityBundle]      Added translations to settings user role for hovering single permission
     * BUGFIX      #2798 [ContactBundle]       Contact cards are now ordered correctly and by fullName by default
     * ENHANCEMENT #2835 [CoreBundle]          Used the delegating file loader from symfony instead of own implementation for loading webspace xml files
     * ENHANCEMENT #2831 [RouteBundle]         Improved speed of route-update-command for lots of entities
