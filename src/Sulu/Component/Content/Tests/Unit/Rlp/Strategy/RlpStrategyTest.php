@@ -387,4 +387,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $result = $this->strategy->generateForUuid('test', '123-123-123', 'default', 'de');
         $this->assertEquals('/parent/test', $result);
     }
+
+    public function testGenerateForArabicTitle()
+    {
+        $result = $this->strategy->generate('تیتر متن', '/parent', 'sulu_io', 'de');
+        $this->assertEquals('/parent/', $result);
+    }
 }

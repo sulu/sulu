@@ -211,6 +211,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2401 [MediaBundle]         Fixed slow media queries
     * HOTFIX      #2415 [ContactBundle]       Fixed account contacts api response
     * HOTFIX      #2401 [MediaBundle]         Fixed search in media bundle
+    * HOTFIX      #2400 [ContentBundle]       Allow empty clean title for resource-locator generation
     * HOTFIX      #2381 [ContentBundle]       Fixed auto-name subscriber to rename at the very end of persist
     * HOTFIX      #2388 [Rest]                Fixed bug when applying same sortfield multiple times
     * HOTFIX      #2378 [ContentBundle]       Fixed writing security to page documents

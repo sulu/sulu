@@ -103,8 +103,10 @@ abstract class RlpStrategy implements RlpStrategyInterface
         // cleanup path
         $path = $this->cleaner->cleanup($path, $languageCode);
 
-        // get unique path
-        $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey);
+        if (substr($path, -1, 1) !== '/') {
+            // get unique path
+            $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey);
+        }
 
         return $path;
     }
