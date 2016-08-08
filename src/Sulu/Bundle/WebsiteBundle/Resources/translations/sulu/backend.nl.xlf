@@ -82,6 +82,10 @@
                 <source>website.webspace.settings.site-id</source>
                 <target>Site-ID</target>
             </trans-unit>
+            <trans-unit id="14" resname="website.webspace.settings.type.google_tag_manager">
+                <source>website.webspace.settings.type.google_tag_manager</source>
+                <target>Google tag-manager</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -74,6 +74,10 @@
                 <source>contact.accounts.bankAccounts.edit.label</source>
                 <target>Rekening bewerken</target>
             </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22194" resname="public.locked">
+                <source>public.locked</source>
+                <target>Geblokkeerd</target>
+            </trans-unit>
             <trans-unit id="643c99ff2964652633a5ca2178d22195" resname="contact.accounts.placeOfJurisdiction">
                 <source>contact.accounts.placeOfJurisdiction</source>
                 <target>Jurisdictie</target>
