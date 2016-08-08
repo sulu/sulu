@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <!-- WebspaceKey: sulu_lo -->
-    <file source-language="de" datatype="plaintext" original="%uuid_page_0%">
+    <file source-language="en" datatype="plaintext" original="%uuid_page_0%">
         <body>
             <!-- title: text_line -->
             <trans-unit id="0" resname="title">
-                <source>test 0</source>
+                <source>Parent</source>
                 <target>test 0 impoted</target>
             </trans-unit>
 
             <!-- url: resource_locator -->
             <trans-unit id="1" resname="url" translate="no">
-                <source>/</source>
-                <target>/</target>
+                <source>/parent</source>
+                <target>/parent</target>
             </trans-unit>
 
             <!-- article: text_editor -->
@@ -214,18 +214,18 @@
             </trans-unit>
         </body>
     </file>
-        <file source-language="de" datatype="plaintext" original="%uuid_page_1%">
+        <file source-language="en" datatype="plaintext" original="%uuid_page_1%">
         <body>
             <!-- title: text_line -->
             <trans-unit id="36" resname="title">
-                <source>test 1</source>
+                <source>Child</source>
                 <target>test 1 imported</target>
             </trans-unit>
 
             <!-- url: resource_locator -->
             <trans-unit id="37" resname="url" translate="no">
-                <source></source>
-                <target></target>
+                <source>/child</source>
+                <target>/child</target>
             </trans-unit>
 
 

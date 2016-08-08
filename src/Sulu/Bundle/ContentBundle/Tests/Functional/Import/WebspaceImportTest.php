@@ -11,6 +11,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Import;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -29,19 +30,26 @@ class WebspaceImportTest extends SuluTestCase
     private $pages = [];
     private $webspaceImporter;
 
+    protected $distPath = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff.dist';
+    protected $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
+
     protected function setUp()
     {
-        parent::initPhpcr();
+        $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->parent = $this->documentManager->find('/cmf/sulu_io/contents', 'de');
+        $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
         $this->webspaceImporter = $this->getContainer()->get('sulu_content.import.webspace');
+
+        $this->prepareData();
+        $this->prepareImportData();
+    }
+
+    public function tearDown() {
+        $this->removeImportFile();
     }
 
     public function testImport12Xliff()
     {
-        $this->prepareData();
-        $this->prepareImportData();
-
         $importData = [
             'webspaceKey' => 'sulu_io',
             'locale' => 'en',
@@ -62,32 +70,51 @@ class WebspaceImportTest extends SuluTestCase
             $successes,
             2
         );
+    }
 
-        $this->removeImportFile();
+    public function testImportTitle()
+    {
+        /** @var BasePageDocument $document */
+        $document = $this->documentManager->find(
+            $this->pages[1]->getUuid(),
+            'en',
+            [
+                'type' => 'page',
+                'load_ghost_content' => false,
+            ]
+        );
+
+        var_dump($document->getTitle());
+
+        $this->assertEquals(
+            1,
+            1
+        );
     }
 
     private function removeImportFile()
     {
-        $fs = new Filesystem();
-        $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
+        try {
+            $fs = new Filesystem();
 
-        $fs->remove($path);
+            $fs->remove($this->path);
+        } catch(IOExceptionInterface $e) {
+            echo "An error occurred while creating your directory at ".$e->getPath();
+        }
     }
 
     private function prepareImportData()
     {
         $fs = new Filesystem();
-        $distPath = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff.dist';
-        $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
 
         try {
-            $fs->copy($distPath, $path);
+            $fs->copy($this->distPath, $this->path);
 
-            $distContent = file_get_contents($path, true);
+            $distContent = file_get_contents($this->path, true);
             $newContent = str_replace('%uuid_page_0%', $this->pages[0]->getUuid(), $distContent);
-            $newContent = str_replace('%uuid_page_1%', $this->pages[1]->getUuid(), $distContent);
+            $newContent = str_replace('%uuid_page_1%', $this->pages[1]->getUuid(), $newContent);
 
-            file_put_contents($path, $newContent);
+            file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while copy distfile ".$e->getPath();
         }
@@ -95,39 +122,42 @@ class WebspaceImportTest extends SuluTestCase
 
     private function prepareData()
     {
-        $this->pages[0] = $this->createPage([
-            'title' => 'test 0'
-        ]);
-        $this->pages[1] = $this->createPage([
-            'title' => 'test 1'
-        ]);
+        $this->pages[0] = $this->createSimplePage('Parent', '/parent');
+        $this->documentManager->publish($this->pages[0], 'en');
 
-        // TODO: set correct uuid from export-file
+        $this->pages[1] = $this->createSimplePage('Child', '/child');
+        $this->documentManager->publish($this->pages[1], 'en');
 
-        $this->documentManager->persist($this->pages[0], 'de');
-        $this->documentManager->flush();
-
-        $this->documentManager->persist($this->pages[1], 'de');
         $this->documentManager->flush();
     }
 
     /**
-     * @param $data
+     * Creates a simple page.
+     *
+     * @param string $title
+     * @param string $url
+     *
      * @return PageDocument
      */
-    private function createPage($data)
+    private function createSimplePage($title, $url)
     {
-        $page = new PageDocument();
+        /** @var PageDocument $page */
+        $page = $this->documentManager->create('page');
+        $page->setTitle($title);
+        $page->setResourceSegment($url);
+        $page->setLocale('en');
+        $page->setParent($this->homeDocument);
+        $page->setStructureType('simple');
+        $page->setExtensionsData([
+            'excerpt' => [
+                'title' => '',
+                'description' => '',
+                'categories' => [],
+                'tags' => [],
+            ],
+        ]);
 
-        $uuidReflection = new \ReflectionProperty(PageDocument::class, 'uuid');
-        $uuidReflection->setAccessible(true);
-        $uuidReflection->setValue($page, 1);
-
-        $page->setTitle($data['title']);
-        $page->setParent($this->parent);
-        $page->setStructureType('overview');
-        $page->setResourceSegment('/foo');
-        $page->getStructure()->bind($data, true);
+        $this->documentManager->persist($page, 'en');
 
         return $page;
     }
