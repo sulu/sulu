@@ -121,6 +121,11 @@ class Collection extends ApiWrapper
      */
     protected $entity;
 
+    /**
+     * @var int
+     */
+    protected $mediaCount = 0;
+
     public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
@@ -490,6 +495,24 @@ class Collection extends ApiWrapper
         }
 
         return;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return int The number of media contained by the collection
+     */
+    public function getMediaCount()
+    {
+        return $this->mediaCount;
+    }
+
+    /**
+     * @param int $mediaCount The new number of media
+     */
+    public function setMediaCount($mediaCount)
+    {
+        $this->mediaCount = $mediaCount;
     }
 
     /**

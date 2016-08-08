@@ -314,6 +314,10 @@
                 <source>sulu-media.selection.overlay.save</source>
                 <target>Toepassen</target>
             </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js55369f111118" resname="sulu-media.upload-files">
+                <source>sulu-media.upload-files</source>
+                <target>Bestanden uploaden</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

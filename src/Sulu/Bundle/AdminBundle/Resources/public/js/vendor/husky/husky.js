@@ -29532,7 +29532,6 @@ define('__component__$navigation@husky',[],function() {
             this.hidden = false;
             this.tooltipsEnabled = true;
             this.animating = false;
-            this.dataNavigationIsLoading = false;
             this.items = []; // array to save all navigation items
 
             // binding dom events
@@ -30075,10 +30074,8 @@ define('__component__$navigation@husky',[],function() {
         unCollapse: function(forced) {
             if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
                 if (forced) {
-                    if (!this.hasDataNavigation()) {
-                        // freeze width of parent so that the navigation overlaps the content
-                        this.sandbox.dom.width(this.$el, this.sandbox.dom.width(this.$navigation));
-                    }
+                    // freeze width of parent so that the navigation overlaps the content
+                    this.sandbox.dom.width(this.$el, this.sandbox.dom.width(this.$navigation));
                     this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
                 } else {
                     this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
@@ -30137,12 +30134,7 @@ define('__component__$navigation@husky',[],function() {
                 this.emitItemSelectEvent(extendedItem);
             }
 
-            if (!!this.hasDataNavigation()) {
-                this.removeDataNavigation();
-            }
-
             this.markItemSelected($selectItem);
-            this.refreshDataNavigation(extendedItem);
         },
 
         /**
@@ -30212,102 +30204,6 @@ define('__component__$navigation@husky',[],function() {
             this.currentNavigationWidth = this.sandbox.dom.width(this.$navigation);
             this.sandbox.dom.width(this.$navigation, 0);
             this.hidden = true;
-        },
-
-        /**
-         * If there currently is a data navigation it gets removed. If the given item
-         * has a data navigation configured it gets created.
-         * @param itemData the item data
-         */
-        refreshDataNavigation: function(itemData) {
-            if (!!this.dataNavigationIsLoading) return;
-
-            if (!!this.hasDataNavigation()) {
-                this.removeDataNavigation();
-            }
-
-            if (!!itemData && !!itemData.dataNavigation) {
-                this.renderDataNavigation(itemData.dataNavigation);
-            }
-        },
-
-        /**
-         * Render data navigation and init with item
-         * @param options
-         */
-        renderDataNavigation: function(options) {
-            this.dataNavigationIsLoading = true;
-            this.collapse();
-
-            var $element = this.sandbox.dom.createElement('<div/>', {class: 'navigation-data-container'}), key;
-            this.sandbox.dom.append(this.$el, $element);
-
-            var componentOptions = {
-                el: $element,
-                url: options.url,
-                rootUrl: options.rootUrl
-            },
-                initializedEvent = 'husky.data-navigation.initialized';
-
-            // optional options
-            if (!!options.resultKey) {
-                componentOptions.resultKey = options.resultKey;
-            }
-            if (!!options.nameKey) {
-                componentOptions.nameKey = options.nameKey;
-            }
-            if (!!options.childrenLinkKey) {
-                componentOptions.childrenLinkKey = options.childrenLinkKey;
-            }
-            if (!!options.instanceName) {
-                componentOptions.instanceName = options.instanceName;
-                initializedEvent = 'husky.data-navigation.' + options.instanceName + '.initialized';
-            }
-            if (!!options.showAddBtn) {
-                componentOptions.showAddBtn = options.showAddBtn;
-            }
-            if (!!options.translates) {
-                componentOptions.translates = {};
-
-                for (key in options.translates) {
-                    componentOptions.translates[key] = this.sandbox.translate(options.translates[key]);
-                }
-            }
-
-            this.sandbox.dom.addClass(this.$el, 'data-navigation-opened');
-            this.sandbox.dom.width(this.$el, '');
-            this.sandbox.util.delay(function() {
-                $element.addClass('expanded');
-            }, 0);
-
-            this.sandbox.once(initializedEvent, function() {
-                this.dataNavigationIsLoading = false;
-            }.bind(this));
-
-            // init data-navigation
-            this.sandbox.start([{
-                name: 'data-navigation@husky',
-                options: componentOptions
-            }]);
-        },
-
-        /**
-         * Remove data navigation
-         */
-        removeDataNavigation: function() {
-            this.sandbox.dom.removeClass(this.$el, 'data-navigation-opened');
-
-            this.sandbox.stop(this.$find('.navigation-data-container'));
-
-            this.unCollapse();
-        },
-
-        /**
-         * Returns true if a data navigation is initialized
-         * @returns {boolean}
-         */
-        hasDataNavigation: function() {
-            return this.$find('.navigation-data-container').length > 0;
         }
     };
 });
@@ -32455,6 +32351,225 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 });
 
 /**
+ * @class Tiles (Datagrid Decorator)
+ * @constructor
+ *
+ * @param {String} [icon] The icon to display in the rendered tiles
+ * @param {Object} [fields] Describes the fields from which the title and the description get constructed
+ * @param {Array} [fields.title] The fields from which the title gets constructed
+ * @param {Array} [fields.description] The fields from which the description gets constructed
+ * @param {Object} [translations] Contains the translation keys used by this view
+ * @param {Boolean} [showAddNewTile] True to show a tile which emits an add new
+ * @param {Boolean} [addNewIcon] The icon to show in the "add new"-tile
+ *
+ * @param {Boolean} [rendered] property used by the datagrid-main class
+ * @param {Function} [initialize] function which gets called once at the start of the view
+ * @param {Function} [render] function to render data
+ * @param {Function} [destroy] function to destroy the view and unbind events
+ */
+define('husky_components/datagrid/decorators/tiles-view',[],function() {
+
+    'use strict';
+
+    var defaults = {
+        icon: 'fa-folder',
+        showAddNewTile: true,
+        addNewIcon: 'fa-plus-circle',
+        fields: {
+            title: ['title'],
+            description: ['elements']
+        },
+        translations: {
+            items: 'public.items',
+            addNew: 'public.add-new'
+        }
+    },
+
+    templates = {
+        tile: [
+            '<div class="tile">',
+            '   <span class="<%= icon %> icon"></span>',
+            '   <span title="<%= title %>" class="title"><%= croppedTitle %></span>',
+            '   <span class="description"><%= description %></span>',
+            '</div>'
+        ].join(''),
+        addNewTile: [
+            '<div class="add-new-tile">',
+            '   <span class="<%= icon %> icon"></span>',
+            '   <span class="title"><%= title %></span>',
+            '</div>'
+        ].join('')
+    },
+
+    /**
+     * Apply datagrid-content-filters on the given record column by column.
+     * Datagrid-content-filters are used to format the raw database-values (for the number of elements)
+     *
+     * @param {Object} record The record data
+     * @returns {Object} the modified record
+     */
+    processContentFilters = function(record) {
+        var modifiedRecord = this.sandbox.util.extend(false, {}, record), argument;
+        this.datagrid.matchings.forEach(function(matching) {
+            argument = null;
+            if (matching.type === this.datagrid.types.COUNT) {
+                argument = this.sandbox.translate(this.options.translations.items);
+            }
+
+            modifiedRecord[matching.attribute] = this.datagrid.processContentFilter.call(
+                this.datagrid,
+                matching.attribute,
+                modifiedRecord[matching.attribute],
+                matching.type,
+                argument
+            );
+        }.bind(this));
+
+        return modifiedRecord;
+    },
+
+    /**
+     * Emitted when the add tile gets clicked
+     *
+     * @event husky.datagrid.tiles.add-clicked
+     */
+    ADD_CLICKED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'tiles.add-clicked');
+    };
+
+    return {
+
+        /**
+         * Initializes the view, gets called only once
+         * @param {Object} context The context of the datagrid class
+         * @param {Object} options The options used by the view
+         */
+        initialize: function(context, options) {
+            // context of the datagrid-component
+            this.datagrid = context;
+
+            // make sandbox available in this-context
+            this.sandbox = this.datagrid.sandbox;
+
+            // merge defaults with options
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+        },
+
+        /**
+         * Method to render this view.
+         *
+         * @param data object containing the data which is rendered
+         * @param $container dom-element to render datagrid in
+         */
+        render: function(data, $container) {
+            this.rendered = false;
+            this.$el = null;
+            this.$tiles = {};
+
+            this.renderContainer($container);
+            data.embedded.map(this.renderRecord.bind(this));
+            if (!!this.options.showAddNewTile) {
+                this.renderAddNewTile();
+            }
+            this.bindDomEvents();
+            this.rendered = true;
+        },
+
+        /**
+         * Binds dom related events for the view
+         */
+        bindDomEvents: function() {
+            this.$el.on('click', '.tile', function(event) {
+                this.datagrid.itemAction.call(this.datagrid, $(event.currentTarget).data('id'));
+            }.bind(this));
+        },
+
+        /**
+         * Renders the main container of the decorator
+         *
+         * @param {Object} $container The element to render the decorator into.
+         */
+        renderContainer: function($container) {
+            this.$el = $('<div class="tiles-view"/>');
+            $container.append(this.$el);
+        },
+
+        /**
+         * Renders the add new tile and binds its click event
+         */
+        renderAddNewTile: function() {
+            var $addNew = $(_.template(templates.addNewTile, {
+                icon: this.options.addNewIcon,
+                title: this.sandbox.translate(this.options.translations.addNew)
+            }));
+
+            $addNew.on('click', function() {
+                this.sandbox.emit(ADD_CLICKED.call(this));
+            }.bind(this));
+
+            this.$el.append($addNew);
+        },
+
+        /**
+         * Renders a single record into the view
+         *
+         * @param {Object} record The data of the record
+         */
+        renderRecord: function(record) {
+            record = processContentFilters.call(this, record);
+            var title = this.getTitleString(record),
+                description = this.getDescriptionSring(record);
+            this.$tiles[record.id] = $(_.template(templates.tile, {
+                icon: this.options.icon,
+                title: title,
+                croppedTitle: this.sandbox.util.cropMiddle(this.getTitleString(record), 20),
+                description: this.sandbox.util.cropMiddle(description, 20)
+            }));
+            this.$tiles[record.id].data('id', record.id);
+
+            this.$el.append(this.$tiles[record.id]);
+        },
+
+        /**
+         * Constructs and returns the title string to render
+         *
+         * @param {Object} record the data to construct the title from
+         * @return {String} the constructed title
+         */
+        getTitleString: function(record) {
+            var title = '';
+            this.options.fields.title.forEach(function(titleField) {
+                title += record[titleField] + ' ';
+            });
+
+            return title.trim();
+        },
+
+        /**
+         * Constructs and returns the description string to render
+         *
+         * @param {Object} record the data to construct the description from
+         * @return {String} the constructed description
+         */
+        getDescriptionSring: function(record) {
+            var description = '';
+            this.options.fields.description.forEach(function(descriptionField) {
+                description += record[descriptionField] + ' ';
+            });
+
+            return description.trim();
+        },
+
+        /**
+         * Destroys the view
+         */
+        destroy: function() {
+            this.$el.remove();
+        }
+    };
+});
+
+/**
  * @class DropdownPagination (Datagrid Decorator)
  * @constructor
  *
@@ -33085,9 +33200,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
     define('__component__$datagrid@husky',[
         'husky_components/datagrid/decorators/table-view',
+        'husky_components/datagrid/decorators/tiles-view',
         'husky_components/datagrid/decorators/dropdown-pagination',
         'husky_components/datagrid/decorators/infinite-scroll-pagination'
-    ], function(decoratorTableView, decoratorDropdownPagination, infiniteScrollPagination) {
+    ], function(decoratorTableView, decoratorTilesView, decoratorDropdownPagination, infiniteScrollPagination) {
 
         /* Default values for options */
 
@@ -33147,7 +33263,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
             decorators = {
                 views: {
-                    'table': decoratorTableView
+                    table: decoratorTableView,
+                    tiles: decoratorTilesView
                 },
                 paginations: {
                     'dropdown': decoratorDropdownPagination,
@@ -34547,20 +34664,32 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (this.options.selectedCounter) {
                     this.sandbox.dom.on(this.$el,
                         'click',
-                        function(event) {
-                            this.sandbox.dom.stopPropagation(event);
-                            if (!this.gridViews[this.viewId].showSelected) {
-                                return;
-                            }
-
-                            this.show = !this.show;
-                            this.gridViews[this.viewId].showSelected(this.show);
-
-                            this.updateSelectedCounter();
-                        }.bind(this),
+                        this.toggleSelectedClickHandler.bind(this),
                         '.selected-elements .show-selected'
                     );
                 }
+            },
+
+            /**
+             * Handlers the click on the "show selected" and "show all" button.
+             *
+             * @param {Object} event The click event
+             */
+            toggleSelectedClickHandler: function(event) {
+                this.sandbox.dom.stopPropagation(event);
+                if (!this.gridViews[this.viewId].showSelected) {
+                    return;
+                }
+
+                this.show = !this.show;
+                this.gridViews[this.viewId].showSelected(this.show);
+                if (!!this.show && !!this.paginations[this.paginationId]) {
+                    this.paginations[this.paginationId].destroy();
+                } else {
+                    this.rerenderPagination();
+                }
+
+                this.updateSelectedCounter();
             },
 
             unbindWindowResize: function() {
@@ -34712,7 +34841,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].addRecord) {
                     return;
                 }
-                
+
                 if (!!recordData[this.options.idKey]) {
                     this.pushRecords([recordData]);
                 }
@@ -34730,7 +34859,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].addRecord) {
                     return;
                 }
-                
+
                 this.sandbox.util.foreach(records, function(record) {
                     if (!!record[this.options.idKey]) {
                         this.pushRecords([record]);
@@ -34750,7 +34879,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].removeRecord || !recordId) {
                     return;
                 }
-                
+
                 this.gridViews[this.viewId].removeRecord(recordId);
                 this.removeRecordFromSelected(recordId);
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
@@ -34763,7 +34892,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].removeRecord || !recordIds) {
                     return;
                 }
-                
+
                 this.sandbox.util.foreach(recordIds, function(recordId) {
                     this.gridViews[this.viewId].removeRecord(recordId);
                     this.removeRecordFromSelected(recordId);
@@ -34872,6 +35001,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         this.getSelectedItemIds().length === 0
                     ) {
                         this.show = false;
+                        if (!!this.gridViews[this.viewId].rendered) {
+                            this.gridViews[this.viewId].showSelected(false);
+                        }
                     }
 
                     if (!!this.show) {
@@ -35175,7 +35307,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         // return if no page is passed or passed invalidly
                         if (!page || page > this.data.pages || page < 1) {
                             this.sandbox.logger.log("invalid page number or reached start/end!");
-                            return;
+                            def.resolve();
+                            return def;
                         }
                         // if no limit is passed keep current limit
                         if (!limit) {
@@ -37976,7 +38109,10 @@ define('__component__$toolbar@husky',[],function() {
                     }
 
                     // create title span
-                    title = (!!item.title && this.options.showTitle === true) ? item.title : '';
+                    title = '';
+                    if (!!item.title && (this.options.showTitle === true || item.showTitle === true)) {
+                        title = item.title;
+                    }
                     this.sandbox.dom.append($listItem, '<span class="title">' + title + '</span>');
 
                     // add dropdown-toggle element (hidden at default)

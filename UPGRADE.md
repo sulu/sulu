@@ -1,5 +1,12 @@
 # Upgrade
 
+## dev-develop
+
+### Data-Navigation
+
+The class `DataNavigationItem` got removed and is not supported
+anymore. Please use other forms of navigating instead.
+
 ## 1.3.0-RC3
 
 ### Resource-locator generation

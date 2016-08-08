@@ -5,11 +5,17 @@
 }
 
 /* line 5, ../scss/modules/collection.scss */
+.children-container {
+  margin-top: -10px;
+  margin-bottom: 40px;
+}
+
+/* line 10, ../scss/modules/collection.scss */
 #collections-root.no-content {
   text-align: center;
   height: 210px;
 }
-/* line 9, ../scss/modules/collection.scss */
+/* line 14, ../scss/modules/collection.scss */
 #collections-root.no-content .icon {
   display: block;
   left: 50%;
@@ -17,7 +23,7 @@
   font-size: 125px;
   color: #e4e4e4;
 }
-/* line 16, ../scss/modules/collection.scss */
+/* line 21, ../scss/modules/collection.scss */
 #collections-root.no-content .text {
   font-weight: bold;
   color: #e4e4e4;
@@ -25,48 +31,58 @@
   margin-top: 20px;
 }
 
-/* line 25, ../scss/modules/collection.scss */
+/* line 30, ../scss/modules/collection.scss */
 .dropzone-container .husky-dropzone {
   display: none;
 }
-/* line 30, ../scss/modules/collection.scss */
+/* line 35, ../scss/modules/collection.scss */
 .dropzone-container .husky-overlay-container .husky-dropzone {
   display: block;
 }
 
-/* line 40, ../scss/modules/collection.scss */
+/* line 42, ../scss/modules/collection.scss */
+.sticky-toolbar.fixed .list-toolbar-container.collection {
+  width: 92.75%;
+}
+
+/* line 48, ../scss/modules/collection.scss */
+.toolbar-hidden .collection-header-container {
+  top: -60px;
+}
+
+/* line 5, ../scss/modules/masonry-decorator.scss */
 .masonry-container .empty-list {
   background: none;
 }
-/* line 44, ../scss/modules/collection.scss */
+/* line 9, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-grid {
   margin-bottom: -20px;
   position: relative;
   text-align: center;
 }
-/* line 50, ../scss/modules/collection.scss */
+/* line 15, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item {
   box-shadow: 0 0 10px -10px rgba(0, 0, 0, 0.2);
   width: 260px;
   background-color: #fff;
-  border-radius: 3px;
   opacity: 1;
+  border-radius: 3px;
   border: 1px solid #fff;
-  -moz-transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
-  -o-transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
-  -webkit-transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
-  transition: opacity 100ms, top 100ms, left 100ms, box-shadow 200ms;
+  -moz-transition: top 100ms, left 100ms, opacity 100ms, box-shadow 200ms;
+  -o-transition: top 100ms, left 100ms, opacity 100ms, box-shadow 200ms;
+  -webkit-transition: top 100ms, left 100ms, opacity 100ms, box-shadow 200ms;
+  transition: top 100ms, left 100ms, opacity 100ms, box-shadow 200ms;
 }
-/* line 68, ../scss/modules/collection.scss */
+/* line 33, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item.loading {
   opacity: 0;
 }
-/* line 72, ../scss/modules/collection.scss */
+/* line 37, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item .action-navigator, .masonry-container .masonry-item .download-navigator, .masonry-container .masonry-item .play-video-navigator {
   cursor: pointer;
   color: #000;
 }
-/* line 77, ../scss/modules/collection.scss */
+/* line 42, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item .custom-checkbox {
   width: 0;
   margin: 0;
@@ -77,33 +93,33 @@
   -webkit-transition: width 80ms, margin 80ms;
   transition: width 80ms, margin 80ms;
 }
-/* line 85, ../scss/modules/collection.scss */
+/* line 50, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item:hover {
   box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.2);
 }
-/* line 88, ../scss/modules/collection.scss */
+/* line 53, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item:hover .custom-checkbox {
   width: 15px;
   margin-right: 8px;
 }
-/* line 93, ../scss/modules/collection.scss */
-.masonry-container .masonry-item:hover .masonry-info .icons {
-  display: block;
+/* line 58, ../scss/modules/masonry-decorator.scss */
+.masonry-container .masonry-item:hover .masonry-info .icons > *::before {
+  color: #000;
 }
-/* line 98, ../scss/modules/collection.scss */
+/* line 63, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item.selected {
   box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.2);
 }
-/* line 100, ../scss/modules/collection.scss */
+/* line 65, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item.selected .custom-checkbox {
   width: 15px;
   margin-right: 8px;
 }
-/* line 106, ../scss/modules/collection.scss */
+/* line 71, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-item.no-image .masonry-image {
   background: #ddd;
 }
-/* line 111, ../scss/modules/collection.scss */
+/* line 76, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-image {
   width: 100%;
   overflow: hidden;
@@ -111,13 +127,13 @@
   background: url("../img/checked.gif") repeat;
   position: relative;
 }
-/* line 119, ../scss/modules/collection.scss */
+/* line 84, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-image .image-icon {
   color: white;
   font-size: 70px;
   margin: 30px;
 }
-/* line 125, ../scss/modules/collection.scss */
+/* line 90, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-image .image {
   position: relative;
   left: 0;
@@ -129,12 +145,12 @@
   -webkit-transition: width 200ms, height 200ms, left 200ms;
   transition: width 200ms, height 200ms, left 200ms;
 }
-/* line 139, ../scss/modules/collection.scss */
+/* line 104, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-image:hover .image {
   width: 270px;
   left: -5px;
 }
-/* line 146, ../scss/modules/collection.scss */
+/* line 111, ../scss/modules/masonry-decorator.scss */
 .masonry-container .edit-hint {
   width: 100%;
   height: 100%;
@@ -147,7 +163,7 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 155, ../scss/modules/collection.scss */
+/* line 120, ../scss/modules/masonry-decorator.scss */
 .masonry-container .edit-hint::before {
   content: "";
   display: block;
@@ -160,7 +176,7 @@
   height: 100%;
   border-radius: 0 0 3px 3px;
 }
-/* line 168, ../scss/modules/collection.scss */
+/* line 133, ../scss/modules/masonry-decorator.scss */
 .masonry-container .edit-hint span {
   display: block;
   position: absolute;
@@ -173,59 +189,52 @@
   color: #fff;
   font-size: 24px;
 }
-/* line 175, ../scss/modules/collection.scss */
+/* line 140, ../scss/modules/masonry-decorator.scss */
 .masonry-container .edit-hint:hover {
   opacity: 1;
 }
-/* line 180, ../scss/modules/collection.scss */
+/* line 145, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info {
   height: 80px;
   text-align: left;
   padding: 20px 20px 0 20px;
   position: relative;
 }
-/* line 186, ../scss/modules/collection.scss */
+/* line 151, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .main {
   font-size: 0;
   line-height: 18px;
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 193, ../scss/modules/collection.scss */
+/* line 158, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .title {
   font-size: 14px;
 }
-/* line 197, ../scss/modules/collection.scss */
+/* line 162, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .description {
   font-size: 12px;
   line-height: 12px;
   color: #999;
 }
-/* line 203, ../scss/modules/collection.scss */
+/* line 168, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons {
   position: absolute;
   bottom: 5px;
   right: 20px;
-  display: none;
 }
-/* line 210, ../scss/modules/collection.scss */
+/* line 174, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons > * {
   margin-left: 5px;
 }
-/* line 214, ../scss/modules/collection.scss */
+/* line 178, ../scss/modules/masonry-decorator.scss */
+.masonry-container .masonry-info .icons > *::before {
+  color: transparent;
+}
+/* line 182, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .badge {
   margin-top: -11px;
   margin-right: 3px;
-}
-
-/* line 222, ../scss/modules/collection.scss */
-.sticky-toolbar.fixed .list-toolbar-container.collection {
-  width: 92.75%;
-}
-
-/* line 228, ../scss/modules/collection.scss */
-.toolbar-hidden .collection-header-container {
-  top: -60px;
 }
 
 /* line 5, ../scss/modules/media-selection.scss */

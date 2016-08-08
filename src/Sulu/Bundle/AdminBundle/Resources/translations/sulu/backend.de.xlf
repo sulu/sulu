@@ -970,6 +970,10 @@
                 <source>public.version</source>
                 <target>Version</target>
             </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4831a23233" resname="public.items">
+                <source>public.items</source>
+                <target>Objekte</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

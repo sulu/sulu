@@ -78,26 +78,23 @@ define([
          * @param collectionId
          * @returns promise
          */
-        loadOrNew: function(collectionId, locale) {
-            var promise = $.Deferred(),
-                collection;
-            if (!collectionId) {
-                collection = new Collection();
-                Mediator.emit('sulu.medias.collection.created');
-                promise.resolve(collection.toJSON());
-            } else {
-                collection = Collection.findOrCreate({id: collectionId});
-                collection.fetch({
-                    data: {locale: locale},
-                    success: function(response) {
-                        Mediator.emit('sulu.medias.collection.loaded', collectionId);
-                        promise.resolve(response.toJSON());
-                    }.bind(this),
-                    error: function() {
-                        promise.reject();
-                    }.bind(this)
-                });
-            }
+        load: function(collectionId, locale) {
+            var promise = $.Deferred(), collection;
+
+            collection = Collection.findOrCreate({id: collectionId});
+            collection.fetch({
+                data: {
+                    locale: locale,
+                    breadcrumb: true
+                },
+                success: function(response) {
+                    Mediator.emit('sulu.medias.collection.loaded', collectionId);
+                    promise.resolve(response.toJSON());
+                }.bind(this),
+                error: function() {
+                    promise.reject();
+                }.bind(this)
+            });
 
             return promise;
         },
