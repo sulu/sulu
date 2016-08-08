@@ -111,6 +111,13 @@ class Webspace implements ArrayableInterface
     private $defaultTemplates = [];
 
     /**
+     * The url generation strategy for this portal.
+     *
+     * @var string
+     */
+    private $resourceLocatorStrategy;
+
+    /**
      * Sets the key of the webspace.
      *
      * @param string $key
@@ -508,6 +515,26 @@ class Webspace implements ArrayableInterface
     }
 
     /**
+     * Set resource-locator strategy.
+     *
+     * @param string $resourceLocatorStrategy
+     */
+    public function setResourceLocatorStrategy($resourceLocatorStrategy)
+    {
+        $this->resourceLocatorStrategy = $resourceLocatorStrategy;
+    }
+
+    /**
+     * Returns resource-locator strategy.
+     *
+     * @return string
+     */
+    public function getResourceLocatorStrategy()
+    {
+        return $this->resourceLocatorStrategy;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -518,6 +545,7 @@ class Webspace implements ArrayableInterface
         $res['localizations'] = [];
         $res['templates'] = $this->getTemplates();
         $res['defaultTemplates'] = $this->getDefaultTemplates();
+        $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
 
         foreach ($this->getLocalizations() as $localization) {
             $res['localizations'][] = $localization->toArray();

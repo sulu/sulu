@@ -14,6 +14,7 @@
             <xs:element type="defaultTemplatesType" name="default-templates" minOccurs="1" maxOccurs="1"/>
             <xs:element type="templatesType" name="templates" minOccurs="0" maxOccurs="1"/>
             <xs:element type="navigationType" name="navigation"/>
+            <xs:element type="resource-locatorType" name="resource-locator" maxOccurs="1" minOccurs="0"/>
             <xs:element type="portalsType" name="portals"/>
         </xs:sequence>
     </xs:complexType>
@@ -92,6 +93,12 @@
         </xs:simpleContent>
     </xs:complexType>
 
+    <xs:complexType name="resource-locatorType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="strategy"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="portalsType">
         <xs:sequence>
             <xs:element type="portalType" name="portal" maxOccurs="unbounded" minOccurs="0"/>
@@ -101,14 +108,8 @@
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
             <xs:element type="xs:string" name="key"/>
-            <xs:element type="resource-locatorType" name="resource-locator"/>
             <xs:element type="localizationsType" name="localizations" minOccurs="0" maxOccurs="1"/>
             <xs:element type="environmentsType" name="environments"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="resource-locatorType">
-        <xs:sequence>
-            <xs:element type="xs:string" name="strategy"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="defaultTemplatesType">

@@ -282,6 +282,14 @@ class NodeControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
+    public function testGetNotExistingTree()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/not-existing-id?webspace=sulu_io&language=en&fields=title,order,published&tree=true');
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
     public function testGetGhostContent()
     {
         $document = $this->createPageDocument();
@@ -449,36 +457,34 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $deleteData = [
-            [
-                'template' => 'simple',
-                'title' => 'test1',
-                'url' => '/test1',
+        $linkedDocument = $this->createPageDocument();
+        $linkedDocument->setTitle('test1');
+        $linkedDocument->setResourceSegment('/test1');
+        $linkedDocument->setStructureType('simple');
+        $this->documentManager->persist($linkedDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($linkedDocument, 'en');
+        $this->documentManager->flush();
+
+        $document = $this->createPageDocument();
+        $document->setTitle('test2');
+        $document->setResourceSegment('/test2');
+        $document->setStructureType('internallinks');
+        $document->getStructure()->bind([
+            'internalLinks' => [
+                $linkedDocument->getUuid(),
             ],
-        ];
+        ]);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
+        $this->documentManager->flush();
 
-        $deleteData = $this->setUpContent($deleteData);
-
-        $linkData = [
-            [
-                'template' => 'internallinks',
-                'title' => 'test2',
-                'url' => '/test2',
-                'internalLinks' => [
-                    $deleteData[0]['id'],
-                ],
-            ],
-        ];
-
-        $linkData = $this->setupContent($linkData);
-
-        $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $client->getResponse());
 
-        $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en&force=true');
+        $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en&force=true');
         $this->assertHttpStatusCode(204, $client->getResponse());
 
-        $client->request('GET', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $client->request('GET', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 

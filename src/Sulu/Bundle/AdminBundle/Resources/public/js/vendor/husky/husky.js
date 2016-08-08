@@ -28000,6 +28000,40 @@ define('services/husky/util',['sprintf'], function(sprintf) {
             '"': '&quot;',
             "'": '&#39;',
             "/": '&#x2F;'
+        },
+
+        /**
+         * Calculates the number of matches parts of the first array
+         * have with parts of the second array
+         *
+         * @param {Array} parts1
+         * @param {Array} parts2
+         * @returns {number}
+         */
+        getSuccessfulMatches = function(parts1, parts2) {
+            var successfulMatches = 0, lastMatchedIndex = -1, partMatched, i, j;
+
+            // all parts of the first array are tried to match against a single part of the second array
+            for (i = 0; i < parts1.length; i++) {
+                partMatched = false;
+
+                // for each not matched part in the second array
+                for (j = lastMatchedIndex + 1; j < parts2.length; j++) {
+                    // try to match it with the current part of the first array
+                    if (parts1[i] === parts2[j]) {
+                        successfulMatches += 1;
+                        lastMatchedIndex = i;
+                        partMatched = true;
+                        break;
+                    }
+                }
+                // after a part is not matched the counting is finished
+                if (!partMatched) {
+                    break;
+                }
+            }
+
+            return successfulMatches;
         };
 
     function Util() {
@@ -28284,36 +28318,25 @@ define('services/husky/util',['sprintf'], function(sprintf) {
     };
 
     /**
-     * Returns a percentage (0 to 1) on how similar two strings are
-     * http://stackoverflow.com/questions/10473745/compare-strings-javascript-return-of-likely
+     * Compares two url, using their individual parts (sections between "/")
+     * The function tries to match each part of the first url to a part
+     * in the second url.
      *
-     * @param x {String} the first string
-     * @param y the {String} second string
-     * @returns {number} the percentage on how similar two strings are
+     * @param {String} matchUrl The url where each part is tried to match
+     * @param {String} toMatchUrl The url against which parts are matched
+     * @returns {number} The difference between the number of matched parts and not matched parts.
      */
-    Util.prototype.compareStrings = function(x, y) {
-        var simpleCompare = function(a, b) {
-            var lengthA = a.length;
-            var lengthB = b.length;
-            if (lengthA === 0 && lengthB === 0) {
-                return 1;
-            }
-            var equivalency = 0;
-            var minLength = (a.length > b.length) ? b.length : a.length;
-            var maxLength = (a.length < b.length) ? b.length : a.length;
+    Util.prototype.compareURIs = function(matchUrl, toMatchUrl) {
+        var matchParts = matchUrl.split('/'),
+            toMatchParts = toMatchUrl.split('/'),
+            successfulMatches,
+            countNotMatchedParts;
 
-            for (var i = 0; i < minLength; i++) {
-                if (a[i] == b[i]) {
-                    equivalency++;
-                }
-            }
+        successfulMatches = getSuccessfulMatches(matchParts, toMatchParts);
+        countNotMatchedParts = matchParts.length - successfulMatches;
 
-            return equivalency / maxLength;
-        };
-
-        // maximum of similarity from front to back and from back to front
-        return Math.max(simpleCompare(x,y), simpleCompare(x.split('').reverse().join(''), y.split('').reverse().join('')));
-    },
+        return successfulMatches - countNotMatchedParts;
+    };
 
     /**
      * Return a formatted string.
@@ -29819,7 +29842,7 @@ define('__component__$navigation@husky',[],function() {
                 if (!item || !item.action) {
                     return;
                 }
-                matchValue = this.sandbox.util.compareStrings(item.action, selectAction);
+                matchValue = this.sandbox.util.compareURIs(item.action, selectAction);
                 if (matchValue > maxMatchValue) {
                     matchItem = item;
                     maxMatchValue = matchValue;
@@ -32432,375 +32455,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 });
 
 /**
- * @class ThumbnailView (Datagrid Decorator)
- * @constructor
- *
- * @param {Object} [viewOptions] Configuration object
- * @param {Boolean} [viewOptions.large] If true large thumbnails get rendered
- * @param {Number} [viewOptions.fadeInDuration] duration of the fade in animation
- *
- * @param {Boolean} [rendered] property used by the datagrid-main class
- * @param {Function} [initialize] function which gets called once at the start of the view
- * @param {Function} [render] function to render data
- * @param {Function} [destroy] function to destroy the view and unbind events
- * @param {Boolean} [unselectOnBackgroundClick] should the items be deselcted on docuemnt click
- */
-define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
-
-    'use strict';
-
-    var defaults = {
-            large: false,
-            fadeInDuration: 400,
-            largeThumbnailFormat: '170x170',
-            smallThumbnailFormat: '50x50',
-            unselectOnBackgroundClick: true,
-            selectable: true
-        },
-
-        constants = {
-            containerClass: 'husky-thumbnails',
-            itemClass: 'item',
-            smallClass: 'small',
-            largeClass: 'large',
-            titleClass: 'title',
-            downloadClass: 'download',
-            downloadIcon: 'cloud-download',
-            checkboxClass: 'checkbox',
-            descriptionClass: 'description',
-            thumbnailSrcProperty: 'url',
-            thumbnailAltProperty: 'alt',
-            idProperty: 'id',
-            textClass: 'text',
-            imageClass: 'image',
-            descriptionDelimiter: ', ',
-            selectedClass: 'is-selected'
-        },
-
-        templates = {
-            item: [
-                '<div class="' + constants.itemClass + ' <%= styleClass %>">',
-                '   <div class="' + constants.imageClass + '">',
-                '       <div class="fa-coffee empty"></div>',
-                '       <img src="<%= imgSrc %>" alt="<%= imgAlt %>"/>',
-                '   </div>',
-                '   <div class="' + constants.textClass + '">',
-                '       <span class="' + constants.titleClass + '"><%= title %></span><br />',
-                '       <span class="' + constants.descriptionClass + '"><%= description %></span>',
-                '   </div>',
-                '<% if (!!selectable) { %>',
-                '   <div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
-                '       <input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
-                '       <span class="icon"></span>',
-                '   </div>',
-                '<% } %>',
-                '   <div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
-                '</div>'
-            ].join('')
-        },
-
-        /**
-         * triggered when a when the download icon gets clicked
-         * @event husky.datagrid.download-clicked
-         * @param {Number|String} the id of the data-record
-         */
-        DOWNLOAD_CLICKED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'download-clicked');
-        };
-
-    return {
-
-        /**
-         * Initializes the view, gets called only once
-         * @param {Object} context The context of the datagrid class
-         * @param {Object} options The options used by the view
-         */
-        initialize: function(context, options) {
-            // context of the datagrid-component
-            this.datagrid = context;
-
-            // make sandbox available in this-context
-            this.sandbox = this.datagrid.sandbox;
-
-            // merge defaults with options
-            this.options = this.sandbox.util.extend(true, {}, defaults, options);
-
-            this.setVariables();
-        },
-
-        /**
-         * Takes an object with options and extends the current ones
-         * @param options {Object} new options to merge to the current ones
-         */
-        extendOptions: function(options) {
-            this.options = this.sandbox.util.extend(true, {}, this.options, options);
-        },
-
-        /**
-         * Sets the starting variables for the view
-         */
-        setVariables: function() {
-            this.rendered = false;
-            this.data = null;
-            this.$el = null;
-            this.thumbnailFormat = null;
-
-            // global array to store the dom elements
-            this.$thumbnails = {};
-        },
-
-        /**
-         * Method to render data in this view
-         */
-        render: function(data, $container) {
-            this.$el = this.sandbox.dom.createElement('<div class="' + constants.containerClass + '"/>');
-            this.sandbox.dom.append($container, this.$el);
-            this.data = data;
-
-            this.renderThumbnails(this.data.embedded);
-            this.sandbox.dom.on('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName, function() {
-                if (this.options.unselectOnBackgroundClick) {
-                    this.unselectAll();
-                }
-            }.bind(this));
-            this.rendered = true;
-        },
-
-        /**
-         * Parses the data and passes it to a render function
-         * @param thumbnails {Array} array with thumbnails to render
-         */
-        renderThumbnails: function(thumbnails, appendAtBottom) {
-            var imgSrc, imgAlt, title, description, id, thumbnail;
-
-            this.thumbnailFormat = (this.options.large === false) ? this.options.smallThumbnailFormat : this.options.largeThumbnailFormat;
-
-            // loop through each data record
-            this.sandbox.util.foreach(thumbnails, function(record) {
-                imgSrc = imgAlt = title = '';
-                description = [];
-
-                // foreach matching configured get the corresponding datum from the record
-                this.sandbox.util.foreach(this.datagrid.matchings, function(matching) {
-                    var argument, result;
-
-                    // get argument
-                    if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        argument = this.thumbnailFormat;
-                    }
-
-                    // process
-                    result = this.datagrid.processContentFilter.call(this.datagrid,
-                        matching.attribute,
-                        record[matching.attribute],
-                        matching.type,
-                        argument
-                    );
-
-                    // get the thumbnail and the title data (to place it on top)
-                    // with the rest generate a description string
-                    if (matching.type === this.datagrid.types.THUMBNAILS) {
-                        imgSrc = result[constants.thumbnailSrcProperty];
-                        imgAlt = result[constants.thumbnailAltProperty];
-                    } else if (matching.type === this.datagrid.types.TITLE) {
-                        title = result;
-                    } else if (matching.type === this.datagrid.types.BYTES) {
-                        description.push(result);
-                    }
-                }.bind(this));
-
-                id = record[constants.idProperty];
-                description = description.join(constants.descriptionDelimiter);
-
-                // pass the found data to a render method
-                this.renderThumbnail(id, imgSrc, imgAlt, title, description, record, appendAtBottom);
-            }.bind(this));
-        },
-
-        /**
-         * Renders the actual thumbnail element
-         * @param id {String|Number} the identifier of the data record
-         * @param imgSrc {String} the thumbnail src of the data record
-         * @param imgAlt {String} the thumbnail alt tag of the data record
-         * @param title {String} the title of the data record
-         * @param description {String} the thumbnail description to render
-         * @param record {Object} the original data record
-         */
-        renderThumbnail: function(id, imgSrc, imgAlt, title, description, record, appendAtBottom) {
-            this.$thumbnails[id] = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.item)({
-                    imgSrc: imgSrc,
-                    imgAlt: imgAlt,
-                    title: this.sandbox.util.cropMiddle(String(title), 24),
-                    description: this.sandbox.util.cropMiddle(String(description), 32),
-                    styleClass: (this.options.large === true) ? constants.largeClass : constants.smallClass,
-                    checked: !!this.datagrid.itemIsSelected.call(this.datagrid, record.id),
-                    selectable: this.options.selectable
-                })
-            );
-            if (this.datagrid.itemIsSelected.call(this.datagrid, record.id)) {
-                this.selectItem(id, true);
-            }
-            this.sandbox.dom.data(this.$thumbnails[id], 'id', id);
-            this.sandbox.dom.hide(this.$thumbnails[id]);
-            if (!!appendAtBottom) {
-                this.sandbox.dom.append(this.$el, this.$thumbnails[id]);
-            } else {
-                this.sandbox.dom.prepend(this.$el, this.$thumbnails[id]);
-            }
-            this.sandbox.dom.fadeIn(this.$thumbnails[id], this.options.fadeInDuration);
-
-            this.bindThumbnailDomEvents(id);
-        },
-
-        /**
-         * Destroys the view
-         */
-        destroy: function() {
-            this.sandbox.dom.off('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName);
-            this.sandbox.dom.remove(this.$el);
-        },
-
-        /**
-         * Binds Dom-Events for a thumbnail
-         * @param id {Number|String} the identifier of the thumbnail to bind events on
-         */
-        bindThumbnailDomEvents: function(id) {
-            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                if (!!this.options.selectable) {
-                    this.toggleItemSelected(id);
-                } else {
-                    this.selectItem(id);
-                }
-            }.bind(this));
-
-            this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                this.downloadHandler(id);
-            }.bind(this), '.' + constants.downloadClass);
-
-            this.sandbox.dom.on(this.$thumbnails[id].find('img'), 'error', function() {
-                this.$thumbnails[id].find('img').remove();
-            }.bind(this));
-
-            this.sandbox.dom.on(this.$thumbnails[id].find('img'), 'load', function() {
-                this.$thumbnails[id].find('.fa-coffee').remove();
-            }.bind(this));
-
-            if (!!this.options.selectable) {
-                this.sandbox.dom.on(this.$thumbnails[id], 'dblclick', function() {
-                    this.datagrid.itemAction.call(this.datagrid, id);
-                    this.selectItem(id);
-                }.bind(this));
-            }
-        },
-
-        /**
-         * Selects a record with a given id
-         * @param recordId {Number|String} the id of the record to select or deselect
-         */
-        selectRecord: function(recordId) {
-            this.selectItem(recordId, false);
-        },
-
-        /**
-         * Deselects all records
-         */
-        deselectAllRecords: function() {
-            this.unselectAll();
-        },
-
-        /**
-         * Toggles an item with a given id selected or unselected
-         * @param id {Number|String} the id of the item
-         */
-        toggleItemSelected: function(id) {
-            if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
-                this.unselectItem(id, false);
-            } else {
-                this.selectItem(id, false);
-            }
-        },
-
-        /**
-         * Selects an item with a given id
-         * @param id {Number|String} the id of the item
-         * @param onlyView {Boolean} if true the selection only affects this view and not the data array
-         */
-        selectItem: function(id, onlyView) {
-            if (!!this.options.selectable) {
-                this.sandbox.dom.addClass(this.$thumbnails[id], constants.selectedClass);
-                if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
-                    this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', true);
-                }
-                if (onlyView !== true) {
-                    this.datagrid.setItemSelected.call(this.datagrid, id);
-                }
-            } else {
-                this.datagrid.itemAction(id);
-            }
-        },
-
-        /**
-         * Unselects an item with a given id
-         * @param id {Number|String} the id of the item
-         * @param onlyView {Boolean} if true the selection only affects this view and not the data array
-         */
-        unselectItem: function(id, onlyView) {
-            this.sandbox.dom.removeClass(this.$thumbnails[id], constants.selectedClass);
-            if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
-                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', false);
-            }
-            if (onlyView !== true) {
-                this.datagrid.setItemUnselected.call(this.datagrid, id);
-            }
-        },
-
-        /**
-         * Adds a record to the view
-         * @param record
-         * @public
-         */
-        addRecord: function(record, appendAtBottom) {
-            this.renderThumbnails([record], appendAtBottom);
-        },
-
-        /**
-         * Handles the click onto the download button of an item
-         * @param id {Number|String} the id of the item
-         */
-        downloadHandler: function(id) {
-            this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
-        },
-
-        /**
-         * Removes a data record from the view
-         * @param recordId {Number|String} the records identifier
-         * @returns {Boolean} true if deleted succesfully
-         */
-        removeRecord: function(recordId) {
-            if (!!this.$thumbnails[recordId]) {
-                this.sandbox.dom.remove(this.$thumbnails[recordId]);
-                this.datagrid.removeRecord.call(this.datagrid, recordId);
-                return true;
-            }
-            return false;
-        },
-
-        /**
-         * Unselects all thumbnails
-         */
-        unselectAll: function() {
-            this.sandbox.util.each(this.$thumbnails, function(id) {
-                this.unselectItem(id, true);
-            }.bind(this));
-            this.datagrid.deselectAllItems.call(this.datagrid);
-        }
-    };
-});
-
-/**
  * @class DropdownPagination (Datagrid Decorator)
  * @constructor
  *
@@ -33431,10 +33085,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
     define('__component__$datagrid@husky',[
         'husky_components/datagrid/decorators/table-view',
-        'husky_components/datagrid/decorators/thumbnail-view',
         'husky_components/datagrid/decorators/dropdown-pagination',
         'husky_components/datagrid/decorators/infinite-scroll-pagination'
-    ], function(decoratorTableView, thumbnailView, decoratorDropdownPagination, infiniteScrollPagination) {
+    ], function(decoratorTableView, decoratorDropdownPagination, infiniteScrollPagination) {
 
         /* Default values for options */
 
@@ -33494,8 +33147,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
             decorators = {
                 views: {
-                    table: decoratorTableView,
-                    thumbnail: thumbnailView
+                    table: decoratorTableView
                 },
                 paginations: {
                     dropdown: decoratorDropdownPagination,
@@ -36358,7 +36010,7 @@ define('__component__$search@husky',[], function() {
             slide: false
         },
         constants = {
-            slideClass: 'slide',
+            slideClass: 'search-slide',
             slideCollapsedClass: 'slide-collapsed',
             slideExpandedClass: 'slide-expanded'
         },
@@ -36446,6 +36098,10 @@ define('__component__$search@husky',[], function() {
                 this.sandbox.dom.on(this.$find('input'), 'focus', this.expand.bind(this));
                 this.sandbox.dom.on(this.$find('input'), 'blur', this.collapse.bind(this));
             }
+
+            this.$el.on('keydown keyup', function(event) {
+                event.stopPropagation();
+            }.bind(this));
         },
 
         collapse: function() {
@@ -41530,7 +41186,8 @@ define('__component__$password-fields@husky',[], function() {
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {String} [options.url] url to load data
+ * @params {String} [options.url] url to load data.
+ * @params {String} [options.fallbackUrl] url to load data from, when loading from the main url fails.
  * @params {String} [options.selected] id of selected element - needed to restore state
  * @params {String|Function} [options.actionIcon] icon class of action button
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
@@ -41572,6 +41229,7 @@ define('__component__$column-navigation@husky',[],function() {
 
     var defaults = {
             url: null,
+            fallbackUrl: null,
             prefilledData: null,
             selected: null,
             data: null,
@@ -41925,7 +41583,13 @@ define('__component__$column-navigation@husky',[],function() {
             if (!!this.options.prefilledData) {
                 this.handleResponse(this.options.prefilledData, 0);
             } else {
-                this.load(this.options.url, 0);
+                this.load(this.options.url, 0, function() {
+                    // when an error occured try again with the fallback url
+                    if (!!this.options.fallbackUrl) {
+                        this.initiallySelected = null;
+                        this.load(this.options.fallbackUrl, 0);
+                    }
+                }.bind(this));
             }
         },
 
@@ -41933,6 +41597,7 @@ define('__component__$column-navigation@husky',[],function() {
          * Initializes the class properties with their default-values
          */
         setProperties: function() {
+            this.initiallySelected = this.options.selected;
             this.$selectedElement = null;
             this.filledColumns = 0;
             this.columnLoadStarted = false;
@@ -42080,19 +41745,27 @@ define('__component__$column-navigation@husky',[],function() {
          * Loads data from a specific url and triggers the parsing
          * @param {String} url
          * @param {Number} columnNumber
+         * @param {Function} errorCallback
          */
-        load: function(url, columnNumber) {
+        load: function(url, columnNumber, errorCallback) {
             if (!!url) {
                 this.columnLoadStarted = true;
-                this.sandbox.util.load(url)
-                    .then(function(response) {
+                $.ajax({
+                    url: url,
+                    global: false,
+
+                    success: function(response) {
                         this.handleResponse(response, columnNumber);
-                    }.bind(this))
-                    .fail(function(error) {
+                    }.bind(this),
+
+                    error: function(jqXHR, error) {
                         this.columnLoadStarted = false;
                         this.sandbox.logger.error("An error occured while fetching data from: ", error);
-                    }.bind(this));
-
+                        if (typeof errorCallback === 'function') {
+                            errorCallback();
+                        }
+                    }.bind(this)
+                });
             } else {
                 this.sandbox.logger.log("husky.column.navigation -  url not set, aborted loading of data");
             }
@@ -42183,11 +41856,13 @@ define('__component__$column-navigation@husky',[],function() {
                 }
 
                 // if this node is the specified as selected in the options, we select it
-                if (!!this.options.selected && (this.options.selected === itemData[this.options.idName] || this.options.selected === itemData[this.options.pathName])) {
+                if (!!this.initiallySelected && (this.initiallySelected === itemData[this.options.idName] ||
+                    this.initiallySelected === itemData[this.options.pathName])
+                ) {
                     this.setElementSelected($item);
                     this.selected[number] = itemData;
                     lastSelected = itemData;
-                    this.options.selected = null;
+                    this.initiallySelected = null;
                 }
             }.bind(this));
 
@@ -42259,13 +41934,13 @@ define('__component__$column-navigation@husky',[],function() {
                     if (!!data[this.options.publishedName]) {
                         this.sandbox.dom.append(
                             $container,
-                            '<span class="not-published col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                            '<span class="published-icon col-icon" title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
                         );
                     }
 
                     this.sandbox.dom.append(
                         $container,
-                        '<span class="not-published-state col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                        '<span class="draft-icon col-icon" title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
                     );
                 }
             }
@@ -43474,10 +43149,11 @@ define('__component__$ckeditor@husky',[], function() {
  * @params {String} [options.instanceName] instance name of the component
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
- * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'dropzone'
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'dropzone', 'wide', 'responsive-width'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
  * @params {Boolean} [options.displayHeader] Defines if overlay Header with title should be shown
- * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
+ * @params {Boolean} [options.contentSpacing] Defines if there should be a spacing between overlay borders and content
+ * @params {String} [options.type] The type of the overlay ('normal' or 'warning')
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
  * @params {Null|Number} [options.left] to fix the left position of the overlay. (px)
@@ -43525,6 +43201,7 @@ define('__component__$overlay@husky',[], function() {
             skin: '',
             supportKeyInput: true,
             displayHeader: true,
+            contentSpacing: true,
             propagateEvents: true,
             type: 'normal',
             cssClass: '',
@@ -43594,6 +43271,7 @@ define('__component__$overlay@husky',[], function() {
                 cssClass: 'alert',
                 removeOnClose: true,
                 openOnStart: true,
+                contentSpacing: false,
                 instanceName: 'alert',
                 buttons: [
                     {
@@ -43630,7 +43308,7 @@ define('__component__$overlay@husky',[], function() {
                 '           <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
                 '       </div>',
                 '   <% } %>',
-                '   <div class="overlay-content"></div>',
+                '   <div class="overlay-content <%= spacingClass %>"></div>',
                 '   <div class="overlay-footer">',
                 '   </div>',
                 '</div>'
@@ -44097,8 +43775,8 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.$el = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.overlaySkeleton,
                     {
-                        skin: this.options.skin,
-                        cssClass: this.options.cssClass || '',
+                        skin: (!!this.options.skin) ? this.options.skin : '',
+                        cssClass: (!!this.options.cssClass) ? this.options.cssClass : '',
                         overflowClass: (this.slides.length > 1) ? 'overflow-hidden' : ''
                     }
                 )
@@ -44126,7 +43804,8 @@ define('__component__$overlay@husky',[], function() {
                     subTitle: !!this.slides[slide].subTitle ? this.slides[slide].subTitle : null,
                     index: this.slides[slide].index,
                     cssClass: this.slides[slide].cssClass,
-                    displayHeader: this.options.displayHeader
+                    displayHeader: this.options.displayHeader,
+                    spacingClass: (!!this.options.contentSpacing) ? 'content-spacing' : ''
                 })
             );
             this.overlay.slides[slide].$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.slides[slide].$el);
@@ -46407,6 +46086,7 @@ define('husky_components/data-navigation/list-view',[], function() {
  * @param {String} [options.childrenLinkKey] - key of children link in object
  * @param {String} [options.showAddButton] - Indicates if add button should be rendered
  * @param {Object} [options.translates] Holds the translates
+ * @param {String} [options.locale] The locale option to send with each request
  * @param {Boolean} [options.globalEvents] Should global events be sent
  */
 define('__component__$data-navigation@husky',[
@@ -46428,6 +46108,7 @@ define('__component__$data-navigation@husky',[
             limit: 20,
             showAddButton: true,
             globalEvents: true,
+            locale: null,
             translates: {
                 noData: 'No Data',
                 title: 'Data',
@@ -46562,6 +46243,15 @@ define('__component__$data-navigation@husky',[
         },
 
         /**
+         * Setter for current locale
+         * @param {string} locale locale to set
+         * @event husky.data-navigation.content.set-locale
+         */
+        SET_LOCALE = function() {
+            return createEventName.call(this, 'set-locale');
+        },
+
+        /**
          * Navigation will be reloaded with current url
          * @event husky.data-navigation.content.reload
          */
@@ -46587,10 +46277,17 @@ define('__component__$data-navigation@husky',[
          */
         initialize: function() {
             this.currentView = null;
+            this.locale = null;
             this.cache = this.sandbox.cacheFactory.create();
             this.options = this.sandbox.util.extend(true, {}, defaultOptions, this.options);
             this.mainTpl = this.sandbox.util.template(templates.main());
             this.headerTpl = this.sandbox.util.template(templates.header());
+            this.whenLocaleReceived = $.Deferred();
+
+            if (!!this.options.locale) {
+                this.locale = this.options.locale;
+                this.whenLocaleReceived.resolve();
+            }
 
             this.render();
             this.bindCustomEvents();
@@ -46599,17 +46296,30 @@ define('__component__$data-navigation@husky',[
             this.sandbox.once('husky.loader.initialized', function() {
                 this.showLoader();
 
-                this.load()
-                    .then(function(data) {
-                        this.hideLoader();
-                        this.sandbox.emit(INITIALIZED.call(this));
+                this.whenLocaleReceived.then(function() {
+                    this.load()
+                        .then(function(data) {
+                            this.hideLoader();
+                            this.sandbox.emit(INITIALIZED.call(this));
 
-                        this.currentView = this.createView(data);
-                        this.updateHeader(data);
-                        this.storeData(data);
-                        this.appendView();
-                    }.bind(this));
+                            this.currentView = this.createView(data);
+                            this.updateHeader(data);
+                            this.storeData(data);
+                            this.appendView();
+                        }.bind(this));
+                }.bind(this));
             }.bind(this));
+        },
+
+        /**
+         * Sets the locale for the component and resolves the
+         * corresponding promise.
+         *
+         * @param {String} locale The locale to set
+         */
+        setLocale: function(locale) {
+            this.locale = locale;
+            this.whenLocaleReceived.resolve();
         },
 
         /**
@@ -46743,6 +46453,8 @@ define('__component__$data-navigation@husky',[
                 }
             }.bind(this));
 
+            this.sandbox.on(SET_LOCALE.call(this), this.setLocale.bind(this));
+
             this.sandbox.on(SELECT.call(this), function(id) {
                 this.showChildren(id);
             }.bind(this));
@@ -46807,11 +46519,11 @@ define('__component__$data-navigation@husky',[
             this.page = 1;
             this.loading = true;
 
-            return this.sandbox.util.load(this.getUrl(url))
-                .then(this.parse.bind(this))
+            return this.sandbox.util.load(this.getUrl(url), {
+                locale: this.locale
+            }).then(this.parse.bind(this))
                 .then(function(data) {
                     this.loading = false;
-
                     return data;
                 }.bind(this));
         },
@@ -52303,7 +52015,7 @@ define('husky_extensions/itembox',[],function() {
                 return [
                     '<div class="white-box form-element" id="', this.ids.container, '">',
                     '    <div class="header">',
-                    '        <span class="', this.options.actionIcon ,' icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <span class="', this.options.actionIcon, ' icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
                     '        <span class="selected-counter', !!this.options.hideSelectedCounter ? ' hidden' : '', '">',
                     '            <span class="num">0</span><span> ', this.sandbox.translate(this.options.translations.elementsSelected) ,'</span>',
                     '        </span>',
@@ -52692,8 +52404,8 @@ define('husky_extensions/itembox',[],function() {
                 var $item = this.sandbox.dom.createElement(templates.item.call(
                     this,
                     item[this.options.idKey],
-                    this.getItemContent(item))
-                );
+                    this.getItemContent(item)
+                ));
 
                 this.sandbox.dom.append(this.$list, $item);
 

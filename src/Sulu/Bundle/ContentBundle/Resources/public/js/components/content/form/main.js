@@ -30,7 +30,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
         template: '',
 
-        inAddMode: true,
         whenResourceLocatorIsLoaded: $.Deferred(),
         
         // content change detection
@@ -58,25 +57,27 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.sandbox.on('sulu.content.navigate', this.navigate, this);
 
             this.sandbox.on('sulu.header.saved', function(data) {
-                this.showState(!!data.published);
+                this.data = data;
+                this.showState(!!this.data.published);
+                this.initializeResourceLocator();
             }, this);
         },
 
         /**
          * Initializes the rlp-inputs as well as the rlp-part inputs.
-         * When in edit mode (not in add), the rlp-inputs and the rlp-part inputs
+         * When there is already an url for the page, the rlp-inputs and the rlp-part inputs
          * are just like any other inputs and the corresponding promise is resolved right away.
          */
         initializeResourceLocator: function() {
-            if (!!this.inAddMode) {
+            if (!this.data.url) {
                 // when a rlp-part gets changed other parts (e.g. submitting) has to wait
-                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'change', function() {
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'change.resourcelocator', function() {
                     if (!this.whenResourceLocatorIsLoaded || this.whenResourceLocatorIsLoaded.state() === 'resolved') {
                         this.whenResourceLocatorIsLoaded = $.Deferred();
                     }
                 }.bind(this));
 
-                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.loadResourceLocator.bind(this));
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout.resourcelocator', this.loadResourceLocator.bind(this));
 
                 // initialize all rlp-inputs as not edited by the user
                 this.getDomElementsForTagName('sulu.rlp', function(property) {
@@ -88,6 +89,8 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 }.bind(this));
 
             } else {
+                // saving a ghost page does not reinitialize the component, therefore we need to remove these handlers
+                this.sandbox.dom.off(this.getDomElementsForTagName('sulu.rlp.part'), '.resourcelocator');
                 this.whenResourceLocatorIsLoaded.resolve();
             }
         },
@@ -103,10 +106,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
             this.preview = preview;
             this.data = data;
-            if (!!this.data.id) {
-                // the form is in edit mode, if and ID is given, and therefore the page has already existed
-                this.inAddMode = false;
-            }
 
             this.showState(!!this.data.published);
 
@@ -192,7 +191,9 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                     content: this.data,
                     options: this.options
                 },
-                context = this.sandbox.util.extend({}, defaults),
+                context = this.sandbox.util.extend({}, defaults, {
+                    categoryLocale: this.options.language
+                }),
                 tpl = this.sandbox.util.template(template, context);
 
             this.sandbox.dom.html(this.formId, tpl);
@@ -504,10 +505,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
-
-            if (!!this.inAddMode) {
-                this.whenResourceLocatorIsLoaded = $.Deferred();
-            }
         },
 
         submit: function(action) {
@@ -521,7 +518,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
                     var data = this.sandbox.form.getData(this.formId);
                     data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
-                    this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
 
                     this.sandbox.emit('sulu.content.contents.save', data, action);
                 }

@@ -32,13 +32,14 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>Sulu CMF</name>
             <key>sulucmf</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="en"/>

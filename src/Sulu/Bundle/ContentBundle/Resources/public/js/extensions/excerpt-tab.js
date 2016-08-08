@@ -59,7 +59,8 @@ define(['jquery'], function($) {
                     this.$el.html(
                         this.sandbox.util.template(template, {
                             translate: this.sandbox.translate,
-                            options: this.options
+                            options: this.options,
+                            categoryLocale: this.options.language
                         })
                     );
 

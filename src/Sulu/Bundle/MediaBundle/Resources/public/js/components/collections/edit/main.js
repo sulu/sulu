@@ -92,6 +92,7 @@ define([
                     url: '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title'
                 }
             });
+            this.sandbox.emit('husky.data-navigation.collections.set-locale', UserSettingsManager.getMediaLocale());
             this.updateDataNavigationAddButton();
 
             this.bindCustomEvents();
@@ -197,11 +198,12 @@ define([
          * @param parentCollection
          */
         moveCollection: function(parentCollection) {
-            CollectionManager.move(this.data.id, parentCollection.id).then(function() {
-                this.sandbox.emit('husky.data-navigation.collections.reload');
-                this.sandbox.emit('husky.data-navigation.collections.select', parentCollection.id);
-                MediaRouter.toCollection(this.data.id);
-            }.bind(this));
+            CollectionManager.move(this.data.id, parentCollection.id, UserSettingsManager.getMediaLocale())
+                .then(function() {
+                    this.sandbox.emit('husky.data-navigation.collections.reload');
+                    this.sandbox.emit('husky.data-navigation.collections.select', parentCollection.id);
+                    MediaRouter.toCollection(this.data.id);
+                }.bind(this));
         }
     };
 });

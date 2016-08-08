@@ -37,13 +37,14 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>test CMF AT</name>
             <key>testcmf_at</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="de" country="at" default="true"/>

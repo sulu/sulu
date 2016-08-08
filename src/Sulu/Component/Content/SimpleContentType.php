@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content;
 
+use Jackalope\NodeType\NodeProcessor;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
@@ -85,7 +86,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     ) {
         $value = $property->getValue();
         if ($value != null) {
-            $node->setProperty($property->getName(), $value);
+            $node->setProperty($property->getName(), $this->removeIllegalCharacters($value));
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
@@ -162,5 +163,18 @@ abstract class SimpleContentType implements ContentTypeInterface
     public function getReferencedUuids(PropertyInterface $property)
     {
         return [];
+    }
+
+    /**
+     * Remove illegal characters from content string, else PHPCR would throw an `PHPCR\ValueFormatException`
+     * if an illegal characters is detected.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function removeIllegalCharacters($content)
+    {
+        return preg_replace(NodeProcessor::VALIDATE_STRING, '', $content);
     }
 }

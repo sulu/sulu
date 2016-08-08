@@ -39,13 +39,14 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>short</strategy>
+    </resource-locator>
+
     <fuu>
         <portal>
             <name>Sulu CMF AT</name>
             <key>sulucmf_at</key>
-            <resource-locator>
-                <strategy>short</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="de" country="at"/>

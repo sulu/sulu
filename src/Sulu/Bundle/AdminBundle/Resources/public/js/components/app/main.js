@@ -446,12 +446,11 @@ define(function() {
          * @param locale {string} locale to change to
          */
         changeUserLocale: function(locale) {
-            //Todo: don't use hardcoded url
             this.sandbox.util.ajax({
                 type: 'PUT',
                 url: constants.changeLanguageUrl,
-                contentType: 'application/json', // payload format
-                dataType: 'json', // response format
+                contentType: 'application/json',
+                dataType: 'json',
                 data: JSON.stringify({
                     locale: locale
                 }),

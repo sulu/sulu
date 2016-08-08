@@ -13,7 +13,6 @@ services:
   - mysql
 
 environment:
-  SYMFONY_DEPRECATIONS_HELPER: weak
   JACKRABBIT_VERSION: '2.12.0'
   SYMFONY__DATABASE__PASSWORD: Password12!
 

@@ -87,19 +87,22 @@ define(['text!./form.html'], function(form) {
                 this.sandbox.emit('sulu.category.categories.list');
             }.bind(this));
 
-            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.saveDetails.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteCategory.bind(this));
-            this.sandbox.on('sulu.category.categories.changed', this.changeHandler.bind(this));
-        },
 
-        /**
-         * Triggered when locale was changed.
-         *
-         * @param {{id}} localeItem
-         */
-        changeLanguage: function(localeItem) {
-            this.locale = localeItem.id;
+            // add clicked
+            this.sandbox.on('sulu.toolbar.add', function() {
+                this.sandbox.emit('husky.datagrid.record.add', {
+                    id: '',
+                    keyword: '',
+                    locale: this.locale
+                });
+            }.bind(this));
+
+            // resolve conflict
+            this.sandbox.on('husky.datagrid.data.save.failed', function(jqXHR, textStatus, error, data) {
+                this.handleFail(jqXHR, data);
+            }.bind(this));
         },
 
         /**
@@ -176,20 +179,6 @@ define(['text!./form.html'], function(form) {
                 },
                 'keywords'
             );
-
-            // add clicked
-            this.sandbox.on('sulu.toolbar.add', function() {
-                this.sandbox.emit('husky.datagrid.record.add', {
-                    id: '',
-                    keyword: '',
-                    locale: this.locale
-                });
-            }.bind(this));
-
-            // resolve conflict
-            this.sandbox.on('husky.datagrid.data.save.failed', function(jqXHR, textStatus, error, data) {
-                this.handleFail(jqXHR, data);
-            }.bind(this));
         },
 
         handleFail: function(jqXHR, data) {
@@ -286,13 +275,6 @@ define(['text!./form.html'], function(form) {
             }.bind(this)).fail(function(jqXHR) {
                 this.handleFail(jqXHR, data);
             }.bind(this));
-        },
-
-        changeHandler: function(category) {
-            this.prepareData(category);
-            this.sandbox.form.setData(constants.detailsFromSelector, this.data);
-
-            this.sandbox.emit('husky.datagrid.url.update', {locale: this.locale});
         },
 
         /**

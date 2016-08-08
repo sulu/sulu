@@ -48,6 +48,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
 
     return {
         initialize: function() {
+            this.locale = this.options.locale;
             this.filter = null;
 
             this.bindCustomEvents();
@@ -79,7 +80,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }.bind(this));
 
             this.sandbox.on(FILTER_EDIT, function(id) {
-                this.load(id, AppConfig.getUser().locale);
+                this.load(id);
             }.bind(this));
 
             this.sandbox.on(FILTER_LIST, function(type) {
@@ -87,7 +88,12 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }.bind(this));
 
             this.sandbox.on('sulu.header.language-changed', function(locale) {
-                this.load(this.options.id, locale.id);
+                this.locale = locale.id;
+                if (this.options.display === 'list') {
+                    this.renderList();
+                } else if (this.options.display === 'form') {
+                    this.renderForm();
+                }
             }, this);
         },
 
@@ -119,7 +125,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         newFilter: function() {
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'resource/filters/' + this.options.type + '/' + AppConfig.getUser().locale + '/add'
+                'resource/filters/' + this.options.type + '/' + this.locale + '/add'
             );
         },
 
@@ -201,10 +207,10 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
          * @param id
          * @param locale
          */
-        load: function(id, locale) {
+        load: function(id) {
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'resource/filters/' + this.options.type + '/' + locale + '/' + 'edit:' + id + '/details'
+                'resource/filters/' + this.options.type + '/' + this.locale + '/' + 'edit:' + id + '/details'
             );
         },
 
@@ -248,7 +254,8 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                     name: 'filters/components/list@suluresource',
                     options: {
                         el: $list,
-                        type: this.options.type
+                        type: this.options.type,
+                        locale: this.locale
                     }
                 }
             ]);

@@ -14,21 +14,13 @@
                 <source>sulu-document-manager.publish</source>
                 <target>Veröffentlichen</target>
             </trans-unit>
-            <trans-unit id="4" resname="sulu-document-manager.published-shadow">
-                <source>sulu-document-manager.published-shadow</source>
-                <target>Der Veröffentlichungsstatus wird vom Status der Hauptseite übernommen.</target>
-            </trans-unit>
             <trans-unit id="5" resname="sulu-document-manager.draft-label">
                 <source>sulu-document-manager.draft-label</source>
                 <target><![CDATA[Du arbeitest an einem Entwurf, zuletzt gespeichert: %(changed)s von <b>%(user)s</b>]]></target>
             </trans-unit>
             <trans-unit id="6" resname="sulu-document-manager.unpublish">
                 <source>sulu-document-manager.unpublish</source>
-                <target>Veröffentlichung widerrufen</target>
-            </trans-unit>
-            <trans-unit id="7" resname="labels.error.unpublish-desc">
-                <source>labels.error.unpublish-desc</source>
-                <target>Veröffentlichung der Seite konnte nicht widerrufen werden.</target>
+                <target>Nicht mehr veröffentlichen</target>
             </trans-unit>
         </body>
     </file>

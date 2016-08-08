@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContentBundle\Markup;
 
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
@@ -121,10 +120,12 @@ class LinkTag implements TagInterface
         foreach ($attributesByTag as $tag => $attributes) {
             if (!array_key_exists($attributes['href'], $contents)) {
                 $state = self::VALIDATE_REMOVED;
-            } elseif (WorkflowStage::TEST === $contents[$attributes['href']]->getWorkflowStage()) {
-                $state = self::VALIDATE_UNPUBLISHED;
-            } else {
+            } elseif (array_key_exists('published', $contents[$attributes['href']]->getData()) &&
+                !empty($contents[$attributes['href']]->getData()['published'])
+            ) {
                 continue;
+            } else {
+                $state = self::VALIDATE_UNPUBLISHED;
             }
 
             $result[$tag] = $state;
@@ -156,7 +157,7 @@ class LinkTag implements TagInterface
             $locale,
             MappingBuilder::create()
                 ->setResolveUrl(true)
-                ->addProperties(['title'])
+                ->addProperties(['title', 'published'])
                 ->setOnlyPublished($published)
                 ->setHydrateGhost(false)
                 ->getMapping()

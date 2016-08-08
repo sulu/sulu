@@ -210,6 +210,24 @@
                 });
             };
 
+            /**
+             * Returns the default locale for different content depending on the current
+             * user and the available locales.
+             *
+             * @returns {String} the default locale
+             */
+            app.sandbox.sulu.getDefaultContentLocale = function() {
+                if (!!SULU.user.locale && _.contains(SULU.locales, SULU.user.locale)) {
+                    return SULU.user.locale;
+                }
+
+                var savedLocale = app.sandbox.sulu.getUserSetting('contentLanguage');
+                if (!!savedLocale) {
+                    return savedLocale;
+                }
+
+                return SULU.locales[0];
+            };
 
             /**
              * Shows a standard delete warning dialog

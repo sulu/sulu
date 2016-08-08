@@ -173,7 +173,10 @@ define(['config', 'app-config'], function(Config, AppConfig) {
                         name: 'datagrid@husky',
                         options: {
                             el: this.$find('#' + this.ids.overlayDatagrid),
-                            url: _.template(this.options.snippetsUrl, {type: type, locale: AppConfig.getUser().locale}),
+                            url: _.template(this.options.snippetsUrl, {
+                                type: type,
+                                locale: this.sandbox.sulu.getDefaultContentLocale()
+                            }),
                             resultKey: 'snippets',
                             sortable: false,
                             searchInstanceName: this.ids.overlayDatagridSearch,

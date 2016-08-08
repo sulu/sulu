@@ -27,7 +27,8 @@ define(['config', 'css!sulucategorycss/main'], function(Config) {
 
             var CATEGORIES_LOCALE = 'categoryLocale',
                 getLocale = function() {
-                    return app.sandbox.sulu.getUserSetting(CATEGORIES_LOCALE) || app.sandbox.sulu.user.locale;
+                    return app.sandbox.sulu.getUserSetting(CATEGORIES_LOCALE)
+                        || app.sandbox.sulu.getDefaultContentLocale();
                 },
                 toList = function(locale) {
                     app.sandbox.emit('sulu.router.navigate', 'settings/categories/' + locale, false, false);

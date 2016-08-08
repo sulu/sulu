@@ -88,7 +88,7 @@ define([
             } else {
                 collection = Collection.findOrCreate({id: collectionId});
                 collection.fetch({
-                    data: (!!locale) ? {locale: locale} : null,
+                    data: {locale: locale},
                     success: function(response) {
                         Mediator.emit('sulu.medias.collection.loaded', collectionId);
                         promise.resolve(response.toJSON());
@@ -156,10 +156,10 @@ define([
          * @param parentCollectionId
          * @returns {*}
          */
-        move: function(collectionId, parentCollectionId) {
+        move: function(collectionId, parentCollectionId, locale) {
             var promise = $.Deferred();
 
-            var url = '/admin/api/collections/' + collectionId + '?action=move';
+            var url = '/admin/api/collections/' + collectionId + '?action=move&locale=' + locale;
             url = (!!parentCollectionId) ? url + '&destination=' + parentCollectionId : url;
 
             Util.save(url, 'POST')

@@ -178,17 +178,9 @@
                 <source>smart-content.changed</source>
                 <target>Geändert am (Datum)</target>
             </trans-unit>
-            <trans-unit id="cc88fcd370c8ff1d96f0b9f991db8317" resname="smart-content.save">
-                <source>smart-content.save</source>
-                <target>Save</target>
-            </trans-unit>
-            <trans-unit id="cc881cd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
-                <source>smart-content.clear</source>
-                <target>Clear</target>
-            </trans-unit>
-            <trans-unit id="cc88fcd370c8ff1d96f0b9f992db8317" resname="smart-content.save">
-                <source>smart-content.save</source>
-                <target>Speichern</target>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f991db8317" resname="smart-content.apply">
+                <source>smart-content.apply</source>
+                <target>Übernehmen</target>
             </trans-unit>
             <trans-unit id="cc882cd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
                 <source>smart-content.clear</source>
@@ -698,10 +690,6 @@
             <trans-unit id="45" resname="sulu-content.draft-label">
                 <source>sulu-content.draft-label</source>
                 <target><![CDATA[Du arbeitest an einem Entwurf, zuletzt gespeichert: %(changed)s von <b>%(user)s</b>]]></target>
-            </trans-unit>
-            <trans-unit id="46" resname="sulu-content.unpublish">
-                <source>sulu-content.unpublish</source>
-                <target>Veröffentlichung widerrufen</target>
             </trans-unit>
             <trans-unit id="47" resname="labels.error.content-unpublish-desc">
                 <source>labels.error.content-unpublish-desc</source>

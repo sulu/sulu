@@ -231,10 +231,10 @@ define([
          * Start the list toolbar and the datagrid
          */
         startDatagrid: function() {
-            var view = UserSettingsManager.getMediaListView();
-
-            // init list-toolbar and datagrid
-            var settingsDropdown = [], buttons = {};
+            var view = UserSettingsManager.getMediaListView(),
+                locale = UserSettingsManager.getMediaLocale(),
+                // init list-toolbar and datagrid
+                settingsDropdown = [], buttons = {};
 
             if (SecurityChecker.hasPermission(this.data, 'add')) {
                 buttons.add = {
@@ -288,7 +288,9 @@ define([
 
             buttons.mediaDecoratorDropdown = {};
 
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'media', '/admin/api/media/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this,
+                'media',
+                '/admin/api/media/fields?locale=' + locale,
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
@@ -296,7 +298,7 @@ define([
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
+                    url: '/admin/api/media?locale=' + locale + '&collection=' + this.options.id,
                     searchFields: ['name', 'title', 'description'],
                     view: view,
                     pagination: UserSettingsManager.getMediaListPagination(),
@@ -329,7 +331,7 @@ define([
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
                             emptyIcon: 'fa-file-o',
-                            locale: UserSettingsManager.getMediaLocale()
+                            locale: locale
                         }
                     },
                     paginationOptions: {
@@ -367,7 +369,7 @@ define([
          */
         moveMedia: function(collection) {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                MediaManager.move(ids, collection.id);
+                MediaManager.move(ids, collection.id, UserSettingsManager.getMediaLocale());
             }.bind(this));
         },
 

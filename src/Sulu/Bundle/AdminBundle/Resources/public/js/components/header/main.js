@@ -501,13 +501,15 @@ define([], function() {
         startLanguageChanger: function() {
             if (!!this.options.toolbarLanguageChanger) {
                 var $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.languageChanger)({
-                        title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale
+                            title: this.options.toolbarLanguageChanger.preSelected
+                                || this.sandbox.sulu.getDefaultContentLocale()
                     })),
                     options = constants.languageChangerDefaults;
                 this.sandbox.dom.show(this.$find(constants.rightSelector));
                 this.sandbox.dom.append(this.$find(constants.rightSelector), $element);
                 options.el = $element;
                 options.data = this.options.toolbarLanguageChanger.data || this.getDefaultLanguages();
+
                 this.sandbox.start([{
                     name: 'dropdown@husky',
                     options: options

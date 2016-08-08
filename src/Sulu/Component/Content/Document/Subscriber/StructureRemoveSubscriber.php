@@ -13,12 +13,13 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -29,17 +30,42 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
-    private $inspector;
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
+     * @var SessionInterface
+     */
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
+    /**
+     * @var MetadataFactoryInterface
+     */
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
-        DocumentInspector $inspector,
+        DocumentManagerInterface $documentManager,
+        DocumentInspector $documentInspector,
+        SessionInterface $defaultSession,
+        SessionInterface $liveSession,
         MetadataFactoryInterface $metadataFactory
     ) {
         $this->documentManager = $documentManager;
-        $this->inspector = $inspector;
+        $this->documentInspector = $documentInspector;
+        $this->defaultSession = $defaultSession;
+        $this->liveSession = $liveSession;
         $this->metadataFactory = $metadataFactory;
     }
 
@@ -77,7 +103,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      */
     private function removeRoute(StructureBehavior $document)
     {
-        foreach ($this->inspector->getReferrers($document) as $referrer) {
+        foreach ($this->documentInspector->getReferrers($document) as $referrer) {
             if ($referrer instanceof RouteBehavior) {
                 $this->documentManager->remove($referrer);
             }
@@ -86,8 +112,17 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     private function removeReferences($document)
     {
-        $node = $this->inspector->getNode($document);
+        $node = $this->documentInspector->getNode($document);
 
+        $this->removeReferencesForNode($this->defaultSession->getNode($node->getPath()));
+        $this->removeReferencesForNode($this->liveSession->getNode($node->getPath()));
+    }
+
+    /**
+     * @param $node
+     */
+    private function removeReferencesForNode(NodeInterface $node)
+    {
         $references = $node->getReferences();
 
         foreach ($references as $reference) {

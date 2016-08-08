@@ -34,21 +34,26 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "all",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999 }
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "locale" = "expr(object.getLocale())" }
  *      )
  * )
  * @Relation(
  *      "filterByTypes",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "types" = "{types}" }
+ *          parameters = {
+ *              "collection" = "expr(object.getId())",
+ *              "limit" = 9999,
+ *              "types" = "{types}",
+ *              "locale" = "expr(object.getLocale())"
+ *          }
  *      )
  * )
  * @Relation(
  *      "self",
  *      href = @Route(
  *          "get_collection",
- *          parameters = { "id" = "expr(object.getId())" }
+ *          parameters = { "id" = "expr(object.getId())", "locale" = "expr(object.getLocale())" }
  *      )
  * )
  * @Relation(
@@ -59,7 +64,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "children",
  *      href = @Route(
  *          "get_collection",
- *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title" }
+ *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title", "locale" = "expr(object.getLocale())" }
  *      )
  * )
  * @Relation(

@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Type;
 /**
  * Represents a parameter of a property.
  */
-class PropertyParameter
+class PropertyParameter implements \JsonSerializable
 {
     /**
      * @var string
@@ -150,5 +150,16 @@ class PropertyParameter
         } else {
             return '';
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'value' => $this->getValue(),
+            'type' => $this->getType(),
+        ];
     }
 }

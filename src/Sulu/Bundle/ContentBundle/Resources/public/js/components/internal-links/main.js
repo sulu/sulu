@@ -8,9 +8,9 @@
  */
 
 /**
- * handles media selection
+ * handles internal links
  *
- * @class MediaSelection
+ * @class InternalLinks
  * @constructor
  */
 define([], function() {
@@ -29,11 +29,14 @@ define([], function() {
             actionIcon: 'fa-link',
             dataDefault: [],
             navigateEvent: 'sulu.router.navigate',
+            publishedStateName: 'publishedState',
+            publishedName: 'published',
             translations: {
                 noContentSelected: 'internal-links.nolinks-selected',
                 addLinks: 'internal-links.add',
                 visible: 'public.visible',
-                of: 'public.of'
+                of: 'public.of',
+                unpublished: 'public.unpublished'
             }
         },
 
@@ -44,12 +47,24 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(id, value) {
+            contentItem: function(id, value, icons) {
                 return [
+                    '<span class="icons">' + icons + '</span>',
                     '<a href="#" data-id="', id, '" class="link">',
                     '    <span class="value">', value, '</span>',
                     '</a>'
                 ].join('');
+            },
+
+            icons: {
+                draft: function(title) {
+                    return '<span class="draft-icon" title="' + title + '"/>';
+                },
+                published: function(title) {
+                    return [
+                        '<span class="published-icon" title="' + title + '"/>'
+                    ].join('');
+                }
             }
         },
 
@@ -97,10 +112,7 @@ define([], function() {
                 data.push(item.id);
 
                 this.setData(data, false);
-
-                if (!!item.publishedState) {
-                    this.addItem(item);
-                }
+                this.addItem(item);
             }
         },
 
@@ -172,7 +184,8 @@ define([], function() {
                         container: this.$el,
                         removeOnClose: false,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
-                        skin: 'wide',
+                        skin: 'responsive-width',
+                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
@@ -221,8 +234,35 @@ define([], function() {
         getItemContent: function(item) {
             return templates.contentItem(
                 item[this.options.idKey],
-                item.title
+                item.title,
+                this.getItemIcons(item)
             );
+        },
+
+        /**
+         * Returns the icons of an item for given item data
+         *
+         * @param {Object} itemData The data of the item
+         * @returns {string} the html string of icons
+         */
+        getItemIcons: function(itemData) {
+            if (itemData[this.options.publishedStateName] === undefined) {
+                return '';
+            }
+
+            var icons = '';
+            if (!itemData[this.options.publishedStateName] && !!itemData[this.options.publishedName]) {
+                icons += templates.icons.published(
+                    this.sandbox.translate(this.options.translations.unpublished)
+                );
+            }
+            if (!itemData[this.options.publishedStateName]) {
+                icons += templates.icons.draft(
+                    this.sandbox.translate(this.options.translations.unpublished)
+                );
+            }
+
+            return icons;
         },
 
         sortHandler: function(ids) {

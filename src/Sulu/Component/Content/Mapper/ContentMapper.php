@@ -280,25 +280,6 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey, $locale, $segmentKey = null)
-    {
-        $uuid = $this->rlpStrategy->loadByResourceLocator(
-            $resourceLocator,
-            $webspaceKey,
-            $locale,
-            $segmentKey
-        );
-
-        $document = $this->loadDocument($uuid, $locale, [
-            'exclude_shadow' => false,
-        ]);
-
-        return $this->documentToStructure($document);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function loadBySql2($sql2, $locale, $webspaceKey, $limit = null)
     {
         $query = $this->documentManager->createQuery($sql2, $locale);
@@ -729,6 +710,7 @@ class ContentMapper implements ContentMapperInterface
             'changed' => $document->getChanged(),
             'changer' => $document->getChanger(),
             'created' => $document->getCreated(),
+            'publishedState' => $nodeState === WorkflowStage::PUBLISHED,
             'published' => $document->getPublished(),
             'creator' => $document->getCreator(),
             'title' => $originalDocument->getTitle(),
