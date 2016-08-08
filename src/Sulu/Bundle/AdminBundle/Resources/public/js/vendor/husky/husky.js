@@ -41928,9 +41928,7 @@ define('__component__$column-navigation@husky',[],function() {
                         this.sandbox.dom.append($container,
                             '<span class="fa-shadow-node col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.shadow) + '"></span>');
                     }
-                }
-                // unpublished
-                if (!data[this.options.publishedStateName]) {
+                } else if (!data[this.options.publishedStateName]) {
                     if (!!data[this.options.publishedName]) {
                         this.sandbox.dom.append(
                             $container,

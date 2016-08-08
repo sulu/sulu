@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * FEATURE     #2761 [All]                 Added Dutch translation
     * FEATURE     #2748 [AdminBundle]         Added Twig blocks to be able to use inheritance
     * BUGFIX      #2771 [SnippetBundle]       Fixed default snippets for public workspace
+    * BUGFIX      #2773 [ContentBundle]       Removed published icons from column navigation when page is ghost
 
 * 1.3.0-RC3 (2016-08-08)
     * BUGFIX      #2760 [MediaBundle]         Added missing locale to media move action
