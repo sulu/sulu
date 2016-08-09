@@ -22,7 +22,6 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
@@ -229,10 +228,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
@@ -242,10 +240,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $englishDocument = $this->getDocumentMock();
         $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'en')->willReturn($englishDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
         $this->rlpStrategy->getChildPart('/english/parent/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent/child');
         $defaultNode->setProperty('i18n:en-url', '/english/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:en-url', '/english/parent/child')->shouldBeCalled();
         $englishDocument->setResourceSegment('/english/parent/child')->shouldBeCalled();
@@ -281,11 +278,10 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
         $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
@@ -341,12 +337,10 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
-            ->willThrow(ResourceLocatorNotFoundException::class);
         $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/child');
         $defaultNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
         $germanDocument->setResourceSegment(Argument::any())->shouldBeCalled();
@@ -381,9 +375,8 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
         $this->rlpStrategy->save($germanDocument, null)->shouldNotBeCalled();
@@ -424,22 +417,20 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
         $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
 
         $englishDocument = $this->getDocumentMock();
         $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'en')->willReturn($englishDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
         $englishDocument->getResourceSegment()->willReturn('/english/child');
         $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/english/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent/child');
         $defaultNode->setProperty('i18n:en-url', '/english/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:en-url', Argument::any())->shouldNotBeCalled();
 
@@ -477,11 +468,10 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
         $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
 
@@ -543,12 +533,10 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
-            ->willThrow(ResourceLocatorNotFoundException::class);
         $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
+        $this->rlpStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/child');
         $defaultNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
 

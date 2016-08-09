@@ -80,14 +80,22 @@ class CleanupHistoryCommandTest extends SuluTestCase
 
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
         $teamNode = $this->createContentNode($contentNode, $webspaceKey, 'team', '/team', $locale);
-        $this->createContentNode($teamNode, $webspaceKey, 'daniel', '/team/daniel', $locale);
-        $this->createContentNode($teamNode, $webspaceKey, 'johannes', '/team/johannes', $locale);
+        $danielNode = $this->createContentNode($teamNode, $webspaceKey, 'daniel', '/team/daniel', $locale);
+        $johannesNode = $this->createContentNode($teamNode, $webspaceKey, 'johannes', '/team/johannes', $locale);
 
         $session->save();
 
         $teamDocument = $this->documentManager->find($teamNode->getIdentifier(), 'en');
         $teamDocument->setResourceSegment('/team');
-        $this->rlpStrategy->save($teamDocument, 1); // Will also create routes for child nodes
+        $this->rlpStrategy->save($teamDocument, 1);
+
+        $danielDocument = $this->documentManager->find($danielNode->getIdentifier(), 'en');
+        $danielDocument->setResourceSegment('/team/daniel');
+        $this->rlpStrategy->save($danielDocument, 1);
+
+        $johannesDocument = $this->documentManager->find($johannesNode->getIdentifier(), 'en');
+        $johannesDocument->setResourceSegment('/team/johannes');
+        $this->rlpStrategy->save($johannesDocument, 1);
 
         $session->save();
         $session->refresh(false);
@@ -100,20 +108,41 @@ class CleanupHistoryCommandTest extends SuluTestCase
 
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
         $teamNode = $this->createContentNode($contentNode, $webspaceKey, 'team', '/team', $locale);
-        $this->createContentNode($teamNode, $webspaceKey, 'daniel', '/team/daniel', $locale);
-        $this->createContentNode($teamNode, $webspaceKey, 'johannes', '/team/johannes', $locale);
-        $this->createContentNode($contentNode, $webspaceKey, 'about-us', '/about-us', $locale);
+        $danielNode = $this->createContentNode($teamNode, $webspaceKey, 'daniel', '/team/daniel', $locale);
+        $johannesNode = $this->createContentNode($teamNode, $webspaceKey, 'johannes', '/team/johannes', $locale);
+        $aboutNode = $this->createContentNode($contentNode, $webspaceKey, 'about-us', '/about-us', $locale);
 
         $session->save();
 
         $teamDocument = $this->documentManager->find($teamNode->getIdentifier());
-        $teamDocument->setResourceSegment('/team'); // Will also create routes for child nodes
+        $teamDocument->setResourceSegment('/team');
         $this->rlpStrategy->save($teamDocument, 1);
+
+        $danielDocument = $this->documentManager->find($danielNode->getIdentifier());
+        $danielDocument->setResourceSegment('/team/daniel');
+        $this->rlpStrategy->save($danielDocument, 1);
+
+        $johannesDocument = $this->documentManager->find($johannesNode->getIdentifier());
+        $johannesDocument->setResourceSegment('/team/johannes');
+        $this->rlpStrategy->save($johannesDocument, 1);
+
+        $aboutDocument = $this->documentManager->find($aboutNode->getIdentifier());
+        $aboutDocument->setResourceSegment('/about-us');
+        $this->rlpStrategy->save($aboutDocument, 1);
+
         $session->save();
         $session->refresh(false);
 
+        // update resource locators
         $teamDocument->setResourceSegment('/my-test');
         $this->rlpStrategy->save($teamDocument, 1);
+
+        $danielDocument->setResourceSegment('/my-test/daniel');
+        $this->rlpStrategy->save($danielDocument, 1);
+
+        $johannesDocument->setResourceSegment('/my-test/johannes');
+        $this->rlpStrategy->save($johannesDocument, 1);
+
         $session->save();
         $session->refresh(false);
     }

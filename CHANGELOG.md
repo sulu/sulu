@@ -2,9 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2685 [ContentBundle]       Fixed resource locator adaption for pages with ghost-ancestors
     * BUGFIX      #2758 [ContentBundle]       Fixed wrong disabeling of button in block type
     * FEATURE     #2761 [All]                 Added Dutch translation
-    * FEATURE     #2748 [AdminBundle]         Added Twig blocks to be able to use inheritance 
+    * FEATURE     #2748 [AdminBundle]         Added Twig blocks to be able to use inheritance
 
 * 1.3.0-RC3 (2016-08-08)
     * BUGFIX      #2760 [MediaBundle]         Added missing locale to media move action

@@ -94,6 +94,7 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
         </service>
 
         <!-- simple content types -->

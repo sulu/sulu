@@ -15,6 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
@@ -29,7 +30,8 @@ class TreeStrategy extends RlpStrategy
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
         SuluNodeHelper $nodeHelper,
-        DocumentInspector $documentInspector
+        DocumentInspector $documentInspector,
+        DocumentManagerInterface $documentManager
     ) {
         parent::__construct(
             'whole-tree',
@@ -38,7 +40,8 @@ class TreeStrategy extends RlpStrategy
             $structureManager,
             $contentTypeManager,
             $nodeHelper,
-            $documentInspector
+            $documentInspector,
+            $documentManager
         );
     }
 

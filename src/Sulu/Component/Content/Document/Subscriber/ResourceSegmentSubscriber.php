@@ -19,7 +19,6 @@ use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -98,7 +97,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             Events::HYDRATE => ['handleHydrate', -200],
             Events::MOVE => ['updateMovedDocument', -128],
             Events::COPY => ['updateCopiedDocument', -128],
-            Events::PUBLISH => 'handlePersistRoute',
+            Events::PUBLISH => ['handlePersistRoute', -128],
         ];
     }
 
@@ -296,16 +295,10 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 $locale
             );
 
-            try {
-                $parentPart = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $locale);
-            } catch (ResourceLocatorNotFoundException $e) {
-                $parentPart = null;
-            }
-
             $this->updateResourceSegmentProperty(
                 $defaultNode,
                 $resourceSegmentPropertyName,
-                $parentPart,
+                $parentUuid,
                 $webspaceKey,
                 $locale
             );
@@ -314,7 +307,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 $this->updateResourceSegmentProperty(
                     $liveNode,
                     $resourceSegmentPropertyName,
-                    $parentPart,
+                    $parentUuid,
                     $webspaceKey,
                     $locale
                 );
@@ -335,14 +328,14 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      *
      * @param NodeInterface $node
      * @param string $resourceSegmentPropertyName
-     * @param string $parentPart
+     * @param string $parentUuid
      * @param string $webspaceKey
      * @param string $locale
      */
     private function updateResourceSegmentProperty(
         NodeInterface $node,
         $resourceSegmentPropertyName,
-        $parentPart,
+        $parentUuid,
         $webspaceKey,
         $locale
     ) {
@@ -350,7 +343,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
         $node->setProperty(
             $resourceSegmentPropertyName,
-            $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+            $this->rlpStrategy->generate($childPart, $parentUuid, $webspaceKey, $locale)
         );
     }
 }
