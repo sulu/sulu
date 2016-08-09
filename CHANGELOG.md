@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2775 [ContentBundle]       Removed action icon for ghost pages in column-navigation (husky)
     * ENHANCEMENT #2704 [ContactBundle]       Save contact-/account-documents with save button in header
     * BUGFIX      #2648 [HttpCacheBundle]     Purge cache when removing or unpublishing page
     * FEATURE     #2780 [ContentBundle]       Added images/icons of excerpt to search index
