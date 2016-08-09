@@ -489,7 +489,8 @@ define(['services/husky/util'], function(util) {
                 chooseCategoriesCancel: 'smart-content.choose-categories.cancel',
                 clearButton: 'smart-content.clear',
                 applyButton: 'smart-content.apply',
-                unpublished: 'public.unpublished'
+                unpublished: 'public.unpublished',
+                publishedWithDraft: 'public.published-with-draft'
             };
 
             this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
@@ -656,15 +657,17 @@ define(['services/husky/util'], function(util) {
                 return '';
             }
 
-            var icons = '';
+            var icons = '',
+                tooltip = this.sandbox.translate(this.translations.unpublished);
             if (!itemData[this.options.publishedStateKey] && !!itemData[this.options.publishedKey]) {
+                tooltip = this.sandbox.translate(this.translations.publishedWithDraft);
                 icons += _.template(templates.icons.published, {
-                    title: this.sandbox.translate(this.translations.unpublished)
+                    title: tooltip
                 });
             }
             if (!itemData[this.options.publishedStateKey]) {
                 icons += _.template(templates.icons.draft, {
-                    title: this.sandbox.translate(this.translations.unpublished)
+                    title: tooltip
                 });
             }
 

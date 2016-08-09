@@ -36,7 +36,8 @@ define([], function() {
                 addLinks: 'internal-links.add',
                 visible: 'public.visible',
                 of: 'public.of',
-                unpublished: 'public.unpublished'
+                unpublished: 'public.unpublished',
+                publishedWithDraft: 'public.published-with-draft'
             }
         },
 
@@ -250,16 +251,14 @@ define([], function() {
                 return '';
             }
 
-            var icons = '';
+            var icons = '',
+                tooltip = this.sandbox.translate(this.options.translations.unpublished);
             if (!itemData[this.options.publishedStateName] && !!itemData[this.options.publishedName]) {
-                icons += templates.icons.published(
-                    this.sandbox.translate(this.options.translations.unpublished)
-                );
+                tooltip = this.sandbox.translate(this.options.translations.publishedWithDraft);
+                icons += templates.icons.published(tooltip);
             }
             if (!itemData[this.options.publishedStateName]) {
-                icons += templates.icons.draft(
-                    this.sandbox.translate(this.options.translations.unpublished)
-                );
+                icons += templates.icons.draft(tooltip);
             }
 
             return icons;

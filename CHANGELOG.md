@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2704 [ContactBundle]       Save contact-/account-documents with save button in header
     * BUGFIX      #2648 [HttpCacheBundle]     Purge cache when removing or unpublishing page
     * FEATURE     #2780 [ContentBundle]       Added images/icons of excerpt to search index
+    * BUGFIX      #2777 [ContentBundle]       Fixed tooltip translations in column-navigation
     * BUGFIX      #2685 [ContentBundle]       Fixed resource locator adaption for pages with ghost-ancestors
     * BUGFIX      #2758 [ContentBundle]       Fixed wrong disabeling of button in block type
     * FEATURE     #2761 [All]                 Added Dutch translation
