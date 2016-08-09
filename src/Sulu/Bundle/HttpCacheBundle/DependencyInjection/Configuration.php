@@ -42,7 +42,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('paths')
+                        ->arrayNode('url')
                             ->canBeDisabled()
                         ->end()
                         ->arrayNode('tags')

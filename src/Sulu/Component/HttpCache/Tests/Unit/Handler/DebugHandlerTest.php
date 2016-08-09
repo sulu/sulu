@@ -38,8 +38,6 @@ class DebugHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->parameterBag = new ParameterBag();
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
         $this->response->headers = $this->parameterBag;

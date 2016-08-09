@@ -61,6 +61,11 @@ The name of the route also changed from `website_search` to
 `sulu_search.website_search`, because the controller is located in the
 SuluSearchBundle now.
 
+### Removed HTTP Cache Paths-Handler
+
+The HTTP Cache Integration has been refactored. The following configuration
+is not available anymore and must be removed: `sulu_http_cache.handlers.paths`
+
 ### Webspace Configuration
 
 The configuration schema for webspaces has changed. Instead of

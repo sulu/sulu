@@ -99,6 +99,7 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
         $localization1_2 = new Localization();
         $localization1_2->setLanguage('en');
         $webspace1->setLocalizations([$localization1_1, $localization1_2]);
+
         /** @var Webspace $webspace2 */
         $webspace2 = new Webspace();
         $webspace2->setKey('webspace2');
@@ -118,7 +119,13 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
 
         $routeNode = $this->prophesize(RouteDocument::class);
         $this->documentManager->create('route')->willReturn($routeNode->reveal());
-        $this->documentManager->find(Argument::any())->willThrow(DocumentNotFoundException::class);
+
+        $this->documentManager->find(
+            '/cmf/webspace1/contents',
+            'en',
+            ['load_ghost_content' => false]
+        )->willReturn(new HomeDocument());
+        $this->documentManager->find(Argument::cetera())->willThrow(DocumentNotFoundException::class);
 
         $this->documentManager->persist(
             Argument::type(HomeDocument::class),
@@ -133,8 +140,6 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             Argument::type(HomeDocument::class),
             'en',
             [
-                'path' => '/cmf/webspace1/contents',
-                'auto_create' => true,
                 'ignore_required' => true,
             ]
         )->shouldBeCalled();
