@@ -32,8 +32,6 @@ class SessionManager implements SessionManagerInterface
     }
 
     /**
-     * @deprecated Use the doctrine_phpcr service to retreive the session
-     *
      * {@inheritdoc}
      */
     public function getSession()
