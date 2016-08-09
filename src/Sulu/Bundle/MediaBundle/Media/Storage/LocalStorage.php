@@ -144,7 +144,11 @@ class LocalStorage implements StorageInterface
 
         if ($counter > 0) {
             $fileNameParts = explode('.', $fileName, 2);
-            $newFileName = $fileNameParts[0] . '-' . $counter . '.' . $fileNameParts[1];
+            $newFileName = $fileNameParts[0] . '-' . $counter;
+
+            if (isset($fileNameParts[1])) {
+                $newFileName .=  '.' . $fileNameParts[1];
+            }
         }
 
         $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);

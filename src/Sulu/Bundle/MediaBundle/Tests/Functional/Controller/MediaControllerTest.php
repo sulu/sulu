@@ -937,6 +937,42 @@ class MediaControllerTest extends SuluTestCase
      *
      * @group postWithoutDetails
      */
+    public function testPostWithoutExtension()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $imagePath = $this->getImagePath();
+        $this->assertTrue(file_exists($imagePath));
+        $photo = new UploadedFile($imagePath, 'photo', 'image/jpeg', 160768);
+
+        $client->request(
+            'POST',
+            '/api/media',
+            [
+                'locale' => 'en',
+                'collection' => $this->collection->getId(),
+            ],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
+
+        $this->assertEquals(1, count($client->getRequest()->files->all()));
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertEquals($this->mediaDefaultTitle, $response->title);
+
+        $this->assertEquals('photo', $response->name);
+        $this->assertNotNull($response->id);
+    }
+
+    /**
+     * Test POST to create a new Media without details.
+     *
+     * @group postWithoutDetails
+     */
     public function testPostWithSmallFile()
     {
         $client = $this->createAuthenticatedClient();
