@@ -150,14 +150,14 @@ define([
             this.sandbox.on(
                 'husky.overlay.dropzone-' + this.options.instanceName + '.opened',
                 function() {
-                    this.$el.find('.single-media-selection').addClass('dropzone-overlay-opened');
+                    this.$el.find('.media-selection-overlay').addClass('dropzone-overlay-opened');
                 }.bind(this)
             );
 
             this.sandbox.on(
                 'husky.overlay.dropzone-' + this.options.instanceName + '.closed',
                 function() {
-                    this.$el.find('.single-media-selection').removeClass('dropzone-overlay-opened');
+                    this.$el.find('.media-selection-overlay').removeClass('dropzone-overlay-opened');
                 }.bind(this)
             );
 
@@ -349,8 +349,8 @@ define([
                         removeOnClose: this.options.removeOnClose,
                         el: $element,
                         container: this.$el,
-                        skin: 'wide',
-                        cssClass: 'single-media-selection',
+                        contentSpacing: false,
+                        cssClass: 'media-selection-overlay',
                         instanceName: this.options.instanceName,
                         slides: [
                             {
