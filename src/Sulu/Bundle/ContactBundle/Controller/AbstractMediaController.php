@@ -93,7 +93,7 @@ abstract class AbstractMediaController extends RestController
      * @param string $id
      * @param string $mediaId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function removeMediaFromEntity($entityName, $id, $mediaId)
     {
@@ -143,9 +143,9 @@ abstract class AbstractMediaController extends RestController
      * @param string $routeName
      * @param AbstractContactManager $contactManager
      * @param string $id
-     * @param bool $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function getMultipleView($entityName, $routeName, AbstractContactManager $contactManager, $id, $request)
     {
@@ -194,7 +194,7 @@ abstract class AbstractMediaController extends RestController
      *
      * @param $entityName
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function getFieldsView($entityName)
     {

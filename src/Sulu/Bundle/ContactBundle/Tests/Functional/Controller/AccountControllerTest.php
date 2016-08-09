@@ -57,6 +57,16 @@ class AccountControllerTest extends SuluTestCase
     private $logo;
 
     /**
+     * @var Media
+     */
+    private $media1 = null;
+
+    /**
+     * @var Media
+     */
+    private $media2 = null;
+
+    /**
      * @var EntityManagerInterface
      */
     private $em;
@@ -230,7 +240,7 @@ class AccountControllerTest extends SuluTestCase
         $note->setValue('Note');
         $account->addNote($note);
 
-        $this->initLogo();
+        $this->initMedias();
         $account->setLogo($this->logo);
 
         $this->em->persist($account);
@@ -255,7 +265,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function initLogo()
+    public function initMedias()
     {
         $collectionType = new CollectionType();
         $collectionType->setName('My collection type');
@@ -291,6 +301,49 @@ class AccountControllerTest extends SuluTestCase
         $this->logo->addFile($file);
         $file->setMedia($this->logo);
         $this->em->persist($this->logo);
+        $this->em->persist($file);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media1.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1950-04-20'));
+        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->media1 = new Media();
+        $this->media1->setType($imageType);
+        $this->media1->setCollection($collection);
+        $this->media1->addFile($file);
+        $file->setMedia($this->media1);
+        $this->em->persist($this->media1);
+        $this->em->persist($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media2.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1970-04-20'));
+        $fileVersion->setCreated(new \DateTime('1970-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->media2 = new Media();
+        $this->media2->setType($imageType);
+        $this->media2->setCollection($collection);
+        $this->media2->addFile($file);
+        $file->setMedia($this->media2);
+        $this->em->persist($this->media2);
         $this->em->persist($file);
     }
 
@@ -1539,6 +1592,83 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    public function testPatchNotExisting()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'PATCH',
+            '/api/accounts/101',
+            [
+                'medias' => [],
+            ]
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    public function testPatchAssignedMedias()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/accounts/' . $this->account->getId());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+
+        // add two medias
+        $client->request(
+            'PATCH',
+            '/api/accounts/' . $this->account->getId(),
+            [
+                'medias' => [
+                    [
+                        'id' => $this->media1->getId(),
+                    ],
+                    [
+                        'id' => $this->media2->getId(),
+                    ],
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, count($response->medias));
+
+        // remove medias
+        $client->request(
+            'PATCH',
+            '/api/accounts/' . $this->account->getId(),
+            [
+                'medias' => [],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+
+        // missing media
+        $client->request(
+            'PATCH',
+            '/api/accounts/' . $this->account->getId(),
+            [
+                'medias' => [
+                    [
+                        'id' => $this->media1->getId(),
+                    ],
+                    [
+                        'id' => 101,
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+
+        $client->request('GET', '/api/accounts/' . $this->account->getId());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
     }
 
     public function testDeleteById()

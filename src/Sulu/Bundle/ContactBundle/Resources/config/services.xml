@@ -66,6 +66,7 @@
             <argument type="service" id="sulu_contact.account_factory"/>
             <argument type="service" id="sulu_contact.account_repository"/>
             <argument type="service" id="sulu.repository.contact"/>
+            <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%">
@@ -75,6 +76,7 @@
             <argument type="service" id="sulu_contact.account_repository"/>
             <argument type="service" id="sulu_contact.contact_title_repository"/>
             <argument type="service" id="sulu.repository.contact"/>
+            <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%">
