@@ -17,6 +17,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
@@ -228,7 +229,11 @@ class InvalidationSubscriber implements EventSubscriberInterface
 
         // get current resource-locator and history resource-locators
         $resourceLocators = [];
-        $resourceLocators[] = $this->rlpStrategy->loadByContentUuid($documentUuid, $webspace, $locale);
+        try {
+            $resourceLocators[] = $this->rlpStrategy->loadByContentUuid($documentUuid, $webspace, $locale);
+        } catch (ResourceLocatorNotFoundException $e) {
+            // if no resource locator exists there is also no url to purge from the cache
+        }
 
         $historyResourceLocators = $this->rlpStrategy->loadHistoryByContentUuid($documentUuid, $webspace, $locale);
         foreach ($historyResourceLocators as $historyResourceLocator) {

@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2785 [ContentBundle]       Fixed deindexing of documents for both workspaces
     * BUGFIX      #2775 [ContentBundle]       Removed action icon for ghost pages in column-navigation (husky)
     * BUGFIX      #2781 [ContentBundle]       Set workflowstage of copied nodes to draft
+    * BUGFIX      #2784 [ContentBundle]       Fixed publish handling for internal and external links
     * ENHANCEMENT #2704 [ContactBundle]       Save contact-/account-documents with save button in header
     * BUGFIX      #2648 [HttpCacheBundle]     Purge cache when removing or unpublishing page
     * FEATURE     #2780 [ContentBundle]       Added images/icons of excerpt to search index
