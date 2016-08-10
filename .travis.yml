@@ -18,7 +18,10 @@ matrix:
   include:
     - php: 5.5
     - php: 7.0
-      env: 
+      env:
+        - SYMFONY__DATABASE__DRIVER=pdo_pgsql
+        - SYMFONY__DATABASE__USER=postgres
+        - SYMFONY__DATABASE__PASSWORD=postgres
         - SYMFONY__PHPCR__TRANSPORT=jackrabbit
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"

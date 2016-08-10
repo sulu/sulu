@@ -537,10 +537,10 @@ class ContactRepositoryTest extends SuluTestCase
     public function findGetAllProvider()
     {
         return [
-            [null, null, [], [], $this->contactData],
-            [3, null, [], [], array_slice($this->contactData, 0, 3)],
-            [3, 2, [], [], array_slice($this->contactData, 2, 3)],
-            [1, 0, [], ['lastName' => 'Gabler'], [$this->contactData[4]]],
+            [null, null, ['id' => 'asc'], [], $this->contactData],
+            [3, null, ['id' => 'asc'], [], array_slice($this->contactData, 0, 3)],
+            [3, 2, ['id' => 'asc'], [], array_slice($this->contactData, 2, 3)],
+            [1, 0, ['id' => 'asc'], ['lastName' => 'Gabler'], [$this->contactData[4]]],
             [1, 0, ['firstName' => 'asc'], [], [$this->contactData[1]]],
             [null, 0, ['firstName' => 'desc'], ['lastName' => 'Musterfrau'], [$this->contactData[3], $this->contactData[2]]],
         ];

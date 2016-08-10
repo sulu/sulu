@@ -150,8 +150,8 @@ class CollectionController extends RestController implements ClassResourceInterf
             );
         } catch (CollectionNotFoundException $cnf) {
             $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);

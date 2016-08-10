@@ -30,7 +30,8 @@ class AnalyticsRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
-            ->where('a.webspaceKey = :webspaceKey');
+            ->where('a.webspaceKey = :webspaceKey')
+            ->orderBy('a.id', 'ASC');
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('webspaceKey', $webspaceKey);
@@ -73,7 +74,8 @@ class AnalyticsRepository extends EntityRepository
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
             ->where('a.allDomains = TRUE OR (domains.url = :url AND domains.environment = :environment)')
-            ->andWhere('a.webspaceKey = :webspaceKey');
+            ->andWhere('a.webspaceKey = :webspaceKey')
+            ->orderBy('a.id', 'ASC');
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('url', $url);

@@ -29,6 +29,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
     {
         // phone types
         $metadata = $manager->getClassMetaData(PhoneType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $phoneType1 = new PhoneType();
@@ -48,6 +49,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         // email types
         $metadata = $manager->getClassMetaData(EmailType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $emailType1 = new EmailType();
@@ -66,6 +68,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         // address types
         $metadata = $manager->getClassMetaData(AddressType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $addressType1 = new AddressType();
@@ -80,6 +83,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         // url types
         $metadata = $manager->getClassMetaData(UrlType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $urlType1 = new UrlType();
@@ -94,6 +98,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         // fax types
         $metadata = $manager->getClassMetaData(FaxType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $faxType1 = new FaxType();

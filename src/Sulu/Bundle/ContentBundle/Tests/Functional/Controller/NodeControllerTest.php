@@ -66,6 +66,7 @@ class NodeControllerTest extends SuluTestCase
         $tag1 = new Tag();
 
         $metadata = $this->em->getClassMetaData(get_class($tag1));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $tag1->setId(1);
