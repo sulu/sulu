@@ -25,6 +25,7 @@ define(['underscore'], function(_) {
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
             types: null,
+            url: '/admin/api/media',
             navigateEvent: 'sulu.router.navigate',
             locale: '',
             dataDefault: {
@@ -75,7 +76,7 @@ define(['underscore'], function(_) {
                 if (fallbackLocale) {
                     content.push('    <span class="badge">', fallbackLocale, '</span>');
                 }
-                
+
                 content.push(
                     '    <span class="title">', title, '</span>',
                     '</a>'
@@ -142,6 +143,7 @@ define(['underscore'], function(_) {
                 name: 'media-selection/overlay@sulumedia',
                 options: {
                     el: $container,
+                    url: this.options.url,
                     instanceName: this.options.instanceName,
                     preSelectedIds: _.map(this.getData().ids, function(id) {
                         return {id: id};

@@ -61,6 +61,7 @@ define([
         defaults: {
             options: {
                 preselected: [],
+                url: '/admin/api/media',
                 singleSelect: false,
                 removeable: true,
                 instanceName: null,
@@ -75,7 +76,11 @@ define([
 
             templates: {
                 skeleton: skeletonTemplate,
-                uploadUrl: '/admin/api/media?collection=<%= id %>&locale=<%= locale %><% if (!!types) {%>&types=<%= types %><% } %>'
+                url: [
+                    '<%= url %>?locale=<%= locale %>',
+                    '<% if (!!types) {%>&types=<%= types %><% } %>',
+                    '<% _.each(params, function(value, key) {%>&<%= key %>=<%= value %><% }) %>'
+                ].join('')
             },
 
             translations: {
@@ -275,12 +280,23 @@ define([
             this.$el.find('.list-title').text(title);
         },
 
+        getUrl: function(params) {
+            if (!params) {
+                params = {};
+            }
+
+            return this.templates.url({
+                url: this.options.url,
+                locale: this.options.locale,
+                types: this.options.types,
+                params: params
+            });
+        },
+
         changeUploadCollection: function(id) {
             this.sandbox.emit(
-                'husky.dropzone.' + this.options.instanceName + '.change-url', this.templates.uploadUrl({
-                    id: id,
-                    locale: this.options.locale,
-                    types: this.options.types
+                'husky.dropzone.' + this.options.instanceName + '.change-url', this.getUrl({
+                    collection: id
                 })
             );
         },
@@ -391,7 +407,7 @@ define([
                         options: {
                             el: this.$el.find('.dropzone-container'),
                             maxFilesize: Config.get('sulu-media').maxFilesize,
-                            url: '/admin/api/media?locale=' + this.options.locale,
+                            url: this.getUrl(),
                             method: 'POST',
                             paramName: 'fileVersion',
                             instanceName: this.options.instanceName,
@@ -432,9 +448,10 @@ define([
                 },
                 {
                     el: this.$el.find('.list-datagrid-container'),
-                    url: [
-                        '/admin/api/media?locale=', this.options.locale, '&orderBy=media.created&orderSort=desc'
-                    ].join(''),
+                    url: this.getUrl({
+                        orderBy: 'media.created',
+                        orderSort: 'desc'
+                    }),
                     view: UserSettingsManager.getMediaListView(),
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
