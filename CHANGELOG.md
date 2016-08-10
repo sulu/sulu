@@ -17,6 +17,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2795 [ContentBundle]       Allow to load document without any translation
     * BUGFIX      #2791 [CustomUrlBundle]     Use the default locale of the user to load the custom url column navigation
     * BUGFIX      #2792 [ContentBundle]       Do not show empty selection for link target in ckeditor
+    * ENHANCEMENT #2793 [CategoryBundle]      Refactored category-form to fit new javascript structure
     * FEATURE     #2703 [All]                 Improved experience when using sulu with postgres.
     * BUGFIX      #2785 [ContentBundle]       Fixed deindexing of documents for both workspaces
     * BUGFIX      #2775 [ContentBundle]       Removed action icon for ghost pages in column-navigation (husky)
