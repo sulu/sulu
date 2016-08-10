@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2791 [CustomUrlBundle]     Use the default locale of the user to load the custom url column navigation
     * FEATURE     #2703 [All]                 Improved experience when using sulu with postgres.
     * BUGFIX      #2785 [ContentBundle]       Fixed deindexing of documents for both workspaces
     * BUGFIX      #2775 [ContentBundle]       Removed action icon for ghost pages in column-navigation (husky)
