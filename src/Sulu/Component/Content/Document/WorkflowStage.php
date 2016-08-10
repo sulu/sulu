@@ -19,6 +19,13 @@ namespace Sulu\Component\Content\Document;
 final class WorkflowStage
 {
     /**
+     * An array containing all the available workflow stages.
+     *
+     * @var array
+     */
+    public static $stages = [self::TEST, self::PUBLISHED];
+
+    /**
      * Document is published.
      */
     const PUBLISHED = 2;
