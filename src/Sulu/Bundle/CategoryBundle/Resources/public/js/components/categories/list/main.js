@@ -107,7 +107,6 @@ define(function () {
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
                     searchFields: ['name'],
-                    pagination: false,
                     actionCallback: this.editCategory.bind(this),
                     viewOptions: {
                         table: {

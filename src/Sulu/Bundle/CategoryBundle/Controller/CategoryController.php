@@ -15,14 +15,11 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
-use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
-use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
-use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -47,26 +44,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     protected static $entityKey = 'categories';
 
     /**
-     * {@inheritdoc}
-     */
-    protected $fieldsWidth = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $bundlePrefix = 'category.category.';
-
-    /**
-     * Returns the CategoryManager.
-     *
-     * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManager
-     */
-    private function getManager()
-    {
-        return $this->get('sulu_category.category_manager');
-    }
-
-    /**
      * Returns all fields that can be used by list.
      *
      * @Get("categories/fields")
@@ -78,33 +55,22 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getFieldsAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->getManager()->getFieldDescriptors($locale);
-        // lft and rgt should not be made available through the API
+        $fieldDescriptors = $this->getCategoryManager()->getFieldDescriptors($locale);
+
+        // unset list-irrelevant field descriptors
         unset($fieldDescriptors['lft']);
         unset($fieldDescriptors['rgt']);
+        unset($fieldDescriptors['depth']);
+        unset($fieldDescriptors['parent']);
+        unset($fieldDescriptors['hasChildren']);
+        unset($fieldDescriptors['locale']);
+        unset($fieldDescriptors['defaultLocale']);
 
-        // default contacts list
-        return $this->handleView(
-            $this->view(
-                array_values(
-                    array_diff_key(
-                        $fieldDescriptors,
-                        [
-                            'depth' => false,
-                            'parent' => false,
-                            'hasChildren' => false,
-                            'locale' => false,
-                            'defaultLocale' => false,
-                        ]
-                    )
-                ),
-                200
-            )
-        );
+        return $this->handleView($this->view(array_values($fieldDescriptors), 200));
     }
 
     /**
-     * Get a single category for a given id.
+     * Returns the category which is assigned to the given id.
      *
      * @param $id
      * @param Request $request
@@ -114,50 +80,46 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getAction($id, Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $categoryManager = $this->get('sulu_category.category_manager');
-        $view = $this->responseGetById(
-            $id,
-            function ($id) use ($locale, $categoryManager) {
-                $categoryEntity = $categoryManager->findById($id);
+        $findCallback = function ($id) use ($locale) {
+            return $this->getCategoryManager()->findById($id, $locale);
+        };
 
-                return $categoryManager->getApiObject($categoryEntity, $locale);
-            }
-        );
+        $view = $this->responseGetById($id, $findCallback);
 
         return $this->handleView($view);
     }
 
     /**
-     * Returns the children for a parent for the given key.
+     * Returns the sub-graph below the category which is assigned to the given parentId.
+     * This method is used by the husky datagrid to load children of a category.
+     * If request.flat is set, only the first level of the respective graph is returned in a flat format.
      *
      * @param Request $request
-     * @param mixed $key
+     * @param mixed $parentId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getChildrenAction(Request $request, $key)
+    public function getChildrenAction($parentId, Request $request)
     {
-        if ($request->get('flat') == 'true') {
-            $list = $this->getCategoryListRepresentation($request, $key);
-        } else {
-            $sortBy = $request->get('sortBy');
-            $sortOrder = $request->get('sortOrder');
-            $categoryManager = $this->get('sulu_category.category_manager');
-            $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
-            $wrappers = $categoryManager->getApiObjects(
-                $categories,
-                $this->getRequestParameter($request, 'locale', true)
-            );
-            $list = new CollectionRepresentation($wrappers, self::$entityKey);
-        }
-        $view = $this->view($list, 200);
+        $locale = $this->getRequestParameter($request, 'locale', true);
 
-        return $this->handleView($view);
+        if ($request->get('flat') == 'true') {
+            // check if parent exists
+            $this->getCategoryManager()->findById($parentId, $locale);
+            $list = $this->getListRepresentation($request, $locale, $parentId, true);
+        } else {
+            $categories = $this->getCategoryManager()->findChildrenByParentId($locale, $parentId);
+            $list = new CollectionRepresentation($categories, self::$entityKey);
+        }
+
+        return $this->handleView($this->view($list, 200));
     }
 
     /**
-     * Shows all categories
-     * Can be filtered with "parent" and "depth" parameters.
+     * Returns the whole category graph.
+     * If request.rootKey is set, only the sub-graph below the category which is assigned to the given key is returned.
+     * If request.flat is set, only the first level of the respective graph is returned in a flat format.
+     * If request.expand is set, the paths to the respective categories are expanded.
      *
      * @param Request $request
      *
@@ -165,24 +127,19 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('flat') == 'true') {
-            $list = $this->getCategoryListRepresentation($request);
-        } else {
-            $parent = $request->get('parent');
-            $depth = $request->get('depth');
-            $sortBy = $request->get('sortBy');
-            $sortOrder = $request->get('sortOrder');
-            $categoryManager = $this->get('sulu_category.category_manager');
-            $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
-            $wrappers = $categoryManager->getApiObjects(
-                $categories,
-                $this->getRequestParameter($request, 'locale', true)
-            );
-            $list = new CollectionRepresentation($wrappers, self::$entityKey);
-        }
-        $view = $this->view($list, 200);
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $rootKey = $request->get('rootKey');
 
-        return $this->handleView($view);
+        if ($request->get('flat') == 'true') {
+            $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey, $locale)->getId() : null;
+            $expandIds = array_filter(explode(',', $request->get('expandIds')));
+            $list = $this->getListRepresentation($request, $locale, $rootId, false, $expandIds);
+        } else {
+            $categories = $this->getCategoryManager()->findChildrenByParentKey($locale, $rootKey);
+            $list = new CollectionRepresentation($categories, self::$entityKey);
+        }
+
+        return $this->handleView($this->view($list, 200));
     }
 
     /**
@@ -194,11 +151,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function postAction(Request $request)
     {
-        return $this->saveEntity($request, null);
+        return $this->saveCategory($request);
     }
 
     /**
-     * Changes an existing category.
+     * Updates the category which is assigned to the given id.
+     * Properties which are not set in the request will be removed from the category.
      *
      * @param $id
      * @param Request $request
@@ -207,21 +165,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function putAction($id, Request $request)
     {
-        try {
-            if (!$request->get('name')) {
-                throw new MissingArgumentException(self::$entityName, 'name');
-            }
-
-            return $this->saveEntity($request, $id);
-        } catch (MissingArgumentException $exc) {
-            $view = $this->view($exc->toArray(), 400);
-
-            return $this->handleView($view);
-        }
+        return $this->saveCategory($request, $id);
     }
 
     /**
-     * Partly changes an existing category.
+     * Partly updates the category which is assigned to the given id.
+     * Properties which are not set in the request will not be changed.
      *
      * @param $id
      * @param Request $request
@@ -230,11 +179,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function patchAction(Request $request, $id)
     {
-        return $this->saveEntity($request, $id);
+        return $this->saveCategory($request, $id, true);
     }
 
     /**
-     * Deletes the category for the given id.
+     * Deletes the category which is assigned to the given id.
      *
      * @param $id
      *
@@ -242,102 +191,94 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
-            $categoryManager = $this->get('sulu_category.category_manager');
-            $categoryManager->delete($id);
+        $deleteCallback = function ($id) {
+            $this->getCategoryManager()->delete($id);
         };
 
-        $view = $this->responseDelete($id, $delete);
+        $view = $this->responseDelete($id, $deleteCallback);
 
         return $this->handleView($view);
     }
 
     /**
-     * @return RestHelperInterface
-     */
-    protected function getRestHelper()
-    {
-        return $this->get('sulu_core.doctrine_rest_helper');
-    }
-
-    /**
-     * Handles the change of a category. Used in PUT and PATCH.
+     * Creates or updates a category based on the request.
+     * If id is set, the category which is assigned to the given id is overwritten.
+     * If patch is set, the category which is assigned to the given id is updated partially.
      *
-     * @param $id
      * @param Request $request
+     * @param null $id
+     * @param bool $patch
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws CategoryIdNotFoundException
+     * @throws CategoryKeyNotUniqueException
+     * @throws MissingArgumentException
      */
-    protected function saveEntity(Request $request, $id)
+    protected function saveCategory(Request $request, $id = null, $patch = false)
     {
-        try {
-            $categoryManager = $this->get('sulu_category.category_manager');
-            $key = $request->get('key');
-            $locale = $this->getRequestParameter($request, 'locale', true);
-            $data = [
-                'id' => $id,
-                'key' => (empty($key)) ? null : $key,
-                'name' => $request->get('name'),
-                'meta' => $request->get('meta'),
-                'parent' => $request->get('parent'),
-                'locale' => $locale,
-            ];
-            $categoryEntity = $categoryManager->save($data, $this->getUser()->getId());
-            $categoryWrapper = $categoryManager->getApiObject($categoryEntity, $locale);
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $data = [
+            'id' => $id,
+            'name' => (empty($request->get('name'))) ? null : $request->get('name'),
+            'key' => (empty($request->get('key'))) ? null : $request->get('key'),
+            'meta' => $request->get('meta'),
+            'parent' => $request->get('parent'),
+        ];
+        $category = $this->getCategoryManager()->save($data, null, $locale, $patch);
 
-            $view = $this->view($categoryWrapper, 200);
-        } catch (EntityNotFoundException $e) {
-            $view = $this->view($e->toArray(), 404);
-        } catch (KeyNotUniqueException $e) {
-            $view = $this->view($e->toArray(), 400);
-        }
-
-        return $this->handleView($view);
+        return $this->handleView($this->view($category, 200));
     }
 
     /**
-     * Returns a Category-list-representation.
+     * Returns a category-list-representation for the category graph respective to the request.
+     * The category-list-representation contains only the root level of the category graph.
+     *
+     * If parentId is set, the root level of the sub-graph below the category with the given parentId is returned.
+     * If disableLimit is set, the list-representation ignores the limit of the request. This is used when querying
+     * for children of a category.
+     * If expandIds is set, the paths to the categories which are assigned to the ids are expanded. Categories are
+     * only expanded if they are descendants of the root level and the do not affect the limit or pagination.
      *
      * @param Request $request
-     *
-     * @throws MissingParameterException iff the locale is missing in the request
+     * @param $locale
+     * @param null $parentId
+     * @param bool $disableLimit
+     * @param array $expandIds
      *
      * @return CategoryListRepresentation
      */
-    protected function getCategoryListRepresentation(Request $request, $parentKey = null)
+    protected function getListRepresentation(Request $request, $locale, $parentId = null, $disableLimit = false, $expandIds = [])
     {
-        /** @var RestHelperInterface $restHelper */
-        $restHelper = $this->getRestHelper();
+        $listBuilder = $this->initializeListBuilder($locale);
 
-        /** @var DoctrineListBuilderFactory $factory */
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-        $listBuilder = $factory->create(self::$entityName);
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->getManager()->getFieldDescriptors($locale);
-        $listBuilder->sort($fieldDescriptors['depth']);
-
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
-
-        $listBuilder->addSelectField($fieldDescriptors['depth']);
-        $listBuilder->addSelectField($fieldDescriptors['parent']);
-        $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['defaultLocale']);
-        $listBuilder->addSelectField($fieldDescriptors['lft']);
-        $listBuilder->addSelectField($fieldDescriptors['rgt']);
-
-        if ($parentKey !== null) {
-            $this->addParentSelector($parentKey, $listBuilder);
+        // return all matching categories if search is set, else return only the level below parent in category tree
+        if (!$request->get('search')) {
+            $listBuilder->where($this->getCategoryManager()->getFieldDescriptor($locale, 'parent'), $parentId);
         }
 
-        // FIXME: don't do this.
-        $listBuilder->limit(null);
+        // need to disable default limit because some frontend components are not paginated
+        if ($disableLimit || !$request->get('limit')) {
+            $listBuilder->limit(null);
+        }
 
         $results = $listBuilder->execute();
+
+        // append expanded paths to requested ids to the response, if expandIds is set
+        if ($expandIds) {
+            $resultIds = array_map(
+                function ($category) {
+                    return $category['id'];
+                },
+                $results
+            );
+            $pathResults = $this->loadExpandedPaths($resultIds, $expandIds, $locale);
+            $results = array_merge($results, $pathResults);
+        }
+
         foreach ($results as &$result) {
             $result['hasChildren'] = ($result['lft'] + 1) !== $result['rgt'];
         }
-        unset($result); // break the reference
 
         $list = new CategoryListRepresentation(
             $results,
@@ -353,27 +294,71 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * append parent selector to listbuilder.
+     * Initializes and returns a ListBuilder instance which is used when returning a CategoryListRepresentation
+     * for the given locale. The returned ListBuilder is initialized with the request-parameters and respective
+     * select fields.
      *
-     * @param $parentKey
-     * @param DoctrineListBuilder $listBuilder
+     * @param $locale
+     *
+     * @return DoctrineListBuilder
      */
-    protected function addParentSelector($parentKey, DoctrineListBuilder $listBuilder)
+    private function initializeListBuilder($locale)
     {
-        $manager = $this->getManager();
-        $parentEntity = $manager->findByKey($parentKey);
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $listBuilder->between(
-            new DoctrineFieldDescriptor(
-                'lft',
-                'lft',
-                CategoryManager::$categoryEntityName,
-                'public.lft',
-                [],
-                true
-            ),
-            [$parentEntity->getLft() + 1, $parentEntity->getRgt()]
-        );
+        /** @var DoctrineListBuilderFactory $factory */
+        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+        $fieldDescriptors = $this->getCategoryManager()->getFieldDescriptors($locale);
+
+        $listBuilder = $factory->create(self::$entityName);
+        // sort by depth before initializing listbuilder with request parameter to avoid wrong sorting in frontend
+        $listBuilder->sort($fieldDescriptors['depth']);
+        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $listBuilder->addSelectField($fieldDescriptors['depth']);
+        $listBuilder->addSelectField($fieldDescriptors['parent']);
+        $listBuilder->addSelectField($fieldDescriptors['locale']);
+        $listBuilder->addSelectField($fieldDescriptors['defaultLocale']);
+        $listBuilder->addSelectField($fieldDescriptors['lft']);
+        $listBuilder->addSelectField($fieldDescriptors['rgt']);
+
+        return $listBuilder;
+    }
+
+    /**
+     * Returns all categories which are child of a category which is positioned on a path
+     * between a category of the fromIds array (inclusive) to a category from the toIds array (exclusive).
+     *
+     * This method is used to display an expanded category tree on first load, when a child-category
+     * is selected in the frontend.
+     *
+     * @param $fromIds array Start-points of a path
+     * @param $toIds array End-points of a path
+     * @param $locale
+     *
+     * @return array
+     */
+    private function loadExpandedPaths($fromIds, $toIds, $locale)
+    {
+        // collect ids of categories between root level (inclusive) and leaves (exclusive)
+        $pathIds = $this->get('sulu_category.category_repository')->findCategoryIdsBetween($fromIds, $toIds);
+        $pathParentIds = array_diff($pathIds, $toIds);
+
+        if (!$pathParentIds) {
+            return [];
+        }
+
+        // load all children of categories along the paths from root level to leaves
+        $listBuilder = $this->initializeListBuilder($locale);
+        $listBuilder->limit(null);
+        $listBuilder->addExpression($listBuilder->createInExpression(
+            $this->getCategoryManager()->getFieldDescriptor($locale, 'parent'),
+            $pathParentIds
+        ));
+
+        return $listBuilder->execute();
     }
 
     /**
@@ -382,5 +367,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getSecurityContext()
     {
         return 'sulu.settings.categories';
+    }
+
+    /**
+     * Returns the CategoryManager.
+     *
+     * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface
+     */
+    private function getCategoryManager()
+    {
+        return $this->get('sulu_category.category_manager');
     }
 }

@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
@@ -27,7 +26,6 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
     {
         $this->getCategoryManager()->save([
             'name' => $name,
-            'locale' => 'en',
             'key' => $name,
             'meta' => [
                 [
@@ -40,7 +38,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
                     'locale' => 'de-ch',
                 ],
             ],
-        ], $this->getUserId());
+        ], $this->getUserId(), 'en');
     }
 
     /**
