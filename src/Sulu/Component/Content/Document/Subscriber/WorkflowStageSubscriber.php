@@ -12,11 +12,13 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
@@ -69,6 +71,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             Events::PERSIST => 'setWorkflowStageToTest',
             Events::PUBLISH => 'setWorkflowStageToPublished',
             Events::UNPUBLISH => 'setWorkflowStageToTestAndResetPublishedDate',
+            Events::COPY => 'setWorkflowStageToTestForCopy',
         ];
     }
 
@@ -159,6 +162,43 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             WorkflowStage::TEST
         );
         $node->setProperty($this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, $locale), null);
+    }
+
+    /**
+     * Sets the workflowstage for the copied node and all its children to test. This is done because newly copied pages
+     * shouldn't be automatically published on the website.
+     *
+     * @param CopyEvent $event
+     */
+    public function setWorkflowStageToTestForCopy(CopyEvent $event)
+    {
+        $this->setNodeWorkflowStageToTestForCopy($event->getCopiedNode());
+    }
+
+    /**
+     * Sets the workflowstage and the published date for the given node and all of its children to test resp. null. This
+     * is done for every language in which the given properties exist.
+     *
+     * @param NodeInterface $node
+     */
+    private function setNodeWorkflowStageToTestForCopy(NodeInterface $node)
+    {
+        $workflowStageNameFilter = $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, '*');
+        foreach ($node->getProperties($workflowStageNameFilter) as $property) {
+            /** @var PropertyInterface $property */
+            $property->setValue(WorkflowStage::TEST);
+        }
+
+        $publishedNameFilter = $this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, '*');
+        foreach ($node->getProperties($publishedNameFilter) as $property) {
+            /** @var PropertyInterface $property */
+            $property->setValue(null);
+        }
+
+        foreach ($node->getNodes() as $node) {
+            /** @var NodeInterface $node */
+            $this->setNodeWorkflowStageToTestForCopy($node);
+        }
     }
 
     /**
