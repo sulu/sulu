@@ -16,9 +16,13 @@ use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
@@ -346,6 +350,22 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->pathHandler->invalidatePath($urlEn1)->shouldBeCalled();
         $this->pathHandler->invalidatePath($urlDe1)->shouldBeCalled();
         $this->pathHandler->invalidatePath($urlEn2)->shouldBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeRemovingWithResourceLocatorNotFoundException()
+    {
+        $event = $this->prophesize(RemoveEvent::class);
+        $document = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(ShadowLocaleBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getUuid()->willReturn('some-uuid');
+        $this->documentInspector->getPublishedLocales($document->reveal())->willReturn(['de']);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->rlpStrategy->loadByContentUuid(Argument::cetera())->willThrow(ResourceLocatorNotFoundException::class);
+        $this->rlpStrategy->loadHistoryByContentUuid(Argument::cetera())->willReturn([]);
 
         $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
     }

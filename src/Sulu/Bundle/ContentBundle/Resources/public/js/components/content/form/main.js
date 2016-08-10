@@ -31,7 +31,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
         template: '',
 
         whenResourceLocatorIsLoaded: $.Deferred(),
-        
+
         // content change detection
         saved: true,
         animateTemplateDropdown: false,
@@ -58,7 +58,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
             this.sandbox.on('sulu.header.saved', function(data) {
                 this.data = data;
-                this.showState(!!this.data.published);
                 this.initializeResourceLocator();
             }, this);
         },
@@ -106,8 +105,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
             this.preview = preview;
             this.data = data;
-
-            this.showState(!!this.data.published);
 
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);
@@ -409,16 +406,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             }
 
             return url;
-        },
-
-        showState: function(published) {
-            if (!!published) {
-                this.sandbox.emit('sulu.header.toolbar.item.hide', 'stateTest');
-                this.sandbox.emit('sulu.header.toolbar.item.show', 'statePublished');
-            } else {
-                this.sandbox.emit('sulu.header.toolbar.item.hide', 'statePublished');
-                this.sandbox.emit('sulu.header.toolbar.item.show', 'stateTest');
-            }
         },
 
         setHeaderBar: function(saved) {
