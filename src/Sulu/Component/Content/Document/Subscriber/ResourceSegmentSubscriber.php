@@ -128,6 +128,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
+
+        if (!$property) {
+            // do not set a resource segment if the document has no structure
+            return;
+        }
+
         $locale = $this->documentInspector->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
@@ -155,7 +161,11 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $property = $this->getResourceSegmentProperty($document);
-        $this->persistDocument($document, $property);
+        // check if a property for the resource segment is available, this prevents the code from failing in case there
+        // is no such property for some reason (e.g. the document doesn't have a structure)
+        if ($property) {
+            $this->persistDocument($document, $property);
+        }
     }
 
     /**
@@ -223,6 +233,11 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     private function getResourceSegmentProperty($document)
     {
         $structure = $this->documentInspector->getStructureMetadata($document);
+
+        if (!$structure) {
+            return;
+        }
+
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {

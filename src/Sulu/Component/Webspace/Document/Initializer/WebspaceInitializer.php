@@ -83,7 +83,7 @@ class WebspaceInitializer implements InitializerInterface
 
         $webspaceLocales = [];
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $webspaceLocales[] = $localization->getLocalization();
+            $webspaceLocales[] = $localization->getLocale();
         }
 
         $homeType = $webspace->getDefaultTemplate('home');

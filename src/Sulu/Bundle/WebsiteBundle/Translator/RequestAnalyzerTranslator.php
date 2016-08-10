@@ -86,7 +86,7 @@ class RequestAnalyzerTranslator implements TranslatorInterface
             return;
         }
 
-        $this->translator->setLocale($this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->translator->setLocale($this->requestAnalyzer->getCurrentLocalization()->getLocale());
         $this->initialized = true;
     }
 }

@@ -1747,16 +1747,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrderNonExistingSource()
     {
-        $data = [
-            [
-                'title' => 'test1',
-                'url' => '/test1',
-            ],
-        ];
-
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
             'POST',
