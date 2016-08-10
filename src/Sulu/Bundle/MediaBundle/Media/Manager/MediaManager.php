@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\FFProbe;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -603,7 +603,7 @@ class MediaManager implements MediaManagerInterface
 
                         if (is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
-                            $categories = $this->categoryRepository->findCategoryByIds($categoryIds);
+                            $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
 
                             foreach ($categories as $category) {
                                 $media->addCategory($category);

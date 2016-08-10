@@ -292,6 +292,26 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns a the id of the parent category, if one exists.
+     * This method is used to serialize the parent-id.
+     *
+     * @VirtualProperty
+     * @SerializedName("parent")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return null|Category
+     */
+    public function getParentId()
+    {
+        $parent = $this->getEntity()->getParent();
+        if ($parent) {
+            return $parent->getId();
+        }
+
+        return;
+    }
+
+    /**
      * Sets a given category as the parent of the entity.
      *
      * @param Entity $parent
