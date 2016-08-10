@@ -1466,6 +1466,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('test5', $response['title']);
         $this->assertEquals('/test2/test3/test5', $response['path']);
         $this->assertEquals('/test2/test3/testing5', $response['url']);
+        $this->assertEquals(false, $response['publishedState']);
+        $this->assertArrayNotHasKey('published', $response);
 
         // check old node
         $client->request(

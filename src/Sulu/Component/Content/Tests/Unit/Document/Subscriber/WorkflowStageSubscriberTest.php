@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -19,6 +20,7 @@ use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
@@ -260,6 +262,57 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->defaultSession->getNode(Argument::cetera())->shouldNotBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToTestAndResetPublishedDate($event->reveal());
+    }
+
+    public function testSetWorkflowStageToTestForCopy()
+    {
+        $event = $this->prophesize(CopyEvent::class);
+        $event->getCopiedNode()->willReturn($this->defaultNode->reveal());
+        $this->propertyEncoder->localizedSystemName('state', '*')->willReturn('i18n:*-state');
+        $this->propertyEncoder->localizedSystemName('published', '*')->willReturn('i18n:*-published');
+
+        $defaultGermanStateProperty = $this->prophesize(PropertyInterface::class);
+        $defaultEnglishStateProperty = $this->prophesize(PropertyInterface::class);
+        $this->defaultNode->getProperties('i18n:*-state')->willReturn([
+            $defaultGermanStateProperty->reveal(),
+            $defaultEnglishStateProperty->reveal(),
+        ]);
+
+        $defaultGermanPublishedProperty = $this->prophesize(PropertyInterface::class);
+        $defaultEnglishPublishedProperty = $this->prophesize(PropertyInterface::class);
+        $this->defaultNode->getProperties('i18n:*-published')->willReturn([
+            $defaultGermanPublishedProperty->reveal(),
+            $defaultEnglishPublishedProperty->reveal(),
+        ]);
+
+        $childNode = $this->prophesize(NodeInterface::class);
+        $childNode->getNodes()->willReturn([]);
+        $this->defaultNode->getNodes()->willReturn([$childNode->reveal()]);
+
+        $defaultGermanChildStateProperty = $this->prophesize(PropertyInterface::class);
+        $defaultEnglishChildStateProperty = $this->prophesize(PropertyInterface::class);
+        $childNode->getProperties('i18n:*-state')->willReturn([
+            $defaultGermanChildStateProperty->reveal(),
+            $defaultEnglishChildStateProperty->reveal(),
+        ]);
+
+        $defaultGermanChildPublishedProperty = $this->prophesize(PropertyInterface::class);
+        $defaultEnglishChildPublishedProperty = $this->prophesize(PropertyInterface::class);
+        $childNode->getProperties('i18n:*-published')->willReturn([
+            $defaultGermanChildPublishedProperty->reveal(),
+            $defaultEnglishChildPublishedProperty->reveal(),
+        ]);
+
+        $defaultGermanStateProperty->setValue(WorkflowStage::TEST)->shouldBeCalled();
+        $defaultEnglishStateProperty->setValue(WorkflowStage::TEST)->shouldBeCalled();
+        $defaultGermanPublishedProperty->setValue(null)->shouldBeCalled();
+        $defaultEnglishPublishedProperty->setValue(null)->shouldBeCalled();
+        $defaultGermanChildStateProperty->setValue(WorkflowStage::TEST)->shouldBeCalled();
+        $defaultEnglishChildStateProperty->setValue(WorkflowStage::TEST)->shouldBeCalled();
+        $defaultGermanChildPublishedProperty->setValue(null)->shouldBeCalled();
+        $defaultEnglishChildPublishedProperty->setValue(null)->shouldBeCalled();
+
+        $this->workflowStageSubscriber->setWorkflowStageToTestForCopy($event->reveal());
     }
 
     /**
