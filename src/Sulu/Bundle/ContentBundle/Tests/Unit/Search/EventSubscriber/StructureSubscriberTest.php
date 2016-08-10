@@ -138,6 +138,27 @@ class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->deindexRemovedDocument($removeEvent->reveal());
     }
 
+    public function testDeindexRemovedDocumentWithWorkflowStageBehavior()
+    {
+        $removeEvent = $this->prophesize(RemoveEvent::class);
+
+        $document = $this->prophesize(StructureBehavior::class)
+            ->willImplement(WorkflowStageBehavior::class);
+        $removeEvent->getDocument()->willReturn($document);
+
+        $document->getWorkflowStage()->willReturn(WorkflowStage::TEST);
+
+        $document->setWorkflowStage(WorkflowStage::TEST)->shouldBeCalled();
+        $this->searchManager->deindex($document)->shouldBeCalled();
+
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED)->shouldBeCalled();
+        $this->searchManager->deindex($document)->shouldBeCalled();
+
+        $document->setWorkflowStage(WorkflowStage::TEST)->shouldBeCalled();
+
+        $this->subscriber->deindexRemovedDocument($removeEvent->reveal());
+    }
+
     public function testDeindexUnpublishedDocument()
     {
         $unpublishEvent = $this->prophesize(UnpublishEvent::class);
