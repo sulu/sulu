@@ -339,7 +339,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                             el: '#target-select',
                             selected: (!!this.data.targetDocument ? this.data.targetDocument.uuid : null),
                             webspace: this.options.webspace.key,
-                            locale: this.data.locale || this.options.webspace.localizations[0].localization,
+                            locale: this.sandbox.sulu.getDefaultContentLocale(),
                             instanceName: 'custom-urls',
                             rootUrl: constants.targetRootUrl,
                             selectedUrl: constants.targetSelectedUrl,
