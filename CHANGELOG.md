@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release
     * BUGFIX      #2764 [MediaBundle]         Fixed type filter for media content type
     * BUGFIX      #2795 [ContentBundle]       Allow to load document without any translation

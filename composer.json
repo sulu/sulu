@@ -23,7 +23,7 @@
         "friendsofsymfony/rest-bundle": "~1.4",
         "guzzle/guzzle": "3.*",
         "imagine/imagine": "~0.6.1",
-        "massive/search-bundle": "dev-develop",
+        "massive/search-bundle": "0.15.*",
         "sulu/document-manager": "0.8.*",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
