@@ -2,6 +2,16 @@
 
 ## 1.3.0-RC3
 
+### Resource-locator generation
+
+The `generate` method of the `RlpStrategyInterface` uses `parentUuid` instead of `parentPath` now.
+The signature changed from
+`public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);`
+to
+`public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);`
+
+Also the `generateForUuid` method of the `RlpStrategyInterface` got removed.
+
 ### Address country is nullable
 
 To make it easier to migrate data the country in the address entity is now nullable in sulu.
@@ -50,6 +60,11 @@ you want to use for the search in your webspace configuration:
 The name of the route also changed from `website_search` to
 `sulu_search.website_search`, because the controller is located in the
 SuluSearchBundle now.
+
+### Removed HTTP Cache Paths-Handler
+
+The HTTP Cache Integration has been refactored. The following configuration
+is not available anymore and must be removed: `sulu_http_cache.handlers.paths`
 
 ### Webspace Configuration
 

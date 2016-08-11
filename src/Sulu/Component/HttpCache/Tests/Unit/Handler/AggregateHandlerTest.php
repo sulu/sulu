@@ -44,8 +44,6 @@ class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
 

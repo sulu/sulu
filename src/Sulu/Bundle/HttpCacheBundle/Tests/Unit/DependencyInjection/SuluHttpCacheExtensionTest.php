@@ -78,7 +78,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
         $this->assertTrue($this->container->has('sulu_http_cache.handler'));
         $this->assertTrue($this->container->has('sulu_http_cache.handler.aggregate'));
-        $this->assertTrue($this->container->has('sulu_http_cache.handler.paths'));
+        $this->assertTrue($this->container->has('sulu_http_cache.handler.url'));
         $this->assertFalse($this->container->has('sulu_http_cache.handler.tags'));
     }
 
@@ -86,7 +86,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     {
         return [
             ['tags'],
-            ['paths'],
+            ['url'],
             ['public'],
             ['debug'],
             ['aggregate'],
@@ -143,7 +143,6 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     public function provideEventSubscribers()
     {
         return [
-            ['content_mapper'],
             ['flush'],
             ['update_response'],
         ];

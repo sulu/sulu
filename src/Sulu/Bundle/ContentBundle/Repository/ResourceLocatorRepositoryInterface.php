@@ -21,7 +21,6 @@ interface ResourceLocatorRepositoryInterface
      *
      * @param string[]    $parts        parts of title
      * @param null|string $parentUuid   uuid of parent node (can be null)
-     * @param null|string $uuid         uuid of node (can be null)
      * @param string      $webspaceKey
      * @param string      $languageCode
      * @param string      $templateKey
@@ -29,7 +28,7 @@ interface ResourceLocatorRepositoryInterface
      *
      * @return string
      */
-    public function generate($parts, $parentUuid, $uuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null);
+    public function generate($parts, $parentUuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null);
 
     /**
      * @param string $uuid

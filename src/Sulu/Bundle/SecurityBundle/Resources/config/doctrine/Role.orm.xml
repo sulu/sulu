@@ -9,6 +9,9 @@
             <cascade>
                 <cascade-persist/>
             </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </one-to-many>
         <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="role"/>
         <one-to-many field="settings" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleSetting" mapped-by="role" index-by="key"/>

@@ -128,7 +128,18 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->searchManager->deindex($document);
+        if (!$document instanceof WorkflowStageBehavior) {
+            $this->searchManager->deindex($document);
+        } else {
+            $workflowStage = $document->getWorkflowStage();
+
+            foreach (WorkflowStage::$stages as $stage) {
+                $document->setWorkflowStage($stage);
+                $this->searchManager->deindex($document);
+            }
+
+            $document->setWorkflowStage($workflowStage);
+        }
     }
 
     /**

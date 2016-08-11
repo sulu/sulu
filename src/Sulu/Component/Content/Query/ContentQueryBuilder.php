@@ -156,6 +156,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $customOrder = $this->buildOrder($webspaceKey, $locale);
             if (!empty($customOrder)) {
                 $order[] = $customOrder;
+            } else {
+                $order = ['[jcr:path] ASC'];
             }
         }
 

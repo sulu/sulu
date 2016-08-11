@@ -155,8 +155,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
         $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
-        $this->localization1->getLocalization()->willReturn('en');
-        $this->localization2->getLocalization()->willReturn('de');
+        $this->localization1->getLocale()->willReturn('en');
+        $this->localization2->getLocale()->willReturn('de');
         $this->localization1->getParent()->willReturn($this->localization2->reveal());
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
@@ -173,8 +173,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
-        $this->localization1->getLocalization()->willReturn('en');
-        $this->localization2->getLocalization()->willReturn('de');
+        $this->localization1->getLocale()->willReturn('en');
+        $this->localization2->getLocale()->willReturn('de');
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
@@ -195,8 +195,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->webspace->getLocalization(self::FIX_LOCALE)->willReturn($this->localization1->reveal());
 
-        $this->localization1->getLocalization()->willReturn('en');
-        $this->localization2->getLocalization()->willReturn('de');
+        $this->localization1->getLocale()->willReturn('en');
+        $this->localization2->getLocale()->willReturn('de');
 
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 

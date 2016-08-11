@@ -730,6 +730,9 @@ class AccountController extends RestController implements ClassResourceInterface
         if (array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
+        if ($request->get('medias') !== null) {
+            $accountManager->setMedias($account, $request->get('medias'));
+        }
 
         // Check if mainContact is set
         if (($mainContactRequest = $request->get('mainContact')) !== null) {

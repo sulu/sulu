@@ -28,8 +28,6 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->proxyCache = $this->prophesize('FOS\HttpCache\ProxyClient\Invalidation\BanInterface');
         $this->parameterBag = $this->prophesize('Symfony\Component\HttpFoundation\ParameterBag');

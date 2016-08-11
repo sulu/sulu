@@ -15,6 +15,7 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
@@ -101,7 +102,7 @@ class TreeStrategyTest extends SuluTestCase
         $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
     }
 
-    public function testMoveTree()
+    public function testChangeResourceSegment()
     {
         // create routes for content
         $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -188,6 +189,81 @@ class TreeStrategyTest extends SuluTestCase
         $this->assertEquals('/test/news-2', $this->getRlForHistory('/news/news-2'));
         $this->assertEquals('/test/news-2/sub-1', $this->getRlForHistory('/news/news-2/sub-1'));
         $this->assertEquals('/test/news-2/sub-2', $this->getRlForHistory('/news/news-2/sub-2'));
+    }
+
+    public function testChangeResourceSegmentUnpublishedChildren()
+    {
+        $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $google = $this->createDocument($parentDocument, 'google', '/google');
+        $this->documentManager->persist($google, 'en');
+        $this->documentManager->publish($google, 'en');
+        $this->documentManager->flush();
+
+        $news = $this->createDocument($google, 'news', '/google/news');
+        $this->documentManager->persist($news, 'en');
+        $this->documentManager->publish($news, 'en');
+        $this->documentManager->flush();
+
+        $austria = $this->createDocument($news, 'austria', '/google/news/austria');
+        $this->documentManager->persist($austria, 'en');
+        $this->documentManager->publish($austria, 'en');
+        $this->documentManager->flush();
+
+        $secret = $this->createDocument($google, 'secret', '/google/secret');
+        $this->documentManager->persist($secret, 'en');
+        $this->documentManager->flush();
+
+        // secret is unpublished, therefore it is not part of the resource locator
+        $virtualReality = $this->createDocument($secret, 'secret', '/google/virtual-reality');
+        $this->documentManager->persist($virtualReality, 'en');
+        $this->documentManager->publish($virtualReality, 'en');
+        $this->documentManager->flush();
+
+        // change resource segment from google to alphabet
+        $google = $this->documentManager->find($google->getUuid(), 'en');
+        $google->setResourceSegment('/alphabet');
+        $this->documentManager->persist($google, 'en');
+        $this->documentManager->publish($google, 'en');
+        $this->documentManager->flush();
+
+        // check updated routes
+        $google = $this->documentManager->find($google->getUuid(), 'en');
+        $this->assertEquals('/alphabet', $google->getResourceSegment());
+        $this->assertEquals(
+            $google->getUuid(),
+            $this->rlpStrategy->loadByResourceLocator($google->getResourceSegment(), 'sulu_io', 'en')
+        );
+
+        $news = $this->documentManager->find($news->getUuid(), 'en');
+        $this->assertEquals('/alphabet/news', $news->getResourceSegment());
+        $this->assertEquals(
+            $news->getUuid(),
+            $this->rlpStrategy->loadByResourceLocator($news->getResourceSegment(), 'sulu_io', 'en')
+        );
+
+        $austria = $this->documentManager->find($austria->getUuid(), 'en');
+        $this->assertEquals('/alphabet/news/austria', $austria->getResourceSegment());
+        $this->assertEquals(
+            $austria->getUuid(),
+            $this->rlpStrategy->loadByResourceLocator($austria->getResourceSegment(), 'sulu_io', 'en')
+        );
+
+        $secret = $this->documentManager->find($secret->getUuid(), 'en');
+        $this->assertEquals('/alphabet/secret', $secret->getResourceSegment());
+        try {
+            $this->rlpStrategy->loadByResourceLocator($secret->getResourceSegment(), 'sulu_io', 'en');
+            $this->fail('resource locator found for unpublished page');
+        } catch (ResourceLocatorNotFoundException $exc) {
+            // everything ok; resource locator is not found because secret is not published
+        }
+
+        $virtualReality = $this->documentManager->find($virtualReality->getUuid(), 'en');
+        $this->assertEquals('/alphabet/virtual-reality', $virtualReality->getResourceSegment());
+        $this->assertEquals(
+            $virtualReality->getUuid(),
+            $this->rlpStrategy->loadByResourceLocator($virtualReality->getResourceSegment(), 'sulu_io', 'en')
+        );
     }
 
     private function getRlForHistory($rl)

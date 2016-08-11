@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="sulu-document-manager.save-draft">
+                <source>sulu-document-manager.save-draft</source>
+                <target>Opslaan als concept</target>
+            </trans-unit>
+            <trans-unit id="2" resname="sulu-document-manager.save-publish">
+                <source>sulu-document-manager.save-publish</source>
+                <target>Opslaan en publiceren</target>
+            </trans-unit>
+            <trans-unit id="3" resname="sulu-document-manager.publish">
+                <source>sulu-document-manager.publish</source>
+                <target>Publiceren</target>
+            </trans-unit>
+            <trans-unit id="5" resname="sulu-document-manager.draft-label">
+                <source>sulu-document-manager.draft-label</source>
+                 <target><![CDATA[Je werkt aan een concept, laatst opgeslagen: %(changed)s door <b>%(user)s</b>]]></target>
+            </trans-unit>
+            <trans-unit id="6" resname="sulu-document-manager.unpublish">
+                <source>sulu-document-manager.unpublish</source>
+                <target>Depubliceer</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

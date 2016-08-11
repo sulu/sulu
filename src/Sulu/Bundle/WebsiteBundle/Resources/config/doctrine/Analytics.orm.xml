@@ -28,6 +28,9 @@
                     <join-column name="domain" referenced-column-name="id" />
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
     </entity>
 </doctrine-mapping>

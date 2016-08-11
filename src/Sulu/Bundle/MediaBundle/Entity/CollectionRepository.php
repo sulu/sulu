@@ -98,6 +98,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
         }
 
+        $queryBuilder->addOrderBy('collection.id', 'ASC');
+
         if ($user !== null && $permission != null) {
             $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
         }
@@ -110,14 +112,12 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
      */
     public function count($depth = 0, $filter = [], CollectionInterface $collection = null)
     {
-        $query = $this->getIdsQuery($depth, $filter, [], $collection, 'COUNT(DISTINCT collection.id)');
+        $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
         try {
-            $result = intval($query->getSingleScalarResult());
+            return count($ids);
         } catch (NoResultException $e) {
             return;
         }
-
-        return $result;
     }
 
     /**
@@ -149,6 +149,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                     $qb->addOrderBy('collectionMeta.' . $column, strtolower($order) === 'asc' ? 'ASC' : 'DESC');
                 }
             }
+            $qb->addOrderBy('collection.id', 'ASC');
+
             if ($parent !== null) {
                 $qb->andWhere('parent.id = :parent');
             }
@@ -278,6 +280,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
      *
      * @param int $depth
      * @param array $filter
+     * @param array $sortBy
      * @param CollectionInterface|null $collection
      * @param string $select
      *
@@ -338,6 +341,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 );
             }
         }
+
+        $queryBuilder->addOrderBy('collection.id', 'ASC');
 
         if (array_key_exists('limit', $filter)) {
             $queryBuilder->setMaxResults($filter['limit']);

@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="contacts.sidebar.web-and-mail">
+                <source>contacts.sidebar.web-and-mail</source>
+                <target>Web &amp; Email</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="contacts.sidebar.mainContact">
+                <source>contacts.sidebar.mainContact</source>
+                <target>Primair contactpersoon</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a5f" resname="public.company">
+                <source>public.company</source>
+                <target>Bedrijf</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a6f" resname="contacts.sidebar.mainCompany">
+                <source>contacts.sidebar.mainCompany</source>
+                <target>Hoofdvestiging</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a7f" resname="content-navigation.accounts.documents">
+                <source>content-navigation.accounts.documents</source>
+                <target>Documenten</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a8f" resname="content-navigation.contacts.documents">
+                <source>content-navigation.contacts.documents</source>
+                <target>Documenten</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e39a7f" resname="contact.contacts.assignment">
+                <source>contact.contacts.assignment</source>
+                <target>Toewijzing</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e49a8f" resname="contact.contacts.categories.label">
+                <source>contact.contacts.categories.label</source>
+                <target>Categorieën</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e41a8f" resname="contact.account.add-account-contact">
+                <source>contact.account.add-account-contact</source>
+                <target>Persoon toevoegen</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e42a8f" resname="contact.accounts.add-new-contact-to-account">
+                <source>contact.accounts.add-new-contact-to-account</source>
+                <target>Voeg een nieuwe persoon toe</target>
+            </trans-unit>
+            <trans-unit id="10" resname="contacttype.home">
+                <source>contacttype.home</source>
+                <target>Thuis</target>
+            </trans-unit>
+            <trans-unit id="11" resname="contacttype.work">
+                <source>contacttype.work</source>
+                <target>Werk</target>
+            </trans-unit>
+            <trans-unit id="12" resname="contacts.sidebar.company">
+                <source>contacts.sidebar.company</source>
+                <target>Andere bedrijven</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2d34h" resname="search-overlay.index.contact.title">
+                <source>search-overlay.index.contact.title</source>
+                <target>Contacten</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45b7f5acb2d39e" resname="search-overlay.index.account.title">
+                <source>search-overlay.index.account.title</source>
+                <target>Rekeningen</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22191" resname="contact.accounts.bankAccount.label">
+                <source>contact.accounts.bankAccount.label</source>
+                <target>Bankrekening</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22192" resname="contact.accounts.bankAccounts.add.label">
+                <source>contact.accounts.bankAccounts.add.label</source>
+                <target>Rekening toevoegen</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22193" resname="contact.accounts.bankAccounts.edit.label">
+                <source>contact.accounts.bankAccounts.edit.label</source>
+                <target>Rekening bewerken</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22195" resname="contact.accounts.placeOfJurisdiction">
+                <source>contact.accounts.placeOfJurisdiction</source>
+                <target>Jurisdictie</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22196" resname="contact.termsOfPayment">
+                <source>contact.termsOfPayment</source>
+                <target>Betaaltermijnen</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22197" resname="contact.termsOfDelivery">
+                <source>contact.termsOfDelivery</source>
+                <target>Bezorgafspraken</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22198" resname="contact.accounts.termsOfDelivery.select">
+                <source>contact.accounts.termsOfDelivery.select</source>
+                <target>Maak je keuze...</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22199" resname="contact.accounts.termsOfPayment.select">
+                <source>contact.accounts.termsOfPayment.select</source>
+                <target>Maak je keuze...</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22236" resname="contact.account.condition.select">
+                <source>contact.account.condition.select</source>
+                <target>Maak je keuze...</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22237" resname="content-navigation.contacts.activities">
+                <source>content-navigation.contacts.activities</source>
+                <target>Activiteiten</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22238" resname="contact.activities.remove">
+                <source>contact.activities.remove</source>
+                <target>Activiteit verwijderen</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22239" resname="contact.activities.type">
+                <source>contact.activities.type</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22241" resname="contact.activities.priority">
+                <source>contact.activities.priority</source>
+                <target>Prioriteit</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22242" resname="contact.activities.status">
+                <source>contact.activities.status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22243" resname="contact.activities.subject">
+                <source>contact.activities.subject</source>
+                <target>Onderwerp</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22244" resname="contact.activities.note">
+                <source>contact.activities.note</source>
+                <target>Notitie</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22245" resname="contact.activities.dueDate">
+                <source>contact.activities.dueDate</source>
+                <target>Opleveringsdatum</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22246" resname="contact.activities.assignedContact">
+                <source>contact.activities.assignedContact</source>
+                <target>Persoon</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22247" resname="contact.contacts.activities.edit">
+                <source>contact.contacts.activities.edit</source>
+                <target>Bewerk activiteit</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22248" resname="contact.contacts.activities.add">
+                <source>contact.contacts.activities.add</source>
+                <target>Activiteit toevoegen</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22249" resname="contact.activity.type.phone.intern">
+                <source>contact.activity.type.phone.intern</source>
+                <target>Telefoon intern</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22250" resname="contact.activity.type.phone.extern">
+                <source>contact.activity.type.phone.extern</source>
+                <target>Telefoon extern</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22251" resname="contact.activity.type.mail.intern">
+                <source>contact.activity.type.mail.intern</source>
+                <target>Mail intern</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22252" resname="contact.activity.type.mail.extern">
+                <source>contact.activity.type.mail.extern</source>
+                <target>Mail extern</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22253" resname="contact.activity.type.appointment">
+                <source>contact.activity.type.appointment</source>
+                <target>Afspraak</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22254" resname="contact.activity.type.noInterest">
+                <source>contact.activity.type.noInterest</source>
+                <target>Geen interesse</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22255" resname="contact.activity.type.recall">
+                <source>contact.activity.type.recall</source>
+                <target>Terugbellen</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22256" resname="contact.activity.state.open">
+                <source>contact.activity.state.open</source>
+                <target>Open</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22257" resname="contact.activity.state.closed">
+                <source>contact.activity.state.closed</source>
+                <target>Gesloten</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22258" resname="contact.activity.state.inProgress">
+                <source>contact.activity.state.inProgress</source>
+                <target>Lopend</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22259" resname="contact.activity.priority.low">
+                <source>contact.activity.priority.low</source>
+                <target>Laag</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f2224860" resname="contact.activity.priority.mid">
+                <source>contact.activity.priority.mid</source>
+                <target>Medium</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22261" resname="contact.activity.priority.high">
+                <source>contact.activity.priority.high</source>
+                <target>Hoog</target>
+            </trans-unit>
+            <trans-unit id="643d99fa2964652633a5ca2169f22237" resname="content-navigation.contact.accounts.contacts">
+                <source>content-navigation.contact.accounts.contacts</source>
+                <target>Personen</target>
+            </trans-unit>
+            <trans-unit id="643d99fa2964652633a5ca2169f22239" resname="contact.accounts.contact-remove">
+                <source>contact.accounts.contact-remove</source>
+                <target>Verwijder contacpersoon bij bedrijf</target>
+            </trans-unit>
+            <trans-unit id="643d99fa2964652633a5ca2169f22240" resname="contact.accounts.add-contact">
+                <source>contact.accounts.add-contact</source>
+                <target>Voeg contactpersoon bij bedrijf toe</target>
+            </trans-unit>
+            <trans-unit id="643d99fa2964652633a5ca2169f22241" resname="contact.accounts.corporation">
+                <source>contact.accounts.corporation</source>
+                <target>Add-on</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e456a5ce2178d22192" resname="contact.contacts.main-contact">
+                <source>contact.contacts.main-contact</source>
+                <target>Belangrijkste contactpersoon</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22192" resname="contact.contacts.isPoolAlpinEmployee">
+                <source>contact.contacts.isPoolAlpinEmployee</source>
+                <target>PA-Werknemer</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22193" resname="contact.address.primaryAddress">
+                <source>contact.address.primaryAddress</source>
+                <target>Hoofdadres</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22194" resname="contact.address.deliveryAddress">
+                <source>contact.address.deliveryAddress</source>
+                <target>Postadres</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22195" resname="contact.address.billingAddress">
+                <source>contact.address.billingAddress</source>
+                <target>Factuuradres</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22196" resname="contact.address.type">
+                <source>contact.address.type</source>
+                <target>Adrestype</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22197" resname="contact.address.postbox.number">
+                <source>contact.address.postbox.number</source>
+                <target>Postbusnummer</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22198" resname="contact.address.postbox.postcode">
+                <source>contact.address.postbox.postcode</source>
+                <target>Postcode</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d22199" resname="contact.address.postbox.city">
+                <source>contact.address.postbox.city</source>
+                <target>Stad</target>
+            </trans-unit>
+            <trans-unit id="po642c992f1929c9e633a5ce2178d22200" resname="contact.address.type.select">
+                <source>contact.address.type.select</source>
+                <target>Selecteer adrestype</target>
+            </trans-unit>
+            <trans-unit id="po642c992f1929c9e633a5ce2178d22201" resname="contact.address.add.label">
+                <source>contact.address.add.label</source>
+                <target>Adres toevoegen</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d2219c" resname="contact.accounts.type.conversion.message">
+                <source>contact.accounts.type.conversion.message</source>
+                <target>Deze handeling zal de organisatie omzetten. Dit kan niet ongedaan gemaakt worden. Denk er goed over na en ga akkoord of annuleer.</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d2219b" resname="contact.account.type.customer.conversion">
+                <source>contact.account.type.customer.conversion</source>
+                <target>Converteren naar klant</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929c9e633a5ce2178d2219a" resname="contact.account.type.lead.conversion">
+                <source>contact.account.type.lead.conversion</source>
+                <target>Converteren naar lead</target>
+            </trans-unit>
+            <trans-unit id="0501e263af3ba0f52ef7a4d3c0298d50" resname="contact.contacts.details">
+                <source>contact.contacts.details</source>
+                <target>Contact details</target>
+            </trans-unit>
+            <trans-unit id="79d68f4ec8392a1f07b99dddc6e48a22" resname="contacts.edit-address">
+                <source>contacts.edit-address</source>
+                <target>Adres bewerken</target>
+            </trans-unit>
+            <trans-unit id="57000f1907b8c8548d35699790a3552d" resname="contact.accounts.bonusSettlement">
+                <source>contact.accounts.bonusSettlement</source>
+                <target>Bonusregeling</target>
+            </trans-unit>
+            <trans-unit id="116dd2324c3e200fe70e6672107c0423" resname="contact.accounts.bonusConditions">
+                <source>contact.accounts.bonusConditions</source>
+                <target>Bonusvoorwaarden</target>
+            </trans-unit>
+            <trans-unit id="4ced7e7729c9114bf64ce5a936d6b1f2" resname="contact.accounts.correspondence">
+                <source>contact.accounts.correspondence</source>
+                <target>Correspondentie via</target>
+            </trans-unit>
+            <trans-unit id="f22404eb2d33ceaf238eefc31a71d124" resname="contact.contacts.salutation">
+                <source>contact.contacts.salutation</source>
+                <target>Begroeting</target>
+            </trans-unit>
+            <trans-unit id="16cc76aeac068c2027efe58d0ae9d008" resname="contact.contacts.formOfAddress">
+                <source>contact.contacts.formOfAddress</source>
+                <target>Aanhef</target>
+            </trans-unit>
+            <trans-unit id="f47ed841c01ac8a9869950c758174209" resname="contact.contacts.formOfAddress.select">
+                <source>contact.contacts.formOfAddress.select</source>
+                <target>Kies aanhef</target>
+            </trans-unit>
+            <trans-unit id="4db269ac7faa0b76bd7288c86efb795b" resname="contact.contacts.formOfAddress.male">
+                <source>contact.contacts.formOfAddress.male</source>
+                <target>de heer</target>
+            </trans-unit>
+            <trans-unit id="cb106dadb34469a52f67b087c579f37a" resname="contact.contacts.formOfAddress.female">
+                <source>contact.contacts.formOfAddress.female</source>
+                <target>mevrouw</target>
+            </trans-unit>
+            <trans-unit id="b50e54392bb7da978e9a2cf49c4fa8fc" resname="contact.accounts.manage.categories.title">
+                <source>contact.accounts.manage.categories.title</source>
+                <target>Beheer categorieën</target>
+            </trans-unit>
+            <trans-unit id="742e8b76d3297cc60d49b6da002cadf6" resname="contact.accounts.manage.categories">
+                <source>contact.accounts.manage.categories</source>
+                <target>Beheer categorieën</target>
+            </trans-unit>
+            <trans-unit id="35ac1a3024f2eb490134c3c0b2c2c540" resname="contact.accounts.category.select">
+                <source>contact.accounts.category.select</source>
+                <target>Kies een categorie</target>
+            </trans-unit>
+            <trans-unit id="a48f27ebd46344b265095d9c2f6e7a27" resname="contact.accounts.category">
+                <source>contact.accounts.category</source>
+                <target>Categorie</target>
+            </trans-unit>
+            <trans-unit id="bf746deceecc14117cee98a6dee9621e" resname="contact.accounts.bankName">
+                <source>contact.accounts.bankName</source>
+                <target>Naam bank</target>
+            </trans-unit>
+            <trans-unit id="1172f8b447c7e3c041f39dd32ccc9f1a" resname="contact.accounts.bank-accounts">
+                <source>contact.accounts.bank-accounts</source>
+                <target>Bankrekeningen</target>
+            </trans-unit>
+            <trans-unit id="8d73384b25d38a5f32ab5169afd75e60" resname="contact.accounts.add-bank-account">
+                <source>contact.accounts.add-bank-account</source>
+                <target>Nieuwe rekening toevoegen</target>
+            </trans-unit>
+            <trans-unit id="2193fee100102d3c2f87ec9828dc3bab" resname="contact.accounts.number">
+                <source>contact.accounts.number</source>
+                <target>Nummer</target>
+            </trans-unit>
+            <trans-unit id="792da838c3130e338d9c5cb5e277469e" resname="contact.accounts.registerNumber">
+                <source>contact.accounts.registerNumber</source>
+                <target>Registratienummer</target>
+            </trans-unit>
+            <trans-unit id="5d5f771c4109de372c712d2759f8a205" resname="contact.accounts.uid">
+                <source>contact.accounts.uid</source>
+                <target>UID</target>
+            </trans-unit>
+            <trans-unit id="12e8ff6fd83093df313049330f7c35cc" resname="contact.accounts.division">
+                <source>contact.accounts.division</source>
+                <target>Divisie</target>
+            </trans-unit>
+            <trans-unit id="4f4a5c96a0bfc7e6577f3b16d08c037f" resname="contact.accounts.delete.contacts">
+                <source>contact.accounts.delete.contacts</source>
+                <target>Verwijder alle &lt;%= number %&gt; gerelateerde contacten.</target>
+            </trans-unit>
+            <trans-unit id="c932351362aaec41a9a4d45c75c7d0dd" resname="contact.accounts.delete.contacts-found">
+                <source>contact.accounts.delete.contacts-found</source>
+                <target>Gerelateerde contacten gevonden.</target>
+            </trans-unit>
+            <trans-unit id="1f589540dc08f9d94163df6923eaba80" resname="contact.accounts.delete.contacts-question">
+                <source>contact.accounts.delete.contacts-question</source>
+                <target>Wil je ze gezamenlijk met het geselecteerde bedrijf verwijderen?</target>
+            </trans-unit>
+            <trans-unit id="4ecec83f0e5e3fec4128c248b2ce66da" resname="contact.accounts.delete.contacts-checkbox">
+                <source>contact.accounts.delete.contacts-checkbox</source>
+                <target>Verwijder alle &lt;%= number %&gt; gerelateerde contacten.</target>
+            </trans-unit>
+            <trans-unit id="b26532550903c431ac3a18bd18fd3974" resname="contact.accounts.delete.sub-found">
+                <source>contact.accounts.delete.sub-found</source>
+                <target>Een of meer dochterbedrijven gevonden.</target>
+            </trans-unit>
+            <trans-unit id="be247a829a9521e04a11ce8fd9805447" resname="contact.accounts.delete.sub-found-desc">
+                <source>contact.accounts.delete.sub-found-desc</source>
+                <target>Een bedrijf kan niet verwijderd worden als het dochterbedrijven heeft. Verwijder eerst de dochterbedrijven of verbreek de relatie. </target>
+            </trans-unit>
+            <trans-unit id="cdf96c847495b2ec2bcf1f3b45489fb8" resname="contact.accounts.delete.desc">
+                <source>contact.accounts.delete.desc</source>
+                <target>Wil je dit bedrijf echt verwijderen? Alle data gaat verloren. </target>
+            </trans-unit>
+            <trans-unit id="73f08bc1e1576fe835885fccd00abaeb" resname="contacts.accounts.manage.categories.title">
+                <source>contacts.accounts.manage.categories.title</source>
+                <target>Beheer categorieën</target>
+            </trans-unit>
+            <trans-unit id="b7a4aa666805f63aa7a28f4c18f99ed0" resname="contacts.accounts.manage.categories">
+                <source>contacts.accounts.manage.categories</source>
+                <target>Beheer categorieën</target>
+            </trans-unit>
+            <trans-unit id="3113e12e2fbe9b9a8b569a0bb9ba6a44" resname="contacts.accounts.category.select">
+                <source>contacts.accounts.category.select</source>
+                <target>Kies een categorie</target>
+            </trans-unit>
+            <trans-unit id="d6dc091748c0ec57fa675a24df5d8656" resname="contacts.accounts.category">
+                <source>contacts.accounts.category</source>
+                <target>Categorie</target>
+            </trans-unit>
+            <trans-unit id="fe0771440b9c4b41f82d5ae509fb3897" resname="contact.add.address">
+                <source>contact.add.address</source>
+                <target>Voeg adres toe</target>
+            </trans-unit>
+            <trans-unit id="685fdb78d9f1bdff9bf26ece5dfcee6d" resname="contact.account.type.basic">
+                <source>contact.account.type.basic</source>
+                <target>Persoon</target>
+            </trans-unit>
+            <trans-unit id="2935695d2d6378e8dfdcc0f9d2d63ddd" resname="contact.account.type.lead">
+                <source>contact.account.type.lead</source>
+                <target>Lead</target>
+            </trans-unit>
+            <trans-unit id="8fdb51021529466148c851a4724fbc6a" resname="contact.account.type.customer">
+                <source>contact.account.type.customer</source>
+                <target>Klant</target>
+            </trans-unit>
+            <trans-unit id="128c73540d2e4643177375cde1b5a44c" resname="contact.account.type.supplier">
+                <source>contact.account.type.supplier</source>
+                <target>Leverancier</target>
+            </trans-unit>
+            <trans-unit id="4926f85302370f0c0e5381e2c08797d8" resname="contact.account.add-basic">
+                <source>contact.account.add-basic</source>
+                <target>Nieuwe organisatie aanmaken</target>
+            </trans-unit>
+            <trans-unit id="88eebe41010b0d017b51a2d8aa74d91d" resname="contact.account.add-lead">
+                <source>contact.account.add-lead</source>
+                <target>Nieuwe lead aanmaken</target>
+            </trans-unit>
+            <trans-unit id="7d8cd989345f70f053970f7d2e3fa260" resname="contact.account.add-customer">
+                <source>contact.account.add-customer</source>
+                <target>Nieuwe klant aanmaken</target>
+            </trans-unit>
+            <trans-unit id="1652bb0344288e4c4b003ddd4313ba49" resname="contact.account.add-supplier">
+                <source>contact.account.add-supplier</source>
+                <target>Nieuwe leverancier aanmaken</target>
+            </trans-unit>
+            <trans-unit id="8f6cabe97b1f83bec94b4e7b78348e0c" resname="contact.accounts.type">
+                <source>contact.accounts.type</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="16a5444f8a5aca84bec03721b231b3a7" resname="contact.contacts.birthday">
+                <source>contact.contacts.birthday</source>
+                <target>Geboortedatum</target>
+            </trans-unit>
+            <trans-unit id="f34bfecf79a539b6592fb2f2ec1135ef" resname="contact.contacts.middleName">
+                <source>contact.contacts.middleName</source>
+                <target>Tussenvoegsel</target>
+            </trans-unit>
+            <trans-unit id="5b3bf4af63094914b22eb76ed9c43a30" resname="content-navigation.contacts.details">
+                <source>content-navigation.contacts.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="61788b1f08f29f6e5f1cb4076fd81272" resname="navigation.contacts">
+                <source>navigation.contacts</source>
+                <target>Contacten</target>
+            </trans-unit>
+            <trans-unit id="a5483734334073f618ff019ef3a41470" resname="navigation.contacts.people">
+                <source>navigation.contacts.people</source>
+                <target>Personen</target>
+            </trans-unit>
+            <trans-unit id="b819087c400da29fa73c69eb259d6fbe" resname="navigation.contacts.companies">
+                <source>navigation.contacts.companies</source>
+                <target>Organisaties</target>
+            </trans-unit>
+            <trans-unit id="690fa3a0e9c39771d51fd5e8a8ae8a04" resname="contact.accounts.title">
+                <source>contact.accounts.title</source>
+                <target>Organisatie</target>
+            </trans-unit>
+            <trans-unit id="a4190eb0ddea6a4a416c5568a137c6f6" resname="contact.accounts.name">
+                <source>contact.accounts.name</source>
+                <target>Organisatie</target>
+            </trans-unit>
+            <trans-unit id="201e6a9adc585674ad3871e2ed7425a0" resname="contact.accounts.website">
+                <source>contact.accounts.website</source>
+                <target>Website</target>
+            </trans-unit>
+            <trans-unit id="4318cb1df244d69cdc8af5b6408329d1" resname="contact.accounts.company">
+                <source>contact.accounts.company</source>
+                <target>Moederbedrijf</target>
+            </trans-unit>
+            <trans-unit id="2745c23db7c8055c84ecba422b39e8e6" resname="contact.contacts.title">
+                <source>contact.contacts.title</source>
+                <target>Personen</target>
+            </trans-unit>
+            <trans-unit id="bce12aa0a40b4a95a3bfc133a6bf286f" resname="contact.contacts.contactTitle">
+                <source>contact.contacts.contactTitle</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="b24511ddcc2d8dd9a49c68974cab6566" resname="contact.contacts.firstName">
+                <source>contact.contacts.firstName</source>
+                <target>Voornaam</target>
+            </trans-unit>
+            <trans-unit id="d981f062a65f15748ceda92a2fa42466" resname="contact.contacts.lastName">
+                <source>contact.contacts.lastName</source>
+                <target>Achternaam</target>
+            </trans-unit>
+            <trans-unit id="03b430a05634e102e66cdadae27d1e70" resname="contact.contacts.position">
+                <source>contact.contacts.position</source>
+                <target>Functie</target>
+            </trans-unit>
+            <trans-unit id="df7167eb3863f47cc66e7541f97cbd68" resname="contact.contacts.company">
+                <source>contact.contacts.company</source>
+                <target>Organisatie</target>
+            </trans-unit>
+            <trans-unit id="404f1373fa1b569869be6f77a3cf1430" resname="contact.form.addEmail">
+                <source>contact.form.addEmail</source>
+                <target>E-mail toevoegen</target>
+            </trans-unit>
+            <trans-unit id="6db6e588c3df474917225bb25fb8a5c0" resname="contact.form.addPhone">
+                <source>contact.form.addPhone</source>
+                <target>Telefoonnummer toevoegen</target>
+            </trans-unit>
+            <trans-unit id="ebf22850aedc95a2e1f2bc0aee88e202" resname="contact.form.addAddress">
+                <source>contact.form.addAddress</source>
+                <target>Adres toevoegen</target>
+            </trans-unit>
+            <trans-unit id="fe67e0959383f98a37831a9a41534c9e" resname="contact.address.street">
+                <source>contact.address.street</source>
+                <target>Straat</target>
+            </trans-unit>
+            <trans-unit id="588849ca29af69fb52e87e00fc749ede" resname="contact.address.number">
+                <source>contact.address.number</source>
+                <target>Nummer</target>
+            </trans-unit>
+            <trans-unit id="588849ca29af69fb11e87e00fc749ede" resname="contact.address.address-line">
+                <source>contact.address.address-line</source>
+                <target>Adresregel</target>
+            </trans-unit>
+            <trans-unit id="892c81dcb8e0d2de200e48faa929bff2" resname="contact.address.additional">
+                <source>contact.address.additional</source>
+                <target>Toevoeging</target>
+            </trans-unit>
+            <trans-unit id="00b38c566108f89bff15e8738ed312d4" resname="contact.address.zip">
+                <source>contact.address.zip</source>
+                <target>Postcode</target>
+            </trans-unit>
+            <trans-unit id="9dc2ecd9f28d79e1a41998d972350aa0" resname="contact.address.city">
+                <source>contact.address.city</source>
+                <target>Stad</target>
+            </trans-unit>
+            <trans-unit id="20b094e3c0a7fb6f474e86ec3a960507" resname="contact.address.state">
+                <source>contact.address.state</source>
+                <target>Regio</target>
+            </trans-unit>
+            <trans-unit id="9b5759b2b50bb1c9148289636b579c41" resname="contact.address.country">
+                <source>contact.address.country</source>
+                <target>Land</target>
+            </trans-unit>
+            <trans-unit id="435b1473d76660a3essds2e9335a8d5d" resname="navigation.search">
+                <source>navigation.search</source>
+                <target>Zoeken</target>
+            </trans-unit>
+            <trans-unit id="435b1473d76660a3essds2e9335a8d5f" resname="sulu.toolbar.cards">
+                <source>sulu.toolbar.cards</source>
+                <target>Kaarten</target>
+            </trans-unit>
+            <trans-unit id="425b1473d76660a3essds2e9335a8d5d" resname="contact.accounts.document-added">
+                <source>contact.accounts.document-added</source>
+                <target>Document toegevoegd</target>
+            </trans-unit>
+            <trans-unit id="425b1432d76660a3e434s2e9335a8d5d" resname="contact.accounts.documents-removed">
+                <source>contact.accounts.documents-removed</source>
+                <target>Documenten verwijderd</target>
+            </trans-unit>
+            <trans-unit id="435b147223ft60a3essds2e9335a8d5d" resname="contact.accounts.documents-saved">
+                <source>contact.accounts.documents-saved</source>
+                <target>Documenten opgeslagen</target>
+            </trans-unit>
+            <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
+                <source>contact.accounts.deleted</source>
+                <target>Organisatie verwijderd</target>
+            </trans-unit>
+            <trans-unit id="435b1473d76660a3essds2e4335a8d5d" resname="contact.accounts.saved">
+                <source>contact.accounts.saved</source>
+                <target>Organisatie bewaard</target>
+            </trans-unit>
+            <trans-unit id="435a1473d78660a3essds2e9135a8d5d" resname="contact.accounts.contacts-removed">
+                <source>contact.accounts.contacts-removed</source>
+                <target>Persoon verwijderd uit organisatie</target>
+            </trans-unit>
+            <trans-unit id="435a1473d78660a3essds2e9135a8d5a" resname="contact.accounts.contact-saved">
+                <source>contact.accounts.contact-saved</source>
+                <target>Persoon toegevoegd aan organisatie</target>
+            </trans-unit>
+            <trans-unit id="435a1473d78660a3essds2e7135a8d5a" resname="contact.accounts.main-account-set">
+                <source>contact.accounts.main-account-set</source>
+                <target>Hoofdcontact ingesteld</target>
+            </trans-unit>
+            <trans-unit id="425a1473d78660a3essds2e7134a8d5a" resname="contact.contacts.deleted">
+                <source>contact.contacts.deleted</source>
+                <target>Contact verwijderd</target>
+            </trans-unit>
+            <trans-unit id="425a1473d78660c3essds2e7134a8d5a" resname="contact.contacts.saved">
+                <source>contact.contacts.saved</source>
+                <target>Contact bewaard</target>
+            </trans-unit>
+            <trans-unit id="425a1473d78660c3essds2e6134a8d5a" resname="contact.contacts.documents-removed">
+                <source>contact.contacts.documents-removed</source>
+                <target>documenten verwijderd</target>
+            </trans-unit>
+            <trans-unit id="435b1472d76660a3essds2e9335a8d5d" resname="contact.contacts.document-added">
+                <source>contact.contacts.document-added</source>
+                <target>Document toegevoegd</target>
+            </trans-unit>
+            <trans-unit id="435b1472d76660a3e3z5e2e9335a8d5d" resname="contact.contacts.documents-saved">
+                <source>contact.contacts.documents-saved</source>
+                <target>Documenten opgeslagen</target>
+            </trans-unit>
+            <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
+                <source>contact.address.countryCode</source>
+                <target>Land</target>
+            </trans-unit>
+            <trans-unit id="235b1473d78922a3essds2e9335a8d5d" resname="contact.contacts.avatar.saved">
+                <source>contact.contacts.avatar.saved</source>
+                <target>Avatar bewaard</target>
+            </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
+                <source>contact.accounts.logo.saved</source>
+                <target>Logo bewaard</target>
+            </trans-unit>
+            <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
+                <source>contact.contacts.avatar-dropzone-text</source>
+                <target>Sleep een afbeelding hier naartoe of klik hier om de avatar te wijzigen</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g7593a3e44gs2e9335a8d5d" resname="contact.accounts.logo-dropzone-text">
+                <source>contact.accounts.logo-dropzone-text</source>
+                <target>Sleep een afbeelding hier naartoe of klik hier om het logo te wijzigen</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d50" resname="contact-selection.no-contact-selected">
+                <source>contact-selection.no-contact-selected</source>
+                <target>Geen contacten geselecteerd</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d51" resname="contact-selection.add">
+                <source>contact-selection.add</source>
+                <target>Kies contact</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="user.enable">
+                <source>user.enable</source>
+                <target>Gebruiker activeren</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="labels.success.user.activated">
+                <source>labels.success.user.activated</source>
+                <target>Gebruiker geactiveerd</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -564,6 +564,10 @@
                 <source>contact.accounts.documents-removed</source>
                 <target>Dokumente entfernt</target>
             </trans-unit>
+            <trans-unit id="435b147223ft60a3essds2e9335a8d5d" resname="contact.accounts.documents-saved">
+                <source>contact.accounts.documents-saved</source>
+                <target>Dokumente gespeichert</target>
+            </trans-unit>
             <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
                 <source>contact.accounts.deleted</source>
                 <target>Organisation gelöscht</target>
@@ -599,6 +603,10 @@
             <trans-unit id="435b1472d76660a3essds2e9335a8d5d" resname="contact.contacts.document-added">
                 <source>contact.contacts.document-added</source>
                 <target>Dokument hinzugefügt</target>
+            </trans-unit>
+            <trans-unit id="435b1472d76660a3e3z5e2e9335a8d5d" resname="contact.contacts.documents-saved">
+                <source>contact.contacts.documents-saved</source>
+                <target>Dokumente gespeichert</target>
             </trans-unit>
             <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
                 <source>contact.address.countryCode</source>

@@ -66,6 +66,11 @@ class MediaControllerTest extends SuluTestCase
     private $videoType;
 
     /**
+     * @var MediaType
+     */
+    private $audioType;
+
+    /**
      * @var Category
      */
     private $category;
@@ -194,6 +199,10 @@ class MediaControllerTest extends SuluTestCase
         $this->videoType->setName('video');
         $this->videoType->setDescription('This is a video');
 
+        $this->audioType = new MediaType();
+        $this->audioType->setName('audio');
+        $this->audioType->setDescription('This is a video');
+
         // create some tags
         $tag1 = new Tag();
         $tag1->setName('Tag 1');
@@ -204,16 +213,34 @@ class MediaControllerTest extends SuluTestCase
         $this->em->persist($tag1);
         $this->em->persist($tag2);
         $this->em->persist($this->documentType);
+        $this->em->persist($this->audioType);
         $this->em->persist($this->imageType);
         $this->em->persist($this->videoType);
 
         $this->em->flush();
     }
 
-    protected function createMedia($name, $locale = 'en-gb')
+    protected function createMedia($name, $locale = 'en-gb', $type = 'image')
     {
         $media = new Media();
-        $media->setType($this->imageType);
+
+        if ($type === 'image') {
+            $media->setType($this->imageType);
+            $extension = 'jpeg';
+            $mimeType = 'image/jpg';
+        } elseif ($type === 'audio') {
+            $media->setType($this->audioType);
+            $extension = 'mp3';
+            $mimeType = 'audio/mp3';
+        } elseif ($type === 'video') {
+            $media->setType($this->videoType);
+            $extension = 'mp4';
+            $mimeType = 'video/mp4';
+        } else {
+            $media->setType($this->documentType);
+            $extension = 'txt';
+            $mimeType = 'text/plain';
+        }
 
         // create file
         $file = new File();
@@ -223,8 +250,8 @@ class MediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setName($name . '.jpeg');
-        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setName($name . '.' . $extension);
+        $fileVersion->setMimeType($mimeType);
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
@@ -232,11 +259,11 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->addCategory($this->category2);
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
-        $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.jpeg"}');
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.' . $extension . '"}');
         if (!file_exists(__DIR__ . '/../../uploads/media/1')) {
             mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
         }
-        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/' . $name . '.jpeg');
+        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/' . $name . '.' . $extension);
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -543,6 +570,7 @@ class MediaControllerTest extends SuluTestCase
     public function testcGetCollectionTypes()
     {
         $media = $this->createMedia('photo');
+        $document = $this->createMedia('document', 'en-gb', 'document');
 
         $client = $this->createAuthenticatedClient();
 
@@ -589,12 +617,14 @@ class MediaControllerTest extends SuluTestCase
     public function testcGetCollectionTypesMultiple()
     {
         $media = $this->createMedia('photo');
+        $audio = $this->createMedia('audio', 'en-gb', 'audio');
+        $document = $this->createMedia('document', 'en-gb', 'document');
 
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?locale=en-gb&collection=' . $this->collection->getId() . '&types=image,audio'
+            '/api/media?locale=en-gb&collection=' . $this->collection->getId() . '&types=image,audio&sortBy=id'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -603,9 +633,12 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
+
         $this->assertEquals($media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
+        $this->assertEquals($audio->getId(), $response->_embedded->media[1]->id);
+        $this->assertEquals('audio.mp3', $response->_embedded->media[1]->name);
     }
 
     public function testcGetFallbacks()

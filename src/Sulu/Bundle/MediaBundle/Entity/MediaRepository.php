@@ -110,6 +110,11 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             return [];
         }
 
+        if (empty($orderBy)) {
+            $orderBy = 'media.id';
+            $orderSort = 'asc';
+        }
+
         if (!$ids) {
             $ids = $this->getIds(
                 $collection,
@@ -156,9 +161,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $queryBuilder->setParameter('mediaIds', $ids);
         }
 
-        if ($orderBy !== null) {
-            $queryBuilder->addOrderBy($orderBy, $orderSort);
-        }
+        $queryBuilder->addOrderBy($orderBy, $orderSort);
 
         if ($user !== null && $permission !== null) {
             $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');

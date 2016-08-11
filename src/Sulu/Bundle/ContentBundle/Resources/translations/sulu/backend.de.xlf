@@ -467,6 +467,10 @@
                 <source>public.unpublished</source>
                 <target>Nicht veröffentlicht</target>
             </trans-unit>
+            <trans-unit id="9cbaaaaa38148fbed4a73a4223dffe1fc" resname="public.published-with-draft">
+                <source>public.published-with-draft</source>
+                <target>Veröffentlicht mit Entwurf</target>
+            </trans-unit>
             <trans-unit id="5cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.internal-link">
                 <source>public.internal-link</source>
                 <target>Interner Link</target>

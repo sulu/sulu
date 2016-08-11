@@ -66,6 +66,7 @@ class NodeControllerTest extends SuluTestCase
         $tag1 = new Tag();
 
         $metadata = $this->em->getClassMetaData(get_class($tag1));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $tag1->setId(1);
@@ -1465,6 +1466,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('test5', $response['title']);
         $this->assertEquals('/test2/test3/test5', $response['path']);
         $this->assertEquals('/test2/test3/testing5', $response['url']);
+        $this->assertEquals(false, $response['publishedState']);
+        $this->assertArrayNotHasKey('published', $response);
 
         // check old node
         $client->request(
@@ -1527,6 +1530,7 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
+        $document = $this->documentManager->find($document->getUuid(), 'de', ['load_ghost_content' => false]);
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
@@ -1541,7 +1545,6 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'de');
         $this->documentManager->flush();
 
-        $document = $this->documentManager->find($document->getUuid(), 'de');
         $document->setShadowLocaleEnabled(true);
         $document->setShadowLocale('en');
         $this->documentManager->persist($document, 'de');
@@ -1572,6 +1575,7 @@ class NodeControllerTest extends SuluTestCase
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_de');
+        $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
         $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($document, 'de');
@@ -1743,16 +1747,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrderNonExistingSource()
     {
-        $data = [
-            [
-                'title' => 'test1',
-                'url' => '/test1',
-            ],
-        ];
-
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
             'POST',

@@ -1,6 +1,27 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #2764 [MediaBundle]         Fixed type filter for media content type
+    * BUGFIX      #2795 [ContentBundle]       Allow to load document without any translation
+    * BUGFIX      #2791 [CustomUrlBundle]     Use the default locale of the user to load the custom url column navigation
+    * BUGFIX      #2792 [ContentBundle]       Do not show empty selection for link target in ckeditor
+    * FEATURE     #2703 [All]                 Improved experience when using sulu with postgres.
+    * BUGFIX      #2785 [ContentBundle]       Fixed deindexing of documents for both workspaces
+    * BUGFIX      #2775 [ContentBundle]       Removed action icon for ghost pages in column-navigation (husky)
+    * BUGFIX      #2781 [ContentBundle]       Set workflowstage of copied nodes to draft
+    * BUGFIX      #2784 [ContentBundle]       Fixed publish handling for internal and external links
+    * ENHANCEMENT #2704 [ContactBundle]       Save contact-/account-documents with save button in header
+    * BUGFIX      #2648 [HttpCacheBundle]     Purge cache when removing or unpublishing page
+    * FEATURE     #2780 [ContentBundle]       Added images/icons of excerpt to search index
+    * BUGFIX      #2777 [ContentBundle]       Fixed tooltip translations in column-navigation
+    * BUGFIX      #2685 [ContentBundle]       Fixed resource locator adaption for pages with ghost-ancestors
+    * BUGFIX      #2758 [ContentBundle]       Fixed wrong disabeling of button in block type
+    * FEATURE     #2761 [All]                 Added Dutch translation
+    * FEATURE     #2748 [AdminBundle]         Added Twig blocks to be able to use inheritance
+    * BUGFIX      #2771 [SnippetBundle]       Fixed default snippets for public workspace
+    * BUGFIX      #2773 [ContentBundle]       Removed published icons from column navigation when page is ghost
+
 * 1.3.0-RC3 (2016-08-08)
     * BUGFIX      #2760 [MediaBundle]         Added missing locale to media move action
     * ENHANCEMENT #2759 [ContentBundle]       Fixed ok button translation for smart content overlay

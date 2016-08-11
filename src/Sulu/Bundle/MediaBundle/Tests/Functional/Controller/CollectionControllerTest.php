@@ -112,6 +112,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         // force id = 1
         $metadata = $this->em->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $this->collectionType1 = $this->createCollectionType(
@@ -853,6 +854,7 @@ class CollectionControllerTest extends SuluTestCase
 
         // Add New Collection Type
         $collectionType = new CollectionType();
+        $collectionType->setId(3);
         $collectionType->setName('Second Collection Type');
         $collectionType->setKey('my-type');
         $collectionType->setDescription('Second Collection Type');

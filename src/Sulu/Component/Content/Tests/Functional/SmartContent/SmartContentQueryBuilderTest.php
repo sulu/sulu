@@ -1057,7 +1057,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         if (!$isShadow) {
             /** @var PageDocument $document */
             try {
-                $document = $this->documentManager->find($uuid, $locale);
+                $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             } catch (DocumentNotFoundException $e) {
                 $document = $this->documentManager->create('page');
             }
@@ -1075,7 +1075,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             }
             $this->documentManager->persist($document, $locale, $persistOptions);
         } else {
-            $document = $this->documentManager->find($uuid, $locale);
+            $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             $document->setShadowLocaleEnabled(true);
             $document->setShadowLocale($shadowLocale);
             $document->setLocale($locale);

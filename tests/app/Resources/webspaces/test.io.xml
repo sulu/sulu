@@ -53,6 +53,11 @@
                         <url>test.lo/{localization}</url>
                     </urls>
                 </environment>
+                <environment type="test">
+                    <urls>
+                        <url>test.lo/{localization}</url>
+                    </urls>
+                </environment>
             </environments>
         </portal>
     </portals>
