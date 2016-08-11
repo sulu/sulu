@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2764 [MediaBundle]         Fixed type filter for media content type
     * BUGFIX      #2795 [ContentBundle]       Allow to load document without any translation
+    * ENHANCEMENT #2796 [ContactBundle]       Remove minlength of 3 from organisation name
     * BUGFIX      #2791 [CustomUrlBundle]     Use the default locale of the user to load the custom url column navigation
     * BUGFIX      #2792 [ContentBundle]       Do not show empty selection for link target in ckeditor
     * FEATURE     #2703 [All]                 Improved experience when using sulu with postgres.
