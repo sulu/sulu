@@ -884,6 +884,36 @@ input, select {
   display: none;
 }
 
+/* line 1, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb {
+  padding-bottom: 5px;
+}
+/* line 4, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .breadcrumb {
+  cursor: pointer;
+  font-size: 12px;
+  color: #999;
+  -moz-transition: color 80ms;
+  -o-transition: color 80ms;
+  -webkit-transition: color 80ms;
+  transition: color 80ms;
+}
+/* line 10, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .breadcrumb:hover {
+  color: #000;
+}
+/* line 15, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .icon {
+  display: inline-block;
+  margin: 0 5px;
+  font-size: 9px;
+  color: #000;
+}
+/* line 22, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .breadcrumb:last-child .icon {
+  display: none;
+}
+
 /*----------------------------------------*/
 /* line 4, ../scss/modules/sidebar.scss */
 .sulu-sidebar {
@@ -956,23 +986,36 @@ input, select {
 /** only shown when parent has class
     .option-dropdown-toggler
 **/
-/* line 7, ../scss/modules/headlines.scss */
+/* line 6, ../scss/modules/headlines.scss */
 .options-dropdown-container {
   display: none;
 }
-/* line 10, ../scss/modules/headlines.scss */
+/* line 9, ../scss/modules/headlines.scss */
 .options-dropdown-container.is-active {
   display: block;
 }
-/* line 13, ../scss/modules/headlines.scss */
+/* line 12, ../scss/modules/headlines.scss */
 .options-dropdown-container span {
   padding-left: 5px;
   padding-right: 5px;
 }
 
-/* line 21, ../scss/modules/headlines.scss */
+/* line 20, ../scss/modules/headlines.scss */
 .options-dropdown-toggler:hover .options-dropdown-container {
   display: block;
+}
+
+/* line 26, ../scss/modules/headlines.scss */
+.content-title {
+  margin-bottom: 30px;
+}
+/* line 27, ../scss/modules/headlines.scss */
+.content-title h2 {
+  margin-bottom: 0;
+}
+/* line 31, ../scss/modules/headlines.scss */
+.content-title.underlined {
+  border-bottom: 2px solid #ddd;
 }
 
 /* line 1, ../scss/modules/data-overlay.scss */
