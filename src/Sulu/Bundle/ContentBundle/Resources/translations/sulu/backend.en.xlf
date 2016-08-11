@@ -775,6 +775,10 @@
                 <source>sulu-content.teaser.no-teaser</source>
                 <target>No teaser selected</target>
             </trans-unit>
+            <trans-unit id="67" resname="sulu-content.resource-locator.delete">
+                <source>sulu-content.resource-locator.delete</source>
+                <target>The URL will be deleted for all draft and live versions of this page. This cannot be undone. Do you wish to proceed?</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
