@@ -9,7 +9,7 @@ cache:
 
 env:
   global:
-    - JACKRABBIT_VERSION=2.12.0
+    - JACKRABBIT_VERSION=2.12.2
     - SYMFONY__PHPCR__TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
     - SYMFONY__DATABASE__DRIVER=pdo_mysql

@@ -89,13 +89,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $structureType = $this->getDefaultStructureType($type);
         }
 
-        if (!is_string($structureType)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected string for structureType, got: %s',
-                    is_object($structureType) ? get_class($structureType) : gettype($structureType)
-                )
-            );
+        if (!$structureType) {
+            return;
         }
 
         $cachePath = sprintf(
@@ -247,17 +242,12 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      *
      * @param string $type
      *
-     * @return string
+     * @return string|null
      */
     private function getDefaultStructureType($type)
     {
         if (!isset($this->defaultTypes[$type])) {
-            throw new \RuntimeException(
-                sprintf(
-                    'No structure type was available and no default exists for document with alias "%s"',
-                    $type
-                )
-            );
+            return;
         }
 
         return $this->defaultTypes[$type];

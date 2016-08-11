@@ -147,14 +147,9 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->getStructureMetadata('page');
     }
 
-    /**
-     * It should throw an exception if no structure type is given and no default is available.
-     *
-     * @expectedException \RuntimeException
-     */
     public function testGetStructureDefaultNoSet()
     {
-        $this->factory->getStructureMetadata('snoopet');
+        $this->assertNull($this->factory->getStructureMetadata('snoopet'));
     }
 
     /**

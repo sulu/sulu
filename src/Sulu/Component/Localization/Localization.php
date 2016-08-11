@@ -294,7 +294,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function findLocalization($localization)
     {
-        if ($this->getLocalization() == $localization) {
+        if ($this->getLocale() == $localization) {
             return $this;
         }
 
