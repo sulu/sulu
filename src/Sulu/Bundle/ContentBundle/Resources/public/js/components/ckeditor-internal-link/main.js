@@ -212,7 +212,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
 
                                 this.href = id;
                                 this.hrefTitle = title;
-                                this.hrefPublished = item.publishedState;
+                                this.hrefPublished = !!item.published;
                                 this.sandbox.emit('husky.overlay.internal-link.slide-to', 0);
                                 $('.href-container').removeClass('husky-validate-error');
                             }.bind(this)

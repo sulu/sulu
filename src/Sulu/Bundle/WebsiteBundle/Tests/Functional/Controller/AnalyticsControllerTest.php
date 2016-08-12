@@ -57,7 +57,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $items = $response['_embedded']['analytics'];
-        $this->assertCount(3, $items);
+        $this->assertCount(4, $items);
         $this->assertEquals('test-1', $items[0]['title']);
         $this->assertEquals('google', $items[0]['type']);
         $this->assertEquals('UA123-123', $items[0]['content']);
@@ -82,6 +82,13 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('stage', $items[2]['domains'][0]['environment']);
         $this->assertEquals('{localization}.google.at', $items[2]['domains'][1]['url']);
         $this->assertEquals('prod', $items[2]['domains'][1]['environment']);
+
+        $this->assertEquals('test-4', $items[3]['title']);
+        $this->assertEquals('google_tag_manager', $items[3]['type']);
+        $this->assertEquals('GTM-XXXX', $items[3]['content']);
+        $this->assertCount(1, $items[3]['domains']);
+        $this->assertEquals('www.sulu.io', $items[3]['domains'][0]['url']);
+        $this->assertEquals('prod', $items[3]['domains'][0]['environment']);
     }
 
     public function testGet()
@@ -164,7 +171,7 @@ class AnalyticsControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[3]->getId());
+        $client->request('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[4]->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request('GET', '/api/webspaces/test_io/analytics');
@@ -182,6 +189,7 @@ class AnalyticsControllerTest extends SuluTestCase
             $this->entities[0]->getId(),
             $this->entities[1]->getId(),
             $this->entities[2]->getId(),
+            $this->entities[3]->getId(),
         ];
 
         $client->request('DELETE', '/api/webspaces/sulu_io/analytics?ids=' . implode(',', $ids));
@@ -227,6 +235,15 @@ class AnalyticsControllerTest extends SuluTestCase
                     ['url' => 'www.google.at', 'environment' => 'stage'],
                     ['url' => '{localization}.google.at', 'environment' => 'prod'],
                 ],
+            ]
+        );
+        $this->entities[] = $this->analyticsManager->create(
+            'sulu_io',
+            [
+                'title' => 'test-4',
+                'type' => 'google_tag_manager',
+                'content' => 'GTM-XXXX',
+                'domains' => [['url' => 'www.sulu.io', 'environment' => 'prod']],
             ]
         );
         $this->entities[] = $this->analyticsManager->create(

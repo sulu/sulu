@@ -88,7 +88,10 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function getAction($id, Request $request)
     {
         if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
-            $collections = $this->getCollectionManager()->getTreeById($id, $this->getLocale($request));
+            $collections = $this->getCollectionManager()->getTreeById(
+                $id,
+                $this->getRequestParameter($request, 'locale', true)
+            );
 
             if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
                 $collections = [
@@ -104,7 +107,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         }
 
         try {
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
@@ -147,8 +150,8 @@ class CollectionController extends RestController implements ClassResourceInterf
             );
         } catch (CollectionNotFoundException $cnf) {
             $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -179,7 +182,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             if ($flat) {
                 $collections = $collectionManager->get(
-                    $this->getLocale($request),
+                    $this->getRequestParameter($request, 'locale', true),
                     [
                         'depth' => $depth,
                         'search' => $search,
@@ -190,7 +193,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 );
             } else {
                 $collections = $collectionManager->getTree(
-                    $this->getLocale($request),
+                    $this->getRequestParameter($request, 'locale', true),
                     $offset,
                     $limit,
                     $search,
@@ -320,7 +323,8 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected function moveEntity($id, Request $request)
     {
         $destinationId = $this->getRequestParameter($request, 'destination');
-        $collection = $this->getCollectionManager()->move($id, $this->getLocale($request), $destinationId);
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $collection = $this->getCollectionManager()->move($id, $locale, $destinationId);
         $view = $this->view($collection);
 
         return $this->handleView($view);
@@ -337,7 +341,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             'style' => $request->get('style'),
             'type' => $request->get('type', $this->container->getParameter('sulu_media.collection.type.default')),
             'parent' => $request->get('parent'),
-            'locale' => $request->get('locale', $this->getLocale($request)),
+            'locale' => $this->getRequestParameter($request, 'locale', true),
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'changer' => $request->get('changer'),
@@ -368,14 +372,14 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
-            $data['locale'] = $this->getLocale($request);
+            $data['locale'] = $this->getRequestParameter($request, 'locale', true);
             $collection = $collectionManager->save($data, $this->getUser()->getId());
 
             $view = $this->view($collection, 200);
-        } catch (CollectionNotFoundException $cnf) {
-            $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (CollectionNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);

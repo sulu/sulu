@@ -12,7 +12,8 @@
 namespace Sulu\Component\Webspace\Settings;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 
 /**
  * Manages settings on top the webspace node.
@@ -24,9 +25,17 @@ class SettingsManager implements SettingsManagerInterface
      */
     private $sessionManager;
 
-    public function __construct(SessionManagerInterface $sessionManager)
-    {
+    /**
+     * @var DeprecatedSessionManagerInterface
+     */
+    private $deprecatedSessionManager;
+
+    public function __construct(
+        SessionManagerInterface $sessionManager,
+        DeprecatedSessionManagerInterface $deprecatedSessionManager
+    ) {
         $this->sessionManager = $sessionManager;
+        $this->deprecatedSessionManager = $deprecatedSessionManager;
     }
 
     /**
@@ -41,9 +50,13 @@ class SettingsManager implements SettingsManagerInterface
             $value = json_encode($data);
         }
 
-        $this->sessionManager->getWebspaceNode($webspaceKey)->setProperty($propertyName, $value);
+        $this->sessionManager->setNodeProperty(
+            $this->deprecatedSessionManager->getWebspacePath($webspaceKey),
+            $propertyName,
+            $value
+        );
 
-        $this->sessionManager->getSession()->save();
+        $this->sessionManager->flush();
     }
 
     /**
@@ -52,14 +65,14 @@ class SettingsManager implements SettingsManagerInterface
     public function remove($webspaceKey, $key)
     {
         $propertyName = $this->getPropertyName($key);
-        if (!$this->sessionManager->getWebspaceNode($webspaceKey)->hasProperty($propertyName)) {
-            return;
-        }
 
-        $property = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperty($propertyName);
-        $property->remove();
+        $this->sessionManager->setNodeProperty(
+            $this->deprecatedSessionManager->getWebspacePath($webspaceKey),
+            $propertyName,
+            null
+        );
 
-        $this->sessionManager->getSession()->save();
+        $this->sessionManager->flush();
     }
 
     /**
@@ -69,7 +82,7 @@ class SettingsManager implements SettingsManagerInterface
     {
         $propertyName = $this->getPropertyName($key);
 
-        $value = $this->sessionManager->getWebspaceNode($webspaceKey)->getPropertyValueWithDefault(
+        $value = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey)->getPropertyValueWithDefault(
             $propertyName,
             'null'
         );
@@ -83,7 +96,7 @@ class SettingsManager implements SettingsManagerInterface
     public function loadString($webspaceKey, $key)
     {
         $propertyName = $this->getPropertyName($key);
-        $webspaceNode = $this->sessionManager->getWebspaceNode($webspaceKey);
+        $webspaceNode = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey);
         if (!$webspaceNode->hasProperty($propertyName)) {
             return;
         }
@@ -96,7 +109,7 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function loadByWildcard($webspaceKey, $wildcard)
     {
-        $properties = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperties(
+        $properties = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey)->getProperties(
             $this->getPropertyName($wildcard)
         );
 
@@ -113,7 +126,7 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function loadStringByWildcard($webspaceKey, $wildcard)
     {
-        $webspaceNode = $this->sessionManager->getWebspaceNode($webspaceKey);
+        $webspaceNode = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey);
 
         $properties = $webspaceNode->getProperties($this->getPropertyName($wildcard));
 

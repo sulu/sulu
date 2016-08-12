@@ -51,6 +51,7 @@
         </service>
 
         <service id="sulu_core.webspace.settings_manager" class="Sulu\Component\Webspace\Settings\SettingsManager">
+            <argument type="service" id="sulu_document_manager.session_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
         </service>
 

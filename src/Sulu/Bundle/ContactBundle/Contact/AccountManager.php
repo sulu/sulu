@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -48,12 +49,18 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     private $contactRepository;
 
     /**
+     * @var MediaRepositoryInterface
+     */
+    protected $mediaRepository;
+
+    /**
      * @param ObjectManager $em
      * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
      * @param AccountFactory $accountFactory
      * @param AccountRepository $accountRepository
      * @param ContactRepository $contactRepository
+     * @param MediaRepositoryInterface $mediaRepository
      */
     public function __construct(
         ObjectManager $em,
@@ -61,12 +68,14 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         MediaManagerInterface $mediaManager,
         AccountFactory $accountFactory,
         AccountRepository $accountRepository,
-        ContactRepository $contactRepository
+        ContactRepository $contactRepository,
+        MediaRepositoryInterface $mediaRepository
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
         $this->accountFactory = $accountFactory;
         $this->accountRepository = $accountRepository;
         $this->contactRepository = $contactRepository;
+        $this->mediaRepository = $mediaRepository;
     }
 
     /**
@@ -260,6 +269,42 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     {
         $media = $this->mediaManager->getEntityById($mediaId);
         $account->setLogo($media);
+    }
+
+    /**
+     * Sets the medias of the given account to the given medias.
+     * Currently associated medias are replaced.
+     *
+     * @param Account $account
+     * @param $medias
+     *
+     * @throws EntityNotFoundException
+     */
+    public function setMedias(Account $account, $medias)
+    {
+        $mediaIds = array_map(
+            function ($media) {
+                return $media['id'];
+            },
+            $medias
+        );
+
+        $foundMedias = $this->mediaRepository->findById($mediaIds);
+        $foundMediaIds = array_map(
+            function ($mediaEntity) {
+                return $mediaEntity->getId();
+            },
+            $foundMedias
+        );
+
+        if ($missingMediaIds = array_diff($mediaIds, $foundMediaIds)) {
+            throw new EntityNotFoundException($this->mediaRepository->getClassName(), reset($missingMediaIds));
+        }
+
+        $account->getMedias()->clear();
+        foreach ($foundMedias as $media) {
+            $account->addMedia($media);
+        }
     }
 
     /**

@@ -12,10 +12,12 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
+        {% block stylesheets %}
         <!-- build:css app.min.css -->
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <!-- endbuild -->
+        {% endblock stylesheets %}
     </head>
     <body>
         <div class="spinner initial-loader">
@@ -70,8 +72,10 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
+        {% block javascripts %}
         <!-- build:js app.min.js -->
         <script data-main="/bundles/suluadmin/js/main" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
         <!-- endbuild -->
+        {% endblock javascripts %}
     </body>
 </html>

@@ -336,9 +336,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
             $portal->setName($this->xpath->query('x:name', $portalNode)->item(0)->nodeValue);
             $portal->setKey($this->xpath->query('x:key', $portalNode)->item(0)->nodeValue);
-            $portal->setResourceLocatorStrategy(
-                $this->xpath->query('x:resource-locator/x:strategy', $portalNode)->item(0)->nodeValue
-            );
 
             // set localization on portal
             $this->generatePortalLocalizations($portalNode, $portal);

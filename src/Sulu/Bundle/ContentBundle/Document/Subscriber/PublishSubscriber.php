@@ -132,7 +132,7 @@ class PublishSubscriber implements EventSubscriberInterface
      */
     public function copyNodeInPublicWorkspace(CopyEvent $event)
     {
-        $this->createNodesWithUuid($event->getCopiedNode());
+        $this->copyNodeWithChildrenInPublicWorkspace($event->getCopiedNode());
     }
 
     /**
@@ -221,6 +221,15 @@ class PublishSubscriber implements EventSubscriberInterface
     public function flushPublicWorkspace()
     {
         $this->liveSession->save();
+    }
+
+    private function copyNodeWithChildrenInPublicWorkspace(NodeInterface $node)
+    {
+        $this->createNodesWithUuid($node);
+
+        foreach ($node->getNodes() as $childNode) {
+            $this->copyNodeWithChildrenInPublicWorkspace($childNode);
+        }
     }
 
     /**

@@ -138,7 +138,8 @@ define(['services/husky/util'], function(util) {
                             url: [
                                 '/admin/api/categories',
                                 (!!this.options.root ? ('/' + this.options.root) + '/children' : ''),
-                                '?flat=true&sortBy=depth&sortOrder=asc'
+                                '?locale=' + this.sandbox.sulu.getDefaultContentLocale(),
+                                '&flat=true&sortBy=depth&sortOrder=asc'
                             ].join(''),
                             resultKey: 'categories',
                             pagination: false,

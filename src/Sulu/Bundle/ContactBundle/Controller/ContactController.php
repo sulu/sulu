@@ -433,6 +433,39 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Partially update an existing contact.
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction($id, Request $request)
+    {
+        try {
+            $contact = $this->getContactManager()->save(
+                $request->request->all(),
+                $id,
+                true
+            );
+
+            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $view = $this->view($apiContact, 200);
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(
+                    static::$contactSerializationGroups
+                )
+            );
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
      * @return ContactManager
      */
     protected function getContactManager()

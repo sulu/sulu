@@ -102,6 +102,22 @@ class CategoryManager implements CategoryManagerInterface
                 [],
                 true
             );
+            $this->fieldDescriptors['lft'] = new DoctrineFieldDescriptor(
+                'lft',
+                'lft',
+                self::$categoryEntityName,
+                'public.lft',
+                [],
+                true
+            );
+            $this->fieldDescriptors['rgt'] = new DoctrineFieldDescriptor(
+                'rgt',
+                'rgt',
+                self::$categoryEntityName,
+                'public.rgt',
+                [],
+                true
+            );
             $this->fieldDescriptors['key'] = new DoctrineFieldDescriptor(
                 'key',
                 'key',
@@ -209,19 +225,6 @@ class CategoryManager implements CategoryManagerInterface
                     self::$categoryEntityName . 'Parent' => new DoctrineJoinDescriptor(
                             self::$categoryEntityName,
                             self::$categoryEntityName . '.parent'
-                        ),
-                ],
-                false
-            );
-            $this->fieldDescriptors['hasChildren'] = new DoctrineFieldDescriptor(
-                'id',
-                'hasChildren',
-                self::$categoryEntityName . 'Children',
-                'category.children',
-                [
-                    self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
-                            self::$categoryEntityName,
-                            self::$categoryEntityName . '.children'
                         ),
                 ],
                 false

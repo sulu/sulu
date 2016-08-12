@@ -1181,4 +1181,34 @@
         <column name="from">&amp;</column>
         <column name="to">y</column>
     </item>
+    <item>
+        <column name="locale">DE</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">und</column>
+    </item>
+    <item>
+        <column name="locale">EN</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">and</column>
+    </item>
+    <item>
+        <column name="locale">FR</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">et</column>
+    </item>
+    <item>
+        <column name="locale">IT</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">NL</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">en</column>
+    </item>
+    <item>
+        <column name="locale">ES</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">y</column>
+    </item>
 </replacers>

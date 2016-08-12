@@ -345,7 +345,7 @@ class Address
      *
      * @return Address
      */
-    public function setCountry(\Sulu\Bundle\ContactBundle\Entity\Country $country)
+    public function setCountry(\Sulu\Bundle\ContactBundle\Entity\Country $country = null)
     {
         $this->country = $country;
 

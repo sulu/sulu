@@ -110,18 +110,6 @@ interface ContentMapperInterface
     public function loadStartPage($webspaceKey, $languageCode);
 
     /**
-     * returns data from given path.
-     *
-     * @param string $resourceLocator Resource locator
-     * @param string $webspaceKey     Key of webspace
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return StructureInterface
-     */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
      * returns the content returned by the given sql2 query as structures.
      *
      * @param string $sql2         The query, which returns the content

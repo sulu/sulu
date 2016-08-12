@@ -325,14 +325,8 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
-
-        if ($response->medias[0]->id == 1) {
-            $this->assertNotNull($response->medias[0]->id);
-            $this->assertNotNull($response->medias[1]->id);
-        } else {
-            $this->assertNotNull($response->medias[1]->id);
-            $this->assertNotNull($response->medias[0]->id);
-        }
+        $this->assertNotNull($response->medias[0]->id);
+        $this->assertNotNull($response->medias[1]->id);
     }
 
     public function testAccountMediaPostNotExistingMedia()

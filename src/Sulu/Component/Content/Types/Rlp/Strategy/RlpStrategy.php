@@ -20,6 +20,8 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
@@ -63,6 +65,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     protected $documentInspector;
 
+    /**
+     * @var DocumentManagerInterface
+     */
+    protected $documentManager;
+
     public function __construct(
         $name,
         RlpMapperInterface $mapper,
@@ -70,7 +77,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
         SuluNodeHelper $nodeHelper,
-        DocumentInspector $documentInspector
+        DocumentInspector $documentInspector,
+        DocumentManagerInterface $documentManager
     ) {
         $this->name = $name;
         $this->mapper = $mapper;
@@ -79,6 +87,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $this->contentTypeManager = $contentTypeManager;
         $this->nodeHelper = $nodeHelper;
         $this->documentInspector = $documentInspector;
+        $this->documentManager = $documentManager;
     }
 
     /**
@@ -92,10 +101,20 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null)
+    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // title should not have a slash
         $title = str_replace('/', '-', $title);
+
+        if ($parentUuid !== null) {
+            $parentDocument = $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false]);
+            // find uuid of published ancestor for generating parent-path-segment
+            $resolvedParentUuid = $this->documentInspector->getUuid($this->getPublishedAncestorOrSelf($parentDocument));
+            // using loadByContentUuid because loadByContent returns the wrong language for shadow-pages
+            $parentPath = $this->loadByContentUuid($resolvedParentUuid, $webspaceKey, $languageCode);
+        } else {
+            $parentPath = '/';
+        }
 
         // get generated path from childClass
         $path = $this->generatePath($title, $parentPath);
@@ -110,13 +129,20 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the first ancestor-or-self of the given document which is published and therefore has an
+     * assigned resource locator. If all ancestor documents are unpublished, the root document is returned.
+     *
+     * @param object $document
+     *
+     * @return object
      */
-    public function generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    private function getPublishedAncestorOrSelf($document)
     {
-        $parentPath = $this->mapper->getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey);
+        while (!$document->getPublished() && $document instanceof ParentBehavior) {
+            $document = $document->getParent();
+        }
 
-        return $this->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
+        return $document;
     }
 
     /**
@@ -184,61 +210,43 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $webspaceKey = $this->documentInspector->getWebspace($document);
         $languageCode = $this->documentInspector->getLocale($document);
 
+        $node = $this->documentInspector->getNode($document);
+        $node->getSession()->save();
+
         foreach ($document->getChildren() as $childDocument) {
-            $childNode = $this->documentInspector->getNode($childDocument);
-
-            // determine structure
-            $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
-
-            if (!$childNode->hasProperty($templatePropertyName)) {
+            // skip documents without assigned resource segment
+            if (!$childDocument instanceof ResourceSegmentBehavior
+                || !($currentResourceLocator = $childDocument->getResourceSegment())
+            ) {
+                $this->adaptResourceLocators($childDocument, $userId);
                 continue;
-            }
-
-            $template = $childNode->getPropertyValue($templatePropertyName);
-            $structure = $this->structureManager->getStructure($template);
-
-            if (!$structure->hasTag('sulu.rlp')) {
-                continue;
-            }
-
-            // get rlp
-            try {
-                $rlp = $this->loadByContent($childDocument);
-            } catch (ResourceLocatorNotFoundException $ex) {
-                $childNode->getSession()->save();
-
-                $rlpPart = $childNode->getPropertyValue(
-                    $this->nodeHelper->getTranslatedPropertyName('title', $languageCode)
-                );
-                $parentRlp = $this->mapper->getParentPath(
-                    $childNode->getIdentifier(),
-                    $webspaceKey,
-                    $languageCode
-                );
-
-                // generate new resourcelocator
-                $rlp = $this->generate(
-                    $rlpPart,
-                    $parentRlp,
-                    $webspaceKey,
-                    $languageCode
-                );
             }
 
             // build new resource segment based on parent changes
-            $rlpParts = explode('/', $rlp);
-            $newRlp = $document->getResourceSegment() . '/' . $rlpParts[count($rlpParts) - 1];
+            $parentUuid = $this->documentInspector->getUuid($document);
+            $childPart = $this->getChildPart($currentResourceLocator);
+            $newResourceLocator = $this->generate($childPart, $parentUuid, $webspaceKey, $languageCode);
 
-            // determine rlp property
+            // save new resource locator
+            $childNode = $this->documentInspector->getNode($childDocument);
+            $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
+            $template = $childNode->getPropertyValue($templatePropertyName);
+            $structure = $this->structureManager->getStructure($template);
+
             $property = $structure->getPropertyByTagName('sulu.rlp');
+            $property->setValue($newResourceLocator);
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-            $property->setValue($newRlp);
-            $childDocument->setResourceSegment($newRlp);
-
-            // write value to node
             $translatedProperty = $this->nodeHelper->getTranslatedProperty($property, $languageCode);
             $contentType->write($childNode, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
-            $this->save($childDocument, $userId);
+
+            $childDocument->setResourceSegment($newResourceLocator);
+
+            // do not save routes if unpublished
+            if (!$childDocument->getPublished()) {
+                $this->adaptResourceLocators($childDocument, $userId);
+            } else {
+                $this->save($childDocument, $userId);
+            }
         }
     }
 

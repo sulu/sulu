@@ -112,6 +112,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         // force id = 1
         $metadata = $this->em->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $this->collectionType1 = $this->createCollectionType(
@@ -294,6 +295,67 @@ class CollectionControllerTest extends SuluTestCase
     }
 
     /**
+     * @description Test GET all Collections with pagination and sorted by title
+     */
+    public function testcGetPaginated()
+    {
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection A', 'de' => 'Test Kollektion A']
+        );
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection C', 'de' => 'Test Kollektion C']
+        );
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection B', 'de' => 'Test Kollektion B']
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=1&limit=2',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(2, $response->pages);
+        $this->assertEquals(1, $response->page);
+        $this->assertEquals(2, $response->limit);
+        $this->assertEquals(4, $response->total);
+        $this->assertNotEmpty($response->_embedded->collections);
+        $this->assertCount(2, $response->_embedded->collections);
+        $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
+        $this->assertEquals('Test Collection A', $response->_embedded->collections[1]->title);
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=2&limit=2',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(2, $response->pages);
+        $this->assertEquals(2, $response->page);
+        $this->assertEquals(2, $response->limit);
+        $this->assertEquals(4, $response->total);
+        $this->assertNotEmpty($response->_embedded->collections);
+        $this->assertCount(2, $response->_embedded->collections);
+        $this->assertEquals('Test Collection B', $response->_embedded->collections[0]->title);
+        $this->assertEquals('Test Collection C', $response->_embedded->collections[1]->title);
+    }
+
+    /**
      * @description Test GET for non existing Resource (404)
      */
     public function testGetByIdNotExisting()
@@ -302,7 +364,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/10'
+            '/api/collections/10?locale=en'
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
@@ -522,6 +584,7 @@ class CollectionControllerTest extends SuluTestCase
             'POST',
             '/api/collections',
             [
+                'locale' => 'en',
                 'title' => 'Test Collection 2',
                 'type' => [
                     'id' => $this->collectionType1->getId(),
@@ -779,65 +842,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request(
-            'GET',
-            '/api/collections/' . $this->collection1->getId()
-        );
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $style = new \stdClass();
-        $style->type = 'circle';
-        $style->color = '#00ccff';
-
-        $id = $response->id;
-
-        $this->assertEquals($style, $response->style);
-        $this->assertEquals($this->collection1->getId(), $response->id);
-        $this->assertNotNull($response->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
-        $this->assertEquals('Test Collection changed', $response->title);
-        $this->assertEquals('This Description is only for testing changed', $response->description);
-        $this->assertEquals('en', $response->locale);
-
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'GET',
-            '/api/collections?locale=en'
-        );
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertNotEmpty($response);
-
-        $this->assertEquals(2, $response->total);
-
-        $this->assertTrue(isset($response->_embedded->collections[0]));
-        $this->assertTrue(isset($response->_embedded->collections[1]));
-        $responseFirstEntity = $response->_embedded->collections[0];
-        if ($responseFirstEntity->id !== $id) {
-            $responseFirstEntity = $response->_embedded->collections[1];
-        }
-
-        $style = new \stdClass();
-        $style->type = 'circle';
-        $style->color = '#00ccff';
-
-        $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
-        $this->assertNotNull($responseFirstEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
-        $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
-        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
-        $this->assertEquals('en', $responseFirstEntity->locale);
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     /**
@@ -849,6 +854,7 @@ class CollectionControllerTest extends SuluTestCase
 
         // Add New Collection Type
         $collectionType = new CollectionType();
+        $collectionType->setId(3);
         $collectionType->setName('Second Collection Type');
         $collectionType->setKey('my-type');
         $collectionType->setDescription('Second Collection Type');
@@ -861,6 +867,7 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             [
+                'locale' => 'en',
                 'style' => [
                     'type' => 'quader',
                     'color' => '#00ccff',
@@ -900,6 +907,7 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/404',
             [
+                'locale' => 'en',
                 'style' => [
                     'type' => 'quader',
                     'color' => '#00ccff',
@@ -925,7 +933,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/' . $this->collection1->getId()
+            '/api/collections/' . $this->collection1->getId() . '?locale=en'
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
@@ -945,7 +953,7 @@ class CollectionControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/collections/404');
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $client->request('GET', '/api/collections?flat=true');
+        $client->request('GET', '/api/collections?locale=en&flat=true');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }

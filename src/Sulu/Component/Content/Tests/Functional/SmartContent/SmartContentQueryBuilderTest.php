@@ -1057,7 +1057,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         if (!$isShadow) {
             /** @var PageDocument $document */
             try {
-                $document = $this->documentManager->find($uuid, $locale);
+                $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             } catch (DocumentNotFoundException $e) {
                 $document = $this->documentManager->create('page');
             }
@@ -1075,7 +1075,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             }
             $this->documentManager->persist($document, $locale, $persistOptions);
         } else {
-            $document = $this->documentManager->find($uuid, $locale);
+            $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             $document->setShadowLocaleEnabled(true);
             $document->setShadowLocale($shadowLocale);
             $document->setLocale($locale);
@@ -1114,16 +1114,34 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(1, count($result));
-        $this->assertEquals('/team/daniel', $result[0]['url']);
-        $this->assertEquals('Daniel', $result[0]['title']);
+        $this->assertEquals(3, count($result));
+        $this->assertEquals('/team/thomas', $result[0]['url']);
+        $this->assertEquals('Thomas', $result[0]['title']);
+        $this->assertEquals(false, $result[0]['publishedState']);
+        $this->assertNull($result[0]['published']);
+        $this->assertEquals('/team/daniel', $result[1]['url']);
+        $this->assertEquals('Daniel', $result[1]['title']);
+        $this->assertEquals(true, $result[1]['publishedState']);
+        $this->assertNotNull($result[1]['published']);
+        $this->assertEquals('/team/johannes', $result[2]['url']);
+        $this->assertEquals('Johannes', $result[2]['title']);
+        $this->assertEquals(false, $result[2]['publishedState']);
+        $this->assertNull($result[2]['published']);
 
         $result = $this->contentQuery->execute('sulu_io', ['de'], $builder);
 
-        $this->assertEquals(2, count($result));
-        $this->assertEquals('/team/daniel', $result[0]['url']);
-        $this->assertEquals('Daniel', $result[0]['title']);
-        $this->assertEquals('/team/johannes', $result[1]['url']);
-        $this->assertEquals('Johannes DE', $result[1]['title']);
+        $this->assertEquals(3, count($result));
+        $this->assertEquals('/team/thomas', $result[0]['url']);
+        $this->assertEquals('Thomas', $result[0]['title']);
+        $this->assertEquals(false, $result[0]['publishedState']);
+        $this->assertNull($result[0]['published']);
+        $this->assertEquals('/team/daniel', $result[1]['url']);
+        $this->assertEquals('Daniel', $result[1]['title']);
+        $this->assertEquals(true, $result[1]['publishedState']);
+        $this->assertNotNull($result[1]['published']);
+        $this->assertEquals('/team/johannes', $result[2]['url']);
+        $this->assertEquals('Johannes DE', $result[2]['title']);
+        $this->assertEquals(true, $result[2]['publishedState']);
+        $this->assertNotNull($result[2]['published']);
     }
 }

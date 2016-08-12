@@ -57,7 +57,10 @@ define(['config'], function(Config) {
                 toolbar: {
                     buttons: {
                         add: {},
-                        deleteSelected: {}
+                        deleteSelected: {},
+                    },
+                    languageChanger: {
+                        preSelected: this.options.locale
                     }
                 }
             };
@@ -74,7 +77,9 @@ define(['config'], function(Config) {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'filterFields', '/admin/api/filters/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this,
+                'filterFields',
+                '/admin/api/filters/fields?locale=' + this.options.locale,
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'filterSearch',
@@ -82,7 +87,7 @@ define(['config'], function(Config) {
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
-                    url: '/admin/api/filters?flat=true&context='+this.options.type,
+                    url: '/admin/api/filters?locale=' + this.options.locale + '&flat=true&context='+this.options.type,
                     resultKey: 'filters',
                     searchInstanceName: 'filterSearch',
                     searchFields: ['name'],

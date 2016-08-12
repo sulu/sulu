@@ -13,11 +13,13 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
+    {% block stylesheets %}
     <!-- build:css login.min.css -->
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
     <!-- endbuild -->
 
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
+    {% endblock stylesheets %}
 </head>
 <body>
     <div id="main" class="login">
@@ -47,8 +49,10 @@
         {% endautoescape %}
     </script>
 
+    {% block javascripts %}
     <!-- build:js login.min.js -->
     <script data-main="/bundles/suluadmin/js/login" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
     <!-- endbuild -->
+    {% endblock javascripts %}
 </body>
 </html>

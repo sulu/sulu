@@ -14,7 +14,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
     var constants = {
             filterListUrl: 'resource/filters/',
             manageFilters: 'manage',
-            filtersUrl: 'api/filters?flat=true&limit=100&context=',
+            filtersUrl: 'api/filters?locale={locale}&flat=true&limit=100&context=',
             filterUrl: 'resource/filters/',
             toolbarSelectButtonId: 'filters'
         },
@@ -122,6 +122,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          * @returns {Object}
          */
         getFilterDropdown = function(context, dataGridInstanceName, url) {
+            url = url.replace('{locale}', this.sandbox.sulu.getDefaultContentLocale());
             return {
                 id: constants.toolbarSelectButtonId,
                 icon: 'filter',
@@ -163,7 +164,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          * @returns {string}
          */
         createUrlToFilterDetails = function() {
-            return constants.filterUrl + this.context + '/' + AppConfig.getUser().locale + '/edit:' + this.filter.id + '/edit';
+            return constants.filterUrl + this.context + '/' + this.sandbox.sulu.getDefaultContentLocale() + '/edit:' + this.filter.id + '/edit';
         },
 
         /**

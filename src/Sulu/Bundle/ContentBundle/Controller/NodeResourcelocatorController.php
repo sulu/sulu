@@ -14,8 +14,11 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * handles resource locator api.
@@ -27,23 +30,21 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     /**
      * return resource-locator for sub-node.
      *
-     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
+     * @throws MissingArgumentException
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function postGenerateAction()
+    public function postGenerateAction(Request $request)
     {
-        $parentUuid = $this->getRequestParameter($this->getRequest(), 'parent');
-        $uuid = $this->getRequestParameter($this->getRequest(), 'uuid');
-        $parts = $this->getRequestParameter($this->getRequest(), 'parts', true);
-        $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
-        $webspaceKey = $this->getRequestParameter($this->getRequest(), 'webspace', true);
-        $languageCode = $this->getRequestParameter($this->getRequest(), 'language', true);
+        $parentUuid = $this->getRequestParameter($request, 'parent');
+        $parts = $this->getRequestParameter($request, 'parts', true);
+        $templateKey = $this->getRequestParameter($request, 'template', true);
+        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $languageCode = $this->getLocale($request);
 
         $result = $this->getResourceLocatorRepository()->generate(
             $parts,
             $parentUuid,
-            $uuid,
             $webspaceKey,
             $languageCode,
             $templateKey
@@ -57,7 +58,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
      *
      * @param string $uuid
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction($uuid)
     {
@@ -70,7 +71,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     /**
      * deletes resource locator with given path.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction()
     {
@@ -110,5 +111,13 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     private function getDocumentManager()
     {
         return $this->get('sulu_document_manager.document_manager');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return $this->getRequestParameter($request, 'language', true);
     }
 }

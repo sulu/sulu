@@ -40,6 +40,16 @@ interface CollectionRepositoryInterface
     );
 
     /**
+     * Returns the number of matched collections by a given set of parameters.
+     *
+     * @param int $depth The depth to which collections are loaded
+     * @param array $filter The array of filters to apply
+     *
+     * @return int The number of matched collections
+     */
+    public function count($depth = 0, $filter = [], CollectionInterface $collection = null);
+
+    /**
      * Finds the collection with a given id.
      *
      * @param int $id

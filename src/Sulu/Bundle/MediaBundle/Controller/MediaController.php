@@ -17,7 +17,6 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -61,8 +60,10 @@ class MediaController extends AbstractMediaController implements
      */
     public function getFieldsAction(Request $request)
     {
+        $locale = $this->getRequestParameter($request, 'locale', true);
+
         return $this->handleView(
-            $this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200)
+            $this->view(array_values($this->getFieldDescriptors($locale)), 200)
         );
     }
 
@@ -77,7 +78,7 @@ class MediaController extends AbstractMediaController implements
     public function getAction($id, Request $request)
     {
         try {
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $mediaManager = $this->getMediaManager();
             $view = $this->responseGetById(
                 $id,
@@ -113,9 +114,11 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
-        $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $fieldDescriptors = $this->getFieldDescriptors($locale, false);
         $ids = array_filter(explode(',', $request->get('ids')));
-        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
+        $types = array_filter(explode(',', $request->get('types')));
+        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids, $types);
         $listResponse = $listBuilder->execute();
         $count = $listBuilder->count();
 
@@ -158,7 +161,9 @@ class MediaController extends AbstractMediaController implements
             $count
         );
 
-        return $this->handleView($this->view($list, 200));
+        $view = $this->view($list, 200);
+
+        return $this->handleView($view);
     }
 
     /**
@@ -166,10 +171,12 @@ class MediaController extends AbstractMediaController implements
      *
      * @param Request $request
      * @param FieldDescriptorInterface[] $fieldDescriptors
+     * @param array $ids
+     * @param array $types
      *
      * @return DoctrineListBuilder
      */
-    private function getListBuilder(Request $request, array $fieldDescriptors, $ids)
+    private function getListBuilder(Request $request, array $fieldDescriptors, $ids, $types)
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -205,6 +212,11 @@ class MediaController extends AbstractMediaController implements
             }
 
             $listBuilder->in($fieldDescriptors['id'], $ids);
+        }
+
+        // set the types
+        if (count($types)) {
+            $listBuilder->in($fieldDescriptors['type'], $types);
         }
 
         // field which will be needed afterwards to generate route
@@ -316,7 +328,7 @@ class MediaController extends AbstractMediaController implements
     protected function moveEntity($id, Request $request)
     {
         try {
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $destination = $this->getRequestParameter($request, 'destination', true);
             $mediaManager = $this->getMediaManager();
 

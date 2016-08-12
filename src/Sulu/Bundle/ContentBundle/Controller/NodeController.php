@@ -80,7 +80,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * returns webspace key from request.
      *
      * @param Request $request
-     * @param bool    $force
+     * @param bool $force
      *
      * @return string
      */
@@ -127,7 +127,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * returns a content item with given UUID as JSON String.
      *
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -170,8 +170,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ->addProperties($properties)
             ->getMapping();
 
-        if ($tree) {
-            return $this->getTreeContent($uuid, $locale, $webspaceKey, $webspaceNodes, $mapping, $user);
+        try {
+            if ($tree) {
+                return $this->getTreeContent($uuid, $locale, $webspaceKey, $webspaceNodes, $mapping, $user);
+            }
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+
+            return $this->handleView($view);
         }
 
         $data = $this->get('sulu_content.content_repository')->find($uuid, $locale, $webspaceKey, $mapping, $user);
@@ -193,6 +199,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @return Response
      *
      * @throws ParameterDataTypeException
+     * @throws EntityNotFoundException
      */
     private function getTreeContent(
         $uuid,
@@ -214,22 +221,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 $mapping,
                 $user
             );
-        } catch (ItemNotFoundException $ex) {
-            // TODO return 404 and handle this edge case on client side
-            return $this->redirect(
-                $this->get('router')->generate(
-                    'get_nodes',
-                    [
-                        'language' => $locale,
-                        'webspace' => $webspaceKey,
-                        'exclude-ghosts' => !$mapping->shouldHydrateGhost(),
-                        'exclude-shadows' => !$mapping->shouldHydrateShadow(),
-                        'fields' => implode(',', $mapping->getProperties()),
-                        'tree' => true,
-                        'webspace-nodes' => $webspaceNodes,
-                    ]
-                )
-            );
+        } catch (ItemNotFoundException $e) {
+            throw new EntityNotFoundException('node', $uuid, $e);
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
@@ -245,7 +238,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -260,9 +253,13 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $uuid,
             function ($id) use ($language, $ghostContent) {
                 try {
-                    return $this->getDocumentManager()->find($id, $language, [
-                        'load_ghost_content' => $ghostContent,
-                    ]);
+                    return $this->getDocumentManager()->find(
+                        $id,
+                        $language,
+                        [
+                            'load_ghost_content' => $ghostContent,
+                        ]
+                    );
                 } catch (DocumentNotFoundException $ex) {
                     return;
                 }
@@ -343,7 +340,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Returns nodes by given ids.
      *
      * @param Request $request
-     * @param array   $idString
+     * @param array $idString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -716,7 +713,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      *
      * @Post("/nodes/{uuid}")
      *
-     * @param string  $uuid
+     * @param string $uuid
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -987,11 +984,15 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $data['parent'] = $request->query->get('parent');
         }
 
-        $form = $this->createForm($type, $document, [
-            // disable csrf protection, since we can't produce a token, because the form is cached on the client
-            'csrf_protection' => false,
-            'webspace_key' => $this->getWebspace($request),
-        ]);
+        $form = $this->createForm(
+            $type,
+            $document,
+            [
+                // disable csrf protection, since we can't produce a token, because the form is cached on the client
+                'csrf_protection' => false,
+                'webspace_key' => $this->getWebspace($request),
+            ]
+        );
         $form->submit($data, false);
 
         if (!$form->isValid()) {

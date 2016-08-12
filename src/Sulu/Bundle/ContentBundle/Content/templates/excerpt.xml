@@ -26,6 +26,8 @@
                 <title lang="de">Text für weiterführenden Link</title>
                 <title lang="en">Text for more link</title>
             </meta>
+
+            <tag name="sulu.search.field"/>
         </property>
 
         <property name="description" type="text_editor">
@@ -60,6 +62,8 @@
                 <title lang="de">Icon</title>
                 <title lang="en">Icon</title>
             </meta>
+
+            <tag name="sulu.search.field" type="json"/>
         </property>
 
         <property name="images" type="media_selection">
@@ -67,6 +71,8 @@
                 <title lang="de">Bilder</title>
                 <title lang="en">Images</title>
             </meta>
+
+            <tag name="sulu.search.field" type="json"/>
         </property>
     </properties>
 </template>

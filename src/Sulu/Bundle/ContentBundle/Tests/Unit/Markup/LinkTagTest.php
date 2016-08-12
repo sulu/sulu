@@ -219,7 +219,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
 
     public function testValidate()
     {
-        $content = $this->createContent('123-123-123', 'Pagetitle', '/test');
+        $content = $this->createContent('123-123-123', 'Pagetitle', '/test', 'published-date');
         $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
             ->willReturn([$content]);
 
@@ -261,7 +261,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMixed()
     {
-        $content = $this->createContent('123-123-123', 'Pagetitle', '/test');
+        $content = $this->createContent('123-123-123', 'Pagetitle', '/test', 'published-date');
         $this->contentRepository->findByUuids(['123-123-123', '312-312-312'], 'de', Argument::type(Mapping::class))
             ->willReturn([$content]);
 
@@ -289,7 +289,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function createContent($id, $title, $url, $webspaceKey = 'sulu_io', $locale = 'de')
+    private function createContent($id, $title, $url, $published = '', $webspaceKey = 'sulu_io', $locale = 'de')
     {
         $content = new Content(
             $locale,
@@ -299,7 +299,10 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             WorkflowStage::PUBLISHED,
             1,
             false,
-            ['title' => $title],
+            [
+                'title' => $title,
+                'published' => $published,
+            ],
             []
         );
         $content->setUrl($url);

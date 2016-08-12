@@ -17,7 +17,7 @@
         <field name="webspaceKey" type="string" column="webspace_key" length="255"/>
         <field name="allDomains" type="boolean" column="all_domains"/>
         <field name="content" type="json_array" column="content"/>
-        <field name="type" type="string" column="type" length="6"/>
+        <field name="type" type="string" column="type" length="60"/>
 
         <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\Domain" field="domains">
             <join-table name="we_analytics_domains">
@@ -28,6 +28,9 @@
                     <join-column name="domain" referenced-column-name="id" />
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
     </entity>
 </doctrine-mapping>

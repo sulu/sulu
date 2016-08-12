@@ -71,78 +71,52 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         UserInterface $user = null,
         $permission = null
     ) {
-        try {
-            $queryBuilder = $this->createQueryBuilder('collection')
-                ->addSelect('collectionMeta')
-                ->addSelect('defaultMeta')
-                ->addSelect('collectionType')
-                ->addSelect('collectionParent')
-                ->addSelect('parentMeta')
-                ->addSelect('collectionChildren')
-                ->leftJoin('collection.meta', 'collectionMeta')
-                ->leftJoin('collection.defaultMeta', 'defaultMeta')
-                ->leftJoin('collection.type', 'collectionType')
-                ->leftJoin('collection.parent', 'collectionParent')
-                ->leftJoin('collection.children', 'collectionChildren')
-                ->leftJoin('collectionParent.meta', 'parentMeta')
-                ->where('collection.depth <= :depth1 OR collectionChildren.depth <= :depth2');
+        $ids = $this->getIdsQuery($depth, $filter, $sortBy, $collection)->getScalarResult();
 
-            if ($collection !== null) {
-                $queryBuilder->andWhere('collection.lft BETWEEN :lft AND :rgt AND collection.id != :id');
-            }
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->addSelect('collectionMeta')
+            ->addSelect('defaultMeta')
+            ->addSelect('collectionType')
+            ->addSelect('collectionParent')
+            ->addSelect('parentMeta')
+            ->addSelect('collectionChildren')
+            ->leftJoin('collection.meta', 'collectionMeta')
+            ->leftJoin('collection.defaultMeta', 'defaultMeta')
+            ->leftJoin('collection.type', 'collectionType')
+            ->leftJoin('collection.parent', 'collectionParent')
+            ->leftJoin('collection.children', 'collectionChildren')
+            ->leftJoin('collectionParent.meta', 'parentMeta')
+            ->where('collection.id IN (:ids)')
+            ->setParameter('ids', $ids);
 
-            if (array_key_exists('search', $filter) && $filter['search'] !== null) {
-                $queryBuilder->andWhere('collectionMeta.title LIKE :search');
-                $queryBuilder->setParameter('search', '%' . $filter['search'] . '%');
-            }
-
-            if (array_key_exists('locale', $filter)) {
-                $queryBuilder->andWhere('collectionMeta.locale = :locale OR defaultMeta.locale != :locale');
-                $queryBuilder->setParameter('locale', $filter['locale']);
-            }
-
-            if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
-                foreach ($sortBy as $column => $order) {
-                    $queryBuilder->addOrderBy(
-                        'collectionMeta.' . $column,
-                        (strtolower($order) === 'asc' ? 'ASC' : 'DESC')
-                    );
-                }
-            }
-
-            if (array_key_exists('systemCollections', $filter) && !$filter['systemCollections']) {
-                $queryBuilder->andWhere(
-                    'collectionType.key != \'' . SystemCollectionManagerInterface::COLLECTION_TYPE . '\''
+        if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
+            foreach ($sortBy as $column => $order) {
+                $queryBuilder->addOrderBy(
+                    'collectionMeta.' . $column,
+                    (strtolower($order) === 'asc' ? 'ASC' : 'DESC')
                 );
             }
+        }
 
-            if ($user !== null && $permission != null) {
-                $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
-            }
+        $queryBuilder->addOrderBy('collection.id', 'ASC');
 
-            $collectionDepth = $collection !== null ? $collection->getDepth() : 0;
+        if ($user !== null && $permission != null) {
+            $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
+        }
 
-            $query = $queryBuilder->getQuery();
-            $query->setParameter('depth1', $collectionDepth + $depth);
-            $query->setParameter('depth2', $depth + 1);
+        return $queryBuilder->getQuery()->getResult();
+    }
 
-            if ($collection !== null) {
-                $query->setParameter('lft', $collection->getLft());
-                $query->setParameter('rgt', $collection->getRgt());
-                $query->setParameter('id', $collection->getId());
-            }
-
-            if (array_key_exists('limit', $filter)) {
-                $query->setMaxResults($filter['limit']);
-            }
-
-            if (array_key_exists('offset', $filter)) {
-                $query->setFirstResult($filter['offset']);
-            }
-
-            return new Paginator($query);
-        } catch (NoResultException $ex) {
-            return [];
+    /**
+     * {@inheritdoc}
+     */
+    public function count($depth = 0, $filter = [], CollectionInterface $collection = null)
+    {
+        $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
+        try {
+            return count($ids);
+        } catch (NoResultException $e) {
+            return;
         }
     }
 
@@ -175,6 +149,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                     $qb->addOrderBy('collectionMeta.' . $column, strtolower($order) === 'asc' ? 'ASC' : 'DESC');
                 }
             }
+            $qb->addOrderBy('collection.id', 'ASC');
+
             if ($parent !== null) {
                 $qb->andWhere('parent.id = :parent');
             }
@@ -296,5 +272,85 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->setParameter('id', $id);
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the basic query which selects the ids of a collection for a given
+     * set of parameters.
+     *
+     * @param int $depth
+     * @param array $filter
+     * @param array $sortBy
+     * @param CollectionInterface|null $collection
+     * @param string $select
+     *
+     * @return Query
+     */
+    private function getIdsQuery(
+        $depth = 0,
+        $filter = [],
+        $sortBy = [],
+        CollectionInterface $collection = null,
+        $select = 'collection.id'
+    ) {
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->select($select)
+            ->leftJoin('collection.children', 'collectionChildren')
+            ->where('collection.depth <= :depth1 OR collectionChildren.depth <= :depth2');
+
+        $collectionDepth = $collection !== null ? $collection->getDepth() : 0;
+        $queryBuilder->setParameter('depth1', $collectionDepth + $depth);
+        $queryBuilder->setParameter('depth2', $depth + 1);
+
+        if ($collection !== null) {
+            $queryBuilder->andWhere('collection.lft BETWEEN :lft AND :rgt AND collection.id != :id');
+            $queryBuilder->setParameter('lft', $collection->getLft());
+            $queryBuilder->setParameter('rgt', $collection->getRgt());
+            $queryBuilder->setParameter('id', $collection->getId());
+        }
+
+        if (array_key_exists('search', $filter) && $filter['search'] !== null ||
+            array_key_exists('locale', $filter) ||
+            count($sortBy) > 0
+        ) {
+            $queryBuilder->leftJoin('collection.meta', 'collectionMeta');
+            $queryBuilder->leftJoin('collection.defaultMeta', 'defaultMeta');
+        }
+
+        if (array_key_exists('search', $filter) && $filter['search'] !== null) {
+            $queryBuilder->andWhere('collectionMeta.title LIKE :search OR defaultMeta.locale != :locale');
+            $queryBuilder->setParameter('search', '%' . $filter['search'] . '%');
+        }
+
+        if (array_key_exists('locale', $filter)) {
+            $queryBuilder->andWhere('collectionMeta.locale = :locale OR defaultMeta.locale != :locale');
+            $queryBuilder->setParameter('locale', $filter['locale']);
+        }
+
+        if (array_key_exists('systemCollections', $filter) && !$filter['systemCollections']) {
+            $queryBuilder->leftJoin('collection.type', 'collectionType');
+            $queryBuilder->andWhere('collectionType.key != :type');
+            $queryBuilder->setParameter('type', SystemCollectionManagerInterface::COLLECTION_TYPE);
+        }
+
+        if (count($sortBy) > 0) {
+            foreach ($sortBy as $column => $order) {
+                $queryBuilder->addOrderBy(
+                    'collectionMeta.' . $column,
+                    (strtolower($order) === 'asc' ? 'ASC' : 'DESC')
+                );
+            }
+        }
+
+        $queryBuilder->addOrderBy('collection.id', 'ASC');
+
+        if (array_key_exists('limit', $filter)) {
+            $queryBuilder->setMaxResults($filter['limit']);
+        }
+        if (array_key_exists('offset', $filter)) {
+            $queryBuilder->setFirstResult($filter['offset']);
+        }
+
+        return $queryBuilder->getQuery();
     }
 }

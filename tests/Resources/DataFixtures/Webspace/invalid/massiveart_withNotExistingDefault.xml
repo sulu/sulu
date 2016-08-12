@@ -42,13 +42,14 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>Massive Art CA</name>
             <key>massiveart_ca</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="en" country="ca"/>

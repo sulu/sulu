@@ -12,12 +12,16 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
@@ -32,9 +36,24 @@ use Symfony\Component\Routing\RouteCollection;
 class ContentRouteProvider implements RouteProviderInterface
 {
     /**
-     * @var ContentMapperInterface
+     * @var DocumentManagerInterface
      */
-    private $contentMapper;
+    private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
+     * @var RlpStrategyInterface
+     */
+    private $rlpStrategy;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
 
     /**
      * @var RequestAnalyzerInterface
@@ -52,18 +71,27 @@ class ContentRouteProvider implements RouteProviderInterface
     private $urlReplacer;
 
     /**
-     * @param ContentMapperInterface $contentMapper
+     * @param DocumentManagerInterface $documentManager
+     * @param DocumentInspector $documentInspector
+     * @param RlpStrategyInterface $rlpStrategy
+     * @param StructureManagerInterface $structureManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param DefaultLocaleProviderInterface $defaultLocaleProvider
      * @param ReplacerInterface $urlReplacer
      */
     public function __construct(
-        ContentMapperInterface $contentMapper,
+        DocumentManagerInterface $documentManager,
+        DocumentInspector $documentInspector,
+        RlpStrategyInterface $rlpStrategy,
+        StructureManagerInterface $structureManager,
         RequestAnalyzerInterface $requestAnalyzer,
         DefaultLocaleProviderInterface $defaultLocaleProvider,
         ReplacerInterface $urlReplacer
     ) {
-        $this->contentMapper = $contentMapper;
+        $this->documentManager = $documentManager;
+        $this->documentInspector = $documentInspector;
+        $this->rlpStrategy = $rlpStrategy;
+        $this->structureManager = $structureManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->defaultLocaleProvider = $defaultLocaleProvider;
         $this->urlReplacer = $urlReplacer;
@@ -98,7 +126,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
             || $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
         ) {
-            // redirect webspace correctly with language
+            // redirect webspace correctly with locale
             $collection->add(
                 'redirect_' . uniqid(),
                 $this->getRedirectWebSpaceRoute($request)
@@ -118,65 +146,73 @@ class ContentRouteProvider implements RouteProviderInterface
         } else {
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
-            $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
             try {
                 // load content by url ignore ending trailing slash
-                $content = $this->contentMapper->loadByResourceLocator(
-                    rtrim($resourceLocator, '/'),
-                    $portal->getWebspace()->getKey(),
-                    $language
+                /** @var PageDocument $document */
+                $document = $this->documentManager->find(
+                    $this->rlpStrategy->loadByResourceLocator(
+                        rtrim($resourceLocator, '/'),
+                        $portal->getWebspace()->getKey(),
+                        $locale
+                    ),
+                    $locale,
+                    [
+                        'load_ghost_content' => false,
+                    ]
                 );
 
-                if (!$content) {
-                    throw new ResourceLocatorNotFoundException();
-                } elseif (
+                if (!$document->getTitle()) {
+                    // If the title is empty the document does not exist in this locale
+                    // Necessary because of https://github.com/sulu/sulu/issues/2724, otherwise locale could be checked
+                    return $collection;
+                }
+
+                if (
                     preg_match('/\/$/', $resourceLocator)
                     && $this->requestAnalyzer->getResourceLocatorPrefix()
-                    && $content->getNodeState() === StructureInterface::STATE_PUBLISHED
                 ) {
                     // redirect page to page without slash at the end
                     $collection->add(
                         'redirect_' . uniqid(),
                         $this->getRedirectWebSpaceRoute($request)
                     );
-                } elseif (
-                    $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
-                    $content->getNodeState() === StructureInterface::STATE_PUBLISHED
-                ) {
+                } elseif ($document->getRedirectType() === RedirectType::INTERNAL) {
                     // redirect internal link
-                    $redirectUrl = $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator();
+                    $redirectUrl = $this->requestAnalyzer->getResourceLocatorPrefix()
+                        . $document->getRedirectTarget()->getResourceSegment();
 
                     if ($request->getQueryString()) {
                         $redirectUrl .= '?' . $request->getQueryString();
                     }
 
                     $collection->add(
-                        $content->getKey() . '_' . uniqid(),
+                        $document->getStructureType() . '_' . $document->getUuid(),
                         $this->getRedirectRoute(
                             $request,
                             $redirectUrl
                         )
                     );
-                } elseif (
-                    $content->getNodeType() === Structure::NODE_TYPE_EXTERNAL_LINK &&
-                    $content->getNodeState() === StructureInterface::STATE_PUBLISHED
-                ) {
+                } elseif ($document->getRedirectType() === RedirectType::EXTERNAL) {
                     $collection->add(
-                        $content->getKey() . '_' . uniqid(),
-                        $this->getRedirectRoute($request, $content->getResourceLocator())
+                        $document->getStructureType() . '_' . $document->getUuid(),
+                        $this->getRedirectRoute($request, $document->getRedirectExternal())
                     );
-                } elseif (
-                    $content->getNodeState() === StructureInterface::STATE_TEST ||
-                    !$content->getHasTranslation() ||
-                    !$this->checkResourceLocator()
-                ) {
-                    // error 404 page not published
-                    throw new ResourceLocatorNotFoundException();
+                } elseif (!$this->checkResourceLocator()) {
+                    return $collection;
                 } else {
+                    // convert the page to a StructureBridge because of BC
+                    /** @var PageBridge $structure */
+                    $structure = $this->structureManager->wrapStructure(
+                        $this->documentInspector->getMetadata($document)->getAlias(),
+                        $this->documentInspector->getStructureMetadata($document)
+                    );
+                    $structure->setDocument($document);
+
                     // show the page
                     $collection->add(
-                        $content->getKey() . '_' . uniqid(),
-                        $this->getStructureRoute($request, $content)
+                        $document->getStructureType() . '_' . $document->getUuid(),
+                        $this->getStructureRoute($request, $structure)
                     );
                 }
             } catch (ResourceLocatorNotFoundException $exc) {
@@ -296,11 +332,11 @@ class ContentRouteProvider implements RouteProviderInterface
 
     /**
      * @param Request            $request
-     * @param StructureInterface $content
+     * @param PageBridge $content
      *
      * @return Route
      */
-    protected function getStructureRoute(Request $request, $content)
+    protected function getStructureRoute(Request $request, PageBridge $content)
     {
         return new Route(
             $request->getPathInfo(), [

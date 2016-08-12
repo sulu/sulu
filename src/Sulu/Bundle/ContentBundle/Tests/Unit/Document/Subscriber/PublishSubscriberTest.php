@@ -237,6 +237,22 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->liveSession->itemExists('/cmf/sulu')->willReturn(false);
 
+        $defaultTestNode = $this->prophesize(NodeInterface::class);
+        $defaultTestNode->getPath()->willReturn('/cmf/sulu/test');
+        $defaultTestNode->getSession()->willReturn($session->reveal());
+        $defaultSuluNode->getNode('test')->willReturn($defaultTestNode);
+        $defaultTestNode->getIdentifier()->willReturn('test-uuid');
+        $defaultTestNode->getNodes()->willReturn([]);
+        $this->node->getNodes()->willReturn([$defaultTestNode->reveal()]);
+
+        $liveSuluNode->hasNode('test')->willReturn(false);
+        $liveTestNode = $this->prophesize(NodeInterface::class);
+        $liveTestNode->setMixins(['mix:referenceable'])->shouldBeCalled();
+        $liveTestNode->setProperty('jcr:uuid', 'test-uuid')->shouldBeCalled();
+        $liveSuluNode->addNode('test')->willReturn($liveTestNode->reveal());
+
+        $this->liveSession->itemExists('/cmf/sulu/test')->willReturn(false);
+
         $this->publishSubscriber->copyNodeInPublicWorkspace($event->reveal());
     }
 

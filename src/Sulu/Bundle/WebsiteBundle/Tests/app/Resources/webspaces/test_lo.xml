@@ -34,13 +34,14 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>test CMF</name>
             <key>testcmf</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="en" default="true"/>

@@ -154,7 +154,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->addSelect('medias')
             ->addSelect('categories')
             ->addSelect('bankAccounts')
-            ->where('u.id IN (:ids)');
+            ->where('u.id IN (:ids)')
+            ->orderBy('u.id', 'ASC');
 
         $query = $qb->getQuery();
         $query->setParameter('ids', $ids);
@@ -246,7 +247,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     /**
      * {@inheritdoc}
      */
-    public function findGetAll($limit = null, $offset = null, $sorting = [], $where = [])
+    public function findGetAll($limit = null, $offset = null, $sorting = ['id' => 'asc'], $where = [])
     {
         // Create basic query
         $qb = $this->createQueryBuilder('u')

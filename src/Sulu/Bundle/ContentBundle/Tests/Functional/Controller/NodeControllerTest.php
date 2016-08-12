@@ -66,6 +66,7 @@ class NodeControllerTest extends SuluTestCase
         $tag1 = new Tag();
 
         $metadata = $this->em->getClassMetaData(get_class($tag1));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $tag1->setId(1);
@@ -282,6 +283,14 @@ class NodeControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
+    public function testGetNotExistingTree()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/not-existing-id?webspace=sulu_io&language=en&fields=title,order,published&tree=true');
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
     public function testGetGhostContent()
     {
         $document = $this->createPageDocument();
@@ -449,36 +458,34 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $deleteData = [
-            [
-                'template' => 'simple',
-                'title' => 'test1',
-                'url' => '/test1',
+        $linkedDocument = $this->createPageDocument();
+        $linkedDocument->setTitle('test1');
+        $linkedDocument->setResourceSegment('/test1');
+        $linkedDocument->setStructureType('simple');
+        $this->documentManager->persist($linkedDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($linkedDocument, 'en');
+        $this->documentManager->flush();
+
+        $document = $this->createPageDocument();
+        $document->setTitle('test2');
+        $document->setResourceSegment('/test2');
+        $document->setStructureType('internallinks');
+        $document->getStructure()->bind([
+            'internalLinks' => [
+                $linkedDocument->getUuid(),
             ],
-        ];
+        ]);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
+        $this->documentManager->flush();
 
-        $deleteData = $this->setUpContent($deleteData);
-
-        $linkData = [
-            [
-                'template' => 'internallinks',
-                'title' => 'test2',
-                'url' => '/test2',
-                'internalLinks' => [
-                    $deleteData[0]['id'],
-                ],
-            ],
-        ];
-
-        $linkData = $this->setupContent($linkData);
-
-        $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $client->getResponse());
 
-        $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en&force=true');
+        $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en&force=true');
         $this->assertHttpStatusCode(204, $client->getResponse());
 
-        $client->request('GET', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $client->request('GET', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
@@ -1459,6 +1466,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('test5', $response['title']);
         $this->assertEquals('/test2/test3/test5', $response['path']);
         $this->assertEquals('/test2/test3/testing5', $response['url']);
+        $this->assertEquals(false, $response['publishedState']);
+        $this->assertArrayNotHasKey('published', $response);
 
         // check old node
         $client->request(
@@ -1521,6 +1530,7 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
+        $document = $this->documentManager->find($document->getUuid(), 'de', ['load_ghost_content' => false]);
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
@@ -1535,7 +1545,6 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'de');
         $this->documentManager->flush();
 
-        $document = $this->documentManager->find($document->getUuid(), 'de');
         $document->setShadowLocaleEnabled(true);
         $document->setShadowLocale('en');
         $this->documentManager->persist($document, 'de');
@@ -1566,6 +1575,7 @@ class NodeControllerTest extends SuluTestCase
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_de');
+        $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
         $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($document, 'de');
@@ -1737,16 +1747,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrderNonExistingSource()
     {
-        $data = [
-            [
-                'title' => 'test1',
-                'url' => '/test1',
-            ],
-        ];
-
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
             'POST',

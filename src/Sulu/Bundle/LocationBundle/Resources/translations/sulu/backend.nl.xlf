@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf001" resname="sulu.location.configure">
+                <source>sulu.location.configure</source>
+                <target>Configureer locatie</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf002" resname="sulu.location.locate-address">
+                <source>sulu.location.locate-address</source>
+                <target>Locatie adres</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf003" resname="sulu.location.title">
+                <source>sulu.location.title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf004" resname="sulu.location.street">
+                <source>sulu.location.street</source>
+                <target>Straat</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf005" resname="sulu.location.number">
+                <source>sulu.location.number</source>
+                <target>Nummer</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf006" resname="sulu.location.code">
+                <source>sulu.location.code</source>
+                <target>Postcode</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf007" resname="sulu.location.town">
+                <source>sulu.location.town</source>
+                <target>Stad</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf008" resname="sulu.location.country">
+                <source>sulu.location.country</source>
+                <target>Land</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf009" resname="sulu.location.coords">
+                <source>sulu.location.coords</source>
+                <target>Coördinaten (Long / Lat / Zoom)</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf00A" resname="sulu.location.map">
+                <source>sulu.location.map</source>
+                <target>Kaart</target>
+            </trans-unit>
+            <trans-unit id="f1234asdf123123fd4a73a4123dfdf00B" resname="sulu.location.search">
+                <source>sulu.location.search</source>
+                <target>Zoeken</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

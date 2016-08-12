@@ -1,6 +1,49 @@
 # Upgrade
 
+## 1.3.0-RC3
+
+### Resource-locator generation
+
+The `generate` method of the `RlpStrategyInterface` uses `parentUuid` instead of `parentPath` now.
+The signature changed from
+`public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);`
+to
+`public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);`
+
+Also the `generateForUuid` method of the `RlpStrategyInterface` got removed.
+
+### Address country is nullable
+
+To make it easier to migrate data the country in the address entity is now nullable in sulu.
+
+```sql
+ALTER TABLE co_addresses CHANGE idCountries idCountries INT DEFAULT NULL;
+```
+
+### Databases
+
+#### ORM
+
+The mapping structure of analytic settings have changed.
+Use the following command to update:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ## 1.3.0-RC2
+
+### RestController locale
+
+The `getLocale` method of the RestController returned the locale
+of the user (a system locale), if no request parameter with the name
+`locale` was passed. As RestControllers most often provide access
+to content in content locales and not in system locales,
+this behaviour was removed. The `getLocale` method now just returns
+a possibly passed request parameter named `locale` or null.
+If a locale is needed for sure, the `getLocale` method needs to be
+overwritten. It is also advised to override the method, if in no
+case locales are needed.
 
 ### SearchController
 
@@ -17,6 +60,11 @@ you want to use for the search in your webspace configuration:
 The name of the route also changed from `website_search` to
 `sulu_search.website_search`, because the controller is located in the
 SuluSearchBundle now.
+
+### Removed HTTP Cache Paths-Handler
+
+The HTTP Cache Integration has been refactored. The following configuration
+is not available anymore and must be removed: `sulu_http_cache.handlers.paths`
 
 ### Webspace Configuration
 
@@ -40,6 +88,8 @@ After:
     <template type="error">SomeBundle:views:error.html.twig</template>
 </templates>
 ```
+
+And the `resource-locator` node has moved from `portal` to `webspace`. 
 
 This change only affects the files which use the 1.1 version of the webspace
 schema definition.

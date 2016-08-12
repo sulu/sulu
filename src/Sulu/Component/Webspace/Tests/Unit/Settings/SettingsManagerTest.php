@@ -13,12 +13,38 @@ namespace Sulu\Component\Webspace\Tests\Unit\Settings;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\SessionInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManager;
 
 class SettingsManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var SettingsManager
+     */
+    private $settingsManager;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var DeprecatedSessionManagerInterface
+     */
+    private $deprecatedSessionManager;
+
+    public function setUp()
+    {
+        $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $this->deprecatedSessionManager = $this->prophesize(DeprecatedSessionManagerInterface::class);
+
+        $this->settingsManager = new SettingsManager(
+            $this->sessionManager->reveal(),
+            $this->deprecatedSessionManager->reveal()
+        );
+    }
+
     public function dataProvider()
     {
         $node = $this->prophesize(NodeInterface::class);
@@ -35,21 +61,17 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSave($webspaceKey, $key, $data)
     {
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
-        $node = $this->prophesize(NodeInterface::class);
-        $session = $this->prophesize(SessionInterface::class);
+        $this->deprecatedSessionManager->getWebspacePath($webspaceKey)->willReturn('/cmf/' . $webspaceKey);
 
-        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
-        $sessionManager->getSession()->willReturn($session->reveal());
+        $this->sessionManager->setNodeProperty(
+            '/cmf/' . $webspaceKey,
+            'settings:' . $key,
+            (!($data instanceof NodeInterface) ? json_encode($data) : $data)
+        );
 
-        $node->setProperty('settings:' . $key, (!($data instanceof NodeInterface) ? json_encode($data) : $data))
-            ->shouldBeCalledTimes(1);
+        $this->sessionManager->flush();
 
-        $session->save()->shouldBeCalledTimes(1);
-
-        $manager = new SettingsManager($sessionManager->reveal());
-
-        $manager->save($webspaceKey, $key, $data);
+        $this->settingsManager->save($webspaceKey, $key, $data);
     }
 
     public function removeDataProvider()
@@ -64,23 +86,13 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemove($webspaceKey, $key)
     {
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
-        $node = $this->prophesize(NodeInterface::class);
-        $property = $this->prophesize(PropertyInterface::class);
-        $session = $this->prophesize(SessionInterface::class);
+        $this->deprecatedSessionManager->getWebspacePath($webspaceKey)->willReturn('/cmf/' . $webspaceKey);
 
-        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
-        $sessionManager->getSession()->willReturn($session->reveal());
+        $this->sessionManager->setNodeProperty('/cmf/' . $webspaceKey, 'settings:' . $key, null)->shouldBeCalled();
 
-        $node->hasProperty('settings:' . $key)->shouldBeCalledTimes(1)->willReturn(true);
-        $node->getProperty('settings:' . $key)->shouldBeCalledTimes(1)->willReturn($property->reveal());
-        $property->remove()->shouldBeCalledTimes(1);
+        $this->sessionManager->flush()->shouldBeCalled();
 
-        $session->save()->shouldBeCalledTimes(1);
-
-        $manager = new SettingsManager($sessionManager->reveal());
-
-        $manager->remove($webspaceKey, $key);
+        $this->settingsManager->remove($webspaceKey, $key);
     }
 
     /**
@@ -88,18 +100,15 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoad($webspaceKey, $key, $data)
     {
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
         $node = $this->prophesize(NodeInterface::class);
 
-        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
+        $this->deprecatedSessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
 
         $node->getPropertyValueWithDefault('settings:' . $key, json_encode(null))
             ->shouldBeCalledTimes(1)
             ->willReturn((!($data instanceof NodeInterface) ? json_encode($data) : $data));
 
-        $manager = new SettingsManager($sessionManager->reveal());
-
-        $result = $manager->load($webspaceKey, $key);
+        $result = $this->settingsManager->load($webspaceKey, $key);
 
         $this->assertEquals($data, $result);
     }
@@ -117,11 +126,10 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadString($webspaceKey, $key, $data, $exists)
     {
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
 
-        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
+        $this->deprecatedSessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
 
         $node->hasProperty('settings:' . $key)->willReturn($exists);
         $node->getProperty('settings:' . $key)
@@ -130,9 +138,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
 
         $property->getString()->willReturn($data);
 
-        $manager = new SettingsManager($sessionManager->reveal());
-
-        $result = $manager->loadString($webspaceKey, $key);
+        $result = $this->settingsManager->loadString($webspaceKey, $key);
 
         $this->assertEquals($exists ? $data : null, $result);
     }
@@ -141,7 +147,6 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
     {
         $referencedNode = $this->prophesize(NodeInterface::class);
 
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
         $node = $this->prophesize(NodeInterface::class);
         $property1 = $this->prophesize(PropertyInterface::class);
         $property1->getName()->willReturn('settings:test-1');
@@ -150,13 +155,11 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $property2->getName()->willReturn('settings:test-2');
         $property2->getValue()->willReturn(json_encode(['test1' => 'test1']));
 
-        $sessionManager->getWebspaceNode('sulu_io')->willReturn($node->reveal());
+        $this->deprecatedSessionManager->getWebspaceNode('sulu_io')->willReturn($node->reveal());
 
         $node->getProperties('settings:test-*')->willReturn([$property1->reveal(), $property2->reveal()]);
 
-        $manager = new SettingsManager($sessionManager->reveal());
-
-        $settings = $manager->loadByWildcard('sulu_io', 'test-*');
+        $settings = $this->settingsManager->loadByWildcard('sulu_io', 'test-*');
 
         $this->assertCount(2, $settings);
         $this->assertEquals($referencedNode->reveal(), $settings['test-1']);

@@ -23,6 +23,8 @@ interface SessionManagerInterface
      * Returns a valid session to interact with a phpcr database.
      *
      * @return SessionInterface
+     *
+     * @deprecated Use the doctrine_phpcr service to retrieve the session
      */
     public function getSession();
 
@@ -34,6 +36,9 @@ interface SessionManagerInterface
      * @param string $segment
      *
      * @return NodeInterface
+     *
+     * @deprecated Do not use anymore, because the node is always returned from the default session, although multiple
+     *             sessions can exist
      */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null);
 
@@ -54,6 +59,9 @@ interface SessionManagerInterface
      * @param string $webspaceKey
      *
      * @return NodeInterface
+     *
+     * @deprecated Do not use anymore, because the node is always returned from the default session, although multiple
+     *             sessions can exist
      */
     public function getContentNode($webspaceKey);
 
@@ -72,6 +80,9 @@ interface SessionManagerInterface
      * @param string$webspaceKey
      *
      * @return NodeInterface
+     *
+     * @deprecated Do not use anymore, because the node is always returned from the default session, although multiple
+     *             sessions can exist
      */
     public function getWebspaceNode($webspaceKey);
 
@@ -88,6 +99,9 @@ interface SessionManagerInterface
      * returns the snippet node.
      *
      * @return \PHPCR\NodeInterface
+     *
+     * @deprecated Do not use anymore, because the node is always returned from the default session, although multiple
+     *             sessions can exist
      */
     public function getSnippetNode();
 }

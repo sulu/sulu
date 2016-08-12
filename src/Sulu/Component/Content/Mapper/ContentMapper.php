@@ -37,7 +37,6 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -280,25 +279,6 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey, $locale, $segmentKey = null)
-    {
-        $uuid = $this->rlpStrategy->loadByResourceLocator(
-            $resourceLocator,
-            $webspaceKey,
-            $locale,
-            $segmentKey
-        );
-
-        $document = $this->loadDocument($uuid, $locale, [
-            'exclude_shadow' => false,
-        ]);
-
-        return $this->documentToStructure($document);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function loadBySql2($sql2, $locale, $webspaceKey, $limit = null)
     {
         $query = $this->documentManager->createQuery($sql2, $locale);
@@ -492,18 +472,9 @@ class ContentMapper implements ContentMapperInterface
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
-                try {
-                    $parentResourceLocator = $this->rlpStrategy->loadByContentUuid(
-                        $this->inspector->getUuid($parentDocument),
-                        $webspaceKey,
-                        $destLocale
-                    );
-                } catch (ResourceLocatorNotFoundException $e) {
-                    $parentResourceLocator = null;
-                }
                 $resourceLocator = $this->rlpStrategy->generate(
                     $destDocument->getTitle(),
-                    $parentResourceLocator,
+                    $this->inspector->getUuid($parentDocument),
                     $webspaceKey,
                     $destLocale
                 );
@@ -729,6 +700,7 @@ class ContentMapper implements ContentMapperInterface
             'changed' => $document->getChanged(),
             'changer' => $document->getChanger(),
             'created' => $document->getCreated(),
+            'publishedState' => $nodeState === WorkflowStage::PUBLISHED,
             'published' => $document->getPublished(),
             'creator' => $document->getCreator(),
             'title' => $originalDocument->getTitle(),

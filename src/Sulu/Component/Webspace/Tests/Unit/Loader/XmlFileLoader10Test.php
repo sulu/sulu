@@ -79,8 +79,6 @@ class XmlFileLoader10Test extends WebspaceTestCase
             $webspace->getDefaultTemplates()
         );
 
-        $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
-
         $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());

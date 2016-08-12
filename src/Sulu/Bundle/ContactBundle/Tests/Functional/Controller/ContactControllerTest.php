@@ -59,6 +59,16 @@ class ContactControllerTest extends SuluTestCase
     private $avatar = null;
 
     /**
+     * @var Media
+     */
+    private $media1 = null;
+
+    /**
+     * @var Media
+     */
+    private $media2 = null;
+
+    /**
      * @var EntityManager
      */
     private $em;
@@ -335,7 +345,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->persist($category2);
 
-        $this->initAvatar();
+        $this->initMedias();
         $contact->setAvatar($this->avatar);
 
         $this->em->flush();
@@ -344,7 +354,7 @@ class ContactControllerTest extends SuluTestCase
         $this->contactPosition = $position;
     }
 
-    public function initAvatar()
+    public function initMedias()
     {
         $collectionType = new CollectionType();
         $collectionType->setName('My collection type');
@@ -380,6 +390,49 @@ class ContactControllerTest extends SuluTestCase
         $this->avatar->addFile($file);
         $file->setMedia($this->avatar);
         $this->em->persist($this->avatar);
+        $this->em->persist($file);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media1.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1950-04-20'));
+        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->media1 = new Media();
+        $this->media1->setType($imageType);
+        $this->media1->setCollection($collection);
+        $this->media1->addFile($file);
+        $file->setMedia($this->media1);
+        $this->em->persist($this->media1);
+        $this->em->persist($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media2.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1970-04-20'));
+        $fileVersion->setCreated(new \DateTime('1970-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->media2 = new Media();
+        $this->media2->setType($imageType);
+        $this->media2->setCollection($collection);
+        $this->media2->addFile($file);
+        $file->setMedia($this->media2);
+        $this->em->persist($this->media2);
         $this->em->persist($file);
     }
 
@@ -1941,7 +1994,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->notes));
 
         $this->assertEquals(0, $response->formOfAddress);
-        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertFalse(property_exists($response, 'salutation'));
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1964,7 +2017,84 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->notes));
 
         $this->assertEquals(0, $response->formOfAddress);
-        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertFalse(property_exists($response, 'salutation'));
+    }
+
+    public function testPatchNotExisting()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PATCH',
+            '/api/contacts/101',
+            [
+                'medias' => [],
+            ]
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    public function testPatchAssignedMedias()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+
+        // add two medias
+        $client->request(
+            'PATCH',
+            '/api/contacts/' . $this->contact->getId(),
+            [
+                'medias' => [
+                    [
+                        'id' => $this->media1->getId(),
+                    ],
+                    [
+                        'id' => $this->media2->getId(),
+                    ],
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, count($response->medias));
+
+        // remove medias
+        $client->request(
+            'PATCH',
+            '/api/contacts/' . $this->contact->getId(),
+            [
+                'medias' => [],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+
+        // missing media
+        $client->request(
+            'PATCH',
+            '/api/contacts/' . $this->contact->getId(),
+            [
+                'medias' => [
+                    [
+                        'id' => $this->media1->getId(),
+                    ],
+                    [
+                        'id' => 101,
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
     }
 
     public function testPrimaryAddressHandlingPost()

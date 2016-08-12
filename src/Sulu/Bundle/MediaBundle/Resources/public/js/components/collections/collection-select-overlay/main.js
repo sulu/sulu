@@ -18,8 +18,7 @@ define(function() {
             title: '',
             rootCollection: false,
             disableIds: [],
-            disabledChildren: false,
-            locale: Husky.sulu.user.locale
+            disabledChildren: false
         },
 
         templates = {
@@ -75,7 +74,9 @@ define(function() {
          */
         initialize: function() {
             // extend defaults with options
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.options = this.sandbox.util.extend(true, {
+                locale: this.sandbox.sulu.getDefaultContentLocale()
+            }, defaults, this.options);
 
             this.bindCustomEvents();
             this.openOverlay();
@@ -171,7 +172,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections?sortBy=title&limit=9999&locale' + this.options.locale;
+                options.url = '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale;
             }
 
             this.sandbox.start(

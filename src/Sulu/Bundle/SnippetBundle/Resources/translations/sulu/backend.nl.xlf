@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="navigation.snippets">
+                <source>navigation.snippets</source>
+                <target>Fragmenten</target>
+            </trans-unit>
+            <trans-unit id="2" resname="snippets.snippet.title">
+                <source>snippets.snippet.title</source>
+                <target>Fragmenten</target>
+            </trans-unit>
+            <trans-unit id="3" resname="snippets.list.template">
+                <source>snippets.list.template</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="4" resname="content-navigation.snippets.details">
+                <source>content-navigation.snippets.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="5" resname="navigation.global-content">
+                <source>navigation.global-content</source>
+                <target>Algemene inhoud</target>
+            </trans-unit>
+            <trans-unit id="6" resname="snippet-content.add">
+                <source>snippet-content.add</source>
+                <target>Fragment selecteren</target>
+            </trans-unit>
+            <trans-unit id="9" resname="snippet.delete-referenced-by-following">
+                <source>snippet.delete-referenced-by-following</source>
+                <target>Naar dit fragment wordt gerefereerd door volgende pagina's:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="snippet.delete-confirm-text">
+                <source>snippet.delete-confirm-text</source>
+                <target>Weet je zeker dat je het fragment wilt verwijderen?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="snippet.delete-confirm-title">
+                <source>snippet.delete-confirm-title</source>
+                <target>Bevestig verwijderen</target>
+            </trans-unit>
+            <trans-unit id="12" resname="snippet.delete-do-it">
+                <source>snippet.delete-do-it</source>
+                <target>Ja, ik weet het zeker</target>
+            </trans-unit>
+            <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
+                <source>snippet.delete-no-snippets-selected</source>
+                <target>Er zijn geen fragmenten geselecteerd</target>
+            </trans-unit>
+            <trans-unit id="14" resname="snippet-content.nosnippets-selected">
+                <source>snippet.delete-no-snippets-selected</source>
+                <target>Geen fragmenten geselecteerd</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.index.snippet.title">
+                <source>search-overlay.index.snippet.title</source>
+                <target>Fragmenten</target>
+            </trans-unit>
+            <trans-unit id="15" resname="content-navigation.webspace.snippets">
+                <source>content-navigation.webspace.general</source>
+                <target>Fragmenten</target>
+            </trans-unit>
+            <trans-unit id="16" resname="snippets.defaults.default">
+                <source>snippets.defaults.default</source>
+                <target>Standaard</target>
+            </trans-unit>
+            <trans-unit id="17" resname="snippets.defaults.type">
+                <source>snippets.defaults.type</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="18" resname="snippet.delete-confirm-default-text">
+                <source>snippet.delete-confirm-default-text</source>
+                <target>Dit fragment wordt gebruikt als standaard</target>
+            </trans-unit>
+            <trans-unit id="19" resname="snippet.changed-warning.title">
+                <source>snippet.changed-warning.title</source>
+                <target>Pas op! De inhoud wordt overschreven</target>
+            </trans-unit>
+            <trans-unit id="20" resname="snippet.changed-warning.description">
+                <source>snippet.changed-warning.description</source>
+                <target>Dit fragment is aangepast door een andere gebruiker.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="snippet.changed-warning.ok-button">
+                <source>snippet.changed-warning.ok-button</source>
+                <target>Bewaar fragment</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

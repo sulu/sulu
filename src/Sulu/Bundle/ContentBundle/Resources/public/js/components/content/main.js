@@ -280,6 +280,7 @@ define([
                     this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
 
                     this.sandbox.emit('sulu.header.saved', data);
+                    this.showState(!!this.data.published);
                     this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
                 }
 
@@ -378,9 +379,9 @@ define([
         },
 
         getResourceLocator: function(parts, template, callback) {
-            var url = '/admin/api/nodes/resourcelocators/generates?' +
-                (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') +
-                (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') +
+            var parentUuid = (!!this.options.parent) ? this.options.parent : this.data.parentUuid,
+                url = '/admin/api/nodes/resourcelocators/generates?' +
+                (!!parentUuid ? 'parent=' + parentUuid + '&' : '') +
                 '&webspace=' + this.options.webspace +
                 '&language=' + this.options.language +
                 '&template=' + template;
@@ -724,6 +725,8 @@ define([
             this.setTemplate(this.data);
             this.showDraftLabel();
 
+            this.showState(!!this.data.published);
+
             if (this.options.content === 'permissions') {
                 this.showSaveItems('permissions');
             }
@@ -797,7 +800,6 @@ define([
             setToolbarItems.call(this, 'publish', publish);
 
             setToolbarItems.call(this, 'unpublish', !!this.data.published);
-            setToolbarItems.call(this, '')
 
             if (!!saveDraft || !!savePublish || !!publish) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
@@ -890,6 +892,9 @@ define([
                             icon: 'floppy-o',
                             title: 'public.save',
                             disabled: true,
+                            callback: function() {
+                                this.sandbox.emit('sulu.toolbar.save', 'publish');
+                            }.bind(this),
                             dropdownItems: saveDropdown
                         }
                     };
@@ -914,7 +919,13 @@ define([
                             disabled: !this.data.published,
                             callback: this.unpublish.bind(this)
                         }
-                    }
+                    };
+
+                    editDropdown.divider = {
+                        options: {
+                            divider: true
+                        }
+                    };
                 }
 
                 if (SecurityChecker.hasPermission(this.data, 'delete') && !isHomeDocument(this.data)) {
@@ -1012,7 +1023,7 @@ define([
                         .fail(function () {
                             this.sandbox.emit(
                                 'sulu.labels.error.show',
-                                'labels.error.unpublish-desc',
+                                'labels.error.content-unpublish-desc',
                                 'labels.error'
                             );
                         }.bind(this));
@@ -1052,6 +1063,16 @@ define([
             this.sandbox.util.each(hiddenItems, function(index, hiddenItem) {
                 this.sandbox.emit('sulu.header.toolbar.item.hide', hiddenItem);
             }.bind(this));
+        },
+
+        showState: function(published) {
+            if (!!published) {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'stateTest');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'statePublished');
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'statePublished');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'stateTest');
+            }
         },
 
         showDraftLabel: function() {

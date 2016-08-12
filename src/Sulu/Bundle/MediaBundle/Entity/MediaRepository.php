@@ -95,80 +95,79 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         UserInterface $user = null,
         $permission = null
     ) {
-        try {
-            list(
+        list(
+            $collection,
+            $systemCollections,
+            $types,
+            $search,
+            $orderBy,
+            $orderSort,
+            $ids
+            ) = $this->extractFilterVars($filter);
+
+        // if empty array of ids is requested return empty array of medias
+        if ($ids !== null && count($ids) === 0) {
+            return [];
+        }
+
+        if (empty($orderBy)) {
+            $orderBy = 'media.id';
+            $orderSort = 'asc';
+        }
+
+        if (!$ids) {
+            $ids = $this->getIds(
                 $collection,
                 $systemCollections,
                 $types,
                 $search,
                 $orderBy,
                 $orderSort,
-                $ids
-                ) = $this->extractFilterVars($filter);
-
-            // if empty array of ids is requested return empty array of medias
-            if ($ids !== null && count($ids) === 0) {
-                return [];
-            }
-
-            if (!$ids) {
-                $ids = $this->getIds(
-                    $collection,
-                    $systemCollections,
-                    $types,
-                    $search,
-                    $orderBy,
-                    $orderSort,
-                    $limit,
-                    $offset
-                );
-            }
-
-            $queryBuilder = $this->createQueryBuilder('media')
-                ->leftJoin('media.type', 'type')
-                ->leftJoin('media.collection', 'collection')
-                ->innerJoin('media.files', 'file')
-                ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
-                ->leftJoin('fileVersion.tags', 'tag')
-                ->leftJoin('fileVersion.meta', 'fileVersionMeta')
-                ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
-                ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
-                ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
-                ->leftJoin('media.creator', 'creator')
-                ->leftJoin('creator.contact', 'creatorContact')
-                ->leftJoin('media.changer', 'changer')
-                ->leftJoin('changer.contact', 'changerContact')
-                ->addSelect('type')
-                ->addSelect('collection')
-                ->addSelect('file')
-                ->addSelect('tag')
-                ->addSelect('fileVersion')
-                ->addSelect('fileVersionMeta')
-                ->addSelect('fileVersionDefaultMeta')
-                ->addSelect('fileVersionContentLanguage')
-                ->addSelect('fileVersionPublishLanguage')
-                ->addSelect('creator')
-                ->addSelect('changer')
-                ->addSelect('creatorContact')
-                ->addSelect('changerContact');
-
-            if ($ids !== null) {
-                $queryBuilder->andWhere('media.id IN (:mediaIds)');
-                $queryBuilder->setParameter('mediaIds', $ids);
-            }
-
-            if ($orderBy !== null) {
-                $queryBuilder->addOrderBy($orderBy, $orderSort);
-            }
-
-            if ($user !== null && $permission !== null) {
-                $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
-            }
-
-            return $queryBuilder->getQuery()->getResult();
-        } catch (NoResultException $ex) {
-            return;
+                $limit,
+                $offset
+            );
         }
+
+        $queryBuilder = $this->createQueryBuilder('media')
+            ->leftJoin('media.type', 'type')
+            ->leftJoin('media.collection', 'collection')
+            ->innerJoin('media.files', 'file')
+            ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
+            ->leftJoin('fileVersion.tags', 'tag')
+            ->leftJoin('fileVersion.meta', 'fileVersionMeta')
+            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
+            ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
+            ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+            ->leftJoin('media.creator', 'creator')
+            ->leftJoin('creator.contact', 'creatorContact')
+            ->leftJoin('media.changer', 'changer')
+            ->leftJoin('changer.contact', 'changerContact')
+            ->addSelect('type')
+            ->addSelect('collection')
+            ->addSelect('file')
+            ->addSelect('tag')
+            ->addSelect('fileVersion')
+            ->addSelect('fileVersionMeta')
+            ->addSelect('fileVersionDefaultMeta')
+            ->addSelect('fileVersionContentLanguage')
+            ->addSelect('fileVersionPublishLanguage')
+            ->addSelect('creator')
+            ->addSelect('changer')
+            ->addSelect('creatorContact')
+            ->addSelect('changerContact');
+
+        if ($ids !== null) {
+            $queryBuilder->andWhere('media.id IN (:mediaIds)');
+            $queryBuilder->setParameter('mediaIds', $ids);
+        }
+
+        $queryBuilder->addOrderBy($orderBy, $orderSort);
+
+        if ($user !== null && $permission !== null) {
+            $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
