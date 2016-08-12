@@ -358,7 +358,6 @@ class Webspace implements WebspaceInterface
             }
 
             $document->$setter($value);
-
         }
     }
 

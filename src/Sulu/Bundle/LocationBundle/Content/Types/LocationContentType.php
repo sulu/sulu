@@ -19,7 +19,6 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Symfony\Component\Intl\Intl;
-use Sulu\Component\Content\ContentTypeExportInterface;
 
 /**
  * ContentType for TextEditor.
