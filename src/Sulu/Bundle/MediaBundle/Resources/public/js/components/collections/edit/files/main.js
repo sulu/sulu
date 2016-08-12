@@ -11,11 +11,22 @@ define([
     'config',
     'services/sulumedia/collection-manager',
     'services/sulumedia/media-manager',
+    'services/sulumedia/media-router',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
     'sulusecurity/services/security-checker',
-    'services/sulumedia/file-icons'
-], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker, FileIcons) {
+    'services/sulumedia/file-icons',
+    'text!./files.html'
+], function(
+    Config,
+    CollectionManager,
+    MediaManager,
+    MediaRouter,
+    UserSettingsManager,
+    OverlayManager,
+    SecurityChecker,
+    FileIcons,
+    filesTemplate) {
 
     'use strict';
 
@@ -23,30 +34,29 @@ define([
             instanceName: 'collection'
         },
 
+        urls = {
+            children: '/admin/api/collections<% if (!!collection) { %>/<%= collection %><% } %>?locale=<%= locale %><% if (!!collection) { %>&depth=1<% } %>',
+            media: '/admin/api/media?locale=<%= locale %><% if (!!collection) { %>&collection=<%= collection %><% } %>'
+        },
+
         constants = {
             hideToolbarClass: 'toolbar-hidden',
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
-            collectionTitleSelector: '.collection-title h2'
+            childrenSelector: '.children-container',
+            collectionTitleSelector: 'h2.content-title'
         };
 
     return {
 
-        stickyToolbar: true,
+        stickyToolbar: 240,
 
         layout: {
-            navigation: {
-                collapsed: true
-            },
             content: {
                 width: 'max'
             }
         },
-
-        templates: [
-            '/admin/media/template/collection/files'
-        ],
 
         /**
          * Initialize the component
@@ -54,23 +64,18 @@ define([
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
+            this.data = this.options.getData();
             this.bindDatagridEvents();
             this.bindDropzoneEvents();
             this.bindOverlayEvents();
             this.bindManagerEvents();
             this.bindListToolbarEvents();
 
-            this.sandbox.emit('sulu.medias.collection.get-data', function(data) {
-                this.data = data;
-                this.render();
-            }.bind(this));
+            this.render();
 
             // start edit if media was clicked in root-component
-            if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
-                var editId = this.sandbox.sulu.viewStates['media-file-edit-id'];
-                OverlayManager.startEditMediaOverlay.call(this, editId, UserSettingsManager.getMediaLocale());
-                delete this.sandbox.sulu.viewStates['media-file-edit-id'];
+            if (!!this.options.editId) {
+                OverlayManager.startEditMediaOverlay.call(this, this.options.editId, this.options.locale);
             }
         },
 
@@ -78,6 +83,11 @@ define([
          * Bind datagrid related events
          */
         bindDatagridEvents: function() {
+            this.sandbox.on(
+                'husky.datagrid.' + this.data.id + '.children.tiles.add-clicked',
+                OverlayManager.startCreateCollectionOverlay.bind(this, this.data)
+            );
+
             // toggle item buttons
             this.sandbox.on('husky.datagrid.number.selections', function(selectedItems) {
                 var string = (selectedItems > 0) ? 'enable' : 'disable';
@@ -94,6 +104,7 @@ define([
             // add uploaded medias to datagrid
             this.sandbox.on('husky.dropzone.' + this.options.instanceName + '.success', function(file, mediaResponse) {
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
+                mediaResponse.type = mediaResponse.type.name;
                 this.sandbox.emit('husky.datagrid.records.add', [mediaResponse]);
             }, this);
         },
@@ -110,13 +121,12 @@ define([
             // remove moved medias from datagrid
             this.sandbox.on('sulu.medias.media.moved', function(id) {
                 this.sandbox.emit('husky.datagrid.record.remove', id);
-                this.sandbox.emit('husky.data-navigation.collections.reload');
             }.bind(this));
 
             // change saved medias in datagrid
             this.sandbox.on('sulu.medias.media.saved', function(id, media) {
                 // change medias if media is saved without locale or locale is current media-locale
-                if (!media.locale || media.locale === UserSettingsManager.getMediaLocale()) {
+                if (!media.locale || media.locale === this.options.locale) {
                     this.sandbox.emit('husky.datagrid.records.change', this.sandbox.util.extend(true, {}, media, {
                         type: (!!media.type.name) ? media.type.name : media.type
                     }));
@@ -166,9 +176,7 @@ define([
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
-                OverlayManager.startMoveMediaOverlay.call(
-                    this, this.options.id, UserSettingsManager.getMediaLocale()
-                );
+                OverlayManager.startMoveMediaOverlay.call(this, this.data.id, this.options.locale);
             }.bind(this));
 
             // change datagrid view to table
@@ -206,7 +214,7 @@ define([
         },
 
         savedHandler: function(id, collection) {
-            if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
+            if (!collection.locale || collection.locale === this.options.locale) {
                 $(constants.collectionTitleSelector).text(collection.title)
             }
         },
@@ -215,16 +223,61 @@ define([
          * Renders the files component
          */
         render: function() {
-            this.sandbox.dom.html(
-                this.$el,
-                this.renderTemplate('/admin/media/template/collection/files')
-            );
+            this.sandbox.dom.html(this.$el, filesTemplate);
 
             if (SecurityChecker.hasPermission(this.data, 'add')) {
                 this.startDropzone();
             }
 
+            this.startChildrenTiles();
             this.startDatagrid();
+        },
+
+        /**
+         * Starts the datagrid showing the children (sub-folders) of the collection
+         */
+        startChildrenTiles: function() {
+            if (!this.data.hasSub) {
+                this.$find(constants.childrenSelector).remove();
+                return;
+            }
+
+            this.sandbox.start([{
+                name: 'datagrid@husky',
+                options: {
+                    el: this.$find(constants.childrenSelector),
+                    url: _.template(urls.children, {
+                        collection: this.data.id,
+                        locale: this.options.locale
+                    }),
+                    instanceName: this.data.id + '.children',
+                    view: 'tiles',
+                    resultKey: 'collections',
+                    viewOptions: {
+                        tiles: {
+                            fields: {
+                                description: ['mediaCount']
+                            }
+                        }
+                    },
+                    pagination: false,
+                    actionCallback: function(id) {
+                        MediaRouter.toCollection(id, this.options.locale);
+                    }.bind(this),
+                    matchings: [
+                        {
+                            name: 'id'
+                        },
+                        {
+                            name: 'title'
+                        },
+                        {
+                            name: 'mediaCount',
+                            type: 'count'
+                        }
+                    ]
+                }
+            }]);
         },
 
         /**
@@ -232,13 +285,80 @@ define([
          */
         startDatagrid: function() {
             var view = UserSettingsManager.getMediaListView(),
-                locale = UserSettingsManager.getMediaLocale(),
-                // init list-toolbar and datagrid
-                settingsDropdown = [], buttons = {};
+                locale = this.options.locale;
 
-            if (SecurityChecker.hasPermission(this.data, 'add')) {
+
+            this.sandbox.sulu.initListToolbarAndList.call(this,
+                'media',
+                '/admin/api/media/fields?locale=' + locale + '&sortBy=created&sortOrder=desc',
+                {
+                    el: this.$find(constants.toolbarSelector),
+                    instanceName: this.options.instanceName,
+                    template: this.sandbox.sulu.buttons.get(this.getEditButtons())
+                },
+                {
+                    el: this.$find(constants.datagridSelector),
+                    url: _.template(urls.media, {
+                        collection: this.data.id,
+                        locale: locale
+                    }),
+                    searchFields: ['name', 'title', 'description'],
+                    view: view,
+                    pagination: UserSettingsManager.getMediaListPagination(),
+                    resultKey: 'media',
+                    actionCallback: function(clickedId) {
+                        this.editMedia(clickedId);
+                    }.bind(this),
+                    viewOptions: {
+                        table: {
+                            actionIconColumn: 'name',
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            badges: [
+                                {
+                                    column: 'title',
+                                    callback: function(item, badge) {
+                                        if (item.locale !== this.options.locale) {
+                                            badge.title = item.locale;
+
+                                            return badge;
+                                        }
+                                    }.bind(this)
+                                }
+                            ]
+                        },
+                        'datagrid/decorators/masonry-view': {
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            locale: locale
+                        }
+                    },
+                    paginationOptions: {
+                        'infinite-scroll': {
+                            reachedBottomMessage: 'public.reached-list-end',
+                            scrollOffset: 500
+                        }
+                    }
+                });
+        },
+
+        /**
+         * Constructs and returns the buttons for the list-toolbar, dependent on the
+         * permissions of the current user.
+         *
+         * @returns {Object} The buttons for the media edit
+         */
+        getEditButtons: function() {
+            var settingsDropdown = [], buttons = {};
+
+            if (!!this.data.id && SecurityChecker.hasPermission(this.data, 'add')) {
                 buttons.add = {
                     options: {
+                        showTitle: true,
+                        title: 'sulu-media.upload-files',
+                        icon: 'cloud-upload',
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.add');
                         }.bind(this)
@@ -266,7 +386,7 @@ define([
                 };
             }
 
-            if (SecurityChecker.hasPermission(this.data, 'edit')) {
+            if (!!this.data.id && SecurityChecker.hasPermission(this.data, 'edit')) {
                 settingsDropdown.push({
                     id: 'media-move',
                     title: this.sandbox.translate('sulu.media.move'),
@@ -288,79 +408,29 @@ define([
 
             buttons.mediaDecoratorDropdown = {};
 
-            this.sandbox.sulu.initListToolbarAndList.call(this,
-                'media',
-                '/admin/api/media/fields?locale=' + locale,
-                {
-                    el: this.$find(constants.toolbarSelector),
-                    instanceName: this.options.instanceName,
-                    template: this.sandbox.sulu.buttons.get(buttons)
-                },
-                {
-                    el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?locale=' + locale + '&collection=' + this.options.id,
-                    searchFields: ['name', 'title', 'description'],
-                    view: view,
-                    pagination: UserSettingsManager.getMediaListPagination(),
-                    resultKey: 'media',
-                    actionCallback: function(clickedId) {
-                        this.editMedia(clickedId);
-                    }.bind(this),
-                    viewOptions: {
-                        table: {
-                            actionIconColumn: 'name',
-                            noImgIcon: function(item) {
-                                return FileIcons.getByMimeType(item.mimeType);
-                            },
-                            badges: [
-                                {
-                                    column: 'title',
-                                    callback: function(item, badge) {
-                                        if (item.locale !== UserSettingsManager.getMediaLocale()) {
-                                            badge.title = item.locale;
-
-                                            return badge;
-                                        }
-                                    }.bind(this)
-                                }
-                            ],
-                            emptyIcon: 'fa-file-o'
-                        },
-                        'datagrid/decorators/masonry-view': {
-                            noImgIcon: function(item) {
-                                return FileIcons.getByMimeType(item.mimeType);
-                            },
-                            emptyIcon: 'fa-file-o',
-                            locale: locale
-                        }
-                    },
-                    paginationOptions: {
-                        'infinite-scroll': {
-                            reachedBottomMessage: 'public.reached-list-end',
-                            scrollOffset: 500
-                        }
-                    }
-                });
+            return buttons;
         },
 
         /**
          * Starts the dropzone component
          */
         startDropzone: function() {
-            this.sandbox.start([
-                {
-                    name: 'dropzone@husky',
-                    options: {
-                        el: this.$find(constants.dropzoneSelector),
-                        maxFilesize: Config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media?collection=' + this.options.id
-                            + '&locale=' + UserSettingsManager.getMediaLocale(),
-                        method: 'POST',
-                        paramName: 'fileVersion',
-                        instanceName: this.options.instanceName
+            if (!!this.data.id) {
+                this.sandbox.start([
+                    {
+                        name: 'dropzone@husky',
+                        options: {
+                            el: this.$find(constants.dropzoneSelector),
+                            maxFilesize: Config.get('sulu-media').maxFilesize,
+                            url: '/admin/api/media?collection=' + this.data.id
+                            + '&locale=' + this.options.locale,
+                            method: 'POST',
+                            paramName: 'fileVersion',
+                            instanceName: this.options.instanceName
+                        }
                     }
-                }
-            ]);
+                ]);
+            }
         },
 
         /**
@@ -369,7 +439,26 @@ define([
          */
         moveMedia: function(collection) {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                MediaManager.move(ids, collection.id, UserSettingsManager.getMediaLocale());
+                MediaManager.move(ids, collection.id, this.options.locale);
+
+                // If the media was moved to a child collection, update the children tiles
+                this.sandbox.emit('husky.datagrid.' + this.data.id + '.children.records.get',
+                    function(childCollections) {
+
+                        childCollections.forEach(function(childCollection) {
+                            // update the mediaCount property of a child collection in the datagrid
+                            // if media got moved to it
+                            if (childCollection.id === collection.id) {
+                                this.sandbox.emit('husky.datagrid.' + this.data.id + '.children.records.change',
+                                    _.extend(childCollection, {
+                                        mediaCount: childCollection.mediaCount + ids.length
+                                    })
+                                );
+                            }
+                        }.bind(this));
+
+                    }.bind(this)
+                );
             }.bind(this));
         },
 
@@ -378,7 +467,7 @@ define([
          */
         editMedias: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
-                OverlayManager.startEditMediaOverlay.call(this, mediaIds, UserSettingsManager.getMediaLocale());
+                OverlayManager.startEditMediaOverlay.call(this, mediaIds, this.options.locale);
             }.bind(this));
         },
 
@@ -386,7 +475,7 @@ define([
          * Edit given media
          */
         editMedia: function(mediaId) {
-            OverlayManager.startEditMediaOverlay.call(this, [mediaId], UserSettingsManager.getMediaLocale());
+            OverlayManager.startEditMediaOverlay.call(this, [mediaId], this.options.locale);
         },
 
         /**

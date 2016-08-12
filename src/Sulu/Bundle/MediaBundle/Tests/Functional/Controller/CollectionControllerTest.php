@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -41,6 +43,11 @@ class CollectionControllerTest extends SuluTestCase
      * @var CollectionType
      */
     private $collectionType2;
+
+    /**
+     * @var MediaType
+     */
+    private $mediaType;
 
     /**
      * @var CacheInterface
@@ -126,18 +133,28 @@ class CollectionControllerTest extends SuluTestCase
             SystemCollectionManagerInterface::COLLECTION_TYPE,
             'System Collections'
         );
+        $this->mediaType = $this->createMediaType();
+        $this->em->persist($this->mediaType);
         $this->em->persist($this->collectionType1);
         $this->em->persist($this->collectionType2);
         $this->em->flush();
 
         $this->collection1 = $this->createCollection(
             $this->collectionType1,
-            ['en-gb' => 'Test Collection', 'de' => 'Test Kollektion']
+            ['en-gb' => 'Test Collection', 'de' => 'Test Kollektion'],
+            null,
+            null,
+            5
         );
     }
 
-    private function createCollection(CollectionType $collectionType, $title = [], $parent = null, $key = null)
-    {
+    private function createCollection(
+        CollectionType $collectionType,
+        $title = [],
+        $parent = null,
+        $key = null,
+        $numberOfMedia = 0
+    ) {
         // Collection
         $collection = new Collection();
 
@@ -178,7 +195,22 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
+        $this->addMedia($collection, $numberOfMedia);
+
         return $collection;
+    }
+
+    private function addMedia(Collection $collection, $numberOfMedia)
+    {
+        for ($i = 0; $i < $numberOfMedia; ++$i) {
+            $media = new Media();
+            $media->setType($this->mediaType);
+            $media->setCollection($collection);
+            $collection->addMedia($media);
+            $this->em->persist($media);
+        }
+
+        $this->em->flush();
     }
 
     private function createCollectionType($id, $key, $name, $description = '')
@@ -190,6 +222,15 @@ class CollectionControllerTest extends SuluTestCase
         $collectionType->setDescription($description);
 
         return $collectionType;
+    }
+
+    private function createMediaType()
+    {
+        $mediaType = new MediaType();
+        $mediaType->setName('image');
+        $mediaType->setDescription('This is an image');
+
+        return $mediaType;
     }
 
     private function mapCollections($collections)
@@ -274,7 +315,7 @@ class CollectionControllerTest extends SuluTestCase
     /**
      * @description Test GET all Collections
      */
-    public function testcGet()
+    public function testCGet()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -292,6 +333,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->_embedded->collections);
 
         $this->assertCount(1, $response->_embedded->collections);
+        $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
+        $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
     }
 
     /**

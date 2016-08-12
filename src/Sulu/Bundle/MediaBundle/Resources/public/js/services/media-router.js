@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/husky/mediator'], function(Mediator) {
+define([
+    'services/husky/mediator',
+    'services/sulumedia/user-settings-manager'
+], function(Mediator, UserSettingsManager) {
 
     'use strict';
 
@@ -20,22 +23,33 @@ define(['services/husky/mediator'], function(Mediator) {
     AccountRouter.prototype = {
 
         /**
-         * Navigates to collection view of given collectionId
+         * Navigates to collection view of given collectionId.
+         *
          * @param collectionId
+         * @param locale
+         * @param mediaId
          */
-        toCollection: function(collectionId) {
+        toCollection: function(collectionId, locale, mediaId) {
+            locale = locale || UserSettingsManager.getMediaLocale();
             if (!!collectionId) {
-                Mediator.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/files', true, true);
+                var mediaEditAppendix = (!!mediaId) ? '/edit:' + mediaId : '';
+                Mediator.emit(
+                    'sulu.router.navigate',
+                    'media/collections/' + locale + '/edit:' + collectionId + '/files' + mediaEditAppendix, true, true
+                );
             } else {
-                this.toRoot();
+                this.toRootCollection(locale);
             }
         },
 
         /**
-         * Navigates to the collection root view
+         * Navigates to the collection root view.
+         *
+         * @param locale
          */
-        toRoot: function() {
-            Mediator.emit('sulu.router.navigate', 'media/collections/root', true, true);
+        toRootCollection: function(locale) {
+            locale = locale || UserSettingsManager.getMediaLocale();
+            Mediator.emit('sulu.router.navigate', 'media/collections/' + locale, true, true);
         }
     };
 

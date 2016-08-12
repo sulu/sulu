@@ -20,16 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 class TemplateController extends Controller
 {
     /**
-     * renders template for the collection files-view.
-     *
-     * @return Response
-     */
-    public function collectionFilesAction()
-    {
-        return $this->render('SuluMediaBundle:Template:collection-files.html.twig');
-    }
-
-    /**
      * renders template for the collection settings-view.
      *
      * @return Response

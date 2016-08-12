@@ -657,12 +657,12 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * prepare an api entity.
+     * Prepare an api entity.
      *
-     * @param CollectionEntity   $entity
-     * @param string             $locale
-     * @param CollectionEntity[] $entities           nested set
-     * @param array              $breadcrumbEntities
+     * @param CollectionInterface $entity
+     * @param string $locale
+     * @param CollectionEntity[] $entities nested set
+     * @param array $breadcrumbEntities
      *
      * @return Collection
      */
@@ -691,6 +691,10 @@ class CollectionManager implements CollectionManagerInterface
                 $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);
             }
             $apiEntity->setBreadcrumb($breadcrumbApiEntities);
+        }
+
+        if ($entity && $entity->getId()) {
+            $apiEntity->setMediaCount($this->collectionRepository->countMedia($entity));
         }
 
         return $this->addPreview($apiEntity);

@@ -52,6 +52,10 @@ define(function() {
                 app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
             },
 
+            getLastVisitedCollection: function() {
+                return app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey);
+            },
+
             getDropdownPageSize: function() {
                 return app.sandbox.sulu.getUserSetting(dropdownPageSize) || 20;
             },

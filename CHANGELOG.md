@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #2799 [MediaBundle]         Implemented tiles view for navigating through collections
+    * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
+
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release
     * BUGFIX      #2764 [MediaBundle]         Fixed type filter for media content type
@@ -18,7 +22,6 @@ CHANGELOG for Sulu
     * BUGFIX      #2777 [ContentBundle]       Fixed tooltip translations in column-navigation
     * BUGFIX      #2685 [ContentBundle]       Fixed resource locator adaption for pages with ghost-ancestors
     * BUGFIX      #2758 [ContentBundle]       Fixed wrong disabeling of button in block type
-    * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * FEATURE     #2761 [All]                 Added Dutch translation
     * FEATURE     #2748 [AdminBundle]         Added Twig blocks to be able to use inheritance
     * BUGFIX      #2771 [SnippetBundle]       Fixed default snippets for public workspace

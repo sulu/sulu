@@ -2,10 +2,6 @@ sulu_media.template.collection:
     pattern: /template/media/collection.html
     defaults: { _controller: SuluMediaBundle:Template:collection }
 
-sulu_media.template.collection.files:
-    pattern: /template/collection/files.html
-    defaults: { _controller: SuluMediaBundle:Template:collectionFiles }
-
 sulu_media.template.collection.settings:
     pattern: /template/collection/settings.html
     defaults: { _controller: SuluMediaBundle:Template:collectionSettings }

@@ -29,12 +29,13 @@ require.config({
 
 define([
     'services/sulumedia/media-router',
+    'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
     'extensions/masonry',
     'extensions/sulu-buttons-mediabundle',
     'sulumedia/ckeditor/media-link',
     'css!sulumediacss/main'
-], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons, MediaLinkPlugin) {
+], function(MediaRouter, UserSettingsManager, OverlayManager, MasonryExtension, MediaButtons, MediaLinkPlugin) {
 
     'use strict';
 
@@ -56,28 +57,50 @@ define([
                 };
             });
 
-            // list all collections
+            // list the top collections with all media
             sandbox.mvc.routes.push({
-                route: 'media/collections/root',
+                route: 'media/collections/:locale',
+                callback: function(locale) {
+                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-locale="' + locale + '"/>';
+                }
+            });
+
+            // list the top collections with all media (without locale)
+            sandbox.mvc.routes.push({
+                route: 'media/collections',
                 callback: function() {
-                    return '<div data-aura-component="collections/root@sulumedia"/>';
+                    if (!!UserSettingsManager.getLastVisitedCollection()) {
+                        MediaRouter.toCollection(
+                            UserSettingsManager.getLastVisitedCollection(),
+                            UserSettingsManager.getMediaLocale()
+                        );
+                    } else {
+                        MediaRouter.toRootCollection(UserSettingsManager.getMediaLocale());
+                    }
                 }
             });
 
             // show a single collection with files and upload
             sandbox.mvc.routes.push({
-                route: 'media/collections/edit::id/:content',
-                callback: function(id) {
-                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '"/>';
+                route: 'media/collections/:locale/edit::id/:content',
+                callback: function(locale, id) {
+                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '" data-aura-locale="' + locale + '"/>';
                 }
             });
 
             // show a single collection with files and upload
+            sandbox.mvc.routes.push({
+                route: 'media/collections/:locale/edit::id/:content/edit::mediaId',
+                callback: function(locale, id, content, mediaId) {
+                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '" data-aura-locale="' + locale + '" data-aura-edit-id="' + mediaId + '"/>';
+                }
+            });
+
+            // show a single collection with files and upload (without locale)
             sandbox.mvc.routes.push({
                 route: 'media/collections/edit::id/:content/edit::mediaId',
                 callback: function(id, content, mediaId) {
-                    sandbox.sulu.viewStates['media-file-edit-id'] = parseInt(mediaId);
-                    MediaRouter.toCollection(id);
+                    MediaRouter.toCollection(id, UserSettingsManager.getMediaLocale(), mediaId);
                 }
             });
 
@@ -91,25 +114,7 @@ define([
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {
                     return;
-                    }
-
-                this.sandbox.on('husky.data-navigation.collections.selected', function(item) {
-                    if (item === null) {
-                        MediaRouter.toRoot();
-                    }
-                }.bind(this));
-
-                this.sandbox.on('husky.data-navigation.collections.add', function(item) {
-                    OverlayManager.startCreateCollectionOverlay.call(this, item);
-                }.bind(this));
-
-                this.sandbox.on('sulu.media.collection-create.created', function(collection) {
-                    MediaRouter.toCollection(collection.id);
-
-                    this.sandbox.emit('husky.data-navigation.collections.reload', function() {
-                        this.sandbox.emit('husky.data-navigation.collections.select', collection.id);
-                    });
-                }.bind(this));
+                }
 
                 this.sandbox.on('husky.dropzone.error', function(xhr, file) {
                     var title = this.sandbox.translate('sulu.dropzone.error.title'),

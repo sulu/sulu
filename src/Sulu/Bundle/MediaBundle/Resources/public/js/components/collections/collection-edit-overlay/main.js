@@ -63,7 +63,7 @@ define([
             }
 
             this.bindEvents();
-            CollectionManager.loadOrNew(this.options.collectionId, this.options.locale).then(function(collection) {
+            CollectionManager.load(this.options.collectionId, this.options.locale).then(function(collection) {
                 this.data = collection;
                 this.openOverlay();
             }.bind(this));

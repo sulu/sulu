@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Navigation\DataNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -34,20 +33,10 @@ class MediaAdmin extends Admin
         $section->setPosition(20);
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
-            $media = new DataNavigationItem('navigation.media', '/admin/api/collections?sortBy=title');
-            $media->setId('collections-edit');
+            $media = new NavigationItem('navigation.media');
             $media->setPosition(20);
             $media->setIcon('image');
-            $media->setAction('media/collections/root');
-            $media->setInstanceName('collections');
-            $media->setDataNameKey('title');
-            $media->setDataResultKey('collections');
-            $media->setShowAddButton(true);
-            $media->setTitleTranslationKey('navigation.media.collections');
-            $media->setNoDataTranslationKey('navigation.media.collections.empty');
-            $media->setAddButtonTranslationKey('navigation.media.collections.add');
-            $media->setSearchTranslationKey('navigation.media.collections.search');
-
+            $media->setAction('media/collections');
             $section->addChild($media);
             $rootNavigationItem->addChild($section);
         }

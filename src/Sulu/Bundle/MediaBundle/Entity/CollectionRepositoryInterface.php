@@ -50,6 +50,15 @@ interface CollectionRepositoryInterface
     public function count($depth = 0, $filter = [], CollectionInterface $collection = null);
 
     /**
+     * Returns the number of media contained in a given collection.
+     *
+     * @param CollectionInterface $collection The collection for which the number of media should be returned
+     *
+     * @return int The number of media in the given collection
+     */
+    public function countMedia(CollectionInterface $collection);
+
+    /**
      * Finds the collection with a given id.
      *
      * @param int $id
