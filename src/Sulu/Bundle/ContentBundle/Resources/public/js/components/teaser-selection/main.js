@@ -195,6 +195,10 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
 
                 return false;
             }.bind(this));
+
+            this.$el.on('click', '.image', function(e) {
+                openMediaOverlay.call(this, $(e.currentTarget).parents('li'));
+            }.bind(this));
         },
 
         showEdit = function($element) {
@@ -240,12 +244,9 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 item = {
                     title: $edit.find('.title').val() || null,
                     description: $edit.find('.description').val() || null,
-                    moreText: $edit.find('.moreText').val() || null
+                    moreText: $edit.find('.moreText').val() || null,
+                    mediaId: $edit.find('.mediaId').data('id') || null
                 };
-
-            item = _.omit(item, _.filter(_.keys(item), function(key) {
-                return item[key] === null;
-            }));
 
             hideEdit.call(this, $element);
 
@@ -254,6 +255,13 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
 
             $view.find('.title').text(item.title);
             $view.find('.description').text(this.cleanupText(item.description));
+
+            $view.find('.image').remove();
+            if (!!item.mediaId) {
+                $view.find('.value').prepend(
+                    '<span class="image"><img src="' + $edit.find('.mediaId').attr('src') + '"/></span>'
+                );
+            }
         },
 
         reset = function($element) {
@@ -269,6 +277,39 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             this.setItem(id, item);
             $view.find('.title').text(apiItem.title);
             $view.find('.description').text(this.cleanupText(apiItem.description));
+        },
+
+        openMediaOverlay = function($element) {
+            var $container = $('<div/>'),
+                id = $element.data('id'),
+                apiItem = this.getApiItem(id);
+            this.$el.append($container);
+
+            this.sandbox.start([{
+                name: 'media-selection/overlay@sulumedia',
+                options: {
+                    el: $container,
+                    preselected: [apiItem.mediaId],
+                    instanceName: 'teaser-' + apiItem.type + '-' + apiItem.id,
+                    removeOnClose: true,
+                    openOnStart: true,
+                    singleSelect: true,
+                    locale: this.options.locale,
+                    saveCallback: function(items) {
+                        var item = items[0],
+                            $image = $element.find('.image-content');
+
+                        $image.removeClass('fa-picture-o');
+                        $image.html('<img class="mediaId" data-id="' + item.id + '" src="' + item.thumbnails['50x50'] + '"/>');
+                    },
+                    removeCallback: function() {
+                        var $image = $element.find('.image-content');
+
+                        $image.addClass('fa-picture-o');
+                        $image.html('');
+                    }
+                }
+            }]);
         },
 
         stopEditComponents = function($element) {
@@ -316,7 +357,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                     translations: this.translations,
                     descriptionText: this.cleanupText(item.description),
                     types: this.options.types,
-                    translate: this.sandbox.translate
+                    translate: this.sandbox.translate,
+                    locale: this.options.locale
                 }, item)
             );
         },
@@ -377,7 +419,10 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                     return oldItem;
                 }
 
-                return _.defaults(item, oldItem);
+                item = _.defaults(item, oldItem);
+                return _.omit(item, _.filter(_.keys(item), function(key) {
+                    return item[key] === null;
+                }));
             });
 
             this.setData(data, false);
