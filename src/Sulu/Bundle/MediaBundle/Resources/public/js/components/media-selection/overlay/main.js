@@ -489,6 +489,7 @@ define([
                             selectOnAction: !this.options.singleSelect,
                             unselectOnBackgroundClick: false,
                             locale: this.options.locale,
+                            hintIcon: 'fa-check-circle-o',
                             badges: [
                                 {
                                     column: 'title',
