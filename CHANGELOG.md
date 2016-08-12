@@ -17,6 +17,7 @@ CHANGELOG for Sulu
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
     * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 
+    * FEATURE     #2811 [SearchBundle]        Make indexes searched by website search configurable
 
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release

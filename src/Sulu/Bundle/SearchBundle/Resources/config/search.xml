@@ -26,6 +26,9 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.resolver.parameter"/>
             <argument type="service" id="templating"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
             <tag name="sulu.context" context="website"/>
         </service>
 
