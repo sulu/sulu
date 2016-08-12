@@ -31,7 +31,6 @@ class WebspaceImportTest extends SuluTestCase
     private $parent;
     private $pages = [];
     private $webspaceImporter;
-
     protected $distPath = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff.dist';
     protected $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
 
@@ -52,7 +51,8 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Remove all created Data.
      */
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->removeImportFile();
     }
 
@@ -60,7 +60,7 @@ class WebspaceImportTest extends SuluTestCase
      * Run tests for language import:
      * - import data
      * - get documents
-     * - test document data
+     * - test document data.
      */
     public function testImport12Xliff()
     {
@@ -72,7 +72,7 @@ class WebspaceImportTest extends SuluTestCase
             'filePath' => $this->path,
         ];
 
-        list($count, $fails, $successes, $failed) = $this->webspaceImporter->import(
+        list( $count, $fails, $successes, $failed ) = $this->webspaceImporter->import(
             $importData['webspaceKey'],
             $importData['locale'],
             $importData['filePath'],
@@ -133,7 +133,7 @@ class WebspaceImportTest extends SuluTestCase
             $fs = new Filesystem();
 
             $fs->remove($this->path);
-        } catch(IOExceptionInterface $e) {
+        } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
     }

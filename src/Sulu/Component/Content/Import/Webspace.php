@@ -341,7 +341,7 @@ class Webspace implements WebspaceInterface
             return;
         }
 
-        foreach ($data as $key => $property){
+        foreach ($data as $key => $property) {
             $setter = 'set' . ucfirst($key);
 
             if (in_array($key, self::$excludedSettings) || !method_exists($document, $setter)) {
