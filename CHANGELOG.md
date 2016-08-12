@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* develop
+    * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 
+
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release
     * BUGFIX      #2764 [MediaBundle]         Fixed type filter for media content type
