@@ -16,15 +16,18 @@ use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This controller handles the search for the website.
  */
-class WebsiteSearchController
+class WebsiteSearchController implements ContainerAwareInterface
 {
     use RequestParametersTrait;
+    use ContainerAwareTrait;
 
     /**
      * @var SearchManagerInterface
@@ -94,10 +97,15 @@ class WebsiteSearchController
             }
         }
 
+
+
         $hits = $this->searchManager
             ->createSearch($queryString)
             ->locale($locale)
-            ->index('page_' . $webspace->getKey() . '_published')
+            ->indexes(array_map(
+                [$this, 'resolveIndexPlaceholders'],
+                $this->container->getParameter('sulu_search.website_indexes')
+            ))
             ->execute();
 
         return $this->engine->renderResponse(
@@ -107,6 +115,15 @@ class WebsiteSearchController
                 $this->requestAnalyzer
             )
         );
+    }
+
+    private function resolveIndexPlaceholders($value)
+    {
+        $resolver = $this->container->get('twig');
+        $value = $resolver->createTemplate($value)->render([
+            'webspace' => $this->requestAnalyzer->getWebspace()
+        ]);
+        return $value;
     }
 
     /**

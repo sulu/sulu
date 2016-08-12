@@ -57,6 +57,7 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('sulu_search.indexes', $config['indexes']);
+        $container->setParameter('sulu_search.website_indexes', $config['website_indexes']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('search.xml');
