@@ -67,6 +67,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
 
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<error>Abort!</error>');
+
             return;
         }
 

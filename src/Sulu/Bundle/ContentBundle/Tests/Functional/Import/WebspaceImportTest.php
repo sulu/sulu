@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -7,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Import;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
@@ -34,7 +36,7 @@ class WebspaceImportTest extends SuluTestCase
     protected $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
 
     /**
-     * called berfore every test
+     * Setup data for import.
      */
     protected function setUp()
     {
@@ -48,14 +50,14 @@ class WebspaceImportTest extends SuluTestCase
     }
 
     /**
-     * called after tests
+     * Remove all created Data.
      */
     public function tearDown() {
         $this->removeImportFile();
     }
 
     /**
-     * run tests for language import
+     * Run tests for language import:
      * - import data
      * - get documents
      * - test document data
@@ -123,7 +125,7 @@ class WebspaceImportTest extends SuluTestCase
     }
 
     /**
-     * removes the created export.xliff file
+     * Removes the created export.xliff file.
      */
     private function removeImportFile()
     {
@@ -132,12 +134,12 @@ class WebspaceImportTest extends SuluTestCase
 
             $fs->remove($this->path);
         } catch(IOExceptionInterface $e) {
-            echo "An error occurred while creating your directory at ".$e->getPath();
+            echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
     }
 
     /**
-     * creates the export.xliff file and replace the placeholder with the current uuid
+     * Creates the export.xliff file and replace the placeholder with the current uuid.
      */
     private function prepareImportData()
     {
@@ -152,17 +154,17 @@ class WebspaceImportTest extends SuluTestCase
                 '%uuid_page_1%',
             ], [
                 $this->pages[0]->getUuid(),
-                $this->pages[1]->getUuid()
+                $this->pages[1]->getUuid(),
             ], $distContent);
 
             file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
-            echo "An error occurred while copy distfile ".$e->getPath();
+            echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
     }
 
     /**
-     * create the test-pages
+     * Create the test-pages.
      */
     private function prepareData()
     {
@@ -206,5 +208,3 @@ class WebspaceImportTest extends SuluTestCase
         return $page;
     }
 }
-
-?>
