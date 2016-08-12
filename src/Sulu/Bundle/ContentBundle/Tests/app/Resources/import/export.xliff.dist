@@ -6,13 +6,13 @@
             <!-- title: text_line -->
             <trans-unit id="0" resname="title">
                 <source>Parent</source>
-                <target>test 0 impoted</target>
+                <target>test 0 imported</target>
             </trans-unit>
 
             <!-- url: resource_locator -->
             <trans-unit id="1" resname="url" translate="no">
                 <source>/parent</source>
-                <target>/parent</target>
+                <target></target>
             </trans-unit>
 
             <!-- article: text_editor -->
@@ -239,7 +239,7 @@
             <!-- seo-title:  -->
             <trans-unit id="41" resname="seo-title">
                 <source></source>
-                <target></target>
+                <target>SEO Title</target>
             </trans-unit>
 
             <!-- seo-description:  -->
