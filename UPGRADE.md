@@ -101,7 +101,7 @@ The image format "150x100" as well as the format "200x200" got removed
 from the backend formats. If a website relied on this format,
 it should be - as all image formats a website needs - defined
 in the theme specific config file.
-(http://docs.sulu.io/en/latest/book/creating-a-basic-website/adding-a-theme.html#configure-image-formats)
+(http://docs.sulu.io/en/latest/book/creating-a-basic-website/configuring-image-formats.html)
 
 ### PHPCR
 To adapt to the new PHPCR structure execute the migrations:
