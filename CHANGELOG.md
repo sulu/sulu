@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2804 [ListBuilder]         Fixed ids-query in doctrine-list-builder
+
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release
     * BUGFIX      #2764 [MediaBundle]         Fixed type filter for media content type

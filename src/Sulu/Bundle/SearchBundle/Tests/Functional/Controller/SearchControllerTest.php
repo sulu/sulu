@@ -70,6 +70,7 @@ class SearchControllerTest extends SuluTestCase
                     ],
                     'totals' => [
                         'product' => 0,
+                        'contact' => 0,
                     ],
                     'total' => 0,
                 ],
@@ -111,6 +112,7 @@ class SearchControllerTest extends SuluTestCase
                     ],
                     'totals' => [
                         'product' => 1,
+                        'contact' => 0,
                     ],
                     'total' => 1,
                 ],
@@ -152,6 +154,7 @@ class SearchControllerTest extends SuluTestCase
                     ],
                     'totals' => [
                         'product' => 2,
+                        'contact' => 0,
                     ],
                     'total' => 2,
                 ],
