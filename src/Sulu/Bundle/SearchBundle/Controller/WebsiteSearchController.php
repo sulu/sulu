@@ -123,7 +123,7 @@ class WebsiteSearchController implements ContainerAwareInterface
         $value = $resolver->createTemplate($value)->render([
             'webspace' => $this->requestAnalyzer->getWebspace(),
         ]);
-        
+
         return $value;
     }
 
