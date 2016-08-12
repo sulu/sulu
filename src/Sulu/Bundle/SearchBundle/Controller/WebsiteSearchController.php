@@ -121,7 +121,7 @@ class WebsiteSearchController implements ContainerAwareInterface
     {
         $resolver = $this->container->get('twig');
         $value = $resolver->createTemplate($value)->render([
-            'webspace' => $this->requestAnalyzer->getWebspace()
+            'webspace' => $this->requestAnalyzer->getWebspace(),
         ]);
         return $value;
     }
