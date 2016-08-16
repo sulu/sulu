@@ -411,8 +411,9 @@ define([
                             method: 'POST',
                             paramName: 'fileVersion',
                             instanceName: this.options.instanceName,
+                            overlayContainer: this.$find('.overlay-content'),
                             dropzoneEnabled: false,
-                            cancelUploadOnOverlayClick: true
+                            cancelUploadOnOverlayClose: true
                         }
                     }
                 ]

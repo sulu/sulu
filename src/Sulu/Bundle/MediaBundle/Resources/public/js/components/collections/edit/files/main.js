@@ -426,6 +426,7 @@ define([
                             + '&locale=' + this.options.locale,
                             method: 'POST',
                             paramName: 'fileVersion',
+                            overlayContainer: '.content-column',
                             instanceName: this.options.instanceName
                         }
                     }
