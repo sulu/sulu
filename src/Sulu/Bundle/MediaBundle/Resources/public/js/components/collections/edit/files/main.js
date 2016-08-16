@@ -45,7 +45,7 @@ define([
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
             childrenSelector: '.children-container',
-            collectionTitleSelector: 'h2.content-title'
+            collectionTitleSelector: '.content-title h2'
         };
 
     return {

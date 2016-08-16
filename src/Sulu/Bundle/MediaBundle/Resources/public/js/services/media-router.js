@@ -18,6 +18,7 @@ define([
         rootCollection: 'media/collections/:locale',
         rootCollectionWithoutLocale: 'media/collections',
         editCollection: 'media/collections/:locale/edit::id/:content',
+        editCollectionWithoutLocale: 'media/collections/edit::id/:content',
         editMedia: 'media/collections/:locale/edit::id/:content/edit::mediaId',
         editMediaWithoutLocale: 'media/collections/edit::id/:content/edit::mediaId'
     };
@@ -93,6 +94,14 @@ define([
                 callback: function(locale, id) {
                     return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '" data-aura-locale="' + locale + '"/>';
                 }
+            });
+
+            // show a single collection with files and upload (without locale)
+            routes.push({
+                route: mediaRoutes.editCollectionWithoutLocale,
+                callback: function(id) {
+                    this.toCollection(id);
+                }.bind(this)
             });
 
             // show a single collection with files and upload
