@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Export a webspace in a specific format.
@@ -47,6 +48,32 @@ class WebspaceExportCommand extends ContainerAwareCommand
         $format = $input->getOption('format');
         $uuid = $input->getOption('uuid');
         $nodes = $input->getOption('nodes');
+
+        $output->writeln([
+            '<info>Language Export</info>',
+            '<info>===============</info>',
+            '',
+            '<info>Options</info>',
+            'Webspace: ' . $webspaceKey,
+            'Target: ' . $target,
+            'Locale: ' . $locale,
+            'Format: ' . $format,
+            'UUID: ' . $uuid,
+            '---------------',
+            '',
+        ]);
+
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('<question>Continue with this options?(y/n)</question> ', false);
+
+        if (!$helper->ask($input, $output, $question)) {
+            $output->writeln('<error>Abort!</error>');
+
+            return;
+        }
+
+        $output->writeln('<info>Continue!</info>');
+
         $ignoredNodes = $input->getOption('ignored-nodes');
         if ($nodes) {
             $nodes = explode(',', $nodes);
@@ -61,6 +88,7 @@ class WebspaceExportCommand extends ContainerAwareCommand
         $file = $webspaceExporter->export(
             $webspaceKey,
             $locale,
+            $output,
             $format,
             $uuid,
             $nodes,

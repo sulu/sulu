@@ -19,16 +19,17 @@ interface WebspaceInterface
     /**
      * @param string $webspaceKey
      * @param string $locale
+     * @param $output
      * @param string $format
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
-     *
      * @return string
      */
     public function export(
         $webspaceKey,
         $locale,
+        $output,
         $format = '1.2.xliff',
         $uuid = null,
         $nodes = null,
@@ -38,16 +39,17 @@ interface WebspaceInterface
     /**
      * @param string $webspaceKey
      * @param string $locale
+     * @param $output
      * @param string $format
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
-     *
      * @return string
      */
     public function getExportData(
         $webspaceKey,
         $locale,
+        $output,
         $format = '1.2.xliff',
         $uuid = null,
         $nodes = null,

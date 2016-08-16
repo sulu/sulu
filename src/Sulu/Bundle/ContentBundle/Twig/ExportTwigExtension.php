@@ -65,6 +65,14 @@ class ExportTwigExtension extends \Twig_Extension
      */
     public function escapeXmlContent($content)
     {
+        if (is_object($content) || is_array($content)) {
+            if (method_exists($content, 'getUuid')) {
+                return $content->getUuid();
+            }
+
+            return 'ERROR: wrong data';
+        }
+
         if (preg_match('/[<>{}"&]/', $content)) {
             $content = '<![CDATA[' . $content . ']]>';
         }

@@ -20,6 +20,7 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Templating\EngineInterface;
 
 class Webspace implements WebspaceInterface
@@ -89,18 +90,18 @@ class Webspace implements WebspaceInterface
     /**
      * @param string $webspaceKey
      * @param string $locale
+     * @param string $output
      * @param string $format
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
-     *
      * @return string
-     *
      * @throws \Exception
      */
     public function export(
         $webspaceKey,
         $locale,
+        $output,
         $format = '1.2.xliff',
         $uuid = null,
         $nodes = null,
@@ -112,23 +113,24 @@ class Webspace implements WebspaceInterface
 
         return $this->templating->render(
             $this->getTemplate($format),
-            $this->getExportData($webspaceKey, $locale, $format, $uuid, $nodes, $ignoredNodes)
+            $this->getExportData($webspaceKey, $locale, $output, $format, $uuid, $nodes, $ignoredNodes)
         );
     }
 
     /**
      * @param string $webspaceKey
      * @param string $locale
+     * @param string $output
      * @param string $format
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
-     *
      * @return array
      */
     public function getExportData(
         $webspaceKey,
         $locale,
+        $output,
         $format = '1.2.xliff',
         $uuid = null,
         $nodes = null,
@@ -138,6 +140,11 @@ class Webspace implements WebspaceInterface
         $documents = $this->getDocuments($webspaceKey, $locale, $uuid, $nodes, $ignoredNodes);
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
         $documentData = [];
+
+        $output->writeln('<info>Loading Data…</info>');
+
+        $progress = new ProgressBar($output, count($documents));
+        $progress->start();
 
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
@@ -151,7 +158,16 @@ class Webspace implements WebspaceInterface
                 'settings' => $settingData,
                 'extensions' => $extensionData,
             ];
+
+            $progress->advance();
         }
+
+        $progress->finish();
+
+        $output->writeln([
+            '',
+            '<info>Render Xliff…</info>',
+        ]);
 
         return [
             'webspaceKey' => $webspaceKey,
