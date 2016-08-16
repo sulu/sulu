@@ -196,7 +196,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 return false;
             }.bind(this));
 
-            this.$el.on('click', '.image', function(e) {
+            this.$el.on('click', '.edit .image', function(e) {
                 openMediaOverlay.call(this, $(e.currentTarget).parents('li'));
             }.bind(this));
         },
@@ -254,7 +254,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             item = _.defaults(item, this.getApiItem($element.data('id')));
 
             $view.find('.title').text(item.title);
-            $view.find('.description').text(this.cleanupText(item.description));
+            $view.find('.description').text(this.cropAndCleanupText(item.description));
 
             $view.find('.image').remove();
             if (!!item.mediaId) {
@@ -266,6 +266,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
 
         reset = function($element) {
             var $view = $element.find('.view'),
+                $edit = $element.find('.edit'),
                 id = $element.data('id'),
                 apiItem = this.getApiItem(id),
                 item = this.getItem(id);
@@ -276,7 +277,14 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
 
             this.setItem(id, item);
             $view.find('.title').text(apiItem.title);
-            $view.find('.description').text(this.cleanupText(apiItem.description));
+            $view.find('.description').text(this.cropAndCleanupText(apiItem.description));
+
+            $view.find('.image').remove();
+            if (!!item.mediaId) {
+                $view.find('.value').prepend(
+                    '<span class="image"><img src="' + $edit.find('.mediaId').attr('src') + '"/></span>'
+                );
+            }
         },
 
         openMediaOverlay = function($element) {
@@ -348,18 +356,25 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             return $('<div>').html('<div>' + text + '</div>').text();
         },
 
+        cropAndCleanupText: function(text, length) {
+            length = !!length ? length : 50;
+
+            return this.sandbox.util.cropTail(this.cleanupText(text), length);
+        },
+
         getItemContent: function(item) {
             this.apiItems[item.teaserId] = item;
             item = _.defaults(this.getItem(item.teaserId), item);
 
             return this.templates.item(
-                _.defaults({
+                _.defaults(item, {
                     translations: this.translations,
-                    descriptionText: this.cleanupText(item.description),
+                    descriptionText: this.cropAndCleanupText(item.description),
                     types: this.options.types,
                     translate: this.sandbox.translate,
-                    locale: this.options.locale
-                }, item)
+                    locale: this.options.locale,
+                    mediaId: null
+                })
             );
         },
 

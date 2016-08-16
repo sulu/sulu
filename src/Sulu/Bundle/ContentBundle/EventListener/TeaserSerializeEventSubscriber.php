@@ -64,16 +64,6 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $media = null;
-        if (null !== $teaser->getMediaId()) {
-            $mediaEntity = $this->mediaManager->getById($teaser->getMediaId(), $teaser->getLocale());
-
-            if (array_key_exists('50x50', $mediaEntity->getThumbnails())) {
-                $media = $mediaEntity->getThumbnails()['50x50'];
-            }
-        }
-
         $visitor->addData('teaserId', $context->accept(sprintf('%s;%s', $teaser->getType(), $teaser->getId())));
-        $visitor->addData('media', $context->accept($media));
     }
 }
