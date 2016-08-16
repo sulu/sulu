@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2821 [CustomUrlBundle]     Added language changer to settings/custom urls
     * BUGFIX      #2878 [ContentBundle]       Added instanceof check for shadow-behavior functions
     * FEATURE     #2875 [RouteBundle]         Added route-content-type
     * BUGFIX      #2513 [PersistanceBundle]   Fix doctrine generator commands
