@@ -57,54 +57,8 @@ define([
                 };
             });
 
-            // list the top collections with all media
-            sandbox.mvc.routes.push({
-                route: 'media/collections/:locale',
-                callback: function(locale) {
-                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-locale="' + locale + '"/>';
-                }
-            });
+            MediaRouter.initialize(app.sandbox.mvc.routes);
 
-            // list the top collections with all media (without locale)
-            sandbox.mvc.routes.push({
-                route: 'media/collections',
-                callback: function() {
-                    if (!!UserSettingsManager.getLastVisitedCollection()) {
-                        MediaRouter.toCollection(
-                            UserSettingsManager.getLastVisitedCollection(),
-                            UserSettingsManager.getMediaLocale()
-                        );
-                    } else {
-                        MediaRouter.toRootCollection(UserSettingsManager.getMediaLocale());
-                    }
-                }
-            });
-
-            // show a single collection with files and upload
-            sandbox.mvc.routes.push({
-                route: 'media/collections/:locale/edit::id/:content',
-                callback: function(locale, id) {
-                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '" data-aura-locale="' + locale + '"/>';
-                }
-            });
-
-            // show a single collection with files and upload
-            sandbox.mvc.routes.push({
-                route: 'media/collections/:locale/edit::id/:content/edit::mediaId',
-                callback: function(locale, id, content, mediaId) {
-                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '" data-aura-locale="' + locale + '" data-aura-edit-id="' + mediaId + '"/>';
-                }
-            });
-
-            // show a single collection with files and upload (without locale)
-            sandbox.mvc.routes.push({
-                route: 'media/collections/edit::id/:content/edit::mediaId',
-                callback: function(id, content, mediaId) {
-                    MediaRouter.toCollection(id, UserSettingsManager.getMediaLocale(), mediaId);
-                }
-            });
-
-            // ckeditor
             sandbox.ckeditor.addPlugin(
                 'mediaLink',
                 new MediaLinkPlugin(app.sandboxes.create('plugin-media-link'))

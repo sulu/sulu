@@ -35,7 +35,7 @@ define([
         },
 
         urls = {
-            children: '/admin/api/collections<% if (!!collection) { %>/<%= collection %><% } %>?locale=<%= locale %><% if (!!collection) { %>&depth=1<% } %>',
+            children: '/admin/api/collections<% if (!!collection) { %>/<%= collection %><% } %>?locale=<%= locale %>&sortBy=title<% if (!!collection) { %>&depth=1<% } %>',
             media: '/admin/api/media?locale=<%= locale %><% if (!!collection) { %>&collection=<%= collection %><% } %>'
         },
 
@@ -257,6 +257,9 @@ define([
                         tiles: {
                             fields: {
                                 description: ['mediaCount']
+                            },
+                            translations: {
+                                addNew: 'sulu.media.add-collection'
                             }
                         }
                     },
