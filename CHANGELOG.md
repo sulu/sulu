@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2803 [MediaBundle]         Add breadcrumb to collection's edit
     * FEATURE     #2799 [MediaBundle]         Implemented tiles view for navigating through collections
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
+    * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
 
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release
