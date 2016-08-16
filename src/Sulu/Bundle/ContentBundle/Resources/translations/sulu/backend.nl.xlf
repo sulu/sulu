@@ -747,6 +747,30 @@
                 <source>labels.error.remove-draft-desc</source>
                 <target>Het concept kon niet verwijderd worden.</target>
             </trans-unit>
+            <trans-unit id="60" resname="sulu-content.teaser.content">
+                <source>sulu-content.teaser.content</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="61" resname="sulu-content.teaser.edit">
+                <source>sulu-content.teaser.edit</source>
+                <target>Lokale info</target>
+            </trans-unit>
+            <trans-unit id="62" resname="sulu-content.teaser.edited">
+                <source>sulu-content.teaser.edited</source>
+                <target>bewerkte</target>
+            </trans-unit>
+            <trans-unit id="63" resname="sulu-content.teaser.reset">
+                <source>sulu-content.teaser.reset</source>
+                <target>Resetten</target>
+            </trans-unit>
+            <trans-unit id="64" resname="sulu-content.teaser.apply">
+                <source>sulu-content.teaser.apply</source>
+                <target>Toepassen</target>
+            </trans-unit>
+            <trans-unit id="65" resname="sulu-content.teaser.cancel">
+                <source>sulu-content.teaser.cancel</source>
+                <target>Annuleer</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

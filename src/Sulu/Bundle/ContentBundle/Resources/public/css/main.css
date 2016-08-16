@@ -428,90 +428,134 @@
   margin-top: -20px;
 }
 
-/* line 2, ../scss/modules/teaser-selection.scss */
+/* line 4, ../scss/modules/teaser-selection.scss */
 .teaser-selection .white-box .content {
   max-height: inherit;
 }
-/* line 6, ../scss/modules/teaser-selection.scss */
+/* line 8, ../scss/modules/teaser-selection.scss */
 .teaser-selection .dropdown-toggle::after {
   border-top: 6px solid #fff;
 }
-/* line 10, ../scss/modules/teaser-selection.scss */
+/* line 12, ../scss/modules/teaser-selection.scss */
 .teaser-selection .present-as.icon {
   width: auto;
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 15, ../scss/modules/teaser-selection.scss */
+/* line 17, ../scss/modules/teaser-selection.scss */
 .teaser-selection .present-as.icon .selected-text {
   font-size: 14px;
   padding-left: 5px;
 }
-/* line 21, ../scss/modules/teaser-selection.scss */
+/* line 23, ../scss/modules/teaser-selection.scss */
 .teaser-selection .husky-overlay-container.type-content .overlay-content {
   margin: 0px;
 }
-/* line 25, ../scss/modules/teaser-selection.scss */
+/* line 27, ../scss/modules/teaser-selection.scss */
 .teaser-selection .image .image-content {
-  font-size: 50px;
+  font-size: 46px;
   color: #ddd;
   position: relative;
-  top: 5px;
+  top: 8px;
 }
-/* line 33, ../scss/modules/teaser-selection.scss */
+/* line 35, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .value {
   float: left;
   width: 350px;
 }
-/* line 37, ../scss/modules/teaser-selection.scss */
+/* line 39, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .value .image {
   float: left;
 }
-/* line 41, ../scss/modules/teaser-selection.scss */
+/* line 43, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .value .description {
   line-height: 14px;
   margin-top: -10px;
   margin-bottom: 0;
   font-size: 12px;
 }
-/* line 49, ../scss/modules/teaser-selection.scss */
+/* line 51, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .type {
   float: left;
   width: 140px;
 }
-/* line 54, ../scss/modules/teaser-selection.scss */
+/* line 56, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .options {
   float: left;
   line-height: 50px;
 }
-/* line 59, ../scss/modules/teaser-selection.scss */
+/* line 61, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view::after {
   clear: both;
 }
-/* line 64, ../scss/modules/teaser-selection.scss */
+/* line 66, ../scss/modules/teaser-selection.scss */
 .teaser-selection .move, .teaser-selection .num, .teaser-selection .remove {
   vertical-align: top;
   line-height: 50px;
 }
-/* line 69, ../scss/modules/teaser-selection.scss */
+/* line 71, ../scss/modules/teaser-selection.scss */
 .teaser-selection .remove {
   top: inherit !important;
   margin-top: 5px !important;
 }
-/* line 74, ../scss/modules/teaser-selection.scss */
+/* line 76, ../scss/modules/teaser-selection.scss */
 .teaser-selection a.btn {
   display: inline-block;
 }
+/* line 81, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  top: -53px;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
+/* line 91, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: black;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 3px 3px;
+}
+/* line 104, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint span {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 24px;
+}
+/* line 111, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint:hover {
+  opacity: 1;
+}
 
-/* line 80, ../scss/modules/teaser-selection.scss */
+/* line 120, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view, .teaser-selection-container .edit {
   display: inline-block;
 }
-/* line 83, ../scss/modules/teaser-selection.scss */
+/* line 123, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view .hidden, .teaser-selection-container .edit .hidden {
   display: none;
 }
-/* line 88, ../scss/modules/teaser-selection.scss */
+/* line 128, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .edit {
   width: 90%;
 }

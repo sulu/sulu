@@ -47,8 +47,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 edited: 'sulu-content.teaser.edited',
                 reset: 'sulu-content.teaser.reset',
                 apply: 'sulu-content.teaser.apply',
-                cancel: 'sulu-content.teaser.cancel',
-                uploadDescription: 'sulu-content.teaser.upload-description'
+                cancel: 'sulu-content.teaser.cancel'
             }
         },
 
@@ -209,6 +208,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 $descriptionContainer = $edit.find('.description-container'),
                 $editorContainer = $('<textarea class="form-element component description"></textarea>');
 
+            $element.find('.move').hide();
+
             $descriptionContainer.children().remove();
             $descriptionContainer.append($editorContainer);
 
@@ -218,6 +219,15 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             $edit.find('.title').val(item.title || '');
             $edit.find('.description').val(item.description || '');
             $edit.find('.moreText').val(item.moreText || '');
+
+            $edit.find('.image-content').remove();
+            if (!!item.mediaId) {
+                $edit.find('.image').prepend(
+                    '<div class="image-content"><img class="mediaId" data-id="' + item.mediaId + '" src="/admin/media/' + item.mediaId + '?locale=' + this.options.locale + '&format=50x50"/></div>'
+                );
+            } else {
+                $edit.find('.image').prepend('<div class="fa-picture-o image-content"/>');
+            }
 
             this.sandbox.start([
                 {
@@ -234,6 +244,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
         hideEdit = function($element) {
             $element.find('.view').removeClass('hidden');
             $element.find('.edit').addClass('hidden');
+            $element.find('.move').show();
 
             stopEditComponents.call(this, $element);
         },
@@ -246,7 +257,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                     description: $edit.find('.description').val() || null,
                     moreText: $edit.find('.moreText').val() || null,
                     mediaId: $edit.find('.mediaId').data('id') || null
-                };
+                },
+                edited = this.isEdited(item);
 
             hideEdit.call(this, $element);
 
@@ -261,6 +273,11 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 $view.find('.value').prepend(
                     '<span class="image"><img src="' + $edit.find('.mediaId').attr('src') + '"/></span>'
                 );
+            }
+
+            $view.find('.edited').removeClass('hidden');
+            if (!edited) {
+                $view.find('.edited').addClass('hidden');
             }
         },
 
@@ -285,6 +302,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                     '<span class="image"><img src="' + $edit.find('.mediaId').attr('src') + '"/></span>'
                 );
             }
+
+            $view.find('.edited').addClass('hidden');
         },
 
         openMediaOverlay = function($element) {
@@ -362,18 +381,27 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             return this.sandbox.util.cropTail(this.cleanupText(text), length);
         },
 
+        isEdited: function(item) {
+            return !_.isEqual(_.keys(item).sort(), ['id', 'type']);
+        },
+
         getItemContent: function(item) {
+            var localItem = this.getItem(item.teaserId),
+                edited = this.isEdited(localItem);
+
             this.apiItems[item.teaserId] = item;
-            item = _.defaults(this.getItem(item.teaserId), item);
+            item = _.defaults(localItem, item);
 
             return this.templates.item(
                 _.defaults(item, {
+                    apiItem: this.apiItems[item.teaserId],
                     translations: this.translations,
                     descriptionText: this.cropAndCleanupText(item.description),
                     types: this.options.types,
                     translate: this.sandbox.translate,
                     locale: this.options.locale,
-                    mediaId: null
+                    mediaId: null,
+                    edited: edited
                 })
             );
         },

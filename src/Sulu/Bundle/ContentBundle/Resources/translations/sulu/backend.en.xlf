@@ -751,6 +751,26 @@
                 <source>sulu-content.teaser.content</source>
                 <target>Pages</target>
             </trans-unit>
+            <trans-unit id="61" resname="sulu-content.teaser.edit">
+                <source>sulu-content.teaser.edit</source>
+                <target>Local info</target>
+            </trans-unit>
+            <trans-unit id="62" resname="sulu-content.teaser.edited">
+                <source>sulu-content.teaser.edited</source>
+                <target>edited</target>
+            </trans-unit>
+            <trans-unit id="63" resname="sulu-content.teaser.reset">
+                <source>sulu-content.teaser.reset</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="64" resname="sulu-content.teaser.apply">
+                <source>sulu-content.teaser.apply</source>
+                <target>Apply</target>
+            </trans-unit>
+            <trans-unit id="65" resname="sulu-content.teaser.cancel">
+                <source>sulu-content.teaser.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

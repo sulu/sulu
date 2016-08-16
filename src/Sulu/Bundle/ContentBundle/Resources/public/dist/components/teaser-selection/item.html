@@ -11,7 +11,7 @@
 
     <div class="type">
         <span class="type-title"><%= translate(types[type].title) %></span>
-        <span class="edited hidden">(<%= translations.edited %>)</span>
+        <span class="edited <% if (!edited) { %>hidden<% } %>">(<%= translations.edited %>)</span>
     </div>
 
     <div class="options align-right">
@@ -27,15 +27,17 @@
             <% } else { %>
             <div class="fa-picture-o image-content"/>
             <% } %>
+
+            <div class="edit-hint"><span class="fa-pencil"/></div>
         </div>
         <div class="grid-col-11">
             <div>
-                <input type="text" class="form-element title" placeholder="<%= title %>"/>
+                <input type="text" class="form-element title" placeholder="<%= apiItem.title %>"/>
             </div>
             <div class="description-container">
             </div>
             <div>
-                <input type="text" class="form-element moreText" placeholder="<%= moreText %>"/>
+                <input type="text" class="form-element moreText" placeholder="<%= apiItem.moreText %>"/>
             </div>
         </div>
     </div>
