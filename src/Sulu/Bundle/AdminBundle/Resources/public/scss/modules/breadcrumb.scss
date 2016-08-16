@@ -1,0 +1,25 @@
+.sulu-breadcrumb {
+    padding-bottom: 5px;
+
+    .breadcrumb {
+        cursor: pointer;
+        font-size: $smallFontSize;
+        color: $grayLight;
+        @include transition(color 80ms);
+
+        &:hover {
+            color: $black;
+        }
+    }
+
+    .icon {
+        display: inline-block;
+        margin: 0 5px;
+        font-size: 9px;
+        color: $black;
+    }
+
+    .breadcrumb:last-child .icon {
+        display: none;
+    }
+}

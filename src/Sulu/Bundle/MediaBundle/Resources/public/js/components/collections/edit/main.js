@@ -34,10 +34,9 @@ define([
 
         header: function() {
 
-
             return {
                 title: this.data.title,
-
+                breadcrumb: this.getBreadcrumb(),
                 noBack: !this.data.id,
                 tabs: {
                     url: '/admin/content-navigations?alias=media',
@@ -101,6 +100,33 @@ define([
         },
 
         /**
+         * Creates and returns the breadcrumb object, from the current data.
+         *
+         * @returns {Object} the breadcrumb data
+         */
+        getBreadcrumb: function() {
+            if (!this.options.id) {
+                return [];
+            }
+
+            var breadcrumbs = [{
+                title: 'sulu.media.all',
+                data: {}
+            }];
+
+            this.data._embedded.breadcrumb.forEach(function(breadcrumb) {
+                breadcrumbs.push({
+                    title: breadcrumb.title,
+                    data: {
+                        id: breadcrumb.id
+                    }
+                });
+            }.bind(this));
+
+            return breadcrumbs;
+        },
+
+        /**
          * loads the collection-data into this.data. is automatically executed before component initialization
          * @returns {*}
          */
@@ -122,9 +148,7 @@ define([
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            if (!!this.data.id) {
-                UserSettingsManager.setLastVisitedCollection(this.data.id);
-            }
+            UserSettingsManager.setLastVisitedCollection(this.data.id);
 
             this.bindCustomEvents();
             this.bindOverlayEvents();
@@ -136,6 +160,7 @@ define([
          */
         bindCustomEvents: function() {
             this.sandbox.on('sulu.header.back', this.routeToParent.bind(this));
+            this.sandbox.on('sulu.header.breadcrumb-clicked', this.breadcrumbClickHandler.bind(this));
             this.sandbox.on('sulu.toolbar.add', this.addHandler.bind(this));
             this.sandbox.on('sulu.toolbar.delete-collection', this.deleteCollection.bind(this));
             this.sandbox.on('sulu.header.language-changed', this.languageChangedHandler.bind(this));
@@ -196,6 +221,19 @@ define([
          */
         addHandler: function() {
             OverlayManager.startCreateCollectionOverlay.call(this, this.data);
+        },
+
+        /**
+         * Handles the click on a breadcrumb item.
+         *
+         * @param {Object} crumb The data of the clicked breadcrumb item.
+         */
+        breadcrumbClickHandler: function(crumb) {
+            if (!!crumb.id) {
+                MediaRouter.toCollection(crumb.id, this.options.locale);
+            } else {
+                MediaRouter.toRootCollection(this.options.locale);
+            }
         },
 
         /**
