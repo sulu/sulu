@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2826 [AdminBundle]         Made the reset to the "show all" only happen, when the datagrid was in the "show selected" state before (husky)
     * FEATURE     #2803 [MediaBundle]         Add breadcrumb to collection's edit
     * ENHANCEMENT #2814 [MediaBundle]         Removed overlay from dropzone and implemented own overlay-style for dropzone (husky)
     * BUGFIX      #2817 [MediaBundle]         Made collection edit redirect to root collection when passed an invalid id
