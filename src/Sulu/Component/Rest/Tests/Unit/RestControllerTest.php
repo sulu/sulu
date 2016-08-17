@@ -12,9 +12,11 @@
 namespace Sulu\Component\Rest\Tests\Unit;
 
 use FOS\RestBundle\View\View;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Rest\Listing\ListRestHelper;
+use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 class RestControllerTest extends \PHPUnit_Framework_TestCase
@@ -24,21 +26,14 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected $controller;
 
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $mockedObject;
-
     public function setUp()
     {
-        $this->controller = $this->getMockForAbstractClass('\Sulu\Component\Rest\RestController');
-        $this->mockedObject = $this->getMock('stdClass', ['getId']);
-        $this->mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
+        $this->controller = $this->getMockForAbstractClass(RestController::class);
     }
 
     public function testResponseGetById()
     {
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseGetById');
+        $method = new \ReflectionMethod(RestController::class, 'responseGetById');
         $method->setAccessible(true);
 
         $id = 1;
@@ -55,7 +50,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testResponseGetByNotExistingId()
     {
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseGetById');
+        $method = new \ReflectionMethod(RestController::class, 'responseGetById');
         $method->setAccessible(true);
 
         $id = 1;
@@ -71,24 +66,19 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutEmpty()
     {
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
-        $mock->expects($this->never())->method('delete');
-        $mock->expects($this->never())->method('update');
-        $mock->expects($this->never())->method('add');
-
-        $delete = function () use ($mock) {
-            $mock->delete();
+        $delete = function () {
+            $this->fail('delete should not be called');
         };
 
-        $update = function () use ($mock) {
-            $mock->update();
+        $update = function () {
+            $this->fail('update should not be called');
         };
 
-        $add = function () use ($mock) {
-            $mock->add();
+        $add = function () {
+            $this->fail('add should not be called');
         };
 
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'processPut');
+        $method = new \ReflectionMethod(RestController::class, 'processPut');
         $method->setAccessible(true);
 
         $method->invoke($this->controller, [], [], $delete, $update, $add);
@@ -96,64 +86,64 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutWithDelete()
     {
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
-        $mock->expects($this->once())->method('delete');
-        $mock->expects($this->never())->method('update');
-        $mock->expects($this->never())->method('add');
-
-        $delete = function () use ($mock) {
-            $mock->delete();
+        $deleteCalled = false;
+        $delete = function () use (&$deleteCalled) {
+            $deleteCalled = true;
         };
 
-        $update = function () use ($mock) {
-            $mock->update();
+        $update = function () {
+            $this->fail('update should not be called');
         };
 
-        $add = function () use ($mock) {
-            $mock->add();
+        $add = function () {
+            $this->fail('add should not be called');
         };
 
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'processPut');
+        $method = new \ReflectionMethod(RestController::class, 'processPut');
         $method->setAccessible(true);
+
+        $object = $this->prophesize(ApiEntity::class);
+        $object->getId()->willReturn(1);
 
         $method->invoke(
             $this->controller,
             [
-                $this->mockedObject,
+                $object->reveal(),
             ],
             [],
             $delete,
             $update,
             $add
         );
+
+        $this->assertTrue($deleteCalled);
     }
 
     public function testProcessPutWithUpdate()
     {
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
-        $mock->expects($this->never())->method('delete');
-        $mock->expects($this->once())->method('update');
-        $mock->expects($this->never())->method('add');
-
-        $delete = function () use ($mock) {
-            $mock->delete();
+        $delete = function () {
+            $this->fail('delete should not be called');
         };
 
-        $update = function () use ($mock) {
-            $mock->update();
+        $updateCalled = false;
+        $update = function () use (&$updateCalled) {
+            $updateCalled = true;
         };
 
-        $add = function () use ($mock) {
-            $mock->add();
+        $add = function () {
+            $this->fail('add should not be called');
         };
 
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'processPut');
+        $method = new \ReflectionMethod(RestController::class, 'processPut');
         $method->setAccessible(true);
+
+        $object = $this->prophesize(ApiEntity::class);
+        $object->getId()->willReturn(1);
 
         $method->invoke(
             $this->controller,
             [
-                $this->mockedObject,
+                $object->reveal(),
             ],
             [
                 [
@@ -164,28 +154,26 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             $update,
             $add
         );
+
+        $this->assertTrue($updateCalled);
     }
 
     public function testProcessPutWithAdd()
     {
-        $mock = $this->getMock('stdClass', ['delete', 'update', 'add']);
-        $mock->expects($this->never())->method('delete');
-        $mock->expects($this->never())->method('update');
-        $mock->expects($this->once())->method('add');
-
-        $delete = function () use ($mock) {
-            $mock->delete();
+        $delete = function () {
+            $this->fail('delete should not be called');
         };
 
-        $update = function () use ($mock) {
-            $mock->update();
+        $update = function () {
+            $this->fail('update shoudl not be called');
         };
 
-        $add = function () use ($mock) {
-            $mock->add();
+        $addCalled = false;
+        $add = function () use (&$addCalled) {
+            $addCalled = true;
         };
 
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'processPut');
+        $method = new \ReflectionMethod(RestController::class, 'processPut');
         $method->setAccessible(true);
 
         $method->invoke(
@@ -200,11 +188,13 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             $update,
             $add
         );
+
+        $this->assertTrue($addCalled);
     }
 
     public function testDelete()
     {
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseDelete');
+        $method = new \ReflectionMethod(RestController::class, 'responseDelete');
         $method->setAccessible(true);
 
         $id = 1;
@@ -221,7 +211,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteWithNotExistingEntity()
     {
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseDelete');
+        $method = new \ReflectionMethod(RestController::class, 'responseDelete');
         $method->setAccessible(true);
 
         $id = 1;
@@ -237,7 +227,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteWithError()
     {
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseDelete');
+        $method = new \ReflectionMethod(RestController::class, 'responseDelete');
         $method->setAccessible(true);
 
         $id = 1;
@@ -266,7 +256,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $controller = $this->getMockForAbstractClass(
-            '\Sulu\Component\Rest\RestController',
+            RestController::class,
             [],
             '',
             true,
@@ -275,32 +265,19 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             ['get', 'getRequest']
         );
 
-        $listHelper = $this->getMock(
-            ListRestHelper::class,
-            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage'],
-            [],
-            '',
-            false
-        );
+        $listHelper = $this->prophesize(ListRestHelper::class);
+        $listHelper->find(null, $entities, [])->willReturn($entities);
+        $listHelper->getTotalNumberOfElements(null, $entities, [])->willReturn(3);
+        $listHelper->getTotalPages(3)->willReturn(3);
+        $listHelper->getLimit()->willReturn(1);
+        $listHelper->getPage()->willReturn(2);
 
-        $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
-        $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper->reveal()));
 
-        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
-        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
-
-        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
-
-        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
-        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => 'admin/api/contacts?page=2']);
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
-        $query->expects($this->any())->method('all')->will($this->returnValue([]));
-        $request->query = $query;
-
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
+        $method = new \ReflectionMethod(RestController::class, 'responseList');
         $method->setAccessible(true);
 
         $view = $method->invoke($controller, $entities)->getData();
@@ -350,7 +327,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $controller = $this->getMockForAbstractClass(
-            '\Sulu\Component\Rest\RestController',
+            RestController::class,
             [],
             '',
             true,
@@ -359,34 +336,26 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             ['get', 'getRequest']
         );
 
-        $listHelper = $this->getMock(
-            ListRestHelper::class,
-            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage'],
+        $listHelper = $this->prophesize(ListRestHelper::class);
+        $listHelper->find(null, $entities, [])->willReturn($entities);
+        $listHelper->getTotalNumberOfElements(null, $entities, [])->willReturn(3);
+        $listHelper->getTotalPages(3)->willReturn(3);
+        $listHelper->getLimit()->willReturn(4);
+        $listHelper->getPage()->willReturn(2);
+
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper->reveal()));
+
+        $request = new Request(
             [],
-            '',
-            false
+            [],
+            [],
+            [],
+            [],
+            ['REQUEST_URI' => 'admin/api/contacts?flat=true&page=2&limit=4&orderBy=lastName&sortOrder=asc']
         );
-
-        $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
-        $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
-
-        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(4));
-        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
-
-        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
-
-        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
-        $request->expects($this->any())->method('getRequestUri')->will(
-            $this->returnValue('admin/api/contacts?flat=true&page=2&limit=4&orderBy=lastName&sortOrder=asc')
-        );
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
-        $query->expects($this->any())->method('all')->will($this->returnValue([]));
-        $request->query = $query;
-
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
+        $method = new \ReflectionMethod(RestController::class, 'responseList');
         $method->setAccessible(true);
 
         $view = $method->invoke($controller, $entities)->getData();
@@ -421,7 +390,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $controller = $this->getMockForAbstractClass(
-            '\Sulu\Component\Rest\RestController',
+            RestController::class,
             [],
             '',
             true,
@@ -430,32 +399,19 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             ['get', 'getRequest']
         );
 
-        $listHelper = $this->getMock(
-            ListRestHelper::class,
-            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage'],
-            [],
-            '',
-            false
-        );
+        $listHelper = $this->prophesize(ListRestHelper::class);
+        $listHelper->find(null, $entities, [])->willReturn($entities);
+        $listHelper->getTotalNumberOfElements(null, $entities, [])->willReturn(3);
+        $listHelper->getTotalPages(3)->willReturn(3);
+        $listHelper->getLimit()->willReturn(1);
+        $listHelper->getPage()->willReturn(2);
 
-        $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
-        $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper->reveal()));
 
-        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
-        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
-
-        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
-
-        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
-        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => 'admin/api/contacts?page=2']);
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
-        $query->expects($this->any())->method('all')->will($this->returnValue([]));
-        $request->query = $query;
-
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'createHalResponse');
+        $method = new \ReflectionMethod(RestController::class, 'createHalResponse');
         $method->setAccessible(true);
 
         $view = $method->invoke($controller, $entities);
@@ -470,23 +426,17 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
     public function testHalLink()
     {
         $entities = [
-            $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
-            $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
+            $this->prophesize(ApiEntity::class),
+            $this->prophesize(ApiEntity::class),
         ];
 
-        $listHelper = $this->getMock(
-            ListRestHelper::class,
-            ['getLimit', 'getPage'],
-            [],
-            '',
-            false
-        );
+        $listHelper = $this->prophesize(ListRestHelper::class);
 
-        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
-        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
+        $listHelper->getLimit()->willReturn(1);
+        $listHelper->getPage()->willReturn(2);
 
         $controller = $this->getMockForAbstractClass(
-            '\Sulu\Component\Rest\RestController',
+            RestController::class,
             [],
             '',
             true,
@@ -494,17 +444,12 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             true,
             ['get', 'getRequest']
         );
-        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
-        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
-        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper->reveal()));
+
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/admin/api/contacts']);
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
-        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', ['all']);
-        $query->expects($this->any())->method('all')->will($this->returnValue([]));
-        $request->query = $query;
-
-        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'getHalLinks');
+        $method = new \ReflectionMethod(RestController::class, 'getHalLinks');
         $method->setAccessible(true);
 
         /** @var View $view */
