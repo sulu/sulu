@@ -15,9 +15,9 @@ use FOS\RestBundle\View\View;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\Listing\ListRestHelper;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 
 class RestControllerTest extends \PHPUnit_Framework_TestCase
 {

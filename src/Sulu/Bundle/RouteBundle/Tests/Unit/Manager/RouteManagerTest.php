@@ -57,7 +57,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->entity = $this->prophesize(RoutableInterface::class);
         $this->mappings = [
             get_class($this->entity->reveal()) => [
-                'service_id' => 'route_generator',
+                'generator' => 'route_generator',
                 'options' => [
                     'route_schema' => '/{title}',
                 ],

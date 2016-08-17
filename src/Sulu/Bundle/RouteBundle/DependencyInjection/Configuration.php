@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('className')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('service_id')->isRequired()->end()
+                            ->scalarNode('generator')->isRequired()->end()
                             ->arrayNode('options')
                                 ->isRequired()
                                 ->useAttributeAsKey('name')

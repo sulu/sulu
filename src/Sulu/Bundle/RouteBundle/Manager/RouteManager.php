@@ -68,7 +68,7 @@ class RouteManager implements RouteManagerInterface
         }
 
         $config = $this->mappings[get_class($entity)];
-        $path = $this->routeGenerators[$config['service_id']]->generate($entity, $config['options']);
+        $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
         $route = $this->routeRepository->createNew()
             ->setPath($path)
             ->setEntityClass(get_class($entity))
@@ -91,7 +91,7 @@ class RouteManager implements RouteManagerInterface
         }
 
         $config = $this->mappings[get_class($entity)];
-        $path = $this->routeGenerators[$config['service_id']]->generate($entity, $config['options']);
+        $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
         if ($path === $entity->getRoute()->getPath()) {
             return $entity->getRoute();
         }

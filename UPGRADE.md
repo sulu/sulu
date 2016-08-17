@@ -24,13 +24,10 @@ sulu_route:
 sulu_route:
     mappings:
         AppBundle\Entity\Example:
-            service_id: sulu_route.route_generator.by_schema
+            generator: by_schema
             options:
                 route_schema: /example/{object.getTitle()}
 ```
-
-Additionally the service-id of `sulu_route.generator.route_generator` is
-now `sulu_route.route_generator.by_schema`.
 
 ### Data-Navigation
 

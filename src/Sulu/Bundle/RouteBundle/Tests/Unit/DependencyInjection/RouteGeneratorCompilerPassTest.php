@@ -22,17 +22,20 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcess()
     {
-        $serviceId = 'sulu_route.route_generator.by_schema';
+        $generatorAlias = 'by_schema';
+        $serviceId = 'sulu_route.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 
         $container = $this->prophesize(ContainerBuilder::class);
+        $container->findTaggedServiceIds('sulu.route_generator')
+            ->willReturn([$serviceId => [['alias' => $generatorAlias]]]);
         $container->hasDefinition(RouteGeneratorCompilerPass::SERVICE_ID)->willReturn(true);
         $container->hasParameter(RouteGeneratorCompilerPass::PARAMETER_NAME)->willReturn(true);
         $container->getParameter(RouteGeneratorCompilerPass::PARAMETER_NAME)->willReturn(
             [
                 \stdClass::class => [
-                    'service_id' => $serviceId,
+                    'generator' => $generatorAlias,
                     'options' => [
                         'route_schema' => '/{entity.getTitle()}',
                     ],
@@ -47,14 +50,14 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
         $generator->getOptionsResolver(['route_schema' => '/{entity.getTitle()}'])
             ->willReturn($optionsResolver->reveal());
 
-        $container->get($serviceId)->willReturn($generator->reveal());
+        $container->get('sulu_route.route_generator')->willReturn($generator->reveal());
 
         $definition = $this->prophesize(Definition::class);
         $definition->replaceArgument(
             0,
             Argument::that(
-                function ($argument) use ($serviceId) {
-                    return 1 === count($argument) && $argument[$serviceId]->__toString() === $serviceId;
+                function ($argument) use ($generatorAlias, $serviceId) {
+                    return 1 === count($argument) && $argument[$generatorAlias]->__toString() === $serviceId;
                 }
             )
         )->shouldBeCalled();
@@ -66,7 +69,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessNoService()
     {
-        $serviceId = 'sulu_route.route_generator.by_schema';
+        $serviceId = 'route.generator.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 
@@ -79,7 +82,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessNoParameter()
     {
-        $serviceId = 'sulu_route.route_generator.by_schema';
+        $serviceId = 'route.generator.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 
@@ -93,11 +96,14 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessEmptyConfig()
     {
-        $serviceId = 'sulu_route.route_generator.by_schema';
+        $generatorAlias = 'by_schema';
+        $serviceId = 'route.generator.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 
         $container = $this->prophesize(ContainerBuilder::class);
+        $container->findTaggedServiceIds('sulu.route_generator')
+            ->willReturn([$serviceId => [['alias' => $generatorAlias]]]);
         $container->hasDefinition(RouteGeneratorCompilerPass::SERVICE_ID)->willReturn(true);
         $container->hasParameter(RouteGeneratorCompilerPass::PARAMETER_NAME)->willReturn(true);
         $container->getParameter(RouteGeneratorCompilerPass::PARAMETER_NAME)->willReturn([]);

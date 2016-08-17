@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RouteGeneratorCompilerPass implements CompilerPassInterface
 {
+    const TAG_NAME = 'sulu.route_generator';
     const SERVICE_ID = 'sulu_route.manager.route_manager';
     const PARAMETER_NAME = 'sulu_route.mappings';
 
@@ -34,12 +35,20 @@ class RouteGeneratorCompilerPass implements CompilerPassInterface
 
         $config = $container->getParameter(self::PARAMETER_NAME);
 
+        $generator = [];
+        foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {
+            foreach ($tags as $attributes) {
+                $generator[$attributes['alias']] = $id;
+            }
+        }
+
         $services = [];
         foreach ($config as $item) {
-            $services[$item['service_id']] = new Reference($item['service_id']);
+            $serviceId = $generator[$item['generator']];
+            $services[$item['generator']] = new Reference($serviceId);
 
             // validate options
-            $generator = $container->get($item['service_id']);
+            $generator = $container->get($serviceId);
             $optionsResolver = $generator->getOptionsResolver($item['options']);
             $optionsResolver->resolve($item['options']);
         }
