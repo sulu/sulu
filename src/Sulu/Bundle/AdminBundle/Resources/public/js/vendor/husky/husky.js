@@ -33139,12 +33139,22 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
          * @param records
          */
         addRecordsToDatagrid: function(records) {
-            this.sandbox.util.foreach(records, function(record) {
+            var recordsToAdd = [];
+            records.forEach(function(record) {
                 if (!!record.id) {
+                    recordsToAdd.push(record);
                     this.datagrid.data.embedded.push(record);
-                    this.datagrid.gridViews[this.datagrid.viewId].addRecord(record, true);
                 }
             }.bind(this));
+
+            // Add records all at once if possible
+            if (!!this.datagrid.gridViews[this.datagrid.viewId].addRecords) {
+                this.datagrid.gridViews[this.datagrid.viewId].addRecords(recordsToAdd, true);
+            } else {
+                recordsToAdd.forEach(function(record) {
+                    this.datagrid.gridViews[this.datagrid.viewId].addRecord(record, true);
+                }.bind(this));
+            }
         }
     };
 });
