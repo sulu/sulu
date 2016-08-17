@@ -14,6 +14,8 @@ namespace Sulu\Component\Rest\Tests\Unit;
 use FOS\RestBundle\View\View;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Symfony\Component\HttpFoundation\Request;
 
 class RestControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -274,8 +276,11 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $listHelper = $this->getMock(
-            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage']
+            ListRestHelper::class,
+            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage'],
+            [],
+            '',
+            false
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -286,7 +291,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
-        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
+        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
@@ -355,8 +360,11 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $listHelper = $this->getMock(
-            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage']
+            ListRestHelper::class,
+            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage'],
+            [],
+            '',
+            false
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -367,7 +375,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
-        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
+        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will(
             $this->returnValue('admin/api/contacts?flat=true&page=2&limit=4&orderBy=lastName&sortOrder=asc')
         );
@@ -423,8 +431,11 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         );
 
         $listHelper = $this->getMock(
-            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage']
+            ListRestHelper::class,
+            ['find', 'getTotalPages', 'getTotalNumberOfElements', 'getLimit', 'getPage'],
+            [],
+            '',
+            false
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -435,7 +446,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
-        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
+        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
@@ -464,8 +475,11 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $listHelper = $this->getMock(
-            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            ['getLimit', 'getPage']
+            ListRestHelper::class,
+            ['getLimit', 'getPage'],
+            [],
+            '',
+            false
         );
 
         $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
@@ -481,7 +495,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             ['get', 'getRequest']
         );
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
-        $request = $this->getMock('\Request', ['getRequestUri', 'getPathInfo']);
+        $request = $this->getMock(Request::class, ['getRequestUri', 'getPathInfo']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
