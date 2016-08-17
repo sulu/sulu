@@ -14,8 +14,16 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
     var defaults = {
         templates: {
             form: form,
-            url: '/admin/api/categories<% if (!!id) { %>/<%= id %><% } %>?locale=<%= locale %>',
-            keywordsUrl: '/admin/api/categories/<%= category %>/keywords<% if (typeof id !== "undefined") { %>/<%= id %><% } %><% if (typeof postfix !== "undefined") { %><%= postfix %><% } %>?locale=<%= locale %><% if (typeof ids !== "undefined") { %>&ids=<%= ids.join(",") %><% } %><% if (typeof force !== "undefined") { %>&force=<%= force %><% } %>'
+            keywordsUrl: [
+                '/admin/api/categories',
+                '/<%= category %>',
+                '/keywords',
+                '<% if (typeof id !== "undefined") { %>/<%= id %><% } %>',
+                '<% if (typeof postfix !== "undefined") { %><%= postfix %><% } %>',
+                '?locale=<%= locale %>',
+                '<% if (typeof ids !== "undefined") { %>&ids=<%= ids.join(",") %><% } %>',
+                '<% if (typeof force !== "undefined") { %>&force=<%= force %><% } %>'
+            ].join('')
         },
         translations: {
             name: 'public.name',
@@ -99,6 +107,10 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
          * @param {object} data
          */
         save: function(data) {
+            if (!!this.options.parent) {
+                data.parent = this.options.parent;
+            }
+
             CategoryManager.save(data, this.options.locale).then(this.saved.bind(this));
         },
 
@@ -142,7 +154,7 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
                             options: {
                                 position: 1,
                                 callback: function() {
-                                    this.deleteKeywords();
+                                    this.deleteKeywordsConfirmation();
                                 }.bind(this)
                             }
                         }
@@ -176,32 +188,36 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
         },
 
         /**
-         * Deletes the selected keywords.
+         * Ask for deleting the selected keywords.
          */
-        deleteKeywords: function() {
+        deleteKeywordsConfirmation: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.sulu.showDeleteDialog(function(confirmed) {
-                    if (confirmed === true) {
-                        this.sandbox.util.save(
-                            this.templates.keywordsUrl({
-                                category: this.data.id,
-                                locale: this.options.locale,
-                                ids: ids
-                            }),
-                            'DELETE'
-                        ).then(function() {
-                            for (var i = 0, length = ids.length; i < length; i++) {
-                                this.sandbox.emit('husky.datagrid.record.remove', ids[i]);
-                            }
-
-                            this.sandbox.emit(
-                                'sulu.labels.success.show',
-                                this.translations.keywordDeleteMessage,
-                                this.translations.keywordDeleteLabel
-                            );
-                        }.bind(this));
+                    if (!confirmed) {
+                        return;
                     }
+
+                    this.deleteKeywords(ids);
                 }.bind(this));
+            }.bind(this));
+        },
+
+        /**
+         * Deletes the selected keywords.
+         */
+        deleteKeywords: function(ids) {
+            var url = this.templates.keywordsUrl({category: this.data.id, locale: this.options.locale, ids: ids});
+
+            this.sandbox.util.save(url, 'DELETE').then(function() {
+                for (var i = 0, length = ids.length; i < length; i++) {
+                    this.sandbox.emit('husky.datagrid.record.remove', ids[i]);
+                }
+
+                this.sandbox.emit(
+                    'sulu.labels.success.show',
+                    this.translations.keywordDeleteMessage,
+                    this.translations.keywordDeleteLabel
+                );
             }.bind(this));
         },
 

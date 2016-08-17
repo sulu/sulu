@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['underscore', 'jquery', 'services/husky/util', 'services/husky/mediator'], function(_, $, Util, Mediator) {
+define(['underscore', 'jquery', 'services/husky/util'], function(_, $, Util) {
 
     'use strict';
 
@@ -20,13 +20,13 @@ define(['underscore', 'jquery', 'services/husky/util', 'services/husky/mediator'
 
     CategoryManager.prototype = {
         load: function(id, locale) {
-            return $.ajax(url({id: id, locale: locale}))
+            return Util.load(url({id: id, locale: locale}));
         },
         save: function(data, locale) {
-            return $.ajax(url({id: data.id, locale: locale}), {method: !!data.id ? 'PUT' : 'POST', data: data});
+            return Util.save(url({id: data.id, locale: locale}), !!data.id ? 'PUT' : 'POST', data);
         },
         delete: function(id, locale) {
-            return $.ajax(url({id: id, locale: locale}), {method: 'DELETE'});
+            return Util.save(url({id: id, locale: locale}), 'DELETE');
         }
     };
 

@@ -16,16 +16,9 @@ define([
 
     'use strict';
 
-    var defaults = {
-            templates: {
-                url: '/admin/api/categories<% if (!!id) { %>/<%= id %><% } %>?locale=<%= locale %>'
-            }
-        },
-        CATEGORIES_LOCALE = Config.get('sulu_category.user_settings.category_locale');
+    var CATEGORIES_LOCALE = Config.get('sulu_category.user_settings.category_locale');
 
     return {
-
-        defaults: defaults,
 
         collaboration: function() {
             if (!this.data || !this.data.id) {
