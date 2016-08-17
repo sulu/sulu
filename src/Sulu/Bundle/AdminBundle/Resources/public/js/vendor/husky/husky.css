@@ -6267,41 +6267,16 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
     width: 1360px;
   }
 }
-/* line 60, ../scss/modules/overlay.scss */
-.husky-overlay-container.dropzone {
-  width: 700px;
-}
-/* line 62, ../scss/modules/overlay.scss */
-.husky-overlay-container.dropzone .slides {
-  margin: 0;
-  padding: 0;
-}
-/* line 65, ../scss/modules/overlay.scss */
-.husky-overlay-container.dropzone .slides .slide {
-  width: 700px;
-}
-/* line 69, ../scss/modules/overlay.scss */
-.husky-overlay-container.dropzone .overlay-header {
-  display: none;
-}
-/* line 72, ../scss/modules/overlay.scss */
-.husky-overlay-container.dropzone .overlay-content {
-  margin-bottom: 20px;
-}
-/* line 75, ../scss/modules/overlay.scss */
-.husky-overlay-container.dropzone .overlay-footer {
-  display: none;
-}
-/* line 81, ../scss/modules/overlay.scss */
+/* line 61, ../scss/modules/overlay.scss */
 .husky-overlay-container.alert .overlay-header {
   height: 70px;
 }
-/* line 83, ../scss/modules/overlay.scss */
+/* line 63, ../scss/modules/overlay.scss */
 .husky-overlay-container.alert .overlay-header .title {
   line-height: normal;
   padding-top: 40px;
 }
-/* line 90, ../scss/modules/overlay.scss */
+/* line 70, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides {
   position: relative;
   left: 0px;
@@ -6312,21 +6287,21 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   white-space: nowrap;
   padding-bottom: 70px;
 }
-/* line 97, ../scss/modules/overlay.scss */
+/* line 77, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides .slide {
   display: inline-block;
   vertical-align: top;
   width: 580px;
 }
 
-/* line 105, ../scss/modules/overlay.scss */
+/* line 85, ../scss/modules/overlay.scss */
 .overlay-header {
   position: relative;
   background: #fff;
   border-radius: 3px 3px 0 0;
   height: 100px;
 }
-/* line 111, ../scss/modules/overlay.scss */
+/* line 91, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999;
   font-size: 24px;
@@ -6339,11 +6314,11 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   line-height: 100px;
   text-align: center;
 }
-/* line 125, ../scss/modules/overlay.scss */
+/* line 105, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .title {
   line-height: 75px;
 }
-/* line 129, ../scss/modules/overlay.scss */
+/* line 109, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .sub-title {
   font-size: 12px;
   color: #999;
@@ -6351,14 +6326,14 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   text-align: center;
 }
 
-/* line 138, ../scss/modules/overlay.scss */
+/* line 118, ../scss/modules/overlay.scss */
 .overlay-tabs {
   background: #fff;
   padding: 0 20px;
   border-top: 1px solid #e9e9e9;
 }
 
-/* line 144, ../scss/modules/overlay.scss */
+/* line 124, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 20px;
   border-top: 1px solid #ddd;
@@ -6375,45 +6350,45 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   content: ' ';
   display: block;
 }
-/* line 155, ../scss/modules/overlay.scss */
+/* line 135, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 115px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 161, ../scss/modules/overlay.scss */
+/* line 141, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 0;
 }
-/* line 165, ../scss/modules/overlay.scss */
+/* line 145, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 170, ../scss/modules/overlay.scss */
+/* line 150, ../scss/modules/overlay.scss */
 .overlay-footer .btn.just-text {
   background: transparent;
   color: #000;
   font-size: 12px;
 }
-/* line 177, ../scss/modules/overlay.scss */
+/* line 157, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 181, ../scss/modules/overlay.scss */
+/* line 161, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 186, ../scss/modules/overlay.scss */
+/* line 166, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
-/* line 191, ../scss/modules/overlay.scss */
+/* line 171, ../scss/modules/overlay.scss */
 .overlay-footer .loader {
   float: right;
   margin-left: 20px;
@@ -6421,12 +6396,12 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   width: 115px;
 }
 
-/* line 199, ../scss/modules/overlay.scss */
+/* line 179, ../scss/modules/overlay.scss */
 .overlay-content {
   position: relative;
   white-space: normal;
 }
-/* line 203, ../scss/modules/overlay.scss */
+/* line 183, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 10px 105px 40px;
   background: #fff;
@@ -6434,26 +6409,26 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   color: #999;
   text-align: center;
 }
-/* line 209, ../scss/modules/overlay.scss */
+/* line 189, ../scss/modules/overlay.scss */
 .overlay-content .message ul {
   border: 1px solid #ddd;
   list-style-position: inside;
   text-align: left;
   padding: 10px;
 }
-/* line 217, ../scss/modules/overlay.scss */
+/* line 197, ../scss/modules/overlay.scss */
 .overlay-content .language-changer {
   width: 80px;
   position: absolute;
   top: -60px;
   right: 0;
 }
-/* line 224, ../scss/modules/overlay.scss */
+/* line 204, ../scss/modules/overlay.scss */
 .overlay-content.content-spacing {
   margin: 20px;
 }
 
-/* line 229, ../scss/modules/overlay.scss */
+/* line 209, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper {
   width: 100%;
   height: 100%;
@@ -6467,7 +6442,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   background: rgba(0, 0, 0, 0.5);
   -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 241, ../scss/modules/overlay.scss */
+/* line 221, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper::before {
   content: '';
   display: inline-block;
@@ -11451,26 +11426,25 @@ label.husky-toggler-label ~ .input-description {
   position: relative;
   top: 0px;
   left: 0px;
-  padding-bottom: 20px;
   width: 100%;
   height: auto;
   border: 1px dashed #ddd;
   border-radius: 3px;
-  cursor: pointer;
   -moz-transition: opacity 300ms;
   -o-transition: opacity 300ms;
   -webkit-transition: opacity 300ms;
   transition: opacity 300ms;
 }
-/* line 25, ../scss/modules/dropzone.scss */
+/* line 24, ../scss/modules/dropzone.scss */
 .husky-dropzone .description {
   text-align: center;
-  height: 130px;
+  height: 150px;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   width: 100%;
-  z-index: 5;
+  z-index: 10;
+  cursor: pointer;
   -moz-transition: margin-top 300ms;
   -o-transition: margin-top 300ms;
   -webkit-transition: margin-top 300ms;
@@ -11493,12 +11467,19 @@ label.husky-toggler-label ~ .input-description {
 .husky-dropzone .description span {
   display: block;
 }
-/* line 51, ../scss/modules/dropzone.scss */
+/* line 49, ../scss/modules/dropzone.scss */
+.husky-dropzone .description * {
+  -moz-transition: opacity 300ms;
+  -o-transition: opacity 300ms;
+  -webkit-transition: opacity 300ms;
+  transition: opacity 300ms;
+}
+/* line 54, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items {
-  height: 130px;
+  height: 150px;
   padding: 20px 0 0 20px;
   position: relative;
-  z-index: 10;
+  z-index: 5;
 }
 /* line 33, ../scss/mixins.scss */
 .husky-dropzone .upload-items:after {
@@ -11506,7 +11487,7 @@ label.husky-toggler-label ~ .input-description {
   content: ' ';
   display: block;
 }
-/* line 58, ../scss/modules/dropzone.scss */
+/* line 61, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item {
   width: 70px;
   height: 90px;
@@ -11517,15 +11498,15 @@ label.husky-toggler-label ~ .input-description {
   margin-bottom: 20px;
   float: left;
 }
-/* line 68, ../scss/modules/dropzone.scss */
+/* line 71, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .success-content {
   display: none;
 }
-/* line 71, ../scss/modules/dropzone.scss */
+/* line 74, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .loading-content {
   padding-top: 20px;
 }
-/* line 74, ../scss/modules/dropzone.scss */
+/* line 77, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .file-size {
   text-align: center;
   font-size: 9px;
@@ -11534,11 +11515,11 @@ label.husky-toggler-label ~ .input-description {
   padding-top: 15px;
   padding-bottom: 5px;
 }
-/* line 81, ../scss/modules/dropzone.scss */
+/* line 84, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .file-size * {
   font-weight: normal;
 }
-/* line 85, ../scss/modules/dropzone.scss */
+/* line 88, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .progress {
   width: 50px;
   height: 6px;
@@ -11547,38 +11528,34 @@ label.husky-toggler-label ~ .input-description {
   border-radius: 3px;
   overflow: hidden;
 }
-/* line 92, ../scss/modules/dropzone.scss */
+/* line 95, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .progress .bar {
   height: 100%;
   background: #52B6CA;
   width: 0%;
 }
-/* line 98, ../scss/modules/dropzone.scss */
+/* line 101, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .icon {
   height: 25px;
   color: #999;
   font-size: 25px;
   text-align: center;
   display: block;
-  animation: ROTATE-ANIMATION 1s linear infinite;
-  -webkit-animation: ROTATE-ANIMATION 1s linear infinite;
-  -moz-animation: ROTATE-ANIMATION 1s linear infinite;
-  -o-animation: ROTATE-ANIMATION 1s linear infinite;
 }
-/* line 109, ../scss/modules/dropzone.scss */
+/* line 108, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image {
   padding: 10px 10px 5px 10px;
   height: 65px;
   line-height: 45px;
   text-align: center;
 }
-/* line 114, ../scss/modules/dropzone.scss */
+/* line 113, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .image img {
   vertical-align: bottom;
   max-width: 100%;
   max-height: 100%;
 }
-/* line 120, ../scss/modules/dropzone.scss */
+/* line 119, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .tick {
   text-align: center;
   color: #999;
@@ -11586,24 +11563,29 @@ label.husky-toggler-label ~ .input-description {
   line-height: 15px;
   display: block;
 }
-/* line 128, ../scss/modules/dropzone.scss */
+/* line 127, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success {
   border-color: #ddd;
-  background: transparent;
 }
-/* line 131, ../scss/modules/dropzone.scss */
+/* line 129, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success .success-content {
   display: block;
 }
-/* line 134, ../scss/modules/dropzone.scss */
+/* line 132, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success .loading-content {
   display: none;
 }
-/* line 142, ../scss/modules/dropzone.scss */
+/* line 139, ../scss/modules/dropzone.scss */
+.husky-dropzone .dropzone-loader {
+  position: relative;
+  z-index: 9002;
+  display: none;
+}
+/* line 146, ../scss/modules/dropzone.scss */
 .husky-dropzone.dz-drag-hover {
   opacity: 0.5;
 }
-/* line 146, ../scss/modules/dropzone.scss */
+/* line 150, ../scss/modules/dropzone.scss */
 .husky-dropzone.dropped {
   padding-bottom: 0;
   -moz-transition: padding 300ms;
@@ -11611,11 +11593,15 @@ label.husky-toggler-label ~ .input-description {
   -webkit-transition: padding 300ms;
   transition: padding 300ms;
 }
-/* line 150, ../scss/modules/dropzone.scss */
+/* line 154, ../scss/modules/dropzone.scss */
 .husky-dropzone.dropped .description {
-  margin-top: -150px;
+  margin-top: -170px;
 }
-/* line 155, ../scss/modules/dropzone.scss */
+/* line 157, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropped .description * {
+  opacity: 0;
+}
+/* line 162, ../scss/modules/dropzone.scss */
 .husky-dropzone.small {
   padding-bottom: 0;
   height: 70px;
@@ -11624,40 +11610,40 @@ label.husky-toggler-label ~ .input-description {
   -webkit-transition: height 300ms;
   transition: height 300ms;
 }
-/* line 160, ../scss/modules/dropzone.scss */
+/* line 167, ../scss/modules/dropzone.scss */
 .husky-dropzone.small .addition {
   display: none;
 }
-/* line 163, ../scss/modules/dropzone.scss */
+/* line 170, ../scss/modules/dropzone.scss */
 .husky-dropzone.small .description {
   height: 70px;
 }
-/* line 166, ../scss/modules/dropzone.scss */
+/* line 173, ../scss/modules/dropzone.scss */
 .husky-dropzone.small .description .icon {
   font-size: 25px;
   line-height: 25px;
 }
-/* line 170, ../scss/modules/dropzone.scss */
+/* line 177, ../scss/modules/dropzone.scss */
 .husky-dropzone.small .description .title {
   font-size: 18px;
   line-height: 18px;
 }
-/* line 175, ../scss/modules/dropzone.scss */
+/* line 182, ../scss/modules/dropzone.scss */
 .husky-dropzone.small .upload-items {
   height: 70px;
 }
-/* line 179, ../scss/modules/dropzone.scss */
+/* line 186, ../scss/modules/dropzone.scss */
 .husky-dropzone.small.dropped {
-  height: 130px;
+  height: 150px;
 }
-/* line 184, ../scss/modules/dropzone.scss */
+/* line 191, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay {
   width: 100%;
   height: 100%;
   padding: 0;
   border: none;
 }
-/* line 190, ../scss/modules/dropzone.scss */
+/* line 197, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container {
   width: 200px;
   height: 200px;
@@ -11681,7 +11667,7 @@ label.husky-toggler-label ~ .input-description {
   -webkit-transform: translate(-50%, -50%) scale(0.8);
   transform: translate(-50%, -50%) scale(0.8);
 }
-/* line 203, ../scss/modules/dropzone.scss */
+/* line 210, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .description {
   width: initial;
   height: initial;
@@ -11698,15 +11684,15 @@ label.husky-toggler-label ~ .input-description {
   -webkit-transition: opacity 100ms;
   transition: opacity 100ms;
 }
-/* line 211, ../scss/modules/dropzone.scss */
+/* line 218, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .description .title {
   display: none;
 }
-/* line 215, ../scss/modules/dropzone.scss */
+/* line 222, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .description .addition {
   color: #666;
 }
-/* line 220, ../scss/modules/dropzone.scss */
+/* line 227, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items {
   width: initial;
   height: initial;
@@ -11719,44 +11705,44 @@ label.husky-toggler-label ~ .input-description {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 226, ../scss/modules/dropzone.scss */
+/* line 233, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item {
   width: initial;
   height: initial;
   margin: 0;
   border: none;
 }
-/* line 232, ../scss/modules/dropzone.scss */
+/* line 239, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content {
   padding: 0;
 }
-/* line 235, ../scss/modules/dropzone.scss */
+/* line 242, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .icon {
   display: none;
 }
-/* line 239, ../scss/modules/dropzone.scss */
+/* line 246, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .file-size {
   padding-top: 0;
   padding-bottom: 6px;
   font-size: 14px;
   line-height: 14px;
 }
-/* line 246, ../scss/modules/dropzone.scss */
+/* line 253, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item .loading-content .progress {
   width: 80px;
   height: 8px;
   border-radius: 4px;
 }
-/* line 254, ../scss/modules/dropzone.scss */
+/* line 261, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item .success-content .image {
   display: none;
 }
-/* line 257, ../scss/modules/dropzone.scss */
+/* line 264, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay .dropzone-container .upload-items .item .success-content .tick {
   font-size: 72px;
   line-height: 72px;
 }
-/* line 267, ../scss/modules/dropzone.scss */
+/* line 274, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay:hover .dropzone-container, .husky-dropzone.overlay.dz-drag-hover .dropzone-container, .husky-dropzone.overlay.dropped .dropzone-container {
   -moz-transform: translate(-50%, -50%) scale(1);
   -ms-transform: translate(-50%, -50%) scale(1);
@@ -11764,18 +11750,98 @@ label.husky-toggler-label ~ .input-description {
   transform: translate(-50%, -50%) scale(1);
   opacity: 0.8;
 }
-/* line 273, ../scss/modules/dropzone.scss */
+/* line 280, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay.dz-drag-hover {
   opacity: 1;
 }
-/* line 275, ../scss/modules/dropzone.scss */
+/* line 282, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay.dz-drag-hover .dropzone-container {
   border: 1px dashed #666;
 }
-/* line 281, ../scss/modules/dropzone.scss */
+/* line 288, ../scss/modules/dropzone.scss */
 .husky-dropzone.overlay.dropped .description {
   margin: 0;
   opacity: 0;
+}
+/* line 295, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9000;
+  margin: 0;
+  padding: 20px;
+  border: none;
+  border-radius: 0;
+}
+/* line 307, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.8;
+  z-index: 9001;
+}
+/* line 319, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay .dropzone-container {
+  position: absolute;
+  top: 20px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  border-radius: 5px;
+  z-index: 9002;
+  border: 1px dashed #fff;
+  overflow: auto;
+  -moz-transition: top 150ms;
+  -o-transition: top 150ms;
+  -webkit-transition: top 150ms;
+  transition: top 150ms;
+}
+/* line 332, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay .dropzone-container .description {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  width: auto;
+  color: #fff;
+}
+/* line 337, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay .dropzone-container .description .icon {
+  margin-top: 0;
+  color: #fff;
+}
+/* line 343, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay .dropzone-loader {
+  display: block;
+  opacity: 0;
+  -moz-transition: opacity 150ms;
+  -o-transition: opacity 150ms;
+  -webkit-transition: opacity 150ms;
+  transition: opacity 150ms;
+}
+/* line 350, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay.dropped .dropzone-loader {
+  opacity: 1;
+}
+/* line 354, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay.dropped .dropzone-container {
+  top: 80px;
+}
+/* line 359, ../scss/modules/dropzone.scss */
+.husky-dropzone.dropzone-overlay:hover, .husky-dropzone.dropzone-overlay.dz-drag-hover {
+  opacity: 1;
 }
 
 /* line 69, ../scss/modules/input.scss */
