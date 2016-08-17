@@ -14,7 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
@@ -59,7 +59,7 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
         $categoryTranslation->addKeyword($exists ? $otherKeyword->reveal() : $keyword->reveal())
             ->shouldBeCalledTimes($has ? 0 : 1);
 
-        $category = $this->prophesize(Category::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
 
         $categoryTranslation->setChanged(Argument::any())->willReturn(null);
@@ -96,7 +96,7 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
         $keyword->isReferencedMultiple()->willReturn(false);
         $keyword->getId()->willReturn(null);
 
-        $category = $this->prophesize(Category::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $category->addTranslation(Argument::type(CategoryTranslation::class))->willReturn(null);
         $category->findTranslationByLocale($locale)->willReturn(false);
         $category->setChanged(Argument::any())->willReturn(null);
@@ -134,7 +134,7 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
         $categoryTranslation->removeKeyword($keyword->reveal())->shouldBeCalled();
         $categoryTranslation->setChanged(Argument::any())->shouldBeCalled();
 
-        $category = $this->prophesize(Category::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
         $category->setChanged(Argument::any())->shouldBeCalled();
 

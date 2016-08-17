@@ -15,12 +15,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -71,8 +71,8 @@ class KeywordController extends RestController implements ClassResourceInterface
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-        /** @var Category $category */
-        $category = $this->get('sulu_category.category_repository')->find($categoryId);
+        /** @var CategoryInterface $category */
+        $category = $this->getCategoryRepository()->find($categoryId);
 
         $fieldDescriptor = $this->getFieldDescriptors();
 
@@ -223,7 +223,7 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     private function getCategoryRepository()
     {
-        return $this->get('sulu_category.category_repository');
+        return $this->get('sulu.repository.category');
     }
 
     /**

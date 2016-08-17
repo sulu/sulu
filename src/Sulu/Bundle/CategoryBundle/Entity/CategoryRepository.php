@@ -22,6 +22,16 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     /**
      * {@inheritdoc}
      */
+    public function createNew()
+    {
+        $className = $this->getClassName();
+
+        return new $className();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isCategoryId($id)
     {
         $queryBuilder = $this->createQueryBuilder('category')

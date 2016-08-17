@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+
+    <mapped-superclass name="Sulu\Bundle\CategoryBundle\Entity\BaseCategory">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="key" column="category_key" type="string" length="255" nullable="true" unique="true"/>
+        <field name="defaultLocale" column="default_locale" type="string" length="5" nullable="false"/>
+
+        <field name="lft" type="integer" column="lft">
+            <gedmo:tree-left/>
+        </field>
+        <field name="rgt" type="integer" column="rgt">
+            <gedmo:tree-right/>
+        </field>
+        <field name="depth" type="integer" column="depth">
+            <gedmo:tree-level/>
+        </field>
+
+        <many-to-one field="parent" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="children">
+            <join-columns>
+                <join-column name="idCategoriesParent" referenced-column-name="id" on-delete="CASCADE"/>
+            </join-columns>
+            <gedmo:tree-parent/>
+        </many-to-one>
+
+        <gedmo:tree type="nested"/>
+    </mapped-superclass>
+</doctrine-mapping>

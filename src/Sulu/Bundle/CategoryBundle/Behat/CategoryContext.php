@@ -47,8 +47,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
      */
     public function theCategoryShouldNotExist($name)
     {
-        $category = $this->getEntityManager()
-            ->getRepository('SuluCategoryBundle:Category')->findOneByKey($name);
+        $category = $this->getContainer()->get('sulu.repository.category')->findOneByKey($name);
 
         if ($category) {
             throw new \Exception(sprintf('Category with key "%s" should NOT exist', $name));
@@ -60,8 +59,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
      */
     public function theCategoryShouldExist($name)
     {
-        $category = $this->getEntityManager()
-            ->getRepository('SuluCategoryBundle:Category')->findOneByKey($name);
+        $category = $this->getContainer()->get('sulu.repository.category')->findOneByKey($name);
 
         if (!$category) {
             throw new \Exception(sprintf('Category with key "%s" should exist', $name));

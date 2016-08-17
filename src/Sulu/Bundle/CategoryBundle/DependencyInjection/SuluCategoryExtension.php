@@ -17,6 +17,7 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
+use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -30,6 +31,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluCategoryExtension extends Extension implements PrependExtensionInterface
 {
+    use PersistenceExtensionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -46,6 +49,8 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        $this->configurePersistence($config['objects'], $container);
     }
 
     /**

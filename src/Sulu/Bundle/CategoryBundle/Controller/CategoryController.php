@@ -16,6 +16,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -37,7 +38,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected static $entityName = 'SuluCategoryBundle:Category';
+    protected static $entityName = CategoryInterface::class;
 
     /**
      * {@inheritdoc}
@@ -265,7 +266,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         // collect categories which children should get loaded
         $parentIdsToExpand = [$parentId];
         if ($expandIds) {
-            $pathIds = $this->get('sulu_category.category_repository')->findCategoryIdsBetween([$parentId], $expandIds);
+            $pathIds = $this->get('sulu.repository.category')->findCategoryIdsBetween([$parentId], $expandIds);
             $parentIdsToExpand = array_merge($parentIdsToExpand, $pathIds);
         }
 

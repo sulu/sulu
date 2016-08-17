@@ -12,7 +12,7 @@
 namespace Sulu\Component\Contact\Model;
 
 use Doctrine\Common\Collections\Collection;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
@@ -535,18 +535,18 @@ interface ContactInterface
     /**
      * Add category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return ContactInterface
      */
-    public function addCategory(Category $category);
+    public function addCategory(CategoryInterface $category);
 
     /**
      * Remove category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      */
-    public function removeCategory(Category $category);
+    public function removeCategory(CategoryInterface $category);
 
     /**
      * Get categories.

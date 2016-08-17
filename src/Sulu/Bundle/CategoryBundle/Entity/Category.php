@@ -19,77 +19,22 @@ use Sulu\Component\Security\Authentication\UserInterface;
 /**
  * Category.
  */
-class Category implements AuditableInterface
+class Category extends BaseCategory
 {
     /**
-     * @var int
+     * @var Collection
      */
-    private $lft;
-
-    /**
-     * @var int
-     */
-    private $rgt;
-
-    /**
-     * @var int
-     */
-    private $depth;
-
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $key;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale;
+    protected $meta;
 
     /**
      * @var Collection
      */
-    private $meta;
+    protected $translations;
 
     /**
      * @var Collection
      */
-    private $translations;
-
-    /**
-     * @var Collection
-     */
-    private $children;
-
-    /**
-     * @var Category
-     */
-    private $parent;
-
-    /**
-     * @var UserInterface
-     */
-    private $creator;
-
-    /**
-     * @var UserInterface
-     */
-    private $changer;
+    protected $children;
 
     /**
      * Constructor.
@@ -102,175 +47,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set id.
-     *
-     * @param int $id
-     *
-     * @return Category
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return Category
-     */
-    public function setLft($lft)
-    {
-        $this->lft = $lft;
-
-        return $this;
-    }
-
-    /**
-     * Get lft.
-     *
-     * @return int
-     */
-    public function getLft()
-    {
-        return $this->lft;
-    }
-
-    /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return Category
-     */
-    public function setRgt($rgt)
-    {
-        $this->rgt = $rgt;
-
-        return $this;
-    }
-
-    /**
-     * Get rgt.
-     *
-     * @return int
-     */
-    public function getRgt()
-    {
-        return $this->rgt;
-    }
-
-    /**
-     * Set depth.
-     *
-     * @param int $depth
-     *
-     * @return Category
-     */
-    public function setDepth($depth)
-    {
-        $this->depth = $depth;
-
-        return $this;
-    }
-
-    /**
-     * Get depth.
-     *
-     * @return int
-     */
-    public function getDepth()
-    {
-        return $this->depth;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Get key.
-     *
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * Set key.
-     *
-     * @param string $key
-     *
-     * @return Category
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * Set defaultLocale.
-     *
-     * @param string $defaultLocale
-     *
-     * @return Category
-     */
-    public function setDefaultLocale($defaultLocale)
-    {
-        $this->defaultLocale = $defaultLocale;
-
-        return $this;
-    }
-
-    /**
-     * Get defaultLocale.
-     *
-     * @return string
-     */
-    public function getDefaultLocale()
-    {
-        return $this->defaultLocale;
-    }
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Add meta.
-     *
-     * @param CategoryMeta $meta
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function addMeta(CategoryMeta $meta)
     {
@@ -280,9 +57,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Remove meta.
-     *
-     * @param CategoryMeta $meta
+     * {@inheritdoc}
      */
     public function removeMeta(CategoryMeta $meta)
     {
@@ -290,9 +65,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get meta.
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function getMeta()
     {
@@ -300,11 +73,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Add translations.
-     *
-     * @param CategoryTranslation $translations
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function addTranslation(CategoryTranslation $translations)
     {
@@ -314,9 +83,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Remove translations.
-     *
-     * @param CategoryTranslation $translations
+     * {@inheritdoc}
      */
     public function removeTranslation(CategoryTranslation $translations)
     {
@@ -324,9 +91,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get translations.
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function getTranslations()
     {
@@ -334,11 +99,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get single meta by locale.
-     *
-     * @param $locale
-     *
-     * @return CategoryTranslation
+     * {@inheritdoc}
      */
     public function findTranslationByLocale($locale)
     {
@@ -350,23 +111,17 @@ class Category implements AuditableInterface
     }
 
     /**
-     * {@see Category::addChild}.
-     *
-     * @deprecated use Category::addChild instead
+     * {@inheritdoc}
      */
-    public function addChildren(Category $child)
+    public function addChildren(CategoryInterface $child)
     {
         $this->addChild($child);
     }
 
     /**
-     * Add children.
-     *
-     * @param Category $child
-     *
-     * @return Category
+     * {@inheritdoc}
      */
-    public function addChild(Category $child)
+    public function addChild(CategoryInterface $child)
     {
         $this->children[] = $child;
 
@@ -374,118 +129,26 @@ class Category implements AuditableInterface
     }
 
     /**
-     * {@see Category::removeChild}.
-     *
-     * @deprecated use Category::addChild instead
+     * {@inheritdoc}
      */
-    public function removeChildren(Category $child)
+    public function removeChildren(CategoryInterface $child)
     {
         $this->removeChild($child);
     }
 
     /**
-     * Remove children.
-     *
-     * @param Category $child
+     * {@inheritdoc}
      */
-    public function removeChild(Category $child)
+    public function removeChild(CategoryInterface $child)
     {
         $this->children->removeElement($child);
     }
 
     /**
-     * Get children.
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Set parent.
-     *
-     * @param Category $parent
-     *
-     * @return Category
-     */
-    public function setParent(Category $parent = null)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent.
-     *
-     * @return Category
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return Category
-     */
-    public function setCreator(UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return Category
-     */
-    public function setChanger(UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Set changed.
-     *
-     * @param \DateTime $changed
-     *
-     * @return Category
-     */
-    public function setChanged(\DateTime $changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
-    }
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
     }
 }
