@@ -131,14 +131,27 @@ define([
          * @returns {*}
          */
         loadComponentData: function() {
+            var whenDataLoaded = $.Deferred();
+
             if (!!this.options.id) {
-                return CollectionManager.load(this.options.id, this.options.locale);
+                CollectionManager.load(this.options.id, this.options.locale)
+                    .then(function(data) {
+                        whenDataLoaded.resolve(data);
+                    })
+                    .fail(function() {
+                        whenDataLoaded.reject();
+                        UserSettingsManager.setLastVisitedCollection(null);
+                        MediaRouter.toRootCollection();
+                    });
+            } else {
+                // Data for the "root" collection
+                return {
+                    title: 'sulu.media.all',
+                    hasSub: true
+                };
             }
 
-            return {
-                title: 'sulu.media.all',
-                hasSub: true
-            };
+            return whenDataLoaded;
         },
 
         /**
