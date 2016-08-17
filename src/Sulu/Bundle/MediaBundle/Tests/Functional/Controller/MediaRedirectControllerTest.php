@@ -12,7 +12,7 @@
 namespace Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -64,12 +64,12 @@ class MediaRedirectControllerTest extends SuluTestCase
     private $videoType;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category2;
 
@@ -127,7 +127,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     {
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
@@ -150,7 +150,7 @@ class MediaRedirectControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('de');
 

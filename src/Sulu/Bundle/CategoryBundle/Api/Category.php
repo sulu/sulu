@@ -14,7 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Api;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;

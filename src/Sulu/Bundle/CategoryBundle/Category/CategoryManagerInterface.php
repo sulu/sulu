@@ -140,7 +140,7 @@ interface CategoryManagerInterface
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
      * and provides neat getters and setters.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category
      * @param string   $locale
      *
      * @return Category
@@ -152,7 +152,7 @@ interface CategoryManagerInterface
     /**
      * Same as getApiObject, but takes multiple category-entities.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category[] $categories
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
      * @param string     $locale
      *
      * @return Category

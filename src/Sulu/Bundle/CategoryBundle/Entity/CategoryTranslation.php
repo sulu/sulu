@@ -37,7 +37,7 @@ class CategoryTranslation implements AuditableInterface
     private $id;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category;
 
@@ -132,11 +132,11 @@ class CategoryTranslation implements AuditableInterface
     /**
      * Set category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return CategoryTranslation
      */
-    public function setCategory(Category $category)
+    public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;
 
@@ -146,7 +146,7 @@ class CategoryTranslation implements AuditableInterface
     /**
      * Get category.
      *
-     * @return Category
+     * @return CategoryInterface
      */
     public function getCategory()
     {
@@ -158,7 +158,7 @@ class CategoryTranslation implements AuditableInterface
      *
      * @param Keyword $keyword
      *
-     * @return Category
+     * @return CategoryInterface
      */
     public function addKeyword(Keyword $keyword)
     {

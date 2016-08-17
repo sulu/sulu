@@ -37,7 +37,7 @@ class CategoryMeta
     private $id;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category;
 
@@ -126,11 +126,11 @@ class CategoryMeta
     /**
      * Set category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return CategoryMeta
      */
-    public function setCategory(Category $category)
+    public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;
 
@@ -140,7 +140,7 @@ class CategoryMeta
     /**
      * Get category.
      *
-     * @return Category
+     * @return CategoryInterface
      */
     public function getCategory()
     {

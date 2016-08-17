@@ -12,7 +12,8 @@
 namespace Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -25,12 +26,12 @@ class KeywordControllerTest extends SuluTestCase
     private $entityManager;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category1;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category2;
 
@@ -45,7 +46,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        $this->category1 = new Category();
+        $this->category1 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $this->category1->setKey('1');
         $this->category1->setDefaultLocale('de');
         $categoryTranslation1 = new CategoryTranslation();
@@ -54,7 +55,7 @@ class KeywordControllerTest extends SuluTestCase
         $categoryTranslation1->setLocale('de');
         $this->category1->addTranslation($categoryTranslation1);
 
-        $this->category2 = new Category();
+        $this->category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $this->category2->setKey('2');
         $this->category2->setDefaultLocale('de');
         $categoryTranslation2 = new CategoryTranslation();

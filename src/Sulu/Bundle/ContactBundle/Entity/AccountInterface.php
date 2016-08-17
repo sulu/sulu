@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
@@ -604,18 +604,18 @@ interface AccountInterface
     /**
      * Add categories.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return Account
      */
-    public function addCategory(Category $category);
+    public function addCategory(CategoryInterface $category);
 
     /**
      * Remove categories.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      */
-    public function removeCategory(Category $category);
+    public function removeCategory(CategoryInterface $category);
 
     /**
      * Get categories.

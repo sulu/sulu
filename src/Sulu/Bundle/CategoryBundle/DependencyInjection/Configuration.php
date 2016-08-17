@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -49,6 +50,32 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
+        $this->addObjectsSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    /**
+     * Adds `objects` section.
+     *
+     * @param ArrayNodeDefinition $node
+     */
+    private function addObjectsSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('objects')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('category')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\Category')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryRepository')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }

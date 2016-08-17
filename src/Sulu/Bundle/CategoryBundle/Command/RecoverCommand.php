@@ -198,6 +198,6 @@ class RecoverCommand extends ContainerAwareCommand
      */
     private function getCategoryRepository()
     {
-        return $this->getContainer()->get('sulu_category.category_repository');
+        return $this->getContainer()->get('sulu.repository.category');
     }
 }

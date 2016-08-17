@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -962,7 +962,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function addCategory(Category $category)
+    public function addCategory(CategoryInterface $category)
     {
         $this->categories[] = $category;
 
@@ -972,7 +972,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeCategory(Category $category)
+    public function removeCategory(CategoryInterface $category)
     {
         $this->categories->removeElement($category);
     }

@@ -17,7 +17,7 @@ use JMS\Serializer\SerializerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category as EntityCategory;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as EntityCategory;
 use Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;

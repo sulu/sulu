@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
+
 /**
  * Defines the methods for the doctrine repository which enables accessing the categories.
  */
-interface CategoryRepositoryInterface
+interface CategoryRepositoryInterface extends RepositoryInterface
 {
     /**
      * Returns true if the given id is assigned to an existing category.
@@ -40,7 +42,7 @@ interface CategoryRepositoryInterface
      *
      * @param int $id
      *
-     * @return Category|null
+     * @return CategoryInterface|null
      */
     public function findCategoryById($id);
 
@@ -50,7 +52,7 @@ interface CategoryRepositoryInterface
      *
      * @param string $key
      *
-     * @return Category|null
+     * @return CategoryInterface|null
      */
     public function findCategoryByKey($key);
 
@@ -59,7 +61,7 @@ interface CategoryRepositoryInterface
      *
      * @param array $ids The ids to load
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      *
      * @deprecated Use ::findCategoriesByIds instead
      */
@@ -70,7 +72,7 @@ interface CategoryRepositoryInterface
      *
      * @param array $ids
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      */
     public function findCategoriesByIds(array $ids);
 
@@ -92,7 +94,7 @@ interface CategoryRepositoryInterface
      *
      * @param null $parentId
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      */
     public function findChildrenCategoriesByParentId($parentId = null);
 
@@ -101,7 +103,7 @@ interface CategoryRepositoryInterface
      *
      * @param int         $key       the key of the category to return the children for
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      *
      * @deprecated Use ::findChildrenCategoriesByParentKey instead
      */
@@ -113,7 +115,7 @@ interface CategoryRepositoryInterface
      *
      * @param null $parentKey
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      */
     public function findChildrenCategoriesByParentKey($parentKey = null);
 

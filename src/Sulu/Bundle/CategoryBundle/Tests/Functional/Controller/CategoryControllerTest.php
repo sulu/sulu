@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -19,27 +19,27 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class CategoryControllerTest extends SuluTestCase
 {
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category1;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category2;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category3;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category4;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $meta1;
 
@@ -55,7 +55,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->purgeDatabase();
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
@@ -87,7 +87,7 @@ class CategoryControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('en');
         $this->category2 = $category2;
@@ -125,7 +125,7 @@ class CategoryControllerTest extends SuluTestCase
 
         /* Third Category (child of first)
         -------------------------------------*/
-        $category3 = new Category();
+        $category3 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category3->setParent($category);
         $category3->setDefaultLocale('en');
         $this->category3 = $category3;
@@ -149,7 +149,7 @@ class CategoryControllerTest extends SuluTestCase
 
         /* Fourth Category (child of third)
         -------------------------------------*/
-        $category4 = new Category();
+        $category4 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category4->setParent($category3);
         $category4->setDefaultLocale('en');
         $this->category4 = $category4;
@@ -242,7 +242,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testGetByIdLocaleFallback()
     {
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setDefaultLocale('en');
 
         $categoryTrans = new CategoryTranslation();

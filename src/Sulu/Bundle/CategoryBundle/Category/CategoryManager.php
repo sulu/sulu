@@ -14,8 +14,8 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
@@ -35,8 +35,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class CategoryManager implements CategoryManagerInterface
 {
-    public static $categoryEntityName = 'SuluCategoryBundle:Category';
-
+    public static $categoryEntityName = CategoryInterface::class;
     public static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
 
     /**
@@ -307,7 +306,7 @@ class CategoryManager implements CategoryManagerInterface
         if ($this->getProperty($data, 'id')) {
             $categoryEntity = $this->findById($this->getProperty($data, 'id'), $locale)->getEntity();
         } else {
-            $categoryEntity = new CategoryEntity();
+            $categoryEntity = $this->categoryRepository->createNew();
         }
 
         // set user properties if userId is set. else these properties are set by the UserBlameSubscriber on save.
@@ -384,7 +383,7 @@ class CategoryManager implements CategoryManagerInterface
      * and provides neat getters and setters. If the given object is already an API-object,
      * the respective entity is used for wrapping.
      *
-     * @param CategoryEntity $category
+     * @param $category
      * @param string $locale
      *
      * @return null|CategoryWrapper
@@ -394,7 +393,7 @@ class CategoryManager implements CategoryManagerInterface
         if ($category instanceof CategoryWrapper) {
             $category = $category->getEntity();
         }
-        if (!$category instanceof CategoryEntity) {
+        if (!$category instanceof CategoryInterface) {
             return;
         }
 

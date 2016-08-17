@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
@@ -43,7 +43,7 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save(Keyword $keyword, Category $category, $force = null)
+    public function save(Keyword $keyword, CategoryInterface $category, $force = null)
     {
         // overwrite existing keyword if force is present
         if (null === $force
@@ -71,12 +71,12 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Overwrites given keyword.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      * @param Keyword $keyword
      *
      * @return Keyword
      */
-    private function handleOverwrite(Keyword $keyword, Category $category)
+    private function handleOverwrite(Keyword $keyword, CategoryInterface $category)
     {
         if (null !== $synonym = $this->findSynonym($keyword)) {
             // reset entity and remove it from category
@@ -112,12 +112,12 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Detach given and create new keyword entity.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      * @param Keyword $keyword
      *
      * @return Keyword
      */
-    private function handleDetach(Keyword $keyword, Category $category)
+    private function handleDetach(Keyword $keyword, CategoryInterface $category)
     {
         $keywordString = $keyword->getKeyword();
         $keywordLocale = $keyword->getLocale();
@@ -142,7 +142,7 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(Keyword $keyword, Category $category)
+    public function delete(Keyword $keyword, CategoryInterface $category)
     {
         $categoryTranslation = $category->findTranslationByLocale($keyword->getLocale());
 
@@ -179,12 +179,12 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Creates a new category translation for a given category and locale.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      * @param $locale
      *
      * @return CategoryTranslation
      */
-    private function createTranslation(Category $category, $locale)
+    private function createTranslation(CategoryInterface $category, $locale)
     {
         $categoryTranslation = new CategoryTranslation();
         $categoryTranslation->setLocale($locale);

@@ -16,8 +16,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -74,8 +74,8 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetApiObject()
     {
-        $entity = new Category();
-        $wrapper = $this->categoryManager->getApiObject($entity, 'en');
+        $entity = $this->prophesize(CategoryInterface::class);
+        $wrapper = $this->categoryManager->getApiObject($entity->reveal(), 'en');
         $this->assertTrue($wrapper instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
 
         $wrapper2 = $this->categoryManager->getApiObject($wrapper, 'en');
@@ -87,20 +87,23 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetApiObjects()
     {
+        $wrapperEntity = $this->prophesize(\Sulu\Bundle\CategoryBundle\Api\Category::class);
+        $wrapperEntity->getEntity()->willReturn($this->prophesize(CategoryInterface::class)->reveal());
+
         $entities = [
-            new Category(),
+            $this->prophesize(CategoryInterface::class)->reveal(),
             null,
-            new Category(),
-            new Category(),
+            $this->prophesize(CategoryInterface::class)->reveal(),
+            $wrapperEntity->reveal(),
             null,
         ];
 
         $wrappers = $this->categoryManager->getApiObjects($entities, 'en');
 
         $this->assertTrue($wrappers[0] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
+        $this->assertEquals(null, $wrappers[1]);
         $this->assertTrue($wrappers[2] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
         $this->assertTrue($wrappers[3] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
-        $this->assertEquals(null, $wrappers[1]);
         $this->assertEquals(null, $wrappers[4]);
     }
 
@@ -111,7 +114,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         $translation = $this->prophesize(CategoryTranslation::class);
         $keyword1 = $this->prophesize(Keyword::class);
         $keyword2 = $this->prophesize(Keyword::class);
-        $category = $this->prophesize(Category::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
         $category->getTranslations()->willReturn([$translation->reveal()]);
 

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -297,7 +298,7 @@ class ContactControllerTest extends SuluTestCase
 
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
@@ -322,7 +323,7 @@ class ContactControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('en');
 
