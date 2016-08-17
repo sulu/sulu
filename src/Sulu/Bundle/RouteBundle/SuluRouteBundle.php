@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Sulu\Bundle\RouteBundle\DependencyInjection\RouteGeneratorCompilerPass;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,6 +32,7 @@ class SuluRouteBundle extends Bundle
     {
         parent::build($container);
 
+        $container->addCompilerPass(new RouteGeneratorCompilerPass());
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass('sulu_route.routing.defaults_provider', 'sulu_route.defaults_provider')
         );

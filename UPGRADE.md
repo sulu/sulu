@@ -7,6 +7,31 @@
 The `ListRestHelper` has changed its constructor, it takes the `RequestStack`
 instead of a `Request` now.
 
+### RouteGenerator
+
+The configuration for the route-generator has changed:
+
+**Before:**
+```
+sulu_route:
+    mappings:
+        AppBundle\Entity\Example:
+            route_schema: /example/{object.getTitle()}
+```
+
+**After:**
+```
+sulu_route:
+    mappings:
+        AppBundle\Entity\Example:
+            service_id: sulu_route.route_generator.by_schema
+            options:
+                route_schema: /example/{object.getTitle()}
+```
+
+Additionally the service-id of `sulu_route.generator.route_generator` is
+now `sulu_route.route_generator.by_schema`.
+
 ### Data-Navigation
 
 The class `DataNavigationItem` got removed and is not supported

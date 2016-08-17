@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="sulu_route.generator.route_generator" class="Sulu\Bundle\RouteBundle\Generator\RouteGenerator">
+        <service id="sulu_route.route_generator.by_schema" class="Sulu\Bundle\RouteBundle\Generator\RouteGenerator">
             <argument type="service" id="sulu_route.generator.expression_token_provider"/>
             <argument type="service" id="sulu_document_manager.slugifier"/>
         </service>

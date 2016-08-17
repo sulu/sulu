@@ -51,8 +51,17 @@ class RouteGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->slugifier->slugify('Test Title')->willReturn('test-title');
         $this->slugifier->slugify(1)->willReturn('1');
 
-        $path = $this->generator->generate($entity->reveal(), '/prefix/{object.getTitle()}/postfix/{object.getId()}');
+        $path = $this->generator->generate(
+            $entity->reveal(),
+            ['route_schema' => '/prefix/{object.getTitle()}/postfix/{object.getId()}']
+        );
 
         $this->assertEquals('/prefix/test-title/postfix/1', $path);
+    }
+
+    public function testGetOptionsResolver()
+    {
+        $optionsResolver = $this->generator->getOptionsResolver(['route_schema' => '/{entity.getTitle()}']);
+        $this->assertEquals(['route_schema'], $optionsResolver->getRequiredOptions());
     }
 }
