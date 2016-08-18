@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### ListRestHelper
+
+The `ListRestHelper` has changed its constructor, it takes the `RequestStack`
+instead of a `Request` now.
+
 ### Data-Navigation
 
 The class `DataNavigationItem` got removed and is not supported
