@@ -75,7 +75,7 @@ class Category extends BaseCategory
     /**
      * {@inheritdoc}
      */
-    public function addTranslation(CategoryTranslation $translations)
+    public function addTranslation(CategoryTranslationInterface $translations)
     {
         $this->translations[] = $translations;
 
@@ -85,7 +85,7 @@ class Category extends BaseCategory
     /**
      * {@inheritdoc}
      */
-    public function removeTranslation(CategoryTranslation $translations)
+    public function removeTranslation(CategoryTranslationInterface $translations)
     {
         $this->translations->removeElement($translations);
     }
@@ -104,7 +104,7 @@ class Category extends BaseCategory
     public function findTranslationByLocale($locale)
     {
         return $this->translations->filter(
-            function (CategoryTranslation $translation) use ($locale) {
+            function (CategoryTranslationInterface $translation) use ($locale) {
                 return $translation->getLocale() === $locale;
             }
         )->first();

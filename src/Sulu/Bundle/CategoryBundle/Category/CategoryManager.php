@@ -18,7 +18,8 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
@@ -66,6 +67,11 @@ class CategoryManager implements CategoryManagerInterface
     private $categoryMetaRepository;
 
     /**
+     * @var CategoryTranslationRepositoryInterface
+     */
+    private $categoryTranslationRepository;
+
+    /**
      * @var KeywordManagerInterface
      */
     private $keywordManager;
@@ -78,6 +84,7 @@ class CategoryManager implements CategoryManagerInterface
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         CategoryMetaRepositoryInterface $categoryMetaRepository,
+        CategoryTranslationRepositoryInterface $categoryTranslationRepository,
         UserRepositoryInterface $userRepository,
         KeywordManagerInterface $keywordManager,
         ObjectManager $em,
@@ -87,6 +94,7 @@ class CategoryManager implements CategoryManagerInterface
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->categoryMetaRepository = $categoryMetaRepository;
+        $this->categoryTranslationRepository = $categoryTranslationRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->keywordManager = $keywordManager;
     }
@@ -321,7 +329,10 @@ class CategoryManager implements CategoryManagerInterface
         $categoryWrapper = $this->getApiObject($categoryEntity, $locale);
 
         if (!$patch || $this->getProperty($data, 'name')) {
-            $categoryWrapper->setName($this->getProperty($data, 'name', null));
+            $translationEntity = $this->categoryTranslationRepository->createNew();
+            $translationEntity->setLocale($locale);
+            $translationEntity->setTranslation($this->getProperty($data, 'name', null));
+            $categoryWrapper->setTranslation($translationEntity);
         }
         $key = $this->getProperty($data, 'key');
         if (!$patch || $key) {

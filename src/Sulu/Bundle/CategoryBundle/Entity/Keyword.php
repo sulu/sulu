@@ -130,11 +130,11 @@ class Keyword implements AuditableInterface
     /**
      * Add category-translation.
      *
-     * @param CategoryTranslation $categoryTranslation
+     * @param CategoryTranslationInterface $categoryTranslation
      *
      * @return Keyword
      */
-    public function addCategoryTranslation(CategoryTranslation $categoryTranslation)
+    public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
     {
         $this->categoryTranslations[] = $categoryTranslation;
 
@@ -144,9 +144,9 @@ class Keyword implements AuditableInterface
     /**
      * Remove category-translation.
      *
-     * @param CategoryTranslation $categoryTranslation
+     * @param CategoryTranslationInterface $categoryTranslation
      */
-    public function removeCategoryTranslation(CategoryTranslation $categoryTranslation)
+    public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
     {
         $this->categoryTranslations->removeElement($categoryTranslation);
     }

@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
@@ -226,22 +226,29 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes a name as string and sets it to the entity.
-     *
-     * @param string $name
-     *
-     * @return Category
+     * Sets a translation to the entity.
+     * If no other translation was assigned before, the translation is added as default.
+     * 
+     * @param CategoryTranslationInterface $translation
      */
-    public function setName($name)
+    public function setTranslation(CategoryTranslationInterface $translation)
     {
-        $translation = $this->getTranslation(false);
-        if ($translation === null) {
-            $translation = $this->createTranslation();
+        $translationEntity = $this->getTranslationByLocale($translation->getLocale());
+
+        if (!$translationEntity) {
+            $translationEntity = $translation;
+            $this->entity->addTranslation($translationEntity);
         }
 
-        $translation->setTranslation($name);
+        $translationEntity->setCategory($this->entity);
+        $translationEntity->setTranslation($translation->getTranslation());
+        $translationEntity->setLocale($translation->getLocale());
 
-        return $this;
+        if ($this->getId() === null && $this->getDefaultLocale() === null) {
+            // new entity and new translation
+            // save first locale as default
+            $this->entity->setDefaultLocale($translationEntity->getLocale());
+        }
     }
 
     /**
@@ -394,7 +401,7 @@ class Category extends ApiEntityWrapper
      *
      * @param $withDefault
      *
-     * @return CategoryTranslation
+     * @return CategoryTranslationInterface
      */
     private function getTranslation($withDefault = false)
     {
@@ -412,36 +419,16 @@ class Category extends ApiEntityWrapper
      *
      * @param string $locale
      *
-     * @return CategoryTranslation
+     * @return CategoryTranslationInterface
      */
     private function getTranslationByLocale($locale)
     {
-        foreach ($this->entity->getTranslations() as $translation) {
-            if ($translation->getLocale() == $locale) {
-                return $translation;
+        if ($locale !== null) {
+            foreach ($this->entity->getTranslations() as $translation) {
+                if ($translation->getLocale() == $locale) {
+                    return $translation;
+                }
             }
         }
-    }
-
-    /**
-     * Creates a new Translation for category.
-     *
-     * @return CategoryTranslation
-     */
-    private function createTranslation()
-    {
-        $translation = new CategoryTranslation();
-        $translation->setLocale($this->locale);
-        $translation->setCategory($this->entity);
-
-        $this->entity->addTranslation($translation);
-
-        if ($this->getId() === null && $this->getDefaultLocale() === null) {
-            // new entity and new translation
-            // save first locale as default
-            $this->entity->setDefaultLocale($this->locale);
-        }
-
-        return $translation;
     }
 }

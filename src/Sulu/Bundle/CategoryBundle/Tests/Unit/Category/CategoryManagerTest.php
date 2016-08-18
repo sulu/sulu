@@ -19,7 +19,8 @@ use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -35,6 +36,11 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
      * @var CategoryMetaRepositoryInterface
      */
     protected $categoryMetaRepository;
+
+    /**
+     * @var CategoryTranslationRepositoryInterface
+     */
+    protected $categoryTranslateRepository;
 
     /**
      * @var UserRepositoryInterface
@@ -65,6 +71,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $this->categoryMetaRepository = $this->prophesize(CategoryMetaRepositoryInterface::class);
+        $this->categoryTranslateRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -73,6 +80,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         $this->categoryManager = new CategoryManager(
             $this->categoryRepository->reveal(),
             $this->categoryMetaRepository->reveal(),
+            $this->categoryTranslateRepository->reveal(),
             $this->userRepository->reveal(),
             $this->keywordManager->reveal(),
             $this->entityManager->reveal(),
@@ -116,7 +124,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
     {
         $id = 1;
 
-        $translation = $this->prophesize(CategoryTranslation::class);
+        $translation = $this->prophesize(CategoryTranslationInterface::class);
         $keyword1 = $this->prophesize(Keyword::class);
         $keyword2 = $this->prophesize(Keyword::class);
         $category = $this->prophesize(CategoryInterface::class);

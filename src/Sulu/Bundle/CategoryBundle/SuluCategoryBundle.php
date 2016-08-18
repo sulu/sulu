@@ -25,6 +25,7 @@ class SuluCategoryBundle extends Bundle
             [
                 'Sulu\Bundle\CategoryBundle\Entity\CategoryInterface' => 'sulu.model.category.class',
                 'Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface' => 'sulu.model.category_meta.class',
+                'Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface' => 'sulu.model.category_translation.class',
             ],
             $container
         );
