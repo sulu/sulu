@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CategoryControllerTest extends SuluTestCase
@@ -59,14 +58,14 @@ class CategoryControllerTest extends SuluTestCase
         $category->setDefaultLocale('en');
 
         // name for first category (en)
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('First Category');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
         // name for first category (de)
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('de');
         $categoryTrans->setTranslation('Erste Kategorie');
         $categoryTrans->setCategory($category);
@@ -92,14 +91,14 @@ class CategoryControllerTest extends SuluTestCase
         $this->category2 = $category2;
 
         // name for second category
-        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans2->setLocale('en');
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
 
         // name for second category
-        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans2->setLocale('de');
         $categoryTrans2->setTranslation('Zweite Kategorie');
         $categoryTrans2->setCategory($category2);
@@ -130,7 +129,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->category3 = $category3;
 
         // name for third category
-        $categoryTrans3 = new CategoryTranslation();
+        $categoryTrans3 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans3->setLocale('en');
         $categoryTrans3->setTranslation('Third Category');
         $categoryTrans3->setCategory($category3);
@@ -154,7 +153,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->category4 = $category4;
 
         // name for fourth category
-        $categoryTrans4 = new CategoryTranslation();
+        $categoryTrans4 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans4->setLocale('en');
         $categoryTrans4->setTranslation('Fourth Category');
         $categoryTrans4->setCategory($category4);
@@ -244,13 +243,13 @@ class CategoryControllerTest extends SuluTestCase
         $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setDefaultLocale('en');
 
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('EN');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en_us');
         $categoryTrans->setTranslation('EN-US');
         $categoryTrans->setCategory($category);

@@ -157,18 +157,18 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Add translations.
      *
-     * @param CategoryTranslation $translations
+     * @param CategoryTranslationInterface $translations
      *
      * @return CategoryInterface
      */
-    public function addTranslation(CategoryTranslation $translations);
+    public function addTranslation(CategoryTranslationInterface $translations);
 
     /**
      * Remove translations.
      *
-     * @param CategoryTranslation $translations
+     * @param CategoryTranslationInterface $translations
      */
-    public function removeTranslation(CategoryTranslation $translations);
+    public function removeTranslation(CategoryTranslationInterface $translations);
 
     /**
      * Get translations.
@@ -182,7 +182,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @param $locale
      *
-     * @return CategoryTranslation
+     * @return CategoryTranslationInterface
      */
     public function findTranslationByLocale($locale);
 

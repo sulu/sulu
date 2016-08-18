@@ -81,6 +81,13 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepository')->end()
                             ->end()
                         ->end()
+                        ->arrayNode('category_translation')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepository')->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

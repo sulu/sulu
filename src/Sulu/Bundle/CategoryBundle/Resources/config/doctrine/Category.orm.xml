@@ -10,7 +10,7 @@
                 <cascade-all/>
             </cascade>
         </one-to-many>
-        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation"
+        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface"
                      mapped-by="category">
             <cascade>
                 <cascade-all/>

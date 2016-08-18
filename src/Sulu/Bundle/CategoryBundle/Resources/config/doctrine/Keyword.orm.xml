@@ -19,7 +19,7 @@
         <field name="locale" column="locale" type="string" length="5" nullable="false"/>
         <field name="keyword" column="keyword" type="string" length="255" nullable="false"/>
 
-        <many-to-many target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" field="categoryTranslations"
+        <many-to-many target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface" field="categoryTranslations"
                       inversed-by="keywords">
             <join-table name="ca_category_translations_keywords">
                 <join-columns>

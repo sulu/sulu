@@ -13,7 +13,8 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
@@ -30,13 +31,22 @@ class KeywordManager implements KeywordManagerInterface
     private $keywordRepository;
 
     /**
+     * @var CategoryTranslationRepositoryInterface
+     */
+    private $categoryTranslationRepository;
+
+    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
 
-    public function __construct(KeywordRepositoryInterface $keywordRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        KeywordRepositoryInterface $keywordRepository,
+        CategoryTranslationRepositoryInterface $categoryTranslationRepository,
+        EntityManagerInterface $entityManager
+    ) {
         $this->keywordRepository = $keywordRepository;
+        $this->categoryTranslationRepository = $categoryTranslationRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -182,11 +192,11 @@ class KeywordManager implements KeywordManagerInterface
      * @param CategoryInterface $category
      * @param $locale
      *
-     * @return CategoryTranslation
+     * @return CategoryTranslationInterface
      */
     private function createTranslation(CategoryInterface $category, $locale)
     {
-        $categoryTranslation = new CategoryTranslation();
+        $categoryTranslation = $this->categoryTranslationRepository->createNew();
         $categoryTranslation->setLocale($locale);
         $categoryTranslation->setTranslation('');
         $categoryTranslation->setCategory($category);
