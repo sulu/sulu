@@ -28,7 +28,7 @@ class RouteManager implements RouteManagerInterface
     /**
      * @var RouteGeneratorInterface
      */
-    private $routeGenerator;
+    private $routeGenerators;
 
     /**
      * @var RouteRepositoryInterface
@@ -41,18 +41,18 @@ class RouteManager implements RouteManagerInterface
     private $conflictResolver;
 
     /**
-     * @param RouteGeneratorInterface   $routeGenerator
-     * @param RouteRepositoryInterface  $routeRepository
+     * @param RouteGeneratorInterface[] $routeGenerators
+     * @param RouteRepositoryInterface $routeRepository
      * @param ConflictResolverInterface $conflictResolver
-     * @param array                     $mappings
+     * @param array $mappings
      */
     public function __construct(
-        RouteGeneratorInterface $routeGenerator,
+        array $routeGenerators,
         RouteRepositoryInterface $routeRepository,
         ConflictResolverInterface $conflictResolver,
         array $mappings
     ) {
-        $this->routeGenerator = $routeGenerator;
+        $this->routeGenerators = $routeGenerators;
         $this->routeRepository = $routeRepository;
         $this->conflictResolver = $conflictResolver;
         $this->mappings = $mappings;
@@ -67,7 +67,8 @@ class RouteManager implements RouteManagerInterface
             throw new RouteAlreadyCreatedException($entity);
         }
 
-        $path = $this->routeGenerator->generate($entity, $this->mappings[get_class($entity)]['route_schema']);
+        $config = $this->mappings[get_class($entity)];
+        $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
         $route = $this->routeRepository->createNew()
             ->setPath($path)
             ->setEntityClass(get_class($entity))
@@ -89,7 +90,8 @@ class RouteManager implements RouteManagerInterface
             throw new RouteNotCreatedException($entity);
         }
 
-        $path = $this->routeGenerator->generate($entity, $this->mappings[get_class($entity)]['route_schema']);
+        $config = $this->mappings[get_class($entity)];
+        $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
         if ($path === $entity->getRoute()->getPath()) {
             return $entity->getRoute();
         }

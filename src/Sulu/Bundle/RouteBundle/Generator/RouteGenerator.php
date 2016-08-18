@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Generator;
 
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This generator creates routes for entities and a schema.
@@ -32,7 +33,7 @@ class RouteGenerator implements RouteGeneratorInterface
      * RouteGenerator constructor.
      *
      * @param TokenProviderInterface $tokenProvider
-     * @param SlugifierInterface     $slugifier
+     * @param SlugifierInterface $slugifier
      */
     public function __construct(TokenProviderInterface $tokenProvider, SlugifierInterface $slugifier)
     {
@@ -43,8 +44,10 @@ class RouteGenerator implements RouteGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($entity, $routeSchema)
+    public function generate($entity, array $options)
     {
+        $routeSchema = $options['route_schema'];
+
         $tokens = [];
         preg_match_all('/{(.*?)}/', $routeSchema, $matches);
         $tokenNames = $matches[1];
@@ -68,5 +71,13 @@ class RouteGenerator implements RouteGeneratorInterface
         }
 
         return $path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptionsResolver(array $options)
+    {
+        return (new OptionsResolver())->setRequired('route_schema');
     }
 }
