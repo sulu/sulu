@@ -13,7 +13,6 @@ namespace Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -141,7 +140,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         $category->addTranslation($categoryTrans);
 
         // meta for first category
-        $categoryMeta = new CategoryMeta();
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
         $categoryMeta->setKey('description');
         $categoryMeta->setValue('Description of Category');
@@ -164,7 +163,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         $category2->addTranslation($categoryTrans2);
 
         // meta for second category
-        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
         $categoryMeta2->setValue('Description of second Category');

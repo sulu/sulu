@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
+
 /**
- * CategoryMeta.
+ * Defines the method for the doctrine repository.
  */
-class CategoryMeta extends BaseCategoryMeta
+interface CategoryMetaRepositoryInterface extends RepositoryInterface
 {
 }

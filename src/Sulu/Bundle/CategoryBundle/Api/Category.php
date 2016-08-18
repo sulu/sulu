@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -247,30 +247,24 @@ class Category extends ApiEntityWrapper
     /**
      * Takes meta as array and sets it to the entity.
      *
-     * @param array $meta
+     * @param CategoryMetaInterface[] $metaEntities
      *
      * @return Category
      */
-    public function setMeta($meta)
+    public function setMeta($metaEntities)
     {
-        $meta = (is_array($meta)) ? $meta : [];
         $currentMeta = $this->entity->getMeta();
-        foreach ($meta as $singleMeta) {
-            $metaEntity = null;
-            if (isset($singleMeta['id'])) {
-                $metaEntity = $this->getSingleMetaById($currentMeta, $singleMeta['id']);
-            }
+        foreach ($metaEntities as $singleMeta) {
+            $metaEntity = $this->getSingleMetaById($currentMeta, $singleMeta->getId());
             if (!$metaEntity) {
-                $metaEntity = new CategoryMeta();
-                $metaEntity->setCategory($this->entity);
+                $metaEntity = $singleMeta;
                 $this->entity->addMeta($metaEntity);
             }
 
-            $metaEntity->setKey($singleMeta['key']);
-            $metaEntity->setValue($singleMeta['value']);
-            if (array_key_exists('locale', $singleMeta)) {
-                $metaEntity->setLocale($singleMeta['locale']);
-            }
+            $metaEntity->setCategory($this->entity);
+            $metaEntity->setKey($singleMeta->getKey());
+            $metaEntity->setValue($singleMeta->getValue());
+            $metaEntity->setLocale($singleMeta->getLocale());
         }
 
         return $this;
@@ -366,15 +360,13 @@ class Category extends ApiEntityWrapper
      */
     private function getSingleMetaById($meta, $id)
     {
-        $return = null;
-        foreach ($meta as $singleMeta) {
-            if ($singleMeta->getId() === $id) {
-                $return = $singleMeta;
-                break;
+        if ($id !== null) {
+            foreach ($meta as $singleMeta) {
+                if ($singleMeta->getId() === $id) {
+                    return $singleMeta;
+                }
             }
         }
-
-        return $return;
     }
 
     /**
@@ -429,8 +421,6 @@ class Category extends ApiEntityWrapper
                 return $translation;
             }
         }
-
-        return;
     }
 
     /**

@@ -24,6 +24,7 @@ class SuluCategoryBundle extends Bundle
         $this->buildPersistence(
             [
                 'Sulu\Bundle\CategoryBundle\Entity\CategoryInterface' => 'sulu.model.category.class',
+                'Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface' => 'sulu.model.category_meta.class',
             ],
             $container
         );

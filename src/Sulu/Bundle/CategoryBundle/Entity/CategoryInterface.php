@@ -134,18 +134,18 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Add meta.
      *
-     * @param CategoryMeta $meta
+     * @param CategoryMetaInterface $meta
      *
      * @return CategoryInterface
      */
-    public function addMeta(CategoryMeta $meta);
+    public function addMeta(CategoryMetaInterface $meta);
 
     /**
      * Remove meta.
      *
-     * @param CategoryMeta $meta
+     * @param CategoryMetaInterface $meta
      */
-    public function removeMeta(CategoryMeta $meta);
+    public function removeMeta(CategoryMetaInterface $meta);
 
     /**
      * Get meta.
