@@ -74,6 +74,13 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryRepository')->end()
                             ->end()
                         ->end()
+                        ->arrayNode('category_meta')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepository')->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

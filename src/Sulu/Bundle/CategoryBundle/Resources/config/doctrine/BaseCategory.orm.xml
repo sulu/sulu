@@ -23,7 +23,7 @@
             <gedmo:tree-level/>
         </field>
 
-        <many-to-one field="parent" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="children">
+        <many-to-one field="parent" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="children">
             <join-columns>
                 <join-column name="idCategoriesParent" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>

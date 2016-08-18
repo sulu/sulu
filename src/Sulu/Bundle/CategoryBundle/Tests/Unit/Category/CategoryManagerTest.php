@@ -16,8 +16,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -29,6 +30,11 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
      * @var CategoryRepositoryInterface
      */
     protected $categoryRepository;
+
+    /**
+     * @var CategoryMetaRepositoryInterface
+     */
+    protected $categoryMetaRepository;
 
     /**
      * @var UserRepositoryInterface
@@ -58,6 +64,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
+        $this->categoryMetaRepository = $this->prophesize(CategoryMetaRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -65,6 +72,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->categoryManager = new CategoryManager(
             $this->categoryRepository->reveal(),
+            $this->categoryMetaRepository->reveal(),
             $this->userRepository->reveal(),
             $this->keywordManager->reveal(),
             $this->entityManager->reveal(),

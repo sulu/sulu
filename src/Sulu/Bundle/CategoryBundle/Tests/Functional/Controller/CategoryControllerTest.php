@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -75,7 +74,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->category1 = $category;
 
         // meta for first category
-        $categoryMeta = new CategoryMeta();
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
         $categoryMeta->setKey('description');
         $categoryMeta->setValue('Description of Category');
@@ -107,7 +106,7 @@ class CategoryControllerTest extends SuluTestCase
         $category2->addTranslation($categoryTrans2);
 
         // meta for second category
-        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
         $categoryMeta2->setValue('Beschreibung der zweiten Kategorie');
@@ -115,7 +114,7 @@ class CategoryControllerTest extends SuluTestCase
         $category2->addMeta($categoryMeta2);
 
         // meta without locale for second category
-        $categoryMeta3 = new CategoryMeta();
+        $categoryMeta3 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta3->setKey('noLocaleKey');
         $categoryMeta3->setValue('noLocaleValue');
         $categoryMeta3->setCategory($category2);
@@ -138,7 +137,7 @@ class CategoryControllerTest extends SuluTestCase
         $category3->addTranslation($categoryTrans3);
 
         // meta for third category
-        $categoryMeta4 = new CategoryMeta();
+        $categoryMeta4 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta4->setLocale('de');
         $categoryMeta4->setKey('another');
         $categoryMeta4->setValue('Description of third Category');
@@ -162,7 +161,7 @@ class CategoryControllerTest extends SuluTestCase
         $category4->addTranslation($categoryTrans4);
 
         // meta for fourth category
-        $categoryMeta5 = new CategoryMeta();
+        $categoryMeta5 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta5->setLocale('de');
         $categoryMeta5->setKey('anotherkey');
         $categoryMeta5->setValue('Description of fourth Category');

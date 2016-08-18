@@ -49,7 +49,7 @@ class Category extends BaseCategory
     /**
      * {@inheritdoc}
      */
-    public function addMeta(CategoryMeta $meta)
+    public function addMeta(CategoryMetaInterface $meta)
     {
         $this->meta[] = $meta;
 
@@ -59,7 +59,7 @@ class Category extends BaseCategory
     /**
      * {@inheritdoc}
      */
-    public function removeMeta(CategoryMeta $meta)
+    public function removeMeta(CategoryMetaInterface $meta)
     {
         $this->meta->removeElement($meta);
     }

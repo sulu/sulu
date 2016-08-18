@@ -16,6 +16,8 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
@@ -59,6 +61,11 @@ class CategoryManager implements CategoryManagerInterface
     private $categoryRepository;
 
     /**
+     * @var CategoryMetaRepositoryInterface
+     */
+    private $categoryMetaRepository;
+
+    /**
      * @var KeywordManagerInterface
      */
     private $keywordManager;
@@ -70,6 +77,7 @@ class CategoryManager implements CategoryManagerInterface
 
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
+        CategoryMetaRepositoryInterface $categoryMetaRepository,
         UserRepositoryInterface $userRepository,
         KeywordManagerInterface $keywordManager,
         ObjectManager $em,
@@ -78,6 +86,7 @@ class CategoryManager implements CategoryManagerInterface
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->categoryMetaRepository = $categoryMetaRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->keywordManager = $keywordManager;
     }
@@ -319,7 +328,18 @@ class CategoryManager implements CategoryManagerInterface
             $categoryWrapper->setKey($key);
         }
         if (!$patch || $this->getProperty($data, 'meta')) {
-            $categoryWrapper->setMeta($this->getProperty($data, 'meta', []));
+            $metaData = (is_array($this->getProperty($data, 'meta'))) ? $this->getProperty($data, 'meta') : [];
+
+            $metaEntities = [];
+            foreach ($metaData as $meta) {
+                $metaEntity = $this->categoryMetaRepository->createNew();
+                $metaEntity->setId($this->getProperty($meta, 'id'));
+                $metaEntity->setKey($this->getProperty($meta, 'key'));
+                $metaEntity->setValue($this->getProperty($meta, 'value'));
+                $metaEntity->setLocale($this->getProperty($meta, 'locale'));
+                $metaEntities[] = $metaEntity;
+            }
+            $categoryWrapper->setMeta($metaEntities);
         }
         if (!$patch || $this->getProperty($data, 'parent')) {
             if ($this->getProperty($data, 'parent')) {
