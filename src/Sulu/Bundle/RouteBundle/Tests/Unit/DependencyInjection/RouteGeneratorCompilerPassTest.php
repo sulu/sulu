@@ -22,7 +22,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcess()
     {
-        $generatorAlias = 'by_schema';
+        $generatorAlias = 'schema';
         $serviceId = 'sulu_route.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
@@ -69,7 +69,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessNoService()
     {
-        $serviceId = 'route.generator.route_generator';
+        $serviceId = 'sulu_route.generator.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 
@@ -82,7 +82,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessNoParameter()
     {
-        $serviceId = 'route.generator.route_generator';
+        $serviceId = 'sulu_route.generator.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 
@@ -96,8 +96,8 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessEmptyConfig()
     {
-        $generatorAlias = 'by_schema';
-        $serviceId = 'route.generator.route_generator';
+        $generatorAlias = 'schema';
+        $serviceId = 'sulu_route.generator.route_generator';
 
         $compilerPass = new RouteGeneratorCompilerPass();
 

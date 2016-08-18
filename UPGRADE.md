@@ -24,7 +24,7 @@ sulu_route:
 sulu_route:
     mappings:
         AppBundle\Entity\Example:
-            generator: by_schema
+            generator: schema
             options:
                 route_schema: /example/{object.getTitle()}
 ```
