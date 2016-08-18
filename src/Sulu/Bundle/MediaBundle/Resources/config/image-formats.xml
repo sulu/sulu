@@ -1,30 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <formats xmlns="http://schemas.sulu.io/media/formats"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
-
-    <format key="400x400">
-        <scale x="400" y="400"/>
+         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.0.xsd">
+    <format>
+        <name>400x400</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">400</parameter>
+                    <parameter name="y">400</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="400x400-inset">
-        <scale x="400" y="400" mode="inset"/>
+    <format>
+        <name>400x400-inset</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">400</parameter>
+                    <parameter name="y">400</parameter>
+                    <parameter name="mode">inset</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="200x180-inset">
-        <scale x="200" y="180" mode="inset"/>
+    <format>
+        <name>200x180-inset</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">200</parameter>
+                    <parameter name="y">180</parameter>
+                    <parameter name="mode">inset</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="260x">
-        <scale x="260"/>
+    <format>
+        <name>260x</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">260x</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="170x170">
-        <scale x="170" y="170"/>
+    <format>
+        <name>170x170</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">170</parameter>
+                    <parameter name="y">170</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="100x100">
-        <scale x="100" y="100"/>
+    <format>
+        <name>100x100</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">100</parameter>
+                    <parameter name="y">100</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="100x100-inset">
-        <scale x="100" y="100" mode="inset"/>
+    <format>
+        <name>100x100-inset</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">100</parameter>
+                    <parameter name="y">100</parameter>
+                    <parameter name="mode">inset</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
-    <format key="50x50">
-        <scale x="50" y="50"/>
+    <format>
+        <name>50x50</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">50</parameter>
+                    <parameter name="y">50</parameter>
+                </parameters>
+            </command>
+        </commands>
     </format>
 </formats>

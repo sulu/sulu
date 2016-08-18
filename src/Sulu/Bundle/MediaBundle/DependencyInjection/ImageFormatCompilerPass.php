@@ -11,15 +11,18 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
-use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader;
+use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader10;
+use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader11;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class ImageFormatCompilerPass.
  */
-class ImageFormatCompilerPass implements CompilerPassInterface
+class ImageFormatCompilerPass implements CompilerPassInterface#
 {
     /**
      * @var ContainerBuilder
@@ -74,12 +77,19 @@ class ImageFormatCompilerPass implements CompilerPassInterface
         $fileName = basename($fullPath);
 
         $locator = new FileLocator($folder);
-        $loader = new XmlFormatLoader($locator);
-        $loader->setDefaultOptions($defaultOptions);
+
+        $xmlLoader10 = new XmlFormatLoader10($locator);
+        $xmlLoader11 = new XmlFormatLoader11($locator);
+        $xmlLoader10->setDefaultOptions($defaultOptions);
+        $xmlLoader11->setDefaultOptions($defaultOptions);
+
+        $resolver = new LoaderResolver([$xmlLoader10, $xmlLoader11]);
+        $loader = new DelegatingLoader($resolver);
+
         $themeFormats = $loader->load($fileName);
         foreach ($themeFormats as $format) {
-            if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
-                $activeFormats[$format['name']] = $format;
+            if (isset($format['key']) && !array_key_exists($format['key'], $activeFormats)) {
+                $activeFormats[$format['key']] = $format;
             }
         }
     }

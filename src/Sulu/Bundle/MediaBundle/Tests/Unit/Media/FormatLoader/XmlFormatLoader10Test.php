@@ -1,0 +1,118 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
+
+use Prophecy\Argument;
+use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
+use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
+use Symfony\Component\Config\FileLocatorInterface;
+
+class XmlFormatLoader10Test extends WebspaceTestCase
+{
+    /**
+     * @var XmlFormatLoader10
+     */
+    protected $loader;
+
+    public function setUp()
+    {
+        $locator = $this->prophesize(FileLocatorInterface::class);
+        $locator->locate(Argument::any())->will(
+            function ($arguments) {
+                return $arguments[0];
+            }
+        );
+
+        $this->loader = new XmlFormatLoader10($locator->reveal());
+    }
+
+    public function testSupports10()
+    {
+        $this->assertTrue(
+            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/deprecated.xml')
+        );
+    }
+
+    public function testSupports11()
+    {
+        $this->assertFalse(
+            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/current.xml')
+        );
+    }
+
+    public function testLoadDeprecated()
+    {
+        $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/deprecated.xml');
+
+        $this->assertEquals(2, count($result));
+
+        $this->assertArrayHasKey('640x480', $result);
+        $this->assertEquals(
+            [
+                'key' => '640x480',
+                'meta' =>
+                    [
+                        'title' => [],
+                    ],
+                'scale' =>
+                    [
+                        'x' => '640',
+                        'y' => '480',
+                        'mode' => 'outbound',
+                    ],
+                'transformations' =>
+                    [
+                        [
+                            'effect' => 'blur',
+                            'parameters' =>
+                                [
+                                    'type' => 'gaussian',
+                                    'kernel' => '20',
+                                ],
+                        ],
+                    ],
+                'options' =>
+                    [
+                        'jpeg_quality' => '70',
+                        'png_compression_level' => '6',
+                    ],
+            ],
+            $result['640x480']
+        );
+
+        $this->assertArrayHasKey('300x', $result);
+        $this->assertEquals(
+            [
+                'key' => '300x',
+                'meta' =>
+                    [
+                        'title' => [],
+                    ],
+                'scale' =>
+                    [
+                        'x' => '300',
+                        'y' => null,
+                        'mode' => 'outbound',
+                    ],
+                'transformations' => [],
+                'options' => [],
+            ],
+            $result['300x']
+        );
+    }
+
+    public function testLoadDeprecatedWithMissingDimension()
+    {
+        $this->expectException(MissingScaleDimensionException::class);
+        $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/deprecated_missing_dimension.xml');
+    }
+}
