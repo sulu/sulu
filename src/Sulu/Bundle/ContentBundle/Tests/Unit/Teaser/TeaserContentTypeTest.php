@@ -66,7 +66,7 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'typeConfiguration' => $configuration,
+                'providerConfiguration' => $configuration,
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
             ],
             $this->contentType->getDefaultParams()

@@ -25,6 +25,7 @@ define(['underscore'], function(_) {
                 }
             }
         },
+
         getColumnNavigationUrl = function() {
             var url = '/admin/api/nodes',
                 urlParts = [

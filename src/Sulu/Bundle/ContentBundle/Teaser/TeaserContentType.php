@@ -67,7 +67,7 @@ class TeaserContentType extends SimpleContentType
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
-            'typeConfiguration' => $this->teaserProviderPool->getConfiguration(),
+            'providerConfiguration' => $this->teaserProviderPool->getConfiguration(),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
         ];
     }

@@ -144,7 +144,7 @@ define(['underscore'], function(_) {
                                 webspaceKey: this.options.webspaceKey,
                                 instanceName: this.options.instanceName,
                                 type: type.name,
-                                data: _.fsrc/Sulu/Component/Content/SimpleContentType.phpilter(data, function(item) {
+                                data: _.filter(data, function(item) {
                                     return item['type'] === type.name;
                                 }),
                                 selectCallback: function(item) {
@@ -169,7 +169,10 @@ define(['underscore'], function(_) {
         initialize: function() {
             this.render();
             renderDropdown.call(this);
-            renderPresentAs.call(this);
+
+            if (0 < this.options.presentAs.length) {
+                renderPresentAs.call(this);
+            }
         },
 
         getUrl: function(data) {

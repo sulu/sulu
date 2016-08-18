@@ -24,5 +24,5 @@ interface TeaserManagerInterface
      *
      * @return Teaser[]
      */
-    public function find($items, $locale);
+    public function find(array $items, $locale);
 }

@@ -34,20 +34,17 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function find($items, $locale)
+    public function find(array $items, $locale)
     {
         if (0 === count($items)) {
             return [];
         }
 
         $result = [];
-        foreach ($this->sort($items) as $type => $typeIds) {
+        list($sortedIds, $positions) = $this->sortItems($items);
+        foreach ($sortedIds as $type => $typeIds) {
             $teasers = $this->providerPool->getProvider($type)->find($typeIds, $locale);
-
-            foreach ($teasers as $teaser) {
-                $index = array_search(['type' => $type, 'id' => $teaser->getId()], $items);
-                $result[$index] = $teaser;
-            }
+            $result = $this->sortTeasers($teasers, $result, $positions);
         }
 
         ksort($result);
@@ -56,22 +53,43 @@ class TeaserManager implements TeaserManagerInterface
     }
 
     /**
-     * Returns ids sorted by type.
+     * Returns sorted teaser by given position array.
      *
-     * @param array $ids
+     * @param Teaser[] $teasers
+     * @param array $result
+     * @param array $positions
      *
      * @return array
      */
-    private function sort($ids)
+    private function sortTeasers(array $teasers, array $result, array $positions)
     {
-        $result = [];
-        foreach ($ids as $id) {
-            if (!array_key_exists($id['type'], $result)) {
-                $result[$id['type']] = [];
-            }
-            $result[$id['type']][] = $id['id'];
+        foreach ($teasers as $teaser) {
+            $result[$positions[sprintf('%s;%s', $teaser->getType(), $teaser->getId())]] = $teaser;
         }
 
         return $result;
+    }
+
+    /**
+     * Returns items sorted by type.
+     *
+     * @param array $items
+     *
+     * @return array
+     */
+    private function sortItems($items)
+    {
+        $ids = [];
+        $positions = [];
+        $index = 0;
+        foreach ($items as $item) {
+            if (!array_key_exists($item['type'], $ids)) {
+                $ids[$item['type']] = [];
+            }
+            $ids[$item['type']][] = $item['id'];
+            $positions[sprintf('%s;%s', $item['type'], $item['id'])] = $index++;
+        }
+
+        return [$ids, $positions];
     }
 }
