@@ -17,29 +17,24 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * CategoryTranslation.
+ * The keywords can describe a category with different words.
  */
-abstract class BaseCategoryTranslation implements CategoryTranslationInterface
+abstract class BaseKeyword implements KeywordInterface
 {
-    /**
-     * @var string
-     */
-    protected $translation;
-
-    /**
-     * @var string
-     */
-    protected $locale;
-
     /**
      * @var int
      */
     protected $id;
 
     /**
-     * @var CategoryInterface
+     * @var string
      */
-    protected $category;
+    protected $keyword;
+
+    /**
+     * @var string
+     */
+    protected $locale;
 
     /**
      * @var UserInterface
@@ -64,24 +59,6 @@ abstract class BaseCategoryTranslation implements CategoryTranslationInterface
     /**
      * {@inheritdoc}
      */
-    public function setTranslation($translation)
-    {
-        $this->translation = $translation;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
@@ -100,17 +77,9 @@ abstract class BaseCategoryTranslation implements CategoryTranslationInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function setKeyword($keyword)
     {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCategory(CategoryInterface $category)
-    {
-        $this->category = $category;
+        $this->keyword = $keyword;
 
         return $this;
     }
@@ -118,9 +87,17 @@ abstract class BaseCategoryTranslation implements CategoryTranslationInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategory()
+    public function getKeyword()
     {
-        return $this->category;
+        return $this->keyword;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -185,5 +162,14 @@ abstract class BaseCategoryTranslation implements CategoryTranslationInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals(KeywordInterface $keyword)
+    {
+        return $keyword->getKeyword() === $this->getKeyword()
+            && $keyword->getLocale() === $this->getLocale();
     }
 }

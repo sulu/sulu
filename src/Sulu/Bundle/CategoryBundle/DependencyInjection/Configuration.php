@@ -88,6 +88,13 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepository')->end()
                             ->end()
                         ->end()
+                        ->arrayNode('keyword')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                    ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\Keyword')->end()
+                                    ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\KeywordRepository')->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

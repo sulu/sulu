@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 
 /**
  * Manages keyword for categories.
@@ -32,7 +32,7 @@ interface KeywordManagerInterface
      *
      * @return Keyword
      */
-    public function save(Keyword $keyword, CategoryInterface $category, $force = null);
+    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null);
 
     /**
      * Removes keyword from given category.
@@ -42,5 +42,5 @@ interface KeywordManagerInterface
      *
      * @return bool true if keyword is deleted completely from the database otherwise only from the category
      */
-    public function delete(Keyword $keyword, CategoryInterface $category);
+    public function delete(KeywordInterface $keyword, CategoryInterface $category);
 }

@@ -34,7 +34,7 @@ class CategoryTranslation extends BaseCategoryTranslation
     /**
      * {@inheritdoc}
      */
-    public function addKeyword(Keyword $keyword)
+    public function addKeyword(KeywordInterface $keyword)
     {
         $this->keywords[] = $keyword;
 
@@ -44,7 +44,7 @@ class CategoryTranslation extends BaseCategoryTranslation
     /**
      * {@inheritdoc}
      */
-    public function removeKeyword(Keyword $keyword)
+    public function removeKeyword(KeywordInterface $keyword)
     {
         $this->keywords->removeElement($keyword);
     }
@@ -60,10 +60,10 @@ class CategoryTranslation extends BaseCategoryTranslation
     /**
      * {@inheritdoc}
      */
-    public function hasKeyword(Keyword $keyword)
+    public function hasKeyword(KeywordInterface $keyword)
     {
         return $this->getKeywords()->exists(
-            function ($key, Keyword $element) use ($keyword) {
+            function ($key, KeywordInterface $element) use ($keyword) {
                 return $element->equals($keyword);
             }
         );

@@ -14,7 +14,7 @@ namespace Functional\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class KeywordControllerTest extends SuluTestCase
@@ -224,7 +224,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNotEquals($first['id'], $result['id']);
 
         // old entity should be deleted
-        $entity = $this->entityManager->find(Keyword::class, $first['id']);
+        $entity = $this->entityManager->find(KeywordInterface::class, $first['id']);
         $this->assertNull($entity);
     }
 
@@ -282,7 +282,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNotNull($result['id']);
         $this->assertNotEquals($first['id'], $result['id']);
 
-        $entity = $this->entityManager->find(Keyword::class, $first['id']);
+        $entity = $this->entityManager->find(KeywordInterface::class, $first['id']);
         $this->assertEquals($first['keyword'], $entity->getKeyword());
     }
 
@@ -334,7 +334,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $client->getResponse());
-        $this->assertNull($this->entityManager->find(Keyword::class, $first['id']));
+        $this->assertNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 
     public function testDeleteMultipleCategories($keyword = 'Test', $locale = 'de')
@@ -348,6 +348,6 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $client->getResponse());
-        $this->assertNotNull($this->entityManager->find(Keyword::class, $first['id']));
+        $this->assertNotNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 }

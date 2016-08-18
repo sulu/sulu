@@ -15,12 +15,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -39,6 +39,9 @@ class KeywordController extends RestController implements ClassResourceInterface
     const FORCE_DETACH = 'detach';
     const FORCE_MERGE = 'merge';
 
+    /**
+     * {@inheritdoc}
+     */
     protected static $entityKey = 'keywords';
 
     /**
@@ -76,7 +79,7 @@ class KeywordController extends RestController implements ClassResourceInterface
 
         $fieldDescriptor = $this->getFieldDescriptors();
 
-        $listBuilder = $factory->create($this->container->getParameter('sulu_category.entity.keyword'));
+        $listBuilder = $factory->create($this->getParameter('sulu.model.keyword.class'));
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
         $listBuilder->where($fieldDescriptor['locale'], $request->get('locale'));
@@ -114,7 +117,7 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function postAction($categoryId, Request $request)
     {
-        /** @var Keyword $keyword */
+        /** @var KeywordInterface $keyword */
         $keyword = $this->getKeywordRepository()->createNew();
         $category = $this->getCategoryRepository()->findCategoryById($categoryId);
         $keyword->setKeyword($request->get('keyword'));
@@ -215,7 +218,7 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     private function getKeywordRepository()
     {
-        return $this->get('sulu_category.keyword_repository');
+        return $this->get('sulu.repository.keyword');
     }
 
     /**
@@ -242,7 +245,7 @@ class KeywordController extends RestController implements ClassResourceInterface
     public function getFieldDescriptors()
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(
-            Keyword::class
+            $this->getParameter('sulu.model.keyword.class')
         );
     }
 

@@ -75,18 +75,18 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Add keyword.
      *
-     * @param Keyword $keyword
+     * @param KeywordInterface $keyword
      *
      * @return CategoryInterface
      */
-    public function addKeyword(Keyword $keyword);
+    public function addKeyword(KeywordInterface $keyword);
 
     /**
      * Remove keyword.
      *
-     * @param Keyword $keyword
+     * @param KeywordInterface $keyword
      */
-    public function removeKeyword(Keyword $keyword);
+    public function removeKeyword(KeywordInterface $keyword);
 
     /**
      * Get keywords.
@@ -98,16 +98,11 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Returns true if given keyword already linked with the category.
      *
-     * @param Keyword $keyword
+     * @param KeywordInterface $keyword
      *
      * @return bool
      */
-    public function hasKeyword(Keyword $keyword);
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreator();
+    public function hasKeyword(KeywordInterface $keyword);
 
     /**
      * @param UserInterface $creator
@@ -115,29 +110,14 @@ interface CategoryTranslationInterface extends AuditableInterface
     public function setCreator($creator);
 
     /**
-     * {@inheritdoc}
-     */
-    public function getChanger();
-
-    /**
      * @param UserInterface $changer
      */
     public function setChanger($changer);
 
     /**
-     * {@inheritdoc}
-     */
-    public function getCreated();
-
-    /**
      * @param \DateTime $created
      */
     public function setCreated($created);
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChanged();
 
     /**
      * @param \DateTime $changed

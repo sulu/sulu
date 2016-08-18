@@ -21,7 +21,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -128,8 +128,8 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         $id = 1;
 
         $translation = $this->prophesize(CategoryTranslationInterface::class);
-        $keyword1 = $this->prophesize(Keyword::class);
-        $keyword2 = $this->prophesize(Keyword::class);
+        $keyword1 = $this->prophesize(KeywordInterface::class);
+        $keyword2 = $this->prophesize(KeywordInterface::class);
         $category = $this->prophesize(CategoryInterface::class);
         $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
         $category->getTranslations()->willReturn([$translation->reveal()]);
