@@ -123,7 +123,7 @@ class ContentTeaserProvider implements TeaserProviderInterface
         return array_filter(
             $this->searchManager->getIndexNames(),
             function ($index) {
-                return strpos($index, 'page_') === 0;
+                return preg_match('/page_(.*)_published/', $index) > 0;
             }
         );
     }
