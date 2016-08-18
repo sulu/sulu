@@ -22,3 +22,7 @@ sulu_content.smart_content:
 sulu_content.webspace:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\WebspaceController
+
+sulu_content.teaser:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\TeaserController

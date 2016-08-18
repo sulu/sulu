@@ -19,6 +19,7 @@ require.config({
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
         "type/toggler": '../../sulucontent/js/validation/types/toggler',
+        "type/teaser-selection": '../../sulucontent/js/validation/types/teaserSelection',
         "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons',
         "extensions/seo-tab": '../../sulucontent/js/extensions/seo-tab',
         "extensions/excerpt-tab": '../../sulucontent/js/extensions/excerpt-tab'

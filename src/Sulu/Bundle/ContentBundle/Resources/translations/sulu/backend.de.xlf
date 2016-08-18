@@ -747,6 +747,10 @@
                 <source>labels.error.remove-draft-desc</source>
                 <target>Der Entwurf konnte nicht gelöscht werden.</target>
             </trans-unit>
+            <trans-unit id="60" resname="sulu-content.teaser.content">
+                <source>sulu-content.teaser.content</source>
+                <target>Seiten</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
