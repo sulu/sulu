@@ -28,17 +28,16 @@ interface WebspaceInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param string $filePath
+     * @param $output
      * @param string $format
      * @param string $uuid
-     *
      * @return array
-     *
-     * @throws WebspaceFormatImporterNotFoundException
      */
     public function import(
         $webspaceKey,
         $locale,
         $filePath,
+        $output,
         $format = '1.2.xliff',
         $uuid = null
     );

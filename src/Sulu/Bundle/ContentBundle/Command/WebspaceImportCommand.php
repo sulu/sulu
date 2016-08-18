@@ -80,6 +80,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             $webspaceKey,
             $locale,
             $filePath,
+            $output,
             $format,
             $uuid,
             $overrideSettings

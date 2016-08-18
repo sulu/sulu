@@ -26,6 +26,7 @@ use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundExcept
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class Webspace implements WebspaceInterface
 {
@@ -86,14 +87,6 @@ class Webspace implements WebspaceInterface
     ];
 
     /**
-     * @var array
-     */
-    protected static $settingsToArray = [
-        'permissions',
-        'navigationContexts',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     public function add($service, $format)
@@ -144,6 +137,7 @@ class Webspace implements WebspaceInterface
         $webspaceKey,
         $locale,
         $filePath,
+        $output,
         $format = '1.2.xliff',
         $uuid = null,
         $overrideSettings = false
@@ -153,11 +147,15 @@ class Webspace implements WebspaceInterface
         $importedCounter = 0;
         $successCounter = 0;
 
+        $progress = new ProgressBar($output, count($parsedDataList));
+        $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
+        $progress->start();
+
         foreach ($parsedDataList as $parsedData) {
             // filter for specific uuid
             if (!$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
                 ++$importedCounter;
-
+                
                 if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale, $overrideSettings)) {
                     $failedImports[] = $parsedData;
                 } else {
@@ -166,7 +164,11 @@ class Webspace implements WebspaceInterface
 
                 $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
             }
+
+            $progress->advance();
         }
+
+        $progress->finish();
 
         return [
             $importedCounter,
@@ -295,10 +297,10 @@ class Webspace implements WebspaceInterface
                     $parent = $document->getParent();
 
                     if ($parent instanceof BasePageDocument) {
-                        $parentPath = $parent->getResourceSegment();
+                        $parentUuid = $parent->getUuid();
                         $value = $this->generateUrl(
                             $structure->getPropertiesByTagName('sulu.rlp.part'),
-                            $parentPath,
+                            $parentUuid,
                             $webspaceKey,
                             $locale,
                             $format,
@@ -353,12 +355,34 @@ class Webspace implements WebspaceInterface
                 $data
             );
 
-            if (in_array($key, self::$settingsToArray)) {
-                $value = json_decode($value);
-            }
-
-            $document->$setter($value);
+            $document->$setter($this->getSetterValue($key, $value));
         }
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return mixed|object
+     */
+    protected function getSetterValue($key, $value)
+    {
+        if (empty($value)) {
+            return;
+        }
+
+        switch($key) {
+            case 'redirectTarget':
+                $value = $this->documentManager->find($value);
+                break;
+            case 'permissions':
+                $value = json_decode($value, true);
+                break;
+            case 'navigationContexts':
+                $value = json_decode($value);
+                break;
+        }
+
+        return $value;
     }
 
     /**
@@ -447,7 +471,7 @@ class Webspace implements WebspaceInterface
      *
      * @return string
      */
-    private function generateUrl($properties, $parentPath, $webspaceKey, $locale, $format, $data)
+    private function generateUrl($properties, $parentUuid, $webspaceKey, $locale, $format, $data)
     {
         $rlpParts = [];
 
@@ -461,6 +485,6 @@ class Webspace implements WebspaceInterface
 
         $title = trim(implode(' ', $rlpParts));
 
-        return $this->rlpStrategy->generate($title, $parentPath, $webspaceKey, $locale);
+        return $this->rlpStrategy->generate($title, $parentUuid, $webspaceKey, $locale);
     }
 }
