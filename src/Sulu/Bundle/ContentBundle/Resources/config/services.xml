@@ -75,7 +75,7 @@
 
         <!-- resource locator -->
         <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
-            <argument type="service" id="sulu.content.rlp.strategy_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
         </service>
 

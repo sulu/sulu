@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
 /**
  * Will be raised if the requested strategy is not available.
  */
-class StrategyNotExistsException extends \Exception
+class ResourceLocatorStrategyNotFoundException extends \Exception
 {
     /**
      * @var string
@@ -32,7 +32,7 @@ class StrategyNotExistsException extends \Exception
      */
     public function __construct($name, $available)
     {
-        parent::__construct(sprintf('Strategy "%s" not found. Available: [""]', $name, implode('", "', $available)));
+        parent::__construct(sprintf('Strategy "%s" not found. Available: ["%s"]', $name, implode('", "', $available)));
 
         $this->name = $name;
         $this->available = $available;

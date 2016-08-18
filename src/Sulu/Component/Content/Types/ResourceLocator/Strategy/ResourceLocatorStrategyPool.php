@@ -9,17 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Manages rlp-strategies.
  */
-class StrategyManager implements StrategyManagerInterface
+class ResourceLocatorStrategyPool implements ResourceLocatorStrategyPoolInterface
 {
     /**
-     * @var RlpStrategyInterface[]
+     * @var ResourceLocatorStrategyInterface[]
      */
     private $strategies;
 
@@ -29,7 +29,7 @@ class StrategyManager implements StrategyManagerInterface
     private $webspaceManager;
 
     /**
-     * @param RlpStrategyInterface[] $strategies
+     * @param ResourceLocatorStrategyInterface[] $strategies
      * @param WebspaceManagerInterface $webspaceManager
      */
     public function __construct(array $strategies, WebspaceManagerInterface $webspaceManager)
@@ -44,7 +44,7 @@ class StrategyManager implements StrategyManagerInterface
     public function getStrategy($name)
     {
         if (!array_key_exists($name, $this->strategies)) {
-            throw new StrategyNotExistsException($name, array_keys($this->strategies));
+            throw new ResourceLocatorStrategyNotFoundException($name, array_keys($this->strategies));
         }
 
         return $this->strategies[$name];

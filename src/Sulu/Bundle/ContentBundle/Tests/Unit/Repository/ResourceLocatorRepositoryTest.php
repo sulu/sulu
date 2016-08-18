@@ -17,9 +17,9 @@ use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
+use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
@@ -39,14 +39,14 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
     private $structureManager;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategy;
 
     /**
-     * @var StrategyManagerInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategyManager;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var DocumentManagerInterface
@@ -56,14 +56,14 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
-        $this->rlpStrategy = $this->prophesize(RlpStrategyInterface::class);
-        $this->rlpStrategyManager = $this->prophesize(StrategyManagerInterface::class);
+        $this->resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
+        $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
 
-        $this->rlpStrategyManager->getStrategyByWebspaceKey(Argument::any())->willReturn($this->rlpStrategy->reveal());
+        $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
 
         $this->repository = new ResourceLocatorRepository(
-            $this->rlpStrategyManager->reveal(),
+            $this->resourceLocatorStrategyPool->reveal(),
             $this->structureManager->reveal()
         );
     }
@@ -87,7 +87,7 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->structureManager->getStructure($template)->willReturn($structure->reveal());
 
         $path = '/parent/news-football';
-        $this->rlpStrategy->generate('news-football', $parentUuid, $webspace, $locale, null)->willReturn($path);
+        $this->resourceLocatorStrategy->generate('news-football', $parentUuid, $webspace, $locale, null)->willReturn($path);
 
         $result = $this->repository->generate($parts, $parentUuid, $webspace, $locale, $template);
         $this->assertEquals($result['resourceLocator'], $path);
@@ -111,7 +111,7 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->structureManager->getStructure($template)->willReturn($structure->reveal());
 
         $path = '/news-football';
-        $this->rlpStrategy->generate('news-football', null, $webspace, $locale, null)->willReturn($path);
+        $this->resourceLocatorStrategy->generate('news-football', null, $webspace, $locale, null)->willReturn($path);
 
         $result = $this->repository->generate($parts, null, $webspace, $locale, $template);
         $this->assertEquals($result['resourceLocator'], $path);
@@ -123,7 +123,7 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
         $webspace = 'sulu_io';
         $locale = 'en';
 
-        $this->rlpStrategy->loadHistoryByContentUuid($uuid, $webspace, $locale)->willReturn([
+        $this->resourceLocatorStrategy->loadHistoryByContentUuid($uuid, $webspace, $locale)->willReturn([
             new ResourceLocatorInformation('/test1', null, 1),
             new ResourceLocatorInformation('/test2', null, 1),
             new ResourceLocatorInformation('/test3', null, 1),
@@ -142,7 +142,7 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
         $webspace = 'sulu_io';
         $locale = 'en';
 
-        $this->rlpStrategy->deleteByPath($path, $webspace, $locale, null)->shouldBeCalled();
+        $this->resourceLocatorStrategy->deleteByPath($path, $webspace, $locale, null)->shouldBeCalled();
         $this->repository->delete($path, $webspace, $locale);
     }
 
@@ -153,7 +153,7 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
         $locale = 'en';
         $segment = 'live';
 
-        $this->rlpStrategy->deleteByPath($path, $webspace, $locale, $segment)->shouldBeCalled();
+        $this->resourceLocatorStrategy->deleteByPath($path, $webspace, $locale, $segment)->shouldBeCalled();
         $this->repository->delete($path, $webspace, $locale, $segment);
     }
 }

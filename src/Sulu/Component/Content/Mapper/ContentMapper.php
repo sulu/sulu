@@ -41,8 +41,8 @@ use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -93,9 +93,9 @@ class ContentMapper implements ContentMapperInterface
     private $extensionDataCache;
 
     /**
-     * @var RlpStrategyManagerInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategyManager;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var DocumentManager
@@ -133,7 +133,7 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        StrategyManagerInterface $rlpStrategyManager,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         NamespaceRegistry $namespaceRegistry
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -146,7 +146,7 @@ class ContentMapper implements ContentMapperInterface
         $this->inspector = $inspector;
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
-        $this->rlpStrategyManager = $rlpStrategyManager;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
@@ -473,7 +473,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->documentManager->find($uuid, $srcLocale);
         $parentDocument = $this->inspector->getParent($document);
         if ($document instanceof ResourceSegmentBehavior) {
-            $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($webspaceKey);
+            $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
         }
 
         foreach ($destLocales as $destLocale) {
@@ -486,7 +486,7 @@ class ContentMapper implements ContentMapperInterface
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
-                $resourceLocator = $strategy->generate(
+                $resourceLocator = $resourceLocatorStrategy->generate(
                     $destDocument->getTitle(),
                     $this->inspector->getUuid($parentDocument),
                     $webspaceKey,

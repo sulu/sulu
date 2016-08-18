@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Mapper;
+namespace Sulu\Component\Content\Types\ResourceLocator\Mapper;
 
 /**
  * base class for Resource Locator Path Mapper.
  */
-abstract class RlpMapper implements RlpMapperInterface
+abstract class ResourceLocatorMapper implements ResourceLocatorMapperInterface
 {
     /**
      * name of mapper.

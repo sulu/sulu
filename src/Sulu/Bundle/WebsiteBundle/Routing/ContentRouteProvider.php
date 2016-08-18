@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -46,9 +46,9 @@ class ContentRouteProvider implements RouteProviderInterface
     private $documentInspector;
 
     /**
-     * @var StrategyManagerInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategyManager;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var StructureManagerInterface
@@ -73,7 +73,7 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * @param DocumentManagerInterface $documentManager
      * @param DocumentInspector $documentInspector
-     * @param StrategyManagerInterface $rlpStrategyManager
+     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param StructureManagerInterface $structureManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param DefaultLocaleProviderInterface $defaultLocaleProvider
@@ -82,7 +82,7 @@ class ContentRouteProvider implements RouteProviderInterface
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        StrategyManagerInterface $rlpStrategyManager,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         StructureManagerInterface $structureManager,
         RequestAnalyzerInterface $requestAnalyzer,
         DefaultLocaleProviderInterface $defaultLocaleProvider,
@@ -90,7 +90,7 @@ class ContentRouteProvider implements RouteProviderInterface
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
-        $this->rlpStrategyManager = $rlpStrategyManager;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->defaultLocaleProvider = $defaultLocaleProvider;
@@ -147,13 +147,13 @@ class ContentRouteProvider implements RouteProviderInterface
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
-            $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($portal->getWebspace()->getKey());
+            $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($portal->getWebspace()->getKey());
 
             try {
                 // load content by url ignore ending trailing slash
                 /** @var PageDocument $document */
                 $document = $this->documentManager->find(
-                    $strategy->loadByResourceLocator(
+                    $resourceLocatorStrategy->loadByResourceLocator(
                         rtrim($resourceLocator, '/'),
                         $portal->getWebspace()->getKey(),
                         $locale

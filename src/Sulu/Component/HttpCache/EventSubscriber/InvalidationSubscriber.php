@@ -18,7 +18,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -58,9 +58,9 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $documentInspector;
 
     /**
-     * @var StrategyManagerInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategyManager;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var WebspaceManagerInterface
@@ -77,7 +77,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * @param HandlerInvalidateStructureInterface $structureHandler
      * @param StructureManagerInterface $structureManager
      * @param DocumentInspector $documentInspector
-     * @param StrategyManagerInterface $rlpStrategyManager
+     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param WebspaceManagerInterface $webspaceManager
      * @param string $environment - kernel envionment, dev, prod, etc
      */
@@ -86,7 +86,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         HandlerInvalidateStructureInterface $structureHandler,
         StructureManagerInterface $structureManager,
         DocumentInspector $documentInspector,
-        StrategyManagerInterface $rlpStrategyManager,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         WebspaceManagerInterface $webspaceManager,
         $environment
     ) {
@@ -94,7 +94,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->structureHandler = $structureHandler;
         $this->structureManager = $structureManager;
         $this->documentInspector = $documentInspector;
-        $this->rlpStrategyManager = $rlpStrategyManager;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
@@ -227,17 +227,17 @@ class InvalidationSubscriber implements EventSubscriberInterface
             return [];
         }
 
-        $strategy = $this->rlpStrategyManager->getStrategyByWebspaceKey($webspace);
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspace);
 
         // get current resource-locator and history resource-locators
         $resourceLocators = [];
         try {
-            $resourceLocators[] = $strategy->loadByContentUuid($documentUuid, $webspace, $locale);
+            $resourceLocators[] = $resourceLocatorStrategy->loadByContentUuid($documentUuid, $webspace, $locale);
         } catch (ResourceLocatorNotFoundException $e) {
             // if no resource locator exists there is also no url to purge from the cache
         }
 
-        $historyResourceLocators = $strategy->loadHistoryByContentUuid($documentUuid, $webspace, $locale);
+        $historyResourceLocators = $resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $webspace, $locale);
         foreach ($historyResourceLocators as $historyResourceLocator) {
             $resourceLocators[] = $historyResourceLocator->getResourceLocator();
         }

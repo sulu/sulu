@@ -17,7 +17,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -105,8 +105,8 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
         $session = $sessionManager->getSession();
         $node = $session->getNodeByIdentifier($page->getUuid());
 
-        /** @var RlpStrategyInterface $strategy */
-        $strategy = $this->getContainer()->get('sulu.content.rlp.strategy_manager')->getStrategyByWebspaceKey(
+        /** @var ResourceLocatorStrategyInterface $resourceLocatorStrategy */
+        $resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy_pool')->getStrategyByWebspaceKey(
             $webspace->getKey()
         );
 
@@ -132,7 +132,7 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
 
         try {
             // load value
-            $rl = $strategy->loadByContent($node, $webspace->getKey(), $localization->getLocalization());
+            $rl = $resourceLocatorStrategy->loadByContent($node, $webspace->getKey(), $localization->getLocalization());
 
             // save value
             $property->setValue($rl);

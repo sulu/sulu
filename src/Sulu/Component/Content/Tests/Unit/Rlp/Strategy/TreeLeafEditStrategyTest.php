@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\Rlp\Strategy;
+namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
@@ -22,9 +22,9 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeLeafEditStrategy;
+use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
+use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
@@ -32,7 +32,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var RlpMapperInterface
+     * @var ResourceLocatorMapperInterface
      */
     private $mapper;
 
@@ -73,7 +73,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mapper = $this->prophesize(RlpMapperInterface::class);
+        $this->mapper = $this->prophesize(ResourceLocatorMapperInterface::class);
         $this->cleaner = $this->prophesize(PathCleanupInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);

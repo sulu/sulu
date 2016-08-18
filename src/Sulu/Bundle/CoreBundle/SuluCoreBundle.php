@@ -41,7 +41,7 @@ class SuluCoreBundle extends Bundle
         );
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(
-                'sulu.content.rlp.strategy_manager',
+                'sulu.content.resource_locator.strategy_pool',
                 'sulu.resource_locator.strategy',
                 0,
                 'alias'

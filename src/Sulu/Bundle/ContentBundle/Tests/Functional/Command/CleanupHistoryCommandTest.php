@@ -15,7 +15,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Command\CleanupHistoryCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Application;
@@ -34,9 +34,9 @@ class CleanupHistoryCommandTest extends SuluTestCase
     private $sessionManager;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategy;
 
     /**
      * @var DocumentManagerInterface
@@ -47,7 +47,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
     {
         $application = new Application($this->getContainer()->get('kernel'));
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree_leaf_edit');
+        $this->resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_leaf_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $cleanupCommand = new CleanupHistoryCommand();
@@ -87,15 +87,15 @@ class CleanupHistoryCommandTest extends SuluTestCase
 
         $teamDocument = $this->documentManager->find($teamNode->getIdentifier(), 'en');
         $teamDocument->setResourceSegment('/team');
-        $this->rlpStrategy->save($teamDocument, 1);
+        $this->resourceLocatorStrategy->save($teamDocument, 1);
 
         $danielDocument = $this->documentManager->find($danielNode->getIdentifier(), 'en');
         $danielDocument->setResourceSegment('/team/daniel');
-        $this->rlpStrategy->save($danielDocument, 1);
+        $this->resourceLocatorStrategy->save($danielDocument, 1);
 
         $johannesDocument = $this->documentManager->find($johannesNode->getIdentifier(), 'en');
         $johannesDocument->setResourceSegment('/team/johannes');
-        $this->rlpStrategy->save($johannesDocument, 1);
+        $this->resourceLocatorStrategy->save($johannesDocument, 1);
 
         $session->save();
         $session->refresh(false);
@@ -116,32 +116,32 @@ class CleanupHistoryCommandTest extends SuluTestCase
 
         $teamDocument = $this->documentManager->find($teamNode->getIdentifier());
         $teamDocument->setResourceSegment('/team');
-        $this->rlpStrategy->save($teamDocument, 1);
+        $this->resourceLocatorStrategy->save($teamDocument, 1);
 
         $danielDocument = $this->documentManager->find($danielNode->getIdentifier());
         $danielDocument->setResourceSegment('/team/daniel');
-        $this->rlpStrategy->save($danielDocument, 1);
+        $this->resourceLocatorStrategy->save($danielDocument, 1);
 
         $johannesDocument = $this->documentManager->find($johannesNode->getIdentifier());
         $johannesDocument->setResourceSegment('/team/johannes');
-        $this->rlpStrategy->save($johannesDocument, 1);
+        $this->resourceLocatorStrategy->save($johannesDocument, 1);
 
         $aboutDocument = $this->documentManager->find($aboutNode->getIdentifier());
         $aboutDocument->setResourceSegment('/about-us');
-        $this->rlpStrategy->save($aboutDocument, 1);
+        $this->resourceLocatorStrategy->save($aboutDocument, 1);
 
         $session->save();
         $session->refresh(false);
 
         // update resource locators
         $teamDocument->setResourceSegment('/my-test');
-        $this->rlpStrategy->save($teamDocument, 1);
+        $this->resourceLocatorStrategy->save($teamDocument, 1);
 
         $danielDocument->setResourceSegment('/my-test/daniel');
-        $this->rlpStrategy->save($danielDocument, 1);
+        $this->resourceLocatorStrategy->save($danielDocument, 1);
 
         $johannesDocument->setResourceSegment('/my-test/johannes');
-        $this->rlpStrategy->save($johannesDocument, 1);
+        $this->resourceLocatorStrategy->save($johannesDocument, 1);
 
         $session->save();
         $session->refresh(false);
@@ -150,7 +150,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
     public function dataProviderOnlyRoot()
     {
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree_leaf_edit');
+        $this->resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_leaf_edit');
 
         $webspaceKey = 'sulu_io';
         $locale = 'de';

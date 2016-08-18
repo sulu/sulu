@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Mapper;
+namespace Sulu\Component\Content\Types\ResourceLocator\Mapper;
 
 use DateTime;
 use PHPCR\ItemExistsException;
@@ -20,11 +20,11 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class PhpcrMapper extends RlpMapper
+class PhpcrMapper extends ResourceLocatorMapper
 {
     /**
      * @var SessionManagerInterface

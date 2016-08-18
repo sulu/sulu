@@ -9,19 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
 /**
  * Interface for resource-locator strategy-manager.
  */
-interface StrategyManagerInterface
+interface ResourceLocatorStrategyPoolInterface
 {
     /**
      * Returns strategy by given name.
      *
      * @param string $name
      *
-     * @return RlpStrategyInterface
+     * @return ResourceLocatorStrategyInterface
      */
     public function getStrategy($name);
 
@@ -30,7 +30,7 @@ interface StrategyManagerInterface
      *
      * @param string $webspaceKey
      *
-     * @return RlpStrategyInterface
+     * @return ResourceLocatorStrategyInterface
      */
     public function getStrategyByWebspaceKey($webspaceKey);
 }

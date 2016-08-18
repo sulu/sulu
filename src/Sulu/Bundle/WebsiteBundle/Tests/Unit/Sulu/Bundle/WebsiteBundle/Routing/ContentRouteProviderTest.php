@@ -23,8 +23,8 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\StrategyManagerInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -50,14 +50,14 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     private $documentInspector;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategy;
 
     /**
-     * @var StrategyManagerInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategyManager;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var StructureManagerInterface
@@ -88,19 +88,19 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
-        $this->rlpStrategy = $this->prophesize(RlpStrategyInterface::class);
-        $this->rlpStrategyManager = $this->prophesize(StrategyManagerInterface::class);
+        $this->resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
+        $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
         $this->urlReplacer = $this->prophesize(ReplacerInterface::class);
 
-        $this->rlpStrategyManager->getStrategyByWebspaceKey(Argument::any())->willReturn($this->rlpStrategy->reveal());
+        $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
 
         $this->contentRouteProvider = new ContentRouteProvider(
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->rlpStrategyManager->reveal(),
+            $this->resourceLocatorStrategyPool->reveal(),
             $this->structureManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->defaultLocaleProvider->reveal(),
@@ -126,7 +126,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('');
 
-        $this->rlpStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class);
         $document->getTitle()->willReturn('');
@@ -156,7 +156,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
@@ -209,7 +209,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
@@ -384,7 +384,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('');
 
-        $this->rlpStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
@@ -475,7 +475,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('', 'webspace', 'de')
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
@@ -507,7 +507,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->urlReplacer->replaceLanguage('sulu.lo', 'de')->shouldBeCalled()->willReturn('sulu.lo');
         $this->urlReplacer->replaceLocalization('sulu.lo', 'de-at')->shouldBeCalled()->willReturn('sulu.lo');
 
-        $this->rlpStrategy->loadByResourceLocator(Argument::cetera())->shouldNotBeCalled();
+        $this->resourceLocatorStrategy->loadByResourceLocator(Argument::cetera())->shouldNotBeCalled();
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
@@ -535,7 +535,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/test');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
 
         $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $redirectTargetDocument->getResourceSegment()->willReturn('/other-test');
@@ -578,7 +578,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/test');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
 
         $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $redirectTargetDocument->getResourceSegment()->willReturn('/other-test');
@@ -621,7 +621,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/test');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
 
         $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $redirectTargetDocument->getResourceSegment()->willReturn('/other-test');
@@ -667,7 +667,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getRedirect()->willReturn('sulu.lo/de-at');
         $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.lo');
 
-        $this->rlpStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class);
         $document->getTitle()->willReturn('some-title');
@@ -703,7 +703,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.lo');
         $this->requestAnalyzer->getRedirect()->willReturn('sulu.lo/de-at');
 
-        $this->rlpStrategy->loadByResourceLocator('', 'webspace', 'de_at')->willReturn('some-uuid');
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de_at')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class);
         $document->getTitle()->willReturn('some-title');
@@ -739,7 +739,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('/qwertz/');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $this->rlpStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')
+        $this->resourceLocatorStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')
             ->willThrow(new ResourceLocatorMovedException('/new-test', '123-123-123'));
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/qwertz/']);

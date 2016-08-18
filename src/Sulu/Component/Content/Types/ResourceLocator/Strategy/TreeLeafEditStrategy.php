@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
 /**
  * Implements RLP Strategy "tree_leaf_edit".
  */
-class TreeLeafEditStrategy extends RlpStrategy
+class TreeLeafEditStrategy extends ResourceLocatorStrategy
 {
     /**
      * {@inheritdoc}
