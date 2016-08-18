@@ -32,6 +32,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             ->addOption('locale', 'l', InputOption::VALUE_REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
+            ->addOption('exportSuluVersion', '', InputOption::VALUE_OPTIONAL, '1.2 or 1.3', '1.3')
             ->addOption('overrideSettings', 'o', InputOption::VALUE_OPTIONAL, 'Override Settings-Tab', 'false')
             ->setDescription('Import webspace');
     }
@@ -47,6 +48,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
         $format = $input->getOption('format');
         $uuid = $input->getOption('uuid');
         $overrideSettings = $input->getOption('overrideSettings');
+        $exportSuluVersion = $input->getOption('exportSuluVersion');
 
         $output->writeln([
             '<info>Language Import</info>',
@@ -58,6 +60,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             'Format: ' . $format,
             'UUID: ' . $uuid,
             'Override Setting: ' . $overrideSettings,
+            'Sulu Version by export: ' . $exportSuluVersion . '.x',
             '---------------',
             '',
         ]);
@@ -83,7 +86,8 @@ class WebspaceImportCommand extends ContainerAwareCommand
             $output,
             $format,
             $uuid,
-            $overrideSettings
+            $overrideSettings,
+            $exportSuluVersion
         );
 
         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {

@@ -140,7 +140,8 @@ class Webspace implements WebspaceInterface
         $output,
         $format = '1.2.xliff',
         $uuid = null,
-        $overrideSettings = false
+        $overrideSettings = false,
+        $exportSuluVersion = '1.3'
     ) {
         $parsedDataList = $this->getParser($format)->parse($filePath, $locale);
         $failedImports = [];
@@ -152,6 +153,11 @@ class Webspace implements WebspaceInterface
         $progress->start();
 
         foreach ($parsedDataList as $parsedData) {
+            // mapping data
+            if ($exportSuluVersion === '1.2') {
+                $parsedData['structureType'] = $parsedData['data']['template']['value'];
+            }
+
             // filter for specific uuid
             if (!$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
                 ++$importedCounter;

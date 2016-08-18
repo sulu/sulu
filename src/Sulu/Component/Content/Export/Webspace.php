@@ -213,7 +213,12 @@ class Webspace implements WebspaceInterface
 
         foreach ($properties as $property) {
             if ($this->contentExportManager->hasExport($property->getType(), $format)) {
+                if (!isset($propertyValues[$property->getName()])) {
+                    continue;
+                }
+
                 $propertyValue = $propertyValues[$property->getName()];
+
                 if ($property instanceof BlockMetadata) {
                     $data = $this->getBlockPropertyData($property, $propertyValue, $format);
                 } else {

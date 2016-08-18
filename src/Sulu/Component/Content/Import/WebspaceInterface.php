@@ -39,6 +39,7 @@ interface WebspaceInterface
         $filePath,
         $output,
         $format = '1.2.xliff',
-        $uuid = null
+        $uuid = null,
+        $exportSuluVersion = '1.3'
     );
 }
