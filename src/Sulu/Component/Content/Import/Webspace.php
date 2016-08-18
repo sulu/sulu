@@ -155,7 +155,7 @@ class Webspace implements WebspaceInterface
             // filter for specific uuid
             if (!$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
                 ++$importedCounter;
-                
+
                 if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale, $overrideSettings)) {
                     $failedImports[] = $parsedData;
                 } else {
@@ -281,6 +281,13 @@ class Webspace implements WebspaceInterface
         $node->setProperty(sprintf('i18n:%s-template', $locale), $structureType);
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
+
+        if ($this->getParser($format)->getPropertyData('title', $data) === '') {
+            throw new \Exception(
+                sprintf('Document(%s) has not set any title', $document->getUuid())
+            );
+            return;
+        }
 
         // import all content data
         foreach ($properties as $property) {
