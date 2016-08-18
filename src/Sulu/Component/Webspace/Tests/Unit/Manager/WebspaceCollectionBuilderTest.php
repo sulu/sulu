@@ -13,17 +13,18 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Loader\DelegatingFileLoader;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
     /**
-     * @var DelegatingFileLoader
+     * @var DelegatingLoader
      */
     private $loader;
 
@@ -39,10 +40,12 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
             return $arguments[0];
         });
 
-        $this->loader = new DelegatingFileLoader([
+        $resolver = new LoaderResolver([
             new XmlFileLoader11($locator->reveal()),
             new XmlFileLoader10($locator->reveal()),
         ]);
+
+        $this->loader = new DelegatingLoader($resolver);
 
         $this->logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     }
