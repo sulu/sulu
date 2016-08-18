@@ -771,6 +771,10 @@
                 <source>sulu-content.teaser.cancel</source>
                 <target>Cancel</target>
             </trans-unit>
+            <trans-unit id="66" resname="sulu-content.teaser.no-teaser">
+                <source>sulu-content.teaser.no-teaser</source>
+                <target>No teaser selected</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

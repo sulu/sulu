@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Teaser;
 
+use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\ContentBundle\Search\Metadata\StructureProvider;
@@ -67,16 +68,23 @@ class ContentTeaserProvider implements TeaserProviderInterface
 
             $title = $document->getField('title')->getValue();
             $excerptTitle = $document->getField('excerptTitle')->getValue();
+            $excerptDescription = $document->getField('excerptDescription')->getValue();
+            $excerptMedia = $this->getMedia($document, 'excerptImages');
+
+            $teaserDescription = $document->hasField(StructureProvider::FIELD_TEASER_DESCRIPTION) ?
+                $document->getField(StructureProvider::FIELD_TEASER_DESCRIPTION)->getValue() : '';
+            $teaserMedia = $document->hasField(StructureProvider::FIELD_TEASER_MEDIA) ?
+                $this->getMedia($document, StructureProvider::FIELD_TEASER_MEDIA) : null;
 
             $result[] = new Teaser(
                 $item->getId(),
                 'content',
                 $locale,
                 ('' !== $excerptTitle ? $excerptTitle : $title),
-                $document->getField('excerptDescription')->getValue(),
+                ('' !== $excerptDescription ? $excerptDescription : $teaserDescription),
                 $document->getField('excerptMore')->getValue(),
                 $document->getField('__url')->getValue(),
-                $this->getMedia(json_decode($document->getField('excerptImages')->getValue(), true)),
+                (null !== $excerptMedia ? $excerptMedia : $teaserMedia),
                 [
                     'structureType' => $document->getField(StructureProvider::FIELD_STRUCTURE_TYPE)->getValue(),
                 ]
@@ -89,12 +97,15 @@ class ContentTeaserProvider implements TeaserProviderInterface
     /**
      * Returns media-id.
      *
-     * @param array $images
+     * @param Document $document
+     * @param string $field
      *
      * @return int|null
      */
-    private function getMedia(array $images)
+    private function getMedia(Document $document, $field)
     {
+        $images = json_decode($document->getField($field)->getValue(), true);
+
         if (!array_key_exists('ids', $images) || 0 === count($images['ids'])) {
             return;
         }
