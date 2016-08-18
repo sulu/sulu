@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2835 [CoreBundle]          Used the delegating file loader from symfony instead of own implementation for loading webspace xml files
     * ENHANCEMENT #2831 [RouteBundle]         Improved speed of route-update-command for lots of entities
     * FEATURE     #2826 [AdminBundle]         Made the reset to the "show all" only happen, when the datagrid was in the "show selected" state before (husky)
     * FEATURE     #2803 [MediaBundle]         Add breadcrumb to collection's edit

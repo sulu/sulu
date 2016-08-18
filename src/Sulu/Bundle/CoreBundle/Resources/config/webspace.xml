@@ -10,11 +10,15 @@
     </parameters>
 
     <services>
-        <service id="sulu_core.webspace.loader.delegator" class="Sulu\Component\Webspace\Loader\DelegatingFileLoader">
+        <service id="sulu_core.webspace.loader.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
             <argument type="collection">
                 <argument type="service" id="sulu_core.webspace.loader.xml.1.1"/>
                 <argument type="service" id="sulu_core.webspace.loader.xml.1.0"/>
             </argument>
+        </service>
+
+        <service id="sulu_core.webspace.loader.delegator" class="Symfony\Component\Config\Loader\DelegatingLoader">
+            <argument type="service" id="sulu_core.webspace.loader.resolver"/>
         </service>
 
         <service id="sulu_core.webspace.loader.xml.1.0" class="Sulu\Component\Webspace\Loader\XmlFileLoader10">
