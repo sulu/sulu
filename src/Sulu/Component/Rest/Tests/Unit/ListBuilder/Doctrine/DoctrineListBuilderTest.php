@@ -721,7 +721,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
         $this->queryBuilder->addSelect('SuluCoreBundle:Example.name AS name_alias')->shouldBeCalled();
-        $this->queryBuilder->groupBy(self::$entityName . '.name')->shouldBeCalled();
+        $this->queryBuilder->groupBy(self::$entityName . '.name')->shouldBeCalledTimes(2);
 
         $this->doctrineListBuilder->setSelectFields(
             [
