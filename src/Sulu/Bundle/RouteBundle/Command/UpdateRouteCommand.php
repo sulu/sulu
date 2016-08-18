@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -31,6 +32,7 @@ class UpdateRouteCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:route:update')
             ->addArgument('entity', InputArgument::REQUIRED)
+            ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, '', 1000)
             ->setDescription('Update the routes for all entities.')
             ->setHelp(
                 <<<'EOT'
@@ -46,6 +48,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $batchSize = $input->getOption('batch-size');
+
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $routeManager = $this->getContainer()->get('sulu_route.manager.route_manager');
@@ -65,8 +69,10 @@ EOT
             )
         );
         $progressBar = new ProgressBar($output, $count);
+        $progressBar->setFormat('debug');
         $progressBar->display();
 
+        $index = 0;
         foreach ($query->iterate() as $item) {
             $entity = $item[0];
 
@@ -76,12 +82,19 @@ EOT
                 $entityManager->persist($routeManager->create($entity));
             }
 
-            $entityManager->flush();
             $progressBar->advance();
+            $entity = null;
 
-            // garbage collect this entity
-            $entityManager->detach($entity);
+            if (0 === ($index++ % $batchSize)) {
+                $entityManager->flush();
+
+                // trigger garbage collect
+                $entityManager->clear();
+            }
         }
+
+        // flush the rest of the entities
+        $entityManager->flush();
 
         //$progressBar->finish();
         $output->writeln('');
