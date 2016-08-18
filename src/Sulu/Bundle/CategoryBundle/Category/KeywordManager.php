@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
@@ -53,7 +53,7 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save(Keyword $keyword, CategoryInterface $category, $force = null)
+    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null)
     {
         // overwrite existing keyword if force is present
         if (null === $force
@@ -86,7 +86,7 @@ class KeywordManager implements KeywordManagerInterface
      *
      * @return Keyword
      */
-    private function handleOverwrite(Keyword $keyword, CategoryInterface $category)
+    private function handleOverwrite(KeywordInterface $keyword, CategoryInterface $category)
     {
         if (null !== $synonym = $this->findSynonym($keyword)) {
             // reset entity and remove it from category
@@ -127,7 +127,7 @@ class KeywordManager implements KeywordManagerInterface
      *
      * @return Keyword
      */
-    private function handleDetach(Keyword $keyword, CategoryInterface $category)
+    private function handleDetach(KeywordInterface $keyword, CategoryInterface $category)
     {
         $keywordString = $keyword->getKeyword();
         $keywordLocale = $keyword->getLocale();
@@ -152,7 +152,7 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(Keyword $keyword, CategoryInterface $category)
+    public function delete(KeywordInterface $keyword, CategoryInterface $category)
     {
         $categoryTranslation = $category->findTranslationByLocale($keyword->getLocale());
 
@@ -181,7 +181,7 @@ class KeywordManager implements KeywordManagerInterface
      *
      * @return Keyword|null
      */
-    private function findSynonym(Keyword $keyword)
+    private function findSynonym(KeywordInterface $keyword)
     {
         return $this->keywordRepository->findByKeyword($keyword->getKeyword(), $keyword->getLocale());
     }

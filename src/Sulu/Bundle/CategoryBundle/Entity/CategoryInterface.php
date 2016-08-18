@@ -79,13 +79,6 @@ interface CategoryInterface extends AuditableInterface
     public function getDepth();
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated();
-
-    /**
      * Get key.
      *
      * @return string
@@ -116,13 +109,6 @@ interface CategoryInterface extends AuditableInterface
      * @return string
      */
     public function getDefaultLocale();
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged();
 
     /**
      * Get id.
@@ -249,13 +235,6 @@ interface CategoryInterface extends AuditableInterface
     public function setCreator(UserInterface $creator = null);
 
     /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator();
-
-    /**
      * Set changer.
      *
      * @param UserInterface $changer
@@ -272,11 +251,4 @@ interface CategoryInterface extends AuditableInterface
      * @return CategoryInterface
      */
     public function setChanged(\DateTime $changed);
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger();
 }

@@ -17,8 +17,8 @@ use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 
 class KeywordManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,14 +43,14 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
 
         $otherKeyword = null;
         if ($exists) {
-            $otherKeyword = $this->prophesize(Keyword::class);
+            $otherKeyword = $this->prophesize(KeywordInterface::class);
             $otherKeyword->getKeyword()->willReturn($keywordString);
             $otherKeyword->getLocale()->willReturn($locale);
             $otherKeyword->getId()->willReturn(15);
         }
         $repository->findByKeyword($keywordString, $locale)->willReturn($otherKeyword ? $otherKeyword->reveal() : null);
 
-        $keyword = $this->prophesize(Keyword::class);
+        $keyword = $this->prophesize(KeywordInterface::class);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
         $keyword->isReferencedMultiple()->willReturn(false);
@@ -96,7 +96,7 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
 
         $repository->findByKeyword($keywordString, $locale)->willReturn(null);
 
-        $keyword = $this->prophesize(Keyword::class);
+        $keyword = $this->prophesize(KeywordInterface::class);
         $keyword->addCategoryTranslation(Argument::type(CategoryTranslationInterface::class))->willReturn(null);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
@@ -137,7 +137,7 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
-        $keyword = $this->prophesize(Keyword::class);
+        $keyword = $this->prophesize(KeywordInterface::class);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
         $keyword->getId()->shouldNotBeCalled();

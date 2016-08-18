@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Exception;
 
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Component\Rest\Exception\RestException;
 
 /**
@@ -24,7 +24,7 @@ class KeywordNotUniqueException extends RestException
      */
     private $keyword;
 
-    public function __construct(Keyword $keyword)
+    public function __construct(KeywordInterface $keyword)
     {
         parent::__construct(
             sprintf('The keyword "%s" is already in use.', $keyword->getKeyword()),

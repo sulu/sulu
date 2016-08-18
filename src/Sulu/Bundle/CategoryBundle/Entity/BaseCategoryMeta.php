@@ -19,27 +19,27 @@ abstract class BaseCategoryMeta implements CategoryMetaInterface
     /**
      * @var string
      */
-    private $key;
+    protected $key;
 
     /**
      * @var string
      */
-    private $value;
+    protected $value;
 
     /**
      * @var string
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var CategoryInterface
      */
-    private $category;
+    protected $category;
 
     /**
      * {@inheritdoc}

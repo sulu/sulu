@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Sulu\Component\Persistence\Repository\RepositoryInterface;
-
 /**
  * Interface for keyword repository.
  */
@@ -23,7 +21,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return Keyword
+     * @return KeywordInterface
      */
     public function findById($id);
 
@@ -33,7 +31,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      * @param string $keyword
      * @param string $locale
      *
-     * @return Keyword
+     * @return KeywordInterface
      */
     public function findByKeyword($keyword, $locale);
 }

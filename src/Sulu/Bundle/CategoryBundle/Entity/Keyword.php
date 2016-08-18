@@ -19,47 +19,12 @@ use Sulu\Component\Security\Authentication\UserInterface;
 /**
  * The keywords can describe a category with different words.
  */
-class Keyword implements AuditableInterface
+class Keyword extends BaseKeyword
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $keyword;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
     /**
      * @var Collection
      */
     private $categoryTranslations;
-
-    /**
-     * @var UserInterface
-     */
-    private $creator;
-
-    /**
-     * @var UserInterface
-     */
-    private $changer;
-
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
 
     /**
      * Constructor.
@@ -70,69 +35,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return Keyword
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * Get locale.
-     *
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * Set keyword.
-     *
-     * @param string $keyword
-     *
-     * @return Keyword
-     */
-    public function setKeyword($keyword)
-    {
-        $this->keyword = $keyword;
-
-        return $this;
-    }
-
-    /**
-     * Get keyword.
-     *
-     * @return string
-     */
-    public function getKeyword()
-    {
-        return $this->keyword;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Add category-translation.
-     *
-     * @param CategoryTranslationInterface $categoryTranslation
-     *
-     * @return Keyword
+     * {@inheritdoc}
      */
     public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
     {
@@ -142,9 +45,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Remove category-translation.
-     *
-     * @param CategoryTranslationInterface $categoryTranslation
+     * {@inheritdoc}
      */
     public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
     {
@@ -152,9 +53,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Get categories.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * {@inheritdoc}
      */
     public function getCategoryTranslations()
     {
@@ -164,77 +63,13 @@ class Keyword implements AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * @param UserInterface $creator
-     */
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * @param UserInterface $changer
-     */
-    public function setChanger($changer)
-    {
-        $this->changer = $changer;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * @param \DateTime $created
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * @param \DateTime $changed
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-    }
-
-    /**
-     * @return bool
-     */
     public function isReferencedMultiple()
     {
         return $this->getCategoryTranslations()->count() > 1;
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isReferenced()
     {
@@ -242,21 +77,10 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getCategoryTranslationCount()
     {
         return $this->getCategoryTranslations()->count();
-    }
-
-    /**
-     * @param Keyword $keyword
-     *
-     * @return bool
-     */
-    public function equals(Keyword $keyword)
-    {
-        return $keyword->getKeyword() === $this->getKeyword()
-            && $keyword->getLocale() === $this->getLocale();
     }
 }

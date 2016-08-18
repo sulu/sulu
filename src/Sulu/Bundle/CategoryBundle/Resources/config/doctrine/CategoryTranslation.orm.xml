@@ -5,6 +5,6 @@
 
     <entity name="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" table="ca_category_translations">
         <many-to-many field="keywords" mapped-by="categoryTranslations"
-                      target-entity="Sulu\Bundle\CategoryBundle\Entity\Keyword"/>
+                      target-entity="Sulu\Bundle\CategoryBundle\Entity\KeywordInterface"/>
     </entity>
 </doctrine-mapping>
