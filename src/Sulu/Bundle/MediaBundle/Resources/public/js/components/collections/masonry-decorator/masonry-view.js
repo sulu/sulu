@@ -146,9 +146,6 @@ define([
              * Sets the starting variables for the view
              */
             setVariables: function() {
-                // Stores the id of the item which has an opened dropdown
-                this.lastItemDropdownId = null;
-
                 this.rendered = false;
                 this.$el = null;
 
@@ -212,7 +209,7 @@ define([
                     direction: 'left',
                     itemWidth: 260,
                     offset: 20,
-                    verticalOffset: 30,
+                    verticalOffset: 20,
                     possibleFilters: [constants.selectedClass]
                 });
             },
@@ -235,8 +232,7 @@ define([
              */
             renderRecords: function(records, appendAtBottom) {
                 this.updateEmptyIndicatorVisibility();
-                var dropdownLoadedDeferreds = [],
-                    itemLoadedDeferreds = [];
+                var itemLoadedDeferreds = [];
 
                 records.forEach(function(record) {
                     var item = processContentFilters.call(this, record);
@@ -248,7 +244,6 @@ define([
                             this.options.separators.description
                         ),
                         isVideo = (item.type === 'video'),
-                        dropdownLoadedDeferred,
                         itemLoadedDeferred;
 
                     // pass the found data to a render method
@@ -263,19 +258,7 @@ define([
                         this.options.noImgIcon(item)
                     );
 
-                    dropdownLoadedDeferred = this.startDownloadDropdown(record);
-                    dropdownLoadedDeferreds.push(dropdownLoadedDeferred);
-
                     itemLoadedDeferreds.push(itemLoadedDeferred);
-                }.bind(this));
-
-                // When all dropdown elements have been initialized
-                $.when.apply($, dropdownLoadedDeferreds).then(function() {
-                    this.clipboard = this.sandbox.clipboard.initialize('.' + constants.downloadNavigatorClass + ' li', {
-                        text: function(trigger) {
-                            return trigger.getAttribute('data-id');
-                        }
-                    });
                 }.bind(this));
 
                 // When all items have been completly loaded
@@ -341,48 +324,66 @@ define([
              * Starts the download dropdown for a given record
              *
              * @param {Object} record The data from which the dropdown gets initialized and started.
-             * @returns {Object} A deferred which gets resolved when the dropdown is fully loaded
              */
-            startDownloadDropdown: function(record) {
-                var dropdownLoadedDeferred = $.Deferred();
-                var dropdownItems = [
-                    {
-                        id: 'download',
-                        name: 'sulu.media.download_original',
-                        url: window.location.protocol + '//' + window.location.host + record.url
-                    },
-                    {id: 'divider', divider: true},
-                    {
-                        id: window.location.protocol + '//' + window.location.host + record.url,
-                        name: 'sulu.media.copy_original',
-                        info: 'sulu.media.copy_url',
-                        clickedInfo: 'sulu.media.copied_url'
-                    }
-                ].concat(_.map(record.thumbnails, function(url, format) {
-                    return {
-                        id: window.location.protocol + '//' + window.location.host + url,
-                        name: format,
-                        info: 'sulu.media.copy_url',
-                        clickedInfo: 'sulu.media.copied_url'
-                    };
-                }));
+            startDownloadDropdown: function(id) {
+                // Ensure that dropdown only gets started if not already started
+                if (!!this.$items[id].find('.' + constants.downloadNavigatorClass).children().length) {
+                    return;
+                }
+
+                var record = this.datagrid.getRecordById(id),
+                    dropdownItems = [
+                        {
+                            id: 'download',
+                            name: 'sulu.media.download_original',
+                            url: window.location.protocol + '//' + window.location.host + record.url
+                        },
+                        {id: 'divider', divider: true},
+                        {
+                            id: window.location.protocol + '//' + window.location.host + record.url,
+                            name: 'sulu.media.copy_original',
+                            info: 'sulu.media.copy_url',
+                            clickedInfo: 'sulu.media.copied_url'
+                        }
+                    ].concat(_.map(record.thumbnails, function(url, format) {
+                        return {
+                            id: window.location.protocol + '//' + window.location.host + url,
+                            name: format,
+                            info: 'sulu.media.copy_url',
+                            clickedInfo: 'sulu.media.copied_url'
+                        };
+                    })),
+                    $element = $('<span class="fa-cloud-download"/>');
+
+                this.$items[id].find('.' + constants.downloadNavigatorClass).append($element);
 
                 this.sandbox.start([
                     {
                         name: 'dropdown@husky',
                         options: {
-                            el: this.$items[record.id].find('.' + constants.downloadNavigatorClass),
-                            instanceName: record.id,
+                            el: $element,
+                            instanceName: id,
                             data: dropdownItems
                         }
                     }
                 ]);
 
                 this.sandbox.once('husky.dropdown.' + record.id + '.rendered', function() {
-                    dropdownLoadedDeferred.resolve();
-                });
+                    this.clipboard = this.sandbox.clipboard.initialize('.' + constants.downloadNavigatorClass + ' li', {
+                        text: function(trigger) {
+                            return trigger.getAttribute('data-id');
+                        }
+                    });
+                }.bind(this));
+            },
 
-                return dropdownLoadedDeferred;
+            /**
+             * Stops the download dropdown for a given record
+             *
+             * {Integer} id The id for the item for which the dropdown gets stopped
+             */
+            stopDownloadDropdown: function(id) {
+                this.sandbox.stop(this.$items[id].find('.' + constants.downloadNavigatorClass + ' *'));
             },
 
             /**
@@ -432,6 +433,14 @@ define([
                     }.bind(this));
                 }
 
+                this.$items[id].on('mouseenter', function() {
+                    this.startDownloadDropdown(id);
+                }.bind(this));
+
+                this.$items[id].on('mouseleave', function() {
+                    this.stopDownloadDropdown(id);
+                }.bind(this));
+
                 this.bindItemDownloadEvents(id);
             },
 
@@ -448,13 +457,6 @@ define([
 
                     window.location.href = item.url;
                 });
-
-                this.sandbox.on('husky.dropdown.' + id + '.showing', function() {
-                    if (!!this.lastItemDropdownId && this.lastItemDropdownId !== id) {
-                        this.sandbox.emit('husky.dropdown.' + this.lastItemDropdownId + '.hide');
-                    }
-                    this.lastItemDropdownId = id;
-                }.bind(this));
             },
 
             /**
@@ -540,6 +542,16 @@ define([
              */
             addRecord: function(record, appendAtBottom) {
                 this.renderRecords([record], appendAtBottom);
+            },
+
+            /**
+             * Adds multiple records to the view
+             * @param record
+             * @param appendAtBottom
+             * @public
+             */
+            addRecords: function(records, appendAtBottom) {
+                this.renderRecords(records, appendAtBottom);
             },
 
             /**

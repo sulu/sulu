@@ -24,8 +24,6 @@
         border-radius: $borderRadius;
         border: 1px solid $white;
         @include transition(
-            top $fadeInDuration,
-            left $fadeInDuration,
             opacity $fadeInDuration,
             box-shadow $effectDuration
         );
@@ -91,19 +89,13 @@
             position: relative;
             left: 0;
             vertical-align: middle;
-            width: 260px - 2px;
             border-radius: 0 0 $borderRadius $borderRadius;
-            @include transition(
-                            width $zoomAnimationDuration,
-                            height $zoomAnimationDuration,
-                            left $zoomAnimationDuration
-            );
+            @include transition(transform $zoomAnimationDuration);
         }
 
         &:hover {
             .image {
-                width: 270px;
-                left: -5px;
+                @include transform(scale(1.05));
             }
         }
     }
@@ -172,6 +164,7 @@
         }
 
         .icons > * {
+            display: inline-block;
             margin-left: 5px;
         }
 
