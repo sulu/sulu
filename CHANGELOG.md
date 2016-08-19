@@ -17,6 +17,7 @@ CHANGELOG for Sulu
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
     * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 
+    * BUGFIX      #2841 [MediaBundle]         Hide system collection's media if permission is not granted
 
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release

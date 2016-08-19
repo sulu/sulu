@@ -199,6 +199,12 @@ class MediaController extends AbstractMediaController implements
             }
             $listBuilder->addSelectField($fieldDescriptors['collection']);
             $listBuilder->where($fieldDescriptors['collection'], $collectionId);
+        } elseif (!$this->getSecurityChecker()->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
+            $nonSystemCollections = $this->getCollectionRepository()->findCollectionSet(
+                100,
+                ['systemCollections' => false]
+            );
+            $listBuilder->in($fieldDescriptors['collection'], $nonSystemCollections);
         }
 
         // If no limit is set in request and limit is set by ids
