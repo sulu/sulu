@@ -223,6 +223,9 @@ define(function() {
              * @param items {Array} array with items to render
              */
             renderRecords: function(items, appendAtBottom) {
+                if (typeof appendAtBottom === 'undefined') {
+                    appendAtBottom = true;
+                }
                 this.updateEmptyIndicatorVisibility();
                 this.sandbox.util.foreach(items, function(record) {
                     var item = processContentFilters.call(this, record);
