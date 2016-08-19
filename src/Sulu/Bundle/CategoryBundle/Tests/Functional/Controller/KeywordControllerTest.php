@@ -70,6 +70,29 @@ class KeywordControllerTest extends SuluTestCase
         $this->entityManager->flush();
     }
 
+    public function testCget() {
+        $this->testPost('keyword1', 'de', $this->category1->getId());
+        $this->testPost('keyword2', 'de', $this->category1->getId());
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories/' . $this->category1->getId() . '/keywords?locale=de'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, $response->total);
+
+        usort($response->_embedded->keywords, function ($key1, $key2) {
+            return $key1->id > $key2->id;
+        });
+
+        $this->assertEquals('keyword1', $response->_embedded->keywords[0]->keyword);
+        $this->assertEquals('keyword2', $response->_embedded->keywords[1]->keyword);
+    }
+
     public function testPost($keyword = 'Test', $locale = 'de', $categoryId = null)
     {
         $client = $this->createAuthenticatedClient();
