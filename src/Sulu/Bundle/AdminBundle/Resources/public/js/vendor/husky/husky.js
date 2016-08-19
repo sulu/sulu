@@ -36136,7 +36136,7 @@ define('__component__$matrix@husky',[],function() {
 
             for (i = 0; i < columnData.length; i++) {
                 if (columnData[i].title) {
-                    title = 'title="' + columnData[i].title + '"';
+                    title = 'title="' + this.sandbox.translate(columnData[i].title) + '"';
                 } else {
                     title = '';
                 }

@@ -135,6 +135,30 @@
                 <source>sulu-security.role.saved</source>
                 <target>Rol succesvol opgeslagen</target>
             </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236l" resname="security.permissions.view">
+                 <source>security.permissions.view</source>
+                 <target>Bekijken</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236z" resname="security.permissions.add">
+                 <source>security.permissions.add</source>
+                 <target>Toevoegen</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236c" resname="security.permissions.edit">
+                 <source>security.permissions.edit</source>
+                 <target>Bewerken</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236q" resname="security.permissions.delete">
+                 <source>security.permissions.delete</source>
+                 <target>Verwijderen</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236t" resname="security.permissions.security">
+                 <source>security.permissions.security</source>
+                 <target>Rechten</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236x" resname="security.permissions.live">
+                 <source>security.permissions.live</source>
+                 <target>Live</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
