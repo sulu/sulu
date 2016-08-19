@@ -11,10 +11,10 @@
         <parameter key="sulu_media.format_cache_clearer.class">Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearer</parameter>
         <parameter key="sulu_media.format_cache.class">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
         <parameter key="sulu_media.image.converter.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
-        <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\CommandManager</parameter>
-        <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
-        <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
-        <parameter key="sulu_media.image.command.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CropCommand</parameter>
+        <parameter key="sulu_media.image.transformation_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager\TransformationManager</parameter>
+        <parameter key="sulu_media.image.transformation.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\ResizeTransformation</parameter>
+        <parameter key="sulu_media.image.transformation.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\ScaleTransformation</parameter>
+        <parameter key="sulu_media.image.transformation.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\CropTransformation</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
@@ -69,19 +69,19 @@
         </service>
 
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
-            <argument type="service" id="sulu_media.image.command_manager" />
+            <argument type="service" id="sulu_media.image.transformation_manager" />
         </service>
 
-        <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%" />
+        <service id="sulu_media.image.transformation_manager" class="%sulu_media.image.transformation_manager.class%" />
 
-        <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%">
-            <tag name="sulu_media.image.command" alias="resize" />
+        <service id="sulu_media.image.transformation.resize" class="%sulu_media.image.transformation.resize.class%">
+            <tag name="sulu_media.image.transformation" alias="resize" />
         </service>
-        <service id="sulu_media.image.command.scale" class="%sulu_media.image.command.scale.class%">
-            <tag name="sulu_media.image.command" alias="scale" />
+        <service id="sulu_media.image.transformation.scale" class="%sulu_media.image.transformation.scale.class%">
+            <tag name="sulu_media.image.transformation" alias="scale" />
         </service>
-        <service id="sulu_media.image.command.crop" class="%sulu_media.image.command.crop.class%">
-            <tag name="sulu_media.image.command" alias="crop" />
+        <service id="sulu_media.image.transformation.crop" class="%sulu_media.image.transformation.crop.class%">
+            <tag name="sulu_media.image.transformation" alias="crop" />
         </service>
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">

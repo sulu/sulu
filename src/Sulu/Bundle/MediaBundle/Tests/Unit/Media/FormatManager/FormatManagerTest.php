@@ -31,7 +31,9 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
-        $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
+        $videoThumbnailService = $this->prophesize(
+            'Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface'
+        );
 
         $ghostScriptPath = '';
         $saveImage = true;
@@ -39,16 +41,16 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $responseHeaders = [];
         $formats = [
             '640x480' => [
-                'name' => '640x480',
-                'commands' => [
-                    [
-                        'action' => 'resize',
-                        'parameters' => [
-                            'x' => 640,
-                            'y' => 480,
-                        ],
-                    ],
+                'key' => '640x480',
+                'meta' => [
+                    'title' => [],
                 ],
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [],
                 'options' => [
                     'jpeg_quality' => 70,
                     'png_compression_level' => 6,
@@ -119,7 +121,9 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
-        $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
+        $videoThumbnailService = $this->prophesize(
+            'Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface'
+        );
 
         $ghostScriptPath = '';
         $saveImage = true;
@@ -127,16 +131,16 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $responseHeaders = [];
         $formats = [
             '640x480' => [
-                'name' => '640x480',
-                'commands' => [
-                    [
-                        'action' => 'resize',
-                        'parameters' => [
-                            'x' => 640,
-                            'y' => 480,
-                        ],
-                    ],
+                'key' => '640x480',
+                'meta' => [
+                    'title' => [],
                 ],
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [],
                 'options' => [
                     'jpeg_quality' => 70,
                     'png_compression_level' => 6,
@@ -176,7 +180,9 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
-        $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
+        $videoThumbnailService = $this->prophesize(
+            'Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface'
+        );
 
         $ghostScriptPath = '';
         $saveImage = true;
@@ -184,16 +190,16 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $responseHeaders = [];
         $formats = [
             '640x480' => [
-                'name' => '640x480',
-                'commands' => [
-                    [
-                        'action' => 'resize',
-                        'parameters' => [
-                            'x' => 640,
-                            'y' => 480,
-                        ],
-                    ],
+                'key' => '640x480',
+                'meta' => [
+                    'title' => [],
                 ],
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [],
                 'options' => [
                     'jpeg_quality' => 70,
                     'png_compression_level' => 6,

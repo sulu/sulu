@@ -9,29 +9,41 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 
-class ScaleCommand implements CommandInterface
+/**
+ * Class ScaleTransformation
+ * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation
+ * @deprecated
+ */
+class ScaleTransformation implements TransformationInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface &$image, $parameters)
+    public function execute(ImageInterface $image, $parameters)
     {
-        $parameters = array_merge([
-            'retina' => false,
-            'forceRatio' => true,
-            'x' => null,
-            'y' => null,
-            'mode' => $image::THUMBNAIL_OUTBOUND,
-        ], $parameters);
+        @trigger_error(
+            'ScaleTransformation is deprecated since version 1.4. Use the scale config instead',
+            E_USER_DEPRECATED
+        );
+        $parameters = array_merge(
+            [
+                'retina' => false,
+                'forceRatio' => true,
+                'x' => null,
+                'y' => null,
+                'mode' => ImageInterface::THUMBNAIL_OUTBOUND,
+            ],
+            $parameters
+        );
 
         list($newWidth, $newHeight) = $this->getHeightWidth($parameters, $image->getSize(), $parameters['mode']);
 
-        $image = $image->thumbnail(new Box($newWidth, $newHeight), $parameters['mode']);
+        return $image->thumbnail(new Box($newWidth, $newHeight), $parameters['mode']);
     }
 
     /**
@@ -40,7 +52,7 @@ class ScaleCommand implements CommandInterface
      *
      * @return array
      */
-    protected function getHeightWidth($parameters, $size, $mode)
+    private function getHeightWidth($parameters, $size, $mode)
     {
         $newWidth = $parameters['x'];
         $newHeight = $parameters['y'];
@@ -92,7 +104,7 @@ class ScaleCommand implements CommandInterface
      *
      * @return array
      */
-    protected function getSizeInSameRatio($size1, $size2, $originalSize)
+    private function getSizeInSameRatio($size1, $size2, $originalSize)
     {
         if ($size1) {
             $size1 = $size1 / $size2 * $originalSize;

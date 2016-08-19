@@ -9,19 +9,28 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 
-class CropCommand implements CommandInterface
+/**
+ * Class CropTransformation
+ * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation
+ * @deprecated
+ */
+class CropTransformation implements TransformationInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface &$image, $parameters)
+    public function execute(ImageInterface $image, $parameters)
     {
+        @trigger_error(
+            'ScaleTransformation is deprecated since version 1.4. Use the scale config instead',
+            E_USER_DEPRECATED
+        );
         $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
         $x = isset($parameters['x']) ? intval($parameters['x']) * $retina : 0;
         $y = isset($parameters['y']) ? intval($parameters['y']) * $retina : 0;
@@ -32,5 +41,7 @@ class CropCommand implements CommandInterface
         $box = new Box($width, $height);
 
         $image->crop($point, $box);
+
+        return $image;
     }
 }

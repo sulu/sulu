@@ -9,13 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager;
 
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
- * Defines the operations of the CommandManager
- * The CommandManager load dynamically services for the image manipulation.
+ * Defines the operations of a manager handling transformations
+ * The TransformationManager loads services for the image manipulation dynamically.
  */
 interface ManagerInterface
 {
@@ -24,7 +24,7 @@ interface ManagerInterface
      *
      * @param string $name
      *
-     * @return CommandInterface
+     * @return TransformationInterface
      */
     public function get($name);
 }

@@ -9,23 +9,23 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
 use Imagine\Image\ImageInterface;
 
 /**
- * Class ScaleCommandTest
- * Test the scale command service.
+ * Class ScaleTransformationTest
+ * Test the scale transformation service.
  */
-class ScaleCommandTest extends AbstractCommandTest
+class ScaleTransformationTest extends AbstractTransformationTest
 {
-    protected $commandServiceName = 'sulu_media.image.command.scale';
+    protected $transformationServiceName = 'sulu_media.image.transformation.scale';
 
     protected function getDataList()
     {
         return [
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                         'x' => 200,
                         'y' => 100,
@@ -36,7 +36,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 100,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                         'x' => 200,
                         'y' => 100,
@@ -48,7 +48,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 200,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                         'x' => 5000,
                         'y' => 5000,
@@ -59,7 +59,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 500,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'x' => 700,
                     'y' => 250,
@@ -73,7 +73,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 230,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'x' => 250,
                     'y' => 700,
@@ -87,7 +87,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 230,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'x' => 5000,
                     'y' => 5000,
@@ -98,7 +98,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 500,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'mode' => ImageInterface::THUMBNAIL_INSET,
                     'x' => 200,
@@ -112,7 +112,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'imageWidth' => 300,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'mode' => ImageInterface::THUMBNAIL_INSET,
                     'x' => 600,
@@ -123,7 +123,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 429,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'mode' => ImageInterface::THUMBNAIL_INSET,
                     'x' => 1000,
@@ -134,7 +134,7 @@ class ScaleCommandTest extends AbstractCommandTest
                 'height' => 500,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                     'mode' => ImageInterface::THUMBNAIL_INSET,
                     'x' => 300,

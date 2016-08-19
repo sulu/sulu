@@ -81,7 +81,7 @@ class LocalFormatCache implements FormatCacheInterface
     public function purge($id, $fileName, $options)
     {
         foreach ($this->formats as $format) {
-            $path = $this->getPath($this->path, $id, $fileName, $format['name']);
+            $path = $this->getPath($this->path, $id, $fileName, $format['key']);
             $this->filesystem->remove($path);
         }
 

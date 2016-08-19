@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 
@@ -106,7 +107,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
     protected function getTransformationsFromFormatNode(\DOMNode $formatNode)
     {
         $transformations = [];
-        // The first "scale" or "resize" command gets skipped, because it is already contained
+        // The first "scale" or "resize" transformation gets skipped, because it is already contained
         // in the scale-section of the format (see "getScaleFromFormatNode")
         $scaleCommandSkipped = false;
 

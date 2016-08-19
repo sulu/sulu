@@ -12,22 +12,22 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use Sulu\Bundle\MediaBundle\DependencyInjection\ImageCommandCompilerPass;
+use Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Test the image command compiler pass.
+ * Test the image transformation compiler pass.
  */
-class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
+class ImageTransformationCompilerPassTest extends AbstractCompilerPassTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function registerCompilerPass(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new ImageCommandCompilerPass());
+        $container->addCompilerPass(new ImageTransformationCompilerPass());
     }
 
     /**
@@ -35,20 +35,20 @@ class ImageCommandCompilerPassTest extends AbstractCompilerPassTestCase
      */
     public function if_compiler_pass_collects_services_by_adding_method_calls_these_will_exist()
     {
-        $commandManager = new Definition();
-        $this->setDefinition('sulu_media.image.command_manager', $commandManager);
+        $transformationManager = new Definition();
+        $this->setDefinition('sulu_media.image.transformation_manager', $transformationManager);
 
-        $command = new Definition();
-        $command->addTag('sulu_media.image.command', ['alias' => 'resize']);
-        $this->setDefinition('sulu_media.image.command.resize', $command);
+        $transformation = new Definition();
+        $transformation->addTag('sulu_media.image.transformation', ['alias' => 'resize']);
+        $this->setDefinition('sulu_media.image.transformation.resize', $transformation);
 
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'sulu_media.image.command_manager',
+            'sulu_media.image.transformation_manager',
             'add',
             [
-                new Reference('sulu_media.image.command.resize'),
+                new Reference('sulu_media.image.transformation.resize'),
                 'resize',
             ]
         );

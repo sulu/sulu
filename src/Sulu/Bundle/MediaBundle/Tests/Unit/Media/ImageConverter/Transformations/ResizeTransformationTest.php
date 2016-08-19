@@ -9,21 +9,21 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
 /**
- * Class ResizeCommandTest
- * Test the resize command service.
+ * Class ResizeTransformationTest
+ * Test the resize transformation service.
  */
-class ResizeCommandTest extends AbstractCommandTest
+class ResizeTransformationTest extends AbstractTransformationTest
 {
-    protected $commandServiceName = 'sulu_media.image.command.resize';
+    protected $transformationServiceName = 'sulu_media.image.transformation.resize';
 
     protected function getDataList()
     {
         return [
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                         'x' => 200,
                         'y' => 100,
@@ -32,7 +32,7 @@ class ResizeCommandTest extends AbstractCommandTest
                 'height' => 100,
             ],
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                         'x' => 5000,
                         'y' => 5000,

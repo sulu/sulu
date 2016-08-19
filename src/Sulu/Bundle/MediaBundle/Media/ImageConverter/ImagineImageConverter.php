@@ -12,13 +12,15 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Imagine as ImagickImagine;
+use Imagine\Imagick\Imagine;
 use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager\ManagerInterface;
 
 /**
  * Sulu imagine converter for media.
@@ -26,27 +28,50 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterfac
 class ImagineImageConverter implements ImageConverterInterface
 {
     /**
-     * @var GdImagine|ImagickImagine
-     */
-    protected $image;
-
-    /**
      * @var ManagerInterface
      */
-    protected $commandManager;
+    private $transformationManager;
 
     /**
-     * @param ManagerInterface $commandManager
+     * @param ManagerInterface $transformationManager
      */
-    public function __construct(ManagerInterface $commandManager)
+    public function __construct(ManagerInterface $transformationManager)
     {
-        $this->commandManager = $commandManager;
+        $this->transformationManager = $transformationManager;
     }
 
     /**
-     * @return GdImagine
+     * {@inheritdoc}
      */
-    protected function newImage()
+    public function convert($originalPath, array $format)
+    {
+        $imagine = $this->newImage();
+        $image = null;
+
+        try {
+            $image = $imagine->open($originalPath);
+        } catch (\RuntimeException $e) {
+            if (file_exists($originalPath)) {
+                throw new InvalidFileTypeException($e->getMessage());
+            }
+            throw new ImageProxyMediaNotFoundException($e->getMessage());
+        }
+
+        $image = $this->toRGB($image);
+
+        if (isset($format['transformations'])) {
+            $image = $this->applyTransformations($image, $format['transformations']);
+        }
+
+        return $image;
+    }
+
+    /**
+     * Creates a new image
+     *
+     * @return ImageInterface
+     */
+    private function newImage()
     {
         try {
             return new ImagickImagine();
@@ -56,72 +81,73 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Applies an array of transformations on a passed image
+     *
+     * @param ImageInterface $image
+     * @param $tansformations
+     * @throws ImageProxyInvalidFormatOptionsException
+     *
+     * @return ImageInterface $image The modified image
      */
-    public function convert($originalPath, $formatOptions)
+    private function applyTransformations(ImageInterface $image, $tansformations)
     {
-        $imagine = $this->newImage();
-
-        try {
-            $this->image = $imagine->open($originalPath);
-        } catch (\RuntimeException $e) {
-            if (file_exists($originalPath)) {
-                throw new InvalidFileTypeException($e->getMessage());
+        foreach ($tansformations as $transformation) {
+            if (!isset($transformation['effect'])) {
+                throw new ImageProxyInvalidFormatOptionsException('Effect not found');
             }
-            throw new ImageProxyMediaNotFoundException($e->getMessage());
+            $image = $this->call($image, $transformation['effect'], $transformation['parameters']);
         }
 
-        $this->toRGB();
-
-        if (!isset($formatOptions['commands'])) {
-            throw new ImageProxyInvalidFormatOptionsException('Commands not found.');
-        }
-        if (isset($formatOptions['commands'])) {
-            foreach ($formatOptions['commands'] as $command) {
-                if (!isset($command['parameters']) && !isset($command['action'])) {
-                    throw new ImageProxyInvalidFormatOptionsException('Action or parameters not found.');
-                }
-                $this->call($command['action'], $command['parameters']);
-            }
-        }
-
-        return $this->image;
+        return $image;
     }
 
     /**
-     * set the image palette to RGB.
+     * Ensures that the color mode of the passed image is RGB
+     *
+     * @param ImageInterface $image
+     *
+     * @return ImageInterface $image The modified image
      */
-    protected function toRGB()
+    private function toRGB(ImageInterface $image)
     {
-        if ($this->image->palette()->name() == 'cmyk') {
-            $this->image->usePalette(new RGB());
+        if ($image->palette()->name() == 'cmyk') {
+            $image->usePalette(new RGB());
         }
+
+        return $image;
     }
 
     /**
-     * @param $command
+     * Calls a given transformation with given parameters on the passed image
+     *
+     * @param ImageInterface $image
+     * @param $transformation
      * @param $parameters
      *
-     * @throws ImageProxyInvalidFormatOptionsException
+     * @return ImageInterface $image The modified image
      */
-    public function call($command, $parameters)
+    private function call(ImageInterface $image, $transformation, $parameters)
     {
-        if (count($this->image->layers())) {
-            $counter = 0;
-            $this->image->layers()->coalesce();
-            foreach ($this->image->layers() as $layer) {
-                ++$counter;
-                $this->commandManager->get($command)->execute($layer, $parameters);
-                if ($counter == 1) {
-                    /** @var \Imagine\Imagick\Image|\Imagine\Gd\Image $image */
-                    $image = $layer; // use first layer as main image
+        if (count($image->layers())) {
+            $countLayer = 0;
+            $image->layers()->coalesce();
+
+            /** @var ImageInterface $temporarImage */
+            $temporarImage = null;
+            foreach ($image->layers() as $layer) {
+                $countLayer += 1;
+                $this->transformationManager->get($transformation)->execute($layer, $parameters);
+                if ($countLayer == 1) {
+                    $temporarImage = $layer; // use first layer as main image
                 } else {
-                    $image->layers()->add($layer);
+                    $temporarImage->layers()->add($layer);
                 }
             }
-            $this->image = $image;
+            $image = $temporarImage;
         } else {
-            $this->commandManager->get($command)->execute($this->image, $parameters);
+            $this->transformationManager->get($transformation)->execute($image, $parameters);
         }
+
+        return $image;
     }
 }
