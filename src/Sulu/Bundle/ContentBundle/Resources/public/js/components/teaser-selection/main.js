@@ -206,7 +206,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 item = this.getItem($element.data('id')),
                 apiItem = this.getApiItem($element.data('id')),
                 $descriptionContainer = $edit.find('.description-container'),
-                $editorContainer = $('<textarea class="form-element component description"></textarea>');
+                $editorContainer = $('<textarea class="form-element component description"></textarea>'),
+                mediaId = item.mediaId || apiItem.mediaId;
 
             $element.find('.move').hide();
 
@@ -221,9 +222,9 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             $edit.find('.moreText').val(item.moreText || '');
 
             $edit.find('.image-content').remove();
-            if (!!item.mediaId) {
+            if (!!mediaId) {
                 $edit.find('.image').prepend(
-                    '<div class="image-content"><img class="mediaId" data-id="' + item.mediaId + '" src="/admin/media/' + item.mediaId + '?locale=' + this.options.locale + '&format=50x50"/></div>'
+                    '<div class="image-content"><img class="mediaId" data-id="' + mediaId + '" src="/admin/media/' + mediaId + '?locale=' + this.options.locale + '&format=50x50"/></div>'
                 );
             } else {
                 $edit.find('.image').prepend('<div class="fa-picture-o image-content"/>');
@@ -444,7 +445,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 parts = id.split(';');
 
             return _.find(items, function(item) {
-                return item.type === parts[0] && item.id === parts[1];
+                return item.type === parts[0] && item.id == parts[1];
             });
         },
 

@@ -511,6 +511,10 @@
   display: inline-block;
 }
 /* line 89, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image-content img {
+  padding-right: 0px;
+}
+/* line 93, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint {
   width: 50px;
   height: 50px;
@@ -524,7 +528,7 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 99, ../scss/modules/teaser-selection.scss */
+/* line 103, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint::before {
   content: "";
   display: block;
@@ -537,7 +541,7 @@
   height: 100%;
   border-radius: 0 0 3px 3px;
 }
-/* line 112, ../scss/modules/teaser-selection.scss */
+/* line 116, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint span {
   display: block;
   position: absolute;
@@ -550,20 +554,20 @@
   color: #fff;
   font-size: 24px;
 }
-/* line 119, ../scss/modules/teaser-selection.scss */
+/* line 123, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint:hover {
   opacity: 1;
 }
 
-/* line 128, ../scss/modules/teaser-selection.scss */
+/* line 132, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view, .teaser-selection-container .edit {
   display: inline-block;
 }
-/* line 131, ../scss/modules/teaser-selection.scss */
+/* line 135, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view .hidden, .teaser-selection-container .edit .hidden {
   display: none;
 }
-/* line 136, ../scss/modules/teaser-selection.scss */
+/* line 140, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .edit {
   width: 90%;
 }

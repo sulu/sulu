@@ -42,7 +42,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->search = $this->prophesize(SearchQueryBuilder::class);
 
-        $this->searchManager->getIndexNames()->willReturn(['page_sulu_io']);
+        $this->searchManager->getIndexNames()->willReturn(['page_sulu_io_published']);
 
         $this->contentProvider = new ContentTeaserProvider($this->searchManager->reveal());
     }
@@ -79,7 +79,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
                 }
             )
         )->willReturn($this->search->reveal())->shouldBeCalled();
-        $this->search->indexes(['page_sulu_io'])->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->indexes(['page_sulu_io_published'])->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->execute()->willReturn(
             [$this->createQueryHit($ids[0], $data[$ids[0]]), $this->createQueryHit($ids[1], $data[$ids[1]])]
         );
