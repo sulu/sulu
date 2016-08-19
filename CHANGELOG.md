@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2804 [ListBuilder]         Fixed ids-query in doctrine-list-builder
+    * HOTFIX      #2839 [WebsiteBundle]       Include port in URLs
 
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release

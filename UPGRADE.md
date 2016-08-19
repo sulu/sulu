@@ -1,5 +1,17 @@
 # Upgrade
 
+## dev-master
+
+If Sulu is used in combination with a port, the port has to be included in the
+URLs of the webspace configuration. So if you want to use Sulu on port 8080 the
+configuration has to look like this:
+
+```xml
+<url>sulu.lo:8080/{localization}</url>
+```
+
+The port can still be emitted if the standard HTTP or HTTPS port is used.
+
 ## 1.3.0-RC3
 
 ### Resource-locator generation

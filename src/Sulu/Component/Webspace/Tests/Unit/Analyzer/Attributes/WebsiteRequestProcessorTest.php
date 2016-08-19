@@ -23,7 +23,6 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
@@ -105,12 +104,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2, $portalInformation3]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('/test'));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
+        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/test']);
 
         $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
         $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
@@ -170,12 +164,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('/test'));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
+        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/test']);
 
         $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
         $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
@@ -233,12 +222,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2]);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('/de'));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
+        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/de']);
 
         $this->replacer->replaceHost(null, 'sulu.lo')->willReturn('sulu.lo');
         $this->replacer->replaceHost('sulu.lo', 'sulu.lo')->willReturn('sulu.lo');
