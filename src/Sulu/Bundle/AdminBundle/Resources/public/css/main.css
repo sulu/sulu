@@ -888,30 +888,35 @@ input, select {
 .sulu-breadcrumb {
   padding-bottom: 5px;
 }
-/* line 4, ../scss/modules/breadcrumb.scss */
+/* line 5, ../scss/modules/breadcrumb.scss */
 .sulu-breadcrumb .breadcrumb {
   cursor: pointer;
   font-size: 12px;
   color: #999;
+}
+/* line 10, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .breadcrumb, .sulu-breadcrumb .breadcrumb .icon {
   -moz-transition: color 80ms;
   -o-transition: color 80ms;
   -webkit-transition: color 80ms;
   transition: color 80ms;
 }
-/* line 10, ../scss/modules/breadcrumb.scss */
-.sulu-breadcrumb .breadcrumb:hover {
+/* line 14, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .breadcrumb:hover, .sulu-breadcrumb .breadcrumb:hover .icon {
   color: #000;
 }
-/* line 15, ../scss/modules/breadcrumb.scss */
+/* line 19, ../scss/modules/breadcrumb.scss */
 .sulu-breadcrumb .icon {
+  color: #ccc;
+  font-size: 9px;
+  margin-right: 5px;
+}
+/* line 25, ../scss/modules/breadcrumb.scss */
+.sulu-breadcrumb .separator {
   display: inline-block;
-  margin: 0 5px;
+  margin: 0 10px 0 5px;
   font-size: 9px;
   color: #000;
-}
-/* line 22, ../scss/modules/breadcrumb.scss */
-.sulu-breadcrumb .breadcrumb:last-child .icon {
-  display: none;
 }
 
 /*----------------------------------------*/

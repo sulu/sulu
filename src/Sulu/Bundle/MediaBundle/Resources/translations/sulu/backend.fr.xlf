@@ -150,8 +150,8 @@
                 <source>media-selection.overlay.all-medias</source>
                 <target>Tous les Medias</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
-                <source>sulu.media.all</source>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all-collections">
+                <source>sulu.media.all-collections</source>
                 <target>Tous les media</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">

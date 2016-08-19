@@ -50,8 +50,6 @@ define([
 
     return {
 
-        stickyToolbar: 240,
-
         layout: {
             content: {
                 width: 'max'
@@ -224,21 +222,31 @@ define([
          */
         render: function() {
             this.sandbox.dom.html(this.$el, filesTemplate);
+            var whenChildrenLoaded, whenDatagridStarted;
 
             if (SecurityChecker.hasPermission(this.data, 'add')) {
                 this.startDropzone();
             }
 
-            this.startChildrenTiles();
-            this.startDatagrid();
+            whenChildrenLoaded = this.startChildrenTiles();
+            whenDatagridStarted = this.startDatagrid();
+
+            $.when(whenChildrenLoaded, whenDatagridStarted).done(function() {
+                var scrollAt = this.$find(constants.toolbarSelector).position().top
+                             - this.$find(constants.toolbarSelector).height();
+                this.sandbox.stickyToolbar.enable(this.$el, scrollAt); 
+            }.bind(this));
         },
 
         /**
          * Starts the datagrid showing the children (sub-folders) of the collection
          */
         startChildrenTiles: function() {
+            var whenTilesInitialized = $.Deferred();
+
             if (!this.data.hasSub) {
                 this.$find(constants.childrenSelector).remove();
+                whenTilesInitialized.resolve();
                 return;
             }
 
@@ -281,6 +289,12 @@ define([
                     ]
                 }
             }]);
+
+            this.sandbox.on('husky.datagrid.' + this.data.id + '.children.view.rendered', function() {
+                whenTilesInitialized.resolve();
+            });
+
+            return whenTilesInitialized;
         },
 
         /**
@@ -288,7 +302,8 @@ define([
          */
         startDatagrid: function() {
             var view = UserSettingsManager.getMediaListView(),
-                locale = this.options.locale;
+                locale = this.options.locale,
+                whenDatagridInitialized = $.Deferred();
 
 
             this.sandbox.sulu.initListToolbarAndList.call(this,
@@ -345,6 +360,12 @@ define([
                         }
                     }
                 });
+
+            this.sandbox.on('husky.datagrid.view.rendered', function() {
+                whenDatagridInitialized.resolve();
+            });
+
+            return whenDatagridInitialized;
         },
 
         /**

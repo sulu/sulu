@@ -10608,7 +10608,7 @@ a.btn-black, a.btn-highlight {
 /* line 307, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements {
   display: block;
-  height: 20px;
+  height: 40px;
   -moz-transition: height 200ms;
   -o-transition: height 200ms;
   -webkit-transition: height 200ms;
@@ -12508,6 +12508,7 @@ label.husky-toggler-label ~ .input-description {
 /* line 10, ../scss/modules/tiles.scss */
 .tiles-view .tile,
 .tiles-view .add-new-tile {
+  position: relative;
   width: 120px;
   height: 120px;
   display: inline-block;
@@ -12517,7 +12518,7 @@ label.husky-toggler-label ~ .input-description {
   vertical-align: middle;
   border-radius: 2px;
 }
-/* line 22, ../scss/modules/tiles.scss */
+/* line 23, ../scss/modules/tiles.scss */
 .tiles-view .tile {
   background: #fff;
   box-shadow: 0 0 10px -10px rgba(0, 0, 0, 0.1);
@@ -12526,11 +12527,11 @@ label.husky-toggler-label ~ .input-description {
   -webkit-transition: box-shadow 200ms;
   transition: box-shadow 200ms;
 }
-/* line 27, ../scss/modules/tiles.scss */
+/* line 28, ../scss/modules/tiles.scss */
 .tiles-view .tile:hover {
   box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.1);
 }
-/* line 32, ../scss/modules/tiles.scss */
+/* line 33, ../scss/modules/tiles.scss */
 .tiles-view .add-new-tile {
   -moz-transition: color 80ms, border-color 80ms;
   -o-transition: color 80ms, border-color 80ms;
@@ -12539,7 +12540,7 @@ label.husky-toggler-label ~ .input-description {
   color: #999;
   border: 1px dashed #ccc;
 }
-/* line 35, ../scss/modules/tiles.scss */
+/* line 36, ../scss/modules/tiles.scss */
 .tiles-view .add-new-tile .icon {
   -moz-transition: color 80ms;
   -o-transition: color 80ms;
@@ -12547,34 +12548,43 @@ label.husky-toggler-label ~ .input-description {
   transition: color 80ms;
   color: #ccc;
 }
-/* line 43, ../scss/modules/tiles.scss */
+/* line 44, ../scss/modules/tiles.scss */
 .tiles-view .add-new-tile:hover {
   color: #000;
   border-color: #000;
 }
-/* line 46, ../scss/modules/tiles.scss */
+/* line 47, ../scss/modules/tiles.scss */
 .tiles-view .add-new-tile:hover .icon {
   color: #000;
 }
-/* line 52, ../scss/modules/tiles.scss */
+/* line 53, ../scss/modules/tiles.scss */
 .tiles-view .icon {
   font-size: 38px;
   line-height: 38px;
   padding: 20px 0 15px 0;
   color: #ddd;
 }
-/* line 59, ../scss/modules/tiles.scss */
+/* line 60, ../scss/modules/tiles.scss */
 .tiles-view .title, .tiles-view .description {
+  position: absolute;
   display: block;
+  width: 100%;
   font-size: 12px;
-  line-height: 20px;
-  margin: 0 5px;
-  white-space: nowrap;
-  overflow: hidden;
+  padding: 0 8px;
 }
 /* line 68, ../scss/modules/tiles.scss */
+.tiles-view .title {
+  bottom: 28px;
+  line-height: 15px;
+}
+/* line 73, ../scss/modules/tiles.scss */
 .tiles-view .description {
+  position: absolute;
+  bottom: 5px;
   color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 20px;
 }
 
 /* line 1, ../scss/modules/badge.scss */
