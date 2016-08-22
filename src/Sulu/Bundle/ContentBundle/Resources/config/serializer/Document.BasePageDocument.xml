@@ -20,11 +20,11 @@
 
         <property name="nodeName" type="string"/>
         <property name="title" type="string" groups="defaultPage,smallPage"/>
-        <property name="creator" type="integer" groups="defaultPage"/>
-        <property name="changer" type="integer" groups="defaultPage"/>
-        <property name="created" type="DateTime" groups="defaultPage"/>
-        <property name="published" type="DateTime" groups="defaultPage,smallPage"/>
-        <property name="changed" type="DateTime" groups="defaultPage"/>
+        <property name="creator" type="integer" groups="defaultPage,preview"/>
+        <property name="changer" type="integer" groups="defaultPage,preview"/>
+        <property name="created" type="DateTime" groups="defaultPage,preview"/>
+        <property name="published" type="DateTime" groups="defaultPage,smallPage,preview"/>
+        <property name="changed" type="DateTime" groups="defaultPage,preview"/>
         <property name="resourceSegment" exclude="true"/>
         <property name="navigationContexts" type="array" serialized-name="navContexts" groups="defaultPage,smallPage"/>
         <property name="redirectType" type="integer" serialized-name="nodeType" groups="defaultPage,smallPage"/>
