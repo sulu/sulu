@@ -287,9 +287,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     private function getUserWithPermissionsQuery()
     {
         return $this->createQueryBuilder('user')
+            ->addSelect('contact')
             ->addSelect('userRoles')
             ->addSelect('role')
             ->addSelect('permissions')
+            ->leftJoin('user.contact', 'contact')
             ->leftJoin('user.userRoles', 'userRoles')
             ->leftJoin('userRoles.role', 'role')
             ->leftJoin('role.permissions', 'permissions');

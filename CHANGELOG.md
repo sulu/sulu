@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2849 [SecurityBundle]      Load contact when loading the user with permissions
     * ENHANCEMENT #2500 [MediaBundle]         Refactored handling of post data for media
     * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
     * BUGFIX      #2504 [WebsiteBundle]       Fixed http-cache clear if var dir exists
