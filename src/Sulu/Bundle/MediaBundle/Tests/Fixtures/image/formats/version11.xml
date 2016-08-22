@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
 
     <format key="400x400">
-        <scale x="400" y="400"/>
+        <scale x="400" y="400" forceRatio="false"/>
         <transformations>
             <transformation>
                 <effect>blur</effect>

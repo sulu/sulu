@@ -26,6 +26,10 @@ abstract class BaseXmlFormatLoader extends FileLoader
 
     const SCALE_MODE_DEFAULT = 'outbound';
 
+    const SCALE_RETINA_DEFAULT = false;
+
+    const SCALE_FORCE_RATIO_DEFAULT = true;
+
     /**
      * @var \DOMXPath
      */
@@ -34,22 +38,22 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * @var array
      */
-    private $defaultOptions = [];
+    private $globalOptions = [];
 
     /**
      * @return array
      */
-    public function getDefaultOptions()
+    public function getGlobalOptions()
     {
-        return $this->defaultOptions;
+        return $this->globalOptions;
     }
 
     /**
-     * @param array $defaultOptions
+     * @param array $globalOptions
      */
-    public function setDefaultOptions($defaultOptions)
+    public function setGlobalOptions($globalOptions)
     {
-        $this->defaultOptions = $defaultOptions;
+        $this->globalOptions = $globalOptions;
     }
 
     /**
@@ -120,8 +124,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
 
     /**
      * For a given format node and a given array of formats, this method parses the
-     * format node to an array and adds it to the formats array. If a format with the
-     * same key is already in the passed array, the node does not get parsed or added.
+     * format node to an array and adds it to the formats array.
      *
      * @param \DOMNode $formatNode
      * @param $formats
@@ -129,10 +132,6 @@ abstract class BaseXmlFormatLoader extends FileLoader
     private function addFormatFromFormatNode(\DOMNode $formatNode, &$formats)
     {
         $key = $this->getKeyFromFormatNode($formatNode);
-
-        if (isset($formats[$key])) {
-            return;
-        }
 
         $meta = $this->getMetaFromFormatNode($formatNode);
         $scale = $this->getScaleFromFormatNode($formatNode);
@@ -144,7 +143,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
             'meta' => $meta,
             'scale' => $scale,
             'transformations' => $transformations,
-            'options' => array_merge($this->defaultOptions, $options),
+            'options' => array_merge($this->globalOptions, $options),
         ];
     }
 

@@ -20,8 +20,7 @@ use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager\ManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaling\ScalingInterface;
 
 /**
  * Sulu imagine converter for media.
@@ -29,22 +28,25 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationIn
 class ImagineImageConverter implements ImageConverterInterface
 {
     /**
-     * @var ManagerInterface
+     * @var TransformationPoolInterface
      */
-    private $transformationManager;
+    private $transformationPool;
 
     /**
-     * @var TransformationInterface
+     * @var ScalingInterface
      */
-    private $scaleTransformation;
+    private $scaling;
 
     /**
-     * @param ManagerInterface $transformationManager
+     * @param TransformationPoolInterface $transformationManager
+     * @param ScalingInterface $scaling
      */
-    public function __construct(ManagerInterface $transformationManager, TransformationInterface $scaleTransformation)
-    {
-        $this->transformationManager = $transformationManager;
-        $this->scaleTransformation = $scaleTransformation;
+    public function __construct(
+        TransformationPoolInterface $transformationManager,
+        ScalingInterface $scaling
+    ) {
+        $this->transformationPool = $transformationManager;
+        $this->scaling = $scaling;
     }
 
     /**
@@ -106,7 +108,15 @@ class ImagineImageConverter implements ImageConverterInterface
             if (!isset($transformation['effect'])) {
                 throw new ImageProxyInvalidFormatOptionsException('Effect not found');
             }
-            $image = $this->call($image, $transformation['effect'], $transformation['parameters']);
+            $image = $this->modifyAllLayers(
+                $image,
+                function (ImageInterface $layer) use ($transformation) {
+                    return $this->transformationPool->get($transformation['effect'])->execute(
+                        $layer,
+                        $transformation['parameters']
+                    );
+                }
+            );
         }
 
         return $image;
@@ -122,13 +132,19 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     private function applyScale(ImageInterface $image, $scale)
     {
-        $parameters = [
-            'x' => $scale['x'],
-            'y' => $scale['y'],
-            'mode' => $scale['mode'],
-        ];
-
-        return $this->scaleTransformation->execute($image, $parameters);
+        return $this->modifyAllLayers(
+            $image,
+            function (ImageInterface $layer) use ($scale) {
+                return $this->scaling->scale(
+                    $layer,
+                    $scale['x'],
+                    $scale['y'],
+                    $scale['mode'],
+                    $scale['forceRatio'],
+                    $scale['retina']
+                );
+            }
+        );
     }
 
     /**
@@ -148,34 +164,33 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Calls a given transformation with given parameters on the passed image.
+     * Applies a callback to every layer of an image and returns the resulting image.
      *
      * @param ImageInterface $image
-     * @param $transformation
-     * @param $parameters
+     * @param callable $modifier The callable to apply to all layers
      *
-     * @return ImageInterface $image The modified image
+     * @return ImageInterface
      */
-    private function call(ImageInterface $image, $transformation, $parameters)
+    private function modifyAllLayers(ImageInterface $image, callable $modifier)
     {
         if (count($image->layers())) {
             $countLayer = 0;
             $image->layers()->coalesce();
 
-            /** @var ImageInterface $temporarImage */
-            $temporarImage = null;
+            /** @var ImageInterface $temporaryImage */
+            $temporaryImage = null;
             foreach ($image->layers() as $layer) {
                 $countLayer += 1;
-                $this->transformationManager->get($transformation)->execute($layer, $parameters);
+                $layer = call_user_func($modifier, $layer);
                 if ($countLayer == 1) {
-                    $temporarImage = $layer; // use first layer as main image
+                    $temporaryImage = $layer; // use first layer as main image
                 } else {
-                    $temporarImage->layers()->add($layer);
+                    $temporaryImage->layers()->add($layer);
                 }
             }
-            $image = $temporarImage;
+            $image = $temporaryImage;
         } else {
-            $this->transformationManager->get($transformation)->execute($image, $parameters);
+            $image = call_user_func($modifier, $image);
         }
 
         return $image;

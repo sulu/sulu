@@ -49,18 +49,19 @@ class ImageFormatCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param array $defaultOptions
+     * @param array $globalOptions
      *
      * @return array
      */
-    protected function loadImageFormats($defaultOptions)
+    protected function loadImageFormats($globalOptions)
     {
         $activeFormats = [];
-        $this->setFormatsFromFile(__DIR__ . '/../Resources/config/image-formats.xml', $activeFormats, $defaultOptions);
 
-        $file = $this->container->getParameter('sulu_media.image_format_file');
-        if (file_exists($file)) {
-            $this->setFormatsFromFile($file, $activeFormats, $defaultOptions);
+        $files = $this->container->getParameter('sulu_media.image_format_files');
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                $this->setFormatsFromFile($file, $activeFormats, $globalOptions);
+            }
         }
 
         return $activeFormats;
@@ -69,9 +70,9 @@ class ImageFormatCompilerPass implements CompilerPassInterface
     /**
      * @param $fullPath
      * @param $activeFormats
-     * @param $defaultOptions
+     * @param $globalOptions
      */
-    protected function setFormatsFromFile($fullPath, &$activeFormats, $defaultOptions)
+    protected function setFormatsFromFile($fullPath, &$activeFormats, $globalOptions)
     {
         $folder = dirname($fullPath);
         $fileName = basename($fullPath);
@@ -80,17 +81,15 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
         $xmlLoader10 = new XmlFormatLoader10($locator);
         $xmlLoader11 = new XmlFormatLoader11($locator);
-        $xmlLoader10->setDefaultOptions($defaultOptions);
-        $xmlLoader11->setDefaultOptions($defaultOptions);
+        $xmlLoader10->setGlobalOptions($globalOptions);
+        $xmlLoader11->setGlobalOptions($globalOptions);
 
         $resolver = new LoaderResolver([$xmlLoader10, $xmlLoader11]);
         $loader = new DelegatingLoader($resolver);
 
         $themeFormats = $loader->load($fileName);
         foreach ($themeFormats as $format) {
-            if (isset($format['key']) && !array_key_exists($format['key'], $activeFormats)) {
-                $activeFormats[$format['key']] = $format;
-            }
+            $activeFormats[$format['key']] = $format;
         }
     }
 }

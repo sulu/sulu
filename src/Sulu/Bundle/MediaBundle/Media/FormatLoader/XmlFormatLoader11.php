@@ -23,11 +23,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     const SCHEME_PATH = '/schema/formats/formats-1.1.xsd';
 
     /**
-     * For a given format node returns the key of the format.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function getKeyFromFormatNode(\DOMNode $formatNode)
     {
@@ -35,11 +31,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the meta information of the format.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
@@ -48,19 +40,15 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
         ];
 
         foreach ($this->xpath->query('x:meta/x:title', $formatNode) as $formatTitleNode) {
-            $langauge = $this->xpath->query('@lang', $formatTitleNode)->item(0)->nodeValue;
-            $meta['title'][$langauge] = $formatTitleNode->nodeValue;
+            $language = $this->xpath->query('@lang', $formatTitleNode)->item(0)->nodeValue;
+            $meta['title'][$language] = $formatTitleNode->nodeValue;
         }
 
         return $meta;
     }
 
     /**
-     * For a given format node returns the scale information of the format.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getScaleFromFormatNode(\DOMNode $formatNode)
     {
@@ -71,14 +59,27 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
             $xNode = $this->xpath->query('@x', $formatScaleNode)->item(0);
             $yNode = $this->xpath->query('@y', $formatScaleNode)->item(0);
             $modeNode = $this->xpath->query('@mode', $formatScaleNode)->item(0);
+            $retinaNode = $this->xpath->query('@retina', $formatScaleNode)->item(0);
+            $forceRatioNode = $this->xpath->query('@forceRatio', $formatScaleNode)->item(0);
             if ($xNode === null && $yNode === null) {
                 throw new MissingScaleDimensionException();
+            }
+
+            $forceRatio = static::SCALE_FORCE_RATIO_DEFAULT;
+            $retina = static::SCALE_RETINA_DEFAULT;
+            if ($forceRatioNode !== null && $forceRatioNode->nodeValue === 'false') {
+                $forceRatio = false;
+            }
+            if ($retinaNode !== null && $retinaNode->nodeValue === 'true') {
+                $retina = false;
             }
 
             $scale = [
                 'x' => ($xNode !== null) ? $xNode->nodeValue : null,
                 'y' => ($yNode !== null) ? $yNode->nodeValue : null,
-                'mode' => ($modeNode !== null) ? $modeNode->nodeValue : self::SCALE_MODE_DEFAULT,
+                'mode' => ($modeNode !== null) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
+                'retina' => $retina,
+                'forceRatio' => $forceRatio,
             ];
         }
 
@@ -86,11 +87,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the transformations for it.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getTransformationsFromFormatNode(\DOMNode $formatNode)
     {

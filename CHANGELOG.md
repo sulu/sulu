@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2848 [ContentBundle]       Fixed preview serialization to include date and authors
     * ENHANCEMENT #2782 [MediaBundle]         Cleaned up media selection overlay styling
+    * ENHANCMENT  #2845 [MediaBundle]         New version of of configuring image formats
     * BUGFIX      #2774 [SecurityBundle]      Added translations to settings user role for hovering single permission
     * BUGFIX      #2798 [ContactBundle]       Contact cards are now ordered correctly and by fullName by default
     * ENHANCEMENT #2835 [CoreBundle]          Used the delegating file loader from symfony instead of own implementation for loading webspace xml files

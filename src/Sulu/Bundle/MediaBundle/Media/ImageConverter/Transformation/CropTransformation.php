@@ -28,7 +28,7 @@ class CropTransformation implements TransformationInterface
     public function execute(ImageInterface $image, $parameters)
     {
         @trigger_error(
-            'ScaleTransformation is deprecated since version 1.4. Use the scale config instead',
+            'CropTransformation is deprecated since version 1.4. Use the scale config instead',
             E_USER_DEPRECATED
         );
         $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;

@@ -9,18 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
- * Defines the operations of a manager handling transformations
- * The TransformationManager loads services for the image manipulation dynamically.
+ * Defines the operations of a pool containing transformations.
  */
-interface ManagerInterface
+interface TransformationPoolInterface
 {
     /**
-     * Return a service which converts an image.
+     * Return a service which transforms an image.
      *
      * @param string $name
      *

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception;
 
 /**
- * Runtime if the media either 'x' or 'y' coordinate is net set for the scale section.
+ * Gets thrown if either 'x' or 'y' coordinate is net set for the scale section.
  */
 class MissingScaleDimensionException extends \RuntimeException
 {

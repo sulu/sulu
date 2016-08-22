@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Prophecy\Argument;
-use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Symfony\Component\Config\FileLocatorInterface;
 
@@ -38,20 +37,20 @@ class XmlFormatLoader10Test extends WebspaceTestCase
     public function testSupports10()
     {
         $this->assertTrue(
-            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/deprecated.xml')
+            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/version10.xml')
         );
     }
 
     public function testSupports11()
     {
         $this->assertFalse(
-            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/current.xml')
+            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/version11.xml')
         );
     }
 
     public function testLoadDeprecated()
     {
-        $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/deprecated.xml');
+        $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/version10.xml');
 
         $this->assertEquals(2, count($result));
 
@@ -66,6 +65,8 @@ class XmlFormatLoader10Test extends WebspaceTestCase
                     'x' => '640',
                     'y' => '480',
                     'mode' => 'outbound',
+                    'forceRatio' => false,
+                    'retina' => false,
                 ],
                 'transformations' => [
                     [
@@ -95,6 +96,8 @@ class XmlFormatLoader10Test extends WebspaceTestCase
                     'x' => '300',
                     'y' => null,
                     'mode' => 'outbound',
+                    'forceRatio' => true,
+                    'retina' => false,
                 ],
                 'transformations' => [],
                 'options' => [],
@@ -103,9 +106,11 @@ class XmlFormatLoader10Test extends WebspaceTestCase
         );
     }
 
+    /**
+     * @expectedException Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException
+     */
     public function testLoadDeprecatedWithMissingDimension()
     {
-        $this->expectException(MissingScaleDimensionException::class);
-        $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/deprecated_missing_dimension.xml');
+        $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/version10_missing_dimension.xml');
     }
 }

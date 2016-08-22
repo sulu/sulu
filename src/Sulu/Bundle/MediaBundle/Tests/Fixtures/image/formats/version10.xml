@@ -11,6 +11,7 @@
                 <parameters>
                     <parameter name="x">640</parameter>
                     <parameter name="y">480</parameter>
+                    <parameter name="forceRatio">false</parameter>
                 </parameters>
             </command>
             <command>

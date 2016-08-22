@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
-use Symfony\Component\Config\FileLocatorInterface;
 
 /**
  * Class XmlFormatLoader for the version 1.1 of the image-formats.
@@ -25,21 +24,21 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
 
     const SCHEME_PATH = '/schema/formats/formats-1.0.xsd';
 
-    public function __construct(FileLocatorInterface $locator)
+    /**
+     * {@inheritdoc}
+     */
+    public function load($resource, $type = null)
     {
-        parent::__construct($locator);
         @trigger_error(
             'XmlFormatLoader10 is deprecated since version 1.4 and will be removed in 2.0. Use XmlFormatLoader11 instead.',
             E_USER_DEPRECATED
         );
+
+        return parent::load($resource, $type);
     }
 
     /**
-     * For a given format node returns the key of the format.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function getKeyFromFormatNode(\DOMNode $formatNode)
     {
@@ -47,11 +46,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the meta information of the format.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
@@ -61,11 +56,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the scale information of the format.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getScaleFromFormatNode(\DOMNode $formatNode)
     {
@@ -75,24 +66,39 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
                 $xNode = $this->xpath->query('x:parameters/x:parameter[@name = "x"]', $commandNode)->item(0);
                 $yNode = $this->xpath->query('x:parameters/x:parameter[@name = "y"]', $commandNode)->item(0);
                 $modeNode = $this->xpath->query('x:parameters/x:parameter[@name = "mode"]', $commandNode)->item(0);
+                $retinaNode = $this->xpath->query('x:parameters/x:parameter[@name = "retina"]', $commandNode)->item(0);
+                $forceRatioNode = $this->xpath->query(
+                    'x:parameters/x:parameter[@name = "forceRatio"]',
+                    $commandNode
+                )->item(0);
 
                 $xValue = null;
                 $yValue = null;
+                $forceRatio = static::SCALE_FORCE_RATIO_DEFAULT;
+                $retina = static::SCALE_RETINA_DEFAULT;
                 if ($xNode !== null && $xNode->nodeValue !== '') {
                     $xValue = $xNode->nodeValue;
                 }
                 if ($yNode !== null && $yNode->nodeValue !== '') {
                     $yValue = $yNode->nodeValue;
                 }
-
                 if ($xValue === null && $yValue === null) {
                     throw new MissingScaleDimensionException();
+                }
+
+                if ($forceRatioNode !== null && $forceRatioNode->nodeValue === 'false') {
+                    $forceRatio = false;
+                }
+                if ($retinaNode !== null && $retinaNode->nodeValue === 'true') {
+                    $retina = true;
                 }
 
                 return [
                     'x' => $xValue,
                     'y' => $yValue,
-                    'mode' => ($modeNode !== null) ? $modeNode->nodeValue : self::SCALE_MODE_DEFAULT,
+                    'mode' => ($modeNode !== null) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
+                    'retina' => $retina,
+                    'forceRatio' => $forceRatio,
                 ];
             }
         }
@@ -101,23 +107,15 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the transformations for it.
-     *
-     * @param \DOMNode $formatNode
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getTransformationsFromFormatNode(\DOMNode $formatNode)
     {
         $transformations = [];
-        // The first "scale" or "resize" transformation gets skipped, because it is already contained
-        // in the scale-section of the format (see "getScaleFromFormatNode")
-        $scaleCommandSkipped = false;
 
         foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
             $action = $this->xpath->query('x:action', $commandNode)->item(0)->nodeValue;
-            if ($scaleCommandSkipped === false && ($action === 'scale' || $action === 'resize')) {
-                $scaleCommandSkipped = true;
+            if ($action === 'scale' || $action === 'resize') {
                 continue;
             }
 

@@ -15,7 +15,7 @@ use Imagine\Image\ImageInterface;
 
 /**
  * Defines the operations of the ImageConverter
- * The ImageConverter is a interface to manage conversions of an Image. Converts
+ * The ImageConverter is an interface to manage conversions of an Image. Converts
  * a media given by its original path according to the information passed in the format.
  */
 interface ImageConverterInterface

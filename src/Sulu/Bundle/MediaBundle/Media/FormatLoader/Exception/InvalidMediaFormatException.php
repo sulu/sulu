@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception;
 
 /**
- * Runtime if the media format config is not accessible or not valid.
+ * Gets thrown if the media format config is not accessible or not valid.
  */
 class InvalidMediaFormatException extends \RuntimeException
 {

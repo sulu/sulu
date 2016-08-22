@@ -41,6 +41,8 @@
         <xs:attribute name="x" type="xs:positiveInteger"/>
         <xs:attribute name="y" type="xs:positiveInteger"/>
         <xs:attribute name="mode" type="modeType"/>
+        <xs:attribute name="retina" type="xs:boolean"/>
+        <xs:attribute name="forceRatio" type="xs:boolean"/>
     </xs:complexType>
 
     <xs:complexType name="transformationsType">

@@ -260,6 +260,14 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getMediaProperties($url)
+    {
+        return $this->formatCache->analyzedMediaUrl($url);
+    }
+
+    /**
      * Clears the format cache.
      */
     public function clearCache()
@@ -276,7 +284,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @throws ImageProxyInvalidImageFormat
      */
-    private function getFormat($format)
+    protected function getFormat($format)
     {
         if (!isset($this->formats[$format])) {
             throw new ImageProxyInvalidImageFormat('Format was not found');
@@ -295,7 +303,7 @@ class FormatManager implements FormatManagerInterface
      * @throws ImageProxyInvalidImageFormat
      * @throws MediaException
      */
-    private function returnFileExtensionIcon($format, $fileExtension, $e)
+    protected function returnFileExtensionIcon($format, $fileExtension, $e)
     {
         $imageExtension = 'png';
 
@@ -318,7 +326,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @return array
      */
-    private function getResponseHeaders($mimeType = '', $setExpireHeaders = false)
+    protected function getResponseHeaders($mimeType = '', $setExpireHeaders = false)
     {
         $headers = [];
 
@@ -356,7 +364,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @return array
      */
-    private function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
+    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
     {
         $options = [];
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {
@@ -370,7 +378,7 @@ class FormatManager implements FormatManagerInterface
      * @param string $mimeType
      * @param string $path
      */
-    private function prepareMedia($mimeType, $path)
+    protected function prepareMedia($mimeType, $path)
     {
         switch ($mimeType) {
             case 'application/pdf':
@@ -387,7 +395,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @throws GhostScriptNotFoundException
      */
-    private function convertPdfToImage($path)
+    protected function convertPdfToImage($path)
     {
         $command = $this->ghostScriptPath .
             ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' .
@@ -416,7 +424,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @throws MediaException
      */
-    private function convertPsdToImage($path)
+    protected function convertPsdToImage($path)
     {
         if (class_exists('Imagick')) {
             $imagine = new Imagine();
@@ -434,7 +442,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @return string
      */
-    private function replaceExtension($filename, $newExtension)
+    protected function replaceExtension($filename, $newExtension)
     {
         $info = pathinfo($filename);
 
@@ -446,7 +454,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @return string
      */
-    private function getImageExtension($fileName)
+    protected function getImageExtension($fileName)
     {
         $extension = $this->getRealFileExtension($fileName);
 
@@ -469,7 +477,7 @@ class FormatManager implements FormatManagerInterface
     /**
      * @param $fileName
      */
-    private function getRealFileExtension($fileName)
+    protected function getRealFileExtension($fileName)
     {
         $pathInfo = pathinfo($fileName);
         if (isset($pathInfo['extension'])) {
@@ -477,14 +485,6 @@ class FormatManager implements FormatManagerInterface
         }
 
         return;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaProperties($url)
-    {
-        return $this->formatCache->analyzedMediaUrl($url);
     }
 
     /**
@@ -497,7 +497,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @throws OriginalFileNotFoundException
      */
-    private function getFile($uri, $mimeType)
+    protected function getFile($uri, $mimeType)
     {
         if (fnmatch('video/*', $mimeType)) {
             $tempFile = tempnam(sys_get_temp_dir(), 'media_original') . '.jpg';
@@ -521,7 +521,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @return string
      */
-    private function createTmpFile($content)
+    protected function createTmpFile($content)
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'media_original');
         $handle = fopen($tempFile, 'w');
@@ -538,7 +538,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @return $this
      */
-    private function clearTempFiles()
+    protected function clearTempFiles()
     {
         $this->fileSystem->remove($this->tempFiles);
 
@@ -552,7 +552,7 @@ class FormatManager implements FormatManagerInterface
      *
      * @throws ImageProxyMediaNotFoundException
      */
-    private function getMediaData(MediaInterface $media)
+    protected function getMediaData(MediaInterface $media)
     {
         $fileName = null;
         $storageOptions = null;

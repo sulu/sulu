@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
- * Default implementation of transformation manager.
+ * Default implementation of transformation pool.
  */
-class TransformationManager implements ManagerInterface
+class TransformationPool implements TransformationPoolInterface
 {
     /**
      * @var TransformationInterface[]
