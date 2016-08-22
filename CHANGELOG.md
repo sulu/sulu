@@ -14,6 +14,7 @@ CHANGELOG for Sulu
     * FEATURE     #2820 [RouteBundle]         Added possibility to implement custom route-generator
     * FEATURE     #2799 [MediaBundle]         Implemented tiles view for navigating through collections
     * FEATURE     #2715 [ContentBundle]       Implemented teaser content-type
+    * ENHANCEMENT #2846 [ContentBundle]       Added teaser-attributes
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
     * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 

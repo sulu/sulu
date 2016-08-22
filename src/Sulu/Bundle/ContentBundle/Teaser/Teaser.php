@@ -57,6 +57,11 @@ class Teaser
     private $url;
 
     /**
+     * @var array
+     */
+    private $attributes;
+
+    /**
      * @param int|string $id
      * @param string $type
      * @param string $locale
@@ -65,8 +70,9 @@ class Teaser
      * @param string $moreText
      * @param string $url
      * @param int $mediaId
+     * @param array $attribute
      */
-    public function __construct($id, $type, $locale, $title, $description, $moreText, $url, $mediaId)
+    public function __construct($id, $type, $locale, $title, $description, $moreText, $url, $mediaId, $attributes = [])
     {
         $this->id = $id;
         $this->type = $type;
@@ -76,6 +82,7 @@ class Teaser
         $this->moreText = $moreText;
         $this->url = $url;
         $this->mediaId = $mediaId;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -156,5 +163,15 @@ class Teaser
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Returns attributes.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

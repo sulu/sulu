@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Teaser;
 
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Sulu\Bundle\ContentBundle\Search\Metadata\StructureProvider;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderInterface;
 
@@ -62,18 +63,23 @@ class ContentTeaserProvider implements TeaserProviderInterface
 
         /** @var QueryHit $item */
         foreach ($searchResult as $item) {
-            $title = $item->getDocument()->getField('title')->getValue();
-            $excerptTitle = $item->getDocument()->getField('excerptTitle')->getValue();
+            $document = $item->getDocument();
+
+            $title = $document->getField('title')->getValue();
+            $excerptTitle = $document->getField('excerptTitle')->getValue();
 
             $result[] = new Teaser(
                 $item->getId(),
                 'content',
                 $locale,
                 ('' !== $excerptTitle ? $excerptTitle : $title),
-                $item->getDocument()->getField('excerptDescription')->getValue(),
-                $item->getDocument()->getField('excerptMore')->getValue(),
-                $item->getDocument()->getField('__url')->getValue(),
-                $this->getMedia(json_decode($item->getDocument()->getField('excerptImages')->getValue(), true))
+                $document->getField('excerptDescription')->getValue(),
+                $document->getField('excerptMore')->getValue(),
+                $document->getField('__url')->getValue(),
+                $this->getMedia(json_decode($document->getField('excerptImages')->getValue(), true)),
+                [
+                    'structureType' => $document->getField(StructureProvider::FIELD_STRUCTURE_TYPE)->getValue(),
+                ]
             );
         }
 
