@@ -13,7 +13,6 @@ namespace Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -70,7 +69,8 @@ class KeywordControllerTest extends SuluTestCase
         $this->entityManager->flush();
     }
 
-    public function testCget() {
+    public function testCget()
+    {
         $this->testPost('keyword1', 'de', $this->category1->getId());
         $this->testPost('keyword2', 'de', $this->category1->getId());
 
