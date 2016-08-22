@@ -32,10 +32,17 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('security_context')->end()
                             ->arrayNode('contexts')
                                 ->prototype('scalar')
-                                ->defaultValue([])
+                                    ->defaultValue([])
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+            ->children()
+                ->arrayNode('website_indexes')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(['page_{ webspace_key }_published'])
                 ->end()
             ->end();
 

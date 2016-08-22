@@ -6,3 +6,6 @@ sulu_content:
         mapping:
             Sulu\Bundle\ContentBundle\Document\PageDocument:
                 index: page
+sulu_search:
+    website_indexes:
+        - 'page_{ webspace_key }_published'
