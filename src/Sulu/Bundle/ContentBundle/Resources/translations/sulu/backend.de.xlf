@@ -775,7 +775,15 @@
                 <source>sulu-content.teaser.no-teaser</source>
                 <target>Keine Teaser ausgewählt</target>
             </trans-unit>
-            <trans-unit id="67" resname="sulu-content.resource-locator.delete">
+            <trans-unit id="67" resname="sulu.overlay.publish">
+                <source>sulu.overlay.publish</source>
+                <target>Veröffentlichen?</target>
+            </trans-unit>
+            <trans-unit id="68" resname="sulu.overlay.publish-desc">
+                <source>sulu.overlay.publish-desc</source>
+                <target>Ihre Daten werden öffentlich zugänglich. Möchten Sie fortfahren?</target>
+            </trans-unit>
+            <trans-unit id="69" resname="sulu-content.resource-locator.delete">
                 <source>sulu-content.resource-locator.delete</source>
                 <target>Die URL wird für alle Entwurfs- und Live-Versionen dieser Seite gelöscht und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?</target>
             </trans-unit>

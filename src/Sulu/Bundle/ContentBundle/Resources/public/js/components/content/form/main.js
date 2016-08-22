@@ -50,7 +50,19 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
             // content save
             this.sandbox.on('sulu.toolbar.save', function(action) {
-                this.submit(action);
+                if(action == 'publish') {
+                    app.sandbox.sulu.showConfirmationDialog({
+                        callback: function(wasConfirmed) {
+                            if (wasConfirmed) {
+                                this.submit(action);
+                            }
+                        }.bind(this),
+                        title: 'sulu.overlay.publish',
+                        description: 'sulu.overlay.publish-desc'
+                    });
+                } else {
+                    this.submit(action);
+                }
             }, this);
 
             // navigate away

@@ -267,6 +267,7 @@
              *                            confirmed or not)
              * @param title {String} custom title of the dialog
              * @param description {String} custom description of the dialog
+             * @param description {Array} custom options of the dialog
              */
             app.sandbox.sulu.showDeleteDialog = function(callback, title, description) {
                 if (typeof title !== 'string') {

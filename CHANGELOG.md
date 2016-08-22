@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 
 * dev-develop
+    * BUGFIX      #2889 [ContentBundle]       Added confirmation message when publishing a page
     * BUGFIX      #2797 [ContentBundle]       When removing resource locator in history now asks for conformation
     * BUGFIX      #2900 [ContentBundle]       Improved bug with grid elements not floating correctly
     * ENHANCEMENT #2927 [ContactBundle]       Enables the extensibility of matchings for contact-selection
