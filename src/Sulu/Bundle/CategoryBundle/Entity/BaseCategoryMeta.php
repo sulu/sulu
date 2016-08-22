@@ -109,7 +109,7 @@ abstract class BaseCategoryMeta implements CategoryMetaInterface
     public function setId($id)
     {
         $this->id = $id;
-        
+
         return $this;
     }
 

@@ -14,11 +14,11 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
-use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 
 class KeywordManagerTest extends \PHPUnit_Framework_TestCase
 {

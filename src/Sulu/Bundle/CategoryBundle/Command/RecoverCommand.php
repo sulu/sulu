@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
