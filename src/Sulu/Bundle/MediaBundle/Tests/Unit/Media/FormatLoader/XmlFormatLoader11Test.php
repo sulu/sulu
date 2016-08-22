@@ -59,32 +59,27 @@ class XmlFormatLoader11Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '400x400',
-                'meta' =>
+                'meta' => [
+                    'title' => [],
+                ],
+                'scale' => [
+                    'x' => '400',
+                    'y' => '400',
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [
                     [
-                        'title' => [],
-                    ],
-                'scale' =>
-                    [
-                        'x' => '400',
-                        'y' => '400',
-                        'mode' => 'outbound',
-                    ],
-                'transformations' =>
-                    [
-                        [
-                            'effect' => 'blur',
-                            'parameters' =>
-                                [
-                                    'type' => 'gaussian',
-                                    'kernel' => '20',
-                                ],
+                        'effect' => 'blur',
+                        'parameters' => [
+                            'type' => 'gaussian',
+                            'kernel' => '20',
                         ],
                     ],
-                'options' =>
-                    [
-                        'jpeg_quality' => '70',
-                        'png_compression_level' => '6',
-                    ],
+                ],
+                'options' => [
+                    'jpeg_quality' => '70',
+                    'png_compression_level' => '6',
+                ],
             ],
             $result['400x400']
         );
@@ -93,25 +88,21 @@ class XmlFormatLoader11Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '400x-inset',
-                'meta' =>
-                    [
-                        'title' =>
-                            [
-                                'en' => 'My 400 Format',
-                                'de' => 'Mein 400 Format',
-                            ],
+                'meta' => [
+                    'title' => [
+                        'en' => 'My 400 Format',
+                        'de' => 'Mein 400 Format',
                     ],
-                'scale' =>
-                    [
-                        'x' => '400',
-                        'y' => null,
-                        'mode' => 'outbound',
-                    ],
+                ],
+                'scale' => [
+                    'x' => '400',
+                    'y' => null,
+                    'mode' => 'outbound',
+                ],
                 'transformations' => [],
-                'options' =>
-                    [
-                        'jpeg_quality' => '70',
-                    ],
+                'options' => [
+                    'jpeg_quality' => '70',
+                ],
             ],
             $result['400x-inset']
         );
@@ -120,16 +111,14 @@ class XmlFormatLoader11Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '200x180-inset',
-                'meta' =>
-                    [
-                        'title' => [],
-                    ],
-                'scale' =>
-                    [
-                        'x' => '200',
-                        'y' => '180',
-                        'mode' => 'outbound',
-                    ],
+                'meta' => [
+                    'title' => [],
+                ],
+                'scale' => [
+                    'x' => '200',
+                    'y' => '180',
+                    'mode' => 'outbound',
+                ],
                 'transformations' => [],
                 'options' => [],
             ],

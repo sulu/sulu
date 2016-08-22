@@ -4,25 +4,19 @@
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
 
     <format key="400x400">
+        <meta>
+            <title lang="en">Header image</title>
+            <title lang="de">Header Bild</title>
+        </meta>
         <scale x="400" y="400"/>
-    </format>
-    <format key="400x400-inset">
-        <scale x="400" y="400" mode="inset"/>
-    </format>
-    <format key="200x180-inset">
-        <scale x="200" y="180" mode="inset"/>
     </format>
     <format key="260x">
         <scale x="260"/>
-    </format>
-    <format key="170x170">
-        <scale x="170" y="170"/>
-    </format>
-    <format key="100x100">
-        <scale x="100" y="100"/>
-    </format>
-    <format key="100x100-inset">
-        <scale x="100" y="100" mode="inset"/>
+        <transformations>
+            <transformation>
+                <effect>blur</effect>
+            </transformation>
+        </transformations>
     </format>
     <format key="50x50">
         <scale x="50" y="50"/>

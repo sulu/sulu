@@ -15,9 +15,8 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 
 /**
- * Class ScaleTransformation
- * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation
- * @deprecated
+ * The class represents a transformation which transforms the dimensions of an image.
+ * This transformation is not available in the config files of the image formats.
  */
 class ScaleTransformation implements TransformationInterface
 {
@@ -26,10 +25,6 @@ class ScaleTransformation implements TransformationInterface
      */
     public function execute(ImageInterface $image, $parameters)
     {
-        @trigger_error(
-            'ScaleTransformation is deprecated since version 1.4. Use the scale config instead',
-            E_USER_DEPRECATED
-        );
         $parameters = array_merge(
             [
                 'retina' => false,

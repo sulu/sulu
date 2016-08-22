@@ -16,8 +16,8 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 
 /**
- * Class CropTransformation
- * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation
+ * Class CropTransformation.
+ *
  * @deprecated
  */
 class CropTransformation implements TransformationInterface

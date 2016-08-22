@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Class ImageFormatCompilerPass.
  */
-class ImageFormatCompilerPass implements CompilerPassInterface#
+class ImageFormatCompilerPass implements CompilerPassInterface
 {
     /**
      * @var ContainerBuilder

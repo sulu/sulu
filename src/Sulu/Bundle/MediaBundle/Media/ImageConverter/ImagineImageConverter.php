@@ -14,13 +14,14 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\RGB;
-use Imagine\Imagick\Imagine as ImagickImagine;
 use Imagine\Imagick\Imagine;
+use Imagine\Imagick\Imagine as ImagickImagine;
 use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager\ManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
  * Sulu imagine converter for media.
@@ -33,11 +34,17 @@ class ImagineImageConverter implements ImageConverterInterface
     private $transformationManager;
 
     /**
+     * @var TransformationInterface
+     */
+    private $scaleTransformation;
+
+    /**
      * @param ManagerInterface $transformationManager
      */
-    public function __construct(ManagerInterface $transformationManager)
+    public function __construct(ManagerInterface $transformationManager, TransformationInterface $scaleTransformation)
     {
         $this->transformationManager = $transformationManager;
+        $this->scaleTransformation = $scaleTransformation;
     }
 
     /**
@@ -59,6 +66,9 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $image = $this->toRGB($image);
 
+        if (isset($format['scale'])) {
+            $image = $this->applyScale($image, $format['scale']);
+        }
         if (isset($format['transformations'])) {
             $image = $this->applyTransformations($image, $format['transformations']);
         }
@@ -67,7 +77,7 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Creates a new image
+     * Creates a new image.
      *
      * @return ImageInterface
      */
@@ -81,13 +91,14 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Applies an array of transformations on a passed image
+     * Applies an array of transformations on a passed image.
      *
      * @param ImageInterface $image
      * @param $tansformations
+     *
      * @throws ImageProxyInvalidFormatOptionsException
      *
-     * @return ImageInterface $image The modified image
+     * @return ImageInterface The modified image
      */
     private function applyTransformations(ImageInterface $image, $tansformations)
     {
@@ -102,7 +113,26 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Ensures that the color mode of the passed image is RGB
+     * Scales a given image according to the information passed as the second argument.
+     *
+     * @param ImageInterface $image
+     * @param $scale
+     *
+     * @return ImageInterface
+     */
+    private function applyScale(ImageInterface $image, $scale)
+    {
+        $parameters = [
+            'x' => $scale['x'],
+            'y' => $scale['y'],
+            'mode' => $scale['mode'],
+        ];
+
+        return $this->scaleTransformation->execute($image, $parameters);
+    }
+
+    /**
+     * Ensures that the color mode of the passed image is RGB.
      *
      * @param ImageInterface $image
      *
@@ -118,7 +148,7 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Calls a given transformation with given parameters on the passed image
+     * Calls a given transformation with given parameters on the passed image.
      *
      * @param ImageInterface $image
      * @param $transformation

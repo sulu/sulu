@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
-use Symfony\Component\Config\Loader\FileLoader;
-use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * Class XmlFormatLoader for the version 1.1 of the image-formats.
@@ -25,9 +23,10 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     const SCHEME_PATH = '/schema/formats/formats-1.1.xsd';
 
     /**
-     * For a given format node returns the key of the format
+     * For a given format node returns the key of the format.
      *
      * @param \DOMNode $formatNode
+     *
      * @return string
      */
     protected function getKeyFromFormatNode(\DOMNode $formatNode)
@@ -36,9 +35,10 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the meta information of the format
+     * For a given format node returns the meta information of the format.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
@@ -56,9 +56,10 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     }
 
     /**
-     * For a given format node returns the scale information of the format
+     * For a given format node returns the scale information of the format.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
     protected function getScaleFromFormatNode(\DOMNode $formatNode)
@@ -88,6 +89,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
      * For a given format node returns the transformations for it.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
     protected function getTransformationsFromFormatNode(\DOMNode $formatNode)

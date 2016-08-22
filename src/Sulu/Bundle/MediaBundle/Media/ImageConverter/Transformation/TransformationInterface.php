@@ -20,7 +20,7 @@ use Imagine\Image\ImageInterface;
 interface TransformationInterface
 {
     /**
-     * Executes the transformation on a given image
+     * Executes the transformation on a given image.
      *
      * @param ImageInterface $image
      * @param $parameters

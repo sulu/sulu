@@ -14,6 +14,7 @@
         <parameter key="sulu_media.image.transformation_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\Manager\TransformationManager</parameter>
         <parameter key="sulu_media.image.transformation.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\ResizeTransformation</parameter>
         <parameter key="sulu_media.image.transformation.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\ScaleTransformation</parameter>
+        <parameter key="sulu_media.image.transformation.scale.deprecated.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\ScaleTransformationDeprecated</parameter>
         <parameter key="sulu_media.image.transformation.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\CropTransformation</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
@@ -70,14 +71,18 @@
 
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
             <argument type="service" id="sulu_media.image.transformation_manager" />
+            <argument type="service" id="sulu_media.image.transformation.scale" />
         </service>
+
+        <service id="sulu_media.image.transformation.scale" class="%sulu_media.image.transformation.scale.class%"/>
 
         <service id="sulu_media.image.transformation_manager" class="%sulu_media.image.transformation_manager.class%" />
 
         <service id="sulu_media.image.transformation.resize" class="%sulu_media.image.transformation.resize.class%">
             <tag name="sulu_media.image.transformation" alias="resize" />
         </service>
-        <service id="sulu_media.image.transformation.scale" class="%sulu_media.image.transformation.scale.class%">
+        <service id="sulu_media.image.transformation.scale.deprecated" class="%sulu_media.image.transformation.scale.deprecated.class%">
+            <argument type="service" id="sulu_media.image.transformation.scale" />
             <tag name="sulu_media.image.transformation" alias="scale" />
         </service>
         <service id="sulu_media.image.transformation.crop" class="%sulu_media.image.transformation.crop.class%">

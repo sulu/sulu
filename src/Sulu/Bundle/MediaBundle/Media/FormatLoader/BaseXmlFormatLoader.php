@@ -149,10 +149,12 @@ abstract class BaseXmlFormatLoader extends FileLoader
     }
 
     /**
-     * Tries to load the DOM Document of a given image formats xml
+     * Tries to load the DOM Document of a given image formats xml.
      *
      * @param $file string The path to the xml file
+     *
      * @return \DOMDocument
+     *
      * @throws InvalidMediaFormatException
      */
     private function tryLoad($file)
@@ -174,6 +176,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      *
      * @param \DOMNode $node
      * @param string $parameterName
+     *
      * @return array
      */
     protected function getParametersFromNode($node, $parameterName = 'parameter')
@@ -192,44 +195,50 @@ abstract class BaseXmlFormatLoader extends FileLoader
     }
 
     /**
-     * For a given format node returns the key of the format
+     * For a given format node returns the key of the format.
      *
      * @param \DOMNode $formatNode
+     *
      * @return string
      */
-    protected abstract function getKeyFromFormatNode(\DOMNode $formatNode);
+    abstract protected function getKeyFromFormatNode(\DOMNode $formatNode);
 
     /**
-     * For a given format node returns the meta information of the format
+     * For a given format node returns the meta information of the format.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
-    protected abstract function getMetaFromFormatNode(\DOMNode $formatNode);
+    abstract protected function getMetaFromFormatNode(\DOMNode $formatNode);
 
     /**
-     * For a given format node returns the scale information of the format
+     * For a given format node returns the scale information of the format.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
-    protected abstract function getScaleFromFormatNode(\DOMNode $formatNode);
+    abstract protected function getScaleFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the transformations for it.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
-    protected abstract function getTransformationsFromFormatNode(\DOMNode $formatNode);
+    abstract protected function getTransformationsFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the options for it.
      *
      * @param \DOMNode $formatNode
+     *
      * @return array
      */
-    private function getOptionsFromFormatNode(\DOMNode $formatNode) {
+    private function getOptionsFromFormatNode(\DOMNode $formatNode)
+    {
         $optionsNode = $this->xpath->query('x:options', $formatNode)->item(0);
 
         return $this->getParametersFromNode($optionsNode, 'option');

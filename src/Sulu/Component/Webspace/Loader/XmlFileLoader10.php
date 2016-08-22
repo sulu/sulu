@@ -40,6 +40,7 @@ use Symfony\Component\Config\Util\XmlUtils;
 /**
  * This file loader is responsible for webspace configuration files in the xml format using the 1.0 version of the
  * webspace schema definition.
+ *
  * @deprecated
  */
 class XmlFileLoader10 extends BaseXmlFileLoader

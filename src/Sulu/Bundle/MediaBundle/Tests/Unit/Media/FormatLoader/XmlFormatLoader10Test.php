@@ -59,32 +59,27 @@ class XmlFormatLoader10Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '640x480',
-                'meta' =>
+                'meta' => [
+                    'title' => [],
+                ],
+                'scale' => [
+                    'x' => '640',
+                    'y' => '480',
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [
                     [
-                        'title' => [],
-                    ],
-                'scale' =>
-                    [
-                        'x' => '640',
-                        'y' => '480',
-                        'mode' => 'outbound',
-                    ],
-                'transformations' =>
-                    [
-                        [
-                            'effect' => 'blur',
-                            'parameters' =>
-                                [
-                                    'type' => 'gaussian',
-                                    'kernel' => '20',
-                                ],
+                        'effect' => 'blur',
+                        'parameters' => [
+                            'type' => 'gaussian',
+                            'kernel' => '20',
                         ],
                     ],
-                'options' =>
-                    [
-                        'jpeg_quality' => '70',
-                        'png_compression_level' => '6',
-                    ],
+                ],
+                'options' => [
+                    'jpeg_quality' => '70',
+                    'png_compression_level' => '6',
+                ],
             ],
             $result['640x480']
         );
@@ -93,16 +88,14 @@ class XmlFormatLoader10Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '300x',
-                'meta' =>
-                    [
-                        'title' => [],
-                    ],
-                'scale' =>
-                    [
-                        'x' => '300',
-                        'y' => null,
-                        'mode' => 'outbound',
-                    ],
+                'meta' => [
+                    'title' => [],
+                ],
+                'scale' => [
+                    'x' => '300',
+                    'y' => null,
+                    'mode' => 'outbound',
+                ],
                 'transformations' => [],
                 'options' => [],
             ],

@@ -13,11 +13,10 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
- * Class ResizeTransformation
- * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation
+ * Class ResizeTransformation.
+ *
  * @deprecated
  */
 class ResizeTransformation implements TransformationInterface
