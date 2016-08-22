@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2848 [ContentBundle]       Fixed preview serialization to include date and authors
     * ENHANCEMENT #2782 [MediaBundle]         Cleaned up media selection overlay styling
     * BUGFIX      #2774 [SecurityBundle]      Added translations to settings user role for hovering single permission
     * BUGFIX      #2798 [ContactBundle]       Contact cards are now ordered correctly and by fullName by default

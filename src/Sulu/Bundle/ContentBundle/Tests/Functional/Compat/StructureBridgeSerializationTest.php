@@ -82,6 +82,10 @@ class StructureBridgeSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(StructureBridge::class, $result);
         $this->assertEquals('internallinks', $result->getKey());
+        $this->assertEquals(1, $result->getChanger());
+        $this->assertEquals(1, $result->getCreator());
+        $this->assertInstanceOf(\DateTime::class, $result->getChanged());
+        $this->assertInstanceOf(\DateTime::class, $result->getCreated());
 
         $property = $result->getProperty('internalLinks');
         $this->assertInstanceOf(Property::class, $property);
@@ -108,7 +112,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
             true
         );
 
-        $this->documentManager->persist($page, 'fr');
+        $this->documentManager->persist($page, 'fr', ['user' => 1]);
         $this->documentManager->flush();
 
         return $page;
