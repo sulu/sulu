@@ -72,27 +72,18 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
 
         $url = null;
         $host = $this->requestAnalyzer->getAttribute('host');
-        if ($domain || $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment)) {
-            $url = $this->webspaceManager->findUrlByResourceLocator(
-                $route,
-                $this->environment,
-                $locale,
-                $webspaceKey,
-                $domain ?: $this->requestAnalyzer->getAttribute('host'),
-                $scheme
-            );
+        if (!$domain && $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment)) {
+            $domain = $host;
         }
 
-        if (!$url && !$domain) {
-            $url = $this->webspaceManager->findUrlByResourceLocator(
-                $route,
-                $this->environment,
-                $locale,
-                $webspaceKey,
-                null,
-                $scheme
-            );
-        }
+        $url = $this->webspaceManager->findUrlByResourceLocator(
+            $route,
+            $this->environment,
+            $locale,
+            $webspaceKey,
+            $domain,
+            $scheme
+        );
 
         return $url ?: $route;
     }

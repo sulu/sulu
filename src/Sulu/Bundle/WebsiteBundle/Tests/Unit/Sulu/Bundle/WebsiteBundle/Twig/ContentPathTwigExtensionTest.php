@@ -112,14 +112,11 @@ class ContentPathTwigExtensionTest extends \PHPUnit_Framework_TestCase
     public function testGetContentPathWithWebspaceKeyNotFoundForDomain()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.test.io');
-        $this->webspaceManager->findUrlByResourceLocator(
-            '/test',
-            $this->environment,
-            'de',
-            'test_io',
-            'www.test.io',
-            'http'
-        )->willReturn(null)->shouldBeCalledTimes(1);
+
+        // empty webspace object will not contain domain as tested in isFromDomain call
+        $webspace = new Webspace();
+        $this->webspaceManager->findWebspaceByKey('test_io')->willReturn($webspace);
+
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
             $this->environment,
