@@ -138,6 +138,7 @@ define([
 
             this.sandbox.once('sulu.tab.saved', function(savedData) {
                 this.setData(savedData);
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-save-desc', 'labels.success');
 
                 promise.resolve(savedData);
             }.bind(this));
