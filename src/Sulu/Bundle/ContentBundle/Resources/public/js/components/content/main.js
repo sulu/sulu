@@ -978,7 +978,8 @@ define([
                         },
                         componentOptions: {
                             values: this.content.toJSON(),
-                            previewService: this.preview
+                            previewService: this.preview,
+                            isTabChangeAllowed: this.isTabChangeAllowed.bind(this)
                         }
                     },
 
@@ -1152,10 +1153,37 @@ define([
                 };
             }
         },
+
         destroy: function() {
             if (!!this.preview) {
                 Preview.destroy(this.preview);
             }
+        },
+
+        isTabChangeAllowed: function () {
+            var allowed = $.Deferred();
+            if (!this.saved) {
+                // show warning dialog
+                this.sandbox.emit('sulu.overlay.show-warning',
+                    'sulu.overlay.be-careful',
+                    'content.template.dialog.content',
+
+                    function() {
+                        // cancel callback
+                        allowed.fail();
+                    }.bind(this),
+
+                    function() {
+                        // ok callback
+                        allowed.resolve();
+                        this.setHeaderBar(true);
+                    }.bind(this)
+                );
+
+            } else {
+                allowed.resolve();
+            }
+            return allowed;
         }
     };
 });
