@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <massive-search-mapping xmlns="http://massiveart.io/schema/dic/massive-search-mapping">
-    <mapping class="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface">
+    <mapping class="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation">
         <id name="id" />
         <title property="translation" />
         <description expr="join(', ', map(object.getKeywords(), 'el.getKeyword()'))"/>
