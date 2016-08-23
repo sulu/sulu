@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;

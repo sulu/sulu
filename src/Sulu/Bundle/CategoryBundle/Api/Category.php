@@ -143,6 +143,7 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("creator")
+     * @Groups({"fullCategory"})
      *
      * @return string
      */
@@ -162,6 +163,7 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("changer")
+     * @Groups({"fullCategory"})
      *
      * @return string
      */
