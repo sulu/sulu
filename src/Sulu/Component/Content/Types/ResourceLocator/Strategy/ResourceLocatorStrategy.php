@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -18,7 +18,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -28,7 +28,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 /**
  * Base class for Resource Locator Path Strategy.
  */
-abstract class RlpStrategy implements RlpStrategyInterface
+abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterface
 {
     /**
      * @var string name of strategy
@@ -36,7 +36,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $name;
 
     /**
-     * @var RlpMapperInterface
+     * @var ResourceLocatorMapperInterface
      */
     protected $mapper;
 
@@ -71,8 +71,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $documentManager;
 
     public function __construct(
-        $name,
-        RlpMapperInterface $mapper,
+        ResourceLocatorMapperInterface $mapper,
         PathCleanupInterface $cleaner,
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
@@ -80,7 +79,6 @@ abstract class RlpStrategy implements RlpStrategyInterface
         DocumentInspector $documentInspector,
         DocumentManagerInterface $documentManager
     ) {
-        $this->name = $name;
         $this->mapper = $mapper;
         $this->cleaner = $cleaner;
         $this->structureManager = $structureManager;

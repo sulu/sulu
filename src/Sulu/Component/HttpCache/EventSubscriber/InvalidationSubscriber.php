@@ -18,7 +18,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -58,9 +58,9 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $documentInspector;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var WebspaceManagerInterface
@@ -77,7 +77,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * @param HandlerInvalidateStructureInterface $structureHandler
      * @param StructureManagerInterface $structureManager
      * @param DocumentInspector $documentInspector
-     * @param RlpStrategyInterface $rlpStrategy
+     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param WebspaceManagerInterface $webspaceManager
      * @param string $environment - kernel envionment, dev, prod, etc
      */
@@ -86,7 +86,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         HandlerInvalidateStructureInterface $structureHandler,
         StructureManagerInterface $structureManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         WebspaceManagerInterface $webspaceManager,
         $environment
     ) {
@@ -94,7 +94,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->structureHandler = $structureHandler;
         $this->structureManager = $structureManager;
         $this->documentInspector = $documentInspector;
-        $this->rlpStrategy = $rlpStrategy;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
@@ -214,7 +214,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * The returned urls can contain placeholders (eg {host}).
      *
      * @param ResourceSegmentBehavior $document
-     * @param $locale
+     * @param string $locale
      *
      * @return array Urls of the given locale which are associated with the given document
      */
@@ -223,19 +223,21 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $documentUuid = ($document instanceof UuidBehavior) ? $document->getUuid() : null;
         $webspace = ($document instanceof WebspaceBehavior) ? $document->getWebspaceName() : null;
 
-        if (!$locale || !$documentUuid) {
+        if (!$locale || !$documentUuid || !$webspace) {
             return [];
         }
+
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspace);
 
         // get current resource-locator and history resource-locators
         $resourceLocators = [];
         try {
-            $resourceLocators[] = $this->rlpStrategy->loadByContentUuid($documentUuid, $webspace, $locale);
+            $resourceLocators[] = $resourceLocatorStrategy->loadByContentUuid($documentUuid, $webspace, $locale);
         } catch (ResourceLocatorNotFoundException $e) {
             // if no resource locator exists there is also no url to purge from the cache
         }
 
-        $historyResourceLocators = $this->rlpStrategy->loadHistoryByContentUuid($documentUuid, $webspace, $locale);
+        $historyResourceLocators = $resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $webspace, $locale);
         foreach ($historyResourceLocators as $historyResourceLocator) {
             $resourceLocators[] = $historyResourceLocator->getResourceLocator();
         }

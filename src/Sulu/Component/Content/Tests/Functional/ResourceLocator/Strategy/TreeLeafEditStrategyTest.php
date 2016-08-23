@@ -9,22 +9,22 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Functional\Rlp\Strategy;
+namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Strategy;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-class TreeStrategyTest extends SuluTestCase
+class TreeLeafEditStrategyTest extends SuluTestCase
 {
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategy;
 
     /**
      * @var DocumentManagerInterface
@@ -43,10 +43,11 @@ class TreeStrategyTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_leaf_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->session = $this->getContainer()->get('doctrine_phpcr.session');
+
 
         $this->initPhpcr();
     }
@@ -81,19 +82,19 @@ class TreeStrategyTest extends SuluTestCase
         // move route
         $news = $this->documentManager->find($news->getUuid(), 'de');
         $news->setResourceSegment('/test');
-        $this->rlpStrategy->save($news, null);
+        $this->resourceLocatorStrategy->save($news, null);
         $this->session->save();
         $this->session->refresh(false);
 
         // delete a history url
-        $this->rlpStrategy->deleteByPath('/news/news-1/sub-1', 'sulu_io', 'de');
+        $this->resourceLocatorStrategy->deleteByPath('/news/news-1/sub-1', 'sulu_io', 'de');
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
         $this->assertTrue($rootNode->hasNode('news/news-1/sub-2'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-2'));
 
         // delete a normal url
-        $this->rlpStrategy->deleteByPath('/test/news-1/sub-2', 'sulu_io', 'de');
+        $this->resourceLocatorStrategy->deleteByPath('/test/news-1/sub-2', 'sulu_io', 'de');
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-2'));
 
@@ -145,39 +146,39 @@ class TreeStrategyTest extends SuluTestCase
         // move route
         $news = $this->documentManager->find($news->getUuid(), 'de');
         $news->setResourceSegment('/test');
-        $this->rlpStrategy->save($news, null);
+        $this->resourceLocatorStrategy->save($news, null);
         $this->session->save();
         $this->session->refresh(false);
 
         // check exist new routes
         $this->assertEquals(
             $news->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $news1->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test/news-1', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-1', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $news1sub1->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test/news-1/sub-1', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-1/sub-1', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $news1sub2->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test/news-1/sub-2', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-1/sub-2', 'sulu_io', 'de')
         );
 
         $this->assertEquals(
             $news2->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test/news-2', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-2', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $news2sub1->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test/news-2/sub-1', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-2/sub-1', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $news2sub2->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator('/test/news-2/sub-2', 'sulu_io', 'de')
+            $this->resourceLocatorStrategy->loadByResourceLocator('/test/news-2/sub-2', 'sulu_io', 'de')
         );
 
         // check history
@@ -232,27 +233,27 @@ class TreeStrategyTest extends SuluTestCase
         $this->assertEquals('/alphabet', $google->getResourceSegment());
         $this->assertEquals(
             $google->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator($google->getResourceSegment(), 'sulu_io', 'en')
+            $this->resourceLocatorStrategy->loadByResourceLocator($google->getResourceSegment(), 'sulu_io', 'en')
         );
 
         $news = $this->documentManager->find($news->getUuid(), 'en');
         $this->assertEquals('/alphabet/news', $news->getResourceSegment());
         $this->assertEquals(
             $news->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator($news->getResourceSegment(), 'sulu_io', 'en')
+            $this->resourceLocatorStrategy->loadByResourceLocator($news->getResourceSegment(), 'sulu_io', 'en')
         );
 
         $austria = $this->documentManager->find($austria->getUuid(), 'en');
         $this->assertEquals('/alphabet/news/austria', $austria->getResourceSegment());
         $this->assertEquals(
             $austria->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator($austria->getResourceSegment(), 'sulu_io', 'en')
+            $this->resourceLocatorStrategy->loadByResourceLocator($austria->getResourceSegment(), 'sulu_io', 'en')
         );
 
         $secret = $this->documentManager->find($secret->getUuid(), 'en');
         $this->assertEquals('/alphabet/secret', $secret->getResourceSegment());
         try {
-            $this->rlpStrategy->loadByResourceLocator($secret->getResourceSegment(), 'sulu_io', 'en');
+            $this->resourceLocatorStrategy->loadByResourceLocator($secret->getResourceSegment(), 'sulu_io', 'en');
             $this->fail('resource locator found for unpublished page');
         } catch (ResourceLocatorNotFoundException $exc) {
             // everything ok; resource locator is not found because secret is not published
@@ -262,14 +263,14 @@ class TreeStrategyTest extends SuluTestCase
         $this->assertEquals('/alphabet/virtual-reality', $virtualReality->getResourceSegment());
         $this->assertEquals(
             $virtualReality->getUuid(),
-            $this->rlpStrategy->loadByResourceLocator($virtualReality->getResourceSegment(), 'sulu_io', 'en')
+            $this->resourceLocatorStrategy->loadByResourceLocator($virtualReality->getResourceSegment(), 'sulu_io', 'en')
         );
     }
 
     private function getRlForHistory($rl)
     {
         try {
-            $this->rlpStrategy->loadByResourceLocator($rl, 'sulu_io', 'de');
+            $this->resourceLocatorStrategy->loadByResourceLocator($rl, 'sulu_io', 'de');
 
             return false;
         } catch (ResourceLocatorMovedException $ex) {

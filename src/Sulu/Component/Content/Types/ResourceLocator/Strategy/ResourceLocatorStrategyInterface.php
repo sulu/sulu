@@ -9,15 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 
 /**
  * InterfaceDefinition of Resource Locator Path Strategy.
  */
-interface RlpStrategyInterface
+interface ResourceLocatorStrategyInterface
 {
     /**
      * returns name of RLP Strategy (e.g. whole-tree).

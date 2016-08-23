@@ -89,7 +89,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                 'contexts' => [],
             ],
             'resourceLocator' => [
-                'strategy' => 'tree',
+                'strategy' => 'tree_leaf_edit',
             ],
         ];
 

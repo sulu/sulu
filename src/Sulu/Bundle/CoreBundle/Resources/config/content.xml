@@ -21,8 +21,7 @@
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
         <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
 
-        <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
-        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
+        <parameter key="sulu.content.resource_locator.mapper.phpcr.class">Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper</parameter>
 
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
 
@@ -52,7 +51,7 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
 
@@ -80,22 +79,34 @@
         </service>
 
         <!-- rlp mapper -->
-        <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
+        <service id="sulu.content.resource_locator.mapper.phpcr"
+                 class="%sulu.content.resource_locator.mapper.phpcr.class%" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
         </service>
 
         <!-- rlp strategies -->
-        <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
-            <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
+        <service id="sulu.content.resource_locator.strategy_pool"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPool">
+            <argument type="collection"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        </service>
+        <service id="sulu.content.resource_locator.strategy.tree_leaf_edit"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy">
+            <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
+
+            <tag name="sulu.resource_locator.strategy" alias="tree_leaf_edit"/>
         </service>
+        <!-- deprecated -->
+        <service id="sulu.content.rlp.mapper.phpcr" alias="sulu.content.resource_locator.mapper.phpcr"/>
+        <service id="sulu.content.rlp.strategy.tree" alias="sulu.content.resource_locator.strategy.tree_leaf_edit"/>
 
         <!-- simple content types -->
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">

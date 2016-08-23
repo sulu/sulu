@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp;
+namespace Sulu\Component\Content\Types\ResourceLocator;
 
 use DateTime;
 

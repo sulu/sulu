@@ -13,8 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 
 /**
  * resource locator repository.
@@ -27,9 +27,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $structureManager;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var string[]
@@ -40,9 +40,15 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         '/admin/api/nodes/{uuid}/resourcelocators',
     ];
 
-    public function __construct(RlpStrategyInterface $rlpStrategy, StructureManagerInterface $structureManager)
-    {
-        $this->rlpStrategy = $rlpStrategy;
+    /**
+     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
+     * @param StructureManagerInterface $structureManager
+     */
+    public function __construct(
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        StructureManagerInterface $structureManager
+    ) {
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
     }
 
@@ -54,7 +60,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         /** @var StructureInterface $structure */
         $structure = $this->structureManager->getStructure($templateKey);
         $title = $this->implodeRlpParts($structure, $parts);
-        $resourceLocator = $this->rlpStrategy->generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey);
+
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
+        $resourceLocator = $resourceLocatorStrategy->generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey);
 
         return [
             'resourceLocator' => $resourceLocator,
@@ -69,7 +77,8 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function getHistory($uuid, $webspaceKey, $languageCode)
     {
-        $urls = $this->rlpStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode);
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
+        $urls = $resourceLocatorStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode);
 
         $result = [];
         /** @var ResourceLocatorInformation $url */
@@ -103,14 +112,15 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $this->rlpStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
+        $resourceLocatorStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * returns base path fo given uuid.
      *
      * @param null|string $uuid
-     * @param int         $default
+     * @param int $default
      *
      * @return string
      */
@@ -125,8 +135,8 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
     /**
      * @param StructureInterface $structure
-     * @param array              $parts
-     * @param string             $separator default '-'
+     * @param array $parts
+     * @param string $separator default '-'
      *
      * @return string
      */

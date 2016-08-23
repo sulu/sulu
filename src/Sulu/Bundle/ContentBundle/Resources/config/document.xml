@@ -31,7 +31,7 @@
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="sulu.content.rlp.strategy.tree" />
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool" />
             <argument type="service" id="doctrine_phpcr.session"/>
             <argument type="service" id="doctrine_phpcr.live_session"/>
             <tag name="sulu_document_manager.event_subscriber" />

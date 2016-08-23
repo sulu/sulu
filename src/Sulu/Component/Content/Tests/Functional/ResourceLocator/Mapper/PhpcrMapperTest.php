@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Functional\Rlp\Strategy;
+namespace Sulu\Component\Content\Tests\Functional\ResourceLocator\Strategy;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
@@ -17,8 +17,8 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper;
+use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
@@ -35,7 +35,7 @@ class PhpcrMapperTest extends SuluTestCase
     private $document2;
 
     /**
-     * @var RlpMapperInterface
+     * @var ResourceLocatorMapperInterface
      */
     private $phpcrMapper;
 

@@ -35,7 +35,7 @@
     </navigation>
 
     <resource-locator>
-        <strategy>tree</strategy>
+        <strategy>tree_leaf_edit</strategy>
     </resource-locator>
 
     <portals>

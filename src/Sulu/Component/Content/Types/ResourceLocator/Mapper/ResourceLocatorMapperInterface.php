@@ -9,18 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Mapper;
+namespace Sulu\Component\Content\Types\ResourceLocator\Mapper;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 
 /**
  * InterfaceDefinition of Resource Locator Path Mapper.
  */
-interface RlpMapperInterface
+interface ResourceLocatorMapperInterface
 {
     /**
      * Returns name of mapper.
