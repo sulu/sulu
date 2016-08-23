@@ -36418,6 +36418,7 @@ define('__component__$search@husky',[], function() {
  *      - data: if no url is provided
  *      - selected: the item that's selected on initialize
  *      - instanceName - enables custom events (in case of multiple tabs on one page)
+ *      - isTabChangeAllowed: funtion that asks if tab change is allowed
  *      - preselect - either true (for url) or position / name  (see preselector for more information)
  *      - preselector:
  *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by options.fragment) - preselector itself is not going to be taken into account in this case
@@ -36457,7 +36458,8 @@ define('__component__$tabs@husky',[],function() {
             preSelectEvent: {
                 enabled: false,
                 triggerSelectItem: true
-            }
+            },
+            isTabChangeAllowed: null
         },
 
         /**
@@ -36574,24 +36576,36 @@ define('__component__$tabs@husky',[],function() {
         selectItem = function(event) {
             event.preventDefault();
             if (this.active === true && this.sandbox.dom.hasClass(event.currentTarget, 'is-selected') !== true) {
-                var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')];
+                var tabChangeAllowed = false;
 
-                if (!!item) {
-                    this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
-                    this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
-                    this.sandbox.dom.addClass(this.$marker, 'animate');
-                    setMarker.call(this);
-                    // callback
-                    if (item.hasOwnProperty('callback') && typeof item.callback === 'function') {
-                        item.callback.call(this, item);
-                    } else if (!!this.options.callback && typeof this.options.callback === 'function') {
-                        this.options.callback.call(this, item);
-                    } else {
-                        triggerSelectEvent.call(this, item);
-                    }
+                if (typeof this.options.isTabChangeAllowed === 'function') {
+                    this.options.isTabChangeAllowed().then(function () {
+                        changeTab.call(this, event);
+                    }.bind(this));
+                } else {
+                    changeTab.call(this, event);
                 }
             } else {
                 return false;
+            }
+        },
+
+        changeTab = function (event) {
+            var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')];
+
+            if (!!item) {
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
+                this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
+                this.sandbox.dom.addClass(this.$marker, 'animate');
+                setMarker.call(this);
+                // callback
+                if (item.hasOwnProperty('callback') && typeof item.callback === 'function') {
+                    item.callback.call(this, item);
+                } else if (!!this.options.callback && typeof this.options.callback === 'function') {
+                    this.options.callback.call(this, item);
+                } else {
+                    triggerSelectEvent.call(this, item);
+                }
             }
         },
 

@@ -233,11 +233,9 @@ define([
 
                 this.bindDomEvents();
                 this.setData(this.data);
-                this.listenForChange();
                 this.startComponents();
-                this.sandbox.start(this.$el, {reset: true});
-
-                this.sandbox.start([
+                var formDeferred = this.sandbox.start(this.$el, {reset: true}),
+                    linkDeferred = this.sandbox.start([
                     {
                         name: 'single-internal-link@sulucontent',
                         options: {
@@ -258,6 +256,10 @@ define([
                         }
                     }
                 ]);
+
+                $.when(formDeferred, linkDeferred).then(function () {
+                    this.listenForChange();
+                });
 
                 this.updateVisibilityForShadowCheckbox(true);
 
