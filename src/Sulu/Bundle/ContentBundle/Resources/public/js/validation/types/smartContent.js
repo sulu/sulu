@@ -14,19 +14,20 @@ define([
 
     'use strict';
 
-    var dataChangedHandler = function(data, $el) {
-            // ignore first event
-            if (!fired[$el.attr('id')]) {
-                fired[$el.attr('id')] = true;
-            } else {
-                App.emit('sulu.preview.update', $el, data);
-                App.emit('sulu.content.changed');
-            }
-        },
-        fired = {};
-
     return function($el, options) {
         var defaults = {},
+
+            dataChangedHandler = function(data, $el) {
+                // ignore first event
+                if (!fired[$el.attr('id')]) {
+                    fired[$el.attr('id')] = true;
+                } else {
+                    App.emit('sulu.preview.update', $el, data);
+                    App.emit('sulu.content.changed');
+                }
+            },
+
+            fired = {},
 
             subType = {
                 initializeSub: function() {

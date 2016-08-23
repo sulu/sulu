@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2884 [ContentBundle]       Content Bundle now shows warning when changing tab without persisting
     * HOTFIX      #2876 [MediaBundle]         Changed column navigation to markable and ok button
     * HOTFIX      #2876 [ContentBundle]       Changed column navigation to markable and ok button
     * HOTFIX      #2883 [WebsiteBundle]       Fixed translator locale for localizations with country
