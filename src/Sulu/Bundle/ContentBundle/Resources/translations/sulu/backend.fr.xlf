@@ -775,7 +775,6 @@
                 <source>sulu-content.teaser.no-teaser</source>
                 <target>Pas de teaser sélectionnés</target>
             </trans-unit>
-
             <trans-unit id="67" resname="sulu.overlay.publish">
                 <source>sulu.overlay.publish</source>
                 <target>Publier?</target>
@@ -787,6 +786,10 @@
             <trans-unit id="69" resname="sulu-content.resource-locator.delete">
                 <source>sulu-content.resource-locator.delete</source>
                 <target>L'URL va être effacée pour toutes les versions aussi bien celles en direct que celles d'ébauche. Ce n'est pas possible de la restaurer après. Veux-tu continuer quand même?</target>
+            </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Créer</target>
             </trans-unit>
         </body>
     </file>
