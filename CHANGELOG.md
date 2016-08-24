@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
     * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension 
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
