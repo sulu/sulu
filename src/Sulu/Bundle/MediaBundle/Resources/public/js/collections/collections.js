@@ -17,8 +17,7 @@ define([
         model: CollectionModel,
 
         url: function() {
-            // TODO remove high limit and paginate correctly
-            return '/admin/api/collections?limit=99999&depth=99999&flat=true';
+            return '/admin/api/collections?depth=99999&flat=true';
         },
 
         fetchSorted: function(sortBy, options) {
