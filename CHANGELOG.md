@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
     * FEATURE     #2999 [MediaBundle]         Added correct mime type to image after editing with aviary 
     * FEATURE     #2994 [HTTPCacheBundle]     Added cachelifetime types and introduced cron-expressions to calculate cachelifetime 
     * BUGFIX      #2992 [ContentBundle]       Fixed page-link-provider without request
