@@ -48,11 +48,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(id, value, icons) {
+            contentItem: function(id, value, url, icons, cropper) {
                 return [
-                    '<span class="icons">' + icons + '</span>',
                     '<a href="#" data-id="', id, '" class="link">',
-                    '    <span class="value">', value, '</span>',
+                    '    <span class="icons">' + icons + '</span>',
+                    '    <span class="value" title="', value ,'">', (typeof cropper === 'function') ? cropper(value, 48) : value, '</span>',
+                    '    <span class="description" title="', url ,'">', (typeof cropper === 'function') ? cropper(url, 55) : value ,'</span>',
                     '</a>'
                 ].join('');
             },
@@ -236,7 +237,9 @@ define([], function() {
             return templates.contentItem(
                 item[this.options.idKey],
                 item.title,
-                this.getItemIcons(item)
+                item.url,
+                this.getItemIcons(item),
+                this.sandbox.util.cropMiddle
             );
         },
 

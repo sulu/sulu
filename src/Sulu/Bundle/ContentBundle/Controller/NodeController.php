@@ -475,6 +475,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ->setHydrateShadow(!$excludeShadows)
             ->setResolveConcreteLocales(true)
             ->addProperties($properties)
+            ->setResolveUrl(true)
             ->getMapping();
 
         $contents = [];

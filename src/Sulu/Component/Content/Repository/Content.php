@@ -101,6 +101,8 @@ class Content implements \ArrayAccess
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $url;
 

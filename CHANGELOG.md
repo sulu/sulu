@@ -1,6 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
+    * ENHANCEMENT #2860 [ContentBundle]       Added url to internal links and smart-content
 * dev-develop
     * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
     * ENHANCEMENT #2912 [CategoryBundle]      Implemented category-bundle entities extensible

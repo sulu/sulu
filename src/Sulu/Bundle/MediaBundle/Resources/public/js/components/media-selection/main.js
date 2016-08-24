@@ -69,7 +69,9 @@ define(['underscore'], function(_) {
 
                 if (thumbnail) {
                     content.push([
-                        '    <img src="', thumbnail, '"/>'
+                        '<span class="image">',
+                        '    <img src="', thumbnail, '"/>',
+                        '</span>'
                     ].join(''));
                 }
 
