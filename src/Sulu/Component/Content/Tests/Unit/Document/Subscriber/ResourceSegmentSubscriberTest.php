@@ -242,6 +242,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->resourceLocatorStrategy->getChildPart('/german/child')->willReturn('child');
         $this->resourceLocatorStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->resourceLocatorStrategy->getInputType()->willReturn(ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF);
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
@@ -293,6 +294,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy->getChildPart('/german/child')->willReturn('child');
         $this->resourceLocatorStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->resourceLocatorStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->resourceLocatorStrategy->getInputType()->willReturn(ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF);
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
@@ -352,6 +354,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy->getChildPart('/german/child')->willReturn('child');
         $this->resourceLocatorStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->resourceLocatorStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/child');
+        $this->resourceLocatorStrategy->getInputType()->willReturn(ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF);
         $defaultNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
         $germanDocument->setResourceSegment(Argument::any())->shouldBeCalled();
@@ -388,6 +391,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
         $this->resourceLocatorStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->resourceLocatorStrategy->generate('child', 'parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $this->resourceLocatorStrategy->getInputType()->willReturn(ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF);
         $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
         $this->resourceLocatorStrategy->save($germanDocument, null)->shouldNotBeCalled();

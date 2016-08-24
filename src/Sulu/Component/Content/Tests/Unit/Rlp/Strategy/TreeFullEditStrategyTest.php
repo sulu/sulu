@@ -12,25 +12,23 @@
 namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
 use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeFullEditStrategy;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
+class TreeFullEditStrategyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ResourceLocatorMapperInterface
@@ -82,7 +80,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
 
-        $this->treeStrategy = new TreeLeafEditStrategy(
+        $this->treeStrategy = new TreeFullEditStrategy(
             $this->mapper->reveal(),
             $this->cleaner->reveal(),
             $this->structureManager->reveal(),
@@ -96,7 +94,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testGetChildPart()
     {
-        $this->assertEquals('asdf', $this->treeStrategy->getChildPart('/test/asdf'));
+        $this->assertEquals('test/asdf', $this->treeStrategy->getChildPart('/test/asdf'));
         $this->assertEquals('asdf', $this->treeStrategy->getChildPart('/asdf'));
         $this->assertEquals('asdf', $this->treeStrategy->getChildPart('asdf'));
     }
@@ -200,14 +198,9 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
 
+        $node = $this->prophesize(NodeInterface::class);
         $document = $this->prophesize(PageDocument::class);
         $document->getResourceSegment()->willReturn('path/to/doc');
-        $document->getChildren()->willReturn([]);
-
-        $session = $this->prophesize(SessionInterface::class);
-        $session->save()->shouldBeCalled();
-        $node = $this->prophesize(NodeInterface::class);
-        $node->getSession()->willReturn($session);
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
@@ -294,32 +287,12 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $structure = $this->prophesize(StructureInterface::class);
         $this->structureManager->getStructure('default')->willReturn($structure);
 
-        $session = $this->prophesize(SessionInterface::class);
-        $session->save()->shouldBeCalledTimes(2);
-
-        $childDocument = $this->prophesize(PageDocument::class);
-        $childDocument->getResourceSegment()->willReturn('path/to/olddoc/pub');
-        $childDocument->getChildren()->willReturn([]);
-        $childDocument->getPublished()->willReturn(true);
-
-        $childNode = $this->prophesize(NodeInterface::class);
-        $childNode->getSession()->willReturn($session);
-        $childNode->getPropertyValue('template-prop')->willReturn('default');
-
-        $this->documentInspector->getNode($childDocument)->willReturn($childNode);
-        $this->documentInspector->getWebspace($childDocument)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($childDocument)->willReturn($languageCode);
-        $this->documentInspector->getUuid($childDocument)->willReturn('published-child-uuid-uuid');
-
         $document = $this->prophesize(PageDocument::class);
         $document->getResourceSegment()->willReturn('path/to/doc');
-        $document->getChildren()->willReturn([$childDocument]);
         $document->getPublished()->willReturn(true);
 
         $node = $this->prophesize(NodeInterface::class);
-        $node->getSession()->willReturn($session);
-
-        $this->documentInspector->getNode($document)->willReturn($node);
+        $this->documentInspector->getNode($document)->willReturn($node->reveal());
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
@@ -328,38 +301,6 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->cleaner->validate('path/to/doc')->willReturn(true);
         $this->mapper->unique('path/to/doc', $webspaceKey, $languageCode)->willReturn(true);
         $this->mapper->save($document)->shouldBeCalled();
-
-        // adapt published child
-        $this->documentManager->find('uuid-uuid-uuid-uuid', $languageCode, ['load_ghost_content' => false])->willReturn(
-            $document
-        );
-        $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
-        $this->mapper->loadByContentUuid('uuid-uuid-uuid-uuid', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc'
-        );
-        $this->cleaner->cleanup('path/to/doc/pub', $languageCode)->willReturn('path/to/doc/pub');
-        $this->mapper->getUniquePath('path/to/doc/pub', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc/pub'
-        );
-
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->getContentTypeName()->willReturn('content-type');
-        $structure->getPropertyByTagName('sulu.rlp')->willReturn($property);
-        $property->setValue('path/to/doc/pub')->shouldBeCalled();
-
-        $contentType = $this->prophesize(ContentTypeInterface::class);
-        $this->contentTypeManager->get('content-type')->willReturn($contentType);
-
-        $translatedProperty = $this->prophesize(PropertyInterface::class);
-        $this->nodeHelper->getTranslatedProperty($property, $languageCode)->willReturn($translatedProperty);
-        $contentType->write($childNode, $translatedProperty, null, $webspaceKey, $languageCode, null)->shouldBeCalled();
-        $childDocument->setResourceSegment('path/to/doc/pub')->shouldBeCalled();
-        $childDocument->getResourceSegment()->willReturn('path/to/doc/pub');
-
-        $this->mapper->loadByContent($childNode, $webspaceKey, $languageCode, null)->willReturn('path/to/olddoc/pub');
-        $this->cleaner->validate('path/to/doc/pub')->willReturn(true);
-        $this->mapper->unique('path/to/doc/pub', $webspaceKey, $languageCode)->willReturn(true);
-        $this->mapper->save($childDocument)->shouldBeCalled();
 
         $this->treeStrategy->save($document->reveal(), null);
     }
@@ -372,30 +313,11 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $structure = $this->prophesize(StructureInterface::class);
         $this->structureManager->getStructure('default')->willReturn($structure);
 
-        $session = $this->prophesize(SessionInterface::class);
-        $session->save()->shouldBeCalledTimes(2);
-
-        $childDocument = $this->prophesize(PageDocument::class);
-        $childDocument->getResourceSegment()->willReturn('path/to/olddoc/pub');
-        $childDocument->getChildren()->willReturn([]);
-        $childDocument->getPublished()->willReturn(false);
-
-        $childNode = $this->prophesize(NodeInterface::class);
-        $childNode->getSession()->willReturn($session);
-        $childNode->getPropertyValue('template-prop')->willReturn('default');
-
-        $this->documentInspector->getNode($childDocument)->willReturn($childNode);
-        $this->documentInspector->getWebspace($childDocument)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($childDocument)->willReturn($languageCode);
-        $this->documentInspector->getUuid($childDocument)->willReturn('published-child-uuid-uuid');
-
         $document = $this->prophesize(PageDocument::class);
         $document->getResourceSegment()->willReturn('path/to/doc');
-        $document->getChildren()->willReturn([$childDocument]);
         $document->getPublished()->willReturn(true);
 
         $node = $this->prophesize(NodeInterface::class);
-        $node->getSession()->willReturn($session);
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
@@ -406,33 +328,6 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->cleaner->validate('path/to/doc')->willReturn(true);
         $this->mapper->unique('path/to/doc', $webspaceKey, $languageCode)->willReturn(true);
         $this->mapper->save($document)->shouldBeCalled();
-
-        // adapt published child
-        $this->documentManager->find('uuid-uuid-uuid-uuid', $languageCode, ['load_ghost_content' => false])->willReturn(
-            $document
-        );
-        $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
-        $this->mapper->loadByContentUuid('uuid-uuid-uuid-uuid', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc'
-        );
-        $this->cleaner->cleanup('path/to/doc/pub', $languageCode)->willReturn('path/to/doc/pub');
-        $this->mapper->getUniquePath('path/to/doc/pub', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc/pub'
-        );
-
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->getContentTypeName()->willReturn('content-type');
-        $structure->getPropertyByTagName('sulu.rlp')->willReturn($property);
-        $property->setValue('path/to/doc/pub')->shouldBeCalled();
-
-        $contentType = $this->prophesize(ContentTypeInterface::class);
-        $this->contentTypeManager->get('content-type')->willReturn($contentType);
-
-        $translatedProperty = $this->prophesize(PropertyInterface::class);
-        $this->nodeHelper->getTranslatedProperty($property, $languageCode)->willReturn($translatedProperty);
-        $contentType->write($childNode, $translatedProperty, null, $webspaceKey, $languageCode, null)->shouldBeCalled();
-        $childDocument->setResourceSegment('path/to/doc/pub')->shouldBeCalled();
-        $childDocument->getResourceSegment()->willReturn('path/to/doc/pub');
 
         $this->treeStrategy->save($document->reveal(), null);
     }

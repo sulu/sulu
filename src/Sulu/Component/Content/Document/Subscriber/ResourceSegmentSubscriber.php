@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
@@ -212,7 +213,22 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     public function updateMovedDocument(MoveEvent $event)
     {
-        $this->updateRoute($event->getDocument(), true);
+        $document = $event->getDocument();
+        if (!$document instanceof ResourceSegmentBehavior) {
+            return;
+        }
+
+        $webspaceKey = $this->documentInspector->getWebspace($event->getDocument());
+        if (!$webspaceKey) {
+            return;
+        }
+
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
+        if ($resourceLocatorStrategy->getInputType() !== ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF) {
+            return;
+        }
+
+        $this->updateRoute($document, true);
     }
 
     /**
@@ -222,10 +238,15 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     public function updateCopiedDocument(CopyEvent $event)
     {
+        $document = $event->getDocument();
+        if (!$document instanceof ResourceSegmentBehavior) {
+            return;
+        }
+
         $this->updateRoute(
             $this->documentManager->find(
                 $event->getCopiedPath(),
-                $this->documentInspector->getLocale($event->getDocument())
+                $this->documentInspector->getLocale($document)
             ),
             false
         );
@@ -297,10 +318,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     private function updateRoute($document, $generateRoutes)
     {
-        if (!$document instanceof ResourceSegmentBehavior) {
-            return;
-        }
-
         $locales = $this->documentInspector->getLocales($document);
         $webspaceKey = $this->documentInspector->getWebspace($document);
         $uuid = $this->documentInspector->getUuid($document);

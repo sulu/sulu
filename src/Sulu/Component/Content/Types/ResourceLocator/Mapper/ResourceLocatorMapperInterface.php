@@ -23,13 +23,6 @@ use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 interface ResourceLocatorMapperInterface
 {
     /**
-     * Returns name of mapper.
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
      * Saves the route for the given document.
      *
      * @param ResourceSegmentBehavior $document

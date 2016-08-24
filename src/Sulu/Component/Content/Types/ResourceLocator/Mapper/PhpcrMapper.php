@@ -24,7 +24,10 @@ use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class PhpcrMapper extends ResourceLocatorMapper
+/**
+ * Manages resource-locators in phpcr.
+ */
+class PhpcrMapper implements ResourceLocatorMapperInterface
 {
     /**
      * @var SessionManagerInterface
@@ -41,6 +44,11 @@ class PhpcrMapper extends ResourceLocatorMapper
      */
     private $documentInspector;
 
+    /**
+     * @param SessionManagerInterface $sessionManager
+     * @param DocumentManagerInterface $documentManager
+     * @param DocumentInspector $documentInspector
+     */
     public function __construct(
         SessionManagerInterface $sessionManager,
         DocumentManagerInterface $documentManager,
@@ -367,7 +375,7 @@ class PhpcrMapper extends ResourceLocatorMapper
     }
 
     /**
-     * check if path is unique from given $root node.
+     * Check if path is unique from given $root node.
      *
      * @param NodeInterface $root route node
      * @param string $path requested path
@@ -381,7 +389,7 @@ class PhpcrMapper extends ResourceLocatorMapper
     }
 
     /**
-     * returns base node of routes from phpcr.
+     * Returns base node of routes from phpcr.
      *
      * @param string $webspaceKey  current session
      * @param string $languageCode
@@ -395,7 +403,7 @@ class PhpcrMapper extends ResourceLocatorMapper
     }
 
     /**
-     * returns base path of routes from phpcr.
+     * Returns base path of routes from phpcr.
      *
      * @param string $webspaceKey  current session
      * @param string $languageCode
@@ -409,7 +417,7 @@ class PhpcrMapper extends ResourceLocatorMapper
     }
 
     /**
-     * returns the abspath.
+     * Returns the abspath.
      *
      * @param string $relPath
      * @param string $webspaceKey
@@ -426,7 +434,9 @@ class PhpcrMapper extends ResourceLocatorMapper
     }
 
     /**
-     * @param $path
+     * Returns resource-locator.
+     *
+     * @param string $path
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
@@ -439,6 +449,7 @@ class PhpcrMapper extends ResourceLocatorMapper
         if ($path === $basePath) {
             return '/';
         }
+
         if (false !== strpos($path, $basePath . '/')) {
             $result = str_replace($basePath . '/', '/', $path);
             if (0 === strpos($result, '/')) {

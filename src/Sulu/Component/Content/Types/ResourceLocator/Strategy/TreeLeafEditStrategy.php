@@ -11,16 +11,18 @@
 
 namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
+
 /**
  * Implements RLP Strategy "tree_leaf_edit".
+ *
+ * The generator uses the whole tree.
+ * The children will also be updated.
+ * Only the last part of the resource-locator is editable.
  */
-class TreeLeafEditStrategy extends ResourceLocatorStrategy
+class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLocatorStrategyInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $name = 'tree_leaf_edit';
-
     /**
      * {@inheritdoc}
      */
@@ -38,14 +40,75 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy
     /**
      * {@inheritdoc}
      */
-    protected function generatePath($title, $parentPath = null)
+    public function getInputType()
     {
-        // if parent has no resource create a new tree
-        if ($parentPath == null) {
-            return '/' . $title;
+        return self::INPUT_TYPE_LEAF;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(ResourceSegmentBehavior $document, $userId)
+    {
+        if (false === parent::save($document, $userId)) {
+            return;
         }
 
-        // concat parentPath and title to whole tree path
-        return $parentPath . '/' . $title;
+        $this->adaptResourceLocators($document, $userId);
+    }
+
+    /**
+     * adopts resource locator of children by iteration.
+     *
+     * @param ResourceSegmentBehavior $document
+     * @param int $userId
+     */
+    private function adaptResourceLocators(ResourceSegmentBehavior $document, $userId)
+    {
+        if (!$document instanceof ChildrenBehavior) {
+            return;
+        }
+
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $languageCode = $this->documentInspector->getLocale($document);
+
+        $node = $this->documentInspector->getNode($document);
+        $node->getSession()->save();
+
+        foreach ($document->getChildren() as $childDocument) {
+            // skip documents without assigned resource segment
+            if (!$childDocument instanceof ResourceSegmentBehavior
+                || !($currentResourceLocator = $childDocument->getResourceSegment())
+            ) {
+                $this->adaptResourceLocators($childDocument, $userId);
+                continue;
+            }
+
+            // build new resource segment based on parent changes
+            $parentUuid = $this->documentInspector->getUuid($document);
+            $childPart = $this->getChildPart($currentResourceLocator);
+            $newResourceLocator = $this->generate($childPart, $parentUuid, $webspaceKey, $languageCode);
+
+            // save new resource locator
+            $childNode = $this->documentInspector->getNode($childDocument);
+            $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
+            $template = $childNode->getPropertyValue($templatePropertyName);
+            $structure = $this->structureManager->getStructure($template);
+
+            $property = $structure->getPropertyByTagName('sulu.rlp');
+            $property->setValue($newResourceLocator);
+            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+            $translatedProperty = $this->nodeHelper->getTranslatedProperty($property, $languageCode);
+            $contentType->write($childNode, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
+
+            $childDocument->setResourceSegment($newResourceLocator);
+
+            // do not save routes if unpublished
+            if (!$childDocument->getPublished()) {
+                $this->adaptResourceLocators($childDocument, $userId);
+            } else {
+                $this->save($childDocument, $userId);
+            }
+        }
     }
 }
