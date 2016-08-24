@@ -106,6 +106,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')->item(0)->nodeValue);
         $this->webspace->setTheme($this->generateTheme());
         $this->webspace->setNavigation($this->generateNavigation());
+        $this->webspace->setResourceLocatorStrategy('tree_leaf_edit');
 
         $this->generateTemplates($this->webspace);
         $this->generateDefaultTemplates($this->webspace);
