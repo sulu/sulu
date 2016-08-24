@@ -4,6 +4,10 @@
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template.xsd">
 
     <key>default</key>
+    
+    <meta>
+        <title lang="en">Standard page</title>
+    </meta>
 
     <view>::default</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
