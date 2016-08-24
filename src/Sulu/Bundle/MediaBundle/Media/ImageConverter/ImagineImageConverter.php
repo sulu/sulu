@@ -20,6 +20,7 @@ use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping\CroppingInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaling\ScalingInterface;
 
 /**
@@ -38,15 +39,22 @@ class ImagineImageConverter implements ImageConverterInterface
     private $scaling;
 
     /**
+     * @var CroppingInterface
+     */
+    private $cropping;
+
+    /**
      * @param TransformationPoolInterface $transformationManager
      * @param ScalingInterface $scaling
      */
     public function __construct(
         TransformationPoolInterface $transformationManager,
-        ScalingInterface $scaling
+        ScalingInterface $scaling,
+        CroppingInterface $cropping
     ) {
         $this->transformationPool = $transformationManager;
         $this->scaling = $scaling;
+        $this->cropping = $cropping;
     }
 
     /**
