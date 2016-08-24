@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -30,15 +32,21 @@ class CategoryList extends ComplexContentType
     private $categoryManager;
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * Holds the template for rendering this content type in the admin.
      *
      * @var string
      */
     private $template;
 
-    public function __construct(CategoryManagerInterface $categoryManager, $template)
+    public function __construct(CategoryManagerInterface $categoryManager, SerializerInterface $serializer, $template)
     {
         $this->categoryManager = $categoryManager;
+        $this->serializer = $serializer;
         $this->template = $template;
     }
 
@@ -73,11 +81,12 @@ class CategoryList extends ComplexContentType
         }
 
         $data = [];
-        $entities = $this->categoryManager->findByIds($ids);
-        $categories = $this->categoryManager->getApiObjects($entities, $property->getStructure()->getLanguageCode());
-
-        foreach ($categories as $category) {
-            $data[] = $category->toArray();
+        foreach ($this->categoryManager->findByIds($ids) as $category) {
+            $serializationContext = SerializationContext::create()
+                ->setAttribute('locale', $property->getStructure()->getLanguageCode())
+                ->setGroups(['contentTypeCategory'])
+                ->setSerializeNull(true);
+            $data[] = $this->serializer->serialize($category, 'array', $serializationContext);
         }
 
         return $data;

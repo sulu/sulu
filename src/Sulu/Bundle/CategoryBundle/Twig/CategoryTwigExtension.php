@@ -81,11 +81,12 @@ class CategoryTwigExtension extends \Twig_Extension
         return $this->memoizeCache->memoize(
             function ($locale, $parentKey = null) {
                 $entities = $this->categoryManager->findChildrenByParentKey($parentKey);
-                $categories = $this->categoryManager->getApiObjects($entities, $locale);
-                $context = SerializationContext::create();
-                $context->setSerializeNull(true);
+                $serializationContext = SerializationContext::create()
+                    ->setAttribute('locale', $locale)
+                    ->setGroups(['contentTypeCategory'])
+                    ->setSerializeNull(true);
 
-                return $this->serializer->serialize($categories, 'array', $context);
+                return $this->serializer->serialize($entities, 'array', $serializationContext);
             }
         );
     }

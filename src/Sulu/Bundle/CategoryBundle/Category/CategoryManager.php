@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -327,46 +326,31 @@ class CategoryManager implements CategoryManagerInterface
             $categoryEntity->setChanger($user);
         }
 
-        $categoryWrapper = $this->getApiObject($categoryEntity, $locale);
-
-        if (!$patch || $this->getProperty($data, 'name')) {
-            $translationEntity = $this->categoryTranslationRepository->createNew();
-            $translationEntity->setLocale($locale);
-            $translationEntity->setTranslation($this->getProperty($data, 'name', null));
-            $categoryWrapper->setTranslation($translationEntity);
-        }
         $key = $this->getProperty($data, 'key');
         if (!$patch || $key) {
-            $categoryWrapper->setKey($key);
+            $categoryEntity->setKey($key);
         }
-        if (!$patch || $this->getProperty($data, 'meta')) {
-            $metaData = (is_array($this->getProperty($data, 'meta'))) ? $this->getProperty($data, 'meta') : [];
 
-            $metaEntities = [];
-            foreach ($metaData as $meta) {
-                $metaEntity = $this->categoryMetaRepository->createNew();
-                $metaEntity->setId($this->getProperty($meta, 'id'));
-                $metaEntity->setKey($this->getProperty($meta, 'key'));
-                $metaEntity->setValue($this->getProperty($meta, 'value'));
-                $metaEntity->setLocale($this->getProperty($meta, 'locale'));
-                $metaEntities[] = $metaEntity;
-            }
-            $categoryWrapper->setMeta($metaEntities);
-        }
         if (!$patch || $this->getProperty($data, 'parent')) {
-            if ($this->getProperty($data, 'parent')) {
-                $parentEntity = $this->findById($this->getProperty($data, 'parent'));
-            } else {
-                $parentEntity = null;
-            }
-            $categoryWrapper->setParent($parentEntity);
+            $parentId = $this->getProperty($data, 'parent');
+            $parentEntity = ($parentId) ? $this->findById($parentId) : null;
+            $categoryEntity->setParent($parentEntity);
         }
 
-        if (!$categoryWrapper->getName()) {
+        if (!$patch || $this->getProperty($data, 'name')) {
+            $this->setCategoryName($categoryEntity, $this->getProperty($data, 'name'), $locale);
+        }
+
+        if (!$patch || $this->getProperty($data, 'meta')) {
+            $metaArray = (is_array($this->getProperty($data, 'meta'))) ? $this->getProperty($data, 'meta') : [];
+            $this->setCategoryMeta($categoryEntity, $metaArray);
+        }
+
+        if (!$categoryEntity->findTranslationByLocale($locale)
+            || !$categoryEntity->findTranslationByLocale($locale)->getTranslation()) {
             throw new CategoryNameMissingException();
         }
 
-        $categoryEntity = $categoryWrapper->getEntity();
         $this->em->persist($categoryEntity);
 
         try {
@@ -403,44 +387,57 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * Returns an API-Object for a given category-entity. The API-Object wraps the entity
-     * and provides neat getters and setters. If the given object is already an API-object,
-     * the associated entity is used for wrapping.
+     * Sets the name of the given locale of the given category-entity.
+     * If the given entity is not translated in the given locale currently, a new category-translation is created
+     * and added to the entity.
+     * If the given entity is not translated in any locale currently, a new category-translation is created and
+     * added as default tranlsation to the entity.
      *
-     * @param $category
-     * @param string $locale
-     *
-     * @return null|CategoryWrapper
+     * @param $entity
+     * @param $name
+     * @param $locale
      */
-    public function getApiObject($category, $locale)
+    private function setCategoryName($entity, $name, $locale)
     {
-        if ($category instanceof CategoryWrapper) {
-            $category = $category->getEntity();
-        }
-        if (!$category instanceof CategoryInterface) {
-            return;
+        $translationEntity = $entity->findTranslationByLocale($locale);
+        if (!$translationEntity) {
+            $translationEntity = $this->categoryTranslationRepository->createNew();
+            $entity->addTranslation($translationEntity);
         }
 
-        return new CategoryWrapper($category, $locale);
+        $translationEntity->setCategory($entity);
+        $translationEntity->setLocale($locale);
+        $translationEntity->setTranslation($name);
+
+        if ($entity->getId() === null && $entity->getDefaultLocale() === null) {
+            $entity->setDefaultLocale($translationEntity->getLocale());
+        }
     }
 
     /**
-     * Returns an array of API-Objects for a given array of category-entities.
-     * The returned array can contain null-values, if the given entities are not valid.
+     * Updates the meta of the given category-entity to the data in the given meta-array.
+     * Meta which is already set to the entity is updated.
+     * Meta which is currently not set to the entity is added.
      *
-     * @param $entities
-     * @param $locale
+     * Despite the method name, no meta is removed from the entity to ensure backward compatibility.
      *
-     * @return array
+     * @param $entity
+     * @param $metaArray
      */
-    public function getApiObjects($entities, $locale)
+    private function setCategoryMeta($entity, $metaArray)
     {
-        return array_map(
-            function($entity) use ($locale) {
-                return $this->getApiObject($entity, $locale);
-            },
-            $entities
-        );
+        foreach ($metaArray as $meta) {
+            $metaEntity = $entity->findMetaById($this->getProperty($meta, 'id'));
+            if (!$metaEntity) {
+                $metaEntity = $this->categoryMetaRepository->createNew();
+                $entity->addMeta($metaEntity);
+            }
+
+            $metaEntity->setCategory($entity);
+            $metaEntity->setKey($this->getProperty($meta, 'key'));
+            $metaEntity->setValue($this->getProperty($meta, 'value'));
+            $metaEntity->setLocale($this->getProperty($meta, 'locale'));
+        }
     }
 
     /**

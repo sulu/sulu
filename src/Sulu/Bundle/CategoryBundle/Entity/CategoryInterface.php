@@ -30,6 +30,13 @@ interface CategoryInterface extends AuditableInterface
     public function setId($id);
 
     /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId();
+
+    /**
      * Set lft.
      *
      * @param int $lft
@@ -78,13 +85,6 @@ interface CategoryInterface extends AuditableInterface
     public function getDepth();
 
     /**
-     * Get key.
-     *
-     * @return string
-     */
-    public function getKey();
-
-    /**
      * Set key.
      *
      * @param string $key
@@ -92,6 +92,13 @@ interface CategoryInterface extends AuditableInterface
      * @return CategoryInterface
      */
     public function setKey($key);
+
+    /**
+     * Get key.
+     *
+     * @return string
+     */
+    public function getKey();
 
     /**
      * Set defaultLocale.
@@ -108,13 +115,6 @@ interface CategoryInterface extends AuditableInterface
      * @return string
      */
     public function getDefaultLocale();
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
 
     /**
      * Add meta.
@@ -140,6 +140,15 @@ interface CategoryInterface extends AuditableInterface
     public function getMeta();
 
     /**
+     * Get single meta by id.
+     *
+     * @param $id
+     *
+     * @return CategoryMetaInterface | null
+     */
+    public function findMetaById($id);
+
+    /**
      * Add translations.
      *
      * @param CategoryTranslationInterface $translations
@@ -163,11 +172,11 @@ interface CategoryInterface extends AuditableInterface
     public function getTranslations();
 
     /**
-     * Get single meta by locale.
+     * Get single translation by locale.
      *
      * @param $locale
      *
-     * @return CategoryTranslationInterface
+     * @return CategoryTranslationInterface | null
      */
     public function findTranslationByLocale($locale);
 

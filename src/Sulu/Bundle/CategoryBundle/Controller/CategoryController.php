@@ -13,7 +13,9 @@ namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
@@ -44,6 +46,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * {@inheritdoc}
      */
     protected static $entityKey = 'categories';
+
+    protected static $categorySerializationGroups = [
+        'fullCategory',
+    ];
 
     /**
      * Returns all fields that can be used by list.
@@ -81,14 +87,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getAction($id, Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $findCallback = function ($id) use ($locale) {
-            $entity = $this->getCategoryManager()->findById($id);
-
-            return $this->getCategoryManager()->getApiObject($entity, $locale);
+        $findCallback = function ($id) {
+            return $this->getCategoryManager()->findById($id);
         };
 
         $view = $this->responseGetById($id, $findCallback);
+        $this->setSerializerParameters($view, $request, static::$categorySerializationGroups);
 
         return $this->handleView($view);
     }
@@ -97,6 +101,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns the sub-graph below the category which is assigned to the given parentId.
      * This method is used by the husky datagrid to load children of a category.
      * If request.flat is set, only the first level of the respective graph is returned in a flat format.
+     * If request.sortBy and request.sortOrder is set, the first level of the graph is sorted.
      *
      * @param Request $request
      * @param mixed $parentId
@@ -105,19 +110,20 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getChildrenAction($parentId, Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-
         if ($request->get('flat') == 'true') {
             // check if parent exists
             $this->getCategoryManager()->findById($parentId);
-            $list = $this->getListRepresentation($request, $locale, $parentId);
+            $list = $this->getListRepresentation($request, $parentId);
+            $view = $this->view($list, 200);
         } else {
-            $entities = $this->getCategoryManager()->findChildrenByParentId($parentId);
-            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, self::$entityKey);
+            $categories = $this->getCategoryManager()->findChildrenByParentId($parentId);
+            $exclusion = new Exclusion(static::$categorySerializationGroups);
+            $list = new CollectionRepresentation($categories, self::$entityKey, null, $exclusion, $exclusion);
+            $view = $this->view($list, 200);
+            $this->setSerializerParameters($view, $request, static::$categorySerializationGroups);
         }
 
-        return $this->handleView($this->view($list, 200));
+        return $this->handleView($view);
     }
 
     /**
@@ -132,20 +138,22 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
         $rootKey = $request->get('rootKey');
 
         if ($request->get('flat') == 'true') {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
             $expandIds = array_filter(explode(',', $request->get('expandIds')));
-            $list = $this->getListRepresentation($request, $locale, $rootId, $expandIds);
+            $list = $this->getListRepresentation($request, $rootId, $expandIds);
+            $view = $this->view($list, 200);
         } else {
-            $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
-            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, self::$entityKey);
+            $categories = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
+            $exclusion = new Exclusion(static::$categorySerializationGroups);
+            $list = new CollectionRepresentation($categories, self::$entityKey, null, $exclusion, $exclusion);
+            $view = $this->view($list, 200);
+            $this->setSerializerParameters($view, $request, static::$categorySerializationGroups);
         }
 
-        return $this->handleView($this->view($list, 200));
+        return $this->handleView($view);
     }
 
     /**
@@ -231,10 +239,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
             'meta' => $request->get('meta'),
             'parent' => $request->get('parent'),
         ];
-        $entity = $this->getCategoryManager()->save($data, null, $locale, $patch);
-        $category = $this->getCategoryManager()->getApiObject($entity, $locale);
+        $category = $this->getCategoryManager()->save($data, null, $locale, $patch);
 
-        return $this->handleView($this->view($category, 200));
+        $view = $this->view($category, 200);
+        $this->setSerializerParameters($view, $request, static::$categorySerializationGroups);
+
+        return $this->handleView($view);
     }
 
     /**
@@ -245,14 +255,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * If expandIds is set, the paths to the categories which are assigned to the ids are expanded.
      *
      * @param Request $request
-     * @param $locale
      * @param null $parentId
      * @param array $expandIds
      *
      * @return CategoryListRepresentation
      */
-    protected function getListRepresentation(Request $request, $locale, $parentId = null, $expandIds = [])
+    protected function getListRepresentation(Request $request, $parentId = null, $expandIds = [])
     {
+        $locale = $this->getRequestParameter($request, 'locale', true);
         $listBuilder = $this->initializeListBuilder($locale);
 
         // disable pagination to simplify tree handling
@@ -332,6 +342,22 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addSelectField($fieldDescriptors['rgt']);
 
         return $listBuilder;
+    }
+
+    /**
+     * Setup the serializer-context of an response-view to serialize the respective translation of a category in
+     * the proper format.
+     *
+     * @param $view
+     * @param $request
+     * @param array $serializationGroups
+     */
+    private function setSerializerParameters($view, $request, $serializationGroups = [])
+    {
+        $context = SerializationContext::create();
+        $context->setGroups($serializationGroups);
+        $context->setAttribute('locale', $this->getRequestParameter($request, 'locale', true));
+        $view->setSerializationContext($context);
     }
 
     /**

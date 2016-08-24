@@ -136,27 +136,6 @@ interface CategoryManagerInterface
     public function delete($id);
 
     /**
-     * Returns an API-Object for a given category-entity. The API-Object wraps the entity
-     * and provides neat getters and setters.
-     *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category
-     * @param string   $locale
-     *
-     * @return CategoryInterface
-     */
-    public function getApiObject($category, $locale);
-
-    /**
-     * Same as getApiObject, but takes multiple category-entities.
-     *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
-     * @param string     $locale
-     *
-     * @return CategoryInterface
-     */
-    public function getApiObjects($categories, $locale);
-
-    /**
      * Returns the FieldDescriptors for the categories.
      *
      * @param string $locale

@@ -33,6 +33,7 @@
         <service id="sulu_category.content.type.category_list" class="%sulu_category.content.type.category_list.class%">
             <tag name="sulu.content.type" alias="category_list"/>
             <argument type="service" id="sulu_category.category_manager"/>
+            <argument type="service" id="jms_serializer"/>
             <argument>%sulu_category.content.type.category_list.template%</argument>
         </service>
 
@@ -53,6 +54,11 @@
             <argument type="service" id="sulu.repository.keyword"/>
             <argument type="service" id="sulu.repository.category_translation"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+
+        <service id="sulu_category.category.serializer.subscriber.category"
+                 class="Sulu\Bundle\CategoryBundle\Serializer\Subscriber\CategorySubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
     </services>
 </container>

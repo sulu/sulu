@@ -15,9 +15,8 @@ use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Prophecy\Argument;
-use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as EntityCategory;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
@@ -39,25 +38,9 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
         return new Memoize(new ArrayCache(), 0);
     }
 
-    /**
-     * Returns ApiCategory with given Data (id, name).
-     *
-     * @param array $data
-     *
-     * @return ApiCategory
-     */
-    private function createCategoryEntity(array $data)
+    private function createCategoryEntity($data)
     {
-        $category = $this->prophesize(ApiCategory::class);
-        $category->getId()->willReturn($data['id']);
-        $category->getName()->willReturn($data['name']);
-
-        return $category->reveal();
-    }
-
-    private function createCategoryApi($data)
-    {
-        $category = $this->prophesize(EntityCategory::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $category->getId()->willReturn($data['id']);
 
         return $category->reveal();
@@ -74,36 +57,24 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
             [[['id' => 1, 'name' => 'sulu']], 'de', 5],
             [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']], 'de', 5],
             [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']], 'de', 5],
-            [[], 'de', 5, 1],
-            [[['id' => 1, 'name' => 'sulu']], 'de', 5, 1],
-            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']], 'de', 5, 1],
-            [
-                [['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']],
-                'de',
-                5,
-                1,
-            ],
         ];
     }
 
     /**
      * @dataProvider getProvider
      */
-    public function testGet($categoryData, $locale = 'en', $parent = null, $depth = null)
+    public function testGet($categoryData, $locale = 'en', $parent = null)
     {
         $categoryEntities = [];
-        $categoryApis = [];
         foreach ($categoryData as $category) {
             $categoryEntities[] = $this->createCategoryEntity($category);
-            $categoryApis[] = $this->createCategoryApi($category);
         }
 
         $manager = $this->prophesize(CategoryManagerInterface::class);
         $manager->findChildrenByParentKey($parent)->shouldBeCalled()->willReturn($categoryEntities);
-        $manager->getApiObjects($categoryEntities, $locale)->shouldBeCalled()->willReturn($categoryApis);
 
         $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize($categoryApis, 'array', Argument::type(SerializationContext::class))
+        $serializer->serialize($categoryEntities, 'array', Argument::type(SerializationContext::class))
             ->shouldBeCalled()->willReturn($categoryData);
 
         $requestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
@@ -114,7 +85,7 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->getMemoizeCache()
         );
 
-        $this->assertEquals($categoryData, $extension->getCategoriesFunction($locale, $parent, $depth));
+        $this->assertEquals($categoryData, $extension->getCategoriesFunction($locale, $parent));
     }
 
     public function appendProvider()

@@ -317,6 +317,22 @@ class Category implements CategoryInterface
     /**
      * {@inheritdoc}
      */
+    public function findMetaById($id)
+    {
+        if (!$id) {
+            return;
+        }
+
+        return $this->getMeta()->filter(
+            function (CategoryMetaInterface $meta) use ($id) {
+                return $meta->getId() === $id;
+            }
+        )->first();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addTranslation(CategoryTranslationInterface $translations)
     {
         $this->translations[] = $translations;
@@ -345,7 +361,11 @@ class Category implements CategoryInterface
      */
     public function findTranslationByLocale($locale)
     {
-        return $this->translations->filter(
+        if (!$locale) {
+            return;
+        }
+
+        return $this->getTranslations()->filter(
             function (CategoryTranslationInterface $translation) use ($locale) {
                 return $translation->getLocale() === $locale;
             }

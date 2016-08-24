@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Sulu\Bundle\CategoryBundle\Entity\Category" exclusion-policy="ALL">
+        <virtual-property method="getId" name="id" groups="fullCategory,partialCategory,contentTypeCategory" expose="true"/>
+        <virtual-property method="getKey" name="key" groups="fullCategory,partialCategory,contentTypeCategory" expose="true"/>
+        <virtual-property method="getDefaultLocale" name="defaultLocale" groups="fullCategory,partialCategory,contentTypeCategory" expose="true"/>
+        <virtual-property method="getCreated" name="created" groups="fullCategory,contentTypeCategory" expose="true"/>
+        <virtual-property method="getChanged" name="changed" groups="fullCategory,contentTypeCategory" expose="true"/>
+        <virtual-property method="getChildren" name="children" groups="fullCategory" expose="true"/>
+    </class>
+</serializer>

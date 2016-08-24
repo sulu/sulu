@@ -88,41 +88,6 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetApiObject()
-    {
-        $entity = $this->prophesize(CategoryInterface::class);
-        $wrapper = $this->categoryManager->getApiObject($entity->reveal(), 'en');
-        $this->assertTrue($wrapper instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
-
-        $wrapper2 = $this->categoryManager->getApiObject($wrapper, 'en');
-        $this->assertSame($wrapper->getEntity(), $wrapper2->getEntity());
-
-        $wrapper = $this->categoryManager->getApiObject(null, 'de');
-        $this->assertEquals(null, $wrapper);
-    }
-
-    public function testGetApiObjects()
-    {
-        $wrapperEntity = $this->prophesize(\Sulu\Bundle\CategoryBundle\Api\Category::class);
-        $wrapperEntity->getEntity()->willReturn($this->prophesize(CategoryInterface::class)->reveal());
-
-        $entities = [
-            $this->prophesize(CategoryInterface::class)->reveal(),
-            null,
-            $this->prophesize(CategoryInterface::class)->reveal(),
-            $wrapperEntity->reveal(),
-            null,
-        ];
-
-        $wrappers = $this->categoryManager->getApiObjects($entities, 'en');
-
-        $this->assertTrue($wrappers[0] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
-        $this->assertEquals(null, $wrappers[1]);
-        $this->assertTrue($wrappers[2] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
-        $this->assertTrue($wrappers[3] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
-        $this->assertEquals(null, $wrappers[4]);
-    }
-
     public function testDelete()
     {
         $id = 1;
