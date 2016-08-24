@@ -215,9 +215,9 @@ class FormatManager implements FormatManagerInterface
             }
             $responseMimeType = 'image/' . $imageExtension;
         } catch (MediaException $e) {
-            $responseContent = $e->getCode() . ': ' . $e->getMessage();
+            $responseContent = null;
             $status = 404;
-            $responseMimeType = 'text/plain';
+            $responseMimeType = null;
         }
 
         // Clear temp files.
