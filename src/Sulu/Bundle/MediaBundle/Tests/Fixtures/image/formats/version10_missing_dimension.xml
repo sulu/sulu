@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formats xmlns="http://schemas.sulu.io/media/formats"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.0.xsd">
+
+    <format>
+        <name>640x480</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="mode">inset</parameter>
+                </parameters>
+            </command>
+            <command>
+                <action>blur</action>
+                <parameters>
+                    <parameter name="type">gaussian</parameter>
+                    <parameter name="kernel">20</parameter>
+                </parameters>
+            </command>
+        </commands>
+        <options>
+            <option name="jpeg_quality">70</option>
+            <option name="png_compression_level">6</option>
+        </options>
+    </format>
+
+    <format>
+        <name>300x300</name>
+        <commands>
+            <command>
+                <action>resize</action>
+                <parameters>
+                    <parameter name="x">300</parameter>
+                </parameters>
+            </command>
+        </commands>
+    </format>
+</formats>

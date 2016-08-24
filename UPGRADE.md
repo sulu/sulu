@@ -2,6 +2,43 @@
 
 ## dev-develop
 
+### New definition mechanism for image-formats
+
+A new structure for the image-formats configuration files was introduced.
+For an explanation on how to define image-formats in the new way please
+refer to the documentation (http://docs.sulu.io/en/latest/book/image-formats.html).
+
+Out of the box, image-formats defined in the old way do still work,
+but the `XMLLoader` and commands are marked as deprecated.
+However when using more profound functionality regarding the image-formats,
+there are some BC breaks:
+
+#### `sulu_media.image_format_file` changed to `sulu_media.image_format_files`
+The configuration `sulu_media.image_format_file` of the MediaBundle
+was changed to `sulu_media.image_format_files` and the type was changed
+from a scalar to an array.
+
+#### "Command" renamed to "Transformation"
+Internally the concept of a command on an image was renamed to 
+"transformation". This renaming was consequently executed throughout the
+MediaBundle. This BC break is only important when custom commands have
+been created. To update the custom commands (now transformations) they now have
+to implement the `TransformationInterface` instead of the `CommandInterface`.
+Moreover the service tag under which a transformation gets registered changed
+from `sulu_media.image.command` to `sulu_media.image.transformation`. The namespaces
+containing "Command" were changed to contain "Transformation" instead.
+Note that there was a slight change in the `TransformationInterface` itself.
+The `execute` method has to return an image and the passed parameter is not
+a reference anymore.
+
+#### Array structure of `sulu_media.image.formats`
+The structure of the arrays in which the formats are stored under
+the symfony parameter `sulu_media.image.formats` changed. `name` was
+renamed to `key`, `commands` was renamed to `transformation` and consequently
+`command` to `transformation.`. In addition the first `scale` or `resize` command
+is now not contained in the `commands` array anymore, but represented by the `scale`
+sub-array of the format.
+
 ### ListRestHelper
 
 The `ListRestHelper` has changed its constructor, it takes the `RequestStack`

@@ -231,6 +231,51 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
+    {
+        $formats = [];
+        if ($this->checkPreviewSupported($mimeType)) {
+            foreach ($this->formats as $format) {
+                $formats[$format['key']] = $this->formatCache->getMediaUrl(
+                    $id,
+                    $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
+                    $storageOptions,
+                    $format['key'],
+                    $version
+                );
+            }
+        }
+
+        return $formats;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function purge($idMedia, $fileName, $options)
+    {
+        return $this->formatCache->purge($idMedia, $fileName, $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMediaProperties($url)
+    {
+        return $this->formatCache->analyzedMediaUrl($url);
+    }
+
+    /**
+     * Clears the format cache.
+     */
+    public function clearCache()
+    {
+        $this->formatCache->clear();
+    }
+
+    /**
      * Return the options for the given format.
      *
      * @param $format
@@ -443,14 +488,6 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getMediaProperties($url)
-    {
-        return $this->formatCache->analyzedMediaUrl($url);
-    }
-
-    /**
      * get file from namespace.
      *
      * @param string $uri
@@ -542,43 +579,6 @@ class FormatManager implements FormatManagerInterface
         }
 
         return [$fileName, $version, $storageOptions, $mimeType];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
-    {
-        $formats = [];
-        if ($this->checkPreviewSupported($mimeType)) {
-            foreach ($this->formats as $format) {
-                $formats[$format['name']] = $this->formatCache->getMediaUrl(
-                    $id,
-                    $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
-                    $storageOptions,
-                    $format['name'],
-                    $version
-                );
-            }
-        }
-
-        return $formats;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function purge($idMedia, $fileName, $options)
-    {
-        return $this->formatCache->purge($idMedia, $fileName, $options);
-    }
-
-    /**
-     * Clears the format cache.
-     */
-    public function clearCache()
-    {
-        $this->formatCache->clear();
     }
 
     /**

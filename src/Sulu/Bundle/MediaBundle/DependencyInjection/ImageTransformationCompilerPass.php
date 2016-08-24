@@ -16,21 +16,21 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiler pass for collecting services tagged with sulu_media.image.command.
+ * Compiler pass for collecting services tagged with sulu_media.image.transformation.
  */
-class ImageCommandCompilerPass implements CompilerPassInterface
+class ImageTransformationCompilerPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('sulu_media.image.command_manager')) {
+        if (!$container->hasDefinition('sulu_media.image.transformation_manager')) {
             return;
         }
 
-        $definition = $container->getDefinition('sulu_media.image.command_manager');
-        $taggedServices = $container->findTaggedServiceIds('sulu_media.image.command');
+        $definition = $container->getDefinition('sulu_media.image.transformation_manager');
+        $taggedServices = $container->findTaggedServiceIds('sulu_media.image.transformation');
 
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {

@@ -15,7 +15,8 @@ use Imagine\Image\ImageInterface;
 
 /**
  * Defines the operations of the ImageConverter
- * The ImageConverter is a interface to manage conversions of an Image.
+ * The ImageConverter is an interface to manage conversions of an Image. Converts
+ * a media given by its original path according to the information passed in the format.
  */
 interface ImageConverterInterface
 {
@@ -23,9 +24,9 @@ interface ImageConverterInterface
      * Convert an image and return the tmpPath.
      *
      * @param string $originalPath
-     * @param array  $formatOptions
+     * @param array  $format
      *
      * @return ImageInterface
      */
-    public function convert($originalPath, $formatOptions);
+    public function convert($originalPath, array $format);
 }

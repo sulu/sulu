@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Test the image command compiler pass.
+ * Test the image transformation compiler pass.
  */
 class FormatCacheClearerCompilerPassTest extends AbstractCompilerPassTestCase
 {

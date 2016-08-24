@@ -9,46 +9,60 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaling;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 
-class ScaleCommand implements CommandInterface
+/**
+ * The class represents a scaling of an image, according to the interface it implements.
+ */
+class Scaling implements ScalingInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function execute(ImageInterface &$image, $parameters)
-    {
-        $parameters = array_merge([
-            'retina' => false,
-            'forceRatio' => true,
-            'x' => null,
-            'y' => null,
-            'mode' => $image::THUMBNAIL_OUTBOUND,
-        ], $parameters);
+    public function scale(
+        ImageInterface $image,
+        $x,
+        $y,
+        $mode = ImageInterface::THUMBNAIL_OUTBOUND,
+        $forceRatio = true,
+        $retina = false
+    ) {
+        list($newWidth, $newHeight) = $this->getHeightWidth(
+            $x,
+            $y,
+            $retina,
+            $forceRatio,
+            $image->getSize(),
+            $mode
+        );
 
-        list($newWidth, $newHeight) = $this->getHeightWidth($parameters, $image->getSize(), $parameters['mode']);
-
-        $image = $image->thumbnail(new Box($newWidth, $newHeight), $parameters['mode']);
+        return $image->thumbnail(new Box($newWidth, $newHeight), $mode);
     }
 
     /**
-     * @param $parameters
-     * @param \Imagine\Image\BoxInterface $size
+     * Gets the height and width of the resulting image, according to the given parameters.
+     *
+     * @param $x
+     * @param $y
+     * @param $retina
+     * @param $forceRatio
+     * @param $size
+     * @param $mode
      *
      * @return array
      */
-    protected function getHeightWidth($parameters, $size, $mode)
+    private function getHeightWidth($x, $y, $retina, $forceRatio, $size, $mode)
     {
-        $newWidth = $parameters['x'];
-        $newHeight = $parameters['y'];
+        $newWidth = $x;
+        $newHeight = $y;
 
         // retina x2
-        if ($parameters['retina']) {
-            $newWidth = $parameters['x'] * 2;
-            $newHeight = $parameters['y'] * 2;
+        if ($retina) {
+            $newWidth = $x * 2;
+            $newHeight = $y * 2;
         }
 
         // calculate height when not set
@@ -64,7 +78,7 @@ class ScaleCommand implements CommandInterface
         // if image is smaller keep ratio
         // e.g. when a square image is requested (200x200) and the original image is smaller (150x100)
         //      it still returns a squared image (100x100)
-        if ($mode === ImageInterface::THUMBNAIL_OUTBOUND && $parameters['forceRatio']) {
+        if ($mode === ImageInterface::THUMBNAIL_OUTBOUND && $forceRatio) {
             if ($newWidth > $size->getWidth()) {
                 list($newHeight, $newWidth) = $this->getSizeInSameRatio(
                     $newHeight,
@@ -92,7 +106,7 @@ class ScaleCommand implements CommandInterface
      *
      * @return array
      */
-    protected function getSizeInSameRatio($size1, $size2, $originalSize)
+    private function getSizeInSameRatio($size1, $size2, $originalSize)
     {
         if ($size1) {
             $size1 = $size1 / $size2 * $originalSize;

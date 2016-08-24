@@ -9,21 +9,21 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
 /**
- * Class CropCommandTest
- * Test the crop command service.
+ * Class CropTransformationTest
+ * Test the crop transformation service.
  */
-class CropCommandTest extends AbstractCommandTest
+class CropTransformationTest extends AbstractTransformationTest
 {
-    protected $commandServiceName = 'sulu_media.image.command.crop';
+    protected $transformationServiceName = 'sulu_media.image.transformation.crop';
 
     protected function getDataList()
     {
         return [
             [
-                // Command Options
+                // Transformation Options
                 'options' => [
                         'x' => 100,
                         'y' => 100,

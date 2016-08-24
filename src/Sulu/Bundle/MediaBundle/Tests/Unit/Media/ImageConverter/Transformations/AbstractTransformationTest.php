@@ -9,27 +9,27 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
  * Class AbstractScaleTest.
  */
-abstract class AbstractCommandTest extends SuluTestCase
+abstract class AbstractTransformationTest extends SuluTestCase
 {
     /**
-     * @var CommandInterface
+     * @var TransformationInterface
      */
-    protected $command;
+    protected $transformation;
 
     /**
      * @var string
      */
-    protected $commandServiceName;
+    protected $transformationServiceName;
 
     /**
      * @var int
@@ -44,7 +44,7 @@ abstract class AbstractCommandTest extends SuluTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->command = $this->getContainer()->get($this->commandServiceName);
+        $this->transformation = $this->getContainer()->get($this->transformationServiceName);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class AbstractCommandTest extends SuluTestCase
      */
     abstract protected function getDataList();
 
-    public function testCommand()
+    public function testTransformation()
     {
         foreach ($this->getDataList() as $data) {
             $imageWidth = $this->imageWidth;
@@ -69,7 +69,7 @@ abstract class AbstractCommandTest extends SuluTestCase
             $imageBox = new Box($imageWidth, $imageHeight);
             $image = $imagine->create($imageBox);
 
-            $this->command->execute($image, $data['options']);
+            $image = $this->transformation->execute($image, $data['options']);
 
             $this->assertEquals($data['width'], $image->getSize()->getWidth());
             $this->assertEquals($data['height'], $image->getSize()->getHeight());
