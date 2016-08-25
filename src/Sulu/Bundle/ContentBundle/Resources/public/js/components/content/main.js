@@ -1001,8 +1001,8 @@ define([
         },
 
         unpublish: function() {
-            this.sandbox.sulu.showDeleteDialog(
-                function(wasConfirmed) {
+            this.sandbox.sulu.showConfirmationDialog({
+                callback: function(wasConfirmed) {
                     if (!wasConfirmed) {
                         return;
                     }
@@ -1028,13 +1028,11 @@ define([
                             );
                         }.bind(this));
                 }.bind(this),
-                this.sandbox.translate(translationKeys.unpublishConfirmTitle),
-                this.sandbox.translate(
-                    !!hasDraft(this.data)?
-                        translationKeys.unpublishConfirmTextNoDraft :
-                        translationKeys.unpublishConfirmTextWithDraft
-                )
-            );
+                title: translationKeys.unpublishConfirmTitle,
+                description: !!hasDraft(this.data)?
+                    translationKeys.unpublishConfirmTextNoDraft :
+                    translationKeys.unpublishConfirmTextWithDraft
+            });
         },
 
         showSaveItems: function(state) {
