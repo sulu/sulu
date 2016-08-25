@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2513 [PersistanceBundle]   Fix doctrine generator commands
     * BUGFIX      #2776 [MediaBundle]         Fixed upload of media without an extension
+    * BUGFIX      #2867 [ContentBundle]       Fixed navigation on removed template
     * BUGFIX      #2850 [ContentBundle]       Ordered response of template action alphabetically
     * BUGFIX      #2848 [ContentBundle]       Fixed preview serialization to include date and authors
     * ENHANCEMENT #2782 [MediaBundle]         Cleaned up media selection overlay styling
