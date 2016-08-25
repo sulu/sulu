@@ -41,6 +41,7 @@ use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -652,7 +653,13 @@ class ContentMapper implements ContentMapperInterface
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
-        $document = $this->documentManager->find($node->getIdentifier(), $locale);
+
+        try {
+            $document = $this->documentManager->find($node->getIdentifier(), $locale);
+        } catch (StructureTypeNotFoundException $e) {
+            // return false;
+        }
+
         $originalDocument = $document;
 
         if (!$node->hasProperty($templateName) && !$node->hasProperty($nodeTypeName)) {
