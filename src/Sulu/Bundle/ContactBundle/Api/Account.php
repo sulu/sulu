@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
+use Doctrine\Common\Collections\Collection;
 use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
@@ -1010,7 +1010,7 @@ class Account extends ApiWrapper
     /**
      * Get the accounts logo and return the array of different formats.
      *
-     * @return Media
+     * @return array
      *
      * @VirtualProperty
      * @SerializedName("logo")
@@ -1048,7 +1048,7 @@ class Account extends ApiWrapper
      *
      * @param MediaInterface $media
      */
-    public function removeMedia(MediaInterfae $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->entity->removeMedia($media);
     }
@@ -1076,29 +1076,21 @@ class Account extends ApiWrapper
     /**
      * Get categories.
      *
-     * @return Category[]
+     * @return Collection
      * @VirtualProperty
      * @SerializedName("categories")
      * @Groups({"fullAccount"})
      */
     public function getCategories()
     {
-        $entities = [];
-        if ($this->entity->getCategories()) {
-            foreach ($this->entity->getCategories() as $category) {
-                $entities[] = new Category($category, $this->locale);
-            }
-        }
-
-        return $entities;
+        return $this->entity->getCategories();
     }
 
     /**
      * Get type of api entity.
      *
-     * @VirtualProperty
-     *
      * @return string
+     * @VirtualProperty
      */
     public function getType()
     {

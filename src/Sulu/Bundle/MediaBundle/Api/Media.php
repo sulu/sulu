@@ -15,8 +15,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -108,7 +107,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("id")
-     * @Groups({"partialMedia"})
+     * @Groups({"fullMedia","partialMedia"})
      *
      * @return int
      */
@@ -120,6 +119,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("locale")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -130,6 +130,8 @@ class Media extends ApiWrapper
 
     /**
      * @VirtualProperty
+     * @SerializedName("fallbackLocale")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -159,6 +161,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("collection")
+     * @Groups({"fullMedia"})
      *
      * @return int
      */
@@ -187,6 +190,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("size")
+     * @Groups({"fullMedia"})
      *
      * @return int
      */
@@ -210,6 +214,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("mimeType")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -233,6 +238,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("title")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -260,6 +266,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("description")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -289,6 +296,7 @@ class Media extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("copyright")
+     * @Groups({"fullMedia"})
      *
      * @return string
      *
@@ -320,6 +328,7 @@ class Media extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("credits")
+     * @Groups({"fullMedia"})
      *
      * @return string
      *
@@ -349,6 +358,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("version")
+     * @Groups({"fullMedia"})
      *
      * @return int
      */
@@ -380,6 +390,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("versions")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -417,6 +428,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("name")
+     * @Groups({"fullMedia"})
      *
      * @return int
      */
@@ -428,12 +440,17 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("type")
+     * @Groups({"fullMedia"})
      *
-     * @return MediaType
+     * @return array
      */
     public function getType()
     {
-        return $this->entity->getType();
+        $typeData = [];
+        $typeData['id'] = $this->entity->getType()->getId();
+        $typeData['name'] = $this->entity->getType()->getName();
+
+        return $typeData;
     }
 
     /**
@@ -455,12 +472,13 @@ class Media extends ApiWrapper
      */
     public function isTypeOf($type)
     {
-        return $this->getType()->getName() == $type;
+        return $this->entity->getType()->getName() == $type;
     }
 
     /**
      * @VirtualProperty
      * @SerializedName("isImage")
+     * @Groups({"fullMedia"})
      *
      * @return bool
      */
@@ -472,6 +490,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("isVideo")
+     * @Groups({"fullMedia"})
      *
      * @return bool
      */
@@ -483,6 +502,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("isAudio")
+     * @Groups({"fullMedia"})
      *
      * @return bool
      */
@@ -494,6 +514,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("isDocument")
+     * @Groups({"fullMedia"})
      *
      * @return bool
      */
@@ -505,6 +526,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("storageOptions")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -549,6 +571,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("publishLanguages")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -587,6 +610,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("contentLanguages")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -630,6 +654,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("tags")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -646,6 +671,7 @@ class Media extends ApiWrapper
 
     /**
      * @SerializedName("thumbnails")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -657,6 +683,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("thumbnails")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -676,6 +703,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("url")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -710,6 +738,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("changed")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -733,6 +762,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("changer")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -749,6 +779,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("created")
+     * @Groups({"fullMedia"})
      *
      * @return mixed
      */
@@ -772,6 +803,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("creator")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -800,6 +832,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("properties")
+     * @Groups({"fullMedia"})
      *
      * @return array
      */
@@ -811,6 +844,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("downloadCounter")
+     * @Groups({"fullMedia"})
      *
      * @return string
      */
@@ -949,9 +983,11 @@ class Media extends ApiWrapper
     /**
      * Adds a category to the entity.
      *
-     * @param CategoryEntity $category
+     * @param CategoryInterface $category
+     *
+     * @return $this
      */
-    public function addCategory(CategoryEntity $category)
+    public function addCategory(CategoryInterface $category)
     {
         $fileVersion = $this->getFileVersion();
         $fileVersion->addCategory($category);
@@ -973,22 +1009,12 @@ class Media extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("categories")
+     * @Groups({"fullMedia"})
      *
-     * @return Category[]
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCategories()
     {
-        $apiCategories = [];
-        $fileVersion = $this->getFileVersion();
-        $categories = $fileVersion->getCategories();
-
-        // return Category API item
-        if (count($categories)) {
-            foreach ($categories as $category) {
-                $apiCategories[] = new Category($category, $this->locale);
-            }
-        }
-
-        return $apiCategories;
+        return $this->getFileVersion()->getCategories();
     }
 }

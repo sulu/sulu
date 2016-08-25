@@ -326,8 +326,14 @@ class ContactControllerTest extends SuluTestCase
         $this->category2 = $category2;
 
         // name for second category
+        $categoryTrans1 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
+        $categoryTrans1->setLocale('de');
+        $categoryTrans1->setTranslation('Zweite Kategorie');
+        $categoryTrans1->setCategory($category2);
+        $category2->addTranslation($categoryTrans1);
+
         $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
-        $categoryTrans2->setLocale('de');
+        $categoryTrans2->setLocale('en');
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
@@ -636,7 +642,7 @@ class ContactControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/contacts',
+            '/api/contacts?locale=de',
             [
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
@@ -782,7 +788,15 @@ class ContactControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
         $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
+        usort($response->categories, function ($cat1, $cat2) {
+            return $cat1->id > $cat2->id;
+        });
         $this->assertEquals(2, count($response->categories));
+        $this->assertEquals($this->category->getId(), $response->categories[0]->id);
+        $this->assertEquals($this->category->getKey(), $response->categories[0]->key);
+        $this->assertEquals(
+            $this->category2->findTranslationByLocale('de')->getTranslation(), $response->categories[1]->name
+        );
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1176,7 +1190,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(2, count($response->categories));
 
-        $client->request('GET', '/api/contacts/' . $response->id);
+        $client->request('GET', '/api/contacts/' . $response->id . '?locale=en');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('John', $response->firstName);
@@ -1214,7 +1228,15 @@ class ContactControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
         $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
+        usort($response->categories, function ($cat1, $cat2) {
+            return $cat1->id > $cat2->id;
+        });
         $this->assertEquals(2, count($response->categories));
+        $this->assertEquals($this->category->getId(), $response->categories[0]->id);
+        $this->assertEquals($this->category->getKey(), $response->categories[0]->key);
+        $this->assertEquals(
+            $this->category2->findTranslationByLocale('en')->getTranslation(), $response->categories[1]->name
+        );
     }
 
     public function testPutDeleteAndAddWithoutId()

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
@@ -29,6 +30,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -40,6 +42,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AccountController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -102,7 +106,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $includes = explode(',', $request->get('include'));
         $accountManager = $this->getAccountManager();
-        $locale = $this->getUser()->getLocale();
+        $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
 
         try {
             $view = $this->responseGetById(
@@ -112,9 +116,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             );
 
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-            );
+            $this->setSerializerParameters($view, $request, static::$accountSerializationGroups);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         }
@@ -181,7 +183,7 @@ class AccountController extends RestController implements ClassResourceInterface
             );
         } else {
             $contactManager = $this->getAccountManager();
-            $locale = $this->getUser()->getLocale();
+            $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
             $contacts = $contactManager->findContactsByAccountId($id, $locale, false);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
         }
@@ -371,7 +373,7 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $numberIdsFilter = 0;
         $requestLimit = $request->get('limit');
-        $locale = $this->getUser()->getLocale();
+        $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
         $filter = $this->retrieveFilter($request, $numberIdsFilter);
 
         if ($request->get('flat') == 'true') {
@@ -404,13 +406,11 @@ class AccountController extends RestController implements ClassResourceInterface
         } else {
             $accountManager = $this->getAccountManager();
             $accounts = $accountManager->findAll($locale, $filter);
-            $list = new CollectionRepresentation($accounts, self::$entityKey);
+            $exclusion = new Exclusion(static::$accountSerializationGroups);
+            $list = new CollectionRepresentation($accounts, self::$entityKey, null, $exclusion, $exclusion);
             $view = $this->view($list, 200);
+            $this->setSerializerParameters($view, $request, static::$accountSerializationGroups);
         }
-
-        $view->setSerializationContext(
-            SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'Default'])
-        );
 
         return $this->handleView($view);
     }
@@ -498,12 +498,10 @@ class AccountController extends RestController implements ClassResourceInterface
             $em->flush();
 
             $accountManager = $this->getAccountManager();
-            $locale = $this->getUser()->getLocale();
+            $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
             $acc = $accountManager->getAccount($account, $locale);
             $view = $this->view($acc, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-            );
+            $this->setSerializerParameters($view, $request, static::$accountSerializationGroups);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -579,13 +577,11 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 // get api entity
                 $accountManager = $this->getAccountManager();
-                $locale = $this->getUser()->getLocale();
+                $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
                 $acc = $accountManager->getAccount($account, $locale);
 
                 $view = $this->view($acc, 200);
-                $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-                );
+                $this->setSerializerParameters($view, $request, static::$accountSerializationGroups);
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -688,13 +684,11 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 // get api entity
                 $accountManager = $this->getAccountManager();
-                $locale = $this->getUser()->getLocale();
+                $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
                 $acc = $accountManager->getAccount($account, $locale);
 
                 $view = $this->view($acc, 200);
-                $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-                );
+                $this->setSerializerParameters($view, $request, static::$accountSerializationGroups);
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -1270,6 +1264,24 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         return $accounts;
+    }
+
+    /**
+     * Setup the serializer-context of an response-view to serialize the respective translation of an account in
+     * the proper format.
+     *
+     * @param $view
+     * @param $request
+     * @param array $serializationGroups
+     */
+    private function setSerializerParameters($view, $request, $serializationGroups = [])
+    {
+        $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
+
+        $context = SerializationContext::create();
+        $context->setGroups($serializationGroups);
+        $context->setAttribute('locale', $locale);
+        $view->setSerializationContext($context);
     }
 
     /**

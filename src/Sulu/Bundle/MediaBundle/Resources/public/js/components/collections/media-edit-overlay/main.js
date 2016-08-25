@@ -508,7 +508,7 @@ define([
 
                 // check if form-data is different to source-media
                 if (JSON.stringify(this.media) !== JSON.stringify(mediaData)) {
-                    mediaManager.save(mediaData).then(function() {
+                    mediaManager.save(mediaData, this.options.locale).then(function() {
                         promise.resolve();
                     });
                 }
@@ -733,7 +733,7 @@ define([
                     var newMedia = this.sandbox.util.extend(false, {}, currentMedia, formData.records[index]);
                     // check if form-data is different to source-media
                     if (JSON.stringify(currentMedia) !== JSON.stringify(newMedia)) {
-                        requests.push(mediaManager.save(newMedia));
+                        requests.push(mediaManager.save(newMedia, this.options.locale));
                     }
                 }.bind(this));
 

@@ -145,6 +145,12 @@ class MediaControllerTest extends SuluTestCase
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
+        $categoryTrans1 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
+        $categoryTrans1->setLocale('de');
+        $categoryTrans1->setTranslation('Erste Kategorie');
+        $categoryTrans1->setCategory($category);
+        $category->addTranslation($categoryTrans1);
+
         // meta for first category
         $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
@@ -502,6 +508,30 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response['id']);
         $this->assertEquals('de', $response['locale']);
         $this->assertEquals('en-gb', $response['fallbackLocale']);
+
+        $categories = [
+            [
+                'id' => $response['categories'][0]['id'],
+                'key' => $response['categories'][0]['key'],
+                'name' => $response['categories'][0]['name'],
+            ],
+            [
+                'id' => $response['categories'][1]['id'],
+                'key' => $response['categories'][1]['key'],
+                'name' => $response['categories'][1]['name'],
+            ],
+        ];
+
+        $this->assertContains([
+            'id' => $this->category->getId(),
+            'key' => $this->category->getKey(),
+            'name' => 'Erste Kategorie',
+        ], $categories);
+        $this->assertContains([
+            'id' => $this->category2->getId(),
+            'key' => $this->category2->getKey(),
+            'name' => 'Second Category',
+        ], $categories);
     }
 
     /**
@@ -813,10 +843,9 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/media',
+            '/api/media?locale=en-gb',
             [
                 'collection' => $this->collection->getId(),
-                'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
@@ -909,9 +938,8 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/media',
+            '/api/media?locale=en',
             [
-                'locale' => 'en',
                 'collection' => $this->collection->getId(),
             ],
             [
@@ -1149,7 +1177,7 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?action=new-version',
+            '/api/media/' . $media->getId() . '?action=new-version&locale=en-gb',
             [
                 'collection' => $this->collection->getId(),
             ],

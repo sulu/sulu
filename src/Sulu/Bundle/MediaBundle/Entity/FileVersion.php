@@ -678,7 +678,7 @@ class FileVersion implements AuditableInterface
     /**
      * Add categories.
      *
-     * @param CategoryInterface $categories´
+     * @param CategoryInterface $categories
      *
      * @return self
      */
@@ -700,7 +700,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get categories.
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCategories()
     {

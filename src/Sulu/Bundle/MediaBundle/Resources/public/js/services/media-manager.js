@@ -70,20 +70,21 @@ define([
         },
 
         /**
-         * Save given media data
+         * Save given media data in the given locale and display labels
          * @param data {Object} the media data to save
+         * @param locale {String} the locale in which the media is saved
          * @returns promise
          */
-        saveMedia = function(data) {
+        saveMedia = function(data, locale) {
             var promise = $.Deferred();
             var media = Media.findOrCreate({id: data.id});
             media.set(data);
 
-            media.save(null, {
-                success: function(response) {
+            media.save({locale: locale}, {
+                success: function (response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
-                error: function(context, jqXHR) {
+                error: function (context, jqXHR) {
                     promise.reject(jqXHR);
                 }.bind(this)
             });
@@ -160,14 +161,15 @@ define([
         },
 
         /**
-         * Save given media data and display labels
+         * Save given media data in the given locale and display labels
          * @param data {Object} the media data to save
+         * @param locale {String} the locale in which the media is saved
          * @returns promise
          */
-        save: function(data) {
+        save: function(data, locale) {
             var promise = $.Deferred();
 
-            saveMedia(data).done(function(media) {
+            saveMedia(data, locale).done(function(media) {
                 Mediator.emit('sulu.medias.media.saved', media.id, media);
                 Mediator.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
                 promise.resolve(media);

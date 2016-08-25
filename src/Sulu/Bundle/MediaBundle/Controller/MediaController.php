@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
@@ -48,6 +49,14 @@ class MediaController extends AbstractMediaController implements
      * @var string
      */
     protected static $entityKey = 'media';
+
+    /**
+     * @var array
+     */
+    protected static $mediaSerializationGroups = [
+        'fullMedia',
+        'partialCategory',
+    ];
 
     /**
      * returns all fields that can be used by list.
@@ -96,6 +105,7 @@ class MediaController extends AbstractMediaController implements
                     return $media;
                 }
             );
+            $this->setSerializerParameters($view, $request, static::$mediaSerializationGroups);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {
@@ -339,6 +349,7 @@ class MediaController extends AbstractMediaController implements
             );
 
             $view = $this->view($media, 200);
+            $this->setSerializerParameters($view, $request, static::$mediaSerializationGroups);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {
@@ -364,6 +375,7 @@ class MediaController extends AbstractMediaController implements
             $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $view = $this->view($media, 200);
+            $this->setSerializerParameters($view, $request, static::$mediaSerializationGroups);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {
@@ -444,5 +456,21 @@ class MediaController extends AbstractMediaController implements
                 ['locale' => $locale],
                 $all ? null : DoctrineFieldDescriptorInterface::class
             );
+    }
+
+    /**
+     * Setup the serializer-context of an response-view to serialize the respective translation of a media in
+     * the proper format.
+     *
+     * @param $view
+     * @param $request
+     * @param array $serializationGroups
+     */
+    private function setSerializerParameters($view, $request, $serializationGroups = [])
+    {
+        $context = SerializationContext::create();
+        $context->setGroups($serializationGroups);
+        $context->setAttribute('locale', $this->getRequestParameter($request, 'locale', true));
+        $view->setSerializationContext($context);
     }
 }

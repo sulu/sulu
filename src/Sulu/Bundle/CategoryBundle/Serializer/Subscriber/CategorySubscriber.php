@@ -93,7 +93,7 @@ class CategorySubscriber implements EventSubscriberInterface
             }
 
             $visitor->addData('meta', $metaArray);
-        } else if ($serializeNull) {
+        } elseif ($serializeNull) {
             $visitor->addData('meta', null);
         }
     }
@@ -114,7 +114,7 @@ class CategorySubscriber implements EventSubscriberInterface
         if ($translation = $category->findTranslationByLocale($effectiveLocale)) {
             $visitor->addData('name', $translation->getTranslation());
             $visitor->addData('locale', $translation->getLocale());
-        } else if ($serializeNull) {
+        } elseif ($serializeNull) {
             $visitor->addData('name', null);
             $visitor->addData('locale', null);
         }
@@ -131,7 +131,7 @@ class CategorySubscriber implements EventSubscriberInterface
     {
         if ($category->getCreator()) {
             $visitor->addData('creator', $category->getCreator()->getFullName());
-        } else if ($serializeNull) {
+        } elseif ($serializeNull) {
             $visitor->addData('creator', null);
         }
     }
@@ -143,11 +143,11 @@ class CategorySubscriber implements EventSubscriberInterface
      * @param $visitor
      * @param $serializeNull
      */
-    private function serializeChanger($category, $visitor,  $serializeNull)
+    private function serializeChanger($category, $visitor, $serializeNull)
     {
         if ($category->getChanger()) {
             $visitor->addData('changer', $category->getChanger()->getFullName());
-        } else if ($serializeNull) {
+        } elseif ($serializeNull) {
             $visitor->addData('changer', null);
         }
     }
@@ -159,11 +159,11 @@ class CategorySubscriber implements EventSubscriberInterface
      * @param $visitor
      * @param $serializeNull
      */
-    private function serializeParent($category, $visitor,  $serializeNull)
+    private function serializeParent($category, $visitor, $serializeNull)
     {
         if ($category->getParent()) {
             $visitor->addData('parent', $category->getParent()->getId());
-        } else if ($serializeNull) {
+        } elseif ($serializeNull) {
             $visitor->addData('parent', null);
         }
     }

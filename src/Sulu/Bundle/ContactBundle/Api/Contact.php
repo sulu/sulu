@@ -16,8 +16,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
@@ -1024,11 +1023,11 @@ class Contact extends ApiWrapper
     /**
      * Add category.
      *
-     * @param CategoryEntity $category
+     * @param CategoryInterface $category
      *
      * @return Contact
      */
-    public function addCategory(CategoryEntity $category)
+    public function addCategory(CategoryInterface $category)
     {
         $this->entity->addCategory($category);
 
@@ -1038,9 +1037,9 @@ class Contact extends ApiWrapper
     /**
      * Remove category.
      *
-     * @param CategoryEntity $category
+     * @param CategoryInterface $category
      */
-    public function removeCategory(CategoryEntity $category)
+    public function removeCategory(CategoryInterface $category)
     {
         $this->entity->removeCategory($category);
     }
@@ -1048,7 +1047,7 @@ class Contact extends ApiWrapper
     /**
      * Get categories.
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      *
      * @VirtualProperty
      * @SerializedName("categories")
@@ -1056,14 +1055,7 @@ class Contact extends ApiWrapper
      */
     public function getCategories()
     {
-        $entities = [];
-        if ($this->entity->getCategories()) {
-            foreach ($this->entity->getCategories() as $category) {
-                $entities[] = new Category($category, $this->locale);
-            }
-        }
-
-        return $entities;
+        return $this->entity->getCategories();
     }
 
     /**

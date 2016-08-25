@@ -236,6 +236,27 @@ class AccountControllerTest extends SuluTestCase
         $accountContact->setMain(true);
         $account->addAccountContact($accountContact);
 
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
+        $category->setKey('second-category-key');
+        $category->setDefaultLocale('en');
+
+        $this->category = $category;
+
+        // name for second category
+        $categoryTrans1 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
+        $categoryTrans1->setLocale('de');
+        $categoryTrans1->setTranslation('Zweite Kategorie');
+        $categoryTrans1->setCategory($category);
+        $category->addTranslation($categoryTrans1);
+
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
+        $categoryTrans2->setLocale('en');
+        $categoryTrans2->setTranslation('Second Category');
+        $categoryTrans2->setCategory($category);
+        $category->addTranslation($categoryTrans2);
+
+        $this->em->persist($category);
+
         $note = new Note();
         $note->setValue('Note');
         $account->addNote($note);
@@ -727,7 +748,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/accounts',
+            '/api/accounts?locale=en',
             [
                 'name' => 'ExampleCompany',
                 'parent' => ['id' => $this->account->getId()],
@@ -817,6 +838,11 @@ class AccountControllerTest extends SuluTestCase
                     ['value' => 'Note 1'],
                     ['value' => 'Note 2'],
                 ],
+                'categories' => [
+                    [
+                        'id' => $this->category->getId(),
+                    ],
+                ],
             ]
         );
 
@@ -847,7 +873,14 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
-        $client->request('GET', '/api/accounts/' . $response->id);
+        $this->assertEquals(1, count($response->categories));
+        $this->assertEquals($this->category->getId(), $response->categories[0]->id);
+        $this->assertEquals($this->category->getKey(), $response->categories[0]->key);
+        $this->assertEquals(
+            $this->category->findTranslationByLocale('en')->getTranslation(), $response->categories[0]->name
+        );
+
+        $client->request('GET', '/api/accounts/' . $response->id . '?locale=de');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
@@ -866,6 +899,13 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $this->assertEquals(1, count($response->categories));
+        $this->assertEquals($this->category->getId(), $response->categories[0]->id);
+        $this->assertEquals($this->category->getKey(), $response->categories[0]->key);
+        $this->assertEquals(
+            $this->category->findTranslationByLocale('de')->getTranslation(), $response->categories[0]->name
+        );
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);

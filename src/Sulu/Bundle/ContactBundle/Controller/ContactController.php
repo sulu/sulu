@@ -27,6 +27,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -37,6 +38,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -201,7 +204,7 @@ class ContactController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         $serializationGroups = [];
-        $locale = $this->getLocale($request);
+        $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
 
         if ($request->get('flat') == 'true') {
             $list = $this->getList($request, $locale);
@@ -213,10 +216,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contacts = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.contact.class')
                 )->findAll();
-                $serializationGroups = array_merge(
-                    $serializationGroups,
-                    static::$contactSerializationGroups
-                );
+                $serializationGroups = array_merge($serializationGroups, static::$contactSerializationGroups);
             }
             // convert to api-contacts
             $apiContacts = [];
@@ -236,11 +236,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
         // set serialization groups
         if (count($serializationGroups) > 0) {
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    $serializationGroups
-                )
-            );
+            $this->setSerializerParameters($view, $request, $serializationGroups);
         }
 
         return $this->handleView($view);
@@ -342,10 +338,10 @@ class ContactController extends RestController implements ClassResourceInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction($id)
+    public function getAction(Request $request, $id)
     {
         $contactManager = $this->getContactManager();
-        $locale = $this->getUser()->getLocale();
+        $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
 
         try {
             $view = $this->responseGetById(
@@ -355,11 +351,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             );
 
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $this->setSerializerParameters($view, $request, static::$contactSerializationGroups);
         } catch (EntityNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         }
@@ -383,14 +375,10 @@ class ContactController extends RestController implements ClassResourceInterface
             );
             $apiContact = $this->getContactManager()->getContact(
                 $contact,
-                $this->getLocale($request)
+                $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale())
             );
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $this->setSerializerParameters($view, $request, static::$contactSerializationGroups);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (MissingArgumentException $maex) {
@@ -416,13 +404,12 @@ class ContactController extends RestController implements ClassResourceInterface
                 $id
             );
 
-            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
-            $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
+            $apiContact = $this->getContactManager()->getContact(
+                $contact,
+                $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale())
             );
+            $view = $this->view($apiContact, 200);
+            $this->setSerializerParameters($view, $request, static::$contactSerializationGroups);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
@@ -449,13 +436,12 @@ class ContactController extends RestController implements ClassResourceInterface
                 true
             );
 
-            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
-            $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
+            $apiContact = $this->getContactManager()->getContact(
+                $contact,
+                $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale())
             );
+            $view = $this->view($apiContact, 200);
+            $this->setSerializerParameters($view, $request, static::$contactSerializationGroups);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
@@ -536,6 +522,24 @@ class ContactController extends RestController implements ClassResourceInterface
         if ($request->get('formOfAddress') == null) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');
         }
+    }
+
+    /**
+     * Setup the serializer-context of an response-view to serialize the respective translation of a contact in
+     * the proper format.
+     *
+     * @param $view
+     * @param $request
+     * @param array $serializationGroups
+     */
+    private function setSerializerParameters($view, $request, $serializationGroups = [])
+    {
+        $locale = $this->getRequestParameter($request, 'locale', false, $this->getUser()->getLocale());
+
+        $context = SerializationContext::create();
+        $context->setGroups($serializationGroups);
+        $context->setAttribute('locale', $locale);
+        $view->setSerializationContext($context);
     }
 
     /**

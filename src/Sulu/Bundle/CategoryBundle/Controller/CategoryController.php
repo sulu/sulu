@@ -101,7 +101,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns the sub-graph below the category which is assigned to the given parentId.
      * This method is used by the husky datagrid to load children of a category.
      * If request.flat is set, only the first level of the respective graph is returned in a flat format.
-     * If request.sortBy and request.sortOrder is set, the first level of the graph is sorted.
      *
      * @param Request $request
      * @param mixed $parentId
