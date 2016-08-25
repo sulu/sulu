@@ -88,6 +88,31 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
+    public function findMediaByIdForRendering($id, $formatKey)
+    {
+        try {
+            $queryBuilder = $this->createQueryBuilder('media')
+                ->leftJoin('media.files', 'file')
+                ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'file.version = fileVersion.version')
+                ->leftJoin('fileVersion.formatOptions', 'formatOptions', Join::WITH, 'formatOptions.formatKey = :formatKey')
+                ->addSelect('file')
+                ->addSelect('fileVersion')
+                ->addSelect('formatOptions')
+                ->where('media.id = :mediaId');
+
+            $query = $queryBuilder->getQuery();
+            $query->setParameter('mediaId', $id);
+            $query->setParameter('formatKey', $formatKey);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findMedia(
         $filter = [],
         $limit = null,

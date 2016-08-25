@@ -86,6 +86,11 @@ class FileVersion implements AuditableInterface
     private $meta = [];
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $formatOptions = [];
+
+    /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
      * @Exclude
      */
@@ -129,6 +134,7 @@ class FileVersion implements AuditableInterface
         $this->contentLanguages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->publishLanguages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formatOptions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
         $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -435,6 +441,16 @@ class FileVersion implements AuditableInterface
     public function getMeta()
     {
         return $this->meta;
+    }
+
+    /**
+     * Get formatOptions.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFormatOptions()
+    {
+        return $this->formatOptions;
     }
 
     /**

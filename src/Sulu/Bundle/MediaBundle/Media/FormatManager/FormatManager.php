@@ -100,16 +100,16 @@ class FormatManager implements FormatManagerInterface
     private $videoThumbnailService;
 
     /**
-     * @param MediaRepository         $mediaRepository
-     * @param StorageInterface        $originalStorage
-     * @param FormatCacheInterface    $formatCache
+     * @param MediaRepository $mediaRepository
+     * @param StorageInterface $originalStorage
+     * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
      * @param VideoThumbnailServiceInterface $videoThumbnailService
-     * @param string                  $ghostScriptPath
-     * @param string                  $saveImage
-     * @param array                   $previewMimeTypes
-     * @param array                   $responseHeaders
-     * @param array                   $formats
+     * @param string $ghostScriptPath
+     * @param string $saveImage
+     * @param array $previewMimeTypes
+     * @param array $responseHeaders
+     * @param array $formats
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -139,20 +139,22 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function returnImage($id, $formatName)
+    public function returnImage($id, $formatKey)
     {
         $setExpireHeaders = false;
 
         try {
-            // Load Media.
-            $media = $this->mediaRepository->findMediaById($id);
+            $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey);
 
             if (!$media) {
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
 
             // Load Media Data.
-            list($fileName, $version, $storageOptions, $mimeType) = $this->getMediaData($media);
+            list($fileName, $version, $storageOptions, $formatOptions, $mimeType) = $this->getMediaData(
+                $media,
+                $formatKey
+            );
 
             try {
                 // Check if file has supported preview.
@@ -161,7 +163,7 @@ class FormatManager implements FormatManagerInterface
                 }
 
                 // Get format options.
-                $format = $this->getFormat($formatName);
+                $format = $this->getFormat($formatKey);
                 $formatOptions = $format['options'];
 
                 // Load Original.
@@ -202,13 +204,13 @@ class FormatManager implements FormatManagerInterface
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
-                        $formatName
+                        $formatKey
                     );
                 }
             } catch (MediaException $exc) {
                 // Return when available a file extension icon.
                 list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon(
-                    $formatName,
+                    $formatKey,
                     $this->getRealFileExtension($fileName),
                     $exc
                 );
@@ -359,8 +361,8 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param ImageInterface $image
-     * @param string         $imageExtension
-     * @param array          $formatOptions
+     * @param string $imageExtension
+     * @param array $formatOptions
      *
      * @return array
      */
@@ -547,15 +549,17 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param MediaInterface $media
+     * @param string $formatKey
      *
      * @return array
      *
      * @throws ImageProxyMediaNotFoundException
      */
-    protected function getMediaData(MediaInterface $media)
+    protected function getMediaData(MediaInterface $media, $formatKey)
     {
         $fileName = null;
         $storageOptions = null;
+        $formatOptions = null;
         $version = null;
         $mimeType = null;
 
@@ -568,6 +572,7 @@ class FormatManager implements FormatManagerInterface
                     $fileName = $fileVersion->getName();
                     $storageOptions = $fileVersion->getStorageOptions();
                     $mimeType = $fileVersion->getMimeType();
+                    $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
                     break;
                 }
             }
@@ -578,7 +583,7 @@ class FormatManager implements FormatManagerInterface
             throw new ImageProxyMediaNotFoundException('Media file version was not found');
         }
 
-        return [$fileName, $version, $storageOptions, $mimeType];
+        return [$fileName, $version, $storageOptions, $formatOptions, $mimeType];
     }
 
     /**

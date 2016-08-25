@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
@@ -197,15 +198,25 @@ class MediaRepositoryTest extends SuluTestCase
 
         $file->addFileVersion($fileVersion);
 
+        $formatOptions = new FormatOptions();
+        $formatOptions->setFormatKey('my-format');
+        $formatOptions->setFileVersion($fileVersion);
+        $formatOptions->setCropHeight(10);
+        $formatOptions->setCropWidth(20);
+        $formatOptions->setCropX(30);
+        $formatOptions->setCropY(40);
+
         $media->addFile($file);
         $media->setCollection($this->collections[$collection]);
 
         $this->em->persist($media);
         $this->em->persist($file);
         $this->em->persist($fileVersionMeta);
+        $this->em->persist($formatOptions);
         $this->em->persist($fileVersion);
 
         $this->em->flush();
+        $this->em->clear();
 
         return $media;
     }
@@ -475,5 +486,31 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->assertEquals(2, $this->mediaRepository->count([]));
         $this->assertEquals(1, $this->mediaRepository->count(['systemCollections' => false]));
+    }
+
+    public function testGetMediaByIdForRendering()
+    {
+        $media = $this->createMedia('media-with-format-options', 'Media with format options');
+
+        $retrievedMedia = $this->mediaRepository->findMediaByIdForRendering($media->getId(), 'my-format');
+
+        $this->assertEquals($media->getId(), $retrievedMedia->getId());
+        $this->assertEquals(1, count($retrievedMedia->getFiles()));
+        $this->assertEquals(1, count($retrievedMedia->getFiles()->get(0)->getFileVersions()));
+
+        /** @var FileVersion $fileVersion */
+        $fileVersion = $retrievedMedia->getFiles()->get(0)->getFileVersions()->get(0);
+
+        $this->assertEquals(1, count($fileVersion->getFormatOptions()));
+
+        /** @var FormatOptions $formatOptions */
+        $formatOptions = $fileVersion->getFormatOptions()->get('my-format');
+
+        $this->assertEquals('my-format', $formatOptions->getFormatKey());
+        $this->assertEquals($fileVersion->getId(), $formatOptions->getFileVersion()->getId());
+        $this->assertEquals(10, $formatOptions->getCropHeight());
+        $this->assertEquals(20, $formatOptions->getCropWidth());
+        $this->assertEquals(30, $formatOptions->getCropX());
+        $this->assertEquals(40, $formatOptions->getCropY());
     }
 }
