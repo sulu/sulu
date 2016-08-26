@@ -208,7 +208,8 @@ define(['underscore'], function(_) {
                 idParts = id.split(';');
 
             for (var i = -1, length = items.length; ++i < length;) {
-                if (idParts[0] === items[i].type && idParts[1] === items[i].id) {
+                // string and int should work
+                if (idParts[0] == items[i].type && idParts[1] == items[i].id) {
                     items.splice(i, 1);
                     break;
                 }
