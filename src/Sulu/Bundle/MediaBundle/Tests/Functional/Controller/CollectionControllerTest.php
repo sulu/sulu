@@ -276,6 +276,13 @@ class CollectionControllerTest extends SuluTestCase
      */
     public function testcGet()
     {
+        for ($i = 1; $i <= 15; ++$i) {
+            $this->createCollection(
+                $this->collectionType1,
+                ['en-gb' => 'Test Collection ' . $i, 'de' => 'Test Kollektion ' . $i]
+            );
+        }
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -291,7 +298,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response->_embedded->collections);
 
-        $this->assertCount(1, $response->_embedded->collections);
+        $this->assertCount(16, $response->_embedded->collections);
     }
 
     /**
@@ -353,6 +360,43 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(2, $response->_embedded->collections);
         $this->assertEquals('Test Collection B', $response->_embedded->collections[0]->title);
         $this->assertEquals('Test Collection C', $response->_embedded->collections[1]->title);
+    }
+
+    /**
+     * @description Tests the cGET action with a pagination. Only the collections of the desired
+     * level should be returned and in the right amount, although they have children.
+     */
+    public function testcGetPaginatedWithChildren()
+    {
+        $parent = $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection 1', 'de' => 'Test Kollektion 1']
+        );
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection 2', 'de' => 'Test Kollektion 2']
+        );
+        $this->createCollection(
+            $this->collectionType1,
+            ['en-gb' => 'Test Collection child', 'de' => 'Test Kollektion Kind'],
+            $parent
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=1&limit=2',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(3, $response->total);
+        $this->assertEquals(2, count($response->_embedded->collections));
     }
 
     /**

@@ -164,7 +164,7 @@ define(function() {
                                 'title': this.sandbox.translate('navigation.media.collections'),
                                 'hasSub': true,
                                 '_links': {
-                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale}
+                                    'children': {'href': '/admin/api/collections?sortBy=title&locale=' + this.options.locale}
                                 },
                                 '_embedded': {'collections': []}
                             }
@@ -172,7 +172,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale;
+                options.url = '/admin/api/collections?sortBy=title&locale=' + this.options.locale;
             }
 
             this.sandbox.start(

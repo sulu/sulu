@@ -46460,17 +46460,18 @@ define('__component__$data-navigation@husky',[
             if (!!this.data.hasNextPage && !this.loading) {
                 this.showLoader();
 
-                this.page++;
-                this.sandbox.util.load(this.getUrl(this.getCurrentUrl()))
-                    .then(function(data) {
-                        var children = data._embedded[this.options.resultKey] || [];
-                        this.data.children = this.data.children.concat(children);
-                        this.data.hasNextPage = this.page < data.pages;
-                        this.currentView.append(children, this.options);
+                this.page += 1;
+                this.sandbox.util.load(this.getUrl(this.getCurrentUrl()), {
+                    locale: this.locale
+                }).then(function(data) {
+                    var children = data._embedded[this.options.resultKey] || [];
+                    this.data.children = this.data.children.concat(children);
+                    this.data.hasNextPage = this.page < data.pages;
+                    this.currentView.append(children, this.options);
 
-                        this.hideLoader();
-                        def.resolve();
-                    }.bind(this));
+                    this.hideLoader();
+                    def.resolve();
+                }.bind(this));
             } else {
                 def.resolve();
             }

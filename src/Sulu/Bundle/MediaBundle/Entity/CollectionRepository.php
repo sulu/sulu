@@ -79,12 +79,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->addSelect('collectionType')
             ->addSelect('collectionParent')
             ->addSelect('parentMeta')
-            ->addSelect('collectionChildren')
             ->leftJoin('collection.meta', 'collectionMeta')
             ->leftJoin('collection.defaultMeta', 'defaultMeta')
             ->leftJoin('collection.type', 'collectionType')
             ->leftJoin('collection.parent', 'collectionParent')
-            ->leftJoin('collection.children', 'collectionChildren')
             ->leftJoin('collectionParent.meta', 'parentMeta')
             ->where('collection.id IN (:ids)')
             ->setParameter('ids', $ids);
@@ -295,12 +293,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     ) {
         $queryBuilder = $this->createQueryBuilder('collection')
             ->select($select)
-            ->leftJoin('collection.children', 'collectionChildren')
-            ->where('collection.depth <= :depth1 OR collectionChildren.depth <= :depth2');
+            ->where('collection.depth <= :depth');
 
         $collectionDepth = $collection !== null ? $collection->getDepth() : 0;
-        $queryBuilder->setParameter('depth1', $collectionDepth + $depth);
-        $queryBuilder->setParameter('depth2', $depth + 1);
+        $queryBuilder->setParameter('depth', $collectionDepth + $depth);
 
         if ($collection !== null) {
             $queryBuilder->andWhere('collection.lft BETWEEN :lft AND :rgt AND collection.id != :id');
