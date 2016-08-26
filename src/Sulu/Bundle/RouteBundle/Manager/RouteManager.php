@@ -61,14 +61,14 @@ class RouteManager implements RouteManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function create(RoutableInterface $entity)
+    public function create(RoutableInterface $entity, $routePath = null)
     {
         if (null !== $entity->getRoute()) {
             throw new RouteAlreadyCreatedException($entity);
         }
 
         $config = $this->mappings[get_class($entity)];
-        $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
+        $path = $routePath ?: $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
         $route = $this->routeRepository->createNew()
             ->setPath($path)
             ->setEntityClass(get_class($entity))
@@ -84,14 +84,14 @@ class RouteManager implements RouteManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function update(RoutableInterface $entity)
+    public function update(RoutableInterface $entity, $routePath = null)
     {
         if (null === $entity->getRoute()) {
             throw new RouteNotCreatedException($entity);
         }
 
         $config = $this->mappings[get_class($entity)];
-        $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
+        $path = $routePath ?: $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
         if ($path === $entity->getRoute()->getPath()) {
             return $entity->getRoute();
         }
