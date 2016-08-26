@@ -153,5 +153,16 @@
 
             <tag name="sulu_markup.tag" tag="link" type="html"/>
         </service>
+
+        <!-- builder -->
+
+        <service id="sulu_core.build.builder.node_order" class="Sulu\Bundle\ContentBundle\Build\NodeOrderBuilder">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="massive_build.builder" />
+        </service>
     </services>
 </container>

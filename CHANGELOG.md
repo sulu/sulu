@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2870 [ContentBundle]       Fixed NodeOrderBuilder for publishing
     * HOTFIX      #2864 [MediaBundle]         Return 404 http code for not existing media
     * HOTFIX      #2865 [ContentBundle]       Fixed button text for unpublish dialog
     * HOTFIX      #2804 [ListBuilder]         Fixed ids-query in doctrine-list-builder
