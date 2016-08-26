@@ -216,7 +216,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->mediaRepository->findMediaById($id);
         if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
+            throw new MediaNotFoundException($id);
         }
 
         return $mediaEntity;

@@ -174,7 +174,7 @@ class File implements AuditableInterface
     /**
      * Get latest file version.
      *
-     * @return FileVersion[]
+     * @return FileVersion
      */
     public function getLatestFileVersion()
     {

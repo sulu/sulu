@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Cropping;
 
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use Imagine\Image\ImageInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping\Cropping;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping\CroppingInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -31,7 +30,8 @@ class CroppingTest extends SuluTestCase
         $this->cropping = new Cropping();
     }
 
-    public function testCrop() {
+    public function testCrop()
+    {
         $imagine = new Imagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);

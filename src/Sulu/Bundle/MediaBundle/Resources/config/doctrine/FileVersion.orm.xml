@@ -47,7 +47,11 @@
                 <cascade-persist />
             </cascade>
         </one-to-many>
-        <one-to-many field="formatOptions" target-entity="Sulu\Bundle\MediaBundle\Entity\FormatOptions" index-by="formatKey" mapped-by="fileVersion"/>
+        <one-to-many field="formatOptions" target-entity="Sulu\Bundle\MediaBundle\Entity\FormatOptions" index-by="formatKey" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>

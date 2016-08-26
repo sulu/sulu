@@ -11,34 +11,28 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection as DoctrineCollection;
-use Sulu\Component\Persistence\Model\AuditableInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
-
 /**
- * Entity for the format-options of a file-version
+ * Entity for the format-options of a file-version.
  */
 class FormatOptions
 {
-
     /**
-     * @var integer
+     * @var int
      */
     private $cropX;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cropY;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cropWidth;
 
     /**
-     * @var integer
+     * @var int
      */
     private $cropHeight;
 
@@ -48,15 +42,14 @@ class FormatOptions
     private $formatKey;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersion
+     * @var FileVersion
      */
     private $fileVersion;
 
-
     /**
-     * Set cropX
+     * Set cropX.
      *
-     * @param integer $cropX
+     * @param int $cropX
      *
      * @return FormatOptions
      */
@@ -68,9 +61,9 @@ class FormatOptions
     }
 
     /**
-     * Get cropX
+     * Get cropX.
      *
-     * @return integer
+     * @return int
      */
     public function getCropX()
     {
@@ -78,9 +71,9 @@ class FormatOptions
     }
 
     /**
-     * Set cropY
+     * Set cropY.
      *
-     * @param integer $cropY
+     * @param int $cropY
      *
      * @return FormatOptions
      */
@@ -92,9 +85,9 @@ class FormatOptions
     }
 
     /**
-     * Get cropY
+     * Get cropY.
      *
-     * @return integer
+     * @return int
      */
     public function getCropY()
     {
@@ -102,9 +95,9 @@ class FormatOptions
     }
 
     /**
-     * Set cropWidth
+     * Set cropWidth.
      *
-     * @param integer $cropWidth
+     * @param int $cropWidth
      *
      * @return FormatOptions
      */
@@ -116,9 +109,9 @@ class FormatOptions
     }
 
     /**
-     * Get cropWidth
+     * Get cropWidth.
      *
-     * @return integer
+     * @return int
      */
     public function getCropWidth()
     {
@@ -126,9 +119,9 @@ class FormatOptions
     }
 
     /**
-     * Set cropHeight
+     * Set cropHeight.
      *
-     * @param integer $cropHeight
+     * @param int $cropHeight
      *
      * @return FormatOptions
      */
@@ -140,9 +133,9 @@ class FormatOptions
     }
 
     /**
-     * Get cropHeight
+     * Get cropHeight.
      *
-     * @return integer
+     * @return int
      */
     public function getCropHeight()
     {
@@ -150,7 +143,7 @@ class FormatOptions
     }
 
     /**
-     * Set formatKey
+     * Set formatKey.
      *
      * @param string $formatKey
      *
@@ -164,7 +157,7 @@ class FormatOptions
     }
 
     /**
-     * Get formatKey
+     * Get formatKey.
      *
      * @return string
      */
@@ -174,13 +167,13 @@ class FormatOptions
     }
 
     /**
-     * Set fileVersion
+     * Set fileVersion.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion
+     * @param FileVersion $fileVersion
      *
      * @return FormatOptions
      */
-    public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion)
+    public function setFileVersion(FileVersion $fileVersion)
     {
         $this->fileVersion = $fileVersion;
 
@@ -188,9 +181,9 @@ class FormatOptions
     }
 
     /**
-     * Get fileVersion
+     * Get fileVersion.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion
+     * @return FileVersion
      */
     public function getFileVersion()
     {

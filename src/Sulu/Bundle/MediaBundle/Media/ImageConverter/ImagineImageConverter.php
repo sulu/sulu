@@ -214,7 +214,7 @@ class ImagineImageConverter implements ImageConverterInterface
             ];
         }
 
-        return null;
+        return;
     }
 
     /**

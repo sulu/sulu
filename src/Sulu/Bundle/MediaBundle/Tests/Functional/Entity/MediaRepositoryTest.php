@@ -205,6 +205,7 @@ class MediaRepositoryTest extends SuluTestCase
         $formatOptions->setCropWidth(20);
         $formatOptions->setCropX(30);
         $formatOptions->setCropY(40);
+        $fileVersion->addFormatOptions($formatOptions);
 
         $media->addFile($file);
         $media->setCollection($this->collections[$collection]);
@@ -216,7 +217,6 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->persist($fileVersion);
 
         $this->em->flush();
-        $this->em->clear();
 
         return $media;
     }

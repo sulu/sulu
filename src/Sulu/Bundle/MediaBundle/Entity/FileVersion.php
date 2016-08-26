@@ -444,6 +444,20 @@ class FileVersion implements AuditableInterface
     }
 
     /**
+     * Adds a format-options entity to the file-version.
+     *
+     * @param FormatOptions $formatOptions
+     *
+     * @return FileVersion
+     */
+    public function addFormatOptions(FormatOptions $formatOptions)
+    {
+        $this->formatOptions[$formatOptions->getFormatKey()] = $formatOptions;
+
+        return $this;
+    }
+
+    /**
      * Get formatOptions.
      *
      * @return \Doctrine\Common\Collections\Collection

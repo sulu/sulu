@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
@@ -270,11 +271,57 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * Clears the format cache.
+     * {@inheritdoc}
      */
     public function clearCache()
     {
         $this->formatCache->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = [])
+    {
+        if (!isset($this->formats[$formatKey])) {
+            throw new FormatNotFoundException($formatKey);
+        }
+
+        $format = $this->formats[$formatKey];
+        $title = $format['key'];
+
+        if (array_key_exists($locale, $format['meta']['title'])) {
+            $title = $format['meta']['title'][$locale];
+        } elseif (count($format['meta']['title']) > 0) {
+            $title = array_values($format['meta']['title'])[0];
+        }
+
+        $formatArray = [
+            'key' => $format['key'],
+            'title' => $title,
+            'scale' => $format['scale'],
+            'options' => $formatOptions,
+        ];
+
+        return $formatArray;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatDefinitions($locale = null, array $formatOptions = [])
+    {
+        $definitionsArray = [];
+
+        foreach ($this->formats as $format) {
+            $options = [];
+            if (array_key_exists($format['key'], $formatOptions)) {
+                $options = $formatOptions[$format['key']];
+            }
+            $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale, $options);
+        }
+
+        return $definitionsArray;
     }
 
     /**
@@ -463,6 +510,7 @@ class FormatManager implements FormatManagerInterface
         switch ($extension) {
             case 'png':
             case 'gif':
+            case 'jpeg':
                 // do nothing
                 break;
             case 'svg':

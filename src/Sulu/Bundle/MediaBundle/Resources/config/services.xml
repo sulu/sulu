@@ -19,7 +19,9 @@
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
+        <parameter key="sulu_media.format_options_manager.class">Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
+        <parameter key="sulu_media.format_options_entity">SuluMediaBundle:FormatOptions</parameter>
         <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
@@ -106,6 +108,19 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%sulu_media.media.types%</argument>
             <argument>%sulu_media.media.blocked_file_types%</argument>
+        </service>
+
+        <service id="sulu_media.format_options_repository" class="Sulu\Bundle\MediaBundle\Entity\FormatOptionsRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+            <argument>%sulu_media.format_options_entity%</argument>
+        </service>
+
+        <service id="sulu_media.format_options_manager" class="%sulu_media.format_options_manager.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_media.format_options_repository" />
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.format_manager" />
+            <argument>%sulu_media.image.formats%</argument>
         </service>
 
         <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%">

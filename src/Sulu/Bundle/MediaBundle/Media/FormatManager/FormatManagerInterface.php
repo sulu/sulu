@@ -50,6 +50,29 @@ interface FormatManagerInterface
     public function getFormats($id, $fileName, $storageOptions, $version, $mimeType);
 
     /**
+     * Returns a definition of a format with a given key. The returned formats contain
+     * the passed format options merged into them.
+     *
+     * @param string $formatKey
+     * @param string $locale
+     * @param array $formatOptions
+     *
+     * @return array
+     */
+    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = []);
+
+    /**
+     * Returns all definitions of image formats. The returned formats contain the passed
+     * format-options merged into them.
+     *
+     * @param string $locale
+     * @param array $formatOptions
+     *
+     * @return array
+     */
+    public function getFormatDefinitions($locale = null, array $formatOptions = []);
+
+    /**
      * Delete the image by the given parameters.
      *
      * @param int    $idMedia
