@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Image\ImageInterface;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 
 /**
  * Defines the operations of the ImageConverter
@@ -25,8 +26,9 @@ interface ImageConverterInterface
      *
      * @param string $originalPath
      * @param array  $format
+     * @param FormatOptions $formatOptions
      *
      * @return ImageInterface
      */
-    public function convert($originalPath, array $format);
+    public function convert($originalPath, array $format, $formatOptions);
 }

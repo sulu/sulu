@@ -17,6 +17,7 @@ use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Imagine;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use RuntimeException;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
@@ -60,7 +61,7 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function convert($originalPath, array $format)
+    public function convert($originalPath, array $format, $formatOptions)
     {
         $imagine = $this->newImage();
         $image = null;
@@ -76,6 +77,10 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $image = $this->toRGB($image);
 
+        $cropParameters = $this->getCropParameters($formatOptions);
+        if (isset($cropParameters)) {
+            $image = $this->applyCrop($image, $cropParameters);
+        }
         if (isset($format['scale'])) {
             $image = $this->applyScale($image, $format['scale']);
         }
@@ -131,6 +136,25 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
+     * Crops a given image according to given parameters.
+     *
+     * @param ImageInterface $image The image to crop
+     * @param array $cropParameters The parameters which define the area to crop
+     *
+     * @return ImageInterface The cropped image
+     */
+    private function applyCrop(ImageInterface $image, array $cropParameters)
+    {
+        return $this->cropping->crop(
+            $image,
+            $cropParameters['x'],
+            $cropParameters['y'],
+            $cropParameters['width'],
+            $cropParameters['height']
+        );
+    }
+
+    /**
      * Scales a given image according to the information passed as the second argument.
      *
      * @param ImageInterface $image
@@ -169,6 +193,28 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         return $image;
+    }
+
+    /**
+     * Constructs the parameters for the cropping. Returns null when
+     * the image should not be cropped.
+     *
+     * @param FormatOptions $formatOptions
+     *
+     * @return array The crop parameters or null
+     */
+    private function getCropParameters($formatOptions)
+    {
+        if (isset($formatOptions)) {
+            return [
+                'x' => $formatOptions->getCropX(),
+                'y' => $formatOptions->getCropY(),
+                'width' => $formatOptions->getCropWidth(),
+                'height' => $formatOptions->getCropHeight(),
+            ];
+        }
+
+        return null;
     }
 
     /**

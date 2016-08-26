@@ -164,7 +164,7 @@ class FormatManager implements FormatManagerInterface
 
                 // Get format options.
                 $format = $this->getFormat($formatKey);
-                $formatOptions = $format['options'];
+                $imagineOptions = $format['options'];
 
                 // Load Original.
                 $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
@@ -174,7 +174,7 @@ class FormatManager implements FormatManagerInterface
                 $this->prepareMedia($mimeType, $original);
 
                 // Convert Media to format.
-                $image = $this->converter->convert($original, $format);
+                $image = $this->converter->convert($original, $format, $formatOptions);
 
                 // Remove profiles and comments.
                 $image->strip();
@@ -190,7 +190,7 @@ class FormatManager implements FormatManagerInterface
                 // Get image.
                 $responseContent = $image->get(
                     $imageExtension,
-                    $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
+                    $this->getOptionsFromImage($image, $imageExtension, $imagineOptions)
                 );
 
                 // HTTP Headers
@@ -362,18 +362,18 @@ class FormatManager implements FormatManagerInterface
     /**
      * @param ImageInterface $image
      * @param string $imageExtension
-     * @param array $formatOptions
+     * @param array $imagineOptions
      *
      * @return array
      */
-    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
+    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
     {
         $options = [];
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {
             $options['animated'] = true;
         }
 
-        return array_merge($options, $formatOptions);
+        return array_merge($options, $imagineOptions);
     }
 
     /**
