@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2876 [MediaBundle]         Changed column navigation to markable and ok button
+    * HOTFIX      #2876 [ContentBundle]       Changed column navigation to markable and ok button
     * HOTFIX      #2883 [WebsiteBundle]       Fixed translator locale for localizations with country
     * HOTFIX      #2873 [ContentBundle]       Include live session in CleanupHistoryCommand
     * HOTFIX      #2874 [SearchBundle]        Use new reindex command in IndexBuilder
