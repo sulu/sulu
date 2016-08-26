@@ -2,7 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+<<<<<<< e6bdf47eb60571109973b78ca1d126e211fea931
     * HOTFIX      #2873 [ContentBundle]       Include live session in CleanupHistoryCommand
+=======
+    * HOTFIX      #2874 [SearchBundle]        Use new reindex command in IndexBuilder
+>>>>>>> use new reindex command in IndexBuilder
     * HOTFIX      #2870 [ContentBundle]       Fixed NodeOrderBuilder for publishing
     * HOTFIX      #2869 [ContentBundle]       Fixed maintain command for resource locator
     * HOTFIX      #2864 [MediaBundle]         Return 404 http code for not existing media
