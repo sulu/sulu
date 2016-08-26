@@ -22,6 +22,7 @@ define(['config'], function(Config) {
             url: null,
             historyApi: null,
             deleteApi: null,
+            inputType: null,
             webspaceKey: null
         },
 
@@ -39,10 +40,10 @@ define(['config'], function(Config) {
                     '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
                     '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
                     '   <input type="text" id="' + options.ids.input + '" class="form-element"/>',
-                    '   <span class="show pointer small-font" id="', options.ids.toggle, '">',
-                    '       <span class="fa-history icon"></span>',
-                    '       <span>', options.showHistoryText, '</span>',
-                    '   </span>',
+                    !!options.historyApi ? '   <span class="show pointer small-font" id="' + options.ids.toggle + '">' : '',
+                    !!options.historyApi ? '       <span class="fa-history icon"></span>' : '',
+                    !!options.historyApi ? '       <span>' + options.showHistoryText + '</span>' : '',
+                    !!options.historyApi ? '   </span>' : '',
                     '   <div class="loader" id="', options.ids.loader, '"></div>',
                     '</div>'
                 ].join('');
@@ -162,7 +163,7 @@ define(['config'], function(Config) {
                 }
             }
             var parts, part;
-            if (getInputType(this.options.webspaceKey) === 'leaf') {
+            if (getInputType.call(this, this.options.webspaceKey) === 'leaf') {
                 parts = value.split('/');
                 part = parts.pop();
             } else {
@@ -244,6 +245,10 @@ define(['config'], function(Config) {
         },
 
         getInputType = function(webspaceKey) {
+            if (!!this.options.inputType) {
+                return this.options.inputType;
+            }
+
             return Config.get('sulu_content.webspace_input_types')[webspaceKey];
         };
 
