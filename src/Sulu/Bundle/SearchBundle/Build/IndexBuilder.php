@@ -43,6 +43,6 @@ class IndexBuilder extends SuluBuilder
      */
     public function build()
     {
-        $this->execCommand('Create search indexes', 'sulu:search:reindex-content');
+        $this->execCommand('Create search indexes', 'massive:search:reindex');
     }
 }
