@@ -80,7 +80,7 @@ define([
 
                 if (SecurityChecker.hasPermission(this.data, 'edit') && !this.data.locked) {
                     buttons.edit.options.dropdownItems.editCollection = {};
-                    buttons.moveCollection = {};
+                    buttons.edit.options.dropdownItems.moveCollection = {};
                 }
 
                 if (SecurityChecker.hasPermission(this.data, 'delete') && !this.data.locked) {
@@ -110,13 +110,15 @@ define([
             }
 
             var breadcrumbs = [{
-                title: 'sulu.media.all',
+                title: 'sulu.media.all-collections',
+                icon: 'fa-folder',
                 data: {}
             }];
 
             this.data._embedded.breadcrumb.forEach(function(breadcrumb) {
                 breadcrumbs.push({
                     title: breadcrumb.title,
+                    icon: 'fa-folder',
                     data: {
                         id: breadcrumb.id
                     }
@@ -146,7 +148,7 @@ define([
             } else {
                 // Data for the "root" collection
                 return {
-                    title: 'sulu.media.all',
+                    title: 'sulu.media.all-collections',
                     hasSub: true
                 };
             }

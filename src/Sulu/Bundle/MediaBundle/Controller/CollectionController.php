@@ -114,27 +114,18 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             // filter children
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
-            $limit = $listRestHelper->getLimit();
-            $offset = $listRestHelper->getOffset();
-            $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
 
-            $filter = [
-                'limit' => $limit,
-                'offset' => $offset,
-                'search' => $search,
-            ];
-
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $sortBy, $sortOrder) {
                     $collection = $collectionManager->getById(
                         $id,
                         $locale,
                         $depth,
                         $breadcrumb,
-                        $filter,
+                        [],
                         $sortBy !== null ? [$sortBy => $sortOrder] : []
                     );
 
@@ -173,9 +164,6 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
-            $limit = $listRestHelper->getLimit();
-            $offset = $listRestHelper->getOffset();
-            $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();
@@ -185,18 +173,17 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $this->getRequestParameter($request, 'locale', true),
                     [
                         'depth' => $depth,
-                        'search' => $search,
                     ],
-                    $limit,
-                    $offset,
+                    null,
+                    null,
                     $sortBy !== null ? [$sortBy => $sortOrder] : []
                 );
             } else {
                 $collections = $collectionManager->getTree(
                     $this->getRequestParameter($request, 'locale', true),
-                    $offset,
-                    $limit,
-                    $search,
+                    null,
+                    null,
+                    null,
                     $depth,
                     $sortBy !== null ? [$sortBy => $sortOrder] : [],
                     $securityChecker->hasPermission('sulu.media.system_collections', 'view')

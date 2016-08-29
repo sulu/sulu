@@ -161,7 +161,7 @@ define(function() {
                         'collections': [
                             {
                                 'id': 'root',
-                                'title': this.sandbox.translate('navigation.media.collections'),
+                                'title': this.sandbox.translate('sulu.media.all-collections'),
                                 'hasSub': true,
                                 '_links': {
                                     'children': {'href': '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale}

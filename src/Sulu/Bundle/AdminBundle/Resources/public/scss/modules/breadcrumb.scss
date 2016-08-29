@@ -1,25 +1,31 @@
 .sulu-breadcrumb {
+    $colorTransitionDuration: 80ms;
     padding-bottom: 5px;
 
     .breadcrumb {
         cursor: pointer;
         font-size: $smallFontSize;
         color: $grayLight;
-        @include transition(color 80ms);
 
-        &:hover {
+        &, .icon {
+            @include transition(color $colorTransitionDuration);
+        }
+
+        &:hover, &:hover .icon {
             color: $black;
         }
     }
 
     .icon {
-        display: inline-block;
-        margin: 0 5px;
+        color: $grayLighter;
         font-size: 9px;
-        color: $black;
+        margin-right: 5px;
     }
 
-    .breadcrumb:last-child .icon {
-        display: none;
+    .separator {
+        display: inline-block;
+        margin: 0 10px 0 5px;
+        font-size: 9px;
+        color: $black;
     }
 }

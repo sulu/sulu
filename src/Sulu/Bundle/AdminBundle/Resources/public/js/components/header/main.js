@@ -112,7 +112,13 @@ define([], function() {
                 '   </div>',
                 '</div>'
             ].join(''),
-            breadcrumb: '<span class="breadcrumb"><%= title %><span class="fa-chevron-right icon"></span></span>'
+            breadcrumb: [
+                '<span class="breadcrumb">',
+                '<% if (!!icon) { %><span class="<%= icon %> icon"></span><% } %>',
+                '<%= title %>',
+                '    <span class="fa-chevron-right separator"></span>',
+                '</span>'
+            ].join('')
         },
 
         createEventName = function(postfix) {
@@ -439,7 +445,8 @@ define([], function() {
 
             breadcrumb.forEach(function(breadcrumbData) {
                 $breadcrumb = $(_.template(templates.breadcrumb, {
-                    title: this.sandbox.translate(breadcrumbData.title)
+                    title: this.sandbox.translate(breadcrumbData.title),
+                    icon: breadcrumbData.icon
                 }));
 
                 $breadcrumb.on('click', function() {

@@ -11,13 +11,6 @@
                 table: {}
             };
 
-            var moveCollection = app.sandbox.sulu.buttons.getApiButton('move');
-            moveCollection.title = 'sulu.collection.move';
-            moveCollection.icon = 'arrows';
-            moveCollection.callback = function() {
-                app.sandbox.emit('sulu.toolbar.move-collection');
-            };
-
             var permissionSettings = app.sandbox.sulu.buttons.getApiButton('permission');
             permissionSettings.title = 'security.roles.permissions';
             permissionSettings.icon = 'lock';
@@ -29,10 +22,6 @@
                 {
                     name: 'mediaDecoratorDropdown',
                     template: decoratorDropdown
-                },
-                {
-                    name: 'moveCollection',
-                    template: moveCollection
                 },
                 {
                     name: 'permissionSettings',
@@ -58,6 +47,15 @@
                         title: 'public.edit',
                         callback: function() {
                             app.sandbox.emit('sulu.toolbar.edit-collection');
+                        }
+                    }
+                },
+                {
+                    name: 'moveCollection',
+                    template: {
+                        title: 'sulu.collection.move',
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.move-collection');
                         }
                     }
                 },

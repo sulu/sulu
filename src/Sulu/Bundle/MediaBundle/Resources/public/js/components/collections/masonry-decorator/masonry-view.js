@@ -263,7 +263,12 @@ define([
 
                 // When all items have been completly loaded
                 $.when.apply($, itemLoadedDeferreds).then(function() {
-                    this.$el.find('.masonry-item').removeClass(constants.loadingClass);
+                    // Safari removed the class before masonry got to position the elements
+                    // which led to undesired rendering glitches. Positioning the task
+                    // at the end of the execution stack fixes the issue.
+                    _.delay(function() {
+                        this.$el.find('.masonry-item').removeClass(constants.loadingClass);
+                    }.bind(this), 0);
                 }.bind(this));
             },
 
