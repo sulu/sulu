@@ -13,6 +13,14 @@
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <tag name="console.command"/>
         </service>
+
+        <service id="sulu_content.command.cleanup_history"
+                 class="Sulu\Bundle\ContentBundle\Command\CleanupHistoryCommand">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
 
