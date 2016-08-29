@@ -126,4 +126,44 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('test', $structure->getNodeName());
     }
+
+    public function testGetIsShadow()
+    {
+        $metadata = $this->prophesize(StructureMetadata::class);
+        $inspector = $this->prophesize(DocumentInspector::class);
+        $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->isShadowLocaleEnabled()->willReturn(true);
+        $document->getShadowLocale()->willReturn('de');
+
+        $structure = new StructureBridge(
+            $metadata->reveal(),
+            $inspector->reveal(),
+            $propertyFactory->reveal(),
+            $document->reveal()
+        );
+
+        $this->assertTrue($structure->getIsShadow());
+        $this->assertEquals('de', $structure->getShadowBaseLanguage());
+    }
+
+    public function testGetIsShadowWrongDocument()
+    {
+        $metadata = $this->prophesize(StructureMetadata::class);
+        $inspector = $this->prophesize(DocumentInspector::class);
+        $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+
+        $document = $this->prophesize(\stdClass::class);
+
+        $structure = new StructureBridge(
+            $metadata->reveal(),
+            $inspector->reveal(),
+            $propertyFactory->reveal(),
+            $document->reveal()
+        );
+
+        $this->assertFalse($structure->getIsShadow());
+        $this->assertNull($structure->getShadowBaseLanguage());
+    }
 }

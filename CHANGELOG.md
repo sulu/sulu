@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2878 [ContentBundle]       Added instanceof check for shadow-behavior functions
     * BUGFIX      #2513 [PersistanceBundle]   Fix doctrine generator commands
     * BUGFIX      #2776 [MediaBundle]         Fixed upload of media without an extension
     * BUGFIX      #2867 [ContentBundle]       Fixed navigation on removed template
