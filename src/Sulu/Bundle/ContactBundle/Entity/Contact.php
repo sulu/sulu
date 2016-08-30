@@ -1017,7 +1017,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function toArray()
     {
         return [
-            'id' => $this->getLastName(),
+            'id' => $this->getId(),
             'firstName' => $this->getFirstName(),
             'middleName' => $this->getMiddleName(),
             'lastName' => $this->getLastName(),
