@@ -96,6 +96,26 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal()));
     }
 
+    public function testCreateWithRoutePath()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+        $route->setPath('/test')->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityClass(get_class($this->entity->reveal()))->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityId('1')->shouldBeCalled()->willReturn($route->reveal());
+        $route->setLocale('de')->shouldBeCalled()->willReturn($route->reveal());
+
+        $this->entity->getId()->willReturn('1');
+        $this->entity->getLocale()->willReturn('de');
+        $this->entity->getRoute()->willReturn(null);
+        $this->entity->setRoute($route->reveal())->shouldBeCalled();
+
+        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->shouldNotBeCalled();
+        $this->routeRepository->createNew()->willReturn($route->reveal());
+        $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
+
+        $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal(), '/test'));
+    }
+
     public function testCreateAlreadyExists()
     {
         $this->setExpectedException(RouteAlreadyCreatedException::class);
@@ -158,11 +178,11 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->entity->setRoute($newRoute->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test-2');
+        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->shouldNotBeCalled();
         $this->routeRepository->createNew()->willReturn($newRoute->reveal());
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
 
-        $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal()));
+        $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2'));
     }
 
     public function testUpdateWithConflict()

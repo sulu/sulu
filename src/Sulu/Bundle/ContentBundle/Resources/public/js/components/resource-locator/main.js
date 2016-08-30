@@ -22,6 +22,7 @@ define(['config'], function(Config) {
             url: null,
             historyApi: null,
             deleteApi: null,
+            inputType: null,
             webspaceKey: null
         },
 
@@ -34,15 +35,19 @@ define(['config'], function(Config) {
                     '</div>'
                 ].join('');
             } else {
+                var history = [
+                    '<span class="show pointer small-font" id="' + options.ids.toggle + '">',
+                    '   <span class="fa-history icon"></span>',
+                    '   <span>' + options.showHistoryText + '</span>',
+                    '</span>'
+                ];
+
                 return [
                     '<div class="resource-locator">',
                     '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
                     '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
                     '   <input type="text" id="' + options.ids.input + '" class="form-element"/>',
-                    '   <span class="show pointer small-font" id="', options.ids.toggle, '">',
-                    '       <span class="fa-history icon"></span>',
-                    '       <span>', options.showHistoryText, '</span>',
-                    '   </span>',
+                    !!options.historyApi ? history.join('') : '',
                     '   <div class="loader" id="', options.ids.loader, '"></div>',
                     '</div>'
                 ].join('');
@@ -162,7 +167,7 @@ define(['config'], function(Config) {
                 }
             }
             var parts, part;
-            if (getInputType(this.options.webspaceKey) === 'leaf') {
+            if (getInputType.call(this, this.options.webspaceKey) === 'leaf') {
                 parts = value.split('/');
                 part = parts.pop();
             } else {
@@ -244,6 +249,10 @@ define(['config'], function(Config) {
         },
 
         getInputType = function(webspaceKey) {
+            if (!!this.options.inputType) {
+                return this.options.inputType;
+            }
+
             return Config.get('sulu_content.webspace_input_types')[webspaceKey];
         };
 
