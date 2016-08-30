@@ -41,4 +41,108 @@ class CroppingTest extends SuluTestCase
         $this->assertEquals(50, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
     }
+
+    public function testValid()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(1000, 500);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+                'y' => 200,
+            ],
+        ];
+        $valid = $this->cropping->isValid($image, 10, 20, 600, 400, $format);
+
+        $this->assertTrue($valid);
+    }
+
+    public function testValidWithOneDimension()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(1000, 500);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+            ],
+        ];
+
+        $valid = $this->cropping->isValid($image, 10, 0, 600, 500, $format);
+        $this->assertTrue($valid);
+
+        $valid = $this->cropping->isValid($image, 10, 20, 600, 20, $format);
+        $this->assertTrue($valid);
+    }
+
+    public function testValidSameSize()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(1000, 500);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+                'y' => 200,
+            ],
+        ];
+        $valid = $this->cropping->isValid($image, 10, 20, 300, 200, $format);
+
+        $this->assertTrue($valid);
+    }
+
+    public function testNotValidTooSmall()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(1000, 500);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+                'y' => 200,
+            ],
+        ];
+        $valid = $this->cropping->isValid($image, 10, 20, 150, 100, $format);
+
+        $this->assertFalse($valid);
+    }
+
+    public function testNotValidExceedX()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(1000, 500);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+                'y' => 200,
+            ],
+        ];
+        $valid = $this->cropping->isValid($image, 500, 20, 600, 400, $format);
+
+        $this->assertFalse($valid);
+    }
+
+    public function testNotValidExceedY()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(1000, 500);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+                'y' => 200,
+            ],
+        ];
+        $valid = $this->cropping->isValid($image, 10, 200, 600, 400, $format);
+
+        $this->assertFalse($valid);
+    }
 }

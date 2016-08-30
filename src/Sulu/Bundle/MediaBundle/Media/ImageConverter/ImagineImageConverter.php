@@ -77,7 +77,7 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $image = $this->toRGB($image);
 
-        $cropParameters = $this->getCropParameters($formatOptions);
+        $cropParameters = $this->getCropParameters($image, $formatOptions, $format);
         if (isset($cropParameters)) {
             $image = $this->applyCrop($image, $cropParameters);
         }
@@ -199,19 +199,33 @@ class ImagineImageConverter implements ImageConverterInterface
      * Constructs the parameters for the cropping. Returns null when
      * the image should not be cropped.
      *
+     * @param ImageInterface $image
      * @param FormatOptions $formatOptions
+     * @param array $format
      *
      * @return array The crop parameters or null
      */
-    private function getCropParameters($formatOptions)
+    private function getCropParameters(ImageInterface $image, $formatOptions, array $format)
     {
         if (isset($formatOptions)) {
-            return [
+            $parameters = [
                 'x' => $formatOptions->getCropX(),
                 'y' => $formatOptions->getCropY(),
                 'width' => $formatOptions->getCropWidth(),
                 'height' => $formatOptions->getCropHeight(),
             ];
+
+            if ($this->cropping->isValid(
+                $image,
+                $parameters['x'],
+                $parameters['y'],
+                $parameters['width'],
+                $parameters['height'],
+                $format
+            )
+            ) {
+                return $parameters;
+            }
         }
 
         return;
