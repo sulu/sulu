@@ -19,7 +19,7 @@ define([
         var defaults = {},
 
             fullValidator = /^(\/[a-z0-9][a-z0-9-_]*)+$/,
-            partValidator = /^[a-z0-9][a-z0-9-_]*$/,
+            leafValidator = /^[a-z0-9][a-z0-9-_]*$/,
 
             getInputType = function() {
                 if (!!this.options.inputType) {
@@ -50,7 +50,7 @@ define([
                     var val = this.getValue(),
                         part = App.dom.data($el, 'part');
 
-                    if (getInputType.call(this) === 'leaf' && !partValidator.test(part)) {
+                    if (getInputType.call(this) === 'leaf' && !leafValidator.test(part)) {
                         return false;
                     }
 
