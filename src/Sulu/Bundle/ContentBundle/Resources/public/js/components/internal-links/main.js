@@ -80,12 +80,11 @@ define([], function() {
          * custom event handling
          */
         bindCustomEvents = function() {
+            this.sandbox.on('sulu.internal-links.' + this.options.instanceName + '.add-button-clicked', startAddOverlay.bind(this));
             this.sandbox.on(
                 'husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized',
                 initColumnNavigation.bind(this)
             );
-
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
 
             this.sandbox.dom.on(this.$el, 'click', function(e) {
                 var id = this.sandbox.dom.data(e.currentTarget, 'id');
@@ -134,7 +133,6 @@ define([], function() {
                             typeName: 'type',
                             hasSubName: 'hasChildren',
                             instanceName: this.options.instanceName,
-                            actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showOptions: false,
                             responsive: false,
@@ -179,11 +177,10 @@ define([], function() {
                 {
                     name: 'overlay@husky',
                     options: {
-                        triggerEl: this.$addButton,
                         cssClass: 'internal-links-overlay',
                         el: $element,
                         container: this.$el,
-                        removeOnClose: false,
+                        openOnStart: true,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
                         skin: 'responsive-width',
                         contentSpacing: false,
@@ -191,7 +188,14 @@ define([], function() {
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
                                 cssClass: 'internal-links-overlay-add',
-                                data: templates.data(this.options)
+                                data: templates.data(this.options),
+                                okCallback: function() {
+                                    this.overlayOkCallback();
+                                    this.sandbox.stop(getId.call(this, 'columnNavigation'));
+                                }.bind(this),
+                                cancelCallback: function () {
+                                    this.sandbox.stop(getId.call(this, 'columnNavigation'));
+                                }.bind(this)
                             }
                         ]
                     }
@@ -221,15 +225,30 @@ define([], function() {
 
             // sandbox event handling
             bindCustomEvents.call(this);
-
-            // init overlays
-            startAddOverlay.call(this);
         },
 
         getUrl: function(data) {
             var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&';
 
             return [this.options.url, delimiter, this.options.idsParameter, '=', (data || []).join(',')].join('');
+        },
+
+        overlayOkCallback: function () {
+            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.get-marked', function (markedCollections) {
+                var data = this.sandbox.util.deepCopy(this.getData());
+
+                $.each(markedCollections, function (id, element) {
+                    if ($.inArray(id, data) < 0) {
+                        selectLink.call(this, element);
+                    }
+                }.bind(this));
+
+                data.forEach(function (item) {
+                    if (!(item in markedCollections)) {
+                        this.removeHandler(item);
+                    }
+                }.bind(this));
+            }.bind(this));
         },
 
         getItemContent: function(item) {
@@ -278,9 +297,7 @@ define([], function() {
                 }
             }
 
-            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.unmark', id);
-
-            this.setData(data, false);
+            this.setData(data);
         }
     };
 });

@@ -9829,50 +9829,46 @@ a.btn-black, a.btn-highlight {
 .column-navigation-wrapper .column-navigation .column ul li.marked .marked-icon {
   display: block;
 }
-/* line 116, ../scss/modules/column-navigation.scss */
-.column-navigation-wrapper .column-navigation .column ul li.marked .action {
-  display: none;
-}
-/* line 121, ../scss/modules/column-navigation.scss */
+/* line 118, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .inactive {
   color: #ccc;
 }
-/* line 125, ../scss/modules/column-navigation.scss */
+/* line 122, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .published-icon + .draft-icon {
   margin-left: -11px;
 }
-/* line 129, ../scss/modules/column-navigation.scss */
+/* line 126, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .orderer {
   display: none;
 }
-/* line 135, ../scss/modules/column-navigation.scss */
+/* line 132, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column.order-mode .orderer {
   display: block;
 }
-/* line 138, ../scss/modules/column-navigation.scss */
+/* line 135, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column.order-mode .icons-left .col-icon {
   display: none;
 }
-/* line 141, ../scss/modules/column-navigation.scss */
+/* line 138, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column.order-mode ul li .action {
   display: none;
 }
-/* line 147, ../scss/modules/column-navigation.scss */
+/* line 144, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text {
   display: block;
   overflow: hidden;
   word-wrap: break-word;
   float: left;
 }
-/* line 154, ../scss/modules/column-navigation.scss */
+/* line 151, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .col-icon {
   float: left;
 }
-/* line 158, ../scss/modules/column-navigation.scss */
+/* line 155, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text.ghost {
   color: #999;
 }
-/* line 162, ../scss/modules/column-navigation.scss */
+/* line 159, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .ghost {
   background: #52B6CA;
   padding: 0 2px;
@@ -9882,7 +9878,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   font-size: 10px;
 }
-/* line 171, ../scss/modules/column-navigation.scss */
+/* line 168, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .marked-icon {
   width: 14px;
   margin-right: 5px;
@@ -9890,43 +9886,43 @@ a.btn-black, a.btn-highlight {
   color: #999;
   display: none;
 }
-/* line 178, ../scss/modules/column-navigation.scss */
+/* line 175, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right {
   position: absolute;
   right: 5px;
   top: 15px;
   height: 20px;
 }
-/* line 183, ../scss/modules/column-navigation.scss */
+/* line 180, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right * {
   line-height: 20px;
 }
-/* line 187, ../scss/modules/column-navigation.scss */
+/* line 184, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left {
   display: block;
   float: left;
   height: 20px;
   font-size: 14px;
 }
-/* line 192, ../scss/modules/column-navigation.scss */
+/* line 189, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left > * {
   line-height: 20px;
 }
-/* line 195, ../scss/modules/column-navigation.scss */
+/* line 192, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .col-icon {
   margin-right: 5px;
 }
-/* line 198, ../scss/modules/column-navigation.scss */
+/* line 195, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .ghost {
   line-height: 15px;
 }
-/* line 201, ../scss/modules/column-navigation.scss */
+/* line 198, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .custom-checkbox {
   line-height: 15px;
   margin-right: 8px;
   margin-top: 2px;
 }
-/* line 207, ../scss/modules/column-navigation.scss */
+/* line 204, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .action {
   background-color: #52B6CA;
   padding: 0px 10px;
@@ -9936,14 +9932,14 @@ a.btn-black, a.btn-highlight {
   display: none;
   margin-right: 0;
 }
-/* line 216, ../scss/modules/column-navigation.scss */
+/* line 213, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .husky-column-navigation-loader {
   position: relative;
   top: 2px;
   left: -2px;
   padding-left: 2px;
 }
-/* line 223, ../scss/modules/column-navigation.scss */
+/* line 220, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .arrow {
   display: inline-block;
   width: 11px;
@@ -9953,36 +9949,36 @@ a.btn-black, a.btn-highlight {
   color: #000;
   margin: 0;
 }
-/* line 233, ../scss/modules/column-navigation.scss */
+/* line 230, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column-item {
   cursor: pointer;
 }
-/* line 236, ../scss/modules/column-navigation.scss */
+/* line 233, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column-item.disabled {
   color: #ccc;
 }
-/* line 241, ../scss/modules/column-navigation.scss */
+/* line 238, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .orderer {
   display: block;
   float: left;
   width: 40px;
   padding: 0 10px 0 0;
 }
-/* line 246, ../scss/modules/column-navigation.scss */
+/* line 243, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .orderer .form-element, .column-navigation-wrapper .column-navigation .orderer .husky-input {
   height: 20px;
   padding-left: 3px;
   padding-right: 3px;
 }
-/* line 253, ../scss/modules/column-navigation.scss */
+/* line 250, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .fa-external-link {
   margin-top: 1px;
 }
-/* line 258, ../scss/modules/column-navigation.scss */
+/* line 255, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options {
   width: 251px;
 }
-/* line 261, ../scss/modules/column-navigation.scss */
+/* line 258, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .add {
   display: inline-block;
   width: 50%;
@@ -9991,7 +9987,7 @@ a.btn-black, a.btn-highlight {
   color: #fff;
   font-size: 16px;
 }
-/* line 270, ../scss/modules/column-navigation.scss */
+/* line 267, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .ok {
   display: block;
   width: 100%;
@@ -10000,7 +9996,7 @@ a.btn-black, a.btn-highlight {
   color: #fff;
   font-size: 16px;
 }
-/* line 279, ../scss/modules/column-navigation.scss */
+/* line 276, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .settings {
   display: inline-block;
   width: 50%;
@@ -10008,11 +10004,11 @@ a.btn-black, a.btn-highlight {
   padding: 5px 0;
   font-size: 16px;
 }
-/* line 287, ../scss/modules/column-navigation.scss */
+/* line 284, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .first {
   border-bottom-left-radius: 3px;
 }
-/* line 291, ../scss/modules/column-navigation.scss */
+/* line 288, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .last {
   border-bottom-right-radius: 3px;
 }
