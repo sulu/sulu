@@ -20,6 +20,7 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -116,8 +117,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $this->getCategoryManager()->findById($parentId, $locale);
 
         if ($request->get('flat') == 'true') {
-            // we need to disable the limit because husky datagrid cannot paginate nested entries
-            $list = $this->getListRepresentation($request, $locale, $parentId, true);
+            $list = $this->getListRepresentation($request, $locale, $parentId);
         } else {
             $categories = $this->getCategoryManager()->find($locale, $parentId);
             $list = new CollectionRepresentation($categories, self::$entityKey);
@@ -144,7 +144,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         if ($request->get('flat') == 'true') {
             $expandIds = array_filter(explode(',', $request->get('expandIds')));
-            $list = $this->getListRepresentation($request, $locale, $rootId, false, $expandIds);
+            $list = $this->getListRepresentation($request, $locale, $rootId, $expandIds);
         } else {
             $categories = $this->getCategoryManager()->find($locale, $rootId);
             $list = new CollectionRepresentation($categories, self::$entityKey);
@@ -246,52 +246,54 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * The category-list-representation contains only the root level of the category graph.
      *
      * If parentId is set, the root level of the sub-graph below the category with the given parentId is returned.
-     * If disableLimit is set, the list-representation ignores the limit of the request. This is used when querying
-     * for children of a category.
-     * If expandIds is set, the paths to the categories which are assigned to the ids are expanded. Categories are
-     * only expanded if they are descendants of the root level and the do not affect the limit or pagination.
+     * If expandIds is set, the paths to the categories which are assigned to the ids are expanded.
      *
      * @param Request $request
      * @param $locale
      * @param null $parentId
-     * @param bool $disableLimit
      * @param array $expandIds
      *
      * @return CategoryListRepresentation
      */
-    protected function getListRepresentation(Request $request, $locale, $parentId = null, $disableLimit = false, $expandIds = [])
+    protected function getListRepresentation(Request $request, $locale, $parentId = null, $expandIds = [])
     {
         $listBuilder = $this->initializeListBuilder($locale);
 
-        // return all matching categories if search is set, else return only the level below parent in category tree
-        if (!$request->get('search')) {
-            $listBuilder->where($this->getCategoryManager()->getFieldDescriptor($locale, 'parent'), $parentId);
+        // disable pagination to simplify tree handling
+        $listBuilder->limit(null);
+
+        // collect categories which children should get loaded
+        $parentIdsToExpand = [$parentId];
+        if ($expandIds) {
+            $pathIds = $this->get('sulu_category.category_repository')->findCategoryIdsBetween([$parentId], $expandIds);
+            $parentIdsToExpand = array_merge($parentIdsToExpand, $pathIds);
         }
 
-        // need to disable default limit because some frontend components are not paginated
-        if ($disableLimit || !$request->get('limit')) {
-            $listBuilder->limit(null);
+        // generate expressions for collected parent-categories
+        $parentExpressions = [];
+        foreach ($parentIdsToExpand as $parentId) {
+            $parentExpressions[] = $listBuilder->createWhereExpression(
+                $this->getCategoryManager()->getFieldDescriptor($locale, 'parent'),
+                $parentId,
+                ListBuilderInterface::WHERE_COMPARATOR_EQUAL
+            );
+        }
+
+        // expand collected parents if search is not set, else search all categories
+        if (!$request->get('search')) {
+            if (count($parentExpressions) >= 2) {
+                $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
+            } elseif (count($parentExpressions) >= 1) {
+                $listBuilder->addExpression($parentExpressions[0]);
+            }
         }
 
         $results = $listBuilder->execute();
-
-        // append expanded paths to requested ids to the response, if expandIds is set
-        if ($expandIds) {
-            $resultIds = array_map(
-                function ($category) {
-                    return $category['id'];
-                },
-                $results
-            );
-            $pathResults = $this->loadExpandedPaths($resultIds, $expandIds, $locale);
-            $results = array_merge($results, $pathResults);
-        }
-
         foreach ($results as &$result) {
             $result['hasChildren'] = ($result['lft'] + 1) !== $result['rgt'];
         }
 
-        $list = new CategoryListRepresentation(
+        return new CategoryListRepresentation(
             $results,
             self::$entityKey,
             'get_categories',
@@ -300,8 +302,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $listBuilder->getLimit(),
             $listBuilder->count()
         );
-
-        return $list;
     }
 
     /**
@@ -333,40 +333,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addSelectField($fieldDescriptors['rgt']);
 
         return $listBuilder;
-    }
-
-    /**
-     * Returns all categories which are child of a category which is positioned on a path
-     * between a category of the fromIds array (inclusive) to a category from the toIds array (exclusive).
-     *
-     * This method is used to display an expanded category tree on first load, when a child-category
-     * is selected in the frontend.
-     *
-     * @param $fromIds array Start-points of a path
-     * @param $toIds array End-points of a path
-     * @param $locale
-     *
-     * @return array
-     */
-    private function loadExpandedPaths($fromIds, $toIds, $locale)
-    {
-        // collect ids of categories between root level (inclusive) and leaves (exclusive)
-        $pathIds = $this->get('sulu_category.category_repository')->findCategoryIdsBetween($fromIds, $toIds);
-        $pathParentIds = array_diff($pathIds, $toIds);
-
-        if (!$pathParentIds) {
-            return [];
-        }
-
-        // load all children of categories along the paths from root level to leaves
-        $listBuilder = $this->initializeListBuilder($locale);
-        $listBuilder->limit(null);
-        $listBuilder->addExpression($listBuilder->createInExpression(
-            $this->getCategoryManager()->getFieldDescriptor($locale, 'parent'),
-            $pathParentIds
-        ));
-
-        return $listBuilder->execute();
     }
 
     /**

@@ -100,23 +100,37 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
      */
     public function findCategoryIdsBetween($fromIds, $toIds)
     {
+        $fromIds = array_filter($fromIds);
+        $toIds = array_filter($toIds);
+
         $queryBuilder = $this->createQueryBuilder('category');
-        $queryBuilder->from($this->getEntityName(), 'fromCategory');
-        $queryBuilder->from($this->getEntityName(), 'toCategory');
+        if ($fromIds) {
+            $queryBuilder->from($this->getEntityName(), 'fromCategory');
+        }
+        if ($toIds) {
+            $queryBuilder->from($this->getEntityName(), 'toCategory');
+        }
 
         $queryBuilder->select('category.id');
 
-        $queryBuilder->andWhere('fromCategory.id IN (:fromIds)');
-        $queryBuilder->andWhere('toCategory.id IN (:toIds)');
-
-        $queryBuilder->andWhere('category.lft >= fromCategory.lft');
-        $queryBuilder->andWhere('category.rgt <= fromCategory.rgt');
-        $queryBuilder->andWhere('category.lft <= toCategory.rgt');
-        $queryBuilder->andWhere('category.rgt >= toCategory.rgt');
+        if ($fromIds) {
+            $queryBuilder->andWhere('fromCategory.id IN (:fromIds)');
+            $queryBuilder->andWhere('category.lft > fromCategory.lft');
+            $queryBuilder->andWhere('category.rgt < fromCategory.rgt');
+        }
+        if ($toIds) {
+            $queryBuilder->andWhere('toCategory.id IN (:toIds)');
+            $queryBuilder->andWhere('category.lft < toCategory.rgt');
+            $queryBuilder->andWhere('category.rgt > toCategory.rgt');
+        }
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('fromIds', $fromIds);
-        $query->setParameter('toIds', $toIds);
+        if ($fromIds) {
+            $query->setParameter('fromIds', $fromIds);
+        }
+        if ($toIds) {
+            $query->setParameter('toIds', $toIds);
+        }
 
         return array_map('current', $query->getScalarResult());
     }

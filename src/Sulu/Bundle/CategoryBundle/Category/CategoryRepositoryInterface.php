@@ -67,10 +67,10 @@ interface CategoryRepositoryInterface
     public function findCategoriesByParentId($parentId = null);
 
     /**
-     * Returns an array of ids of categories which are positioned on a path from a category which is assigned to
-     * one of the entries of the fromIds array to a category which is assigned to one of the entries
+     * Returns an array of ids of categories which are positioned (exlusive) between a category which is assigned to
+     * one of the entries of the fromIds array and a category which is assigned to one of the entries
      * of the toIds array.
-     * All ids of categories which are positioned on a path are returned (including start- and end-point).
+     * Start- and end-points of a path are not returned.
      *
      * @param $fromIds array Start-points of the paths which are processed
      * @param $toIds array End-points of the paths which are processed
