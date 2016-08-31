@@ -432,94 +432,115 @@
 .teaser-selection .white-box .content {
   max-height: inherit;
 }
-/* line 8, ../scss/modules/teaser-selection.scss */
-.teaser-selection .dropdown-toggle::after {
+/* line 10, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .fa-plus-circle .dropdown-toggle::after {
   border-top: 6px solid #fff;
 }
-/* line 12, ../scss/modules/teaser-selection.scss */
-.teaser-selection .husky-dropdown-trigger {
-  width: 45px;
+/* line 14, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .fa-plus-circle .husky-dropdown-trigger {
+  width: 45px !important;
 }
-/* line 16, ../scss/modules/teaser-selection.scss */
-.teaser-selection .selected-counter {
-  left: 75px;
+/* line 19, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .selected-counter {
+  left: 75px !important;
 }
-/* line 20, ../scss/modules/teaser-selection.scss */
-.teaser-selection .present-as.icon {
+/* line 23, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .present-as.icon {
   width: auto;
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 25, ../scss/modules/teaser-selection.scss */
-.teaser-selection .present-as.icon .selected-text {
+/* line 28, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .present-as.icon .selected-text {
   font-size: 14px;
   padding-left: 5px;
 }
-/* line 31, ../scss/modules/teaser-selection.scss */
+/* line 35, ../scss/modules/teaser-selection.scss */
 .teaser-selection .husky-overlay-container.type-content .overlay-content {
   margin: 0px;
 }
-/* line 35, ../scss/modules/teaser-selection.scss */
+/* line 39, ../scss/modules/teaser-selection.scss */
 .teaser-selection .image .image-content {
   font-size: 46px;
   color: #ddd;
   position: relative;
   top: 8px;
 }
-/* line 43, ../scss/modules/teaser-selection.scss */
+/* line 46, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view {
+  width: 90%;
+}
+/* line 48, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .value {
   float: left;
-  width: 350px;
+  width: 65%;
 }
-/* line 47, ../scss/modules/teaser-selection.scss */
+/* line 52, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .value .image {
   float: left;
 }
-/* line 51, ../scss/modules/teaser-selection.scss */
+/* line 56, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .value .description {
   line-height: 14px;
   margin-top: -10px;
   margin-bottom: 0;
   font-size: 12px;
 }
-/* line 59, ../scss/modules/teaser-selection.scss */
+/* line 64, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .type {
   float: left;
-  width: 140px;
+  width: 20%;
 }
-/* line 64, ../scss/modules/teaser-selection.scss */
+/* line 69, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view .options {
   float: left;
   line-height: 50px;
+  width: 15%;
 }
-/* line 69, ../scss/modules/teaser-selection.scss */
+/* line 75, ../scss/modules/teaser-selection.scss */
 .teaser-selection .view::after {
   clear: both;
 }
-/* line 74, ../scss/modules/teaser-selection.scss */
+/* line 80, ../scss/modules/teaser-selection.scss */
 .teaser-selection .move, .teaser-selection .num, .teaser-selection .remove {
   vertical-align: top;
   line-height: 50px;
 }
-/* line 79, ../scss/modules/teaser-selection.scss */
+/* line 85, ../scss/modules/teaser-selection.scss */
 .teaser-selection .remove {
   top: inherit !important;
   margin-top: 5px !important;
 }
-/* line 84, ../scss/modules/teaser-selection.scss */
+/* line 90, ../scss/modules/teaser-selection.scss */
 .teaser-selection a.btn {
   display: inline-block;
 }
-/* line 89, ../scss/modules/teaser-selection.scss */
-.teaser-selection .edit .image-content img {
-  padding-right: 0px;
-}
-/* line 93, ../scss/modules/teaser-selection.scss */
-.teaser-selection .edit .edit-hint {
+/* line 95, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image {
+  float: left;
   width: 50px;
+}
+/* line 99, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image .image-content {
+  height: 50px;
+  overflow: hidden;
+  display: inline-block;
+}
+/* line 105, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image img {
+  padding: 0 !important;
+}
+/* line 110, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .form {
+  width: calc(100% - 56px);
+  margin-left: 55px;
+}
+/* line 115, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint {
+  width: 100%;
   height: 50px;
   position: relative;
-  top: -53px;
+  top: -60px;
   left: 0;
   opacity: 0;
   cursor: pointer;
@@ -528,7 +549,7 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 103, ../scss/modules/teaser-selection.scss */
+/* line 125, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint::before {
   content: "";
   display: block;
@@ -541,7 +562,7 @@
   height: 100%;
   border-radius: 0 0 3px 3px;
 }
-/* line 116, ../scss/modules/teaser-selection.scss */
+/* line 138, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint span {
   display: block;
   position: absolute;
@@ -554,20 +575,20 @@
   color: #fff;
   font-size: 24px;
 }
-/* line 123, ../scss/modules/teaser-selection.scss */
+/* line 145, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint:hover {
   opacity: 1;
 }
 
-/* line 132, ../scss/modules/teaser-selection.scss */
+/* line 154, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view, .teaser-selection-container .edit {
   display: inline-block;
 }
-/* line 135, ../scss/modules/teaser-selection.scss */
+/* line 157, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view .hidden, .teaser-selection-container .edit .hidden {
   display: none;
 }
-/* line 140, ../scss/modules/teaser-selection.scss */
+/* line 162, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .edit {
   width: 90%;
 }

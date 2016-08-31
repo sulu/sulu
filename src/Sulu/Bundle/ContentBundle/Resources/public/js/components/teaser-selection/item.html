@@ -20,8 +20,8 @@
 </div>
 
 <div class="edit hidden">
-    <div class="grid">
-        <div class="grid-col-1 image">
+    <div>
+        <div class="image">
             <% if (!!mediaId) { %>
             <div class="image-content"><img class="mediaId" data-id="<%= mediaId %>" src="/admin/media/<%= mediaId %>?locale=<%= locale %>&format=50x50"/></div>
             <% } else { %>
@@ -30,7 +30,7 @@
 
             <div class="edit-hint"><span class="fa-pencil"/></div>
         </div>
-        <div class="grid-col-11">
+        <div class="form">
             <div>
                 <input type="text" class="form-element title" placeholder="<%= apiItem.title %>"/>
             </div>

@@ -235,7 +235,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                     name: 'ckeditor@husky',
                     options: {
                         el: $editorContainer,
-                        placeholder: this.cleanupText(apiItem.description),
+                        placeholder: this.cleanupText(apiItem.description || ''),
                         autoStart: false
                     }
                 }
@@ -267,7 +267,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             item = _.defaults(item, this.getApiItem($element.data('id')));
 
             $view.find('.title').text(item.title);
-            $view.find('.description').text(this.cropAndCleanupText(item.description));
+            $view.find('.description').text(this.cropAndCleanupText(item.description || ''));
 
             $view.find('.image').remove();
             if (!!item.mediaId) {
@@ -284,7 +284,6 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
 
         reset = function($element) {
             var $view = $element.find('.view'),
-                $edit = $element.find('.edit'),
                 id = $element.data('id'),
                 apiItem = this.getApiItem(id),
                 item = this.getItem(id);
@@ -295,12 +294,12 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
 
             this.setItem(id, item);
             $view.find('.title').text(apiItem.title);
-            $view.find('.description').text(this.cropAndCleanupText(apiItem.description));
+            $view.find('.description').text(this.cropAndCleanupText(apiItem.description || ''));
 
             $view.find('.image').remove();
-            if (!!item.mediaId) {
+            if (!!apiItem.mediaId) {
                 $view.find('.value').prepend(
-                    '<span class="image"><img src="' + $edit.find('.mediaId').attr('src') + '"/></span>'
+                    '<span class="image"><img src="/admin/media/' + apiItem.mediaId + '?locale=' + this.options.locale + '&format=50x50"/></span>'
                 );
             }
 
@@ -397,7 +396,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 _.defaults(item, {
                     apiItem: this.apiItems[item.teaserId],
                     translations: this.translations,
-                    descriptionText: this.cropAndCleanupText(item.description),
+                    descriptionText: this.cropAndCleanupText(item.description || ''),
                     types: this.options.types,
                     translate: this.sandbox.translate,
                     locale: this.options.locale,
@@ -445,7 +444,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 parts = id.split(';');
 
             return _.find(items, function(item) {
-                return item.type === parts[0] && item.id == parts[1];
+                return item.type == parts[0] && item.id == parts[1];
             });
         },
 
@@ -459,13 +458,13 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 parts = id.split(';');
 
             data.items = _.map(items, function(oldItem) {
-                if (oldItem.type !== parts[0] || oldItem.id !== parts[1]) {
+                if (oldItem.type != parts[0] || oldItem.id != parts[1]) {
                     return oldItem;
                 }
 
                 item = _.defaults(item, oldItem);
                 return _.omit(item, _.filter(_.keys(item), function(key) {
-                    return item[key] === null;
+                    return item[key] == null;
                 }));
             });
 
@@ -480,7 +479,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 parts = id.split(';');
 
             data.items = _.map(items, function(oldItem) {
-                if (oldItem.type !== parts[0] || oldItem.id !== parts[1]) {
+                if (oldItem.type != parts[0] || oldItem.id != parts[1]) {
                     return oldItem;
                 }
 

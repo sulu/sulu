@@ -753,7 +753,7 @@
             </trans-unit>
             <trans-unit id="61" resname="sulu-content.teaser.edit">
                 <source>sulu-content.teaser.edit</source>
-                <target>Lokale Information</target>
+                <target></target>
             </trans-unit>
             <trans-unit id="62" resname="sulu-content.teaser.edited">
                 <source>sulu-content.teaser.edited</source>
