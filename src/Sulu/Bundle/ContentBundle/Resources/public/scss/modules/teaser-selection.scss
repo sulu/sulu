@@ -44,7 +44,9 @@
     }
 
     .view {
-        width: 90%;
+        width: 100%;
+        padding-right: 80px;
+
         .value {
             float: left;
             width: 65%;
@@ -89,6 +91,7 @@
 
     a.btn {
         display: inline-block;
+        padding: 0;
     }
 
     .edit {
