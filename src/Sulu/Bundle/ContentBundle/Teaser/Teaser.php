@@ -70,7 +70,7 @@ class Teaser
      * @param string $moreText
      * @param string $url
      * @param int $mediaId
-     * @param array $attribute
+     * @param array $attributes
      */
     public function __construct($id, $type, $locale, $title, $description, $moreText, $url, $mediaId, $attributes = [])
     {
@@ -184,16 +184,13 @@ class Teaser
      */
     public function merge(array $item)
     {
-        return new self(
-            $this->id,
-            $this->type,
-            $this->locale,
-            $this->getValue('title', $item, $this->getTitle()),
-            $this->getValue('description', $item, $this->getDescription()),
-            $this->getValue('moreText', $item, $this->getMoreText()),
-            $this->getValue('url', $item, $this->getUrl()),
-            $this->getValue('mediaId', $item, $this->getMediaId())
-        );
+        $this->title = $this->getValue('title', $item, $this->getTitle());
+        $this->description = $this->getValue('description', $item, $this->getDescription());
+        $this->moreText = $this->getValue('moreText', $item, $this->getMoreText());
+        $this->url = $this->getValue('url', $item, $this->getUrl());
+        $this->mediaId = $this->getValue('mediaId', $item, $this->getMediaId());
+
+        return $this;
     }
 
     /**
