@@ -515,29 +515,32 @@
 /* line 92, ../scss/modules/teaser-selection.scss */
 .teaser-selection a.btn {
   display: inline-block;
+}
+/* line 95, ../scss/modules/teaser-selection.scss */
+.teaser-selection a.btn.edit-teaser {
   padding: 0;
 }
-/* line 98, ../scss/modules/teaser-selection.scss */
+/* line 101, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .image {
   float: left;
   width: 50px;
 }
-/* line 102, ../scss/modules/teaser-selection.scss */
+/* line 105, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .image .image-content {
   height: 50px;
   overflow: hidden;
   display: inline-block;
 }
-/* line 108, ../scss/modules/teaser-selection.scss */
+/* line 111, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .image img {
   padding: 0 !important;
 }
-/* line 113, ../scss/modules/teaser-selection.scss */
+/* line 116, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .form {
   width: calc(100% - 56px);
   margin-left: 55px;
 }
-/* line 118, ../scss/modules/teaser-selection.scss */
+/* line 121, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint {
   width: 100%;
   height: 50px;
@@ -551,7 +554,7 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 128, ../scss/modules/teaser-selection.scss */
+/* line 131, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint::before {
   content: "";
   display: block;
@@ -564,7 +567,7 @@
   height: 100%;
   border-radius: 0 0 3px 3px;
 }
-/* line 141, ../scss/modules/teaser-selection.scss */
+/* line 144, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint span {
   display: block;
   position: absolute;
@@ -577,20 +580,20 @@
   color: #fff;
   font-size: 24px;
 }
-/* line 148, ../scss/modules/teaser-selection.scss */
+/* line 151, ../scss/modules/teaser-selection.scss */
 .teaser-selection .edit .edit-hint:hover {
   opacity: 1;
 }
 
-/* line 157, ../scss/modules/teaser-selection.scss */
+/* line 160, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view, .teaser-selection-container .edit {
   display: inline-block;
 }
-/* line 160, ../scss/modules/teaser-selection.scss */
+/* line 163, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .view .hidden, .teaser-selection-container .edit .hidden {
   display: none;
 }
-/* line 165, ../scss/modules/teaser-selection.scss */
+/* line 168, ../scss/modules/teaser-selection.scss */
 .teaser-selection-container .edit {
   width: 90%;
 }

@@ -224,7 +224,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             $edit.find('.image-content').remove();
             if (!!mediaId) {
                 $edit.find('.image').prepend(
-                    '<div class="image-content"><img class="mediaId" data-id="' + mediaId + '" src="/admin/media/' + mediaId + '?locale=' + this.options.locale + '&format=50x50"/></div>'
+                    '<div class="image-content"><img class="mediaId" data-id="' + mediaId + '" src="/admin/media/redirect/media/' + mediaId + '?locale=' + this.options.locale + '&format=50x50"/></div>'
                 );
             } else {
                 $edit.find('.image').prepend('<div class="fa-picture-o image-content"/>');
@@ -299,7 +299,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             $view.find('.image').remove();
             if (!!apiItem.mediaId) {
                 $view.find('.value').prepend(
-                    '<span class="image"><img src="/admin/media/' + apiItem.mediaId + '?locale=' + this.options.locale + '&format=50x50"/></span>'
+                    '<span class="image"><img src="/admin/media/redirect/media/' + apiItem.mediaId + '?locale=' + this.options.locale + '&format=50x50"/></span>'
                 );
             }
 

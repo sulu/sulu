@@ -11,5 +11,5 @@ sulu_media.template.media.multiple_edit:
     defaults: { _controller: SuluMediaBundle:Template:multipleEdit }
 
 sulu_media.redirect:
-    path: /{id}
+    path: /redirect/media/{id}
     defaults: { _controller: SuluMediaBundle:MediaRedirect:redirect }
