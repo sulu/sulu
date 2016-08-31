@@ -29,6 +29,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
     * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
+    * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
 
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release
