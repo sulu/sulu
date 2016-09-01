@@ -32245,7 +32245,27 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param recordId {Number|String} the id of the parent to load the children for
          */
         loadChildren: function(recordId) {
-            this.datagrid.loadChildren.call(this.datagrid, recordId);
+            var $el = $('<div style="margin-right: -3px"/>'),
+                $icon = $(this.table.rows[recordId].$el).find('.' + constants.toggleIconClass);
+
+            // replace icon with loader while loading children
+            this.sandbox.dom.append($icon, $el);
+            this.sandbox.dom.removeClass($icon, constants.collapsedIcon);
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $el,
+                        size: '8px',
+                        color: '#999999'
+                    }
+                }
+            ]);
+
+            this.datagrid.loadChildren.call(this.datagrid, recordId).then(function () {
+                this.sandbox.stop($el);
+            }.bind(this))
+
             this.table.rows[recordId].childrenLoaded = true;
         },
 
@@ -32861,7 +32881,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             // if first defined step is bigger than the number of all elements don't display show-elements dropdown
             if (this.data.total > this.options.showElementsSteps[0]) {
-                description = this.data.embedded.length;
+                description = this.data.limit;
                 $showElements = this.sandbox.dom.createElement(this.sandbox.util.template(templates.showElements)({
                     desc: description,
                     text: translations.elementsPerPage,
@@ -33907,7 +33927,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.$loader = null;
                 this.$mediumLoader = null;
                 this.isLoading = false;
-                this.initialLoaded = false;
 
                 // append datagrid to html element
                 this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
@@ -33929,6 +33948,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         this.renderSelectedCounter();
                     }
                     this.loadAndEvaluateMatchings().then(function() {
+                        // merge dom-selected and option-preselected items
+                        this.preSelectItems();
                         this.loadAndRenderData();
                         this.sandbox.emit(INITIALIZED.call(this));
                     }.bind(this));
@@ -33949,11 +33970,12 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!!this.options.url) {
                     url = this.options.url;
 
-                    this.sandbox.logger.log('load data from url');
                     if (this.requestFields.length > 0) {
                         url += (url.indexOf('?') === -1) ? '?' : '&';
                         url += 'fields=' + this.requestFields.join(',');
                     }
+
+                    this.sandbox.logger.log('load data from url');
 
                     this.loading();
                     this.load({
@@ -34073,10 +34095,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * Renders the data of the datagrid
              */
             render: function() {
-                if (!this.initialLoaded) {
-                    this.preSelectItems();
-                    this.initialLoaded = true;
-                }
                 this.renderView();
                 if (!!this.paginations[this.paginationId]) {
                     this.paginations[this.paginationId].render(this.data, this.$element);
@@ -34177,6 +34195,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             load: function(params) {
                 this.currentUrl = this.getUrl(params);
+
+                if (!params.data) params.data = {};
+                params.data['expandIds'] = this.getSelectedItemIds().join(',');
+
                 this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
                 return this.sandbox.util.load(this.currentUrl, params.data)
                     .then(function(response) {
@@ -34808,9 +34830,11 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @returns {Number|String} the index of the found record
              */
             getRecordIndexById: function(id) {
-                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (this.data.embedded[i].id === id) {
-                        return i;
+                if (!!this.data && !!this.data.embedded) {
+                    for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                        if (this.data.embedded[i].id === id) {
+                            return i;
+                        }
                     }
                 }
 
@@ -35428,6 +35452,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @param recordId {Number|String}
              */
             loadChildren: function(recordId) {
+                var deferred = this.sandbox.data.deferred();
+
                 if (!!this.data.links.children) {
                     var template = this.sandbox.uritemplate.parse(this.data.links.children.href),
                         url = this.sandbox.uritemplate.expand(template, {parentId: recordId});
@@ -35435,11 +35461,17 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     this.sandbox.util.load(this.getUrl({url: url}))
                         .then(function(response) {
                             this.addRecordsHandler(response._embedded[this.options.resultKey]);
+                            deferred.resolve();
                         }.bind(this))
                         .fail(function(status, error) {
                             this.sandbox.logger.error(status, error);
+                            deferred.fail();
                         }.bind(this));
+                } else {
+                    deferred.resolve();
                 }
+
+                return deferred;
             },
 
             /**
