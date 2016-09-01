@@ -135,6 +135,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                                     newData.items = data;
 
                                     this.setData(newData);
+
+                                    this.sandbox.stop($componentContainer);
                                 }.bind(this)
                             }
                         ]
