@@ -369,7 +369,7 @@ define([
             ]).then(function() {
                 this.setItems(this.options.preselected);
 
-                if (!!this.options.singleSelect) {
+                if (!!this.options.openOnStart) {
                     return this.initializeFormComponents();
                 }
 
@@ -466,6 +466,7 @@ define([
                     actionCallback: !!this.options.singleSelect ? function(id, item) {
                         this.setItems([item]);
                         this.save();
+                        this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.close');
                     }.bind(this) : null,
                     viewOptions: {
                         table: {

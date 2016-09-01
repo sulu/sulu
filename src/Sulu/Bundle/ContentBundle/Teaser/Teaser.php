@@ -70,7 +70,7 @@ class Teaser
      * @param string $moreText
      * @param string $url
      * @param int $mediaId
-     * @param array $attribute
+     * @param array $attributes
      */
     public function __construct($id, $type, $locale, $title, $description, $moreText, $url, $mediaId, $attributes = [])
     {
@@ -173,5 +173,41 @@ class Teaser
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Merges given data with this teaser.
+     *
+     * @param array $item
+     *
+     * @return Teaser
+     */
+    public function merge(array $item)
+    {
+        $this->title = $this->getValue('title', $item, $this->getTitle());
+        $this->description = $this->getValue('description', $item, $this->getDescription());
+        $this->moreText = $this->getValue('moreText', $item, $this->getMoreText());
+        $this->url = $this->getValue('url', $item, $this->getUrl());
+        $this->mediaId = $this->getValue('mediaId', $item, $this->getMediaId());
+
+        return $this;
+    }
+
+    /**
+     * Returns array-value by name or default value.
+     *
+     * @param string $name
+     * @param array $item
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    private function getValue($name, array $item, $default)
+    {
+        if (!array_key_exists($name, $item)) {
+            return $default;
+        }
+
+        return $item[$name];
     }
 }

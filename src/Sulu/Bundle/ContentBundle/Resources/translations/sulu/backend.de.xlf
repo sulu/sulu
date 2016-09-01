@@ -751,6 +751,30 @@
                 <source>sulu-content.teaser.content</source>
                 <target>Seiten</target>
             </trans-unit>
+            <trans-unit id="61" resname="sulu-content.teaser.edit">
+                <source>sulu-content.teaser.edit</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="62" resname="sulu-content.teaser.edited">
+                <source>sulu-content.teaser.edited</source>
+                <target>editiert</target>
+            </trans-unit>
+            <trans-unit id="63" resname="sulu-content.teaser.reset">
+                <source>sulu-content.teaser.reset</source>
+                <target>Zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="64" resname="sulu-content.teaser.apply">
+                <source>sulu-content.teaser.apply</source>
+                <target>Übernehmen</target>
+            </trans-unit>
+            <trans-unit id="65" resname="sulu-content.teaser.cancel">
+                <source>sulu-content.teaser.cancel</source>
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="66" resname="sulu-content.teaser.no-teaser">
+                <source>sulu-content.teaser.no-teaser</source>
+                <target>Keine Teaser ausgewählt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

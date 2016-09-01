@@ -56,6 +56,44 @@ class TeaserManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($teasers, $this->teaserManager->find($items, 'de'));
     }
 
+    public function testFindAndMerge()
+    {
+        $teaser = new Teaser(
+            '123-123-123',
+            'content',
+            'de',
+            'Test-Title',
+            'Test-Description',
+            'Test-More',
+            '/test-xyz',
+            1
+        );
+
+        $item = [
+            'type' => 'content',
+            'id' => '123-123-123',
+            'title' => 'Sulu',
+            'description' => 'Sulu is awesome',
+            'moreText' => 'Read more', 'http://www.sulu.io',
+            'mediaId' => 5,
+        ];
+
+        $contentProvider = $this->prophesize(TeaserProviderInterface::class);
+        $contentProvider->find(['123-123-123'], 'de')->willReturn([$teaser]);
+
+        $this->providerPool->getProvider('content')->shouldBeCalledTimes(1)->willReturn($contentProvider->reveal());
+
+        $result = $this->teaserManager->find([$item], 'de');
+        $this->assertCount(1, $result);
+
+        $this->assertEquals($item['type'], $result[0]->getType());
+        $this->assertEquals($item['id'], $result[0]->getId());
+        $this->assertEquals($item['title'], $result[0]->getTitle());
+        $this->assertEquals($item['description'], $result[0]->getDescription());
+        $this->assertEquals($item['moreText'], $result[0]->getMoreText());
+        $this->assertEquals($item['mediaId'], $result[0]->getMediaId());
+    }
+
     private function getTeaserMocks(array $items)
     {
         return array_map(

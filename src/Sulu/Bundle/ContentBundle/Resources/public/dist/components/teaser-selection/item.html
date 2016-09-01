@@ -1,0 +1,56 @@
+<div class="view" style="display: inline-block;">
+    <div class="value">
+        <% if (!!mediaId) { %>
+        <span class="image"><img src="/admin/media/redirect/media/<%= mediaId %>?locale=<%= locale %>&format=50x50"/></span>
+        <% } %>
+
+        <span class="title"><%= title %></span>
+
+        <p class="description"><%= descriptionText %></p>
+    </div>
+
+    <div class="type">
+        <span class="type-title"><%= translate(types[type].title) %></span>
+        <span class="edited <% if (!edited) { %>hidden<% } %>">(<%= translations.edited %>)</span>
+    </div>
+
+    <div class="options align-right">
+        <a href="#" class="btn edit-teaser"><i class="fa fa-pencil"></i> <%= translations.edit %></a>
+    </div>
+</div>
+
+<div class="edit hidden">
+    <div>
+        <div class="image">
+            <% if (!!mediaId) { %>
+            <div class="image-content"><img class="mediaId" data-id="<%= mediaId %>" src="/admin/media/redirect/media/<%= mediaId %>?locale=<%= locale %>&format=50x50"/></div>
+            <% } else { %>
+            <div class="fa-picture-o image-content"/>
+            <% } %>
+
+            <div class="edit-hint"><span class="fa-pencil"/></div>
+        </div>
+        <div class="form">
+            <div>
+                <input type="text" class="form-element title" placeholder="<%= apiItem.title %>"/>
+            </div>
+            <div class="description-container">
+            </div>
+            <div>
+                <input type="text" class="form-element moreText" placeholder="<%= apiItem.moreText %>"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="grid-col-4 align-left">
+            <a href="#" class="btn grey cancel-teaser-edit"><%= translations.cancel %></a>
+        </div>
+        <div class="grid-col-4 align-center">
+            <a href="#" class="btn reset-teaser-edit"><%= translations.reset %></a>
+        </div>
+        <div class="grid-col-4 align-right">
+            <a href="#" class="btn action apply-teaser-edit"><%= translations.apply %></a>
+        </div>
+    </div>
+</div>
