@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Exception;
+namespace Sulu\Bundle\CategoryBundle\Category\Exception;
 
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Rest\Exception\RestException;

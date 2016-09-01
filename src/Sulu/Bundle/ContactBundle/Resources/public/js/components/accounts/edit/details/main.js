@@ -89,7 +89,7 @@ define([
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/form', {
+            this.html(this.renderTemplate('/admin/contact/template/account/form', {
                 categoryLocale: this.sandbox.sulu.getDefaultContentLocale()
             }));
 
@@ -368,7 +368,7 @@ define([
                 // set form data
                 var formObject = this.sandbox.form.create(constants.formSelector);
                 formObject.initialized.then(function() {
-                    this.setFormData(data, true);
+                    this.formInitializedHandler(data);
                 }.bind(this));
             }.bind(this));
 
@@ -385,7 +385,11 @@ define([
             ]);
         },
 
-        setFormData: function(data, startForm) {
+        formInitializedHandler: function(data) {
+            this.setFormData(data);
+        },
+
+        setFormData: function(data) {
             // add collection filters to form
             this.sandbox.emit('sulu.contact-form.add-collectionfilters', constants.formSelector);
 
@@ -393,12 +397,7 @@ define([
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
             this.sandbox.form.setData(constants.formSelector, data).then(function() {
-                if (!!startForm) {
-                    this.sandbox.start(constants.formSelector);
-                } else {
-                    this.sandbox.start(constants.formContactFields);
-                }
-
+                this.sandbox.start(constants.formContactFields);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                 this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();

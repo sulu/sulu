@@ -28,14 +28,20 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
         $categoryTranslation1->setLocale('en');
         $categoryTranslation1->setTranslation('Category 1');
         $categoryEntity1->addTranslation($categoryTranslation1);
-        $category1 = new Category($categoryEntity1, 'en');
-
         $categoryEntity2 = new CategoryEntity();
         $categoryTranslation2 = new CategoryTranslationEntity();
         $categoryTranslation2->setLocale('en');
         $categoryTranslation2->setTranslation('Category 2');
         $categoryEntity2->addTranslation($categoryTranslation2);
+        $category1 = new Category($categoryEntity1, 'en');
         $category2 = new Category($categoryEntity2, 'en');
+
+        $categoryManager = $this->prophesize(CategoryManagerInterface::class);
+
+        $categoryManager->findByIds([1, 2])->willReturn([$categoryEntity1, $categoryEntity2]);
+        $categoryManager->getApiObjects([$categoryEntity1, $categoryEntity2], 'de')->willReturn([$category1, $category2]);
+
+        $categoryList = new CategoryList($categoryManager->reveal(), '');
 
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -44,29 +50,28 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
         $property->getValue()->willReturn([1, 2]);
         $property->getStructure()->willReturn($structure->reveal());
 
-        $categoryManager = $this->prophesize(CategoryManagerInterface::class);
-        $categoryManager->findByIds([1, 2], 'de')->willReturn([$category1, $category2]);
-
-        $categoryList = new CategoryList($categoryManager->reveal(), '');
-
         $result = $categoryList->getContentData($property->reveal());
 
         $this->assertEquals([$category1->toArray(), $category2->toArray()], $result);
+
+        $categoryManager->findByIds([1, 2])->shouldBeCalled();
+        $categoryManager->getApiObjects([$categoryEntity1, $categoryEntity2], 'de')->shouldBeCalled();
     }
 
     public function testGetContentDataNullPropertyValue()
     {
-        $property = $this->prophesize(Property::class);
-        $property->getValue()->willReturn(null);
-
-
         $categoryManager = $this->prophesize(CategoryManagerInterface::class);
-        $categoryManager->findByIds(Argument::any())->shouldNotBeCalled();
 
         $categoryList = new CategoryList($categoryManager->reveal(), '');
+
+        $property = $this->prophesize(Property::class);
+        $property->getValue()->willReturn(null);
 
         $result = $categoryList->getContentData($property->reveal());
 
         $this->assertEquals([], $result);
+
+        $categoryManager->findByIds(Argument::any())->shouldNotBeCalled();
+        $categoryManager->getApiObjects(Argument::any(), Argument::any())->shouldNotBeCalled();
     }
 }

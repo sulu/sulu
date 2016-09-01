@@ -14,68 +14,57 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 
 /**
- * Defines the methods for the doctrine repository which enables accessing the categories.
+ * Defines the method for the doctrine repository.
  */
 interface CategoryRepositoryInterface
 {
     /**
-     * Returns true if the given id is assigned to an existing category.
-     *
-     * @param $id
-     *
-     * @return bool
-     */
-    public function isCategoryId($id);
-
-    /**
-     * Returns the category which is assigned to the given id.
-     * If no respective category is found, null is returned.
+     * Finds the category with a given id.
      *
      * @param int $id
      *
-     * @return Category|null
+     * @return Category
      */
     public function findCategoryById($id);
 
     /**
-     * Returns the category which is assigned to the given key.
-     * If no respective category is found, null is returned.
+     * Finds the category with a given key.
      *
      * @param string $key
      *
-     * @return Category|null
+     * @return Category
      */
     public function findCategoryByKey($key);
 
     /**
-     * Returns an array of categories which are assigned to the given array of ids.
+     * Finds the categories with the given ids.
      *
-     * @param array $ids
-     *
-     * @return Category[]
-     */
-    public function findCategoriesByIds(array $ids);
-
-    /**
-     * Returns the whole category graph. Children are available through children-properties of parents.
-     * If parentId is set, only the sub-graph below the category which is assigned to the given id is returned.
-     *
-     * @param null $parentId
+     * @param array $ids The ids to load
      *
      * @return Category[]
      */
-    public function findCategoriesByParentId($parentId = null);
+    public function findCategoryByIds(array $ids);
 
     /**
-     * Returns an array of ids of categories which are positioned (exlusive) between a category which is assigned to
-     * one of the entries of the fromIds array and a category which is assigned to one of the entries
-     * of the toIds array.
-     * Start- and end-points of a path are not returned.
+     * Returns all categories. Can be filtered with parent and depth.
      *
-     * @param $fromIds array Start-points of the paths which are processed
-     * @param $toIds array End-points of the paths which are processed
+     * @param number      $parent    the id of the parent to filter for
+     * @param number      $depth     the depth-level to filter for
+     * @param string|null $sortBy    column name to sort the categories by
+     * @param string|null $sortOrder sort order
      *
-     * @return array
+     * @return mixed|null
      */
-    public function findCategoryIdsBetween($fromIds, $toIds);
+    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
+
+    /**
+     * Returns the children for a given category.
+     *
+     * @param int         $key       the key of the category to return the children for
+     * @param string|null $sortBy    column name to sort by
+     * @param string|null $sortOrder sort order
+     *
+     * @return Category[]
+     */
+    public function findChildren($key, $sortBy = null, $sortOrder = null);
 }

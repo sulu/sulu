@@ -603,7 +603,7 @@ class MediaManager implements MediaManagerInterface
 
                         if (is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
-                            $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
+                            $categories = $this->categoryRepository->findCategoryByIds($categoryIds);
 
                             foreach ($categories as $category) {
                                 $media->addCategory($category);

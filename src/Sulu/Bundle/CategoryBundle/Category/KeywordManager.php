@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordIsMultipleReferencedException;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
-use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
-use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 
 /**
  * Manages keyword for categories.

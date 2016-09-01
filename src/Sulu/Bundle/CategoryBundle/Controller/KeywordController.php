@@ -14,7 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
@@ -116,7 +116,7 @@ class KeywordController extends RestController implements ClassResourceInterface
     {
         /** @var Keyword $keyword */
         $keyword = $this->getKeywordRepository()->createNew();
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $category = $this->getCategoryManager()->findById($categoryId);
         $keyword->setKeyword($request->get('keyword'));
         $keyword->setLocale($request->get('locale'));
 
@@ -149,7 +149,7 @@ class KeywordController extends RestController implements ClassResourceInterface
         }
 
         $force = $request->get('force');
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $category = $this->getCategoryManager()->findById($categoryId);
         $keyword->setKeyword($request->get('keyword'));
 
         $keyword = $this->getKeywordManager()->save($keyword, $category, $force);
@@ -171,7 +171,7 @@ class KeywordController extends RestController implements ClassResourceInterface
     public function deleteAction($categoryId, $keywordId)
     {
         $keyword = $this->getKeywordRepository()->findById($keywordId);
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $category = $this->getCategoryManager()->findById($categoryId);
         $this->getKeywordManager()->delete($keyword, $category);
 
         $this->getEntityManager()->flush();
@@ -189,7 +189,7 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function cdeleteAction($categoryId, Request $request)
     {
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $category = $this->getCategoryManager()->findById($categoryId);
 
         $ids = array_filter(explode(',', $request->get('ids')));
         foreach ($ids as $id) {
@@ -219,11 +219,11 @@ class KeywordController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @return CategoryRepositoryInterface
+     * @return CategoryManagerInterface
      */
-    private function getCategoryRepository()
+    private function getCategoryManager()
     {
-        return $this->get('sulu_category.category_repository');
+        return $this->get('sulu_category.category_manager');
     }
 
     /**

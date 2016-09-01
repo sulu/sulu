@@ -11,12 +11,8 @@
 
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
-use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
-use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
-use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
-use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
-use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
-use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordIsMultipleReferencedException;
+use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordNotUniqueException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -59,10 +55,6 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                 [
                     'exception' => [
                         'codes' => [
-                            CategoryIdNotFoundException::class => 404,
-                            CategoryKeyNotFoundException::class => 404,
-                            CategoryKeyNotUniqueException::class => 409,
-                            CategoryNameMissingException::class => 400,
                             KeywordIsMultipleReferencedException::class => 409,
                             KeywordNotUniqueException::class => 409,
                         ],

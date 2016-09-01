@@ -23,8 +23,8 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
  * @Relation(
  *     "children",
  *     href = @Route(
- *         "get_category_children",
- *         parameters = "expr({ parentId: '{parentId}' } + object.getParameters())",
+ *         "expr(object.getRoute())",
+ *         parameters = "expr({ parent: '{parentId}' } + object.getParameters())",
  *         absolute = "expr(object.isAbsolute())",
  *     )
  * )
