@@ -175,9 +175,18 @@ define([
         },
 
         bindCustomEvents: function() {
+            // set this.saved{
+            this.sandbox.on('sulu.header.toolbar.item.enable',function (param) {
+                if (param === 'save') {
+                    this.saved = false;
+                }
+            }.bind(this));
+
             // back button
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.content.contents.list');
+                this.tabChangeAllowed().then(function () {
+                    this.sandbox.emit('sulu.content.contents.list');
+                }.bind(this));
             }.bind(this));
 
             // load column view
@@ -978,7 +987,8 @@ define([
                         },
                         componentOptions: {
                             values: this.content.toJSON(),
-                            previewService: this.preview
+                            previewService: this.preview,
+                            tabChangeAllowed: this.tabChangeAllowed.bind(this)
                         }
                     },
 
@@ -1150,10 +1160,37 @@ define([
                 };
             }
         },
+
         destroy: function() {
             if (!!this.preview) {
                 Preview.destroy(this.preview);
             }
+        },
+
+        tabChangeAllowed: function () {
+            var allowed = $.Deferred();
+            if (!this.saved) {
+                // show warning dialog
+                this.sandbox.emit('sulu.overlay.show-warning',
+                    'sulu.overlay.be-careful',
+                    'content.template.dialog.content',
+
+                    function() {
+                        // cancel callback
+                        allowed.fail();
+                    }.bind(this),
+
+                    function() {
+                        // ok callback
+                        allowed.resolve();
+                        this.setHeaderBar(true);
+                    }.bind(this)
+                );
+
+            } else {
+                allowed.resolve();
+            }
+            return allowed;
         }
     };
 });

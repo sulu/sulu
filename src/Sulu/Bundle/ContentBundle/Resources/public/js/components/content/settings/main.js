@@ -43,7 +43,8 @@ define([
             externalLink: {
                 titleContainer: '#external-link-container .title',
                 linkContainer: '#external-link-container .link'
-            }
+            },
+            shadowPage: '#shadow-container .form-group'
         },
 
         isShadow = function() {
@@ -233,11 +234,9 @@ define([
 
                 this.bindDomEvents();
                 this.setData(this.data);
-                this.listenForChange();
                 this.startComponents();
-                this.sandbox.start(this.$el, {reset: true});
-
-                this.sandbox.start([
+                var formDeferred = this.sandbox.start(this.$el, {reset: true}),
+                    linkDeferred = this.sandbox.start([
                     {
                         name: 'single-internal-link@sulucontent',
                         options: {
@@ -258,6 +257,10 @@ define([
                         }
                     }
                 ]);
+
+                $.when(formDeferred, linkDeferred).then(function () {
+                    this.listenForChange();
+                }.bind(this));
 
                 this.updateVisibilityForShadowCheckbox(true);
 
@@ -454,11 +457,15 @@ define([
             this.sandbox.dom.removeClass(constants.internalLink.linkContainer, constants.validateErrorClass);
             this.sandbox.dom.removeClass(constants.externalLink.titleContainer, constants.validateErrorClass);
             this.sandbox.dom.removeClass(constants.externalLink.linkContainer, constants.validateErrorClass);
+            $(constants.shadowPage + ' > label > span').addClass('clickable');
+            this.sandbox.dom.removeClass(constants.shadowPage, constants.validateErrorClass);
 
             if (data.nodeType === TYPE_INTERNAL) {
                 return this.validateInternal(data);
             } else if (data.nodeType === TYPE_EXTERNAL) {
                 return this.validateExternal(data);
+            } else if (data.shadowOn) {
+                return this.validateShadow(data);
             }
 
             return true;
@@ -491,6 +498,18 @@ define([
             if (!data.urlParts.scheme || !data.urlParts.specificPart) {
                 result = false;
                 this.sandbox.dom.addClass(constants.externalLink.linkContainer, constants.validateErrorClass);
+            }
+
+            return result;
+        },
+
+        validateShadow: function(data) {
+            var result = true;
+
+            if (!data.shadowBaseLanguage) {
+                result = false
+                this.sandbox.dom.addClass(constants.shadowPage, constants.validateErrorClass);
+                $(constants.shadowPage + ' > label > span').removeClass('clickable');
             }
 
             return result;
