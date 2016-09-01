@@ -77,6 +77,10 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                     $('.redirect-hide').show();
                 }
             }.bind(this));
+
+            this.sandbox.on('husky.overlay.custom-urls.language-changed', function(locale) {
+                this.changeDataSourceLanguage(locale);
+            }.bind(this));
         },
 
         /**
@@ -189,6 +193,10 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                                 data: '<div id="target-select" class="data-source-content"/>',
                                 cssClass: 'data-source-slide',
                                 okInactive: true,
+                                languageChanger: {
+                                    locales: this.sandbox.sulu.locales,
+                                    preSelected: this.sandbox.sulu.getDefaultContentLocale()
+                                },
                                 buttons: [
                                     {
                                         type: 'cancel',
@@ -232,9 +240,62 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
         },
 
         /**
+         * Starts the sandbox of #target-select with the given locale.
+         *
+         * @param locale
+         */
+        initializeDataSourceComponent: function (locale) {
+            if (locale === undefined) {
+                locale = this.sandbox.sulu.getDefaultContentLocale();
+            }
+
+            var $element = $('<div/>');
+            this.$find('#target-select').append($element);
+
+            this.sandbox.start(
+                [
+                    {
+                        name: 'content-datasource@sulucontent',
+                        options: {
+                            el: $element,
+                            selected: (!!this.data.targetDocument ? this.data.targetDocument.uuid : null),
+                            webspace: this.options.webspace.key,
+                            locale: locale,
+                            instanceName: 'custom-urls',
+                            rootUrl: constants.targetRootUrl,
+                            selectedUrl: constants.targetSelectedUrl,
+                            resultKey: 'nodes',
+                            selectCallback: function(id, path, title, item) {
+                                var $value = $('#custom-url-target-value');
+                                $value.val(title);
+                                $value.data('item', item);
+                                $('#custom-url-target-button-clear').show();
+
+                                var locales = this.filterConcreteLocales(this.getData().baseDomain, item.concreteLanguages);
+                                this.sandbox.emit('husky.select.target-locale.update', locales, [locales[0]], false);
+
+                                this.target = id;
+                                this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
+                            }.bind(this)
+                        }
+                    }
+                ]
+            );
+        },
+        /**
+         * Stops and restarts CollumNavigation restarts it with correct locale.
+         *
+         * @param locale
+         */
+        changeDataSourceLanguage: function(locale){
+            this.sandbox.stop(this.$find('#target-select *'));
+            this.initializeDataSourceComponent(locale);
+        },
+
+        /**
          * Initializes sub-components.
          */
-        initializeFormComponents: function() {
+        initializeFormComponents: function(locale) {
             this.customUrls = {};
 
             var routeData = _.chain(this.data.routes).map(function(routeDocument, route) {
@@ -334,31 +395,6 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                         }
                     },
                     {
-                        name: 'content-datasource@sulucontent',
-                        options: {
-                            el: '#target-select',
-                            selected: (!!this.data.targetDocument ? this.data.targetDocument.uuid : null),
-                            webspace: this.options.webspace.key,
-                            locale: this.sandbox.sulu.getDefaultContentLocale(),
-                            instanceName: 'custom-urls',
-                            rootUrl: constants.targetRootUrl,
-                            selectedUrl: constants.targetSelectedUrl,
-                            resultKey: 'nodes',
-                            selectCallback: function(id, path, title, item) {
-                                var $value = $('#custom-url-target-value');
-                                $value.val(title);
-                                $value.data('item', item);
-                                $('#custom-url-target-button-clear').show();
-
-                                var locales = this.filterConcreteLocales(this.getData().baseDomain, item.concreteLanguages);
-                                this.sandbox.emit('husky.select.target-locale.update', locales, [locales[0]], false);
-
-                                this.target = id;
-                                this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
-                            }.bind(this)
-                        }
-                    },
-                    {
                         name: 'list-toolbar@suluadmin',
                         options: {
                             el: '#webspace-custom-urls-url-list-toolbar',
@@ -401,6 +437,8 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                     }
                 ]
             );
+
+            this.initializeDataSourceComponent();
 
             if (!!this.data.baseDomain) {
                 $('#custom-url-input-container').show();

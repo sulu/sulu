@@ -43487,7 +43487,7 @@ define('__component__$overlay@husky',[], function() {
             $header: null,
             $content: null,
             $languageChanger: null,
-            $tabs: null, //tabs component container
+            $subheader: null, //tabs component container
             tabs: null //contains tabs related data
         },
 
@@ -43500,7 +43500,7 @@ define('__component__$overlay@husky',[], function() {
             overlayOkSelector: '.overlay-ok',
             overlayCancelSelector: '.overlay-cancel',
             overlayOtherButtonsSelector: '.overlay-button',
-            tabsClass: 'overlay-tabs',
+            subheaderClass: 'overlay-subheader',
             languageChangerClass: 'language-changer'
         },
 
@@ -44064,6 +44064,11 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.slides[slide].$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.slides[slide].$el);
             this.overlay.slides[slide].$header = this.sandbox.dom.find(constants.headerSelector, this.overlay.slides[slide].$el);
 
+            if (this.slides[slide].languageChanger !== null || this.slides[slide].tabs !== null) {
+                this.overlay.slides[slide].$subheader = this.sandbox.dom.createElement('<div class="' + constants.subheaderClass + '"/>');
+                this.overlay.slides[slide].$header.after(this.overlay.slides[slide].$subheader)
+            }
+
             // render a language changer into the header if configured
             if (this.slides[slide].languageChanger !== null) {
                 this.renderLanguageChanger(slide);
@@ -44084,10 +44089,12 @@ define('__component__$overlay@husky',[], function() {
 
             this.sandbox.dom.addClass(this.overlay.$el, 'has-language-chooser');
             this.overlay.slides[slide].$languageChanger = this.sandbox.dom.createElement(
-                '<div class="' + constants.languageChangerClass + '"/>'
+                (this.slides[slide].tabs !== null) ? '<div class="' + constants.languageChangerClass + '"/>' :
+                '<div class="' + constants.languageChangerClass + '-corrector"/>' +
+                '<div class="' + constants.languageChangerClass + '-frame"/>'
             );
-            this.sandbox.dom.append(this.overlay.slides[slide].$content, this.overlay.slides[slide].$languageChanger);
-            this.sandbox.dom.append(this.overlay.slides[slide].$languageChanger, $element);
+            this.overlay.slides[slide].$subheader.append(this.overlay.slides[slide].$languageChanger);
+            this.overlay.slides[slide].$languageChanger.append($element);
 
             this.sandbox.start([
                 {
@@ -44173,8 +44180,6 @@ define('__component__$overlay@husky',[], function() {
          */
         renderTabs: function(slide) {
             this.overlay.slides[slide].tabs = [];
-            this.overlay.slides[slide].$tabs = this.sandbox.dom.createElement('<div class="' + constants.tabsClass + '"/>');
-            this.sandbox.dom.after(this.overlay.slides[slide].$header, this.overlay.slides[slide].$tabs);
 
             for (var i = -1, length = this.slides[slide].tabs.length; ++i < length;) {
                 this.overlay.slides[slide].tabs.push({
@@ -44195,7 +44200,7 @@ define('__component__$overlay@husky',[], function() {
          */
         startTabsComponent: function(slide) {
             var $element = this.sandbox.dom.createElement('<div/>');
-            this.sandbox.dom.html(this.overlay.slides[slide].$tabs, $element);
+            this.overlay.slides[slide].$subheader.append($element);
 
             this.sandbox.start([
                 {

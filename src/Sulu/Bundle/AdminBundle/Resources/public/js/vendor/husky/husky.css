@@ -6327,13 +6327,32 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 
 /* line 118, ../scss/modules/overlay.scss */
-.overlay-tabs {
+.overlay-subheader {
   background: #fff;
   padding: 0 20px;
   border-top: 1px solid #e9e9e9;
+  width: 100%;
+  position: relative;
+}
+/* line 125, ../scss/modules/overlay.scss */
+.overlay-subheader .language-changer,
+.overlay-subheader .language-changer-frame {
+  width: 80px;
+  margin: 10px 0;
+  top: 0;
+  position: absolute;
+  right: 20px;
+}
+/* line 135, ../scss/modules/overlay.scss */
+.overlay-subheader .language-changer-frame {
+  right: 10px;
+}
+/* line 139, ../scss/modules/overlay.scss */
+.overlay-subheader .language-changer-corrector {
+  height: 51px;
 }
 
-/* line 124, ../scss/modules/overlay.scss */
+/* line 145, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 20px;
   border-top: 1px solid #ddd;
@@ -6350,45 +6369,45 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   content: ' ';
   display: block;
 }
-/* line 135, ../scss/modules/overlay.scss */
+/* line 156, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 115px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 141, ../scss/modules/overlay.scss */
+/* line 162, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 0;
 }
-/* line 145, ../scss/modules/overlay.scss */
+/* line 166, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 150, ../scss/modules/overlay.scss */
+/* line 171, ../scss/modules/overlay.scss */
 .overlay-footer .btn.just-text {
   background: transparent;
   color: #000;
   font-size: 12px;
 }
-/* line 157, ../scss/modules/overlay.scss */
+/* line 178, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 161, ../scss/modules/overlay.scss */
+/* line 182, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 166, ../scss/modules/overlay.scss */
+/* line 187, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
-/* line 171, ../scss/modules/overlay.scss */
+/* line 192, ../scss/modules/overlay.scss */
 .overlay-footer .loader {
   float: right;
   margin-left: 20px;
@@ -6396,12 +6415,12 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   width: 115px;
 }
 
-/* line 179, ../scss/modules/overlay.scss */
+/* line 200, ../scss/modules/overlay.scss */
 .overlay-content {
   position: relative;
   white-space: normal;
 }
-/* line 183, ../scss/modules/overlay.scss */
+/* line 204, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 10px 105px 40px;
   background: #fff;
@@ -6409,26 +6428,19 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   color: #999;
   text-align: center;
 }
-/* line 189, ../scss/modules/overlay.scss */
+/* line 210, ../scss/modules/overlay.scss */
 .overlay-content .message ul {
   border: 1px solid #ddd;
   list-style-position: inside;
   text-align: left;
   padding: 10px;
 }
-/* line 197, ../scss/modules/overlay.scss */
-.overlay-content .language-changer {
-  width: 80px;
-  position: absolute;
-  top: -60px;
-  right: 0;
-}
-/* line 204, ../scss/modules/overlay.scss */
+/* line 218, ../scss/modules/overlay.scss */
 .overlay-content.content-spacing {
   margin: 20px;
 }
 
-/* line 209, ../scss/modules/overlay.scss */
+/* line 223, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper {
   width: 100%;
   height: 100%;
@@ -6442,7 +6454,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   background: rgba(0, 0, 0, 0.5);
   -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 221, ../scss/modules/overlay.scss */
+/* line 235, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper::before {
   content: '';
   display: inline-block;
