@@ -58,6 +58,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
                 '__url' => '/test/1',
                 'excerptImages' => json_encode(['ids' => [1, 2, 3]]),
                 '_structure_type' => 'default',
+                '_teaser_description' => '',
             ],
             '456-456-456' => [
                 'title' => 'Test 2',
@@ -67,6 +68,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
                 '__url' => '/test/2',
                 'excerptImages' => json_encode([]),
                 '_structure_type' => 'overview',
+                '_teaser_description' => '',
             ],
         ];
         $ids = array_keys($data);
@@ -101,6 +103,12 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
         foreach ($data as $name => $value) {
             $document->getField($name)->willReturn(new Field($name, $value));
         }
+
+        $document->hasField(Argument::any())->will(
+            function ($arguments) use ($data) {
+                return in_array($arguments[0], array_keys($data));
+            }
+        );
 
         return $queryHit->reveal();
     }

@@ -308,7 +308,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/' . $media->getId() . '?locale=en-gb');
+        $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb');
 
         $this->assertEquals(
             '/media/' . $media->getId() . '/download/photo.jpeg?v=1',
@@ -323,7 +323,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/' . $media->getId() . '?locale=en-gb&format=50x50');
+        $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=50x50');
 
         $this->assertRegExp(
             '/\/uploads\/media\/50x50\/\d{2}\/' . $media->getId() . '-photo.jpg\?v=1/',
@@ -337,13 +337,5 @@ class MediaRedirectControllerTest extends SuluTestCase
     private function getImagePath()
     {
         return __DIR__ . '/../../app/Resources/images/photo.jpeg';
-    }
-
-    /**
-     * @return string
-     */
-    private function getFilePath()
-    {
-        return __DIR__ . '/../../app/Resources/files/small.txt';
     }
 }
