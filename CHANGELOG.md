@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2890 [Localization]        Reintroduced localization provider class
     * HOTFIX      #2876 [MediaBundle]         Changed column navigation to markable and ok button
     * HOTFIX      #2876 [ContentBundle]       Changed column navigation to markable and ok button
     * HOTFIX      #2883 [WebsiteBundle]       Fixed translator locale for localizations with country
