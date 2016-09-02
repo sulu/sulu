@@ -79,7 +79,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($wrapper instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
 
         $wrapper2 = $this->categoryManager->getApiObject($wrapper, 'en');
-        $this->assertSame($wrapper, $wrapper2);
+        $this->assertSame($wrapper->getEntity(), $wrapper2->getEntity());
 
         $wrapper = $this->categoryManager->getApiObject(null, 'de');
         $this->assertEquals(null, $wrapper);
