@@ -988,6 +988,10 @@
                 <source>public.version</source>
                 <target>choses</target>
             </trans-unit>
+            <trans-unit id="c337c52dae1354cc4123c0b4831a23233" resname="public.save-and-apply">
+                <source>public.save-and-apply</source>
+                <target>Enregistrer &amp; appliquer</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

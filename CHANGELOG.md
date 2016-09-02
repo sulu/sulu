@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2915 [MediaBundle]         Fixed height of badges in media-selection
     * ENHANCEMENT #2860 [ContentBundle]       Added url to internal links and smart-content
     * FEATURE     #2914 [CategoryBundle]      Added description and medias to category
+    * FEATURE     #2908 [MediaBundle]         Created cropping-slide for media-edit-overlay
     * FEATURE     #2877 [MediaBundle]         Rest-Api for image-formats and format options
     * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
     * ENHANCEMENT #2912 [CategoryBundle]      Implemented category-bundle entities extensible

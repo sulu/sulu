@@ -48,8 +48,8 @@ define([
                 description: ', '
             },
             emptyIcon: 'fa-coffee',
-            hintIcon: 'fa-pencil',
-            noImgIcon: function(item) {
+            actionIcons: ['fa-pencil'],
+            noImgIcon: function() {
                 return 'fa-file-o';
             }
         },
@@ -298,8 +298,7 @@ define([
                         isVideo: isVideo,
                         domain: window.location.protocol + '//' + window.location.host,
                         selectable: this.options.selectable,
-                        placeholderIcon: icon,
-                        hintIcon: this.options.hintIcon
+                        placeholderIcon: icon
                     })
                 );
                 this.$items[id].addClass(constants.loadingClass);
@@ -319,10 +318,34 @@ define([
                 } else {
                     this.itemLoadedHandler(this.$items[id], itemLoadedDeferred);
                 }
+                this.renderActionIcons(id);
 
                 this.bindItemEvents(id);
 
                 return itemLoadedDeferred;
+            },
+
+            /**
+             * Renders the action icon into an item with a given id.
+             *
+             * @param {Number} id
+             */
+            renderActionIcons: function(id) {
+                this.options.actionIcons.forEach(function(actionIcon) {
+                    var item = this.datagrid.getRecordById(id),
+                        iconClass = (typeof actionIcon === 'string') ? actionIcon : actionIcon.icon,
+                        $icon = $('<div class="' + iconClass + ' action-icon"/>');
+
+                    if (!actionIcon.type || actionIcon.type === item.type) {
+                        this.$items[id].find('.action-icons').append($icon);
+                        if (!!actionIcon.action) {
+                            $icon.on('click', function(event) {
+                                event.stopPropagation();
+                                actionIcon.action(item);
+                            }.bind(this));
+                        }
+                    }
+                }.bind(this));
             },
 
             /**

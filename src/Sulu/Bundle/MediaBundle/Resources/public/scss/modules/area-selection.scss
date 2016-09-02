@@ -26,7 +26,7 @@
         z-index: 20;
         // The area needs a background due to old IEs not being able to hover over transparent elements
         // http://stackoverflow.com/questions/3998917/ie8-div-hover-only-works-when-background-color-is-set-very-strange-why
-        background: rgba(0, 0, 0, 0);
+        background: rgba(0, 0, 0, 0.0001);
 
         // get overwritten in the components javascript
         top: 0;

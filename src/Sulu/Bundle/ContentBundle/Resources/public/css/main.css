@@ -457,7 +457,7 @@
 }
 /* line 35, ../scss/modules/teaser-selection.scss */
 .teaser-selection .husky-overlay-container.type-content .overlay-content {
-  margin: 0px;
+  padding: 0;
 }
 /* line 39, ../scss/modules/teaser-selection.scss */
 .teaser-selection .image .image-content {

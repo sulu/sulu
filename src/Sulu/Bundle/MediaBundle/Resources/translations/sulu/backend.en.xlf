@@ -318,6 +318,62 @@
                 <source>sulu-media.upload-files</source>
                 <target>Upload files</target>
             </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js33469f111118" resname="sulu-media.remove-crop">
+                <source>sulu-media.remove-crop</source>
+                <target>Remove crop</target>
+            </trans-unit>
+            <trans-unit id="243123ca3f64352w337js33469f111118" resname="sulu-media.image-formats">
+                <source>sulu-media.image-formats</source>
+                <target>Image formats</target>
+            </trans-unit>
+            <trans-unit id="143123ca3f64352w337js33469f111118" resname="sulu-media.crop-double-click-hint">
+                <source>sulu-media.crop-double-click-hint</source>
+                <target>A double-click maximizes and centers the area</target>
+            </trans-unit>
+            <trans-unit id="155123ca3f64352w337js33469f111118" resname="sulu-media.edit-image">
+                <source>sulu-media.edit-image</source>
+                <target>Edit image</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w337js33469f111118" resname="sulu-media.crop">
+                <source>sulu-media.crop</source>
+                <target>Crop</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
+                <source>sulu-media.crop-save-success</source>
+                <target>Crop successfully saved</target>
+            </trans-unit>
+            <trans-unit id="221143ca3f64352w117js33469f111118" resname="sulu-media.crop-remove-success">
+                <source>sulu-media.crop-remove-success</source>
+                <target>Crop successfully removed</target>
+            </trans-unit>
+            <trans-unit id="112143ca3f64352w117js33469f111118" resname="sulu-media.crop-not-possible">
+                <source>sulu-media.crop-not-possible</source>
+                <target>Crop not possible</target>
+            </trans-unit>
+            <trans-unit id="112145ca3e64352w117js33469f111119" resname="sulu-media.image-too-small">
+                <source>sulu-media.image-too-small</source>
+                <target>The original image is too small</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33469f111119" resname="sulu-media.crop-out-of-date">
+                <source>sulu-media.crop-out-of-date</source>
+                <target>Crop outdated</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33488f111119" resname="sulu-media.crop-out-of-date-text">
+                <source>sulu-media.crop-out-of-date-text</source>
+                <target>The defined crop is outdated because of another upload or changed image format</target>
+            </trans-unit>
+            <trans-unit id="123145ca3e64352w117js33488f121119" resname="sulu-media.minimum-size-reached">
+                <source>sulu-media.minimum-size-reached</source>
+                <target>Minimal size reached</target>
+            </trans-unit>
+            <trans-unit id="123145cabe64352w117js33488a321119" resname="sulu-media.crops-out-of-date">
+                <source>sulu-media.crops-out-of-date</source>
+                <target>Crops outdated</target>
+            </trans-unit>
+            <trans-unit id="123145cabe77352w117js33488a321119" resname="sulu-media.following-crops-out-of-date">
+                <source>sulu-media.following-crops-out-of-date</source>
+                <target>Crops of the following formats are outdated</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

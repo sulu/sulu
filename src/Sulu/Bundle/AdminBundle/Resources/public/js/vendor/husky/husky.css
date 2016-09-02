@@ -2772,7 +2772,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-style: normal;
 }
 /* line 4, ../scss/fontawesome/_core.scss */
-.fa, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton:before, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before, .text-block > .collapsed-container.empty::before, [class^="fa-"] {
+.fa, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton:before, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .husky-toolbar .toolbar-dropdown-menu li.warning::before, .husky-toolbar .toolbar-dropdown-menu li.checked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before, .text-block > .collapsed-container.empty::before, [class^="fa-"] {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -2857,11 +2857,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.fa-pull-left, .custom-checkbox input:indeterminate + .fa-pull-left.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-left.icon::after, .custom-checkbox input:checked + .fa-pull-left.icon::after, .custom-checkbox input.is-checked + .fa-pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-left::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-left::before, .fa-pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-left.marked::before, .auto-complete-list-selection .fa-pull-left.tm-tag-remove, .husky-datagrid .fa-pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-left.cell-content::after, .sortable .text-block > .fa-pull-left.move::before, .text-block > .fa-pull-left.collapsed-container.empty::before, .fa-pull-left[class^="fa-"] {
+.fa.fa-pull-left, .custom-checkbox input:indeterminate + .fa-pull-left.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-left.icon::after, .custom-checkbox input:checked + .fa-pull-left.icon::after, .custom-checkbox input.is-checked + .fa-pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-left::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-left::before, .fa-pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-left.marked::before, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-left.warning::before, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-left.checked::before, .auto-complete-list-selection .fa-pull-left.tm-tag-remove, .husky-datagrid .fa-pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-left.cell-content::after, .sortable .text-block > .fa-pull-left.move::before, .text-block > .fa-pull-left.collapsed-container.empty::before, .fa-pull-left[class^="fa-"] {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.fa-pull-right, .custom-checkbox input:indeterminate + .fa-pull-right.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-right.icon::after, .custom-checkbox input:checked + .fa-pull-right.icon::after, .custom-checkbox input.is-checked + .fa-pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-right::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-right::before, .fa-pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-right.marked::before, .auto-complete-list-selection .fa-pull-right.tm-tag-remove, .husky-datagrid .fa-pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-right.cell-content::after, .sortable .text-block > .fa-pull-right.move::before, .text-block > .fa-pull-right.collapsed-container.empty::before, .fa-pull-right[class^="fa-"] {
+.fa.fa-pull-right, .custom-checkbox input:indeterminate + .fa-pull-right.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-right.icon::after, .custom-checkbox input:checked + .fa-pull-right.icon::after, .custom-checkbox input.is-checked + .fa-pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-right::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-right::before, .fa-pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-right.marked::before, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-right.warning::before, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-right.checked::before, .auto-complete-list-selection .fa-pull-right.tm-tag-remove, .husky-datagrid .fa-pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-right.cell-content::after, .sortable .text-block > .fa-pull-right.move::before, .text-block > .fa-pull-right.collapsed-container.empty::before, .fa-pull-right[class^="fa-"] {
   margin-left: .3em;
 }
 
@@ -2877,11 +2877,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 23, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.pull-left, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before, .text-block > .pull-left.collapsed-container.empty::before, .pull-left[class^="fa-"] {
+.fa.pull-left, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .husky-toolbar .toolbar-dropdown-menu li.pull-left.warning::before, .husky-toolbar .toolbar-dropdown-menu li.pull-left.checked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before, .text-block > .pull-left.collapsed-container.empty::before, .pull-left[class^="fa-"] {
   margin-right: .3em;
 }
 /* line 24, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.pull-right, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before, .text-block > .pull-right.collapsed-container.empty::before, .pull-right[class^="fa-"] {
+.fa.pull-right, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .husky-toolbar .toolbar-dropdown-menu li.pull-right.warning::before, .husky-toolbar .toolbar-dropdown-menu li.pull-right.checked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before, .text-block > .pull-right.collapsed-container.empty::before, .pull-right[class^="fa-"] {
   margin-left: .3em;
 }
 
@@ -6239,20 +6239,20 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 /* line 28, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide {
-  width: 700px;
+  width: 860px;
 }
 /* line 31, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide .slides .slide {
-  width: 700px;
+  width: 860px;
 }
 /* line 34, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide .slides .slide .overlay-footer {
-  width: 700px;
+  width: 860px;
 }
-@media (min-width: 768px) {
+@media (min-width: 880px) {
   /* line 42, ../scss/modules/overlay.scss */
   .husky-overlay-container.responsive-width, .husky-overlay-container.responsive-width .slides .slide, .husky-overlay-container.responsive-width .slides .slide .overlay-footer {
-    width: 700px;
+    width: 860px;
   }
 }
 @media (min-width: 1024px) {
@@ -6280,12 +6280,12 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 .husky-overlay-container .slides {
   position: relative;
   left: 0px;
-  -moz-transition: left 500ms;
-  -o-transition: left 500ms;
-  -webkit-transition: left 500ms;
-  transition: left 500ms;
   white-space: nowrap;
   padding-bottom: 70px;
+  -moz-transition: left, 500ms;
+  -o-transition: left, 500ms;
+  -webkit-transition: left, 500ms;
+  transition: left, 500ms;
 }
 /* line 77, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides .slide {
@@ -6293,15 +6293,22 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   vertical-align: top;
   width: 580px;
 }
+/* line 83, ../scss/modules/overlay.scss */
+.husky-overlay-container .slides.no-animation {
+  -moz-transition: none;
+  -o-transition: none;
+  -webkit-transition: none;
+  transition: none;
+}
 
-/* line 85, ../scss/modules/overlay.scss */
+/* line 89, ../scss/modules/overlay.scss */
 .overlay-header {
   position: relative;
   background: #fff;
   border-radius: 3px 3px 0 0;
   height: 100px;
 }
-/* line 91, ../scss/modules/overlay.scss */
+/* line 95, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999;
   font-size: 24px;
@@ -6314,11 +6321,11 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   line-height: 100px;
   text-align: center;
 }
-/* line 105, ../scss/modules/overlay.scss */
+/* line 109, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .title {
   line-height: 75px;
 }
-/* line 109, ../scss/modules/overlay.scss */
+/* line 113, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .sub-title {
   font-size: 12px;
   color: #999;
@@ -6326,14 +6333,74 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   text-align: center;
 }
 
-/* line 118, ../scss/modules/overlay.scss */
-.overlay-tabs {
+/* line 122, ../scss/modules/overlay.scss */
+.overlay-subheader {
   background: #fff;
   padding: 0 20px;
   border-top: 1px solid #e9e9e9;
+  width: 100%;
+  height: 51px;
+  position: relative;
+  display: table;
+  table-layout: auto;
+}
+/* line 132, ../scss/modules/overlay.scss */
+.overlay-subheader .overlay-tabs {
+  display: table-cell;
+  width: 100%;
+  max-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* line 140, ../scss/modules/overlay.scss */
+.overlay-subheader .panel {
+  display: table-cell;
+  white-space: nowrap;
+  padding-left: 20px;
+  border-left: 1px solid #e9e9e9;
+}
+/* line 147, ../scss/modules/overlay.scss */
+.overlay-subheader .panel-content {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  border-right: 1px solid #e9e9e9;
+  padding-right: 20px;
+  margin-right: 20px;
+}
+/* line 155, ../scss/modules/overlay.scss */
+.overlay-subheader .panel-content::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+/* line 162, ../scss/modules/overlay.scss */
+.overlay-subheader .panel-content > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 168, ../scss/modules/overlay.scss */
+.overlay-subheader .language-changer {
+  display: inline-block;
+  width: 80px;
+  height: 100%;
+}
+/* line 173, ../scss/modules/overlay.scss */
+.overlay-subheader .language-changer::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+/* line 180, ../scss/modules/overlay.scss */
+.overlay-subheader .language-changer > * {
+  width: 100%;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-/* line 124, ../scss/modules/overlay.scss */
+/* line 188, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 20px;
   border-top: 1px solid #ddd;
@@ -6350,45 +6417,45 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   content: ' ';
   display: block;
 }
-/* line 135, ../scss/modules/overlay.scss */
+/* line 199, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 115px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 141, ../scss/modules/overlay.scss */
+/* line 205, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 0;
 }
-/* line 145, ../scss/modules/overlay.scss */
+/* line 209, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 150, ../scss/modules/overlay.scss */
+/* line 214, ../scss/modules/overlay.scss */
 .overlay-footer .btn.just-text {
   background: transparent;
   color: #000;
   font-size: 12px;
 }
-/* line 157, ../scss/modules/overlay.scss */
+/* line 221, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 161, ../scss/modules/overlay.scss */
+/* line 225, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 166, ../scss/modules/overlay.scss */
+/* line 230, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
-/* line 171, ../scss/modules/overlay.scss */
+/* line 235, ../scss/modules/overlay.scss */
 .overlay-footer .loader {
   float: right;
   margin-left: 20px;
@@ -6396,12 +6463,12 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   width: 115px;
 }
 
-/* line 179, ../scss/modules/overlay.scss */
+/* line 243, ../scss/modules/overlay.scss */
 .overlay-content {
   position: relative;
   white-space: normal;
 }
-/* line 183, ../scss/modules/overlay.scss */
+/* line 247, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 10px 105px 40px;
   background: #fff;
@@ -6409,46 +6476,55 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   color: #999;
   text-align: center;
 }
-/* line 189, ../scss/modules/overlay.scss */
+/* line 253, ../scss/modules/overlay.scss */
 .overlay-content .message ul {
   border: 1px solid #ddd;
   list-style-position: inside;
   text-align: left;
   padding: 10px;
 }
-/* line 197, ../scss/modules/overlay.scss */
-.overlay-content .language-changer {
-  width: 80px;
-  position: absolute;
-  top: -60px;
-  right: 0;
-}
-/* line 204, ../scss/modules/overlay.scss */
+/* line 261, ../scss/modules/overlay.scss */
 .overlay-content.content-spacing {
-  margin: 20px;
+  padding: 20px;
 }
 
-/* line 209, ../scss/modules/overlay.scss */
+/* line 266, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper {
   width: 100%;
   height: 100%;
   position: fixed;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   z-index: 999;
   text-align: center;
-  white-space: nowrap;
-  overflow: auto;
-  background: rgba(0, 0, 0, 0.5);
   -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 221, ../scss/modules/overlay.scss */
-.husky-overlay-wrapper::before {
+/* line 275, ../scss/modules/overlay.scss */
+.husky-overlay-wrapper .husky-overlay-scroll-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  white-space: nowrap;
+}
+/* line 284, ../scss/modules/overlay.scss */
+.husky-overlay-wrapper .husky-overlay-scroll-wrapper::before {
   content: '';
   display: inline-block;
   height: 100%;
   vertical-align: middle;
   margin-right: -0.25em;
+}
+/* line 293, ../scss/modules/overlay.scss */
+.husky-overlay-wrapper .husky-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* line 6, ../scss/modules/custom-icons.scss */
@@ -9099,11 +9175,6 @@ a.btn-black, a.btn-highlight {
 .tabs-container.deactivated ul li.is-selected a {
   color: #52B6CA;
 }
-/* line 71, ../scss/modules/tabs.scss */
-.has-language-chooser .tabs-container {
-  width: calc(100% - 100px);
-  border-right: 1px solid #e9e9e9;
-}
 
 /*styles related to the whole container*/
 /* line 10, ../scss/modules/toolbar.scss */
@@ -9403,117 +9474,129 @@ a.btn-black, a.btn-highlight {
   color: #fff;
 }
 /* line 297, ../scss/modules/toolbar.scss */
-.husky-toolbar .toolbar-dropdown-menu li.marked::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 9px;
-  left: 7px;
+.husky-toolbar .toolbar-dropdown-menu li.marked::before, .husky-toolbar .toolbar-dropdown-menu li.warning::before, .husky-toolbar .toolbar-dropdown-menu li.checked::before {
+  display: inline-block;
+  margin-left: -10px;
+  margin-right: 5px;
   font-size: 12px;
 }
-/* line 308, ../scss/modules/toolbar.scss */
+/* line 306, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.marked::before {
+  content: "";
+}
+/* line 310, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.warning::before {
+  content: "";
+}
+/* line 314, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.checked::before {
+  margin-left: -15px;
+  margin-right: 3px;
+  content: "";
+}
+/* line 320, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover, .husky-toolbar .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 312, ../scss/modules/toolbar.scss */
+/* line 324, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover a, .husky-toolbar .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 318, ../scss/modules/toolbar.scss */
+/* line 330, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li:active {
   background-color: #66bed0;
 }
-/* line 322, ../scss/modules/toolbar.scss */
+/* line 334, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #ddd;
 }
-/* line 329, ../scss/modules/toolbar.scss */
+/* line 341, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 436, ../scss/modules/toolbar.scss */
+/* line 448, ../scss/modules/toolbar.scss */
 .husky-toolbar.big {
   height: 50px;
   width: auto;
 }
-/* line 345, ../scss/modules/toolbar.scss */
+/* line 357, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group {
   height: 50px;
   float: none;
   display: inline-block;
   vertical-align: top;
 }
-/* line 350, ../scss/modules/toolbar.scss */
+/* line 362, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:first-child {
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
 }
-/* line 354, ../scss/modules/toolbar.scss */
+/* line 366, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:last-child {
   border-radius: 0;
 }
-/* line 359, ../scss/modules/toolbar.scss */
+/* line 371, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item {
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0 20px;
   border-radius: 0;
 }
-/* line 364, ../scss/modules/toolbar.scss */
+/* line 376, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon, .husky-toolbar.big .toolbar-item .title {
   color: #fff;
   line-height: 50px;
 }
-/* line 368, ../scss/modules/toolbar.scss */
+/* line 380, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon {
   font-size: 20px;
 }
-/* line 371, ../scss/modules/toolbar.scss */
+/* line 383, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon + .title {
   margin-top: -6px;
 }
-/* line 374, ../scss/modules/toolbar.scss */
+/* line 386, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 377, ../scss/modules/toolbar.scss */
+/* line 389, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle {
   padding-left: 20px;
   padding-right: 20px;
   margin-right: -20px;
 }
-/* line 382, ../scss/modules/toolbar.scss */
+/* line 394, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-/* line 386, ../scss/modules/toolbar.scss */
+/* line 398, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-selected:first-child, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item.is-expanded:first-child, .husky-toolbar.big .toolbar-item:hover, .husky-toolbar.big .toolbar-item:hover:first-child {
   border-color: transparent;
 }
-/* line 391, ../scss/modules/toolbar.scss */
+/* line 403, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:hover {
   background: transparent;
 }
-/* line 394, ../scss/modules/toolbar.scss */
+/* line 406, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:first-child, .husky-toolbar.big .toolbar-item.disabled:hover, .husky-toolbar.big .toolbar-item.disabled:hover:first-child {
   border-color: rgba(255, 255, 255, 0.2);
 }
-/* line 397, ../scss/modules/toolbar.scss */
+/* line 409, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .icon, .husky-toolbar.big .toolbar-item.disabled .title, .husky-toolbar.big .toolbar-item.disabled:hover .icon, .husky-toolbar.big .toolbar-item.disabled:hover .title {
   color: rgba(255, 255, 255, 0.2);
 }
-/* line 400, ../scss/modules/toolbar.scss */
+/* line 412, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .dropdown-toggle::after, .husky-toolbar.big .toolbar-item.disabled:hover .dropdown-toggle::after {
   border-top-color: rgba(255, 255, 255, 0.2);
 }
-/* line 405, ../scss/modules/toolbar.scss */
+/* line 417, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white {
   background-color: #fff;
   height: 30px;
@@ -9523,41 +9606,41 @@ a.btn-black, a.btn-highlight {
   margin-top: 10px;
   margin-right: 10px;
 }
-/* line 413, ../scss/modules/toolbar.scss */
+/* line 425, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .title {
   text-align: left;
   color: #000;
   line-height: 30px;
 }
-/* line 418, ../scss/modules/toolbar.scss */
+/* line 430, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .dropdown-toggle::after {
   border-top-color: #000;
 }
-/* line 421, ../scss/modules/toolbar.scss */
+/* line 433, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white:last-child, .husky-toolbar.big .toolbar-item.highlight-white:first-child {
   border-radius: 3px;
 }
-/* line 427, ../scss/modules/toolbar.scss */
+/* line 439, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-search {
   padding-top: 10px;
 }
-/* line 431, ../scss/modules/toolbar.scss */
+/* line 443, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .item-loader {
   margin-top: 15px;
 }
 
-/* line 440, ../scss/modules/toolbar.scss */
+/* line 452, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive {
   overflow-x: auto;
   overflow-y: hidden;
 }
-/* line 444, ../scss/modules/toolbar.scss */
+/* line 456, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive.overflown {
   -moz-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   -webkit-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
 }
-/* line 446, ../scss/modules/toolbar.scss */
+/* line 458, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive.overflown .toolbar-dropdown-menu {
   margin-top: 0;
 }
@@ -10126,24 +10209,19 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   border-radius: 3px;
   font-size: 12px;
-}
-/* line 33, ../scss/mixins.scss */
-.husky-select-container .dropdown-label:after {
-  clear: both;
-  content: ' ';
-  display: block;
+  white-space: nowrap;
 }
 /* line 24, ../scss/modules/select.scss */
 .husky-select-container .dropdown-label .checkbox {
-  padding-right: 20px;
+  padding-right: 16px;
 }
 /* line 27, ../scss/modules/select.scss */
 .husky-select-container .dropdown-label .icon {
-  float: left;
   font-size: 15px;
   padding-right: 4px;
-  display: block;
+  display: inline-block;
   line-height: 30px;
+  vertical-align: top;
 }
 /* line 34, ../scss/modules/select.scss */
 .husky-select-container .dropdown-label .toggle-icon {
@@ -10160,13 +10238,16 @@ a.btn-black, a.btn-highlight {
 }
 /* line 50, ../scss/modules/select.scss */
 .husky-select-container .husky-select-label {
-  min-height: 30px;
+  height: 30px;
+  line-height: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: block;
+  display: inline-block;
+  vertical-align: top;
+  max-width: calc(100% - 20px);
 }
-/* line 58, ../scss/modules/select.scss */
+/* line 61, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list {
   min-width: 100%;
   position: absolute;
@@ -10179,111 +10260,118 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   overflow: auto;
 }
-/* line 70, ../scss/modules/select.scss */
+/* line 73, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .divider {
   max-width: 100%;
   height: 1px;
   background-color: #ccc;
   margin: 5px 0 10px;
 }
-/* line 77, ../scss/modules/select.scss */
+/* line 80, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list.top {
   top: inherit;
   bottom: 5px;
 }
-/* line 82, ../scss/modules/select.scss */
+/* line 85, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
   cursor: default;
 }
-/* line 86, ../scss/modules/select.scss */
+/* line 89, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
   color: #999;
 }
-/* line 90, ../scss/modules/select.scss */
+/* line 93, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
   display: inline;
   width: 20px;
   margin-right: 10px;
   padding-top: 7px;
 }
-/* line 96, ../scss/modules/select.scss */
+/* line 99, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .item-value {
   display: inline;
   line-height: 30px;
 }
-/* line 101, ../scss/modules/select.scss */
+/* line 104, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 106, ../scss/modules/select.scss */
+/* line 109, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul input {
   margin: 0;
 }
-/* line 110, ../scss/modules/select.scss */
+/* line 113, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li {
   padding: 0px 20px 0px 20px;
   clear: both;
   height: 30px;
 }
-/* line 115, ../scss/modules/select.scss */
+/* line 118, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li > div {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-/* line 121, ../scss/modules/select.scss */
+/* line 124, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52B6CA;
   cursor: pointer;
 }
-/* line 126, ../scss/modules/select.scss */
+/* line 129, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value {
   color: #fff;
 }
-/* line 130, ../scss/modules/select.scss */
+/* line 133, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover > div {
   color: #fff;
 }
-/* line 138, ../scss/modules/select.scss */
+/* line 141, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
   font-size: 10px;
   line-height: 20px;
 }
-/* line 142, ../scss/modules/select.scss */
+/* line 145, ../scss/modules/select.scss */
 .husky-select-container.small .toggle-icon {
   line-height: 20px;
 }
-/* line 145, ../scss/modules/select.scss */
+/* line 148, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
   border-radius: 2px;
 }
-/* line 151, ../scss/modules/select.scss */
+/* line 154, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list.top {
   top: auto;
   bottom: -3px;
 }
-/* line 157, ../scss/modules/select.scss */
+/* line 160, ../scss/modules/select.scss */
 .husky-select-container.small .husky-select-label {
-  min-height: 20px;
+  height: 20px;
+  line-height: 20px;
+  max-width: calc(100% - 10px);
 }
-/* line 163, ../scss/modules/select.scss */
+/* line 168, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
   background: #fff;
 }
-/* line 169, ../scss/modules/select.scss */
+/* line 174, ../scss/modules/select.scss */
+.husky-select-container.white-border .dropdown-label {
+  background: #fff;
+  border: 1px solid #ccc;
+}
+/* line 181, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
   background: #52B6CA;
   color: #fff;
 }
-/* line 175, ../scss/modules/select.scss */
+/* line 187, ../scss/modules/select.scss */
 .husky-select-container select {
   opacity: 0;
   position: absolute;

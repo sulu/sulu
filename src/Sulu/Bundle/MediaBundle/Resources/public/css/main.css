@@ -82,7 +82,7 @@
   position: absolute;
   cursor: move;
   z-index: 20;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.0001);
   top: 0;
   left: 0;
   width: 0;
@@ -191,6 +191,48 @@
   display: block;
 }
 
+/* line 1, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container {
+  margin: -20px;
+}
+/* line 4, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .toolbar-container {
+  background: #52B6CA;
+}
+/* line 8, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .label-container {
+  height: 0;
+  overflow: visible;
+}
+/* line 13, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .back {
+  display: inline-block;
+  vertical-align: top;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: -5px;
+  color: #fff;
+}
+/* line 25, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .toolbar {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 30, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .area-selection {
+  width: 100%;
+  height: 420px;
+}
+/* line 35, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .hint {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+}
+
 /* line 5, ../scss/modules/masonry-decorator.scss */
 .masonry-container .empty-list {
   background: none;
@@ -293,7 +335,7 @@
   transform: scale(1.05);
 }
 /* line 103, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint {
+.masonry-container .action-icons-overlay {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -306,7 +348,7 @@
   transition: opacity 200ms;
 }
 /* line 112, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint::before {
+.masonry-container .action-icons-overlay::before {
   content: "";
   display: block;
   position: absolute;
@@ -319,7 +361,7 @@
   border-radius: 0 0 3px 3px;
 }
 /* line 125, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint span {
+.masonry-container .action-icons-overlay .action-icons {
   display: block;
   position: absolute;
   top: 50%;
@@ -332,153 +374,172 @@
   font-size: 24px;
 }
 /* line 132, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint:hover {
+.masonry-container .action-icons-overlay .action-icon {
+  padding: 10px;
+}
+/* line 136, ../scss/modules/masonry-decorator.scss */
+.masonry-container .action-icons-overlay:hover {
   opacity: 1;
 }
-/* line 137, ../scss/modules/masonry-decorator.scss */
+/* line 141, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info {
   height: 80px;
   text-align: left;
   padding: 20px 20px 0 20px;
   position: relative;
 }
-/* line 143, ../scss/modules/masonry-decorator.scss */
+/* line 147, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .main {
   font-size: 0;
   line-height: 18px;
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 150, ../scss/modules/masonry-decorator.scss */
+/* line 154, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .title {
   font-size: 14px;
 }
-/* line 154, ../scss/modules/masonry-decorator.scss */
+/* line 158, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .description {
   font-size: 12px;
   line-height: 12px;
   color: #999;
 }
-/* line 160, ../scss/modules/masonry-decorator.scss */
+/* line 164, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons {
   position: absolute;
   bottom: 5px;
   right: 20px;
 }
-/* line 166, ../scss/modules/masonry-decorator.scss */
+/* line 170, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons > * {
   display: inline-block;
   margin-left: 5px;
 }
-/* line 171, ../scss/modules/masonry-decorator.scss */
+/* line 175, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons > *::before {
   color: transparent;
 }
-/* line 175, ../scss/modules/masonry-decorator.scss */
+/* line 179, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .badge {
-  margin-top: -11px;
+  vertical-align: super;
   margin-right: 3px;
 }
 
-/* line 1, ../scss/modules/media-selection-overlay.scss */
+/* line 3, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item .crop {
+  display: none;
+  color: #000;
+  text-decoration: none;
+}
+/* line 8, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item .crop span {
+  margin-right: 5px;
+}
+/* line 14, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item:hover .crop {
+  display: table-cell;
+}
+
+/* line 20, ../scss/modules/media-selection.scss */
 .media-selection-overlay {
   height: 500px;
 }
 @media (min-width: 900px) {
-  /* line 5, ../scss/modules/media-selection-overlay.scss */
+  /* line 24, ../scss/modules/media-selection.scss */
   .media-selection-overlay, .media-selection-overlay .slides .slide, .media-selection-overlay .slides .slide .overlay-footer {
     width: 860px;
   }
 }
 @media (min-width: 1200px) {
-  /* line 10, ../scss/modules/media-selection-overlay.scss */
+  /* line 29, ../scss/modules/media-selection.scss */
   .media-selection-overlay, .media-selection-overlay .slides .slide, .media-selection-overlay .slides .slide .overlay-footer {
     width: 1140px;
   }
 }
 @media (min-width: 1600px) {
-  /* line 15, ../scss/modules/media-selection-overlay.scss */
+  /* line 34, ../scss/modules/media-selection.scss */
   .media-selection-overlay, .media-selection-overlay .slides .slide, .media-selection-overlay .slides .slide .overlay-footer {
     width: 1420px;
   }
 }
-/* line 21, ../scss/modules/media-selection-overlay.scss */
+/* line 40, ../scss/modules/media-selection.scss */
 .media-selection-overlay .slide.media-selection-overlay {
   height: 429px;
 }
-/* line 24, ../scss/modules/media-selection-overlay.scss */
+/* line 43, ../scss/modules/media-selection.scss */
 .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
   height: 328px;
 }
 @media (min-height: 700px) {
-  /* line 1, ../scss/modules/media-selection-overlay.scss */
+  /* line 20, ../scss/modules/media-selection.scss */
   .media-selection-overlay {
     height: 600px;
   }
-  /* line 29, ../scss/modules/media-selection-overlay.scss */
+  /* line 48, ../scss/modules/media-selection.scss */
   .media-selection-overlay .slide.media-selection-overlay {
     height: 529px;
   }
-  /* line 32, ../scss/modules/media-selection-overlay.scss */
+  /* line 51, ../scss/modules/media-selection.scss */
   .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
     height: 428px;
   }
 }
 @media (min-height: 800px) {
-  /* line 1, ../scss/modules/media-selection-overlay.scss */
+  /* line 20, ../scss/modules/media-selection.scss */
   .media-selection-overlay {
     height: 700px;
   }
-  /* line 38, ../scss/modules/media-selection-overlay.scss */
+  /* line 57, ../scss/modules/media-selection.scss */
   .media-selection-overlay .slide.media-selection-overlay {
     height: 629px;
   }
-  /* line 41, ../scss/modules/media-selection-overlay.scss */
+  /* line 60, ../scss/modules/media-selection.scss */
   .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
     height: 528px;
   }
 }
 @media (min-height: 900px) {
-  /* line 1, ../scss/modules/media-selection-overlay.scss */
+  /* line 20, ../scss/modules/media-selection.scss */
   .media-selection-overlay {
     height: 800px;
   }
-  /* line 47, ../scss/modules/media-selection-overlay.scss */
+  /* line 66, ../scss/modules/media-selection.scss */
   .media-selection-overlay .slide.media-selection-overlay {
     height: 729px;
   }
-  /* line 50, ../scss/modules/media-selection-overlay.scss */
+  /* line 69, ../scss/modules/media-selection.scss */
   .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
     height: 628px;
   }
 }
-/* line 56, ../scss/modules/media-selection-overlay.scss */
+/* line 75, ../scss/modules/media-selection.scss */
 .media-selection-overlay.dropzone-overlay-opened .container .list-container {
   overflow: hidden;
 }
-/* line 61, ../scss/modules/media-selection-overlay.scss */
+/* line 80, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container {
   padding-right: 20px;
 }
-/* line 64, ../scss/modules/media-selection-overlay.scss */
+/* line 83, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 69, ../scss/modules/media-selection-overlay.scss */
+/* line 88, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 74, ../scss/modules/media-selection-overlay.scss */
+/* line 93, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container > div {
   width: 100%;
 }
-/* line 77, ../scss/modules/media-selection-overlay.scss */
+/* line 96, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container .husky-overlay-wrapper {
   position: absolute;
 }
-/* line 80, ../scss/modules/media-selection-overlay.scss */
+/* line 99, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container .husky-overlay-container {
   position: absolute;
   top: 0;
@@ -489,16 +550,16 @@
   border-radius: 0;
   border: 0;
 }
-/* line 91, ../scss/modules/media-selection-overlay.scss */
+/* line 110, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container .husky-overlay-container .slide {
   width: 100%;
 }
-/* line 98, ../scss/modules/media-selection-overlay.scss */
+/* line 117, ../scss/modules/media-selection.scss */
 .media-selection-overlay .container .navigation-container {
   float: left;
   width: 250px;
 }
-/* line 103, ../scss/modules/media-selection-overlay.scss */
+/* line 122, ../scss/modules/media-selection.scss */
 .media-selection-overlay .container .list-container {
   float: right;
   position: relative;
@@ -506,12 +567,12 @@
   padding: 20px;
   overflow: auto;
 }
-/* line 111, ../scss/modules/media-selection-overlay.scss */
+/* line 130, ../scss/modules/media-selection.scss */
 .media-selection-overlay .container::before, .media-selection-overlay .container::after {
   content: " ";
   display: table;
 }
-/* line 116, ../scss/modules/media-selection-overlay.scss */
+/* line 135, ../scss/modules/media-selection.scss */
 .media-selection-overlay .container::after {
   clear: both;
 }
@@ -522,7 +583,7 @@
 }
 /* line 10, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-content {
-  margin: 0;
+  padding: 0;
 }
 /* line 14, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-footer {
@@ -654,15 +715,24 @@ a.media-edit-link,
 }
 
 /* line 119, ../scss/modules/media-edit-overlay.scss */
+#media-info .info-label-container {
+  overflow: visible;
+  position: absolute;
+  height: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+/* line 128, ../scss/modules/media-edit-overlay.scss */
 #media-info textarea.description {
   height: 90px;
   min-height: 90px;
 }
-/* line 124, ../scss/modules/media-edit-overlay.scss */
+/* line 133, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview {
   text-align: center;
 }
-/* line 127, ../scss/modules/media-edit-overlay.scss */
+/* line 136, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview span.description {
   font-size: 12px;
   color: #999;
