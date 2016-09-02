@@ -304,7 +304,6 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function save($data, $userId, $locale, $patch = false)
     {
-
         if ($this->getProperty($data, 'id')) {
             $categoryEntity = $this->findById($this->getProperty($data, 'id'), $locale)->getEntity();
         } else {
@@ -383,7 +382,7 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
      * and provides neat getters and setters. If the given object is already an API-object,
-     * it is returned unchanged.
+     * the respective entity is used for wrapping.
      *
      * @param CategoryEntity $category
      * @param string $locale
@@ -434,5 +433,25 @@ class CategoryManager implements CategoryManagerInterface
     private function getProperty($data, $key, $default = null)
     {
         return (array_key_exists($key, $data)) ? $data[$key] : $default;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find($parent = null, $depth = null)
+    {
+        if ($parent && !$this->categoryRepository->isCategoryId($parent)) {
+            throw new CategoryIdNotFoundException($parent);
+        }
+
+        return $this->categoryRepository->findCategories($parent, $depth);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findChildren($key)
+    {
+        $this->findChildrenByParentKey($key);
     }
 }

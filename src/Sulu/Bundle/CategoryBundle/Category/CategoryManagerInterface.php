@@ -60,6 +60,19 @@ interface CategoryManagerInterface
     public function findByIds(array $ids, $locale);
 
     /**
+     * Returns tags with a given parent and/or a given depth-level
+     * if no arguments passed returns all categories.
+     *
+     * @param int         $parent    the id of the parent to filter for
+     * @param int         $depth     the depth-level to filter for
+     *
+     * @return Category[]
+     *
+     * @deprecated Use ::findChildrenByParentId instead
+     */
+    public function find($parent = null, $depth = null);
+
+    /**
      * Returns the whole category graph in the given locale.
      * If parentId is set, only the sub-graph below the category which is assigned to the given id is returned.
      *
@@ -71,6 +84,17 @@ interface CategoryManagerInterface
      * @throws CategoryIdNotFoundException if the parentId is not assigned to an existing category
      */
     public function findChildrenByParentId($locale, $parentId = null);
+
+    /**
+     * Returns the children for a given category.
+     *
+     * @param int         $key       the key of the category to search the children for
+     *
+     * @return Category[]
+     *
+     * @deprecated Use ::findChildrenByParentKey instead
+     */
+    public function findChildren($key);
 
     /**
      * Returns the whole category graph in the given locale.
@@ -133,7 +157,7 @@ interface CategoryManagerInterface
      *
      * @return Category
      *
-     * @deprecated Use the serializer instead
+     * @deprecated Use the respective manager function instead
      */
     public function getApiObjects($categories, $locale);
 

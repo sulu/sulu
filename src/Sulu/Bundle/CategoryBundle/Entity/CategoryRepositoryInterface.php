@@ -55,6 +55,17 @@ interface CategoryRepositoryInterface
     public function findCategoryByKey($key);
 
     /**
+     * Finds the categories with the given ids.
+     *
+     * @param array $ids The ids to load
+     *
+     * @return Category[]
+     *
+     * @deprecated Use ::findCategoriesByIds instead
+     */
+    public function findCategoryByIds(array $ids);
+
+    /**
      * Returns an array of categories which are assigned to the given array of ids.
      *
      * @param array $ids
@@ -62,6 +73,18 @@ interface CategoryRepositoryInterface
      * @return Category[]
      */
     public function findCategoriesByIds(array $ids);
+
+    /**
+     * Returns all categories. Can be filtered with parent and depth.
+     *
+     * @param number      $parent    the id of the parent to filter for
+     * @param number      $depth     the depth-level to filter for
+     *
+     * @return mixed|null
+     *
+     * @deprecated Use ::findChildrenCategoriesByParentId instead
+     */
+    public function findCategories($parent = null, $depth = null);
 
     /**
      * Returns the whole category graph. Children are available through children-properties of parents.
@@ -72,6 +95,17 @@ interface CategoryRepositoryInterface
      * @return Category[]
      */
     public function findChildrenCategoriesByParentId($parentId = null);
+
+    /**
+     * Returns the children for a given category.
+     *
+     * @param int         $key       the key of the category to return the children for
+     *
+     * @return Category[]
+     *
+     * @deprecated Use ::findChildrenCategoriesByParentKey instead
+     */
+    public function findChildren($key);
 
     /**
      * Returns the whole category graph. Children are available through children-properties of parents.

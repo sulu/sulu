@@ -4,27 +4,33 @@
 
 ### Refactored category management in backend
 
-The backend of the category bundle was refactored and the category-entity got
-extensible. This lead to the following changes:
+The backend of the category bundle was refactored. This lead to the following changes:
 
 **API:**
 `/categories`: renamed parameter `parent` which accepted an id to `rootKey` which accepts a key
 `/categories/{key}/children` was replaced with `/categories/{id}/children`
 
 **Classes:**
+`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface` 
+`Category\KeywordRepositoryInterface` moved to `Entity\KeywordRepositoryInterface`
 `Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException` 
 `Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException` 
 
 **Methods:**
-Before: `CategoryRepositoryInterface::findCategoryByIds(array $ids)`
-After: `CategoryRepositoryInterface::findCategoriesByIds(array $ids)`
+Deprecated: `CategoryRepositoryInterface::findCategoryByIds(array $ids)`
+Replacement: `CategoryRepositoryInterface::findCategoriesByIds(array $ids)`
 
-Before: `CategoryRepositoryInterface::findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
-After: `CategoryRepositoryInterface::findChildrenCategoriesByParentId($parentId = null)`
+Deprecated: `CategoryRepositoryInterface::findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentId($parentId = null)`
 
-Before: `CategoryRepositoryInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
-After: `CategoryRepositoryInterface::findChildrenCategoriesByParentKey($parentKey = null)`
+Deprecated: `CategoryRepositoryInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentKey($parentKey = null)`
 
+Deprecated: `CategoryManagerInterface::find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentId($locale, $parentId = null)`
+
+Deprecated: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentKey($locale, $parentKey = null)`
 
 Before: `CategoryManagerInterface::findById($id)`
 After: `CategoryManagerInterface::findById($id, $locale)`
@@ -34,12 +40,6 @@ After: `CategoryManagerInterface::findByKey($key, $locale)`
 
 Before: `CategoryManagerInterface::findByIds(array $ids)`
 After: `CategoryManagerInterface::findByIds(array $ids, $locale)`
-
-Before: `CategoryManagerInterface::find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
-After: `CategoryManagerInterface::findChildrenByParentId($locale, $parentId = null)`
-
-Before: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
-After: `CategoryManagerInterface::findChildrenByParentKey($locale, $parentKey = null)`
 
 Before: `CategoryManagerInterface::save($data, $userId);`
 After: `CategoryManagerInterface::save($data, $locale, $patch = false)`

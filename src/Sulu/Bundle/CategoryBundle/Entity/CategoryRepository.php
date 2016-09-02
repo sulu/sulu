@@ -189,4 +189,54 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
             ->addSelect('categoryParent')
             ->addSelect('categoryChildren');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findCategoryByIds(array $ids)
+    {
+        $this->findCategoriesByIds($ids);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findCategories($parent = null, $depth = null)
+    {
+        $queryBuilder = $this->getCategoryQuery();
+        $queryBuilder->andWhere('category.parent IS NULL');
+
+        if ($parent !== null) {
+            $queryBuilder->andWhere('categoryParent.id = :parentId');
+        }
+        if ($depth !== null) {
+            $queryBuilder->andWhere('category.depth = :depth');
+        }
+
+        $query = $queryBuilder->getQuery();
+        if ($parent !== null) {
+            $query->setParameter('parentId', $parent);
+        }
+        if ($depth !== null) {
+            $query->setParameter('depth', $depth);
+        }
+
+        return $query->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findChildren($key)
+    {
+        $queryBuilder = $this->getCategoryQuery()
+            ->from('SuluCategoryBundle:Category', 'parent')
+            ->andWhere('parent.key = :key')
+            ->andWhere('category.parent = parent');
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('key', $key);
+
+        return $query->getResult();
+    }
 }
