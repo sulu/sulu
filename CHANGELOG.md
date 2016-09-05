@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2898 [CustomUrlBundle]     Added action button for ghost pages in custom url target selection
     * BUGFIX      #2893 [ContentBundle]       Fixed stop overlay-component for teaser-selection
     * BUGFIX      #2878 [ContentBundle]       Added instanceof check for shadow-behavior functions
     * FEATURE     #2875 [RouteBundle]         Added route-content-type
