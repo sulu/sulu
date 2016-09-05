@@ -19,6 +19,7 @@ define([], function() {
                 selected: null,
                 webspace: null,
                 locale: null,
+                actionOnGhost: false,
                 instanceNamePrefix: 'smart-content-',
                 selectCallback: function(item) {
                 }
@@ -75,6 +76,7 @@ define([], function() {
                     el: this.$columnNavigationElement,
                     instanceName: this.options.instanceNamePrefix + this.options.instanceName,
                     url: this.getUrl(),
+                    actionOnGhost: this.options.actionOnGhost,
                     resultKey: this.options.resultKey,
                     selected: this.selected,
                     actionCallback: function(item) {
