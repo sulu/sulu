@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 
 * dev-develop
+    * BUGFIX      #2899 [ContentBundle]       Disabled self referencing on internal links
     * BUGFIX      #2855 [ContentBundle]       Button when hovering ghost page added
     * BUGFIX      #2889 [ContentBundle]       Added confirmation message when publishing a page
     * BUGFIX      #2935 [ContentBundle]       Fixed click on toggle label to change toggler

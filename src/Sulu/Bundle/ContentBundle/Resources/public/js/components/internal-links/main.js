@@ -27,6 +27,7 @@ define([], function() {
             hidePositionElement: true,
             dataAttribute: 'internal-links',
             actionIcon: 'fa-link',
+            disabledIds: [],
             dataDefault: [],
             navigateEvent: 'sulu.router.navigate',
             publishedStateName: 'publishedState',
@@ -140,7 +141,8 @@ define([], function() {
                             skin: 'fixed-height-small',
                             markable: true,
                             sortable: false,
-                            premarkedIds: data
+                            premarkedIds: data,
+                            disableIds: this.options.disabledIds
                         }
                     }
                 ]
