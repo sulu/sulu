@@ -43,6 +43,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->leftJoin('file.fileVersions', 'fileVersion')
                 ->leftJoin('fileVersion.tags', 'tag')
                 ->leftJoin('fileVersion.categories', 'category')
+                ->leftJoin('fileVersion.formatOptions', 'formatOptions')
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
@@ -57,6 +58,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('file')
                 ->addSelect('tag')
                 ->addSelect('fileVersion')
+                ->addSelect('formatOptions')
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionDefaultMeta')
                 ->addSelect('fileVersionContentLanguage')
@@ -94,7 +96,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $queryBuilder = $this->createQueryBuilder('media')
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'file.version = fileVersion.version')
-                ->leftJoin('fileVersion.formatOptions', 'formatOptions', Join::WITH, 'formatOptions.formatKey = :formatKey')
+                ->leftJoin(
+                    'fileVersion.formatOptions',
+                    'formatOptions',
+                    Join::WITH,
+                    'formatOptions.formatKey = :formatKey'
+                )
                 ->addSelect('file')
                 ->addSelect('fileVersion')
                 ->addSelect('formatOptions')

@@ -4,6 +4,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2860 [ContentBundle]       Added url to internal links and smart-content
 * dev-develop
     * FEATURE     #2914 [CategoryBundle]      Added description and medias to category
+    * FEATURE     #2877 [MediaBundle]         Rest-Api for image-formats and format options
     * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
     * ENHANCEMENT #2912 [CategoryBundle]      Implemented category-bundle entities extensible
     * ENHANCEMENT #2912 [CategoryBundle]      Refactored CategoryBundle backend

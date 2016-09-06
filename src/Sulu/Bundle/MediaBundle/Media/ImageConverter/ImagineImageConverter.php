@@ -145,12 +145,17 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     private function applyCrop(ImageInterface $image, array $cropParameters)
     {
-        return $this->cropping->crop(
+        return $this->modifyAllLayers(
             $image,
-            $cropParameters['x'],
-            $cropParameters['y'],
-            $cropParameters['width'],
-            $cropParameters['height']
+            function (ImageInterface $layer) use ($cropParameters) {
+                return $this->cropping->crop(
+                    $layer,
+                    $cropParameters['x'],
+                    $cropParameters['y'],
+                    $cropParameters['width'],
+                    $cropParameters['height']
+                );
+            }
         );
     }
 
@@ -250,7 +255,7 @@ class ImagineImageConverter implements ImageConverterInterface
             foreach ($image->layers() as $layer) {
                 $countLayer += 1;
                 $layer = call_user_func($modifier, $layer);
-                if ($countLayer == 1) {
+                if ($countLayer === 1) {
                     $temporaryImage = $layer; // use first layer as main image
                 } else {
                     $temporaryImage->layers()->add($layer);

@@ -615,12 +615,12 @@ class FileVersion implements AuditableInterface
             /** @var FileVersionMeta[] $newMetaList */
             $newMetaList = [];
             $defaultMetaLocale = $this->getDefaultMeta()->getLocale();
-
             /** @var FileVersionContentLanguage[] $newContentLanguageList */
             $newContentLanguageList = [];
-
             /** @var FileVersionPublishLanguage[] $newPublishLanguageList */
             $newPublishLanguageList = [];
+            /** @var FormatOptions[] $newFormatOptionsArray */
+            $newFormatOptionsArray = [];
 
             /** @var FileVersionMeta $meta */
             foreach ($this->meta as $meta) {
@@ -657,6 +657,18 @@ class FileVersion implements AuditableInterface
             foreach ($newPublishLanguageList as $newPublishLanguage) {
                 $newPublishLanguage->setFileVersion($this);
                 $this->addPublishLanguage($newPublishLanguage);
+            }
+
+            /** @var FormatOptions $formatOptions */
+            foreach ($this->formatOptions as $formatOptions) {
+                $newFormatOptionsArray[] = clone $formatOptions;
+            }
+
+            $this->formatOptions->clear();
+            /** @var FormatOptions $newFormatOptions */
+            foreach ($newFormatOptionsArray as $newFormatOptions) {
+                $newFormatOptions->setFileVersion($this);
+                $this->addFormatOptions($newFormatOptions);
             }
         }
     }
