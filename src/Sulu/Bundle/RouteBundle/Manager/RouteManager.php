@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
+use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfiguration;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 
@@ -67,7 +68,7 @@ class RouteManager implements RouteManagerInterface
             throw new RouteAlreadyCreatedException($entity);
         }
 
-        $config = $this->mappings[get_class($entity)];
+        $config = $this->getClassMappingConfiguration(get_class($entity));
 
         if (null === $path) {
             $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
@@ -83,6 +84,32 @@ class RouteManager implements RouteManagerInterface
         $entity->setRoute($route);
 
         return $route;
+    }
+
+    /**
+     * Get class mapping configuration by class name or inheritance chain.
+     *
+     * @param string $className
+     *
+     * @return array
+     *
+     * @throws MissingClassMappingConfiguration
+     */
+    protected function getClassMappingConfiguration($className)
+    {
+        if (array_key_exists($className, $this->mappings)) {
+            return $this->mappings[$className];
+        }
+
+        $reflection = new \ReflectionClass($className);
+
+        while ($parent = $reflection->getParentClass()) {
+            if (array_key_exists($parent->getName(), $this->mappings)) {
+                return $this->mappings[$parent->getName()];
+            }
+        }
+
+        throw new MissingClassMappingConfiguration($className);
     }
 
     /**
