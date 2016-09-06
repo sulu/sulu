@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
-use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfiguration;
+use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 
@@ -93,7 +93,7 @@ class RouteManager implements RouteManagerInterface
      *
      * @return array
      *
-     * @throws MissingClassMappingConfiguration
+     * @throws MissingClassMappingConfigurationException
      */
     protected function getClassMappingConfiguration($className)
     {
@@ -109,7 +109,7 @@ class RouteManager implements RouteManagerInterface
             }
         }
 
-        throw new MissingClassMappingConfiguration($className);
+        throw new MissingClassMappingConfigurationException($className);
     }
 
     /**
