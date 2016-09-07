@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
+use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 
@@ -67,7 +68,7 @@ class RouteManager implements RouteManagerInterface
             throw new RouteAlreadyCreatedException($entity);
         }
 
-        $config = $this->mappings[get_class($entity)];
+        $config = $this->getClassMappingConfiguration(get_class($entity));
 
         if (null === $path) {
             $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
@@ -86,6 +87,31 @@ class RouteManager implements RouteManagerInterface
     }
 
     /**
+     * Get class mapping configuration by class name or inheritance chain.
+     *
+     * @param string $className
+     *
+     * @return array
+     *
+     * @throws MissingClassMappingConfigurationException
+     */
+    protected function getClassMappingConfiguration($className)
+    {
+        if (array_key_exists($className, $this->mappings)) {
+            return $this->mappings[$className];
+        }
+
+        $reflection = new \ReflectionClass($className);
+        while ($reflection = $reflection->getParentClass()) {
+            if (array_key_exists($reflection->getName(), $this->mappings)) {
+                return $this->mappings[$reflection->getName()];
+            }
+        }
+
+        throw new MissingClassMappingConfigurationException($className, array_keys($this->mappings));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function update(RoutableInterface $entity, $path = null)
@@ -94,7 +120,7 @@ class RouteManager implements RouteManagerInterface
             throw new RouteNotCreatedException($entity);
         }
 
-        $config = $this->mappings[get_class($entity)];
+        $config = $this->getClassMappingConfiguration(get_class($entity));
 
         if (null === $path) {
             $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
