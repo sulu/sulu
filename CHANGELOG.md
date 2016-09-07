@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2903 [RouteBundle]         Get class mapping configuration by class name or inheritance chain
+    * ENHANCEMENT #2904 [RouteBundle]         Added route-provider cache
     * BUGFIX      #2893 [ContentBundle]       Fixed stop overlay-component for teaser-selection
     * BUGFIX      #2878 [ContentBundle]       Added instanceof check for shadow-behavior functions
     * FEATURE     #2875 [RouteBundle]         Added route-content-type
