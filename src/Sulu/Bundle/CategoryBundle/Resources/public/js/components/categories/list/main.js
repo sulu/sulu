@@ -105,13 +105,13 @@ define(function () {
                     el: this.$find(constants.listSelector),
                     url: '/admin/api/categories?flat=true&sortBy=name&sortOrder=asc&locale=' + this.locale,
                     childrenPropertyName: 'hasChildren',
+                    expandIds: [this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey)],
                     resultKey: 'categories',
                     searchFields: ['name'],
                     pagination: false,
                     actionCallback: this.editCategory.bind(this),
                     viewOptions: {
                         table: {
-                            openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),
                             hideChildrenAtBeginning: false,
                             cropContents: false,
                             selectItem: {

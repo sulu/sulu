@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
+    * ENHANCEMENT #2909 [CategoryBundle]      Expand path to last visited category in category list
     * BUGFIX      #2913 [CategoryBundle]      Changed doctrine mapping from entity to mapped-superclass for category-entities
     * ENHANCEMENT #2913 [CategoryBundle]      Added DeprecationCompilerPassTest in CategoryBundle
     * ENHANCEMENT #2912 [CategoryBundle]      Implemented category-bundle entities extensible
