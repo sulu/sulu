@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2907 [All]                 Fixed record removing in nested tables
     * ENHANCEMENT #2903 [RouteBundle]         Get class mapping configuration by class name or inheritance chain
     * ENHANCEMENT #2904 [RouteBundle]         Added route-provider cache
     * BUGFIX      #2893 [ContentBundle]       Fixed stop overlay-component for teaser-selection
