@@ -102,14 +102,13 @@ class RouteManager implements RouteManagerInterface
         }
 
         $reflection = new \ReflectionClass($className);
-
-        while ($parent = $reflection->getParentClass()) {
-            if (array_key_exists($parent->getName(), $this->mappings)) {
-                return $this->mappings[$parent->getName()];
+        while ($reflection = $reflection->getParentClass()) {
+            if (array_key_exists($reflection->getName(), $this->mappings)) {
+                return $this->mappings[$reflection->getName()];
             }
         }
 
-        throw new MissingClassMappingConfigurationException($className);
+        throw new MissingClassMappingConfigurationException($className, array_keys($this->mappings));
     }
 
     /**
@@ -121,7 +120,7 @@ class RouteManager implements RouteManagerInterface
             throw new RouteNotCreatedException($entity);
         }
 
-        $config = $this->mappings[get_class($entity)];
+        $config = $this->getClassMappingConfiguration(get_class($entity));
 
         if (null === $path) {
             $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);

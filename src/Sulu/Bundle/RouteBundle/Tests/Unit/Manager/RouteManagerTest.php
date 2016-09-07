@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
+use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Bundle\RouteBundle\Manager\RouteAlreadyCreatedException;
@@ -62,6 +63,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
                     'route_schema' => '/{title}',
                 ],
             ],
+            TestRoutable::class => [
+                'generator' => 'route_generator',
+                'options' => [
+                    'route_schema' => '/{title}',
+                ],
+            ],
         ];
 
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
@@ -94,6 +101,32 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
 
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal()));
+    }
+
+    public function testCreateNoMapping()
+    {
+        $this->setExpectedException(MissingClassMappingConfigurationException::class);
+        $entity = $this->prophesize(RoutableInterface::class);
+
+        $this->manager->create($entity->reveal());
+    }
+
+    public function testCreateInheritMapping()
+    {
+        $entity = new TestRoutableProxy();
+
+        $route = $this->prophesize(RouteInterface::class);
+        $route->setPath('/test')->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityClass(get_class($entity))->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityId('1')->shouldBeCalled()->willReturn($route->reveal());
+        $route->setLocale('de')->shouldBeCalled()->willReturn($route->reveal());
+
+        $this->routeGenerator->generate($entity, ['route_schema' => '/{title}'])->willReturn('/test');
+        $this->routeRepository->createNew()->willReturn($route->reveal());
+        $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
+
+        $this->assertEquals($route->reveal(), $this->manager->create($entity));
+        $this->assertEquals($route->reveal(), $entity->getRoute());
     }
 
     public function testCreateWithRoutePath()
@@ -183,6 +216,39 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
 
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2'));
+    }
+
+    public function testUpdateInheritMapping()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+        $route->getPath()->willReturn('/test');
+        $route->setHistory(true)->shouldBeCalled()->willReturn($route->reveal());
+
+        $entity = new TestRoutableProxy($route->reveal());
+
+        $newRoute = $this->prophesize(RouteInterface::class);
+        $newRoute->setEntityClass(get_class($entity))->shouldBeCalled()
+            ->willReturn($newRoute->reveal());
+        $newRoute->setPath('/test-2')->shouldBeCalled()->will(
+            function () use ($newRoute) {
+                $newRoute->getPath()->willReturn('/test-2');
+
+                return $newRoute->reveal();
+            }
+        );
+        $newRoute->setEntityId('1')->shouldBeCalled()->willReturn($newRoute->reveal());
+        $newRoute->setLocale('de')->shouldBeCalled()->willReturn($newRoute->reveal());
+        $newRoute->addHistory($route->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
+
+        $route->setTarget($newRoute->reveal())->shouldBeCalled()->willReturn($route->reveal());
+        $route->getHistories()->willReturn([]);
+
+        $this->routeGenerator->generate($entity, ['route_schema' => '/{title}'])->shouldNotBeCalled();
+        $this->routeRepository->createNew()->willReturn($newRoute->reveal());
+        $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
+
+        $this->assertEquals($newRoute->reveal(), $this->manager->update($entity, '/test-2'));
+        $this->assertEquals($newRoute->reveal(), $entity->getRoute());
     }
 
     public function testUpdateWithConflict()
@@ -335,4 +401,65 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->manager->update($this->entity->reveal());
     }
+
+    public function testUpdateNoMapping()
+    {
+        $this->setExpectedException(MissingClassMappingConfigurationException::class);
+        $entity = $this->prophesize(RoutableInterface::class);
+        $entity->getRoute()->willReturn($this->prophesize(RouteInterface::class)->reveal());
+
+        $this->manager->update($entity->reveal());
+    }
+}
+
+class TestRoutable implements RoutableInterface
+{
+    /**
+     * @var RouteInterface
+     */
+    private $route;
+
+    /**
+     * @param RouteInterface $route
+     */
+    public function __construct(RouteInterface $route = null)
+    {
+        $this->route = $route;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRoute(RouteInterface $route)
+    {
+        $this->route = $route;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale()
+    {
+        return 'de';
+    }
+}
+
+class TestRoutableProxy extends TestRoutable
+{
 }
