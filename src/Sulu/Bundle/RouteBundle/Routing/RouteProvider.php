@@ -12,6 +12,9 @@
 namespace Sulu\Bundle\RouteBundle\Routing;
 
 use PHPCR\Util\PathHelper;
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\RouteBundle\Entity\Route as SuluRoute;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
@@ -51,21 +54,40 @@ class RouteProvider implements RouteProviderInterface
     private $requestStack;
 
     /**
+     * @var LazyLoadingValueHolderFactory
+     */
+    private $proxyFactory;
+
+    /**
+     * @var Route[]
+     */
+    private $symfonyRouteCache = [];
+
+    /**
+     * @var SuluRoute[]
+     */
+    private $routeCache = [];
+
+    /**
      * @param RouteRepositoryInterface $routeRepository
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param RouteDefaultsProviderInterface $routeDefaultsProvider
      * @param RequestStack $requestStack
+     * @param LazyLoadingValueHolderFactory $proxyFactory
      */
     public function __construct(
         RouteRepositoryInterface $routeRepository,
         RequestAnalyzerInterface $requestAnalyzer,
         RouteDefaultsProviderInterface $routeDefaultsProvider,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        LazyLoadingValueHolderFactory $proxyFactory = null
     ) {
         $this->routeRepository = $routeRepository;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->routeDefaultsProvider = $routeDefaultsProvider;
         $this->requestStack = $requestStack;
+
+        $this->proxyFactory = $proxyFactory ?: new LazyLoadingValueHolderFactory();
     }
 
     /**
@@ -81,7 +103,15 @@ class RouteProvider implements RouteProviderInterface
             $path = PathHelper::relativizePath($path, $prefix);
         }
 
-        $route = $this->routeRepository->findByPath('/' . ltrim($path, '/'), $request->getLocale());
+        $route = $this->findRouteByPath($path, $request->getLocale());
+        if ($route && array_key_exists($route->getId(), $this->symfonyRouteCache)) {
+            $collection->add(
+                self::ROUTE_PREFIX . $route->getId(),
+                $this->symfonyRouteCache[$route->getId()]
+            );
+
+            return $collection;
+        }
 
         if (!$route
             || !$this->routeDefaultsProvider->supports($route->getEntityClass())
@@ -103,6 +133,24 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
+     * Find route and cache it.
+     *
+     * @param string $path
+     * @param string $locale
+     *
+     * @return SuluRoute
+     */
+    private function findRouteByPath($path, $locale)
+    {
+        $path = '/' . ltrim($path, '/');
+        if (!array_key_exists($path, $this->routeCache)) {
+            $this->routeCache[$path] = $this->routeRepository->findByPath($path, $locale);
+        }
+
+        return $this->routeCache[$path];
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getRouteByName($name)
@@ -112,11 +160,21 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $routeId = substr($name, strlen(self::ROUTE_PREFIX));
+        if (array_key_exists($routeId, $this->symfonyRouteCache)) {
+            return $this->symfonyRouteCache[$routeId];
+        }
 
         /** @var RouteInterface $route */
         $route = $this->routeRepository->find($routeId);
 
-        if (!$route) {
+        if (!$route
+            || !$this->routeDefaultsProvider->supports($route->getEntityClass())
+            || !$this->routeDefaultsProvider->isPublished(
+                $route->getEntityClass(),
+                $route->getEntityId(),
+                $route->getLocale()
+            )
+        ) {
             throw new RouteNotFoundException();
         }
 
@@ -156,13 +214,27 @@ class RouteProvider implements RouteProviderInterface
             );
         }
 
-        return new Route(
-            $routePath,
-            $this->routeDefaultsProvider->getByEntity(
-                $route->getEntityClass(),
-                $route->getEntityId(),
-                $request->getLocale()
-            )
+        $symfonyRoute = $this->proxyFactory->createProxy(
+            Route::class,
+            function (&$wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, &$initializer) use (
+                $routePath,
+                $route,
+                $request
+            ) {
+                $initializer = null; // disable initialization
+                $wrappedObject = new Route(
+                    $routePath,
+                    $this->routeDefaultsProvider->getByEntity(
+                        $route->getEntityClass(),
+                        $route->getEntityId(),
+                        $request->getLocale()
+                    )
+                );
+
+                return true;
+            }
         );
+
+        return $this->symfonyRouteCache[$route->getId()] = $symfonyRoute;
     }
 }
