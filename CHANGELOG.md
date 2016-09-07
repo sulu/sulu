@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
     * ENHANCEMENT #2903 [RouteBundle]         Get class mapping configuration by class name or inheritance chain
     * ENHANCEMENT #2904 [RouteBundle]         Added route-provider cache
     * BUGFIX      #2893 [ContentBundle]       Fixed stop overlay-component for teaser-selection

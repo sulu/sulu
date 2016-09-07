@@ -32108,25 +32108,33 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         toggleSelectRecord: function(id, select) {
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
-                // ensure that checkboxes are checked
-                this.sandbox.dom.prop(
-                    this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', true
-                );
-                this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
-                this.indeterminateSelectParents(id);
+
+                if (this.table.rows[id]) {
+                    // ensure that checkboxes are checked
+                    this.sandbox.dom.prop(
+                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', true
+                    );
+                    this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
+                    this.indeterminateSelectParents(id);
+                }
             } else {
                 this.datagrid.setItemUnselected.call(this.datagrid, id);
-                // ensure that checkboxes are unchecked
-                this.sandbox.dom.prop(
-                    this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
-                );
-                if (this.table.rows[id].selectedChildren > 0) {
+
+                if (this.table.rows[id]) {
+                    // ensure that checkboxes are unchecked
                     this.sandbox.dom.prop(
-                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'indeterminate', true
+                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
                     );
+                    if (this.table.rows[id].selectedChildren > 0) {
+                        this.sandbox.dom.prop(
+                            this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el),
+                            'indeterminate',
+                            true
+                        );
+                    }
+                    this.sandbox.dom.removeClass(this.table.rows[id].$el, constants.selectedRowClass);
+                    this.indeterminateUnselectParents(id);
                 }
-                this.sandbox.dom.removeClass(this.table.rows[id].$el, constants.selectedRowClass);
-                this.indeterminateUnselectParents(id);
             }
 
             this.updateSelectAll();
@@ -32245,7 +32253,27 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param recordId {Number|String} the id of the parent to load the children for
          */
         loadChildren: function(recordId) {
-            this.datagrid.loadChildren.call(this.datagrid, recordId);
+            var $el = $('<div style="margin-right: -3px"/>'),
+                $icon = $(this.table.rows[recordId].$el).find('.' + constants.toggleIconClass);
+
+            // replace icon with loader while loading children
+            this.sandbox.dom.append($icon, $el);
+            this.sandbox.dom.removeClass($icon, constants.collapsedIcon);
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $el,
+                        size: '8px',
+                        color: '#999999'
+                    }
+                }
+            ]);
+
+            this.datagrid.loadChildren.call(this.datagrid, recordId).then(function () {
+                this.sandbox.stop($el);
+            }.bind(this))
+
             this.table.rows[recordId].childrenLoaded = true;
         },
 
@@ -32861,7 +32889,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             // if first defined step is bigger than the number of all elements don't display show-elements dropdown
             if (this.data.total > this.options.showElementsSteps[0]) {
-                description = this.data.embedded.length;
+                description = this.data.limit;
                 $showElements = this.sandbox.dom.createElement(this.sandbox.util.template(templates.showElements)({
                     desc: description,
                     text: translations.elementsPerPage,
@@ -33907,7 +33935,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.$loader = null;
                 this.$mediumLoader = null;
                 this.isLoading = false;
-                this.initialLoaded = false;
 
                 // append datagrid to html element
                 this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
@@ -33929,6 +33956,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         this.renderSelectedCounter();
                     }
                     this.loadAndEvaluateMatchings().then(function() {
+                        // merge dom-selected and option-preselected items
+                        this.preSelectItems();
                         this.loadAndRenderData();
                         this.sandbox.emit(INITIALIZED.call(this));
                     }.bind(this));
@@ -33949,11 +33978,12 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!!this.options.url) {
                     url = this.options.url;
 
-                    this.sandbox.logger.log('load data from url');
                     if (this.requestFields.length > 0) {
                         url += (url.indexOf('?') === -1) ? '?' : '&';
                         url += 'fields=' + this.requestFields.join(',');
                     }
+
+                    this.sandbox.logger.log('load data from url');
 
                     this.loading();
                     this.load({
@@ -34073,10 +34103,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * Renders the data of the datagrid
              */
             render: function() {
-                if (!this.initialLoaded) {
-                    this.preSelectItems();
-                    this.initialLoaded = true;
-                }
                 this.renderView();
                 if (!!this.paginations[this.paginationId]) {
                     this.paginations[this.paginationId].render(this.data, this.$element);
@@ -34177,6 +34203,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             load: function(params) {
                 this.currentUrl = this.getUrl(params);
+
+                if (!params.data) params.data = {};
+                params.data['expandIds'] = this.getSelectedItemIds().join(',');
+
                 this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
                 return this.sandbox.util.load(this.currentUrl, params.data)
                     .then(function(response) {
@@ -34808,9 +34838,11 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @returns {Number|String} the index of the found record
              */
             getRecordIndexById: function(id) {
-                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (this.data.embedded[i].id === id) {
-                        return i;
+                if (!!this.data && !!this.data.embedded) {
+                    for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                        if (this.data.embedded[i].id === id) {
+                            return i;
+                        }
                     }
                 }
 
@@ -35428,6 +35460,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @param recordId {Number|String}
              */
             loadChildren: function(recordId) {
+                var deferred = this.sandbox.data.deferred();
+
                 if (!!this.data.links.children) {
                     var template = this.sandbox.uritemplate.parse(this.data.links.children.href),
                         url = this.sandbox.uritemplate.expand(template, {parentId: recordId});
@@ -35435,11 +35469,17 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     this.sandbox.util.load(this.getUrl({url: url}))
                         .then(function(response) {
                             this.addRecordsHandler(response._embedded[this.options.resultKey]);
+                            deferred.resolve();
                         }.bind(this))
                         .fail(function(status, error) {
                             this.sandbox.logger.error(status, error);
+                            deferred.fail();
                         }.bind(this));
+                } else {
+                    deferred.resolve();
                 }
+
+                return deferred;
             },
 
             /**
@@ -45625,7 +45665,7 @@ define('__component__$dropzone@husky',[], function() {
  * @params {String} [options.inputId] DOM-id to give the actual input-tag
  * @params {String} [options.inputName] DOM-name to give the actual input-tag. Can be usefull in forms
  * @params {String} [options.value] value to set at the beginning
- * @params {String} [options.placeholder] html5-placholder to use
+ * @params {String} [options.placeholder] html5-placeholder to use
  * @params {Boolean} [options.disabled] defines if input can be edited
  * @params {String} [options.skin] name of the skin to use. Currently 'phone', 'password', 'url', 'email', 'date', 'time', 'color'. Each skin brings it's own default values. For example the password skin has automatically inputType: 'password'
  * @params {Object} [options.datepickerOptions] config-object to pass to the datepicker component - you can find possible values here http://bootstrap-datepicker.readthedocs.org/en/release/options.html
@@ -45878,7 +45918,8 @@ define('__component__$input@husky',[], function() {
                 if (!!this.options.frontIcon) {
                     this.sandbox.dom.html(this.input.$front, '<a class="fa-' + this.options.frontIcon + '"></a>');
                 } else if (!!this.options.frontText) {
-                    this.sandbox.dom.html(this.input.$front, '<a class="' + constants.textClass + '">' + this.options.frontText + '</a>');
+                    this.sandbox.dom.html(this.input.$front,
+                        '<a class="' + constants.textClass + '">' + this.options.frontText + '</a>');
                 } else {
                     this.sandbox.dom.html(this.input.$front, this.options.frontHtml);
                 }
@@ -45913,7 +45954,8 @@ define('__component__$input@husky',[], function() {
                 if (!!this.options.backIcon) {
                     this.sandbox.dom.html(this.input.$back, '<span class="fa-' + this.options.backIcon + '"></span>');
                 } else if (!!this.options.backText) {
-                    this.sandbox.dom.html(this.input.$back, '<span class="' + constants.textClass + '">' + this.options.backText + '</span>');
+                    this.sandbox.dom.html(this.input.$back,
+                        '<span class="' + constants.textClass + '">' + this.options.backText + '</span>');
                 } else {
                     this.sandbox.dom.html(this.input.$back, this.options.backHtml);
                 }
@@ -45937,7 +45979,9 @@ define('__component__$input@husky',[], function() {
          */
         renderDatePicker: function() {
             this.sandbox.dom.addClass(this.$el, constants.datepickerClass);
-            this.sandbox.dom.attr(this.input.$input, 'placeholder', this.sandbox.globalize.getDatePattern());
+            if (!this.options.placeholder) {
+                this.sandbox.dom.attr(this.input.$input, 'placeholder', this.sandbox.globalize.getDatePattern());
+            }
 
             // parse stard and end date
             if (!!this.options.datepickerOptions.startDate && typeof(this.options.datepickerOptions.startDate) === 'string') {
@@ -45947,9 +45991,10 @@ define('__component__$input@husky',[], function() {
                 this.options.datepickerOptions.endDate = new Date(this.options.datepickerOptions.endDate);
             }
 
-            this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions).on('changeDate', function(event) {
-                this.setDatepickerValueAttr(event.date);
-            }.bind(this));
+            this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions).on('changeDate',
+                function(event) {
+                    this.setDatepickerValueAttr(event.date);
+                }.bind(this));
             this.updateValue();
 
             this.bindDatepickerDomEvents();
@@ -46052,7 +46097,8 @@ define('__component__$input@husky',[], function() {
                     this.sandbox.dom.attr(this.sandbox.dom.find('a', this.input.$front), 'target', '_blank');
                 }
             } else {
-                this.sandbox.dom.removeClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('a', this.input.$front),
+                    constants.linkClickableClass);
                 this.sandbox.dom.removeAttr(this.sandbox.dom.find('a', this.input.$front), 'href');
             }
         },
