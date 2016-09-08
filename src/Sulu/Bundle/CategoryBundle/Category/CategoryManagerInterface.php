@@ -65,12 +65,14 @@ interface CategoryManagerInterface
      *
      * @param int         $parent    the id of the parent to filter for
      * @param int         $depth     the depth-level to filter for
+     * @param string|null $sortBy    column name to sort the categories by
+     * @param string|null $sortOrder sort order
      *
      * @return Category[]
      *
      * @deprecated Use ::findChildrenByParentId instead
      */
-    public function find($parent = null, $depth = null);
+    public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
 
     /**
      * Returns the whole category graph in the given locale.
@@ -89,12 +91,14 @@ interface CategoryManagerInterface
      * Returns the children for a given category.
      *
      * @param int         $key       the key of the category to search the children for
+     * @param string|null $sortBy    column name to sort by
+     * @param string|null $sortOrder sort order
      *
      * @return Category[]
      *
      * @deprecated Use ::findChildrenByParentKey instead
      */
-    public function findChildren($key);
+    public function findChildren($key, $sortBy = null, $sortOrder = null);
 
     /**
      * Returns the whole category graph in the given locale.
@@ -144,8 +148,6 @@ interface CategoryManagerInterface
      * @param string   $locale
      *
      * @return Category
-     *
-     * @deprecated Use the respective manager function instead
      */
     public function getApiObject($category, $locale);
 
@@ -156,8 +158,6 @@ interface CategoryManagerInterface
      * @param string     $locale
      *
      * @return Category
-     *
-     * @deprecated Use the respective manager function instead
      */
     public function getApiObjects($categories, $locale);
 

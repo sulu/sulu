@@ -81,12 +81,14 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      *
      * @param number      $parent    the id of the parent to filter for
      * @param number      $depth     the depth-level to filter for
+     * @param string|null $sortBy    column name to sort the categories by
+     * @param string|null $sortOrder sort order
      *
-     * @return mixed|null
+     * @return CategoryInterface[]
      *
      * @deprecated Use ::findChildrenCategoriesByParentId instead
      */
-    public function findCategories($parent = null, $depth = null);
+    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
 
     /**
      * Returns the whole category graph. Children are available through children-properties of parents.
@@ -102,12 +104,14 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * Returns the children for a given category.
      *
      * @param int         $key       the key of the category to return the children for
+     * @param string|null $sortBy    column name to sort by
+     * @param string|null $sortOrder sort order
      *
      * @return CategoryInterface[]
      *
      * @deprecated Use ::findChildrenCategoriesByParentKey instead
      */
-    public function findChildren($key);
+    public function findChildren($key, $sortBy = null, $sortOrder = null);
 
     /**
      * Returns the whole category graph. Children are available through children-properties of parents.

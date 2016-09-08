@@ -190,7 +190,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * {@see Category::removeChild}.
      *
-     * @deprecated use Category::addChild instead
+     * @deprecated use Category::removeChild instead
      */
     public function removeChildren(CategoryInterface $child);
 
@@ -226,6 +226,7 @@ interface CategoryInterface extends AuditableInterface
 
     /**
      * Set creator.
+     * Note: This property is set automatically by the UserBlameSubscriber if not set manually.
      *
      * @param UserInterface $creator
      *
@@ -235,6 +236,7 @@ interface CategoryInterface extends AuditableInterface
 
     /**
      * Set changer.
+     * Note: This property is set automatically by the UserBlameSubscriber if not set manually.
      *
      * @param UserInterface $changer
      *
@@ -244,6 +246,7 @@ interface CategoryInterface extends AuditableInterface
 
     /**
      * Set changed.
+     * Note: This property is set automatically by the TimestampableSubscriber if not set manually.
      *
      * @param \DateTime $changed
      *

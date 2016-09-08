@@ -205,14 +205,18 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
      */
     public function findCategoryByIds(array $ids)
     {
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findCategoriesByIds() instead.', E_USER_DEPRECATED);
+
         $this->findCategoriesByIds($ids);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findCategories($parent = null, $depth = null)
+    public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenCategoriesByParentId() instead.', E_USER_DEPRECATED);
+
         $queryBuilder = $this->getCategoryQuery();
         $queryBuilder->andWhere('category.parent IS NULL');
 
@@ -221,6 +225,11 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         }
         if ($depth !== null) {
             $queryBuilder->andWhere('category.depth = :depth');
+        }
+
+        if ($sortBy) {
+            $sortOrder = ($sortOrder) ? $sortOrder : 'asc';
+            $queryBuilder->addOrderBy('category.' . $sortBy, $sortOrder);
         }
 
         $query = $queryBuilder->getQuery();
@@ -237,12 +246,19 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     /**
      * {@inheritdoc}
      */
-    public function findChildren($key)
+    public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenCategoriesByParentKey() instead.', E_USER_DEPRECATED);
+
         $queryBuilder = $this->getCategoryQuery()
             ->from('SuluCategoryBundle:Category', 'parent')
             ->andWhere('parent.key = :key')
             ->andWhere('category.parent = parent');
+
+        if ($sortBy) {
+            $sortOrder = ($sortOrder) ? $sortOrder : 'asc';
+            $queryBuilder->addOrderBy('category.' . $sortBy, $sortOrder);
+        }
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('key', $key);

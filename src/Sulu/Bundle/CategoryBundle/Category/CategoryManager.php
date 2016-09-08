@@ -467,20 +467,24 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function find($parent = null, $depth = null)
+    public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.', E_USER_DEPRECATED);
+
         if ($parent && !$this->categoryRepository->isCategoryId($parent)) {
             throw new CategoryIdNotFoundException($parent);
         }
 
-        return $this->categoryRepository->findCategories($parent, $depth);
+        return $this->categoryRepository->findCategories($parent, $depth, $sortBy, $sortOrder);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findChildren($key)
+    public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
-        $this->findChildrenByParentKey($key);
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.', E_USER_DEPRECATED);
+
+        return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);
     }
 }
