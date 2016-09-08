@@ -13,13 +13,11 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -76,31 +74,32 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetApiObject()
     {
-        $entity = new CategoryEntity();
+        $entity = new Category();
         $wrapper = $this->categoryManager->getApiObject($entity, 'en');
+        $this->assertTrue($wrapper instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
 
-        $this->assertTrue($wrapper instanceof CategoryWrapper);
+        $wrapper2 = $this->categoryManager->getApiObject($wrapper, 'en');
+        $this->assertSame($wrapper->getEntity(), $wrapper2->getEntity());
 
         $wrapper = $this->categoryManager->getApiObject(null, 'de');
-
         $this->assertEquals(null, $wrapper);
     }
 
     public function testGetApiObjects()
     {
         $entities = [
-            new CategoryEntity(),
+            new Category(),
             null,
-            new CategoryEntity(),
-            new CategoryEntity(),
+            new Category(),
+            new Category(),
             null,
         ];
 
         $wrappers = $this->categoryManager->getApiObjects($entities, 'en');
 
-        $this->assertTrue($wrappers[0] instanceof CategoryWrapper);
-        $this->assertTrue($wrappers[2] instanceof CategoryWrapper);
-        $this->assertTrue($wrappers[3] instanceof CategoryWrapper);
+        $this->assertTrue($wrappers[0] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
+        $this->assertTrue($wrappers[2] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
+        $this->assertTrue($wrappers[3] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
         $this->assertEquals(null, $wrappers[1]);
         $this->assertEquals(null, $wrappers[4]);
     }

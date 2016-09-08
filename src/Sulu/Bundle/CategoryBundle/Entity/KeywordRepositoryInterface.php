@@ -9,9 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Category;
+namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**

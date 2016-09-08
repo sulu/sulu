@@ -69,24 +69,18 @@ class CategoryTwigExtension extends \Twig_Extension
 
     /**
      * Returns an array of serialized categories.
+     * If parentKey is set, only the children of the category which is assigned to the given key are returned.
      *
      * @param string $locale
-     * @param int $parent id of parent category. null for root
-     * @param int $depth number of children
+     * @param string $parentKey key of parent category
      *
      * @return array
      */
-    public function getCategoriesFunction($locale, $parent = null)
+    public function getCategoriesFunction($locale, $parentKey = null)
     {
         return $this->memoizeCache->memoize(
-            function ($locale, $parent = null) {
-                if (null === $parent) {
-                    $entities = $this->categoryManager->find();
-                } else {
-                    $entities = $this->categoryManager->findChildren($parent);
-                }
-                $apiEntities = $this->categoryManager->getApiObjects($entities, $locale);
-
+            function ($locale, $parentKey = null) {
+                $apiEntities = $this->categoryManager->findChildrenByParentKey($locale, $parentKey);
                 $context = SerializationContext::create();
                 $context->setSerializeNull(true);
 
