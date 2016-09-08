@@ -14,10 +14,11 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
-use Sulu\Bundle\CategoryBundle\Category\KeywordRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 
 class KeywordManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,29 +38,30 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
     public function testSave($exists = false, $has = false, $keywordString = 'Test', $locale = 'de')
     {
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
+        $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $otherKeyword = null;
         if ($exists) {
-            $otherKeyword = $this->prophesize(Keyword::class);
+            $otherKeyword = $this->prophesize(KeywordInterface::class);
             $otherKeyword->getKeyword()->willReturn($keywordString);
             $otherKeyword->getLocale()->willReturn($locale);
             $otherKeyword->getId()->willReturn(15);
         }
         $repository->findByKeyword($keywordString, $locale)->willReturn($otherKeyword ? $otherKeyword->reveal() : null);
 
-        $keyword = $this->prophesize(Keyword::class);
+        $keyword = $this->prophesize(KeywordInterface::class);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
         $keyword->isReferencedMultiple()->willReturn(false);
         $keyword->getId()->willReturn(null);
 
-        $categoryTranslation = $this->prophesize(CategoryTranslation::class);
+        $categoryTranslation = $this->prophesize(CategoryTranslationInterface::class);
         $categoryTranslation->hasKeyword($exists ? $otherKeyword->reveal() : $keyword->reveal())->willReturn($has);
         $categoryTranslation->addKeyword($exists ? $otherKeyword->reveal() : $keyword->reveal())
             ->shouldBeCalledTimes($has ? 0 : 1);
 
-        $category = $this->prophesize(Category::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
 
         $categoryTranslation->setChanged(Argument::any())->willReturn(null);
@@ -74,7 +76,11 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
             $keyword->addCategoryTranslation($categoryTranslation->reveal())->shouldBeCalledTimes($has ? 0 : 1);
         }
 
-        $manager = new KeywordManager($repository->reveal(), $entityManager->reveal());
+        $manager = new KeywordManager(
+            $repository->reveal(),
+            $categoryTranslationRepository->reveal(),
+            $entityManager->reveal()
+        );
         $result = $manager->save($keyword->reveal(), $category->reveal());
 
         $this->assertEquals($exists ? $otherKeyword->reveal() : $keyword->reveal(), $result);
@@ -83,25 +89,32 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
     public function testSaveWithNotExistingCategoryTranslation()
     {
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
+        $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $keywordString = 'my-keyword';
         $locale = 'it';
 
         $repository->findByKeyword($keywordString, $locale)->willReturn(null);
 
-        $keyword = $this->prophesize(Keyword::class);
-        $keyword->addCategoryTranslation(Argument::type(CategoryTranslation::class))->willReturn(null);
+        $keyword = $this->prophesize(KeywordInterface::class);
+        $keyword->addCategoryTranslation(Argument::type(CategoryTranslationInterface::class))->willReturn(null);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
         $keyword->isReferencedMultiple()->willReturn(false);
         $keyword->getId()->willReturn(null);
 
-        $category = $this->prophesize(Category::class);
-        $category->addTranslation(Argument::type(CategoryTranslation::class))->willReturn(null);
+        $categoryTranslationRepository->createNew()->willReturn($this->prophesize(CategoryTranslationInterface::class));
+
+        $category = $this->prophesize(CategoryInterface::class);
+        $category->addTranslation(Argument::type(CategoryTranslationInterface::class))->willReturn(null);
         $category->findTranslationByLocale($locale)->willReturn(false);
         $category->setChanged(Argument::any())->willReturn(null);
 
-        $manager = new KeywordManager($repository->reveal(), $entityManager->reveal());
+        $manager = new KeywordManager(
+            $repository->reveal(),
+            $categoryTranslationRepository->reveal(),
+            $entityManager->reveal()
+        );
         $result = $manager->save($keyword->reveal(), $category->reveal());
 
         $this->assertEquals($keyword->reveal(), $result);
@@ -121,20 +134,21 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
     public function testDelete($referenced = false, $keywordString = 'Test', $locale = 'de')
     {
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
+        $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
-        $keyword = $this->prophesize(Keyword::class);
+        $keyword = $this->prophesize(KeywordInterface::class);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
         $keyword->getId()->shouldNotBeCalled();
         $keyword->isReferenced()->willReturn($referenced);
 
-        $categoryTranslation = $this->prophesize(CategoryTranslation::class);
+        $categoryTranslation = $this->prophesize(CategoryTranslationInterface::class);
         $categoryTranslation->hasKeyword($keyword->reveal())->willReturn(true);
         $categoryTranslation->removeKeyword($keyword->reveal())->shouldBeCalled();
         $categoryTranslation->setChanged(Argument::any())->shouldBeCalled();
 
-        $category = $this->prophesize(Category::class);
+        $category = $this->prophesize(CategoryInterface::class);
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
         $category->setChanged(Argument::any())->shouldBeCalled();
 
@@ -144,7 +158,11 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
             $entityManager->remove($keyword->reveal())->shouldBeCalled();
         }
 
-        $manager = new KeywordManager($repository->reveal(), $entityManager->reveal());
+        $manager = new KeywordManager(
+            $repository->reveal(),
+            $categoryTranslationRepository->reveal(),
+            $entityManager->reveal()
+        );
         $result = $manager->delete($keyword->reveal(), $category->reveal());
 
         $this->assertEquals(!$referenced, $result);

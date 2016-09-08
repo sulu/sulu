@@ -13,53 +13,52 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * The keywords can describe a category with different words.
  */
-class Keyword implements AuditableInterface
+class Keyword implements KeywordInterface
 {
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $keyword;
+    protected $keyword;
 
     /**
      * @var string
      */
-    private $locale;
+    protected $locale;
+
+    /**
+     * @var UserInterface
+     */
+    protected $creator;
+
+    /**
+     * @var UserInterface
+     */
+    protected $changer;
+
+    /**
+     * @var \DateTime
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime
+     */
+    protected $changed;
 
     /**
      * @var Collection
      */
     private $categoryTranslations;
-
-    /**
-     * @var UserInterface
-     */
-    private $creator;
-
-    /**
-     * @var UserInterface
-     */
-    private $changer;
-
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
 
     /**
      * Constructor.
@@ -70,11 +69,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return Keyword
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -84,9 +79,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Get locale.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -94,11 +87,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Set keyword.
-     *
-     * @param string $keyword
-     *
-     * @return Keyword
+     * {@inheritdoc}
      */
     public function setKeyword($keyword)
     {
@@ -108,9 +97,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Get keyword.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getKeyword()
     {
@@ -118,47 +105,11 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * Get id.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Add category-translation.
-     *
-     * @param CategoryTranslation $categoryTranslation
-     *
-     * @return Keyword
-     */
-    public function addCategoryTranslation(CategoryTranslation $categoryTranslation)
-    {
-        $this->categoryTranslations[] = $categoryTranslation;
-
-        return $this;
-    }
-
-    /**
-     * Remove category-translation.
-     *
-     * @param CategoryTranslation $categoryTranslation
-     */
-    public function removeCategoryTranslation(CategoryTranslation $categoryTranslation)
-    {
-        $this->categoryTranslations->removeElement($categoryTranslation);
-    }
-
-    /**
-     * Get categories.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCategoryTranslations()
-    {
-        return $this->categoryTranslations;
     }
 
     /**
@@ -170,7 +121,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @param UserInterface $creator
+     * {@inheritdoc}
      */
     public function setCreator($creator)
     {
@@ -186,7 +137,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @param UserInterface $changer
+     * {@inheritdoc}
      */
     public function setChanger($changer)
     {
@@ -202,7 +153,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @param \DateTime $created
+     * {@inheritdoc}
      */
     public function setCreated($created)
     {
@@ -218,7 +169,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @param \DateTime $changed
+     * {@inheritdoc}
      */
     public function setChanged($changed)
     {
@@ -226,7 +177,42 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
+     */
+    public function equals(KeywordInterface $keyword)
+    {
+        return $keyword->getKeyword() === $this->getKeyword()
+        && $keyword->getLocale() === $this->getLocale();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
+    {
+        $this->categoryTranslations[] = $categoryTranslation;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
+    {
+        $this->categoryTranslations->removeElement($categoryTranslation);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCategoryTranslations()
+    {
+        return $this->categoryTranslations;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function isReferencedMultiple()
     {
@@ -234,7 +220,7 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isReferenced()
     {
@@ -242,21 +228,10 @@ class Keyword implements AuditableInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getCategoryTranslationCount()
     {
         return $this->getCategoryTranslations()->count();
-    }
-
-    /**
-     * @param Keyword $keyword
-     *
-     * @return bool
-     */
-    public function equals(Keyword $keyword)
-    {
-        return $keyword->getKeyword() === $this->getKeyword()
-            && $keyword->getLocale() === $this->getLocale();
     }
 }

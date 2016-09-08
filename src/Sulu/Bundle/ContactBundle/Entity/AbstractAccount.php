@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -710,11 +710,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add categories.
      *
-     * @param Category $categories
+     * @param CategoryInterface $categories
      *
      * @return Account
      */
-    public function addCategory(Category $category)
+    public function addCategory(CategoryInterface $category)
     {
         $this->categories[] = $category;
 
@@ -724,9 +724,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      */
-    public function removeCategory(Category $category)
+    public function removeCategory(CategoryInterface $category)
     {
         $this->categories->removeElement($category);
     }

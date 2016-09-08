@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Sulu\Bundle\CategoryBundle\Category\KeywordRepositoryInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**

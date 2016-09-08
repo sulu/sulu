@@ -11,8 +11,24 @@
 
 namespace Sulu\Bundle\CategoryBundle;
 
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluCategoryBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
+    public function build(ContainerBuilder $container)
+    {
+        $this->buildPersistence(
+            [
+                'Sulu\Bundle\CategoryBundle\Entity\CategoryInterface' => 'sulu.model.category.class',
+                'Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface' => 'sulu.model.category_meta.class',
+                'Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface' => 'sulu.model.category_translation.class',
+                'Sulu\Bundle\CategoryBundle\Entity\KeywordInterface' => 'sulu.model.keyword.class',
+            ],
+            $container
+        );
+    }
 }

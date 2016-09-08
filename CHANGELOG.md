@@ -12,11 +12,13 @@ CHANGELOG for Sulu
     * BUGFIX      #2776 [MediaBundle]         Fixed upload of media without an extension
     * BUGFIX      #2867 [ContentBundle]       Fixed navigation on removed template
     * BUGFIX      #2850 [ContentBundle]       Ordered response of template action alphabetically
+    * ENHANCEMENT #2848 [CategoryBundle]      Implemented category-bundle entities extensible
     * BUGFIX      #2848 [ContentBundle]       Fixed preview serialization to include date and authors
     * ENHANCEMENT #2782 [MediaBundle]         Cleaned up media selection overlay styling
     * ENHANCMENT  #2845 [MediaBundle]         New version of of configuring image formats
     * ENHANCEMENT #2843 [MediaBundle]         Limit bugfix and style fixes for collections
     * BUGFIX      #2774 [SecurityBundle]      Added translations to settings user role for hovering single permission
+    * ENHANCEMENT #2823 [CategoryBundle]      Refactored CategoryBundle backend
     * BUGFIX      #2798 [ContactBundle]       Contact cards are now ordered correctly and by fullName by default
     * ENHANCEMENT #2835 [CoreBundle]          Used the delegating file loader from symfony instead of own implementation for loading webspace xml files
     * ENHANCEMENT #2831 [RouteBundle]         Improved speed of route-update-command for lots of entities

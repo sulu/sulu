@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 
 /**
  * Manages keyword for categories.
@@ -27,20 +27,20 @@ interface KeywordManagerInterface
      * Add given keyword to the category.
      *
      * @param Keyword $keyword
-     * @param Category $category
+     * @param CategoryInterface $category
      * @param string $force
      *
      * @return Keyword
      */
-    public function save(Keyword $keyword, Category $category, $force = null);
+    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null);
 
     /**
      * Removes keyword from given category.
      *
      * @param Keyword $keyword
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return bool true if keyword is deleted completely from the database otherwise only from the category
      */
-    public function delete(Keyword $keyword, Category $category);
+    public function delete(KeywordInterface $keyword, CategoryInterface $category);
 }

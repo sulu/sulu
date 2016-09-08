@@ -9,10 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Category;
-
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
-use Sulu\Component\Persistence\Repository\RepositoryInterface;
+namespace Sulu\Bundle\CategoryBundle\Entity;
 
 /**
  * Interface for keyword repository.
@@ -24,7 +21,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return Keyword
+     * @return KeywordInterface
      */
     public function findById($id);
 
@@ -34,7 +31,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      * @param string $keyword
      * @param string $locale
      *
-     * @return Keyword
+     * @return KeywordInterface
      */
     public function findByKeyword($keyword, $locale);
 }
