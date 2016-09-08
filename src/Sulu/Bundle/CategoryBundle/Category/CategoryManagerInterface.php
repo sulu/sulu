@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use Sulu\Bundle\CategoryBundle\Api\Category;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
@@ -25,39 +25,36 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 interface CategoryManagerInterface
 {
     /**
-     * Returns the category which is assigned to the given id in the given locale.
+     * Returns the category which is assigned to the given id.
      *
      * @param int $id
-     * @param $locale
      *
      * @return Category
      *
      * @throws CategoryIdNotFoundException if the given id is not assigned to an existing category
      */
-    public function findById($id, $locale);
+    public function findById($id);
 
     /**
-     * Returns the category which is assigned to the given key in the given locale.
+     * Returns the category which is assigned to the given key.
      *
      * @param string $key
-     * @param $locale
      *
      * @return Category
      *
      * @throws CategoryKeyNotFoundException if the given key is not assigned to an existing category
      */
-    public function findByKey($key, $locale);
+    public function findByKey($key);
 
     /**
-     * Returns an array of categories which are assigned to the given array of ids in the given locale.
+     * Returns an array of categories which are assigned to the given array of ids.
      * If an id of the array is not assigned to a category, no error is thrown.
      *
      * @param array $ids
-     * @param $locale
      *
      * @return Category[]
      */
-    public function findByIds(array $ids, $locale);
+    public function findByIds(array $ids);
 
     /**
      * Returns tags with a given parent and/or a given depth-level
@@ -75,17 +72,16 @@ interface CategoryManagerInterface
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
 
     /**
-     * Returns the whole category graph in the given locale.
+     * Returns the whole category graph.
      * If parentId is set, only the sub-graph below the category which is assigned to the given id is returned.
      *
-     * @param $locale
      * @param null $parentId
      *
      * @return array
      *
      * @throws CategoryIdNotFoundException if the parentId is not assigned to an existing category
      */
-    public function findChildrenByParentId($locale, $parentId = null);
+    public function findChildrenByParentId($parentId = null);
 
     /**
      * Returns the children for a given category.
@@ -101,20 +97,19 @@ interface CategoryManagerInterface
     public function findChildren($key, $sortBy = null, $sortOrder = null);
 
     /**
-     * Returns the whole category graph in the given locale.
+     * Returns the whole category graph.
      * If parentKey is set, only the sub-graph below the category which is assigned to the given key is returned.
      *
-     * @param $locale
      * @param null $parentKey
      *
      * @return array
      *
      * @throws CategoryKeyNotFoundException if the parentKey is not assigned to an existing category
      */
-    public function findChildrenByParentKey($locale, $parentKey = null);
+    public function findChildrenByParentKey($parentKey = null);
 
     /**
-     * Creates or updates the given data as category in the given locale.
+     * Creates or updates the given data as category in the given locale and return the saved category.
      * If data.id is set, the category which is assigned to the given id is overwritten.
      * If patch is set, the category which is assigned to the given id is updated partially.
      *

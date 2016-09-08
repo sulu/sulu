@@ -16,7 +16,7 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * Category.
+ * Interface for the extensible Category entity.
  */
 interface CategoryInterface extends AuditableInterface
 {

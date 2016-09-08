@@ -73,7 +73,8 @@ class CategoryList extends ComplexContentType
         }
 
         $data = [];
-        $categories = $this->categoryManager->findByIds($ids, $property->getStructure()->getLanguageCode());
+        $entities = $this->categoryManager->findByIds($ids);
+        $categories = $this->categoryManager->getApiObjects($entities, $property->getStructure()->getLanguageCode());
 
         foreach ($categories as $category) {
             $data[] = $category->toArray();

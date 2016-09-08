@@ -21,6 +21,9 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetContentData()
     {
+        $entity1 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\Category::class);
+        $entity2 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\Category::class);
+
         $category1 = $this->prophesize(Category::class);
         $category1->toArray()->willReturn('someArrayData');
 
@@ -35,7 +38,8 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
         $property->getStructure()->willReturn($structure->reveal());
 
         $categoryManager = $this->prophesize(CategoryManagerInterface::class);
-        $categoryManager->findByIds([1, 2], 'de')->willReturn([$category1, $category2]);
+        $categoryManager->findByIds([1, 2])->willReturn([$entity1, $entity2]);
+        $categoryManager->getApiObjects([$entity1, $entity2], 'de')->willReturn([$category1, $category2]);
 
         $categoryList = new CategoryList($categoryManager->reveal(), '');
 

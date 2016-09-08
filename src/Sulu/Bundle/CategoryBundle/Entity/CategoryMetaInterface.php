@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+/**
+ * Interface for the extensible CategoryMeta entity.
+ */
 interface CategoryMetaInterface
 {
     /**

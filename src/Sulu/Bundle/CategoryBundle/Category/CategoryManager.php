@@ -14,9 +14,9 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
@@ -255,63 +255,57 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findById($id, $locale)
+    public function findById($id)
     {
         if (!$entity = $this->categoryRepository->findCategoryById($id)) {
             throw new CategoryIdNotFoundException($id);
         }
 
-        return $this->getApiObject($entity, $locale);
+        return $entity;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findByKey($key, $locale)
+    public function findByKey($key)
     {
         if (!$entity = $this->categoryRepository->findCategoryByKey($key)) {
             throw new CategoryKeyNotFoundException($key);
         }
 
-        return $this->getApiObject($entity, $locale);
+        return $entity;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findByIds(array $ids, $locale)
+    public function findByIds(array $ids)
     {
-        $entities = $this->categoryRepository->findCategoriesByIds($ids);
-
-        return $this->getApiObjects($entities, $locale);
+        return $this->categoryRepository->findCategoriesByIds($ids);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findChildrenByParentId($locale, $parentId = null)
+    public function findChildrenByParentId($parentId = null)
     {
         if ($parentId && !$this->categoryRepository->isCategoryId($parentId)) {
             throw new CategoryIdNotFoundException($parentId);
         }
 
-        $entities = $this->categoryRepository->findChildrenCategoriesByParentId($parentId);
-
-        return $this->getApiObjects($entities, $locale);
+        return $this->categoryRepository->findChildrenCategoriesByParentId($parentId);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findChildrenByParentKey($locale, $parentKey = null)
+    public function findChildrenByParentKey($parentKey = null)
     {
         if ($parentKey && !$this->categoryRepository->isCategoryKey($parentKey)) {
             throw new CategoryKeyNotFoundException($parentKey);
         }
 
-        $entities = $this->categoryRepository->findChildrenCategoriesByParentKey($parentKey);
-
-        return $this->getApiObjects($entities, $locale);
+        return $this->categoryRepository->findChildrenCategoriesByParentKey($parentKey);
     }
 
     /**
@@ -320,7 +314,7 @@ class CategoryManager implements CategoryManagerInterface
     public function save($data, $userId, $locale, $patch = false)
     {
         if ($this->getProperty($data, 'id')) {
-            $categoryEntity = $this->findById($this->getProperty($data, 'id'), $locale)->getEntity();
+            $categoryEntity = $this->findById($this->getProperty($data, 'id'), $locale);
         } else {
             $categoryEntity = $this->categoryRepository->createNew();
         }
@@ -361,7 +355,7 @@ class CategoryManager implements CategoryManagerInterface
         }
         if (!$patch || $this->getProperty($data, 'parent')) {
             if ($this->getProperty($data, 'parent')) {
-                $parentEntity = $this->findById($this->getProperty($data, 'parent'), $locale)->getEntity();
+                $parentEntity = $this->findById($this->getProperty($data, 'parent'), $locale);
             } else {
                 $parentEntity = null;
             }
@@ -381,7 +375,7 @@ class CategoryManager implements CategoryManagerInterface
             throw new CategoryKeyNotUniqueException($key);
         }
 
-        return $this->getApiObject($categoryEntity, $locale);
+        return $categoryEntity;
     }
 
     /**
@@ -411,7 +405,7 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
      * and provides neat getters and setters. If the given object is already an API-object,
-     * the respective entity is used for wrapping.
+     * the associated entity is used for wrapping.
      *
      * @param $category
      * @param string $locale

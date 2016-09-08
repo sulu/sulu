@@ -83,7 +83,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $findCallback = function ($id) use ($locale) {
-            return $this->getCategoryManager()->findById($id, $locale);
+            $entity = $this->getCategoryManager()->findById($id);
+
+            return $this->getCategoryManager()->getApiObject($entity, $locale);
         };
 
         $view = $this->responseGetById($id, $findCallback);
@@ -107,10 +109,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         if ($request->get('flat') == 'true') {
             // check if parent exists
-            $this->getCategoryManager()->findById($parentId, $locale);
+            $this->getCategoryManager()->findById($parentId);
             $list = $this->getListRepresentation($request, $locale, $parentId);
         } else {
-            $categories = $this->getCategoryManager()->findChildrenByParentId($locale, $parentId);
+            $entities = $this->getCategoryManager()->findChildrenByParentId($parentId);
+            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, self::$entityKey);
         }
 
@@ -133,11 +136,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $rootKey = $request->get('rootKey');
 
         if ($request->get('flat') == 'true') {
-            $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey, $locale)->getId() : null;
+            $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
             $expandIds = array_filter(explode(',', $request->get('expandIds')));
             $list = $this->getListRepresentation($request, $locale, $rootId, $expandIds);
         } else {
-            $categories = $this->getCategoryManager()->findChildrenByParentKey($locale, $rootKey);
+            $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
+            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, self::$entityKey);
         }
 
@@ -227,7 +231,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
             'meta' => $request->get('meta'),
             'parent' => $request->get('parent'),
         ];
-        $category = $this->getCategoryManager()->save($data, null, $locale, $patch);
+        $entity = $this->getCategoryManager()->save($data, null, $locale, $patch);
+        $category = $this->getCategoryManager()->getApiObject($entity, $locale);
 
         return $this->handleView($this->view($category, 200));
     }

@@ -99,7 +99,8 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
         }
 
         $manager = $this->prophesize(CategoryManagerInterface::class);
-        $manager->findChildrenByParentKey($locale, $parent)->shouldBeCalled()->willReturn($categoryApis);
+        $manager->findChildrenByParentKey($parent)->shouldBeCalled()->willReturn($categoryEntities);
+        $manager->getApiObjects($categoryEntities, $locale)->shouldBeCalled()->willReturn($categoryApis);
 
         $serializer = $this->prophesize(SerializerInterface::class);
         $serializer->serialize($categoryApis, 'array', Argument::type(SerializationContext::class))

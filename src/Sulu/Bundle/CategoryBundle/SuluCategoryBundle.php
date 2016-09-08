@@ -16,6 +16,9 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * Entry point for the SuluCategoryBundle.
+ */
 class SuluCategoryBundle extends Bundle
 {
     use PersistenceBundleTrait;

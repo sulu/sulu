@@ -15,6 +15,9 @@ use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
+/**
+ * Interface for the extensible CategoryTranslation entity.
+ */
 interface CategoryTranslationInterface extends AuditableInterface
 {
     /**
