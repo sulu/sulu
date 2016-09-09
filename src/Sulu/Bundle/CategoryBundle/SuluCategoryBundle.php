@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle;
 
+use Sulu\Bundle\CategoryBundle\DependencyInjection\DeprecationCompilerPass;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -30,5 +31,7 @@ class SuluCategoryBundle extends Bundle
             ],
             $container
         );
+
+        $container->addCompilerPass(new DeprecationCompilerPass());
     }
 }
