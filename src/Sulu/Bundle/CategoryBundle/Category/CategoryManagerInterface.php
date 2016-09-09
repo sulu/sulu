@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
@@ -29,7 +29,7 @@ interface CategoryManagerInterface
      *
      * @param int $id
      *
-     * @return Category
+     * @return CategoryInterface
      *
      * @throws CategoryIdNotFoundException if the given id is not assigned to an existing category
      */
@@ -40,7 +40,7 @@ interface CategoryManagerInterface
      *
      * @param string $key
      *
-     * @return Category
+     * @return CategoryInterface
      *
      * @throws CategoryKeyNotFoundException if the given key is not assigned to an existing category
      */
@@ -52,7 +52,7 @@ interface CategoryManagerInterface
      *
      * @param array $ids
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      */
     public function findByIds(array $ids);
 
@@ -65,7 +65,7 @@ interface CategoryManagerInterface
      * @param string|null $sortBy    column name to sort the categories by
      * @param string|null $sortOrder sort order
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      *
      * @deprecated Use ::findChildrenByParentId instead
      */
@@ -90,7 +90,7 @@ interface CategoryManagerInterface
      * @param string|null $sortBy    column name to sort by
      * @param string|null $sortOrder sort order
      *
-     * @return Category[]
+     * @return CategoryInterface[]
      *
      * @deprecated Use ::findChildrenByParentKey instead
      */
@@ -118,7 +118,7 @@ interface CategoryManagerInterface
      * @param $locale
      * @param bool $patch
      *
-     * @return Category
+     * @return CategoryInterface
      *
      * @throws CategoryIdNotFoundException if data.id is set, but the id is not assigned to a existing category
      * @throws CategoryKeyNotUniqueException
@@ -142,7 +142,7 @@ interface CategoryManagerInterface
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category
      * @param string   $locale
      *
-     * @return Category
+     * @return CategoryInterface
      */
     public function getApiObject($category, $locale);
 
@@ -152,7 +152,7 @@ interface CategoryManagerInterface
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
      * @param string     $locale
      *
-     * @return Category
+     * @return CategoryInterface
      */
     public function getApiObjects($categories, $locale);
 
