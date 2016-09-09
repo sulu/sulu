@@ -21,8 +21,8 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetContentData()
     {
-        $entity1 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\Category::class);
-        $entity2 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\Category::class);
+        $entity1 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::class);
+        $entity2 = $this->prophesize(\Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::class);
 
         $category1 = $this->prophesize(Category::class);
         $category1->toArray()->willReturn('someArrayData');

@@ -314,7 +314,7 @@ class CategoryManager implements CategoryManagerInterface
     public function save($data, $userId, $locale, $patch = false)
     {
         if ($this->getProperty($data, 'id')) {
-            $categoryEntity = $this->findById($this->getProperty($data, 'id'), $locale);
+            $categoryEntity = $this->findById($this->getProperty($data, 'id'));
         } else {
             $categoryEntity = $this->categoryRepository->createNew();
         }
@@ -355,7 +355,7 @@ class CategoryManager implements CategoryManagerInterface
         }
         if (!$patch || $this->getProperty($data, 'parent')) {
             if ($this->getProperty($data, 'parent')) {
-                $parentEntity = $this->findById($this->getProperty($data, 'parent'), $locale);
+                $parentEntity = $this->findById($this->getProperty($data, 'parent'));
             } else {
                 $parentEntity = null;
             }
@@ -387,7 +387,7 @@ class CategoryManager implements CategoryManagerInterface
             throw new CategoryIdNotFoundException($id);
         }
 
-        /** @var CategoryTranslation $translation */
+        /** @var CategoryTranslationInterface $translation */
         foreach ($entity->getTranslations() as $translation) {
             foreach ($translation->getKeywords() as $keyword) {
                 $this->keywordManager->delete($keyword, $entity);
