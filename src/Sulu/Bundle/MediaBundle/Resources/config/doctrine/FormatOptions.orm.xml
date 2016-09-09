@@ -4,8 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\FormatOptions"
-            table="me_format_options"
-            repository-class="Sulu\Bundle\MediaBundle\Entity\FormatOptionsRepository">
+            table="me_format_options">
 
         <id name="fileVersion" association-key="true"/>
         <id name="formatKey" type="string" length="255"/>

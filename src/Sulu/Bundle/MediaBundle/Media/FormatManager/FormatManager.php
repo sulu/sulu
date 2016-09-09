@@ -236,7 +236,7 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
+    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType)
     {
         $formats = [];
         if ($this->checkPreviewSupported($mimeType)) {
@@ -246,7 +246,8 @@ class FormatManager implements FormatManagerInterface
                     $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
                     $storageOptions,
                     $format['key'],
-                    $version
+                    $version,
+                    $subVersion
                 );
             }
         }
@@ -300,7 +301,7 @@ class FormatManager implements FormatManagerInterface
             'key' => $format['key'],
             'title' => $title,
             'scale' => $format['scale'],
-            'options' => $formatOptions,
+            'options' => (!empty($formatOptions)) ? $formatOptions : null,
         ];
 
         return $formatArray;

@@ -33,6 +33,11 @@ class FileVersion implements AuditableInterface
     /**
      * @var int
      */
+    private $subVersion;
+
+    /**
+     * @var int
+     */
     private $size;
 
     /**
@@ -185,6 +190,30 @@ class FileVersion implements AuditableInterface
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set subVersion.
+     *
+     * @param int $subVersion
+     *
+     * @return FileVersion
+     */
+    public function setSubVersion($subVersion)
+    {
+        $this->subVersion = $subVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get subVersion.
+     *
+     * @return int
+     */
+    public function getSubVersion()
+    {
+        return $this->subVersion;
     }
 
     /**
@@ -622,8 +651,8 @@ class FileVersion implements AuditableInterface
             /** @var FormatOptions[] $newFormatOptionsArray */
             $newFormatOptionsArray = [];
 
-            /** @var FileVersionMeta $meta */
             foreach ($this->meta as $meta) {
+                /** @var FileVersionMeta $meta */
                 $newMetaList[] = clone $meta;
             }
 
@@ -637,8 +666,8 @@ class FileVersion implements AuditableInterface
                 }
             }
 
-            /** @var FileVersionContentLanguage $contentLanguage */
             foreach ($this->contentLanguages as $contentLanguage) {
+                /** @var FileVersionContentLanguage $contentLanguage */
                 $newContentLanguageList[] = clone $contentLanguage;
             }
 
@@ -648,8 +677,8 @@ class FileVersion implements AuditableInterface
                 $this->addContentLanguage($newContentLanguage);
             }
 
-            /** @var FileVersionPublishLanguage $publishLanguage */
             foreach ($this->publishLanguages as $publishLanguage) {
+                /** @var FileVersionPublishLanguage $publishLanguage */
                 $newPublishLanguageList[] = clone $publishLanguage;
             }
 
@@ -659,14 +688,14 @@ class FileVersion implements AuditableInterface
                 $this->addPublishLanguage($newPublishLanguage);
             }
 
-            /** @var FormatOptions $formatOptions */
             foreach ($this->formatOptions as $formatOptions) {
+                /** @var FormatOptions $formatOptions */
                 $newFormatOptionsArray[] = clone $formatOptions;
             }
 
             $this->formatOptions->clear();
-            /** @var FormatOptions $newFormatOptions */
             foreach ($newFormatOptionsArray as $newFormatOptions) {
+                /** @var FormatOptions $newFormatOptions */
                 $newFormatOptions->setFileVersion($this);
                 $this->addFormatOptions($newFormatOptions);
             }

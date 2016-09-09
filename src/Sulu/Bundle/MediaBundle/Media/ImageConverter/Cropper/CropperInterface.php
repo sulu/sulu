@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper;
 
 use Imagine\Image\ImageInterface;
 
 /**
- * Defines a cropping on an image.
+ * Defines a cropper for images.
  */
-interface CroppingInterface
+interface CropperInterface
 {
     /**
      * Crops an image according to the given parameters. The crop has to be valid.
@@ -32,7 +32,7 @@ interface CroppingInterface
     public function crop(ImageInterface $image, $x, $y, $width, $height);
 
     /**
-     * Returns true iff a cropping defined by the cropping parameters is valid on
+     * Returns true iff a crop defined by the crop parameters is valid on
      * a given image with respect to a given format.
      *
      * @param ImageInterface $image The image to crop

@@ -92,7 +92,10 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->media[] = new Media();
 
         $file = new File();
+        $file->setVersion(1);
         $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $file->addFileVersion($fileVersion);
 
         $this->media[0]->addFile($file);
@@ -204,7 +207,6 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->em->persist(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
-        $this->em->flush()->shouldHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldHaveBeenCalled();
 
         $this->assertEquals(10, $formatOptions->getCropX());
@@ -232,7 +234,6 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->em->persist(Argument::type(FormatOptions::class))->shouldNotHaveBeenCalled();
-        $this->em->flush()->shouldNotHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 
@@ -243,7 +244,6 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatOptionsManager->delete(42, '100x100');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
-        $this->em->flush()->shouldHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldHaveBeenCalled();
     }
 
@@ -254,7 +254,6 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatOptionsManager->delete(42, '50x50');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldNotHaveBeenCalled();
-        $this->em->flush()->shouldNotHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 }

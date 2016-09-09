@@ -21,8 +21,8 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping\CroppingInterface;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaling\ScalingInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 
 /**
  * Sulu imagine converter for media.
@@ -35,27 +35,27 @@ class ImagineImageConverter implements ImageConverterInterface
     private $transformationPool;
 
     /**
-     * @var ScalingInterface
+     * @var ScalerInterface
      */
-    private $scaling;
+    private $scaler;
 
     /**
-     * @var CroppingInterface
+     * @var CropperInterface
      */
-    private $cropping;
+    private $cropper;
 
     /**
      * @param TransformationPoolInterface $transformationManager
-     * @param ScalingInterface $scaling
+     * @param ScalerInterface $scaler
      */
     public function __construct(
         TransformationPoolInterface $transformationManager,
-        ScalingInterface $scaling,
-        CroppingInterface $cropping
+        ScalerInterface $scaler,
+        CropperInterface $cropper
     ) {
         $this->transformationPool = $transformationManager;
-        $this->scaling = $scaling;
-        $this->cropping = $cropping;
+        $this->scaler = $scaler;
+        $this->cropper = $cropper;
     }
 
     /**
@@ -148,7 +148,7 @@ class ImagineImageConverter implements ImageConverterInterface
         return $this->modifyAllLayers(
             $image,
             function (ImageInterface $layer) use ($cropParameters) {
-                return $this->cropping->crop(
+                return $this->cropper->crop(
                     $layer,
                     $cropParameters['x'],
                     $cropParameters['y'],
@@ -172,7 +172,7 @@ class ImagineImageConverter implements ImageConverterInterface
         return $this->modifyAllLayers(
             $image,
             function (ImageInterface $layer) use ($scale) {
-                return $this->scaling->scale(
+                return $this->scaler->scale(
                     $layer,
                     $scale['x'],
                     $scale['y'],
@@ -201,7 +201,7 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Constructs the parameters for the cropping. Returns null when
+     * Constructs the parameters for the cropper. Returns null when
      * the image should not be cropped.
      *
      * @param ImageInterface $image
@@ -220,13 +220,13 @@ class ImagineImageConverter implements ImageConverterInterface
                 'height' => $formatOptions->getCropHeight(),
             ];
 
-            if ($this->cropping->isValid(
-                $image,
-                $parameters['x'],
-                $parameters['y'],
-                $parameters['width'],
-                $parameters['height'],
-                $format
+            if ($this->cropper->isValid(
+                    $image,
+                    $parameters['x'],
+                    $parameters['y'],
+                    $parameters['width'],
+                    $parameters['height'],
+                    $format
             )
             ) {
                 return $parameters;

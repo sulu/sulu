@@ -9,25 +9,25 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Cropping;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Cropper;
 
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping\Cropping;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping\CroppingInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\Cropper;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class CroppingTest extends SuluTestCase
+class CropperTest extends SuluTestCase
 {
     /**
-     * @var CroppingInterface
+     * @var CropperInterface
      */
-    private $cropping;
+    private $cropper;
 
     public function setUp()
     {
         parent::setUp();
-        $this->cropping = new Cropping();
+        $this->cropper = new Cropper();
     }
 
     public function testCrop()
@@ -36,7 +36,7 @@ class CroppingTest extends SuluTestCase
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
-        $image = $this->cropping->crop($image, 10, 10, 50, 100);
+        $image = $this->cropper->crop($image, 10, 10, 50, 100);
 
         $this->assertEquals(50, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
@@ -54,7 +54,7 @@ class CroppingTest extends SuluTestCase
                 'y' => 200,
             ],
         ];
-        $valid = $this->cropping->isValid($image, 10, 20, 600, 400, $format);
+        $valid = $this->cropper->isValid($image, 10, 20, 600, 400, $format);
 
         $this->assertTrue($valid);
     }
@@ -71,10 +71,10 @@ class CroppingTest extends SuluTestCase
             ],
         ];
 
-        $valid = $this->cropping->isValid($image, 10, 0, 600, 500, $format);
+        $valid = $this->cropper->isValid($image, 10, 0, 600, 500, $format);
         $this->assertTrue($valid);
 
-        $valid = $this->cropping->isValid($image, 10, 20, 600, 20, $format);
+        $valid = $this->cropper->isValid($image, 10, 20, 600, 20, $format);
         $this->assertTrue($valid);
     }
 
@@ -90,7 +90,7 @@ class CroppingTest extends SuluTestCase
                 'y' => 200,
             ],
         ];
-        $valid = $this->cropping->isValid($image, 10, 20, 300, 200, $format);
+        $valid = $this->cropper->isValid($image, 10, 20, 300, 200, $format);
 
         $this->assertTrue($valid);
     }
@@ -107,7 +107,7 @@ class CroppingTest extends SuluTestCase
                 'y' => 200,
             ],
         ];
-        $valid = $this->cropping->isValid($image, 10, 20, 150, 100, $format);
+        $valid = $this->cropper->isValid($image, 10, 20, 150, 100, $format);
 
         $this->assertFalse($valid);
     }
@@ -124,7 +124,7 @@ class CroppingTest extends SuluTestCase
                 'y' => 200,
             ],
         ];
-        $valid = $this->cropping->isValid($image, 500, 20, 600, 400, $format);
+        $valid = $this->cropper->isValid($image, 500, 20, 600, 400, $format);
 
         $this->assertFalse($valid);
     }
@@ -141,7 +141,7 @@ class CroppingTest extends SuluTestCase
                 'y' => 200,
             ],
         ];
-        $valid = $this->cropping->isValid($image, 10, 200, 600, 400, $format);
+        $valid = $this->cropper->isValid($image, 10, 200, 600, 400, $format);
 
         $this->assertFalse($valid);
     }

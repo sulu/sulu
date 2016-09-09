@@ -219,6 +219,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName($name . '.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);

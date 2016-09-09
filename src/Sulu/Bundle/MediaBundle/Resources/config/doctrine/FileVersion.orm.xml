@@ -15,6 +15,7 @@
         </id>
         <field name="name" type="string" column="name" length="255" />
         <field name="version" type="integer" column="version" />
+        <field name="subVersion" type="integer" column="subVersion" />
         <field name="size" type="integer" column="size" />
         <field name="downloadCounter" type="integer" column="downloadCounter">
             <options>

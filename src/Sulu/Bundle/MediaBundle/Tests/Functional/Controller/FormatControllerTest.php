@@ -71,6 +71,7 @@ class FormatControllerTest extends SuluTestCase
         $fileVersion->setName('My file version');
         $fileVersion->setSize(10);
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setFile($file);
         $file->addFileVersion($fileVersion);
 
@@ -136,7 +137,7 @@ class FormatControllerTest extends SuluTestCase
         $this->assertEquals(50, $response->{'small-inset'}->scale->x);
         $this->assertEquals(50, $response->{'small-inset'}->scale->y);
         $this->assertEquals('inset', $response->{'small-inset'}->scale->mode);
-        $this->assertEmpty($response->{'small-inset'}->options);
+        $this->assertObjectNotHasAttribute('options', $response->{'small-inset'});
 
         $this->assertNotNull($response->{'one-side'});
         $this->assertEquals('one-side', $response->{'one-side'}->key);
@@ -144,7 +145,7 @@ class FormatControllerTest extends SuluTestCase
         $this->assertEquals(200, $response->{'one-side'}->scale->x);
         $this->assertObjectNotHasAttribute('y', $response->{'one-side'}->scale);
         $this->assertEquals('outbound', $response->{'one-side'}->scale->mode);
-        $this->assertEmpty($response->{'one-side'}->options);
+        $this->assertObjectNotHasAttribute('options', $response->{'one-side'});
     }
 
     public function testCGetWithoutLocale()
@@ -233,7 +234,7 @@ class FormatControllerTest extends SuluTestCase
         $this->assertEquals(400, $response->scale->x);
         $this->assertEquals(400, $response->scale->y);
         $this->assertEquals('outbound', $response->scale->mode);
-        $this->assertEmpty($response->options);
+        $this->assertObjectNotHasAttribute('options', $response);
 
         // Test if the options have really been persisted
         $client = $this->createAuthenticatedClient();
@@ -250,7 +251,7 @@ class FormatControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotNull($response->{'big-squared'});
-        $this->assertEmpty($response->{'big-squared'}->options);
+        $this->assertObjectNotHasAttribute('options', $response->{'big-squared'});
     }
 
     public function testPutNotExistingFormat()

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
-use Prophecy\Prediction\NoCallsPrediction;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -74,6 +73,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $file->setVersion(1);
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('dummy.gif');
         $fileVersion->setMimeType('gif');
         $fileVersion->setStorageOptions(['a' => 'b']);
@@ -148,7 +148,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '640x480', 1)->willReturn('/my-url.gif');
+        $formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '640x480', 1, 2)->willReturn('/my-url.gif');
 
         $formatManager = new FormatManager(
             $mediaRepository->reveal(),
@@ -168,6 +168,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             'dummy.gif',
             ['a' => 'b'],
             1,
+            2,
             'gif'
         );
 
@@ -207,7 +208,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1)->should(new NoCallsPrediction());
+        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1, 2)->shouldNotBeCalled();
 
         $formatManager = new FormatManager(
             $mediaRepository->reveal(),
@@ -227,6 +228,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             'dummy.mp3',
             ['a' => 'b'],
             1,
+            2,
             'mp3'
         );
 
@@ -273,7 +275,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
                     'y' => 480,
                     'mode' => 'outbound',
                 ],
-                'options' => [],
+                'options' => null,
             ],
             $formats['640x480']
         );
@@ -287,7 +289,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
                     'y' => 480,
                     'mode' => 'outbound',
                 ],
-                'options' => [],
+                'options' => null,
             ],
             $formats['50x50']
         );
@@ -345,7 +347,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1)->should(new NoCallsPrediction());
+        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1)->shouldNotBeCalled();
 
         return new FormatManager(
             $mediaRepository->reveal(),

@@ -9,15 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaling;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 
 /**
- * The class represents a scaling of an image, according to the interface it implements.
+ * The class represents a scaler of an image, according to the interface it implements.
  */
-class Scaling implements ScalingInterface
+class Scaler implements ScalerInterface
 {
     /**
      * {@inheritdoc}

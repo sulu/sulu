@@ -62,6 +62,7 @@ class FormatController extends RestController implements ClassResourceInterface
         } else {
             $this->getFormatOptionsManager()->save($id, $key, $options);
         }
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         $formatOptions = $this->getFormatOptionsManager()->get($id, $key);
         $format = $this->getFormatManager()->getFormatDefinition($key, $locale, $formatOptions);

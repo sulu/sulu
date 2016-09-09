@@ -9,16 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropping;
+namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 
 /**
- * The class represents a cropping of an image, according to the interface it implements.
+ * The class represents a cropper of an image, according to the interface it implements.
  */
-class Cropping implements CroppingInterface
+class Cropper implements CropperInterface
 {
     /**
      * {@inheritdoc}
@@ -38,9 +38,8 @@ class Cropping implements CroppingInterface
      */
     public function isValid(ImageInterface $image, $x, $y, $width, $height, array $format)
     {
-        return
-            $this->isInsideImage($image, $x, $y, $width, $height) &&
-            $this->isNotSmallerThanFormat($width, $height, $format);
+        return $this->isInsideImage($image, $x, $y, $width, $height)
+            && $this->isNotSmallerThanFormat($width, $height, $format);
     }
 
     /**
@@ -70,7 +69,7 @@ class Cropping implements CroppingInterface
     }
 
     /**
-     * Returns true iff the cropping is greater or equal to the size of a given format.
+     * Returns true iff the crop is greater or equal to the size of a given format.
      *
      * @param $width
      * @param $height
