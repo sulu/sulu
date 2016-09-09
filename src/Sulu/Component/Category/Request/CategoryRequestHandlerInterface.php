@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Category\Request;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 
 /**
  * Handles categories in current request.
@@ -30,7 +30,7 @@ interface CategoryRequestHandlerInterface
     /**
      * Extends current URL with given category.
      *
-     * @param array|Category $category will be included in the URL
+     * @param array|CategoryInterface $category will be included in the URL
      * @param string $categoriesParameter GET parameter name
      *
      * @return string
@@ -40,7 +40,7 @@ interface CategoryRequestHandlerInterface
     /**
      * Set category to current URL.
      *
-     * @param array|Category $category will be included in the URL
+     * @param array|CategoryInterface $category will be included in the URL
      * @param string $categoriesParameter GET parameter name
      *
      * @return string

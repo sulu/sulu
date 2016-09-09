@@ -12,9 +12,7 @@
 namespace Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -64,12 +62,12 @@ class MediaRedirectControllerTest extends SuluTestCase
     private $videoType;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category2;
 
@@ -127,21 +125,21 @@ class MediaRedirectControllerTest extends SuluTestCase
     {
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
         $this->category = $category;
 
         // name for first category
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('First Category');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
         // meta for first category
-        $categoryMeta = new CategoryMeta();
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
         $categoryMeta->setKey('description');
         $categoryMeta->setValue('Description of Category');
@@ -150,21 +148,21 @@ class MediaRedirectControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('de');
 
         $this->category2 = $category2;
 
         // name for second category
-        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans2->setLocale('de');
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
 
         // meta for second category
-        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
         $categoryMeta2->setValue('Description of second Category');

@@ -9,26 +9,26 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Category\Exception;
+namespace Sulu\Bundle\CategoryBundle\Exception;
 
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Component\Rest\Exception\RestException;
 
 /**
- * Keyword is used in multiple categories and translations.
+ * Keyword is used already.
  */
-class KeywordIsMultipleReferencedException extends RestException
+class KeywordNotUniqueException extends RestException
 {
     /**
      * @var Keyword
      */
     private $keyword;
 
-    public function __construct(Keyword $keyword)
+    public function __construct(KeywordInterface $keyword)
     {
         parent::__construct(
-            sprintf('The keyword "%s" is used in multiple categories or translations.', $keyword->getKeyword()),
-            2002
+            sprintf('The keyword "%s" is already in use.', $keyword->getKeyword()),
+            2001
         );
 
         $this->keyword = $keyword;

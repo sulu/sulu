@@ -2,6 +2,65 @@
 
 ## dev-develop
 
+### Refactored category management in backend
+
+The backend of the category bundle was refactored and the category related entities were implemented extensible.
+This lead to the following changes:
+
+**API:**
+`/categories`: renamed parameter `parent` which accepted an id to `rootKey` which accepts a key
+`/categories/{key}/children` was replaced with `/categories/{id}/children`
+
+**Classes:**
+`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface` 
+`Category\KeywordRepositoryInterface` moved to `Entity\KeywordRepositoryInterface`
+`Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException` 
+`Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException` 
+`Category\Exception\KeyNotUniqueException` was replaced with `Exception\CategoryKeyNotUniqueException` 
+
+**Methods:**
+Removed: `Api\Category::setName($name)`
+Replacement: `Api\Category::setTranslation(CategoryTranslationInterface $translation)`
+Reason: The api-entity cannot create a translation-entity as the translation-entity is implemented extensible.
+
+Removed: `Api\Category::setMeta($metaArrays)`
+Replacement: `Api\Category::setMeta($metaEntities)`
+Reason: The api-entity cannot create a meta-entity as the meta-entity is implemented extensible.
+
+Deprecated: `CategoryRepositoryInterface::findCategoryByIds(array $ids)`
+Replacement: `CategoryRepositoryInterface::findCategoriesByIds(array $ids)`
+
+Deprecated: `CategoryRepositoryInterface::findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentId($parentId = null)`
+
+Deprecated: `CategoryRepositoryInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentKey($parentKey = null)`
+
+Deprecated: `CategoryManagerInterface::find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentId($parentId = null)`
+
+Deprecated: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentKey($parentKey = null)`
+
+**Container Parameters/Definitions:**
+Deprecated: `sulu_category.entity.category` 
+Replacement: `sulu.model.category.class` 
+
+Deprecated: `sulu_category.entity.keyword`
+Replacement: `sulu.model.keyword.class`
+
+Deprecated: `sulu_category.category_repository`
+Replacement: `sulu.repository.category`
+
+Deprecated: `sulu_category.keyword_repository`
+Replacement: `sulu.repository.keyword`
+
+**Extensibility**
+Every association of the `Category` entity must be of the type `CategoryInterface` to ensure extensibility
+Every association of the `CategoryTranslation` entity must be of the type `CategoryTranslationInterface` to ensure extensibility
+Every association of the `CategoryMeta` entity must be of the type `CategoryMetaInterface` to ensure extensibility
+Every association of the `Keyword` entity must be of the type `KeywordInterface` to ensure extensibility
+
 ### New definition mechanism for image-formats
 
 A new structure for the image-formats configuration files was introduced.

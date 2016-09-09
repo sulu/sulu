@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -194,10 +194,10 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return CategoryRepository
+     * @return CategoryRepositoryInterface
      */
     private function getCategoryRepository()
     {
-        return $this->getContainer()->get('sulu_category.category_repository');
+        return $this->getContainer()->get('sulu.repository.category');
     }
 }

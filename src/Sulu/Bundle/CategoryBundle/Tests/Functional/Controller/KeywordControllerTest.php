@@ -12,9 +12,8 @@
 namespace Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\CategoryBundle\Entity\Keyword;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class KeywordControllerTest extends SuluTestCase
@@ -25,12 +24,12 @@ class KeywordControllerTest extends SuluTestCase
     private $entityManager;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category1;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category2;
 
@@ -45,19 +44,19 @@ class KeywordControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        $this->category1 = new Category();
+        $this->category1 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $this->category1->setKey('1');
         $this->category1->setDefaultLocale('de');
-        $categoryTranslation1 = new CategoryTranslation();
+        $categoryTranslation1 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTranslation1->setCategory($this->category1);
         $categoryTranslation1->setTranslation('test-1');
         $categoryTranslation1->setLocale('de');
         $this->category1->addTranslation($categoryTranslation1);
 
-        $this->category2 = new Category();
+        $this->category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $this->category2->setKey('2');
         $this->category2->setDefaultLocale('de');
-        $categoryTranslation2 = new CategoryTranslation();
+        $categoryTranslation2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTranslation2->setCategory($this->category2);
         $categoryTranslation2->setTranslation('test-2');
         $categoryTranslation2->setLocale('de');
@@ -68,6 +67,30 @@ class KeywordControllerTest extends SuluTestCase
         $this->entityManager->persist($categoryTranslation1);
         $this->entityManager->persist($categoryTranslation2);
         $this->entityManager->flush();
+    }
+
+    public function testCget()
+    {
+        $this->testPost('keyword1', 'de', $this->category1->getId());
+        $this->testPost('keyword2', 'de', $this->category1->getId());
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories/' . $this->category1->getId() . '/keywords?locale=de'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, $response->total);
+
+        usort($response->_embedded->keywords, function ($key1, $key2) {
+            return $key1->id > $key2->id;
+        });
+
+        $this->assertEquals('keyword1', $response->_embedded->keywords[0]->keyword);
+        $this->assertEquals('keyword2', $response->_embedded->keywords[1]->keyword);
     }
 
     public function testPost($keyword = 'Test', $locale = 'de', $categoryId = null)
@@ -224,7 +247,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNotEquals($first['id'], $result['id']);
 
         // old entity should be deleted
-        $entity = $this->entityManager->find(Keyword::class, $first['id']);
+        $entity = $this->entityManager->find(KeywordInterface::class, $first['id']);
         $this->assertNull($entity);
     }
 
@@ -282,7 +305,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNotNull($result['id']);
         $this->assertNotEquals($first['id'], $result['id']);
 
-        $entity = $this->entityManager->find(Keyword::class, $first['id']);
+        $entity = $this->entityManager->find(KeywordInterface::class, $first['id']);
         $this->assertEquals($first['keyword'], $entity->getKeyword());
     }
 
@@ -334,7 +357,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $client->getResponse());
-        $this->assertNull($this->entityManager->find(Keyword::class, $first['id']));
+        $this->assertNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 
     public function testDeleteMultipleCategories($keyword = 'Test', $locale = 'de')
@@ -348,6 +371,6 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $client->getResponse());
-        $this->assertNotNull($this->entityManager->find(Keyword::class, $first['id']));
+        $this->assertNotNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 }
