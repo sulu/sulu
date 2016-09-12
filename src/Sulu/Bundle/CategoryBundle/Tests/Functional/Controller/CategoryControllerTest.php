@@ -11,11 +11,24 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CategoryControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
     /**
      * @var CategoryInterface
      */
@@ -296,9 +309,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(2, $categories);
         $this->assertCount(1, $categories[0]->children);
@@ -328,9 +344,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(2, $categories);
         $this->assertEquals(2, $response->total);
@@ -359,9 +378,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(4, $categories);
         $this->assertEquals(4, $response->total);
@@ -395,9 +417,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(2, $categories);
         $this->assertEquals(2, $response->total);
@@ -468,9 +493,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(1, $categories);
         $this->assertEquals($this->category3->getId(), $categories[0]->id);
@@ -490,9 +518,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($this->category3->getId(), $categories[0]->id);
@@ -504,7 +535,8 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() . '&expandIds=' . $this->category4->getId()
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey()
+            . '&expandIds=' . $this->category4->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -512,9 +544,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertEquals(2, $response->total);
 
@@ -530,7 +565,8 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey() . '&expandIds=' . $this->category2->getId()
+            '/api/categories?locale=en&flat=true&rootKey=' . $this->category1->getKey()
+            . '&expandIds=' . $this->category2->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -538,9 +574,12 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($this->category3->getId(), $categories[0]->id);
@@ -600,9 +639,12 @@ class CategoryControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(2, $categories);
 
@@ -639,9 +681,12 @@ class CategoryControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(2, $categories);
 
@@ -741,12 +786,30 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPost()
     {
+        $collection = $this->createCollection();
+        $type = $this->createImageType();
+
+        $medias = [
+            $this->createMedia('test-1', $type, $collection),
+            $this->createMedia('test-2', $type, $collection),
+            $this->createMedia('test-3', $type, $collection),
+        ];
+
+        $ids = array_map(
+            function (Media $media) {
+                return $media->getId();
+            },
+            $medias
+        );
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/categories?locale=en',
             [
                 'name' => 'New Category',
+                'description' => 'Sulu is awesome',
+                'medias' => ['ids' => $ids],
                 'key' => 'new-category-key',
                 'meta' => [
                     [
@@ -766,6 +829,8 @@ class CategoryControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('New Category', $response->name);
+        $this->assertEquals('Sulu is awesome', $response->description);
+        $this->assertEquals(['ids' => $ids], (array) $response->medias);
         $this->assertEquals('new-category-key', $response->key);
         $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals('en', $response->locale);
@@ -905,9 +970,12 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals(2, count($response->meta));
 
-        usort($response->meta, function ($m1, $m2) {
-            return strcmp($m1->key, $m2->key);
-        });
+        usort(
+            $response->meta,
+            function ($m1, $m2) {
+                return strcmp($m1->key, $m2->key);
+            }
+        );
         $this->assertTrue('modifiedKey' === $response->meta[0]->key);
         $this->assertTrue('This meta got overriden' === $response->meta[0]->value);
         $this->assertTrue('newMeta' === $response->meta[1]->key);
@@ -924,9 +992,12 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('key', $response);
         $this->assertEquals(2, count($response->meta));
 
-        usort($response->meta, function ($m1, $m2) {
-            return strcmp($m1->key, $m2->key);
-        });
+        usort(
+            $response->meta,
+            function ($m1, $m2) {
+                return strcmp($m1->key, $m2->key);
+            }
+        );
         $this->assertTrue('modifiedKey' === $response->meta[0]->key);
         $this->assertTrue('This meta got overriden' === $response->meta[0]->value);
         $this->assertTrue('newMeta' === $response->meta[1]->key);
@@ -1088,9 +1159,12 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(1, $categories[0]->children);
         $this->assertCount(1, $categories[0]->children[0]->children);
@@ -1121,9 +1195,12 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
         $categories = $response->_embedded->categories;
-        usort($categories, function ($cat1, $cat2) {
-            return $cat1->id > $cat2->id;
-        });
+        usort(
+            $categories,
+            function ($cat1, $cat2) {
+                return $cat1->id > $cat2->id;
+            }
+        );
 
         $this->assertCount(1, $categories[0]->children);
         $this->assertCount(0, $categories[0]->children[0]->children);
@@ -1217,5 +1294,78 @@ class CategoryControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    protected function createImageType()
+    {
+        $imageType = new MediaType();
+        $imageType->setName('image');
+        $imageType->setDescription('This is an image');
+
+        $this->em->persist($imageType);
+        $this->em->flush();
+
+        return $imageType;
+    }
+
+    protected function createCollection()
+    {
+        $collection = new Collection();
+        $collectionType = new CollectionType();
+        $collectionType->setName('Default Collection Type');
+        $collectionType->setDescription('Default Collection Type');
+        $collection->setType($collectionType);
+
+        $this->em->persist($collection);
+        $this->em->persist($collectionType);
+        $this->em->flush();
+
+        return $collection;
+    }
+
+    protected function createMedia($name, $type, $collection, $locale = 'en')
+    {
+        $media = new Media();
+        $media->setType($type);
+        $extension = 'jpeg';
+        $mimeType = 'image/jpg';
+
+        // create file
+        $file = new File();
+        $file->setVersion(1);
+        $file->setMedia($media);
+
+        // create file version
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName($name . '.' . $extension);
+        $fileVersion->setMimeType($mimeType);
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+
+        // create meta
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setLocale($locale);
+        $fileVersionMeta->setTitle($name);
+        $fileVersionMeta->setFileVersion($fileVersion);
+
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        $file->addFileVersion($fileVersion);
+
+        $media->addFile($file);
+        $media->setCollection($collection);
+
+        $this->em->persist($media);
+        $this->em->persist($file);
+        $this->em->persist($fileVersionMeta);
+        $this->em->persist($fileVersion);
+        $this->em->flush();
+
+        return $media;
     }
 }

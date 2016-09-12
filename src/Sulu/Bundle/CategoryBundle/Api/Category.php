@@ -18,6 +18,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
+use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
 class Category extends ApiEntityWrapper
@@ -86,6 +87,66 @@ class Category extends ApiEntityWrapper
         }
 
         return $translation->getTranslation();
+    }
+
+    /**
+     * Returns the description of the Category dependent on the locale.
+     *
+     * @VirtualProperty
+     * @SerializedName("description")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return;
+        }
+
+        return $translation->getDescription();
+    }
+
+    /**
+     * Returns the medias of the Category dependent on the locale.
+     *
+     * @VirtualProperty
+     * @SerializedName("medias")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getMediasRawData()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return ['ids' => []];
+        }
+
+        $ids = [];
+        foreach ($translation->getMedias() as $media) {
+            $ids[] = $media->getId();
+        }
+
+        return ['ids' => $ids];
+    }
+
+    /**
+     * Returns the medias of the Category dependent on the locale.
+     *
+     * @return Media[]
+     */
+    public function getMedias()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return [];
+        }
+
+        $medias = [];
+        foreach ($translation->getMedias() as $media) {
+            $medias[] = new Media($media, $this->locale);
+        }
+
+        return $medias;
     }
 
     /**

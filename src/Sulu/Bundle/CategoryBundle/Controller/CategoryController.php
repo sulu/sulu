@@ -223,10 +223,18 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
+        $mediasData = $request->get('medias', []);
+        $medias = null;
+        if (array_key_exists('ids', $mediasData)) {
+            $medias = $mediasData['ids'];
+        }
+
         $locale = $this->getRequestParameter($request, 'locale', true);
         $data = [
             'id' => $id,
             'name' => (empty($request->get('name'))) ? null : $request->get('name'),
+            'description' => (empty($request->get('description'))) ? null : $request->get('description'),
+            'medias' => $medias,
             'key' => (empty($request->get('key'))) ? null : $request->get('key'),
             'meta' => $request->get('meta'),
             'parent' => $request->get('parent'),

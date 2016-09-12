@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -24,6 +25,16 @@ class CategoryTranslation implements CategoryTranslationInterface
      * @var string
      */
     protected $translation;
+
+    /**
+     * @var string
+     */
+    protected $description;
+
+    /**
+     * @var Media[]
+     */
+    protected $medias;
 
     /**
      * @var string
@@ -68,6 +79,7 @@ class CategoryTranslation implements CategoryTranslationInterface
     public function __construct()
     {
         $this->keywords = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     /**
@@ -86,6 +98,40 @@ class CategoryTranslation implements CategoryTranslationInterface
     public function getTranslation()
     {
         return $this->translation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMedias()
+    {
+        return $this->medias;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMedias($medias)
+    {
+        $this->medias = $medias;
     }
 
     /**

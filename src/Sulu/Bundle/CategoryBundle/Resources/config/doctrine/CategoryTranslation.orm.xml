@@ -10,6 +10,13 @@
 
         <field name="translation" column="translation" type="string" length="255"/>
         <field name="locale" column="locale" type="string" length="5"/>
+        <field name="description" type="text" column="description" nullable="true"/>
+
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
 
         <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="translations">
             <cascade>
