@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2886 [MediaBundle]         Changed behat tests for column navigation
+    * HOTFIX      #2886 [ContentBundle]       Changed behat tests for column navigation
     * HOTFIX      #2890 [Localization]        Reintroduced localization provider class
     * HOTFIX      #2876 [MediaBundle]         Changed column navigation to markable and ok button
     * HOTFIX      #2876 [ContentBundle]       Changed column navigation to markable and ok button
