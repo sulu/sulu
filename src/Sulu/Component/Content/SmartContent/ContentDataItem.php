@@ -67,6 +67,18 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface
     }
 
     /**
+     * Returns the url of the content item.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     */
+    public function getUrl()
+    {
+        return $this->get('url');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getImage()

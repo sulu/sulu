@@ -262,9 +262,9 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false],
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false, 'url' => '/team/johannes'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false, 'url' => '/team/thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -289,8 +289,8 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false, 'url' => '/team/thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -317,8 +317,8 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false],
-                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
+                ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false, 'url' => '/team/thomas'],
             ],
             $result['_embedded']['items']
         );
@@ -343,8 +343,8 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false],
-                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false, 'url' => '/team/johannes'],
+                ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
             ],
             $result['_embedded']['items']
         );
@@ -369,7 +369,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
         $this->assertEquals(
             [
-                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false],
+                ['id' => $this->johannes->getUuid(), 'title' => 'Johannes', 'publishedState' => false, 'url' => '/team/johannes'],
             ],
             $result['_embedded']['items']
         );

@@ -125,6 +125,7 @@ define(['services/husky/util'], function(util) {
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             titleKey: 'title',
+            descriptionKey: 'url',
             imageKey: 'image',
             pathKey: 'path',
             localeKey: 'locale',
@@ -219,7 +220,10 @@ define(['services/husky/util'], function(util) {
                 '<% if (!!image) { %>',
                 '        <span class="image"><img src="<%= image %>"/></span>',
                 '<% } %>',
-                '        <span class="value"><%= value %></span>',
+                '        <span class="value" title="<%= value %>"><%= (typeof cropper === "function") ? cropper(value, 42) : value %></span>',
+                '<% if (!!description) { %>',
+                '        <span class="description" title="<%= description %>"><%= (typeof cropper === "function") ? cropper(description, 55) : description %></span>',
+                '<% } %>',
                 '    </a>',
                 '</li>'
             ].join(''),
@@ -630,11 +634,13 @@ define(['services/husky/util'], function(util) {
                     this.sandbox.dom.append(ul, _.template(template, {
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
+                        description: item[this.options.descriptionKey] || null,
                         image: item[this.options.imageKey] || null,
                         webspace: this.options.webspace,
                         locale: this.options.locale,
                         num: (index + 1),
-                        icons: this.getItemIcons(item)
+                        icons: this.getItemIcons(item),
+                        cropper: this.sandbox.util.cropMiddle
                     }));
                 }.bind(this));
 

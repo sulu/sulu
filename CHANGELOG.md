@@ -1,6 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
+    * ENHANCEMENT #2860 [ContentBundle]       Added url to internal links and smart-content
 * dev-develop
     * FEATURE     #2914 [CategoryBundle]      Added description and medias to category
     * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
