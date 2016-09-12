@@ -32108,25 +32108,33 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         toggleSelectRecord: function(id, select) {
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
-                // ensure that checkboxes are checked
-                this.sandbox.dom.prop(
-                    this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', true
-                );
-                this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
-                this.indeterminateSelectParents(id);
+
+                if (this.table.rows[id]) {
+                    // ensure that checkboxes are checked
+                    this.sandbox.dom.prop(
+                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', true
+                    );
+                    this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
+                    this.indeterminateSelectParents(id);
+                }
             } else {
                 this.datagrid.setItemUnselected.call(this.datagrid, id);
-                // ensure that checkboxes are unchecked
-                this.sandbox.dom.prop(
-                    this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
-                );
-                if (this.table.rows[id].selectedChildren > 0) {
+
+                if (this.table.rows[id]) {
+                    // ensure that checkboxes are unchecked
                     this.sandbox.dom.prop(
-                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'indeterminate', true
+                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
                     );
+                    if (this.table.rows[id].selectedChildren > 0) {
+                        this.sandbox.dom.prop(
+                            this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el),
+                            'indeterminate',
+                            true
+                        );
+                    }
+                    this.sandbox.dom.removeClass(this.table.rows[id].$el, constants.selectedRowClass);
+                    this.indeterminateUnselectParents(id);
                 }
-                this.sandbox.dom.removeClass(this.table.rows[id].$el, constants.selectedRowClass);
-                this.indeterminateUnselectParents(id);
             }
 
             this.updateSelectAll();
@@ -45657,7 +45665,7 @@ define('__component__$dropzone@husky',[], function() {
  * @params {String} [options.inputId] DOM-id to give the actual input-tag
  * @params {String} [options.inputName] DOM-name to give the actual input-tag. Can be usefull in forms
  * @params {String} [options.value] value to set at the beginning
- * @params {String} [options.placeholder] html5-placholder to use
+ * @params {String} [options.placeholder] html5-placeholder to use
  * @params {Boolean} [options.disabled] defines if input can be edited
  * @params {String} [options.skin] name of the skin to use. Currently 'phone', 'password', 'url', 'email', 'date', 'time', 'color'. Each skin brings it's own default values. For example the password skin has automatically inputType: 'password'
  * @params {Object} [options.datepickerOptions] config-object to pass to the datepicker component - you can find possible values here http://bootstrap-datepicker.readthedocs.org/en/release/options.html
@@ -45910,7 +45918,8 @@ define('__component__$input@husky',[], function() {
                 if (!!this.options.frontIcon) {
                     this.sandbox.dom.html(this.input.$front, '<a class="fa-' + this.options.frontIcon + '"></a>');
                 } else if (!!this.options.frontText) {
-                    this.sandbox.dom.html(this.input.$front, '<a class="' + constants.textClass + '">' + this.options.frontText + '</a>');
+                    this.sandbox.dom.html(this.input.$front,
+                        '<a class="' + constants.textClass + '">' + this.options.frontText + '</a>');
                 } else {
                     this.sandbox.dom.html(this.input.$front, this.options.frontHtml);
                 }
@@ -45945,7 +45954,8 @@ define('__component__$input@husky',[], function() {
                 if (!!this.options.backIcon) {
                     this.sandbox.dom.html(this.input.$back, '<span class="fa-' + this.options.backIcon + '"></span>');
                 } else if (!!this.options.backText) {
-                    this.sandbox.dom.html(this.input.$back, '<span class="' + constants.textClass + '">' + this.options.backText + '</span>');
+                    this.sandbox.dom.html(this.input.$back,
+                        '<span class="' + constants.textClass + '">' + this.options.backText + '</span>');
                 } else {
                     this.sandbox.dom.html(this.input.$back, this.options.backHtml);
                 }
@@ -45969,7 +45979,9 @@ define('__component__$input@husky',[], function() {
          */
         renderDatePicker: function() {
             this.sandbox.dom.addClass(this.$el, constants.datepickerClass);
-            this.sandbox.dom.attr(this.input.$input, 'placeholder', this.sandbox.globalize.getDatePattern());
+            if (!this.options.placeholder) {
+                this.sandbox.dom.attr(this.input.$input, 'placeholder', this.sandbox.globalize.getDatePattern());
+            }
 
             // parse stard and end date
             if (!!this.options.datepickerOptions.startDate && typeof(this.options.datepickerOptions.startDate) === 'string') {
@@ -45979,9 +45991,10 @@ define('__component__$input@husky',[], function() {
                 this.options.datepickerOptions.endDate = new Date(this.options.datepickerOptions.endDate);
             }
 
-            this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions).on('changeDate', function(event) {
-                this.setDatepickerValueAttr(event.date);
-            }.bind(this));
+            this.sandbox.datepicker.init(this.input.$input, this.options.datepickerOptions).on('changeDate',
+                function(event) {
+                    this.setDatepickerValueAttr(event.date);
+                }.bind(this));
             this.updateValue();
 
             this.bindDatepickerDomEvents();
@@ -46084,7 +46097,8 @@ define('__component__$input@husky',[], function() {
                     this.sandbox.dom.attr(this.sandbox.dom.find('a', this.input.$front), 'target', '_blank');
                 }
             } else {
-                this.sandbox.dom.removeClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('a', this.input.$front),
+                    constants.linkClickableClass);
                 this.sandbox.dom.removeAttr(this.sandbox.dom.find('a', this.input.$front), 'href');
             }
         },
