@@ -374,6 +374,18 @@
                 <source>sulu-media.following-crops-out-of-date</source>
                 <target>Les cadrages pour les formats suivants sont caducs</target>
             </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Modifier l'image originale</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Nouvelle version d'image sera créé</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Nouvelle version d'image créé. Cadrages définis peuvent être obsolètes.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

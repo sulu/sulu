@@ -28003,11 +28003,64 @@ define('services/husky/util',['sprintf'], function(sprintf) {
         },
 
         /**
+         * From a given image-tag, with an already loaded image. This function returns the
+         * base64 string for that image
+         *
+         * @param {Object} $img The image dom element
+         *
+         * @returns {string} the base64 string
+         */
+        getBase64FromImageTag = function($img) {
+            var canvas = document.createElement("canvas"), ctx, dataUrl;
+
+            canvas.width = $img.get(0).width;
+            canvas.height = $img.get(0).height;
+            ctx = canvas.getContext("2d");
+            ctx.drawImage($img.get(0), 0, 0);
+            dataUrl = canvas.toDataURL("image/png");
+
+            return dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
+        },
+
+        /**
+         * Converts a base64 string to a blob
+         *
+         * @param {String} b64Data The base64 string
+         * @param {String} contentType The content type of the base64 string
+         *
+         * @returns {Blob}
+         */
+        base64toBlob = function(b64Data, contentType) {
+            var byteCharacters = atob(b64Data),
+                byteArrays = [],
+                sliceSize = 512,
+                blob, slice, i;
+
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                var byteNumbers = new Array(slice.length);
+                for (i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                var byteArray = new Uint8Array(byteNumbers);
+
+                byteArrays.push(byteArray);
+            }
+
+            blob = new Blob(byteArrays, {type: contentType});
+
+            return blob;
+        },
+
+        /**
          * Calculates the number of matches parts of the first array
          * have with parts of the second array
          *
          * @param {Array} parts1
          * @param {Array} parts2
+         *
          * @returns {number}
          */
         getSuccessfulMatches = function(parts1, parts2) {
@@ -28347,6 +28400,36 @@ define('services/husky/util',['sprintf'], function(sprintf) {
      * @return {String}
      */
     Util.prototype.sprintf = sprintf.sprintf;
+
+    /**
+     * Loads an image from a given url and converts it into a blob.
+     *
+     * @param {String} imageUrl The url to load the image from
+     *
+     * @returns {Object} a promise which gets resolved with the image blob
+     */
+    Util.prototype.loadImageAsBlob = function(imageUrl) {
+        var $container = $('<div/>'),
+            $img = $('<img crossOrigin="Anonymous" src="' + imageUrl + '"/>'),
+            whenImageLoaded = $.Deferred(),
+            base64Image, blob;
+
+        $container.width(0);
+        $container.height(0);
+        $container.css('visibility', 'hidden');
+        $('body').append($container);
+
+        $img.on('load', function() {
+            base64Image = getBase64FromImageTag($img);
+            $container.remove();
+            blob = base64toBlob(base64Image, 'image/png');
+            blob.name = 'blob.png';
+            whenImageLoaded.resolve(blob);
+        });
+        $container.append($img);
+
+        return whenImageLoaded;
+    };
 
     Util.getInstance = function() {
         if (instance == null) {
@@ -45291,6 +45374,15 @@ define('__component__$dropzone@husky',[], function() {
             return createEventName.call(this, 'disable');
         },
 
+        /**
+         * listens on and adds an image to the dropzone by a given url
+         * @event husky.dropzone.<instance-name>.add-file
+         * @param {String} url The url to the file to add
+         */
+        ADD_IMAGE = function() {
+            return createEventName.call(this, 'add-image');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix, global) {
             return [
@@ -45408,6 +45500,19 @@ define('__component__$dropzone@husky',[], function() {
                     this.openOverlay();
                 }.bind(this));
             }
+
+            this.sandbox.on(ADD_IMAGE.call(this), this.addImage.bind(this));
+        },
+
+        /**
+         * Adds an image to the the dropzone by a given url.
+         *
+         * @param {String} url The url to first load the image from and than upload it via the dropzone
+         */
+        addImage: function(url) {
+            this.sandbox.util.loadImageAsBlob(url).then(function(imageBlob) {
+                this.dropzone.addFile(imageBlob);
+            }.bind(this));
         },
 
         /**
