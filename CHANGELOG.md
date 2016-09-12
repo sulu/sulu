@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #2957 [MediaBundle]         Show missing image in media selection
+    * FEATURE     #2951 [MediaBundle]         Added adobe creative sdk to edit uploaded images
     * FEATURE     #2947 [MediaBundle]         Redesign of media selection overlay
     * BUGFIX      #2949 [MediaBundle]         Renamed toolbar entries in media section to avoid deleting collections by accident
     * BUGFIX      #2936 [MediaBundle]         Fixed cutted media format toolbar dropdown 

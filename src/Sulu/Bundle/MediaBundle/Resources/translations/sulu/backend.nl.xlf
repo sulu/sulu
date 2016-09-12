@@ -366,6 +366,18 @@
                 <source>sulu-media.following-crops-out-of-date</source>
                 <target>Uitsneden van de volgende afbeeldingsformaten zijn verouderd</target>
             </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Origineel aanpassen</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Nieuwe versie van de afbeelding wordt aangemaakt</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Een nieuwe versie van de afbeelding wordt aangemaakt.  Bestaande crops kunnen vervallen.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
