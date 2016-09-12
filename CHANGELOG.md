@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2914 [CategoryBundle]      Added description and medias to category
     * ENHANCEMENT #2910 [ContentBundle]       Updated husky and added placeholder param to date
     * ENHANCEMENT #2912 [CategoryBundle]      Implemented category-bundle entities extensible
     * ENHANCEMENT #2912 [CategoryBundle]      Refactored CategoryBundle backend
