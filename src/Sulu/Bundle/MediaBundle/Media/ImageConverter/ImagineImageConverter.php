@@ -17,10 +17,12 @@ use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Imagine;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use RuntimeException;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaling\ScalingInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 
 /**
  * Sulu imagine converter for media.
@@ -33,26 +35,33 @@ class ImagineImageConverter implements ImageConverterInterface
     private $transformationPool;
 
     /**
-     * @var ScalingInterface
+     * @var ScalerInterface
      */
-    private $scaling;
+    private $scaler;
+
+    /**
+     * @var CropperInterface
+     */
+    private $cropper;
 
     /**
      * @param TransformationPoolInterface $transformationManager
-     * @param ScalingInterface $scaling
+     * @param ScalerInterface $scaler
      */
     public function __construct(
         TransformationPoolInterface $transformationManager,
-        ScalingInterface $scaling
+        ScalerInterface $scaler,
+        CropperInterface $cropper
     ) {
         $this->transformationPool = $transformationManager;
-        $this->scaling = $scaling;
+        $this->scaler = $scaler;
+        $this->cropper = $cropper;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convert($originalPath, array $format)
+    public function convert($originalPath, array $format, $formatOptions)
     {
         $imagine = $this->newImage();
         $image = null;
@@ -68,6 +77,10 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $image = $this->toRGB($image);
 
+        $cropParameters = $this->getCropParameters($image, $formatOptions, $format);
+        if (isset($cropParameters)) {
+            $image = $this->applyCrop($image, $cropParameters);
+        }
         if (isset($format['scale'])) {
             $image = $this->applyScale($image, $format['scale']);
         }
@@ -123,6 +136,30 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
+     * Crops a given image according to given parameters.
+     *
+     * @param ImageInterface $image The image to crop
+     * @param array $cropParameters The parameters which define the area to crop
+     *
+     * @return ImageInterface The cropped image
+     */
+    private function applyCrop(ImageInterface $image, array $cropParameters)
+    {
+        return $this->modifyAllLayers(
+            $image,
+            function (ImageInterface $layer) use ($cropParameters) {
+                return $this->cropper->crop(
+                    $layer,
+                    $cropParameters['x'],
+                    $cropParameters['y'],
+                    $cropParameters['width'],
+                    $cropParameters['height']
+                );
+            }
+        );
+    }
+
+    /**
      * Scales a given image according to the information passed as the second argument.
      *
      * @param ImageInterface $image
@@ -135,7 +172,7 @@ class ImagineImageConverter implements ImageConverterInterface
         return $this->modifyAllLayers(
             $image,
             function (ImageInterface $layer) use ($scale) {
-                return $this->scaling->scale(
+                return $this->scaler->scale(
                     $layer,
                     $scale['x'],
                     $scale['y'],
@@ -164,6 +201,42 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
+     * Constructs the parameters for the cropper. Returns null when
+     * the image should not be cropped.
+     *
+     * @param ImageInterface $image
+     * @param FormatOptions $formatOptions
+     * @param array $format
+     *
+     * @return array The crop parameters or null
+     */
+    private function getCropParameters(ImageInterface $image, $formatOptions, array $format)
+    {
+        if (isset($formatOptions)) {
+            $parameters = [
+                'x' => $formatOptions->getCropX(),
+                'y' => $formatOptions->getCropY(),
+                'width' => $formatOptions->getCropWidth(),
+                'height' => $formatOptions->getCropHeight(),
+            ];
+
+            if ($this->cropper->isValid(
+                    $image,
+                    $parameters['x'],
+                    $parameters['y'],
+                    $parameters['width'],
+                    $parameters['height'],
+                    $format
+            )
+            ) {
+                return $parameters;
+            }
+        }
+
+        return;
+    }
+
+    /**
      * Applies a callback to every layer of an image and returns the resulting image.
      *
      * @param ImageInterface $image
@@ -182,7 +255,7 @@ class ImagineImageConverter implements ImageConverterInterface
             foreach ($image->layers() as $layer) {
                 $countLayer += 1;
                 $layer = call_user_func($modifier, $layer);
-                if ($countLayer == 1) {
+                if ($countLayer === 1) {
                     $temporaryImage = $layer; // use first layer as main image
                 } else {
                     $temporaryImage->layers()->add($layer);

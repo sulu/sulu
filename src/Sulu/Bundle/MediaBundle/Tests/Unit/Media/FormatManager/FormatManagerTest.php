@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
-use Prophecy\Prediction\NoCallsPrediction;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -74,19 +73,20 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $file->setVersion(1);
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('dummy.gif');
         $fileVersion->setMimeType('gif');
         $fileVersion->setStorageOptions(['a' => 'b']);
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 
-        $mediaRepository->findMediaById(1)->willReturn($media);
+        $mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
 
         $originalStorage->load('dummy.gif', 1, ['a' => 'b'])->willReturn(
             dirname(__DIR__) . '/../../Fixtures/image/data/dummy.gif'
         );
 
-        $converter->convert(Argument::type('string'), $formats['640x480'])->willReturn($image->reveal());
+        $converter->convert(Argument::type('string'), $formats['640x480'], null)->willReturn($image->reveal());
 
         $formatCache->save(
             Argument::type('string'),
@@ -148,7 +148,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '640x480', 1)->willReturn('/my-url.gif');
+        $formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '640x480', 1, 2)->willReturn('/my-url.gif');
 
         $formatManager = new FormatManager(
             $mediaRepository->reveal(),
@@ -168,6 +168,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             'dummy.gif',
             ['a' => 'b'],
             1,
+            2,
             'gif'
         );
 
@@ -207,7 +208,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1)->should(new NoCallsPrediction());
+        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1, 2)->shouldNotBeCalled();
 
         $formatManager = new FormatManager(
             $mediaRepository->reveal(),
@@ -227,9 +228,138 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             'dummy.mp3',
             ['a' => 'b'],
             1,
+            2,
             'mp3'
         );
 
         $this->assertEquals([], $result);
+    }
+
+    public function testGetFormatDefinition()
+    {
+        $formatManager = $this->getSimpleFormatManager();
+        $format = $formatManager->getFormatDefinition('640x480', 'en', ['my-option' => 'my-value']);
+
+        $this->assertEquals('640x480', $format['key']);
+        $this->assertEquals('My image format for testing', $format['title']);
+        $this->assertEquals(['x' => 640, 'y' => 480, 'mode' => 'outbound'], $format['scale']);
+        $this->assertEquals(['my-option' => 'my-value'], $format['options']);
+    }
+
+    public function testGetFormatDefinitionNotExistingTitle()
+    {
+        $formatManager = $this->getSimpleFormatManager();
+        $format = $formatManager->getFormatDefinition('50x50', 'en');
+        $this->assertEquals('50x50', $format['title']);
+    }
+
+    public function testGetFormatDefinitionNotExistingLocale()
+    {
+        $formatManager = $this->getSimpleFormatManager();
+        $format = $formatManager->getFormatDefinition('640x480', 'it');
+        $this->assertEquals('My image format for testing', $format['title']);
+    }
+
+    public function testGetFormatDefinitions()
+    {
+        $formatManager = $this->getSimpleFormatManager();
+
+        $formats = $formatManager->getFormatDefinitions('de');
+
+        $this->assertEquals(
+            [
+                'key' => '640x480',
+                'title' => 'Mein Bildformat zum testen',
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'options' => null,
+            ],
+            $formats['640x480']
+        );
+
+        $this->assertEquals(
+            [
+                'key' => '50x50',
+                'title' => '50x50',
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'options' => null,
+            ],
+            $formats['50x50']
+        );
+    }
+
+    private function getSimpleFormatManager()
+    {
+        $mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepository');
+        $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
+        $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
+        $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
+        $videoThumbnailService = $this->prophesize(
+            'Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface'
+        );
+
+        $ghostScriptPath = '';
+        $saveImage = true;
+        $previewMimeTypes = ['gif'];
+        $responseHeaders = [];
+        $formats = [
+            '640x480' => [
+                'key' => '640x480',
+                'meta' => [
+                    'title' => [
+                        'en' => 'My image format for testing',
+                        'de' => 'Mein Bildformat zum testen',
+                    ],
+                ],
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [],
+                'options' => [
+                    'jpeg_quality' => 70,
+                    'png_compression_level' => 6,
+                ],
+            ],
+            '50x50' => [
+                'key' => '50x50',
+                'meta' => [
+                    'title' => [],
+                ],
+                'scale' => [
+                    'x' => 640,
+                    'y' => 480,
+                    'mode' => 'outbound',
+                ],
+                'transformations' => [],
+                'options' => [
+                    'jpeg_quality' => 70,
+                    'png_compression_level' => 6,
+                ],
+            ],
+        ];
+
+        $formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1)->shouldNotBeCalled();
+
+        return new FormatManager(
+            $mediaRepository->reveal(),
+            $originalStorage->reveal(),
+            $formatCache->reveal(),
+            $converter->reveal(),
+            $videoThumbnailService->reveal(),
+            $ghostScriptPath,
+            $saveImage,
+            $previewMimeTypes,
+            $responseHeaders,
+            $formats
+        );
     }
 }

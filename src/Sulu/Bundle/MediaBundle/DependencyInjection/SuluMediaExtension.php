@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,6 +57,22 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         __DIR__ . '/../Resources/config/image-formats.xml',
                     ],
                     'search' => ['enabled' => $container->hasExtension('massive_search')],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            MediaNotFoundException::class => 404,
+                            FileVersionNotFoundException::class => 404,
+                            FormatNotFoundException::class => 404,
+                            FormatOptionsMissingParameterException::class => 400,
+                        ],
+                    ],
                 ]
             );
         }

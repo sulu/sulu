@@ -358,6 +358,17 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("subVersion")
+     *
+     * @return int
+     */
+    public function getSubVersion()
+    {
+        return $this->getFileVersion()->getSubVersion();
+    }
+
+    /**
      * @return array
      */
     public function getAdditionalVersionData()

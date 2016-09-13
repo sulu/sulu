@@ -640,6 +640,7 @@ class CollectionManager implements CollectionManagerInterface
             $fileVersion->getName(),
             $fileVersion->getStorageOptions(),
             $fileVersion->getVersion(),
+            $fileVersion->getSubVersion(),
             $fileVersion->getMimeType()
         );
 

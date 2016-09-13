@@ -91,9 +91,9 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function getMediaUrl($id, $fileName, $options, $format, $version)
+    public function getMediaUrl($id, $fileName, $options, $format, $version, $subVersion)
     {
-        return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version);
+        return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version, $subVersion);
     }
 
     /**
@@ -119,7 +119,7 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * @param string $prePath
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
      * @param string $format
      *
@@ -135,19 +135,24 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * @param string $prePath
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
      * @param string $format
      * @param string $version
+     * @param string $subVersion
      *
      * @return string
      */
-    protected function getPathUrl($prePath, $id, $fileName, $format, $version = '')
+    protected function getPathUrl($prePath, $id, $fileName, $format, $version = '', $subVersion = '')
     {
         $segment = $this->getSegment($id) . '/';
         $prePath = rtrim($prePath, '/');
 
-        return str_replace('{slug}', $format . '/' . $segment . $id . '-' . rawurlencode($fileName), $prePath) . ($version != '' ? '?v=' . $version : '');
+        return str_replace(
+            '{slug}',
+            $format . '/' . $segment . $id . '-' . rawurlencode($fileName),
+            $prePath
+        ) . '?v=' . $version . '-' . $subVersion;
     }
 
     /**

@@ -219,6 +219,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName($name . '.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -324,7 +325,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=50x50');
 
         $this->assertRegExp(
-            '/\/uploads\/media\/50x50\/\d{2}\/' . $media->getId() . '-photo.jpg\?v=1/',
+            '/\/uploads\/media\/50x50\/\d{2}\/' . $media->getId() . '-photo.jpeg\?v=1/',
             $client->getResponse()->headers->get('location')
         );
     }

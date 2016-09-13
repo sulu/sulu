@@ -207,6 +207,7 @@ class AccountMediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -218,6 +219,7 @@ class AccountMediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file2);

@@ -19,6 +19,6 @@ class FileVersionNotFoundException extends MediaException
      */
     public function __construct($id, $version)
     {
-        parent::__construct('FileVersion ' . $version . ' from the Media with ID ' . $id . ' ', self::EXCEPTION_CODE_FILE_VERSION_NOT_FOUND);
+        parent::__construct('File version ' . $version . ' of the Media with id ' . $id . ' ', self::EXCEPTION_CODE_FILE_VERSION_NOT_FOUND);
     }
 }

@@ -142,6 +142,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName($title . '.png');
         $fileVersion->setVersion($version);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setSize(0);
         $fileVersion->setFile($file);
 

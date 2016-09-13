@@ -248,6 +248,7 @@ class MediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName($name . '.' . $extension);
         $fileVersion->setMimeType($mimeType);
         $fileVersion->setFile($file);

@@ -77,10 +77,10 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
                 $forceRatio = static::SCALE_FORCE_RATIO_DEFAULT;
                 $retina = static::SCALE_RETINA_DEFAULT;
                 if ($xNode !== null && $xNode->nodeValue !== '') {
-                    $xValue = $xNode->nodeValue;
+                    $xValue = intval($xNode->nodeValue);
                 }
                 if ($yNode !== null && $yNode->nodeValue !== '') {
-                    $yValue = $yNode->nodeValue;
+                    $yValue = intval($yNode->nodeValue);
                 }
                 if ($xValue === null && $yValue === null) {
                     throw new MissingScaleDimensionException();
