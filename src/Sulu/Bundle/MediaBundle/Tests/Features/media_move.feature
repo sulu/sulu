@@ -16,10 +16,13 @@ Feature: Media move
         And I expect the "husky.datagrid.view.rendered" event
         Then I expect to see "4" ".masonry-item" elements
         When I click on the element ".masonry-item:nth-child(1) .custom-checkbox"
+        And I expect the "husky.toolbar.collection.item.enable media-move" event
         And I click toolbar item "media-move"
         And I expect an overlay to appear
-        And I expect the "husky.column-navigation.collection-select.initialized" event
+        And I expect the "husky.column-navigation.move-media.loaded" event
         And I double click the column navigation item "Foobar"
+        And I expect the "husky.column-navigation.move-media.action" event
+        And I click the ok button
         Then I expect a success notification to appear
         When I am editing the media collection "Foobar"
         Then I expect to see "1" ".masonry-item" elements
@@ -37,6 +40,7 @@ Feature: Media move
         Then I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         When I double click the column navigation item "Foobar"
+        And I click the ok button
         Then I expect a success notification to appear
         When I am editing the media collection "Foobar"
         Then I expect to see "2" ".masonry-item" elements

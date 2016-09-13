@@ -34,6 +34,7 @@ Feature: Single Internal links content type
         And I click the column navigation item "sulu.io"
         And I expect the "husky.column-navigation.link.loaded" event
         And I double click the column navigation item "Articles"
+        And I click the ok button
         And I expect the "sulu.content.changed" event
         And I click the save icon
         And I click toolbar item "savePublish"
