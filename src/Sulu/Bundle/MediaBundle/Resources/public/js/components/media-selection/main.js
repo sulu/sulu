@@ -76,7 +76,9 @@ define(['underscore'], function(_) {
                 }
 
                 if (fallbackLocale) {
+                    content.push('<div class="badges">');
                     content.push('    <span class="badge">', fallbackLocale, '</span>');
+                    content.push('</div>');
                 }
 
                 content.push(
