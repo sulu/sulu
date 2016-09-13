@@ -11,11 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapXMLGeneratorInterface;
-use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
-use Sulu\Component\HttpCache\HttpCache;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,59 +20,88 @@ use Symfony\Component\HttpFoundation\Response;
 class SitemapController extends WebsiteController
 {
     /**
-     * Returns a rendered xmlsitemap.
+     * Render sitemap-index of all available sitemap.xml files.
+     * If only one provider exists this provider will be rendered directly.
      *
-     * @return Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
-        /** @var RequestAnalyzerInterface $requestAnalyzer */
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
+        $pool = $this->get('sulu_website.sitemap.pool');
+        if (!$this->get('sulu_website.sitemap.pool')->hasIndex()) {
+            return $this->sitemapAction($request, $pool->getFirstAlias());
+        }
 
-        /** @var SitemapXMLGeneratorInterface $sitemapXMLGenerator */
-        $sitemapXMLGenerator = $this->get('sulu_website.sitemap_xml_generator');
-
-        $sitemap = $this->get('sulu_content.content_repository')->findAllByPortal(
-            $requestAnalyzer->getPortal()->getXDefaultLocalization()->getLocalization(),
-            $requestAnalyzer->getPortal()->getKey(),
-            MappingBuilder::create()
-                ->addProperties(['changed'])
-                ->setResolveUrl(true)
-                ->getMapping()
-        );
-
-        $webspaceSitemaps = [
+        return $this->render(
+            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
             [
-                'localizations' => array_map(
-                    function (Localization $localization) {
-                        return $localization->getLocalization();
-                    },
-                    $requestAnalyzer->getWebspace()->getAllLocalizations()
-                ),
-                'defaultLocalization' => $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
-                'sitemap' => $sitemap,
-            ],
-        ];
+                'sitemaps' => $this->get('sulu_website.sitemap.pool')->getIndex(),
+            ]
+        );
+    }
 
-        $preferredDomain = $request->getHttpHost();
+    /**
+     * Render sitemap.xml for a single provider.
+     * If this provider has multiple-pages a sitemapindex will be rendered.
+     *
+     * @param Request $request
+     * @param string $alias
+     *
+     * @return Response
+     */
+    public function sitemapAction(Request $request, $alias)
+    {
+        $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
 
-        // XML Response
-        $response = new Response();
-        $response->setMaxAge(240);
-        $response->setSharedMaxAge(960);
+        if (1 === ($maxPage = (int) $provider->getMaxPage())) {
+            return $this->sitemapPaginatedAction($request, $alias, 1);
+        }
 
-        $response->headers->set(
-            HttpCache::HEADER_REVERSE_PROXY_TTL,
-            $response->getAge() + $this->container->getParameter('sulu_website.sitemap.cache.lifetime')
+        return $this->render(
+            'SuluWebsiteBundle:Sitemap:sitemap-paginated-index.xml.twig',
+            ['alias' => $alias, 'maxPage' => $maxPage]
+        );
+    }
+
+    /**
+     * Render a single page for a single sitemap.xml provider.
+     *
+     * @param Request $request
+     * @param string $alias
+     * @param int $page
+     *
+     * @return Response
+     */
+    public function sitemapPaginatedAction(Request $request, $alias, $page)
+    {
+        $portal = $request->get('_sulu')->getAttribute('portal');
+        $webspace = $request->get('_sulu')->getAttribute('webspace');
+        $localization = $request->get('_sulu')->getAttribute('localization');
+
+        if (!$localization) {
+            $localization = $portal->getDefaultLocalization();
+        }
+
+        $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
+        $entries = $provider->generate(
+            $page,
+            $portal->getKey(),
+            $localization->getLocale()
         );
 
-        $response->headers->set('Content-Type', 'text/xml');
-
-        $response->setContent(
-            $sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain, $request->getScheme())
+        return $this->render(
+            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+            [
+                'webspaceKey' => $webspace->getKey(),
+                'locale' => $localization->getLocale(),
+                'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
+                'domain' => $request->getHttpHost(),
+                'scheme' => $request->getScheme(),
+                'url' => $request->getSchemeAndHttpHost(),
+                'entries' => $entries,
+            ]
         );
-
-        // Generate XML
-        return $response;
     }
 }
