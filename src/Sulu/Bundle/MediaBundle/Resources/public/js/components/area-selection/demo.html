@@ -1,0 +1,81 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Area-Selection Demo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/bundles/sulumedia/css/main.css"/>
+    <style>
+        body {
+            padding: 30px;
+            overflow: auto;
+        }
+        .container {
+            width: 850px;
+            height: 600px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<h1>Area-Selection Demo</h1>
+<div class="container">
+    <div id="area-selection"></div>
+    <div id="data"></div>
+    <button id="change-dimensions">Change area-guide dimensions</button>
+    <button id="change-data">Change dimensions and data</button>
+</div>
+
+<script src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
+<script type="text/javascript">
+    require(['husky'], function(Husky) {
+        'use strict';
+
+        var app = Husky({debug: {enable: true}});
+
+        app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
+
+        app.start([{
+            name: 'area-selection@sulumedia',
+            options: {
+                el: '#area-selection',
+                image: 'https://hd.unsplash.com/photo-1470214304380-aadaedcfff84',
+                areaGuidingHeight: 1000,
+                areaGuidingWidth: 1000
+            }
+        }]);
+
+        (function showData() {
+            $('#data').html(JSON.stringify($('#area-selection').data('area')));
+            setTimeout(showData, 10);
+        })();
+
+        $('#change-dimensions').click(function() {
+            app.sandbox.emit('sulu.area-selection.set-area-guide-dimensions', 200, 100, null);
+        });
+
+        $('#change-data').click(function() {
+            app.sandbox.emit('sulu.area-selection.set-area-guide-dimensions', 100, 200, {
+                width: 200,
+                height: 400,
+                x: 20,
+                y: 50
+            });
+        });
+    });
+</script>
+</body>
+</html>
