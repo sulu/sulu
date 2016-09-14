@@ -17,6 +17,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -91,7 +92,9 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $resourceLocator = '/test',
         $requestSeoData = []
     ) {
-        $this->request->get('_seo', [])->willReturn($requestSeoData);
+        $attributes = $this->prophesize(ParameterBag::class);
+        $attributes->get('_seo', [])->willReturn($requestSeoData);
+        $this->request->reveal()->attributes = $attributes->reveal();
 
         /** @var Localization $localization */
         $localization = $this->prophesize(Localization::class);
@@ -137,7 +140,9 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderSeoTagsWithoutPortal()
     {
-        $this->request->get('_seo', [])->willReturn([]);
+        $attributes = $this->prophesize(ParameterBag::class);
+        $attributes->get('_seo', [])->willReturn([]);
+        $this->request->reveal()->attributes = $attributes->reveal();
         $this->seoTwigExtension->renderSeoTags([], [], [], null);
     }
 
