@@ -21,7 +21,11 @@ define(function() {
          */
         getOverlayContainer = function(containerId) {
             var $element = $('<div id="' + containerId + '"/>');
-            $('body').append($element);
+            if (!!this && !!this.$el) {
+                this.$el.append($element);
+            } else {
+                $('body').append($element);
+            }
 
             return $element;
         },
@@ -140,7 +144,7 @@ define(function() {
             if (!$.isArray(mediaIds)) {
                 mediaIds = [mediaIds];
             }
-            var $container = getOverlayContainer('edit-media-overlay');
+            var $container = getOverlayContainer.call(this, 'edit-media-overlay');
             startingSlide = (typeof startingSlide === 'undefined') ? 'edit' : startingSlide;
 
             this.sandbox.start([{

@@ -135,6 +135,7 @@ class MediaStreamController extends Controller
         $response->headers->set('Content-Type', !empty($mimeType) ? $mimeType : 'application/octet-stream');
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-length', $fileSize);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response;
     }
