@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2919 [WebsiteBundle]       Seo info as twig template to make it rewriteable
     * BUGFIX      #2915 [MediaBundle]         Fixed height of badges in media-selection
     * ENHANCEMENT #2860 [ContentBundle]       Added url to internal links and smart-content
     * FEATURE     #2914 [CategoryBundle]      Added description and medias to category
