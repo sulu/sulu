@@ -45,7 +45,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
             $locale,
             $portalKey,
             MappingBuilder::create()
-                ->addProperties(['changed'])
+                ->addProperties(['changed', 'seo-hideInSitemap'])
                 ->setResolveUrl(true)
                 ->setHydrateGhost(false)
                 ->getMapping()
@@ -53,7 +53,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
 
         $result = [];
         foreach ($pages as $page) {
-            if (!$page->getUrl()) {
+            if (!$page->getUrl() || true === $page['seo-hideInSitemap']) {
                 continue;
             }
 
