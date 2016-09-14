@@ -30,16 +30,11 @@ class SitemapController extends WebsiteController
     public function indexAction(Request $request)
     {
         $pool = $this->get('sulu_website.sitemap.pool');
-        if (!$this->get('sulu_website.sitemap.pool')->hasIndex()) {
+        if (!$pool->hasIndex()) {
             return $this->sitemapAction($request, $pool->getFirstAlias());
         }
 
-        return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            [
-                'sitemaps' => $this->get('sulu_website.sitemap.pool')->getIndex(),
-            ]
-        );
+        return $this->render('SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig', ['sitemaps' => $pool->getIndex()]);
     }
 
     /**
@@ -99,7 +94,6 @@ class SitemapController extends WebsiteController
                 'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
                 'domain' => $request->getHttpHost(),
                 'scheme' => $request->getScheme(),
-                'url' => $request->getSchemeAndHttpHost(),
                 'entries' => $entries,
             ]
         );

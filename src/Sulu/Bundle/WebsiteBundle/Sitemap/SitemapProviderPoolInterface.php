@@ -26,6 +26,13 @@ interface SitemapProviderPoolInterface
     public function getProvider($alias);
 
     /**
+     * Returns all providers.
+     *
+     * @return SitemapProviderInterface[]
+     */
+    public function getProviders();
+
+    /**
      * Indicates that the provider with alias exists.
      *
      * @param string $alias

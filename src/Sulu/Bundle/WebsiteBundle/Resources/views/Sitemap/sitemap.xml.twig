@@ -1,11 +1,11 @@
+{% spaceless %}
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     {% set registrableDomain = sulu_util_domain_info(domain).registrableDomain %}
 
     {% for entry in entries %}
     <url>
-        <loc>{{ sulu_content_path(entry.loc, webspaceKey, locale) }}</loc>
+        <loc>{{ sulu_content_path(entry.loc, webspaceKey, locale, null, scheme) }}</loc>
         {% if entry.lastmod %}
         <lastmod>{{ entry.lastmod|date('Y-m-d') }}</lastmod>
         {% endif %}
@@ -19,8 +19,7 @@
         {% set amount = 0 %}
         {% set defaultHref = null %}
         {% for alternateLink in entry.alternateLinks %}
-            {% set href = sulu_content_path(alternateLink.href, webspaceKey, alternateLink.locale) %}
-
+            {% set href = sulu_content_path(alternateLink.href, webspaceKey, alternateLink.locale, null, scheme) %}
             {% if href is not empty and href != alternateLink.href and sulu_util_domain_info(href).registrableDomain == registrableDomain %}
                 {% if locale != alternateLink.locale %}
         <xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace('_', '-') }}" href="{{ href }}"/>
@@ -38,3 +37,4 @@
     </url>
     {% endfor %}
 </urlset>
+{% endspaceless %}
