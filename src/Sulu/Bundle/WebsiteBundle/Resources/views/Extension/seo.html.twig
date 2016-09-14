@@ -1,0 +1,76 @@
+{#-
+ # content array
+ # defaultLocale string
+ # seo array
+ # shadowBaseLocale string
+ # urls array
+-#}
+
+{#- set variables -#}
+{% set seo = seo|merge(app.request.get('_seo', [])) %}
+
+{#- fallback to content title when no seo title is set -#}
+{% set seoTitle = seo.title|default(content.title|default()) %}
+{% set seoDescription = seo.description %}
+{% set seoKeywords = seo.keywords %}
+
+{% set seoRobots = '' %}
+{%- if seo.noIndex|default(false) -%}
+    {% set seoRobots = seoRobots ~ 'noIndex' -%}
+{%- else -%}
+    {% set seoRobots = seoRobots ~ 'index' -%}
+{%- endif -%}
+{%- if seo.noFollow|default(false) -%}
+    {% set seoRobots = seoRobots ~ ',noFollow' -%}
+{%- else -%}
+    {% set seoRobots = seoRobots ~ ',follow' -%}
+{%- endif -%}
+
+{% set seoCanonical = seo.canonicalUrl %}
+
+{%- if not seoCanonical and shadowBaseLocale and urls[shadowBaseLocale]|default() %}
+    {% set seoCanonical = sulu_content_path(urls[shadowBaseLocale], null, locale) %}
+{%- endif -%}
+
+{#- render blocks -#}
+
+{%- block title -%}
+    {%- if seoTitle -%}
+        <title>{{ seoTitle }}</title>
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block description -%}
+    {%- if seoDescription -%}
+        <meta name="description" content="{{ seoDescription }}"/>
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block keywords -%}
+    {%- if seoKeywords -%}
+        <meta name="keywords" content="{{ seoKeywords }}"/>
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block robots -%}
+    {%- if seoRobots -%}
+        <meta name="robots" content="{{ seoRobots }}"/>
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block urls -%}
+    {#- when only one language do not show alternative -#}
+    {%- if urls|length > 1 -%}
+        {%- for locale, url in urls -%}
+            {%- if defaultLocale == locale -%}
+                <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="x-default"/>
+            {%- endif -%}
+            <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="{{ locale }}"/>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block canonical -%}
+    {#- Set canonical to itself if a bot clone the page -#}
+    <link rel="canonical" href="{{ seoCanonical|default(app.request.uri) }}"/>
+{%- endblock -%}
