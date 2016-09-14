@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\WebsiteBundle\Command;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
@@ -111,7 +120,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
             );
         }
 
-        $this->dumpFile('/' . $portalInformation->getUrl() . '/sitemap.xml', $this->renderIndex());
+        $this->dumpFile('/' . $portalInformation->getUrl() . '/sitemap.xml', $this->renderIndex($portalInformation));
 
         foreach ($this->pool->getProviders() as $alias => $provider) {
             $this->dumpFile(
@@ -132,12 +141,12 @@ class DumpSitemapCommand extends ContainerAwareCommand
     private function renderProviderSitemap($alias, PortalInformation $portalInformation)
     {
         $provider = $this->pool->getProvider($alias);
-        if (1 === ($maxPage = (int) $provider->getMaxPage())) {
+        if (1 >= ($maxPage = (int) $provider->getMaxPage())) {
             return $this->renderSitemap($alias, 1, $portalInformation);
         }
 
         $pathFormat = '/%s/sitemaps/%s-%s.xml';
-        for ($page = 1; $page <= $maxPage; $page++) {
+        for ($page = 1; $page <= $maxPage; ++$page) {
             $path = sprintf($pathFormat, $portalInformation->getUrl(), $alias, $page);
             $this->dumpFile($path, $this->renderSitemap($alias, $page, $portalInformation));
         }
@@ -178,13 +187,15 @@ class DumpSitemapCommand extends ContainerAwareCommand
     /**
      * Render index.
      *
+     * @param PortalInformation $portalInformation
+     *
      * @return string
      */
-    private function renderIndex()
+    private function renderIndex(PortalInformation $portalInformation)
     {
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $this->pool->getIndex()]
+            ['sitemaps' => $this->pool->getIndex(), 'scheme' => $this->scheme, 'domain' => $portalInformation->getHost()]
         );
     }
 

@@ -3,7 +3,11 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     {% for sitemap in sitemaps %}
     <sitemap>
+        {% if scheme is defined and domain is defined %}
+        <loc>{{ scheme }}://{{ domain }}{{ path('sulu_website.sitemap', {alias: sitemap.alias}) }}</loc>
+        {% else %}
         <loc>{{ url('sulu_website.sitemap', {alias: sitemap.alias}) }}</loc>
+        {% endif %}
         {% if sitemap.lastmod %}
         <lastmod>{{ sitemap.lastmod|date('c') }}</lastmod>
         {% endif %}

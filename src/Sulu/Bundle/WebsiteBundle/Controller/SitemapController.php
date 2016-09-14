@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Component\HttpCache\HttpCache;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,12 +31,19 @@ class SitemapController extends WebsiteController
      */
     public function indexAction(Request $request)
     {
+        $dumpDir = $this->getDumpDir($request);
+        if ($this->get('filesystem')->exists($dumpDir . '/sitemap.xml')) {
+            return $this->setCacheLifetime(new BinaryFileResponse($dumpDir . '/sitemap.xml'));
+        }
+
         $pool = $this->get('sulu_website.sitemap.pool');
         if (!$pool->hasIndex()) {
             return $this->sitemapAction($request, $pool->getFirstAlias());
         }
 
-        return $this->render('SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig', ['sitemaps' => $pool->getIndex()]);
+        return $this->setCacheLifetime(
+            $this->render('SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig', ['sitemaps' => $pool->getIndex()])
+        );
     }
 
     /**
@@ -48,15 +57,22 @@ class SitemapController extends WebsiteController
      */
     public function sitemapAction(Request $request, $alias)
     {
+        $dumpDir = $this->getDumpDir($request);
+        if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '.xml')) {
+            return $this->setCacheLifetime(new BinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '.xml'));
+        }
+
         $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
 
-        if (1 === ($maxPage = (int) $provider->getMaxPage())) {
+        if (1 >= ($maxPage = (int) $provider->getMaxPage())) {
             return $this->sitemapPaginatedAction($request, $alias, 1);
         }
 
-        return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-paginated-index.xml.twig',
-            ['alias' => $alias, 'maxPage' => $maxPage]
+        return $this->setCacheLifetime(
+            $this->render(
+                'SuluWebsiteBundle:Sitemap:sitemap-paginated-index.xml.twig',
+                ['alias' => $alias, 'maxPage' => $maxPage]
+            )
         );
     }
 
@@ -71,6 +87,13 @@ class SitemapController extends WebsiteController
      */
     public function sitemapPaginatedAction(Request $request, $alias, $page)
     {
+        $dumpDir = $this->getDumpDir($request);
+        if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')) {
+            return $this->setCacheLifetime(
+                new BinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')
+            );
+        }
+
         $portal = $request->get('_sulu')->getAttribute('portal');
         $webspace = $request->get('_sulu')->getAttribute('webspace');
         $localization = $request->get('_sulu')->getAttribute('localization');
@@ -86,16 +109,50 @@ class SitemapController extends WebsiteController
             $localization->getLocale()
         );
 
-        return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-            [
-                'webspaceKey' => $webspace->getKey(),
-                'locale' => $localization->getLocale(),
-                'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
-                'domain' => $request->getHttpHost(),
-                'scheme' => $request->getScheme(),
-                'entries' => $entries,
-            ]
+        return $this->setCacheLifetime(
+            $this->render(
+                'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+                [
+                    'webspaceKey' => $webspace->getKey(),
+                    'locale' => $localization->getLocale(),
+                    'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
+                    'domain' => $request->getHttpHost(),
+                    'scheme' => $request->getScheme(),
+                    'entries' => $entries,
+                ]
+            )
         );
+    }
+
+    /**
+     * Returns dump-dir.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function getDumpDir(Request $request)
+    {
+        $dumpDir = $this->getParameter('sulu_website.sitemap.dump_dir');
+
+        return sprintf('%s/%s/%s', $dumpDir, $request->getScheme(), $request->getHttpHost());
+    }
+
+    /**
+     * Set cache headers.
+     *
+     * @param Response $response
+     *
+     * @return Response
+     */
+    private function setCacheLifetime(Response $response)
+    {
+        $response->headers->set(
+            HttpCache::HEADER_REVERSE_PROXY_TTL,
+            $response->getAge() + $this->container->getParameter('sulu_website.sitemap.cache.lifetime')
+        );
+
+        return $response->setMaxAge(240)
+            ->setSharedMaxAge(960);
     }
 }
