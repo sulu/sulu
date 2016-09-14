@@ -66,8 +66,6 @@ class SeoTwigExtension extends \Twig_Extension
     }
 
     /**
-     * @deprecated use the twig include function to render the seo.
-     *
      * Renders all the SEO tags supported by Sulu.
      *
      * @param \Twig_Environment $twig
@@ -77,6 +75,8 @@ class SeoTwigExtension extends \Twig_Extension
      * @param string $shadowBaseLocale The displayed language, in case the current page is a shadow
      *
      * @return string The rendered HTML tags of the SEO extension
+     *
+     * @deprecated use the twig include function to render the seo.
      */
     public function renderSeoTags(
         \Twig_Environment $twig,
