@@ -14,6 +14,7 @@
  */
 define([
     'config',
+    './cropping-slide',
     'services/sulumedia/media-manager',
     'services/sulumedia/file-icons',
     'text!./info.html',
@@ -22,14 +23,26 @@ define([
     'text!./preview.html',
     'text!./formats.html',
     'text!./categories.html'
-], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate, categoriesTemplate) {
+], function(
+    config,
+    croppingSlide,
+    mediaManager,
+    fileIcons,
+    infoTemplate,
+    copyrightTemplate,
+    versionsTemplate,
+    previewTemplate,
+    formatsTemplate,
+    categoriesTemplate
+) {
 
     'use strict';
 
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            instanceName: ''
+            instanceName: '',
+            startingSlide: 'edit'
         },
 
         constants = {
@@ -245,7 +258,8 @@ define([
          * Starts the actual overlay for single-edit
          */
         startSingleOverlay: function($info, $copyright, $formats, $versions, $preview, $categories) {
-            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>'),
+                $editActionSelect, startingSlide = 0;
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
 
@@ -284,6 +298,14 @@ define([
                 }
             );
 
+            if (this.media.type.name === 'image') {
+                $editActionSelect = $('<div class="edit-action-select"/>')
+                croppingSlide.initialize(this.$el, this.sandbox, this.media, function() {
+                    this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
+                }.bind(this));
+                startingSlide = (this.options.startingSlide === 'crop') ? 1 : startingSlide;
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -293,6 +315,7 @@ define([
                         removeOnClose: true,
                         instanceName: 'media-edit',
                         skin: 'wide',
+                        startingSlide: startingSlide,
                         slides: [
                             {
                                 title: this.media.title,
@@ -301,6 +324,7 @@ define([
                                     locales: this.sandbox.sulu.locales,
                                     preSelected: this.options.locale
                                 },
+                                panelContent: $editActionSelect,
                                 propagateEvents: false,
                                 okCallback: this.singleOkCallback.bind(this),
                                 cancelCallback: function() {
@@ -330,11 +354,41 @@ define([
                                         align: 'right'
                                     }
                                 ]
-                            }
+                            },
+                            croppingSlide.getSlideDefinition()
                         ]
                     }
                 }
-            ]);
+            ]).then(function() {
+                if (this.media.type.name === 'image') {
+                    this.startEditActionSelect($editActionSelect);
+                    croppingSlide.start();
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Starts the edit action select which provides actions
+         * to navigate to the cropping slide.
+         *
+         * @param {Object} $element The dom element to start the select in
+         */
+        startEditActionSelect: function($element) {
+            this.sandbox.start([{
+                name: 'select@husky',
+                options: {
+                    el: $element,
+                    defaultLabel: this.sandbox.translate('sulu-media.crop'),
+                    instanceName: 'edit-action-select',
+                    fixedLabel: true,
+                    skin: 'white-border',
+                    icon: 'crop',
+                    repeatSelect: true,
+                    noItemsCallback: function() {
+                        this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                    }.bind(this)
+                }
+            }]);
         },
 
         /**
@@ -453,6 +507,7 @@ define([
          */
         languageChangedSingle: function(locale) {
             this.saveSingleMedia().then(function() {
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
                 this.options.locale = locale;
 
@@ -471,6 +526,7 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
 
                 this.unbindSingleOverlayEvents();
@@ -489,6 +545,7 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', media.id, media);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
 
                 this.unbindSingleOverlayEvents();

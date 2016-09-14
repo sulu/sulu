@@ -325,7 +325,7 @@ define([
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
                     actionCallback: function(clickedId) {
-                        this.editMedia(clickedId);
+                        this.editMedia(clickedId, false);
                     }.bind(this),
                     viewOptions: {
                         table: {
@@ -350,6 +350,16 @@ define([
                             noImgIcon: function(item) {
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
+                            actionIcons: [
+                                'fa-pencil',
+                                {
+                                    icon: 'fa-crop',
+                                    type: 'image',
+                                    action: function(media) {
+                                        this.editMedia(media.id, true);
+                                    }.bind(this)
+                                }
+                            ],
                             locale: locale
                         }
                     },
@@ -499,8 +509,12 @@ define([
         /**
          * Edit given media
          */
-        editMedia: function(mediaId) {
-            OverlayManager.startEditMediaOverlay.call(this, [mediaId], this.options.locale);
+        editMedia: function(mediaId, crop) {
+            var startingSlide = 'edit';
+            if (crop === true) {
+                startingSlide = 'crop';
+            }
+            OverlayManager.startEditMediaOverlay.call(this, [mediaId], this.options.locale, startingSlide);
         },
 
         /**

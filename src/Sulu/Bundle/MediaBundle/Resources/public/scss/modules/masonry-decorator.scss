@@ -100,7 +100,7 @@
         }
     }
 
-    .edit-hint {
+    .action-icons-overlay {
         width: 100%;
         height: 100%;
         position: absolute;
@@ -122,11 +122,15 @@
             border-radius: 0 0 $borderRadius $borderRadius;
         }
 
-        span {
+        .action-icons {
             display: block;
             @include centerBlock;
             color: $white;
             font-size: 24px;
+        }
+
+        .action-icon {
+            padding: 10px;
         }
 
         &:hover {
@@ -173,7 +177,7 @@
         }
 
         .badge {
-            margin-top: -11px;
+            vertical-align: super;
             margin-right: 3px;
         }
     }

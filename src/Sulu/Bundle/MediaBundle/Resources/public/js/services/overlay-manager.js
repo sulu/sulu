@@ -130,8 +130,9 @@ define(function() {
          * Start media-edit overlay to edit given mediaIds
          * @param mediaIds medias to edit in overlay
          * @param locale medias are saved for given locale
+         * @param startingSlide The starting slide of the overlay
          */
-        startEditMediaOverlay: function(mediaIds, locale) {
+        startEditMediaOverlay: function(mediaIds, locale, startingSlide) {
             if (!!overlayOpened) {
                 return false;
             }
@@ -140,13 +141,15 @@ define(function() {
                 mediaIds = [mediaIds];
             }
             var $container = getOverlayContainer('edit-media-overlay');
+            startingSlide = (typeof startingSlide === 'undefined') ? 'edit' : startingSlide;
 
             this.sandbox.start([{
                 name: 'collections/media-edit-overlay@sulumedia',
                 options: {
                     el: $container,
                     mediaIds: mediaIds,
-                    locale: locale
+                    locale: locale,
+                    startingSlide: startingSlide
                 }
             }]);
             registerOpenedOverlay.call(this, 'sulu.media-edit.closed');

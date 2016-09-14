@@ -1,3 +1,22 @@
+.white-box .content .items-list li .media-selection-item {
+
+    .crop {
+        display: none;
+        color: $black;
+        text-decoration: none;
+
+        span {
+            margin-right: 5px;
+        }
+    }
+
+    &:hover {
+        .crop {
+            display: table-cell;
+        }
+    }
+}
+
 .media-selection-overlay {
     // responsive width styling
     // we do not use the responsive skin of the overlay component due better adaptability to changing media sizes
