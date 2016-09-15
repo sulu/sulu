@@ -76,7 +76,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function hasIndex()
+    public function needsIndex()
     {
         return count($this->providers) > 1;
     }

@@ -30,7 +30,7 @@ interface SitemapProviderInterface
      *
      * @return SitemapUrl[]
      */
-    public function generate($page, $portalKey, $locale);
+    public function build($page, $portalKey, $locale);
 
     /**
      * Create sitemap.

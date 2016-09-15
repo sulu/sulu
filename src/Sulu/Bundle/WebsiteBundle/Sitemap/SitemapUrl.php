@@ -16,6 +16,9 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
  */
 class SitemapUrl
 {
+    /**
+     * Constants which indicates the change frequency (google will use them).
+     */
     const CHANGE_FREQUENCY_ALWAYS = 'always';
     const CHANGE_FREQUENCY_HOURLY = 'hourly';
     const CHANGE_FREQUENCY_DAILY = 'daily';
@@ -40,6 +43,8 @@ class SitemapUrl
 
     /**
      * Frequency of change.
+     *
+     * See constants SitemapUrl::CHANGE_FREQUENCY_*.
      *
      * @var string
      */

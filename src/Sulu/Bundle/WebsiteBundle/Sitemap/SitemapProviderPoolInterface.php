@@ -49,11 +49,11 @@ interface SitemapProviderPoolInterface
     public function getFirstAlias();
 
     /**
-     * Indicates that the sitemap-index exists.
+     * Indicates that the sitemap-index is needed.
      *
      * @return bool
      */
-    public function hasIndex();
+    public function needsIndex();
 
     /**
      * Returns list of available sitemaps.

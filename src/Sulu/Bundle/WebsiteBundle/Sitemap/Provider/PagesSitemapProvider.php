@@ -39,7 +39,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($page, $portalKey, $locale)
+    public function build($page, $portalKey, $locale)
     {
         $pages = $this->contentRepository->findAllByPortal(
             $locale,
@@ -52,13 +52,18 @@ class PagesSitemapProvider implements SitemapProviderInterface
         );
 
         $result = [];
-        foreach ($pages as $page) {
-            if (!$page->getUrl() || true === $page['seo-hideInSitemap']) {
+        foreach ($pages as $contentPage) {
+            if (!$contentPage->getUrl() || true === $contentPage['seo-hideInSitemap']) {
                 continue;
             }
 
-            $result[] = $sitemapUrl = new SitemapUrl($page->getUrl(), new \DateTime($page['changed']));
-            foreach ($page->getUrls() as $urlLocale => $href) {
+            $changed = $contentPage['changed'];
+            if (is_string($changed)) {
+                $changed = new \DateTime($changed);
+            }
+
+            $result[] = $sitemapUrl = new SitemapUrl($contentPage->getUrl(), $changed);
+            foreach ($contentPage->getUrls() as $urlLocale => $href) {
                 $sitemapUrl->addAlternateLink(new SitemapAlternateLink($href, $urlLocale));
             }
         }

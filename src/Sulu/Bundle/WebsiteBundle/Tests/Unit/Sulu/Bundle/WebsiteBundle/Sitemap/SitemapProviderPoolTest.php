@@ -68,9 +68,9 @@ class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('pages', $this->pool->getFirstAlias());
     }
 
-    public function testHasIndex()
+    public function testNeedsIndex()
     {
-        $this->assertTrue($this->pool->hasIndex());
+        $this->assertTrue($this->pool->needsIndex());
     }
 
     public function testGetIndex()

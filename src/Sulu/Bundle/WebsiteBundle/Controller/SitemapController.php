@@ -37,7 +37,7 @@ class SitemapController extends WebsiteController
         }
 
         $pool = $this->get('sulu_website.sitemap.pool');
-        if (!$pool->hasIndex()) {
+        if (!$pool->needsIndex()) {
             return $this->sitemapAction($request, $pool->getFirstAlias());
         }
 
@@ -103,7 +103,7 @@ class SitemapController extends WebsiteController
         }
 
         $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
-        $entries = $provider->generate(
+        $entries = $provider->build(
             $page,
             $portal->getKey(),
             $localization->getLocale()

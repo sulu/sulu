@@ -20,14 +20,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Dump sitemaps.
+ * Dump sitemaps to filesystem.
  */
 class DumpSitemapCommand extends ContainerAwareCommand
 {
     /**
      * @var SitemapProviderPoolInterface
      */
-    private $pool;
+    private $sitemapProviderPool;
 
     /**
      * @var Filesystem
@@ -75,7 +75,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $this->pool = $this->getContainer()->get('sulu_website.sitemap.pool');
+        $this->sitemapProviderPool = $this->getContainer()->get('sulu_website.sitemap.pool');
         $this->filesystem = new Filesystem();
 
         $this->environment = $this->getContainer()->getParameter('kernel.environment');
@@ -113,16 +113,16 @@ class DumpSitemapCommand extends ContainerAwareCommand
             $portalInformation->setUrl(str_replace('{host}', $this->defaultHost, $portalInformation->getUrl()));
         }
 
-        if (!$this->pool->hasIndex()) {
+        if (!$this->sitemapProviderPool->needsIndex()) {
             return $this->dumpFile(
                 '/' . $portalInformation->getUrl() . '/sitemap.xml',
-                $this->renderProviderSitemap($this->pool->getFirstAlias(), $portalInformation)
+                $this->renderProviderSitemap($this->sitemapProviderPool->getFirstAlias(), $portalInformation)
             );
         }
 
         $this->dumpFile('/' . $portalInformation->getUrl() . '/sitemap.xml', $this->renderIndex($portalInformation));
 
-        foreach ($this->pool->getProviders() as $alias => $provider) {
+        foreach ($this->sitemapProviderPool->getProviders() as $alias => $provider) {
             $this->dumpFile(
                 '/' . $portalInformation->getUrl() . '/sitemaps/' . $alias . '.xml',
                 $this->renderProviderSitemap($alias, $portalInformation)
@@ -140,7 +140,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private function renderProviderSitemap($alias, PortalInformation $portalInformation)
     {
-        $provider = $this->pool->getProvider($alias);
+        $provider = $this->sitemapProviderPool->getProvider($alias);
         if (1 >= ($maxPage = (int) $provider->getMaxPage())) {
             return $this->renderSitemap($alias, 1, $portalInformation);
         }
@@ -168,8 +168,8 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private function renderSitemap($alias, $page, PortalInformation $portalInformation)
     {
-        $provider = $this->pool->getProvider($alias);
-        $entries = $provider->generate($page, $portalInformation->getPortalKey(), $portalInformation->getLocale());
+        $provider = $this->sitemapProviderPool->getProvider($alias);
+        $entries = $provider->build($page, $portalInformation->getPortalKey(), $portalInformation->getLocale());
 
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
@@ -195,7 +195,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
     {
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $this->pool->getIndex(), 'scheme' => $this->scheme, 'domain' => $portalInformation->getHost()]
+            ['sitemaps' => $this->sitemapProviderPool->getIndex(), 'scheme' => $this->scheme, 'domain' => $portalInformation->getHost()]
         );
     }
 
