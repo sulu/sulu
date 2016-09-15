@@ -33,7 +33,22 @@ define([], function() {
             translations: {
                 noContentSelected: 'contact-selection.no-contact-selected',
                 add: 'contact-selection.add'
-            }
+            },
+            matchings: [
+                {
+                    content: 'id',
+                    name: 'id',
+                    disabled: true
+                },
+                {
+                    content: 'contact.contacts.firstName',
+                    name: 'firstName'
+                },
+                {
+                    content: 'contact.contacts.lastName',
+                    name: 'lastName'
+                }
+            ]
         },
 
         templates = {
@@ -132,21 +147,7 @@ define([], function() {
                                 limit: 20
                             }
                         },
-                        matchings: [
-                            {
-                                content: 'id',
-                                name: 'id',
-                                disabled: true
-                            },
-                            {
-                                content: 'contact.contacts.firstName',
-                                name: 'firstName'
-                            },
-                            {
-                                content: 'contact.contacts.lastName',
-                                name: 'lastName'
-                            }
-                        ]
+                        matchings: this.options.matchings
                     }
                 }
             ];
