@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.3.1 (2016-09-15)
     * HOTFIX      #2922 [WebsiteBundle]       Avoid seo information injected by url
     * HOTFIX      #2890 [Localization]        Reintroduced localization provider class
     * HOTFIX      #2876 [MediaBundle]         Changed column navigation to markable and ok button

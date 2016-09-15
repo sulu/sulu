@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.3.1
 
 If Sulu is used in combination with a port, the port has to be included in the
 URLs of the webspace configuration. So if you want to use Sulu on port 8080 the
