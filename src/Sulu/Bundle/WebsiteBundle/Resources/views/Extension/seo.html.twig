@@ -7,12 +7,12 @@
 -#}
 
 {#- merge seo data with _seo from attributes for custom urls -#}
-{% set seo = seo|merge(app.request.attributes.get('_seo', [])|default([])) %}
+{% set seo = seo|default([])|merge(app.request.attributes.get('_seo', [])|default([])) %}
 
 {#- fallback to content title when no seo title is set -#}
 {% set seoTitle = seo.title|default(content.title|default()) %}
-{% set seoDescription = seo.description %}
-{% set seoKeywords = seo.keywords %}
+{% set seoDescription = seo.description|default() %}
+{% set seoKeywords = seo.keywords|default() %}
 
 {% set seoRobots = '' %}
 {%- if seo.noIndex|default(false) -%}
@@ -26,7 +26,7 @@
     {% set seoRobots = seoRobots ~ ',follow' -%}
 {%- endif -%}
 
-{% set seoCanonical = seo.canonicalUrl %}
+{% set seoCanonical = seo.canonicalUrl|default() %}
 
 {%- if not seoCanonical and shadowBaseLocale and urls[shadowBaseLocale]|default() %}
     {% set seoCanonical = sulu_content_path(urls[shadowBaseLocale], null, locale) %}
