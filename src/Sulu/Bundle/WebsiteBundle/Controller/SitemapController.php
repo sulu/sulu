@@ -33,7 +33,7 @@ class SitemapController extends WebsiteController
     {
         $dumpDir = $this->getDumpDir($request);
         if ($this->get('filesystem')->exists($dumpDir . '/sitemap.xml')) {
-            return $this->setCacheLifetime(new BinaryFileResponse($dumpDir . '/sitemap.xml'));
+            return $this->createBinaryFileResponse($dumpDir . '/sitemap.xml');
         }
 
         $pool = $this->get('sulu_website.sitemap.pool');
@@ -59,7 +59,7 @@ class SitemapController extends WebsiteController
     {
         $dumpDir = $this->getDumpDir($request);
         if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '.xml')) {
-            return $this->setCacheLifetime(new BinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '.xml'));
+            return $this->createBinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '.xml');
         }
 
         $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
@@ -89,9 +89,7 @@ class SitemapController extends WebsiteController
     {
         $dumpDir = $this->getDumpDir($request);
         if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')) {
-            return $this->setCacheLifetime(
-                new BinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')
-            );
+            return $this->createBinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml');
         }
 
         $portal = $request->get('_sulu')->getAttribute('portal');
@@ -154,5 +152,20 @@ class SitemapController extends WebsiteController
 
         return $response->setMaxAge(240)
             ->setSharedMaxAge(960);
+    }
+
+    /**
+     * Create a binary file response.
+     *
+     * @param string $file
+     *
+     * @return BinaryFileResponse
+     */
+    private function createBinaryFileResponse($file)
+    {
+        $response = new BinaryFileResponse($file);
+        $response->headers->addCacheControlDirective('no-store', true);
+
+        return $response;
     }
 }
