@@ -78,7 +78,7 @@ class SeoTwigExtension extends \Twig_Extension
     public function renderSeoTags(array $seoExtension, array $content, array $urls, $shadowBaseLocale)
     {
         $request = $this->requestStack->getCurrentRequest();
-        $requestSeo = $request->get('_seo', []);
+        $requestSeo = $request->attributes->get('_seo', []);
         $seoExtension = array_merge($seoExtension, $requestSeo);
 
         $html = '';
