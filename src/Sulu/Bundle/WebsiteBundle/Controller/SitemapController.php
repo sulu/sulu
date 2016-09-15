@@ -11,11 +11,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapXMLGeneratorInterface;
-use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\HttpCache\HttpCache;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,59 +22,137 @@ use Symfony\Component\HttpFoundation\Response;
 class SitemapController extends WebsiteController
 {
     /**
-     * Returns a rendered xmlsitemap.
+     * Render sitemap-index of all available sitemap.xml files.
+     * If only one provider exists this provider will be rendered directly.
      *
-     * @return Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
-        /** @var RequestAnalyzerInterface $requestAnalyzer */
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
+        $dumpDir = $this->getDumpDir($request);
+        if ($this->get('filesystem')->exists($dumpDir . '/sitemap.xml')) {
+            return $this->setCacheLifetime(new BinaryFileResponse($dumpDir . '/sitemap.xml'));
+        }
 
-        /** @var SitemapXMLGeneratorInterface $sitemapXMLGenerator */
-        $sitemapXMLGenerator = $this->get('sulu_website.sitemap_xml_generator');
+        $pool = $this->get('sulu_website.sitemap.pool');
+        if (!$pool->needsIndex()) {
+            return $this->sitemapAction($request, $pool->getFirstAlias());
+        }
 
-        $sitemap = $this->get('sulu_content.content_repository')->findAllByPortal(
-            $requestAnalyzer->getPortal()->getXDefaultLocalization()->getLocalization(),
-            $requestAnalyzer->getPortal()->getKey(),
-            MappingBuilder::create()
-                ->addProperties(['changed'])
-                ->setResolveUrl(true)
-                ->getMapping()
+        return $this->setCacheLifetime(
+            $this->render('SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig', ['sitemaps' => $pool->getIndex()])
+        );
+    }
+
+    /**
+     * Render sitemap.xml for a single provider.
+     * If this provider has multiple-pages a sitemapindex will be rendered.
+     *
+     * @param Request $request
+     * @param string $alias
+     *
+     * @return Response
+     */
+    public function sitemapAction(Request $request, $alias)
+    {
+        $dumpDir = $this->getDumpDir($request);
+        if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '.xml')) {
+            return $this->setCacheLifetime(new BinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '.xml'));
+        }
+
+        $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
+
+        if (1 >= ($maxPage = (int) $provider->getMaxPage())) {
+            return $this->sitemapPaginatedAction($request, $alias, 1);
+        }
+
+        return $this->setCacheLifetime(
+            $this->render(
+                'SuluWebsiteBundle:Sitemap:sitemap-paginated-index.xml.twig',
+                ['alias' => $alias, 'maxPage' => $maxPage]
+            )
+        );
+    }
+
+    /**
+     * Render a single page for a single sitemap.xml provider.
+     *
+     * @param Request $request
+     * @param string $alias
+     * @param int $page
+     *
+     * @return Response
+     */
+    public function sitemapPaginatedAction(Request $request, $alias, $page)
+    {
+        $dumpDir = $this->getDumpDir($request);
+        if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')) {
+            return $this->setCacheLifetime(
+                new BinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')
+            );
+        }
+
+        $portal = $request->get('_sulu')->getAttribute('portal');
+        $webspace = $request->get('_sulu')->getAttribute('webspace');
+        $localization = $request->get('_sulu')->getAttribute('localization');
+
+        if (!$localization) {
+            $localization = $portal->getDefaultLocalization();
+        }
+
+        $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
+        $entries = $provider->build(
+            $page,
+            $portal->getKey(),
+            $localization->getLocale()
         );
 
-        $webspaceSitemaps = [
-            [
-                'localizations' => array_map(
-                    function (Localization $localization) {
-                        return $localization->getLocalization();
-                    },
-                    $requestAnalyzer->getWebspace()->getAllLocalizations()
-                ),
-                'defaultLocalization' => $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
-                'sitemap' => $sitemap,
-            ],
-        ];
+        return $this->setCacheLifetime(
+            $this->render(
+                'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+                [
+                    'webspaceKey' => $webspace->getKey(),
+                    'locale' => $localization->getLocale(),
+                    'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
+                    'domain' => $request->getHttpHost(),
+                    'scheme' => $request->getScheme(),
+                    'entries' => $entries,
+                ]
+            )
+        );
+    }
 
-        $preferredDomain = $request->getHttpHost();
+    /**
+     * Returns dump-dir.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function getDumpDir(Request $request)
+    {
+        $dumpDir = $this->getParameter('sulu_website.sitemap.dump_dir');
 
-        // XML Response
-        $response = new Response();
-        $response->setMaxAge(240);
-        $response->setSharedMaxAge(960);
+        return sprintf('%s/%s/%s', $dumpDir, $request->getScheme(), $request->getHttpHost());
+    }
 
+    /**
+     * Set cache headers.
+     *
+     * @param Response $response
+     *
+     * @return Response
+     */
+    private function setCacheLifetime(Response $response)
+    {
         $response->headers->set(
             HttpCache::HEADER_REVERSE_PROXY_TTL,
             $response->getAge() + $this->container->getParameter('sulu_website.sitemap.cache.lifetime')
         );
 
-        $response->headers->set('Content-Type', 'text/xml');
-
-        $response->setContent(
-            $sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain, $request->getScheme())
-        );
-
-        // Generate XML
-        return $response;
+        return $response->setMaxAge(240)
+            ->setSharedMaxAge(960);
     }
 }

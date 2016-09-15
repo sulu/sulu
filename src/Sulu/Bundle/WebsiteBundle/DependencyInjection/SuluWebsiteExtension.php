@@ -44,9 +44,18 @@ class SuluWebsiteExtension extends Extension
             'sulu_website.sitemap.cache.lifetime',
             $config['twig']['content']['cache_lifetime']
         );
+        $container->setParameter(
+            'sulu_website.sitemap.dump_dir',
+            $config['sitemap']['dump_dir']
+        );
+        $container->setParameter(
+            'sulu_website.sitemap.default_host',
+            $config['sitemap']['default_host']
+        );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('sitemap.xml');
 
         if ($config['analytics']['enabled']) {
             $loader->load('analytics.xml');
