@@ -54,6 +54,7 @@ Feature: Collection management
         And I click the column navigation item "Collections"
         And I wait for the column navigation column 2
         And I double click the column navigation item "Foobar"
+        And I click the ok button
         And I expect a data-navigation to appear
         And I am editing the media collection "Foobar"
         And I click on the element ".fa-chevron-left"
