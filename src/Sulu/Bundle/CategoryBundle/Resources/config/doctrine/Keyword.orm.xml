@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\Keyword" table="ca_keywords">
+    <mapped-superclass name="Sulu\Bundle\CategoryBundle\Entity\Keyword" table="ca_keywords">
         <indexes>
             <index columns="keyword"/>
         </indexes>
@@ -30,5 +30,5 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
-    </entity>
+    </mapped-superclass>
 </doctrine-mapping>

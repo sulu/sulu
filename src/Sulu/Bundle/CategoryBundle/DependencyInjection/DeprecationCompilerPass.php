@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * This CompilerPass adds deprecated parameters and definitions to the container.
  * This is necessary to avoid BC breaks since these values are set dynamically by the PersistenceBundle.
+ *
+ * @deprecated This is here only for BC reasons and will be removed in 2.0
  */
 class DeprecationCompilerPass implements CompilerPassInterface
 {
