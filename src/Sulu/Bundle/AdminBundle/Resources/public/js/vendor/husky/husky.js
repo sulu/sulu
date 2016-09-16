@@ -30973,9 +30973,20 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
         /**
          * Removes a record from the view
+         * If the record has child-records, the child records are removed too.
          * @param recordId {Number|String}
          */
         removeRecord: function(recordId) {
+            // remove children of record
+            this.table.rows[recordId].$el.siblings().each(function(key, sibling) {
+                if ($(sibling).data('parent') === recordId) {
+                    this.removeRecord($(sibling).data('id'));
+                }
+            }.bind(this));
+
+            // deselect record to adjust parent-checkboxes
+            this.deselectRecord(recordId);
+
             this.datagrid.removeRecord.call(this.datagrid, recordId);
             this.sandbox.dom.remove(this.table.rows[recordId].$el);
             delete this.table.rows[recordId];
@@ -41433,6 +41444,7 @@ define('__component__$password-fields@husky',[], function() {
  * @params {String} [options.fallbackUrl] url to load data from, when loading from the main url fails.
  * @params {String} [options.selected] id of selected element - needed to restore state
  * @params {String|Function} [options.actionIcon] icon class of action button
+ * @params {String|Function} [options.unmarkIcon] icon class of action button to unmark
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
  * @params {String}  [options.data[].mode] if 'order' - column gets set in order mode if clicked
  * @params {Function}  [options.data[].enabler] Gets called each time the options change columns.
@@ -41454,6 +41466,7 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Boolean} [options.showStatus] hide or display status of elements
  * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
  * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
+ * @params {Boolean} [options.singleMarkable] If true just one item is markable
  * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
  * @params {Array} [options.disableIds] an array of uuids which will be disabled
  * @params {Array} [options.disabledChildren] an array of uuids which will be disabled
@@ -41479,6 +41492,7 @@ define('__component__$column-navigation@husky',[],function() {
             instanceName: '',
             hasSubName: 'hasSub',
             actionIcon: 'fa-pencil',
+            unmarkIcon: 'fa-minus-circle',
             addButton: true,
             idName: 'id',
             pathName: 'path',
@@ -41497,6 +41511,7 @@ define('__component__$column-navigation@husky',[],function() {
             disableIds: [],
             disabledChildren: false,
             markable: false,
+            singleMarkable: false,
             orderable: true,
             showActionIcon: true,
             orderConfirmTitle: 'column-navigation.order-title',
@@ -41691,6 +41706,15 @@ define('__component__$column-navigation@husky',[],function() {
         },
 
         /**
+         * @event husky.column-navigation.get-marked
+         * @description listens on and passes all the marked objects to a callback
+         * @param {Function} callback to which the marked items get passed
+         */
+        GET_MARKED = function() {
+            return createEventName.call(this, 'get-marked');
+        },
+
+        /**
          * @event husky.column-navigation.highlight
          * @description listens on and highlights an item with a given uuid
          * @param {Number|String} the id of the item to highlight
@@ -41762,6 +41786,15 @@ define('__component__$column-navigation@husky',[],function() {
          * @returns {string}
          */
         getActionIcon = function(data) {
+            // if is markable change action Icon
+            if (this.options.markable && this.options.actionIcon === defaults.actionIcon) {
+                if (this.options.singleMarkable) {
+                    this.options.actionIcon  = 'fa-check';
+                } else {
+                    this.options.actionIcon  = 'fa-plus-circle';
+                }
+            }
+
             var actionItem = this.options.actionIcon;
 
             if (typeof(this.options.actionIcon) === 'function') {
@@ -41861,8 +41894,14 @@ define('__component__$column-navigation@husky',[],function() {
 
             this.columns = [];
             this.selected = [];
-            // array with all marked ids
-            this.marked = this.options.premarkedIds || [];
+
+            this.marked = {};
+            if (this.options.premarkedIds) {
+                this.options.premarkedIds.forEach(function (premarkedId) {
+                    // write empty object as value because element not available yet
+                    this.marked[premarkedId] = {};
+                }.bind(this));
+            }
         },
 
         /**
@@ -42086,9 +42125,14 @@ define('__component__$column-navigation@husky',[],function() {
             var $list = this.sandbox.dom.find('ul', $column), nodeWithSubNodes, lastSelected;
             this.sandbox.util.each(data._embedded[this.options.resultKey], function(index, itemData) {
                 itemData.order = (index + 1);
+                if (itemData[this.options.idName] in this.marked) {
+                    // write missing values in this marked
+                    this.marked[this.options.idName] = itemData;
+                }
                 var $item = this.renderItem(itemData);
                 itemData.$el = $item;
                 this.storeDataItem(number, itemData);
+
                 this.sandbox.dom.append($list, $item);
                 this.setItemsTextWidth($item);
 
@@ -42131,7 +42175,7 @@ define('__component__$column-navigation@husky',[],function() {
                 })),
                 disabled = (this.options.disableIds.indexOf(data[this.options.idName]) !== -1);
 
-            if (this.marked.indexOf(data[this.options.idName]) !== -1) { // if is marked
+            if (data[this.options.idName] in this.marked) { // if is marked
                 this.sandbox.dom.addClass($item, constants.markedClass);
             }
             if (disabled) { // if is marked
@@ -42218,6 +42262,11 @@ define('__component__$column-navigation@husky',[],function() {
         renderRightInfo: function($item, data, disabled) {
             var $container = this.sandbox.dom.find('.' + constants.iconsRightClass, $item),
                 actionIcon = getActionIcon.call(this, data);
+
+            // if is marked change action Icon
+            if (data[this.options.idName] in this.marked) {
+                actionIcon = this.options.unmarkIcon;
+            }
 
             // show action icon only for non-ghost pages
             if ((!data[this.options.typeName] || data[this.options.typeName].name !== 'ghost') &&
@@ -42600,6 +42649,11 @@ define('__component__$column-navigation@husky',[],function() {
 
                 this.initialize();
             }.bind(this));
+            this.sandbox.on(GET_MARKED.call(this), function (callback) {
+                if (typeof callback === "function") {
+                    callback(this.marked);
+                }
+            }.bind(this));
 
             this.sandbox.on('husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.click', this.dropdownItemClicked.bind(this));
 
@@ -42696,14 +42750,44 @@ define('__component__$column-navigation@husky',[],function() {
         },
 
         /**
+         * Returns all the marked objects.
+         */
+        mark: function(id, item) {
+            var $element = this.$find('li[data-id="' + id + '"]');
+            if (!!$element.length) {
+                // if single markable unmark all the others
+                if (this.options.singleMarkable === true) {
+                    $.each(this.marked, function (key, value) {
+                        this.unmark(key);
+                    }.bind(this));
+                }
+                this.sandbox.dom.addClass($element, constants.markedClass);
+                if(!(id in this.marked)) {
+                    this.marked[id] = item;
+                }
+                this.setItemsTextWidth($element);
+                // change unmark to mark icon
+                var $markButton = $element.find('span:last-child > .' + this.options.actionIcon);
+                $markButton.removeClass(this.options.actionIcon);
+                this.sandbox.dom.prependClass($markButton, this.options.unmarkIcon);
+            }
+        },
+
+        /**
          * Unmarks a node for a given id
          * @param id {Number|String} the id of the node to unmark
          */
         unmark: function(id) {
             var $element = this.$find('li[data-id="' + id + '"]');
             if (!!$element.length) {
-                this.sandbox.dom.removeClass($element, constants.markedClass);
-                this.marked.splice(this.marked.indexOf(id), 1);
+                $element.removeClass(constants.markedClass);
+                if(id in this.marked) {
+                    delete this.marked[id];
+                }
+                // change unmark to mark icon
+                var $unmarkButton = $element.find('span:last-child > .' + this.options.unmarkIcon);
+                $unmarkButton.removeClass(this.options.unmarkIcon);
+                this.sandbox.dom.prependClass($unmarkButton, this.options.actionIcon);
             }
         },
 
@@ -42991,9 +43075,11 @@ define('__component__$column-navigation@husky',[],function() {
             item = this.columns[column][id];
 
             if (this.options.markable === true) {
-                this.sandbox.dom.addClass($listItem, constants.markedClass);
-                this.marked.push(id);
-                this.setItemsTextWidth($listItem);
+                if (!(id in this.marked)) {
+                    this.mark(id, item)
+                } else {
+                    this.unmark(id);
+                }
             }
 
             this.sandbox.dom.stopPropagation(event);
@@ -46709,17 +46795,18 @@ define('__component__$data-navigation@husky',[
             if (!!this.data.hasNextPage && !this.loading) {
                 this.showLoader();
 
-                this.page++;
-                this.sandbox.util.load(this.getUrl(this.getCurrentUrl()))
-                    .then(function(data) {
-                        var children = data._embedded[this.options.resultKey] || [];
-                        this.data.children = this.data.children.concat(children);
-                        this.data.hasNextPage = this.page < data.pages;
-                        this.currentView.append(children, this.options);
+                this.page += 1;
+                this.sandbox.util.load(this.getUrl(this.getCurrentUrl()), {
+                    locale: this.locale
+                }).then(function(data) {
+                    var children = data._embedded[this.options.resultKey] || [];
+                    this.data.children = this.data.children.concat(children);
+                    this.data.hasNextPage = this.page < data.pages;
+                    this.currentView.append(children, this.options);
 
-                        this.hideLoader();
-                        def.resolve();
-                    }.bind(this));
+                    this.hideLoader();
+                    def.resolve();
+                }.bind(this));
             } else {
                 def.resolve();
             }
