@@ -144,7 +144,7 @@ define(function() {
                         el: $element,
                         container: this.$el,
                         instanceName: 'copy-locales',
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate('content.contents.settings.copy-locales.title'),

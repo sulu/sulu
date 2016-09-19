@@ -153,7 +153,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.edit.loading'),
                         data: $loader,
-                        skin: 'wide',
+                        skin: 'large',
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit.loading',
@@ -316,7 +316,7 @@ define([
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
-                        skin: 'wide',
+                        skin: 'large',
                         startingSlide: startingSlide,
                         supportKeyInput: false,
                         slides: [

@@ -114,7 +114,7 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'responsive-width',
                         propagateEvents: false,
                         title: this.sandbox.translate('sulu.media.move.overlay-title'),
                         data: templates.columnNavigation(),

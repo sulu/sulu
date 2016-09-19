@@ -145,7 +145,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                         removeOnClose: true,
                         el: $element,
                         container: this.$el,
-                        skin: 'wide',
+                        skin: 'medium',
                         instanceName: 'internal-link',
                         slides: [
                             {
@@ -158,6 +158,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                                 title: this.translations.internalLink,
                                 data: this.templates.contentDatasource(),
                                 cssClass: 'data-source-slide',
+                                contentSpacing: false,
                                 buttons: [
                                     {
                                         type: 'cancel',

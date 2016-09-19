@@ -236,7 +236,7 @@ define(['config'], function(Config) {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'url-history',
-                        skin: 'wide',
+                        skin: 'medium',
                         data: content
                     }
                 }

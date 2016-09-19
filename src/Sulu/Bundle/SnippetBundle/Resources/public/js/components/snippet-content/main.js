@@ -200,7 +200,7 @@ define([], function() {
                         container: this.$el,
 
                         instanceName: 'snippet-content.' + this.options.instanceName + '.add',
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addSnippets),

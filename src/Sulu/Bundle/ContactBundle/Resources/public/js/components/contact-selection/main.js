@@ -320,7 +320,7 @@ define([], function() {
                         removeOnClose: false,
                         container: this.$el,
                         instanceName: 'contact-selection.' + this.options.instanceName + '.add',
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [slide]
                     }
                 }
