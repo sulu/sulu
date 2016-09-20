@@ -1,6 +1,7 @@
 {% if params.type == 'toggler' %}
 <div class="grid-row small">
-    <div class="preview-update trigger-save-button"
+    <div id="{{ id|raw }}"
+         class="preview-update trigger-save-button"
          data-form="true"
          data-aura-component="toggler@husky"
          data-aura-instance-name="{{ property.name }}"
