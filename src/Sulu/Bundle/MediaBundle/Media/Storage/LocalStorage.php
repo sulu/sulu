@@ -147,7 +147,7 @@ class LocalStorage implements StorageInterface
             $newFileName = $fileNameParts[0] . '-' . $counter;
 
             if (isset($fileNameParts[1])) {
-                $newFileName .=  '.' . $fileNameParts[1];
+                $newFileName .= '.' . $fileNameParts[1];
             }
         }
 
