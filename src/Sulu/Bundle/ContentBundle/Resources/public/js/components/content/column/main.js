@@ -500,6 +500,8 @@ define([
                         url: this.getUrl(this.getLastSelected()),
                         fallbackUrl: this.getUrl(),
                         actionIcon: getActionIcon.bind(this),
+                        showActionButtonOnGhost: true,
+                        actionButtonOnGhostText: this.sandbox.translate('sulu-content.create'),
                         addButton: addButtonEnabler.bind(this),
                         data: [
                             {

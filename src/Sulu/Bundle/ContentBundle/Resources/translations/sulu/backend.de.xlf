@@ -787,6 +787,10 @@
                 <source>sulu-content.resource-locator.delete</source>
                 <target>Die URL wird für alle Entwurfs- und Live-Versionen dieser Seite gelöscht und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?</target>
             </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Erstellen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

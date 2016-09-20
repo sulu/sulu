@@ -787,6 +787,10 @@
                 <source>sulu-content.resource-locator.delete</source>
                 <target>De URL wordt verwijderd voor alle concepten en live versies van deze pagina. Dit kan niet ongedaan gemaakt worden. Wil je doorgaan?</target>
             </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Aanmaken</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

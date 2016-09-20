@@ -41450,6 +41450,8 @@ define('__component__$password-fields@husky',[], function() {
  * @params {String} [options.selected] id of selected element - needed to restore state
  * @params {String|Function} [options.actionIcon] icon class of action button
  * @params {String|Function} [options.unmarkIcon] icon class of action button to unmark
+ * @params {String} [options.actionButtonOnGhostText] Text for the action button
+ * @params {Boolean} [options.showActionButtonOnGhost] if set true create button for ghost page is enabled
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
  * @params {String}  [options.data[].mode] if 'order' - column gets set in order mode if clicked
  * @params {Function}  [options.data[].enabler] Gets called each time the options change columns.
@@ -41498,6 +41500,8 @@ define('__component__$column-navigation@husky',[],function() {
             hasSubName: 'hasSub',
             actionIcon: 'fa-pencil',
             unmarkIcon: 'fa-minus-circle',
+            actionButtonOnGhostText: 'create',
+            showActionButtonOnGhost: false,
             addButton: true,
             idName: 'id',
             pathName: 'path',
@@ -42278,6 +42282,13 @@ define('__component__$column-navigation@husky',[],function() {
                 this.options.showActionIcon === true && actionIcon && !disabled
             ) {
                 this.sandbox.dom.append($container, '<span class="' + actionIcon + ' action col-icon"></span>');
+            }
+
+            // show create Button for ghost pages
+            if ((!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') && this.options.showActionButtonOnGhost &&
+                this.options.showActionIcon === true && actionIcon && !disabled
+            ) {
+                this.sandbox.dom.append($container, '<span class="action col-icon">' + this.options.actionButtonOnGhostText + '</span>');
             }
 
             if (!!data[this.options.hasSubName] && (!disabled || !this.options.disabledChildren)) {
