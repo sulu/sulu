@@ -18,7 +18,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
@@ -61,18 +60,21 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             $config['url_expression']
         );
 
-        $request = $this->getMock(Request::class);
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
-        $request->expects($this->once())->method('setLocale')->with($localization->getLocalization());
+        $request = new Request(
+            ['get' => 1],
+            ['post' => 1],
+            [],
+            [],
+            [],
+            ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => $config['path_info']]
+        );
 
         $attributes = $this->provider->process(
             $request,
             new RequestAttributes(['portalInformation' => $portalInformation])
         );
+
+        $this->assertEquals($localization->getLocale(), $request->getLocale());
 
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
@@ -113,21 +115,24 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             $config['redirect']
         );
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
-        $request->expects($this->once())->method('setLocale')->with($localization->getLocalization());
-        if ($expected['format']) {
-            $request->expects($this->once())->method('setRequestFormat')->with($expected['format']);
-        }
+        $request = new Request(
+            ['get' => 1],
+            ['post' => 1],
+            [],
+            [],
+            [],
+            ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => $config['path_info']]
+        );
 
         $attributes = $this->provider->process(
             $request,
             new RequestAttributes(['portalInformation' => $portalInformation])
         );
+
+        $this->assertEquals($localization->getLocale(), $request->getLocale());
+        if ($expected['format']) {
+            $this->assertEquals($expected['format'], $request->getRequestFormat());
+        }
 
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());

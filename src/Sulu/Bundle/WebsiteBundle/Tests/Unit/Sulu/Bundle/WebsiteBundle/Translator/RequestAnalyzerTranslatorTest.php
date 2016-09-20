@@ -31,6 +31,19 @@ class RequestAnalyzerTranslatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $requestAnalyzerTranslator->getLocale());
     }
 
+    public function testGetLocaleWithCountry()
+    {
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+
+        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de', 'at'));
+        $translator->setLocale('de_AT')->shouldBeCalledTimes(1);
+        $translator->getLocale()->willReturn('de_AT');
+
+        $this->assertEquals('de_AT', $requestAnalyzerTranslator->getLocale());
+    }
+
     public function testGetLocaleTwice()
     {
         $translator = $this->prophesize(TranslatorInterface::class);

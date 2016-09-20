@@ -43,7 +43,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *          "cget_media",
  *          parameters = {
  *              "collection" = "expr(object.getId())",
- *              "limit" = 9999,
  *              "types" = "{types}",
  *              "locale" = "expr(object.getLocale())"
  *          }

@@ -20,6 +20,7 @@ Feature: Media move
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         And I double click the column navigation item "Foobar"
+        And I click the ok button
         Then I expect a success notification to appear
         When I am editing the media collection "Foobar"
         Then I expect to see "1" ".masonry-item" elements
@@ -37,6 +38,7 @@ Feature: Media move
         Then I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         When I double click the column navigation item "Foobar"
+        And I click the ok button
         Then I expect a success notification to appear
         When I am editing the media collection "Foobar"
         Then I expect to see "2" ".masonry-item" elements

@@ -130,6 +130,18 @@ sulu_route:
 The class `DataNavigationItem` got removed and is not supported
 anymore. Please use other forms of navigating instead.
 
+## 1.3.1
+
+If Sulu is used in combination with a port, the port has to be included in the
+URLs of the webspace configuration. So if you want to use Sulu on port 8080 the
+configuration has to look like this:
+
+```xml
+<url>sulu.lo:8080/{localization}</url>
+```
+
+The port can still be emitted if the standard HTTP or HTTPS port is used.
+
 ## 1.3.0-RC3
 
 ### Resource-locator generation
@@ -237,7 +249,7 @@ The image format "150x100" as well as the format "200x200" got removed
 from the backend formats. If a website relied on this format,
 it should be - as all image formats a website needs - defined
 in the theme specific config file.
-(http://docs.sulu.io/en/latest/book/creating-a-basic-website/adding-a-theme.html#configure-image-formats)
+(http://docs.sulu.io/en/latest/book/creating-a-basic-website/configuring-image-formats.html)
 
 ### PHPCR
 To adapt to the new PHPCR structure execute the migrations:

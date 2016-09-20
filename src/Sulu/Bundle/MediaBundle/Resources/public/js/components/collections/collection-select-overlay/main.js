@@ -90,12 +90,6 @@ define(function() {
         bindCustomEvents: function() {
             // start column navigation when overlay is openend
             this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
-
-            // wait for item select in column-navigation
-            this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
-                this.sandbox.emit(SELECTED.call(this), item);
-                this.sandbox.stop();
-            }.bind(this));
         },
 
         /**
@@ -125,6 +119,14 @@ define(function() {
                         title: this.sandbox.translate('sulu.media.move.overlay-title'),
                         data: templates.columnNavigation(),
                         buttons: buttons,
+                        okCallback: function() {
+                            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.get-marked', function (collections) {
+                                if (Object.keys(collections).length === 1) {
+                                    this.sandbox.emit(SELECTED.call(this), collections[Object.keys(collections)[0]]);
+                                }
+                                this.sandbox.stop();
+                            }.bind(this));
+                        }.bind(this),
                         cancelCallback: function() {
                             this.sandbox.stop();
                         }.bind(this),
@@ -144,10 +146,11 @@ define(function() {
             var options = {
                 el: constants.columnNavigationContainerSelector,
                 instanceName: this.options.instanceName,
-                actionIcon: 'fa-check-circle',
                 resultKey: 'collections',
                 showOptions: false,
                 showStatus: false,
+                markable: true,
+                singleMarkable: true,
                 responsive: false,
                 sortable: false,
                 skin: 'fixed-height-small',
@@ -164,7 +167,7 @@ define(function() {
                                 'title': this.sandbox.translate('sulu.media.all-collections'),
                                 'hasSub': true,
                                 '_links': {
-                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale}
+                                    'children': {'href': '/admin/api/collections?sortBy=title&locale=' + this.options.locale}
                                 },
                                 '_embedded': {'collections': []}
                             }
@@ -172,7 +175,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections?sortBy=title&limit=9999&locale=' + this.options.locale;
+                options.url = '/admin/api/collections?sortBy=title&locale=' + this.options.locale;
             }
 
             this.sandbox.start(

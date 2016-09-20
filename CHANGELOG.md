@@ -1,6 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
+
 * dev-develop
     * BUGFIX      #2797 [ContentBundle]       When removing resource locator in history now asks for conformation
     * BUGFIX      #2900 [ContentBundle]       Improved bug with grid elements not floating correctly
@@ -54,6 +55,22 @@ CHANGELOG for Sulu
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
+
+* 1.3.1 (2016-09-15)
+    * HOTFIX      #2922 [WebsiteBundle]       Avoid seo information injected by url
+    * HOTFIX      #2890 [Localization]        Reintroduced localization provider class
+    * HOTFIX      #2876 [MediaBundle]         Changed column navigation to markable and ok button
+    * HOTFIX      #2876 [ContentBundle]       Changed column navigation to markable and ok button
+    * HOTFIX      #2883 [WebsiteBundle]       Fixed translator locale for localizations with country
+    * HOTFIX      #2873 [ContentBundle]       Include live session in CleanupHistoryCommand
+    * HOTFIX      #2874 [SearchBundle]        Use new reindex command in IndexBuilder
+    * HOTFIX      #2870 [ContentBundle]       Fixed NodeOrderBuilder for publishing
+    * HOTFIX      #2869 [ContentBundle]       Fixed maintain command for resource locator
+    * HOTFIX      #2864 [MediaBundle]         Return 404 http code for not existing media
+    * HOTFIX      #2865 [ContentBundle]       Fixed button text for unpublish dialog
+    * HOTFIX      #2863 [MediaBundle]         Removed default limit from collection controller and children join from collection-repository
+    * HOTFIX      #2804 [ListBuilder]         Fixed ids-query in doctrine-list-builder
+    * HOTFIX      #2839 [WebsiteBundle]       Include port in URLs
 
 * 1.3.0 (2016-08-11)
     * FEATURE     #2680 [AdminBundle]         Changed the login background for the release

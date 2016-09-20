@@ -66,15 +66,8 @@ class SeoTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Renders all the SEO tags supported by Sulu.
-     *
-     * @param \Twig_Environment $twig
-     * @param array $seoExtension The values delivered by the SEO extension of Sulu
-     * @param array $content The content of the current page
-     * @param string[] $urls All the localized URLs for the current page
-     * @param string $shadowBaseLocale The displayed language, in case the current page is a shadow
-     *
-     * @return string The rendered HTML tags of the SEO extension
+     * Renders the correct title of the current page. The correct title is either the title provided by the SEO
+     * extension, or the title of the content, if the SEO extension does not provide one.
      *
      * @deprecated use the twig include function to render the seo
      */
