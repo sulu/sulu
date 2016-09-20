@@ -21,6 +21,7 @@ use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -82,10 +83,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
 
-        $this->query = $this->getMockBuilder(AbstractQuery::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['execute', 'getSingleScalarResult', 'getArrayResult'])
-            ->getMockForAbstractClass();
+        $this->query = $this->prophesize(AbstractQuery::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
 
@@ -94,7 +92,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->addGroupBy()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->where(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->setMaxResults(Argument::any())->willReturn($this->queryBuilder->reveal());
-        $this->queryBuilder->getQuery()->willReturn($this->query);
+        $this->queryBuilder->getQuery()->willReturn($this->query->reveal());
 
         $this->queryBuilder->distinct(false)->should(function () {
         });
@@ -102,23 +100,20 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         });
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldBeCalled();
 
-        $this->query->expects($this->any())->method('getArrayResult')->willReturn($this->idResult);
+        $this->query->getArrayResult()->willReturn($this->idResult);
+        $this->query->getScalarResult()->willReturn([[3]]);
 
-        $this->eventDispatcher = $this->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $this->doctrineListBuilder = new DoctrineListBuilder(
             $this->entityManager->reveal(),
             self::$entityName,
-            $this->eventDispatcher,
+            $this->eventDispatcher->reveal(),
             [PermissionTypes::VIEW => 64]
         );
 
         $event = new ListBuilderCreateEvent($this->doctrineListBuilder);
-        $this->eventDispatcher->expects($this->any())->method('dispatch')->with(
-            ListBuilderEvents::LISTBUILDER_CREATE, $event
-        )->willReturn($event);
+        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event)->willReturn($event);
 
         $doctrineListBuilderReflectionClass = new \ReflectionClass($this->doctrineListBuilder);
         $this->findIdsByGivenCriteria = $doctrineListBuilderReflectionClass->getMethod('findIdsByGivenCriteria');
@@ -449,6 +444,31 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->addOrderBy(self::$entityName . '.id', 'ASC')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
+    }
+
+    public function testSortConcat()
+    {
+        $select = 'CONCAT(SuluCoreBundle:Example.name, CONCAT(\' \', SuluCoreBundle:Example.desc)) AS name_desc';
+
+        $this->doctrineListBuilder->sort(new DoctrineConcatenationFieldDescriptor(
+            [
+                new DoctrineFieldDescriptor('name', 'name', self::$entityName),
+                new DoctrineFieldDescriptor('desc', 'desc', self::$entityName),
+            ],
+            'name_desc'
+        ));
+
+        $this->queryBuilder
+            ->addSelect($select)
+            ->shouldBeCalled();
+
+        $selectExpression = $this->prophesize(Select::class);
+        $selectExpression->getParts()->willReturn([$select]);
+        $this->queryBuilder->getDQLPart('select')->willReturn([$selectExpression->reveal()]);
+
+        $this->doctrineListBuilder->execute();
+
+        $this->queryBuilder->addOrderBy('name_desc', 'ASC')->shouldHaveBeenCalledTimes(2);
     }
 
     public function testLimit()
