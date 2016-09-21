@@ -62,7 +62,9 @@ define([
             multiEditClass: 'multi-edit',
             loadingClass: 'loading',
             loaderClass: 'media-edit-loader',
-            resetPreviewActionClass: 'media-reset-preview-action'
+            resetPreviewActionClass: 'media-reset-preview-action',
+            singleOverlaySkin: 'large',
+            multipleOverlaySkin: 'medium'
         },
 
         resetPreviewUrl = function(id) {
@@ -118,7 +120,7 @@ define([
             this.medias = null;
             this.$multiple = null;
 
-            this.startLoadingOverlay();
+            this.startLoadingOverlay(this.options.mediaIds.length > 1);
             this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
                 this.editMedia(medias);
             }.bind(this));
@@ -129,7 +131,7 @@ define([
         /**
          * Starts the loading overlay
          */
-        startLoadingOverlay: function() {
+        startLoadingOverlay: function(multiple) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.loadingClass + '"/>'),
                 $loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '" />');
 
@@ -153,7 +155,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.edit.loading'),
                         data: $loader,
-                        skin: 'large',
+                        skin: !!multiple ? constants.multipleOverlaySkin : constants.singleOverlaySkin,
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit.loading',
@@ -316,7 +318,7 @@ define([
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
-                        skin: 'large',
+                        skin: constants.singleOverlaySkin,
                         startingSlide: startingSlide,
                         supportKeyInput: false,
                         slides: [
@@ -720,6 +722,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.multiple-edit.title'),
                         data: this.$multiple,
+                        skin: constants.multipleOverlaySkin,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
                             preSelected: this.options.locale
