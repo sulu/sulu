@@ -88,10 +88,7 @@ define([
                 save: 'sulu-media.selection.overlay.save',
                 remove: 'public.remove',
                 uploadInfo: 'media-selection.list-toolbar.upload-info',
-                allMedias: 'media-selection.overlay.all-medias',
-                noData: 'navigation.media.collections.empty',
-                navigationTitle: 'navigation.media.collections',
-                search: 'navigation.media.collections.search'
+                allMedias: 'media-selection.overlay.all-medias'
             }
         },
 
@@ -117,8 +114,6 @@ define([
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('husky.data-navigation.' + this.options.instanceName + '.selected', this.dataNavigationSelectHandler.bind(this));
-
             if (!!this.options.removeOnClose) {
                 this.sandbox.on('husky.overlay.' + this.options.instanceName + '.closed', function() {
                     this.sandbox.stop();
@@ -257,29 +252,6 @@ define([
             }).length;
         },
 
-        dataNavigationSelectHandler: function(collection) {
-            var id, title = this.sandbox.translate('media-selection.overlay.all-medias');
-
-            if (collection) {
-                id = collection.id;
-                title = collection.title;
-
-                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.show', 'add');
-                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
-            } else {
-                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.hide', 'add');
-                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.disable');
-            }
-
-            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.url.update', {
-                collection: id,
-                page: 1
-            });
-
-            this.changeUploadCollection(id);
-            this.$el.find('.list-title').text(title);
-        },
-
         getUrl: function(params) {
             if (!params) {
                 params = {};
@@ -307,7 +279,6 @@ define([
             }
 
             this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.records.add', files);
-            this.sandbox.emit('husky.data-navigation.' + this.options.instanceName + '.collections.reload');
         },
 
         initializeDialog: function() {
@@ -382,26 +353,6 @@ define([
         initializeFormComponents: function() {
             this.sandbox.start(
                 [
-                    {
-                        name: 'data-navigation@husky',
-                        options: {
-                            el: this.$el.find('.navigation-container'),
-                            resultKey: 'collections',
-                            showAddButton: false,
-                            instanceName: this.options.instanceName,
-                            rootUrl: '/admin/api/collections?sortBy=title',
-                            url: '/admin/api/collections?sortBy=title',
-                            nameKey: 'title',
-                            globalEvents: false,
-                            locale: UserSettingsManager.getMediaLocale(),
-                            translates: {
-                                noData: this.translations.noData,
-                                title: this.translations.navigationTitle,
-                                addButton: '',
-                                search: this.translations.search
-                            }
-                        }
-                    },
                     {
                         name: 'dropzone@husky',
                         options: {
