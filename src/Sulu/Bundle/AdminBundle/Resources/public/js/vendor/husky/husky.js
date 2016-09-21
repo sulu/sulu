@@ -37760,6 +37760,10 @@ define('__component__$toolbar@husky',[],function() {
             var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
                 $item;
 
+            if (!!parent.dropdownOptions && !!parent.dropdownOptions.maxHeight) {
+                $list.css('maxHeight', parent.dropdownOptions.maxHeight);
+            }
+
             this.sandbox.dom.append(listItem, $list);
             this.sandbox.util.foreach(parent.dropdownItems, function(dropdownItem) {
                 dropdownItem.title = this.sandbox.translate(dropdownItem.title);
