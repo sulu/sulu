@@ -1,7 +1,3 @@
-// Colors
-$shrinkBackgroundColor: #21272E !default;
-$shrinkTextColor: $white !default;
-
 // Column structure of the admin
 /*----------------------------------------*/
 
@@ -127,27 +123,6 @@ $shrinkTextColor: $white !default;
         }
         .sulu-title {
             @include transition(none);
-        }
-    }
-
-    .sulu-app-shrink {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        z-index: 120;
-        cursor: pointer;
-        width: 25px;
-        height: 25px;
-        overflow: hidden;
-        background: $shrinkBackgroundColor;
-        color: $shrinkTextColor;
-        text-align: center;
-        line-height: 25px;
-        .fa-chevron-right {
-            padding-left: 2px;
-        }
-        .fa-chevron-left {
-            padding-right: 2px;
         }
     }
 
