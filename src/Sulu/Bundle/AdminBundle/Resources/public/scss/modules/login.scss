@@ -1,3 +1,19 @@
+// Colors
+$loginMediaContainerBackgroundColor: $grayDarkLighter !default;
+$loginMediaDarkenerBackgroundColor: $black !default;
+$loginContentContainerBackgroundColor: $blue !default;
+$loginMessageColor: $white !default;
+$loginHuskeyValidateColor: $red !default;
+$loginBoxFrameFooterBtnBorderColor: $white !default;
+$loginBoxFrameFooterInactiveBorderColor: $grayDarkLighter !default;
+$loginBoxFrameFooterInactiveColor: $grayDarkLighter !default;
+$loginFormElementBorderColor: $white !default;
+$loginNavigatorColor: $white !default;
+$loginSuccessOverlayBackgroundColor: $green !default;
+
+// Images
+$loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
+
 #main {
     min-width: 0;
 }
@@ -23,7 +39,7 @@
     }
     .media-container {
         float: left;
-        background: $grayDarkLighter; //until image is faded in
+        background: $loginMediaContainerBackgroundColor; //until image is faded in
 
         .media-logo {
             width: $logoSize;
@@ -56,7 +72,7 @@
             .darkener {
                 width: 100%;
                 height: 100%;
-                background: $black;
+                background: $loginMediaDarkenerBackgroundColor;
 
                 opacity: 0.2;
                 @include transition(opacity 500ms);
@@ -75,7 +91,7 @@
 
     .content-container {
         float: right;
-        background-color: $blue;
+        background-color: $loginContentContainerBackgroundColor;
 
         .content-box {
             width: $boxWidth;
@@ -108,7 +124,7 @@
 
                     .message, .error-message {
                         display: block;
-                        color: $white;
+                        color: $loginMessageColor;
                     }
 
                     .message {
@@ -134,7 +150,7 @@
                         }
 
                         .husky-validate {
-                            color: $red;
+                            color: $loginHuskeyValidateColor;
                         }
                     }
 
@@ -143,7 +159,7 @@
                         position: relative; // loader positioning
 
                         .btn {
-                            border: 1px solid $white;
+                            border: 1px solid $loginBoxFrameFooterBtnBorderColor;
                             float: right;
                             padding: 0 45px;
 
@@ -152,8 +168,8 @@
                             @include transition(opacity 300ms);
 
                             &.inactive {
-                                border: 1px solid $grayDarkLighter;
-                                color: $grayDarkLighter;
+                                border: 1px solid $loginBoxFrameFooterInactiveBorderColor;
+                                color: $loginBoxFrameFooterInactiveColor;
                                 cursor: default;
                             }
                         }
@@ -164,7 +180,7 @@
                     }
 
                     .form-element {
-                        border-color: $white;
+                        border-color: $loginFormElementBorderColor;
                     }
 
                     &.content-loading {
@@ -180,7 +196,7 @@
         }
 
         .navigator {
-            color: $white;
+            color: $loginNavigatorColor;
             font-size: 12px; // as in sketch
             cursor: pointer;
         }
@@ -202,7 +218,7 @@
             position: relative;
             z-index: -10;
 
-            background-color: $green;
+            background-color: $loginSuccessOverlayBackgroundColor;
 
             // success animation
             opacity: 0;
@@ -213,7 +229,7 @@
                 height: 200px;
                 @include centerFixedSizeBlock(200px, 200px);
 
-                background: url('../img/login-success.svg') no-repeat center center;
+                background: $loginSuccessIconBackgroundImage no-repeat center center;
                 @include background-size(contain);
             }
         }
