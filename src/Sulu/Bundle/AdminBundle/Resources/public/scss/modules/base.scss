@@ -1,5 +1,9 @@
-// BODY
+// Colors
+$initialLoaderBouncerBackgroundColor: $grayLighter !default;
+$highlightSectionBackgroundColor: $grayLighter !default;
 
+
+// Body
 body {
     background-color: $backgroundColor;
 }
@@ -43,14 +47,13 @@ input, select {
     padding-bottom: 20px;
 }
 
-
 .initial-loader {
     $dimension: 100px;
     width: $dimension;
     height: $dimension;
     @include centerBlock();
     .bouncer {
-        background: $grayLighter;
+        background: $initialLoaderBouncerBackgroundColor;
     }
 }
 
@@ -60,7 +63,7 @@ input, select {
     width: 100%;
     margin-top: -$contentPaddingTop;
 
-    background: $grayLighterer;
+    background: $highlightSectionBackgroundColor;
     margin-bottom: 30px;
     @include clear-float;
 
