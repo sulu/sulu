@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2855 [ContentBundle]       Button when hovering ghost page added
     * BUGFIX      #2889 [ContentBundle]       Added confirmation message when publishing a page
     * BUGFIX      #2797 [ContentBundle]       When removing resource locator in history now asks for conformation
+    * BUGFIX      #2934 [WebsiteBundle]       Fixed cache-clearer if using varnisch
     * BUGFIX      #2900 [ContentBundle]       Improved bug with grid elements not floating correctly
     * ENHANCEMENT #2927 [ContactBundle]       Enables the extensibility of matchings for contact-selection
     * BUGFIX      #2925 [WebsiteBundle]       Fixed seo when no data is available
