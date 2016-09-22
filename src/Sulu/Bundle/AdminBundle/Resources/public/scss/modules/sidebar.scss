@@ -2,7 +2,7 @@
 $sidebarBackgroundColor: $white !default;
 $sidebarActionTextColor: $black !default;
 $sidebarLabelTextColor: $grey !default;
-$sidebarBlueIconTextColor: $white !default;
+$sidebarBlueIconColor: $white !default;
 $sidebarBlueIconBackgroundColor: $blue !default;
 $sidebarBlueIconHrBackgroundColor: $grayLighterer !default;
 
@@ -38,7 +38,7 @@ $sidebarBlueIconHrBackgroundColor: $grayLighterer !default;
         width: 30px;
         height: 20px;
         cursor: pointer;
-        color: $sidebarBlueIconTextColor;
+        color: $sidebarBlueIconColor;
         background: $sidebarBlueIconBackgroundColor;
         text-align: center;
         border-radius: 2px;
