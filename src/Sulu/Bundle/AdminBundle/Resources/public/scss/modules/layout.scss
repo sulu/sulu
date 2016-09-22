@@ -1,6 +1,6 @@
 // Colors
 $shrinkBackgroundColor: #21272E !default;
-$shrinkColor: $white !default;
+$shrinkTextColor: $white !default;
 
 // Column structure of the admin
 /*----------------------------------------*/
@@ -140,7 +140,7 @@ $shrinkColor: $white !default;
         height: 25px;
         overflow: hidden;
         background: $shrinkBackgroundColor;
-        color: $shrinkColor;
+        color: $shrinkTextColor;
         text-align: center;
         line-height: 25px;
         .fa-chevron-right {

@@ -1,10 +1,10 @@
 // Colors
 $sidebarBackgroundColor: $white !default;
-$sidebarActionColor: $black !default;
-$sidebarLabelColor: $grey !default;
-$sidebarBlueIconColor: $white !default;
+$sidebarActionTextColor: $black !default;
+$sidebarLabelTextColor: $grey !default;
+$sidebarBlueIconTextColor: $white !default;
 $sidebarBlueIconBackgroundColor: $blue !default;
-$sidebarBlueIconHrColor: $grayLighterer !default;
+$sidebarBlueIconHrBackgroundColor: $grayLighterer !default;
 
 // Sidebar definitions
 /*----------------------------------------*/
@@ -23,7 +23,7 @@ $sidebarBlueIconHrColor: $grayLighterer !default;
     }
 
     .action {
-        color: $sidebarActionColor;
+        color: $sidebarActionTextColor;
         cursor: pointer;
         text-decoration: none;
     }
@@ -31,14 +31,14 @@ $sidebarBlueIconHrColor: $grayLighterer !default;
     .label {
         font-weight: 600;
         margin: 0 0 5px 0;
-        color: $sidebarLabelColor;
+        color: $sidebarLabelTextColor;
     }
 
     .blue-icon {
         width: 30px;
         height: 20px;
         cursor: pointer;
-        color: $sidebarBlueIconColor;
+        color: $sidebarBlueIconTextColor;
         background: $sidebarBlueIconBackgroundColor;
         text-align: center;
         border-radius: 2px;
@@ -65,7 +65,7 @@ $sidebarBlueIconHrColor: $grayLighterer !default;
     hr {
         border: 0;
         height: 1px;
-        background: $sidebarBlueIconHrColor;
+        background: $sidebarBlueIconHrBackgroundColor;
     }
 
 }

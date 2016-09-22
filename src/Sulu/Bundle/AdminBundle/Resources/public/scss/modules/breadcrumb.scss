@@ -1,8 +1,8 @@
 // Colors
-$breadcrumbColor: $grayLight !default;
-$breadcrumbHoverColor: $black !default;
-$breadcrumbIconColor: $grayLighter !default;
-$breadcrumbSeperatorColor: $black !default;
+$breadcrumbTextColor: $grayLight !default;
+$breadcrumbHoverTextColor: $black !default;
+$breadcrumbIconTextColor: $grayLighter !default;
+$breadcrumbSeperatorTextColor: $black !default;
 
 .sulu-breadcrumb {
     $colorTransitionDuration: 80ms;
@@ -11,19 +11,19 @@ $breadcrumbSeperatorColor: $black !default;
     .breadcrumb {
         cursor: pointer;
         font-size: $smallFontSize;
-        color: $breadcrumbColor;
+        color: $breadcrumbTextColor;
 
         &, .icon {
             @include transition(color $colorTransitionDuration);
         }
 
         &:hover, &:hover .icon {
-            color: $breadcrumbHoverColor;
+            color: $breadcrumbHoverTextColor;
         }
     }
 
     .icon {
-        color: $breadcrumbIconColor;
+        color: $breadcrumbIconTextColor;
         font-size: 9px;
         margin-right: 5px;
     }
@@ -32,6 +32,6 @@ $breadcrumbSeperatorColor: $black !default;
         display: inline-block;
         margin: 0 10px 0 5px;
         font-size: 9px;
-        color: $breadcrumbSeperatorColor;
+        color: $breadcrumbSeperatorTextColor;
     }
 }

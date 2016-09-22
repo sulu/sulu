@@ -2,7 +2,7 @@
 $blueRowBackgroundColor: $blue !default;
 $toolbarRowLeftBackgroundColor: $blueRowBackgroundColor !default;
 $toolbarRowRightBackgroundColor: $blueRowBackgroundColor !default;
-$toolbarRowBackColor: $white !default;
+$toolbarRowBackTextColor: $white !default;
 $toolbarRowLanguageChangerBackgroundColor: $white !default;
 $tabsBackgroundColor: $white !default;
 
@@ -59,7 +59,7 @@ $tabsBackgroundColor: $white !default;
             background: $toolbarRowRightBackgroundColor;
         }
         .back {
-            color: $toolbarRowBackColor;
+            color: $toolbarRowBackTextColor;
             text-align: center;
             line-height: $headerHeight;
             cursor: pointer;

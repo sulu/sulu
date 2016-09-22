@@ -2,13 +2,13 @@
 $loginMediaContainerBackgroundColor: $grayDarkLighter !default;
 $loginMediaDarkenerBackgroundColor: $black !default;
 $loginContentContainerBackgroundColor: $blue !default;
-$loginMessageColor: $white !default;
-$loginHuskeyValidateColor: $red !default;
+$loginMessageTextColor: $white !default;
+$loginHuskeyValidateTextColor: $red !default;
 $loginBoxFrameFooterBtnBorderColor: $white !default;
 $loginBoxFrameFooterInactiveBorderColor: $grayDarkLighter !default;
-$loginBoxFrameFooterInactiveColor: $grayDarkLighter !default;
+$loginBoxFrameFooterInactiveTextColor: $grayDarkLighter !default;
 $loginFormElementBorderColor: $white !default;
-$loginNavigatorColor: $white !default;
+$loginNavigatorTextColor: $white !default;
 $loginSuccessOverlayBackgroundColor: $green !default;
 
 // Images
@@ -124,7 +124,7 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
 
                     .message, .error-message {
                         display: block;
-                        color: $loginMessageColor;
+                        color: $loginMessageTextColor;
                     }
 
                     .message {
@@ -150,7 +150,7 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
                         }
 
                         .husky-validate {
-                            color: $loginHuskeyValidateColor;
+                            color: $loginHuskeyValidateTextColor;
                         }
                     }
 
@@ -169,7 +169,7 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
 
                             &.inactive {
                                 border: 1px solid $loginBoxFrameFooterInactiveBorderColor;
-                                color: $loginBoxFrameFooterInactiveColor;
+                                color: $loginBoxFrameFooterInactiveTextColor;
                                 cursor: default;
                             }
                         }
@@ -196,7 +196,7 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
         }
 
         .navigator {
-            color: $loginNavigatorColor;
+            color: $loginNavigatorTextColor;
             font-size: 12px; // as in sketch
             cursor: pointer;
         }
