@@ -1,7 +1,7 @@
 // Colors
 $loginMediaContainerBackgroundColor: $grayDarkLighter !default;
 $loginMediaDarkenerBackgroundColor: $black !default;
-$loginContentContainerBackgroundColor: $blue !default;
+$loginContentContainerBackgroundColor: $blue !default;-
 $loginMessageTextColor: $white !default;
 $loginHuskeyValidateTextColor: $red !default;
 $loginBoxFrameFooterBtnBorderColor: $white !default;
@@ -12,7 +12,7 @@ $loginNavigatorTextColor: $white !default;
 $loginSuccessOverlayBackgroundColor: $green !default;
 
 // Images
-$loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
+$loginSuccessIconBackgroundImage: '../img/login-success.svg' !default;
 
 #main {
     min-width: 0;
@@ -102,11 +102,9 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
             .content-logo {
                 display: none; //only in portrait-mode (media query)
                 margin: 0 auto 30px;
-
                 width: $logoSize;
                 height: $logoSize;
                 z-index: 20;
-
                 background: url($logoPath) no-repeat center center;
                 @include background-size(contain);
             }
@@ -203,12 +201,10 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
 
         .login-content-footer {
             width: 100%;
-
             position: absolute;
             z-index: 10;
             bottom: 0px;
             left: 0px;
-
             text-align: center;
         }
 
@@ -217,7 +213,6 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
             width: 100%;
             position: relative;
             z-index: -10;
-
             background-color: $loginSuccessOverlayBackgroundColor;
 
             // success animation
@@ -229,7 +224,7 @@ $loginSuccessIconBackgroundImage: url('../img/login-success.svg') !default;
                 height: 200px;
                 @include centerFixedSizeBlock(200px, 200px);
 
-                background: $loginSuccessIconBackgroundImage no-repeat center center;
+                background: url($loginSuccessIconBackgroundImage) no-repeat center center;
                 @include background-size(contain);
             }
         }
