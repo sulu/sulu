@@ -1,10 +1,18 @@
+// Colors
+$sidebarBackgroundColor: $white !default;
+$sidebarActionColor: $black !default;
+$sidebarLabelColor: $grey !default;
+$sidebarBlueIconColor: $white !default;
+$sidebarBlueIconBackgroundColor: $blue !default;
+$sidebarBlueIconHrColor: $grayLighterer !default;
+
 // Sidebar definitions
 /*----------------------------------------*/
 
 .sulu-sidebar {
     width: 100%;
     height: 100%;
-    background: $white;
+    background: $sidebarBackgroundColor;
     overflow: auto;
 
     .sidebar-loader {
@@ -15,7 +23,7 @@
     }
 
     .action {
-        color: $black;
+        color: $sidebarActionColor;
         cursor: pointer;
         text-decoration: none;
     }
@@ -23,15 +31,15 @@
     .label {
         font-weight: 600;
         margin: 0 0 5px 0;
-        color: $grey;
+        color: $sidebarLabelColor;
     }
 
     .blue-icon {
         width: 30px;
         height: 20px;
         cursor: pointer;
-        color: $white;
-        background: $blue;
+        color: $sidebarBlueIconColor;
+        background: $sidebarBlueIconBackgroundColor;
         text-align: center;
         border-radius: 2px;
         margin-left: 10px;
@@ -57,7 +65,7 @@
     hr {
         border: 0;
         height: 1px;
-        background: $grayLighterer;
+        background: $sidebarBlueIconHrColor;
     }
 
 }
