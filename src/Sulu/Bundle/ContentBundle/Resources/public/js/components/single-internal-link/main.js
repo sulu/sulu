@@ -169,11 +169,11 @@ define([], function() {
                         removeOnClose: false,
                         instanceName: 'single-internal-link.' + this.options.instanceName,
                         skin: 'responsive-width',
-                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.overlayTitle),
                                 data: templates.data(this.options),
+                                contentSpacing: false,
                                 okCallback: overlayOkCallback.bind(this)
                             }
                         ]

@@ -72,6 +72,11 @@
         padding-left: $contentPaddingLeft;
         padding-right: $contentPaddingRight;
         min-width: $contentMinWidth;
+
+        &.no-padding {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 
     .fixed-width {

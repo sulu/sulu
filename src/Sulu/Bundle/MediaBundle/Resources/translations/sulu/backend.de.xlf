@@ -302,10 +302,6 @@
                 <source>sulu-media.ckeditor.media-link.edit.remove</source>
                 <target>Medien Link entfernen</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="sulu-media.selection.overlay.title">
-                <source>sulu-media.selection.overlay.title</source>
-                <target>Medien</target>
-            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
                 <source>sulu-media.selection.overlay.save</source>
                 <target>Übernehmen</target>

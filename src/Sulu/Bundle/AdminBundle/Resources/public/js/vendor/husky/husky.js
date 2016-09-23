@@ -31044,7 +31044,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds an action-icon to into the first column
          */
         addActionIcon: function() {
-            if (typeof this.datagrid.options.actionCallback === 'function' && !!this.datagrid.matchings && this.datagrid.matchings.length > 0) {
+            if (typeof this.datagrid.options.actionCallback === 'function'
+                && !!this.datagrid.matchings
+                && this.datagrid.matchings.length > 0
+                && !!this.options.actionIcon
+            ) {
                 this.icons.push({
                     icon: this.options.actionIcon,
                     column: this.options.actionIconColumn || this.datagrid.matchings[0].attribute,
@@ -43599,6 +43603,7 @@ define('__component__$overlay@husky',[], function() {
             cancelDefaultText: 'public.cancel',
             okDefaultText: 'public.ok',
             languageChanger: null,
+            contentSpacing: true,
             cssClass: ''
         },
 
@@ -44206,7 +44211,7 @@ define('__component__$overlay@husky',[], function() {
                     index: this.slides[slide].index,
                     cssClass: this.slides[slide].cssClass,
                     displayHeader: this.slides[slide].displayHeader,
-                    spacingClass: (!!this.options.contentSpacing) ? 'content-spacing' : ''
+                    spacingClass: (!!this.slides[slide].contentSpacing) ? 'content-spacing' : ''
                 })
             );
             this.overlay.slides[slide].$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.slides[slide].$el);

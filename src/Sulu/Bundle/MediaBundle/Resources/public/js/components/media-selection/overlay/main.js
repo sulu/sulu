@@ -16,47 +16,36 @@
 define([
     'underscore',
     'config',
+    'services/sulumedia/collection-manager',
     'services/sulumedia/user-settings-manager',
     'text!./skeleton.html'
-], function(_, Config, UserSettingsManager, skeletonTemplate) {
+], function(_, Config, CollectionManager, UserSettingsManager, skeletonTemplate) {
 
     'use strict';
 
-    var fields = [
-        {
-            name: 'id',
-            translation: 'public.id',
-            disabled: true,
-            default: false,
-            sortable: true
+    var constants = {
+            listContainerSelector: '.list-container',
+            overlayBackButtonSelector: '.overlay-container .back',
+            dropzoneWrapperContainer: '.dropzone-wrapper-container',
+            newFormSelector: '#collection-new'
         },
-        {
-            name: 'thumbnails',
-            translation: 'media.media.thumbnails',
-            disabled: false,
-            default: true,
-            sortable: true,
-            type: 'thumbnails'
+
+        emptyCollection = {
+            title: '',
+            description: ''
         },
-        {
-            name: 'title',
-            translation: 'public.title',
-            disabled: false,
-            default: false,
-            sortable: true,
-            type: 'title'
-        },
-        {
-            name: 'size',
-            translation: 'media.media.size',
-            disabled: false,
-            default: true,
-            sortable: true,
-            type: 'bytes'
-        }
-    ];
+
+        getRootData = function() {
+            return {
+                title: this.sandbox.translate('sulu.media.all-collections'),
+                hasSub: true
+            };
+        };
 
     return {
+        templates: [
+            '/admin/media/template/collection/new'
+        ],
 
         defaults: {
             options: {
@@ -68,7 +57,7 @@ define([
                 types: null,
                 removeOnClose: false,
                 openOnStart: false,
-                saveCallback: function(label) {
+                saveCallback: function() {
                 },
                 removeCallback: function() {
                 }
@@ -84,7 +73,6 @@ define([
             },
 
             translations: {
-                title: 'sulu-media.selection.overlay.title',
                 save: 'sulu-media.selection.overlay.save',
                 remove: 'public.remove',
                 uploadInfo: 'media-selection.list-toolbar.upload-info',
@@ -109,8 +97,63 @@ define([
         loadedItems: {},
 
         initialize: function() {
+            this.data = {};
+
             this.initializeDialog();
+
+            this.bindCollectionViewEvents();
+            this.bindDomEvents();
             this.bindCustomEvents();
+        },
+
+        bindCollectionViewEvents: function() {
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.asset.clicked',
+                function(id, item) {
+                    if (this.options.singleSelect) {
+                        this.setItems([item]);
+                        this.save();
+                        this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.close');
+                    }
+                },
+                this
+            );
+
+            this.sandbox.on('sulu.collection-view.' + this.options.instanceName + '.asset.added', function(id, item) {
+                this.addItem(item);
+            }.bind(this));
+
+            this.sandbox.on('sulu.collection-view.' + this.options.instanceName + '.asset.removed', function(id) {
+                this.removeItem(id);
+            }.bind(this));
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.folder.clicked',
+                this.renderCollectionView,
+                this
+            );
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.folder.breadcrumb-clicked',
+                this.handleBreadcrumbClick,
+                this
+            );
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.folder.add-clicked',
+                this.slideToAddForm,
+                this
+            );
+        },
+
+        bindDomEvents: function() {
+            this.$el.on('click', '.back', function() {
+                if (!!this.data._embedded && !!this.data._embedded.parent) {
+                    this.renderCollectionView(this.data._embedded.parent.id);
+                } else {
+                    this.renderCollectionView();
+                }
+            }.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -120,83 +163,10 @@ define([
                 }.bind(this));
             }
 
-            // if files got uploaded to the server add them to the datagrid
-            this.sandbox.on(
-                'husky.dropzone.' + this.options.instanceName + '.files-added',
-                function(files) {
-                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
-                    if (!!this.options.singleSelect) {
-                        this.setItems([files[0]]);
-                        this.save();
-
-                        return this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.close');
-                    }
-
-                    this.addFilesToDatagrid.call(this, files);
-                }.bind(this)
-            );
-
-            // open data-source folder-overlay
-            this.sandbox.on('sulu.toolbar.' + this.options.instanceName + '.add', function() {
-                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.open-data-source');
-                }.bind(this)
-            );
-
-            this.sandbox.on(
-                'husky.overlay.dropzone-' + this.options.instanceName + '.opened',
-                function() {
-                    this.$el.find('.media-selection-overlay').addClass('dropzone-overlay-opened');
-                }.bind(this)
-            );
-
-            this.sandbox.on(
-                'husky.overlay.dropzone-' + this.options.instanceName + '.closed',
-                function() {
-                    this.$el.find('.media-selection-overlay').removeClass('dropzone-overlay-opened');
-                }.bind(this)
-            );
-
-            // change datagrid view to table
-            this.sandbox.on('sulu.toolbar.change.table', function() {
-                UserSettingsManager.setMediaListView('table');
-                UserSettingsManager.setMediaListPagination('dropdown');
-
-                this.sandbox.emit(
-                    'husky.datagrid.' + this.options.instanceName + '.change',
-                    1,
-                    UserSettingsManager.getDropdownPageSize(),
-                    'table',
-                    [],
-                    'dropdown'
-                );
-            }.bind(this));
-
-            // change datagrid view to masonry
-            this.sandbox.on('sulu.toolbar.change.masonry', function() {
-                UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
-                UserSettingsManager.setMediaListPagination('infinite-scroll');
-
-                this.sandbox.emit(
-                    'husky.datagrid.' + this.options.instanceName + '.change',
-                    1,
-                    UserSettingsManager.getInfinityPageSize(),
-                    'datagrid/decorators/masonry-view',
-                    null,
-                    'infinite-scroll'
-                );
-            }.bind(this));
-
             this.events.setItems(this.setItems.bind(this));
+
             this.events.open(function() {
                 this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.open');
-            }.bind(this));
-
-            this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.item.select', function(id, item) {
-                this.addItem(item);
-            }.bind(this));
-
-            this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.item.deselect', function(id) {
-                this.removeItem(id);
             }.bind(this));
 
             this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.loaded', function(data) {
@@ -265,25 +235,14 @@ define([
             });
         },
 
-        changeUploadCollection: function(id) {
-            this.sandbox.emit(
-                'husky.dropzone.' + this.options.instanceName + '.change-url', this.getUrl({
-                    collection: id
-                })
-            );
-        },
-
-        addFilesToDatagrid: function(files) {
-            for (var i = -1, length = files.length; ++i < length;) {
-                files[i].selected = true;
-            }
-
-            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.records.add', files);
+        startOverlayComponents: function () {
+            this.startToolbar();
+            this.renderCollectionView();
         },
 
         initializeDialog: function() {
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
-            this.sandbox.dom.append(this.$el, $element);
+            var $overlay = this.sandbox.dom.createElement('<div class="overlay-container"/>');
+            this.sandbox.dom.append(this.$el, $overlay);
 
             var buttons = [
                 {
@@ -312,26 +271,45 @@ define([
                 });
             }
 
+            // start form when overlay is opened
+            this.sandbox.once('husky.overlay.' + this.options.instanceName + '.opened', function() {
+                this.sandbox.form.create(constants.newFormSelector);
+            }.bind(this));
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
                         openOnStart: this.options.openOnStart,
                         removeOnClose: this.options.removeOnClose,
-                        el: $element,
+                        el: $overlay,
                         container: this.$el,
-                        contentSpacing: false,
                         cssClass: 'media-selection-overlay',
                         instanceName: this.options.instanceName,
                         slides: [
                             {
-                                title: this.translations.title,
+                                displayHeader: false,
                                 data: this.templates.skeleton({
                                     title: this.translations.allMedias
                                 }),
                                 buttons: buttons,
+                                contentSpacing: false,
                                 okCallback: function() {
                                     this.save();
+                                }.bind(this)
+                            },
+                            {
+                                title: this.sandbox.translate('sulu.media.add-collection'),
+                                data: this.renderTemplate('/admin/media/template/collection/new'),
+                                okCallback: function() {
+                                    this.addCollection();
+
+                                    return false;
+                                }.bind(this),
+                                cancelCallback: function() {
+                                    this.slideToCollectionView();
+
+                                    return false;
                                 }.bind(this)
                             }
                         ]
@@ -341,131 +319,125 @@ define([
                 this.setItems(this.options.preselected);
 
                 if (!!this.options.openOnStart) {
-                    return this.initializeFormComponents();
+                    this.startOverlayComponents();
+
+                    return;
                 }
 
                 this.sandbox.once('husky.overlay.' + this.options.instanceName + '.opened', function() {
-                    this.initializeFormComponents();
+                    this.startOverlayComponents();
                 }.bind(this));
             }.bind(this));
         },
 
-        initializeFormComponents: function() {
-            this.sandbox.start(
-                [
-                    {
-                        name: 'dropzone@husky',
-                        options: {
-                            el: this.$el.find('.dropzone-container'),
-                            maxFilesize: Config.get('sulu-media').maxFilesize,
-                            url: this.getUrl(),
-                            method: 'POST',
-                            paramName: 'fileVersion',
-                            instanceName: this.options.instanceName,
-                            overlayContainer: this.$find('.overlay-content'),
-                            dropzoneEnabled: false,
-                            cancelUploadOnOverlayClose: true
+        startToolbar: function() {
+            this.sandbox.start([{
+                name: 'toolbar@husky',
+                options: {
+                    el: this.$el.find('.toolbar'),
+                    instanceName: this.options.instanceName,
+                    skin: 'big',
+                    buttons: [
+                        {
+                            id: 'add-folder',
+                            icon: 'plus-circle',
+                            title: 'sulu.media.add-collection',
+                            callback: this.slideToAddForm.bind(this)
                         }
-                    }
-                ]
-            );
+                    ]
+                }
+            }]);
+        },
 
-            this.sandbox.sulu.initListToolbarAndList.call(
-                this,
-                'mediaOverlay',
-                fields,
-                {
-                    el: this.$el.find('.list-toolbar-container'),
+        startCollectionView: function (data) {
+            var $collectionView = $('<div class="collection-view"/>');
+
+            this.$el.find(constants.listContainerSelector).append($collectionView);
+
+            this.sandbox.start([{
+                name: 'collection-view@sulumedia',
+                options: {
+                    el: $collectionView,
+                    data: data,
+                    locale: this.options.locale,
                     instanceName: this.options.instanceName,
-                    template: this.sandbox.sulu.buttons.get({
-                        add: {
-                            options: {
-                                id: 'add',
-                                title: this.translations.uploadInfo,
-                                hidden: true,
-                                callback: function() {
-                                    this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.open-data-source');
-                                }.bind(this)
-                            }
-                        },
-                        mediaDecoratorDropdown: {
-                            options: {
-                                id: 'change',
-                                dropdownOptions: {
-                                    markSelected: true
-                                }
-                            }
-                        }
-                    })
-                },
-                {
-                    el: this.$el.find('.list-datagrid-container'),
-                    url: this.getUrl({
-                        orderBy: 'media.created',
-                        orderSort: 'desc'
-                    }),
-                    view: UserSettingsManager.getMediaListView(),
-                    pagination: UserSettingsManager.getMediaListPagination(),
-                    resultKey: 'media',
-                    instanceName: this.options.instanceName,
-                    searchFields: ['name', 'title', 'description'],
-                    viewSpacingBottom: 180,
-                    selectedCounter: false,
-                    preselected: _.map(this.items, function(item) {
+                    assetActions: ['fa-check-circle-o'],
+                    assetSelectOnClick: true,
+                    assetSingleSelect: !!this.options.singleSelect,
+                    assetPreselected: _.map(this.items, function (item) {
                         return parseInt(item.id);
                     }),
-                    actionCallback: !!this.options.singleSelect ? function(id, item) {
-                        this.setItems([item]);
-                        this.save();
-                        this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.close');
-                    }.bind(this) : null,
-                    viewOptions: {
-                        table: {
-                            actionIcon: 'check',
-                            actionIconColumn: !!this.options.singleSelect ? 'title' : null,
-                            selectItem: !this.options.singleSelect ? {type: 'checkbox', inFirstCell: false} : false,
-                            badges: [
-                                {
-                                    column: 'title',
-                                    callback: function(item, badge) {
-                                        if (item.locale !== this.options.locale) {
-                                            badge.title = item.locale;
-
-                                            return badge;
-                                        }
-                                    }.bind(this)
-                                }
-                            ]
-                        },
-                        'datagrid/decorators/masonry-view': {
-                            selectable: !this.options.singleSelect,
-                            selectOnAction: !this.options.singleSelect,
-                            unselectOnBackgroundClick: false,
-                            locale: this.options.locale,
-                            actionIcons: ['fa-check-circle-o'],
-                            badges: [
-                                {
-                                    column: 'title',
-                                    callback: function(item, badge) {
-                                        if (item.locale !== this.options.locale) {
-                                            badge.title = item.locale;
-
-                                            return badge;
-                                        }
-                                    }.bind(this)
-                                }
-                            ]
-                        }
-                    },
-                    paginationOptions: {
-                        'infinite-scroll': {
-                            reachedBottomMessage: 'public.reached-list-end',
-                            scrollContainer: '.list-container',
-                            scrollOffset: 500
-                        }
-                    }
+                    assetShowActionIcon: !!this.options.singleSelect,
+                    assetHasEdit: false,
+                    assetHasDelete: false,
+                    assetHasMove: false,
+                    assetHasSelectedCounter: false,
+                    dropzoneOverlayContainer: this.$el.find(constants.dropzoneWrapperContainer),
+                    parentContainer: constants.listContainerSelector
                 }
-            );
+            }]);
+        },
+
+        handleBackButtonDisplay: function () {
+            if (!!this.data.id) {
+                this.sandbox.dom.show(constants.overlayBackButtonSelector);
+            } else {
+                this.sandbox.dom.hide(constants.overlayBackButtonSelector);
+            }
+        },
+
+        handleBreadcrumbClick: function(breadcrumb) {
+            this.renderCollectionView(breadcrumb.data.id);
+        },
+
+        renderCollectionView: function(collectionId) {
+            var $loader;
+
+            this.sandbox.stop('.collection-view');
+
+            if (!collectionId) {
+                this.data = getRootData.call(this);
+                this.startCollectionView(this.data);
+                this.handleBackButtonDisplay();
+            } else {
+                $loader = $('<div class="loader"/>');
+                this.sandbox.sulu.showLoader.call(this, $loader);
+
+                this.$el.find(constants.listContainerSelector).append($loader);
+
+                CollectionManager
+                    .load(collectionId, this.options.locale)
+                    .then(function(data) {
+                        this.sandbox.stop('.loader');
+                        this.data = data;
+                        this.handleBackButtonDisplay();
+                        this.startCollectionView(this.data);
+                    }.bind(this));
+            }
+        },
+
+        slideToAddForm: function() {
+            this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.slide-to', 1);
+        },
+
+        slideToCollectionView: function() {
+            this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.slide-to', 0);
+            this.sandbox.form.setData(constants.newFormSelector, emptyCollection);
+        },
+
+        addCollection: function() {
+            if (this.sandbox.form.validate(constants.newFormSelector)) {
+                var collection = this.sandbox.form.getData(constants.newFormSelector);
+
+                this.slideToCollectionView();
+
+                collection.parent = this.data.id;
+                collection.locale = UserSettingsManager.getMediaLocale();
+
+                CollectionManager.save(collection).then(function(collection) {
+                    this.renderCollectionView(collection.id);
+                }.bind(this));
+            }
         }
     };
 });
