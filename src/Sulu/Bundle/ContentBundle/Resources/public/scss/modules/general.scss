@@ -2,17 +2,12 @@
     width: 95px;
 }
 
-#content-form {
+.form {
     @include clear-float;
+}
 
-    .highlight-section .content {
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-
-    .validate-error {
-        color: $red;
-    }
+.validate-error {
+    color: $red;
 }
 
 .sortable-placeholder {

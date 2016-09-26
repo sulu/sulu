@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Highlight section styling changed
+
+To make the highlight section reusable the css not longer depend on the `#content-form`
+selector you should use now the `.form` class instead. 
+
 ### Removed symfony/security-acl dependency
 
 The following deprecated classes was removed:

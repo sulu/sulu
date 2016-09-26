@@ -67,7 +67,7 @@
     }
 
     .sulu-title {
-      @include transition(width $shrinkAnimationDuration, padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+        @include transition(width $shrinkAnimationDuration, padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
         padding-left: $contentPaddingLeft;
         padding-right: $contentPaddingRight;
         min-width: $contentMinWidth;

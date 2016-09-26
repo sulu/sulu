@@ -77,6 +77,8 @@ input, select {
     .content {
         width: calc(100% - #{$imageWidth});
         float: left;
+        padding-top: 20px;
+        padding-bottom: 20px;
         @include clear-float;
 
         &:only-child {

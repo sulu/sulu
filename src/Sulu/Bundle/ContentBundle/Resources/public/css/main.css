@@ -5,28 +5,24 @@
 }
 
 /* line 33, ../../../../AdminBundle/Resources/public/js/vendor/husky/scss/mixins.scss */
-#content-form:after {
+.form:after {
   clear: both;
   content: ' ';
   display: block;
 }
-/* line 8, ../scss/modules/general.scss */
-#content-form .highlight-section .content {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-/* line 13, ../scss/modules/general.scss */
-#content-form .validate-error {
+
+/* line 9, ../scss/modules/general.scss */
+.validate-error {
   color: #EA524E;
 }
 
-/* line 18, ../scss/modules/general.scss */
+/* line 13, ../scss/modules/general.scss */
 .sortable-placeholder {
   margin-bottom: 20px;
 }
 
 /* smart content extension for internal links */
-/* line 24, ../scss/modules/general.scss */
+/* line 19, ../scss/modules/general.scss */
 .smart-header .add {
   display: block;
   position: absolute;
@@ -41,40 +37,40 @@
   border-radius: 2px;
 }
 
-/* line 40, ../scss/modules/general.scss */
+/* line 35, ../scss/modules/general.scss */
 .node .overlay-content {
   margin: 0px;
 }
-/* line 44, ../scss/modules/general.scss */
+/* line 39, ../scss/modules/general.scss */
 .node .overlay-header {
   margin-bottom: 0px !important;
 }
-/* line 48, ../scss/modules/general.scss */
+/* line 43, ../scss/modules/general.scss */
 .node .overlay-footer {
   margin-top: -1px !important;
 }
 
 /* smart content for column view */
-/* line 54, ../scss/modules/general.scss */
+/* line 49, ../scss/modules/general.scss */
 .column-navigation-wrapper {
   overflow: inherit;
 }
 
 /* block add-button */
-/* line 60, ../scss/modules/general.scss */
+/* line 55, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
   background-color: #ccc;
   cursor: default;
 }
 
 /** multiple property */
-/* line 68, ../scss/modules/general.scss */
+/* line 63, ../scss/modules/general.scss */
 #sulu-content-container .multiple-property .move::before {
   left: -18px;
   top: 2px;
 }
 
-/* line 74, ../scss/modules/general.scss */
+/* line 69, ../scss/modules/general.scss */
 #changelog-container {
   color: #999;
 }
