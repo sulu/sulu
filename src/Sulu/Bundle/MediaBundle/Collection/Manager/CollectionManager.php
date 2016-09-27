@@ -696,6 +696,7 @@ class CollectionManager implements CollectionManagerInterface
 
         if ($entity && $entity->getId()) {
             $apiEntity->setMediaCount($this->collectionRepository->countMedia($entity));
+            $apiEntity->setSubCollectionCount($this->collectionRepository->countSubCollections($entity));
         }
 
         return $this->addPreview($apiEntity);
