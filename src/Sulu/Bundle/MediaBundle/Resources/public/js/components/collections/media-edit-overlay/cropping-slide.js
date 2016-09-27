@@ -371,6 +371,7 @@ define([
                         title: (!!this.selectedFormat) ? this.selectedFormat.title : 'sulu-media.image-formats',
                         dropdownItems: getFormatDropdownItems.call(this),
                         dropdownOptions: {
+                            maxHeight: 385,
                             changeButton: true,
                             callback: formatsDropdownHandler.bind(this)
                         }
