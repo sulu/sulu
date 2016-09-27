@@ -44,7 +44,7 @@
                 {
                     name: 'editCollection',
                     template: {
-                        title: 'public.edit',
+                        title: 'sulu.collection.edit',
                         callback: function() {
                             app.sandbox.emit('sulu.toolbar.edit-collection');
                         }
@@ -62,7 +62,7 @@
                 {
                     name: 'deleteCollection',
                     template: {
-                        title: 'public.delete',
+                        title: 'sulu.collection.delete',
                         callback: function() {
                             app.sandbox.emit('sulu.toolbar.delete-collection');
                         }

@@ -130,9 +130,17 @@
                 <source>sulu.media.edit.loading</source>
                 <target>Chargement du Media</target>
             </trans-unit>
+            <trans-unit id="243d19ff2f64452633a5c72169f22258" resname="sulu.collection.edit">
+                <source>sulu.collection.edit</source>
+                <target>Editer le dossier</target>
+            </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
                 <source>sulu.collection.move</source>
                 <target>Déplacer dossier</target>
+            </trans-unit>
+            <trans-unit id="213d994f2f6465a633a5ce2169f22258" resname="sulu.collection.delete">
+                <source>sulu.collection.delete</source>
+                <target>Supprimer dossier</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
                 <source>navigation.media.collections.empty</source>
