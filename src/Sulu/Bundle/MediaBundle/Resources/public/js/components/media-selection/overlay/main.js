@@ -408,7 +408,7 @@ define([
                 CollectionManager
                     .load(collectionId, this.options.locale)
                     .then(function(data) {
-                        this.sandbox.stop('.loader');
+                        this.sandbox.stop($loader);
                         this.data = data;
                         this.handleBackButtonDisplay();
                         this.startCollectionView(this.data);
@@ -429,12 +429,14 @@ define([
             if (this.sandbox.form.validate(constants.newFormSelector)) {
                 var collection = this.sandbox.form.getData(constants.newFormSelector);
 
-                this.slideToCollectionView();
+                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.show-loader');
 
                 collection.parent = this.data.id;
                 collection.locale = UserSettingsManager.getMediaLocale();
 
                 CollectionManager.save(collection).then(function(collection) {
+                    this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.hide-loader');
+                    this.slideToCollectionView();
                     this.renderCollectionView(collection.id);
                 }.bind(this));
             }
