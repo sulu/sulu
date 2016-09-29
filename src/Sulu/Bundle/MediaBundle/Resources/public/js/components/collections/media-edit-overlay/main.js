@@ -391,7 +391,17 @@ define([
                         {
                             name: this.sandbox.translate('sulu-media.edit-original'),
                             callback: function() {
-                                imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
+                                this.sandbox.sulu.showConfirmationDialog({
+                                    title: 'sulu-media.external-server-title',
+                                    description: 'sulu-media.external-server-description',
+                                    callback: function(confirmed) {
+                                        if (!confirmed) {
+                                            return false;
+                                        }
+
+                                        imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
+                                    }.bind(this)
+                                });
                             }.bind(this)
                         }
                     ]
@@ -554,15 +564,16 @@ define([
          * @param {String} newMediaUrl The url to the new media
          */
         setNewVersionByUrl: function(newMediaUrl) {
-            this.sandbox.emit(
-                'sulu.overlay.show-warning',
-                'sulu-media.new-version-will-be-created',
-                'sulu-media.new-version-will-be-created-description',
-                null,
-                function() {
+            this.sandbox.sulu.showConfirmationDialog({
+                title: 'sulu-media.new-version-will-be-created',
+                description: 'sulu-media.new-version-will-be-created-description',
+                callback: function(confirmed) {
+                    if (!confirmed) {
+                        return;
+                    }
                     this.sandbox.emit('husky.dropzone.file-version.add-image', newMediaUrl);
                 }.bind(this)
-            );
+            });
         },
 
         /**
