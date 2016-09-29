@@ -184,12 +184,12 @@ define([], function() {
                         openOnStart: true,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
                         skin: 'responsive-width',
-                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
                                 cssClass: 'internal-links-overlay-add',
                                 data: templates.data(this.options),
+                                contentSpacing: false,
                                 okCallback: function() {
                                     this.overlayOkCallback();
                                     this.sandbox.stop(getId.call(this, 'columnNavigation'));

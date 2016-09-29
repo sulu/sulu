@@ -6,17 +6,9 @@
                 <source>navigation.media</source>
                 <target>Media</target>
             </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
-                <source>navigation.media.collections</source>
-                <target>Collecties</target>
-            </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
                 <source>navigation.media.collections</source>
                 <target>Alle collecties</target>
-            </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
-                <source>navigation.media.collections.search</source>
-                <target>Filter collecties...</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -141,10 +133,6 @@
             <trans-unit id="213d994f2f6465a633a5ce2169f22258" resname="sulu.collection.delete">
                 <source>sulu.collection.delete</source>
                 <target>Verwijder collectie</target>
-            </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
-                <source>navigation.media.collections.empty</source>
-                <target>Geen collectie</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
@@ -313,10 +301,6 @@
             <trans-unit id="243d88cf2f64352w337js55369f111116" resname="sulu-media.ckeditor.media-link.edit.remove">
                 <source>sulu-media.ckeditor.media-link.edit.remove</source>
                 <target>Verwijder media-link</target>
-            </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="sulu-media.selection.overlay.title">
-                <source>sulu-media.selection.overlay.title</source>
-                <target>Media</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
                 <source>sulu-media.selection.overlay.save</source>

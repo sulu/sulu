@@ -111,13 +111,6 @@ define([], function() {
                 '       <h2><%= title %></h2>',
                 '   </div>',
                 '</div>'
-            ].join(''),
-            breadcrumb: [
-                '<span class="breadcrumb">',
-                '<% if (!!icon) { %><span class="<%= icon %> icon"></span><% } %>',
-                '<%= title %>',
-                '    <span class="fa-chevron-right separator"></span>',
-                '</span>'
             ].join('')
         },
 
@@ -360,7 +353,6 @@ define([], function() {
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
             this.oldScrollPosition = 0;
-            this.$tabs = null;
             this.tabsAction = null;
 
             this.bindCustomEvents();
@@ -433,28 +425,24 @@ define([], function() {
          * @param {Object} $container The container to render the breadcrumb in
          */
         renderBreadcrumb: function($container) {
-            var breadcrumb = this.options.breadcrumb, $element, $breadcrumb;
-            breadcrumb = (typeof breadcrumb === 'function') ? breadcrumb() : breadcrumb;
+            var breadcrumbs = this.options.breadcrumb, $element;
+            breadcrumbs = (typeof breadcrumbs === 'function') ? breadcrumbs() : breadcrumbs;
 
-            if (!breadcrumb) {
+            if (!breadcrumbs) {
                 return;
             }
 
             $element = $('<div class="' + constants.breadcrumbContainerClass + '"/>');
             $container.append($element);
 
-            breadcrumb.forEach(function(breadcrumbData) {
-                $breadcrumb = $(_.template(templates.breadcrumb, {
-                    title: this.sandbox.translate(breadcrumbData.title),
-                    icon: breadcrumbData.icon
-                }));
-
-                $breadcrumb.on('click', function() {
-                    this.sandbox.emit(BREADCRUMB_CLICKED.call(this), breadcrumbData.data);
-                }.bind(this));
-
-                $element.append($breadcrumb);
-            }.bind(this));
+            this.sandbox.start([{
+                name: 'breadcrumbs@suluadmin',
+                options: {
+                    el: $element,
+                    instanceName:'header',
+                    breadcrumbs: breadcrumbs
+                }
+            }]);
         },
 
         /**
@@ -629,6 +617,10 @@ define([], function() {
 
             this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
             this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
+
+            this.sandbox.on('sulu.breadcrumbs.header.breadcrumb-clicked', function(breadcrumbData) {
+                this.sandbox.emit(BREADCRUMB_CLICKED.call(this), breadcrumbData);
+            }.bind(this));
 
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));

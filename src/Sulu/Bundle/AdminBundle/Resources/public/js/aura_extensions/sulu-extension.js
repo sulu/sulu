@@ -574,6 +574,21 @@
                         ]);
                     }.bind(this));
             };
+
+            app.sandbox.sulu.showLoader = function($element) {
+                this.sandbox.start(
+                    [
+                        {
+                            name: 'loader@husky',
+                            options: {
+                                el: $element,
+                                size: '100px',
+                                color: '#ccc'
+                            }
+                        }
+                    ]
+                );
+            };
         }
     });
 })();

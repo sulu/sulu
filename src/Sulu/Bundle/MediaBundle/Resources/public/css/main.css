@@ -468,8 +468,8 @@
   height: 429px;
 }
 /* line 43, ../scss/modules/media-selection.scss */
-.media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-  height: 328px;
+.media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+  height: 378px;
 }
 @media (min-height: 700px) {
   /* line 20, ../scss/modules/media-selection.scss */
@@ -481,8 +481,8 @@
     height: 529px;
   }
   /* line 51, ../scss/modules/media-selection.scss */
-  .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-    height: 428px;
+  .media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+    height: 478px;
   }
 }
 @media (min-height: 800px) {
@@ -495,8 +495,8 @@
     height: 629px;
   }
   /* line 60, ../scss/modules/media-selection.scss */
-  .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-    height: 528px;
+  .media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+    height: 578px;
   }
 }
 @media (min-height: 900px) {
@@ -509,12 +509,12 @@
     height: 729px;
   }
   /* line 69, ../scss/modules/media-selection.scss */
-  .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-    height: 628px;
+  .media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+    height: 678px;
   }
 }
 /* line 75, ../scss/modules/media-selection.scss */
-.media-selection-overlay.dropzone-overlay-opened .container .list-container {
+.media-selection-overlay.dropzone-overlay-opened .list-container {
   overflow: hidden;
 }
 /* line 80, ../scss/modules/media-selection.scss */
@@ -554,27 +554,38 @@
 .media-selection-overlay .dropzone-container .husky-overlay-container .slide {
   width: 100%;
 }
-/* line 117, ../scss/modules/media-selection.scss */
-.media-selection-overlay .container .navigation-container {
-  float: left;
-  width: 250px;
+/* line 116, ../scss/modules/media-selection.scss */
+.media-selection-overlay .dropzone-wrapper-container {
+  position: absolute;
+  width: 100%;
 }
-/* line 122, ../scss/modules/media-selection.scss */
-.media-selection-overlay .container .list-container {
-  float: right;
+/* line 121, ../scss/modules/media-selection.scss */
+.media-selection-overlay .list-container {
   position: relative;
-  width: calc(100% - 250px);
+  width: 100%;
   padding: 20px;
   overflow: auto;
 }
-/* line 130, ../scss/modules/media-selection.scss */
-.media-selection-overlay .container::before, .media-selection-overlay .container::after {
-  content: " ";
-  display: table;
+/* line 128, ../scss/modules/media-selection.scss */
+.media-selection-overlay .toolbar-container {
+  background: #52B6CA;
 }
-/* line 135, ../scss/modules/media-selection.scss */
-.media-selection-overlay .container::after {
-  clear: both;
+/* line 132, ../scss/modules/media-selection.scss */
+.media-selection-overlay .back {
+  display: inline-block;
+  vertical-align: top;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: -5px;
+  color: #fff;
+}
+/* line 144, ../scss/modules/media-selection.scss */
+.media-selection-overlay .toolbar {
+  display: inline-block;
+  vertical-align: top;
 }
 
 /* line 6, ../scss/modules/collection-select-overlay.scss */

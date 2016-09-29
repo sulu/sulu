@@ -105,10 +105,9 @@ define([
         okCallback: function() {
             if (this.sandbox.form.validate(constants.newFormSelector)) {
                 this.addCollection();
-                this.sandbox.stop();
-            } else {
-                return false;
             }
+
+            return false;
         },
 
         /**
@@ -117,11 +116,15 @@ define([
          */
         addCollection: function() {
             var collection = this.sandbox.form.getData(constants.newFormSelector);
+
+            this.sandbox.emit('husky.overlay.add-collection.show-loader');
             collection.parent = this.options.parent;
             collection.locale = UserSettingsManager.getMediaLocale();
 
             CollectionManager.save(collection).done(function(collection) {
                 Mediator.emit('sulu.media.collection-create.created', collection);
+                this.sandbox.emit('husky.overlay.add-collection.hide-loader');
+                this.sandbox.stop();
             }.bind(this));
         },
 

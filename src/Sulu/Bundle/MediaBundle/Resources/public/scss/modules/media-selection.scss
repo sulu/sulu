@@ -40,16 +40,16 @@
     .slide.media-selection-overlay {
         height: 429px;
     }
-    .list-container, .navigation-container {
-        height: 328px;
+    .list-container, .dropzone-wrapper-container {
+        height: 378px;
     }
     @media(min-height: 700px) {
         height: 600px;
         .slide.media-selection-overlay {
             height: 529px;
         }
-        .list-container, .navigation-container {
-            height: 428px;
+        .list-container, .dropzone-wrapper-container {
+            height: 478px;
         }
     }
     @media(min-height: 800px) {
@@ -57,8 +57,8 @@
         .slide.media-selection-overlay {
             height: 629px;
         }
-        .list-container, .navigation-container {
-            height: 528px;
+        .list-container, .dropzone-wrapper-container {
+            height: 578px;
         }
     }
     @media(min-height: 900px) {
@@ -66,13 +66,13 @@
         .slide.media-selection-overlay {
             height: 729px;
         }
-        .list-container, .navigation-container {
-            height: 628px;
+        .list-container, .dropzone-wrapper-container {
+            height: 678px;
         }
     }
 
     &.dropzone-overlay-opened {
-        .container .list-container {
+        .list-container {
             overflow: hidden;
         }
     }
@@ -113,27 +113,36 @@
         }
     }
 
-    .container {
-        .navigation-container {
-            float: left;
-            width: 250px;
-        }
+    .dropzone-wrapper-container {
+        position: absolute;
+        width: 100%;
+    }
 
-        .list-container {
-            float: right;
-            position: relative;
-            width: calc(100% - 250px);
-            padding: 20px;
-            overflow: auto;
-        }
+    .list-container {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        overflow: auto;
+    }
 
-        &::before, &::after {
-            content: " ";
-            display: table;
-        }
+    .toolbar-container {
+        background: $blue;
+    }
 
-        &::after {
-            clear: both;
-        }
+    .back {
+        display: inline-block;
+        vertical-align: top;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+        margin-right: -5px;
+        color: $white;
+    }
+
+    .toolbar {
+        display: inline-block;
+        vertical-align: top;
     }
 }
