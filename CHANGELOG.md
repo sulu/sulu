@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2952 [ContentBundle]       Fixed never ending loader when selected categories in smart-content will be deleted
+
 * 1.3.1 (2016-09-15)
     * HOTFIX      #2922 [WebsiteBundle]       Avoid seo information injected by url
     * HOTFIX      #2890 [Localization]        Reintroduced localization provider class

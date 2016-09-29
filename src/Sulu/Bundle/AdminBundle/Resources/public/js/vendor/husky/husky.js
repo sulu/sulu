@@ -34606,7 +34606,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                             items = [];
 
                         this.sandbox.util.foreach(ids, function(id) {
-                            items.push(this.getRecordById(id));
+                            var item = this.getRecordById(id);
+                            if (!!item) {
+                                items.push(item);
+                            }
                         }.bind(this));
 
                         callback(ids, items);
@@ -34712,7 +34715,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].addRecord) {
                     return;
                 }
-                
+
                 if (!!recordData[this.options.idKey]) {
                     this.pushRecords([recordData]);
                 }
@@ -34730,7 +34733,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].addRecord) {
                     return;
                 }
-                
+
                 this.sandbox.util.foreach(records, function(record) {
                     if (!!record[this.options.idKey]) {
                         this.pushRecords([record]);
@@ -34750,7 +34753,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].removeRecord || !recordId) {
                     return;
                 }
-                
+
                 this.gridViews[this.viewId].removeRecord(recordId);
                 this.removeRecordFromSelected(recordId);
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
@@ -34763,7 +34766,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 if (!this.gridViews[this.viewId].removeRecord || !recordIds) {
                     return;
                 }
-                
+
                 this.sandbox.util.foreach(recordIds, function(recordId) {
                     this.gridViews[this.viewId].removeRecord(recordId);
                     this.removeRecordFromSelected(recordId);
