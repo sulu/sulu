@@ -418,6 +418,12 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals(3, $response->total);
         $this->assertEquals(2, count($response->_embedded->collections));
+        $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
+        $this->assertEquals(0, $response->_embedded->collections[0]->subCollectionCount);
+        $this->assertEquals(5, $response->_embedded->collections[0]->objectCount);
+        $this->assertEquals(0, $response->_embedded->collections[1]->mediaCount);
+        $this->assertEquals(1, $response->_embedded->collections[1]->subCollectionCount);
+        $this->assertEquals(1, $response->_embedded->collections[1]->objectCount);
     }
 
     /**

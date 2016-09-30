@@ -254,7 +254,7 @@ define([
                     viewOptions: {
                         tiles: {
                             fields: {
-                                description: ['mediaCount']
+                                description: ['objectCount']
                             },
                             translations: {
                                 addNew: 'sulu.media.add-collection'
@@ -273,7 +273,7 @@ define([
                             name: 'title'
                         },
                         {
-                            name: 'mediaCount',
+                            name: 'objectCount',
                             type: 'count'
                         }
                     ]

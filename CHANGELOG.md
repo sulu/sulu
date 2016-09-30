@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * FEATURE     #2947 [MediaBundle]         Redesign of media selection overlay
     * BUGFIX      #2949 [MediaBundle]         Renamed toolbar entries in media section to avoid deleting collections by accident
     * BUGFIX      #2936 [MediaBundle]         Fixed cutted media format toolbar dropdown 
+    * BUGFIX      #2946 [MediaBundle]         Included collections in object count in media section
     * BUGFIX      #2855 [ContentBundle]       Button when hovering ghost page added
     * BUGFIX      #2889 [ContentBundle]       Added confirmation message when publishing a page
     * BUGFIX      #2935 [ContentBundle]       Fixed click on toggle label to change toggler
