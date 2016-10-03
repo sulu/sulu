@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized navigation functions.
  */
 class MemoizedNavigationTwigExtension extends \Twig_Extension implements NavigationTwigExtensionInterface
 {
+    use MemoizeTwigExtensionTrait;
+
     /**
      * @var NavigationTwigExtensionInterface
      */
@@ -104,6 +107,6 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function getFunctions()
     {
-        return $this->extension->getFunctions();
+        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 }

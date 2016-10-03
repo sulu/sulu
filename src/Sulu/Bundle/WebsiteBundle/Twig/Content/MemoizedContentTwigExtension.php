@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized Interface to load content.
  */
 class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
 {
+    use MemoizeTwigExtensionTrait;
+
     /**
      * @var ContentTwigExtensionInterface
      */
@@ -72,6 +75,6 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
      */
     public function getFunctions()
     {
-        return $this->extension->getFunctions();
+        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 }

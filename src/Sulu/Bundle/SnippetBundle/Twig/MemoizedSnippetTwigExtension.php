@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\SnippetBundle\Twig;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized Twig functions to handle snippets.
  */
 class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
 {
+    use MemoizeTwigExtensionTrait;
+
     /**
      * @var SnippetTwigExtensionInterface
      */
@@ -56,7 +59,7 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
      */
     public function getFunctions()
     {
-        return $this->extension->getFunctions();
+        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 
     /**
