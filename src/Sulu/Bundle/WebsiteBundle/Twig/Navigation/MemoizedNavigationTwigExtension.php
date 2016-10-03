@@ -24,7 +24,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     /**
      * @var NavigationTwigExtensionInterface
      */
-    private $extension;
+    protected $extension;
 
     /**
      * @var MemoizeInterface
@@ -100,13 +100,5 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 }

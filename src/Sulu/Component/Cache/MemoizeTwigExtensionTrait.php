@@ -17,6 +17,19 @@ namespace Sulu\Component\Cache;
 trait MemoizeTwigExtensionTrait
 {
     /**
+     * @var \Twig_Extension
+     */
+    protected $extension;
+
+    /**
+     * {@see \Twig_Extension::getFunctions}.
+     */
+    public function getFunctions()
+    {
+        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
+    }
+
+    /**
      * Convert simple twig functions to use a new context.
      *
      * @param \Twig_SimpleFunction[] $functions

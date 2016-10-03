@@ -24,7 +24,7 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     /**
      * @var SitemapTwigExtensionInterface
      */
-    private $extension;
+    protected $extension;
 
     /**
      * @var MemoizeInterface
@@ -37,7 +37,9 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     private $lifeTime;
 
     /**
-     * Constructor.
+     * @param SitemapTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param $lifeTime
      */
     public function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -52,14 +54,6 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 
     /**

@@ -24,7 +24,7 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     /**
      * @var SnippetTwigExtensionInterface
      */
-    private $extension;
+    protected $extension;
 
     /**
      * @var MemoizeInterface
@@ -37,7 +37,9 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     private $lifeTime;
 
     /**
-     * Constructor.
+     * @param SnippetTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param int $lifeTime
      */
     public function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -52,14 +54,6 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 
     /**

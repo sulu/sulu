@@ -24,7 +24,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     /**
      * @var ContentTwigExtensionInterface
      */
-    private $extension;
+    protected $extension;
 
     /**
      * @var MemoizeInterface
@@ -37,7 +37,9 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     private $lifeTime;
 
     /**
-     * Constructor.
+     * @param ContentTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param $lifeTime
      */
     public function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -68,13 +70,5 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
     }
 }
