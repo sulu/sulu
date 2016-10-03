@@ -11,12 +11,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Markup;
 
+use Sulu\Bundle\ContentBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
-use Sulu\Component\Content\Repository\Content;
-use Sulu\Component\Content\Repository\ContentRepositoryInterface;
-use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Extends the sulu markup with the "sulu:link" tag.
@@ -25,43 +22,19 @@ class LinkTag implements TagInterface
 {
     const VALIDATE_UNPUBLISHED = 'unpublished';
     const VALIDATE_REMOVED = 'removed';
+    const DEFAULT_PROVIDER = 'page';
 
     /**
-     * @var ContentRepositoryInterface
+     * @var LinkProviderPoolInterface
      */
-    private $contentRepository;
+    private $linkProviderPool;
 
     /**
-     * @var WebspaceManagerInterface
+     * @param LinkProviderPoolInterface $linkProviderPool
      */
-    private $webspaceManager;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @param ContentRepositoryInterface $contentRepository
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param RequestStack $requestStack
-     * @param string $environment
-     */
-    public function __construct(
-        ContentRepositoryInterface $contentRepository,
-        WebspaceManagerInterface $webspaceManager,
-        RequestStack $requestStack,
-        $environment
-    ) {
-        $this->contentRepository = $contentRepository;
-        $this->webspaceManager = $webspaceManager;
-        $this->requestStack = $requestStack;
-        $this->environment = $environment;
+    public function __construct(LinkProviderPoolInterface $linkProviderPool)
+    {
+        $this->linkProviderPool = $linkProviderPool;
     }
 
     /**
@@ -69,40 +42,24 @@ class LinkTag implements TagInterface
      */
     public function parseAll(array $attributesByTag, $locale)
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $contents = $this->preloadContent($attributesByTag, $locale);
+        $contents = $this->preload($attributesByTag, $locale);
 
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
-            if (!array_key_exists($attributes['href'], $contents)) {
-                $result[$tag] = array_key_exists('content', $attributes) ? $attributes['content'] :
-                    (array_key_exists('title', $attributes) ? $attributes['title'] : '');
+            $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
+            if (!array_key_exists($provider . '-' . $attributes['href'], $contents)) {
+                $result[$tag] = $this->getContent($attributes);
 
                 continue;
             }
 
-            $content = $contents[$attributes['href']];
-            $url = $content->getUrl();
-            $pageTitle = $content['title'];
-
-            $title = !empty($attributes['title']) ? $attributes['title'] : $pageTitle;
-            $text = !empty($attributes['content']) ? $attributes['content'] : $pageTitle;
-
-            $url = $this->webspaceManager->findUrlByResourceLocator(
-                $url,
-                $this->environment,
-                $locale,
-                $content->getWebspaceKey(),
-                null,
-                $request->getScheme()
-            );
-
+            $item = $contents[$provider . '-' . $attributes['href']];
             $result[$tag] = sprintf(
                 '<a href="%s" title="%s"%s>%s</a>',
-                $url,
-                $title,
+                $item->getUrl(),
+                $this->getValue($attributes, 'title', $item->getTitle()),
                 (!empty($attributes['target']) ? ' target="' . $attributes['target'] . '"' : ''),
-                $text
+                $this->getValue($attributes, 'content', $item->getTitle())
             );
         }
 
@@ -114,60 +71,89 @@ class LinkTag implements TagInterface
      */
     public function validateAll(array $attributesByTag, $locale)
     {
-        $contents = $this->preloadContent($attributesByTag, $locale, false);
+        $items = $this->preload($attributesByTag, $locale, false);
 
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
-            if (!array_key_exists($attributes['href'], $contents)) {
-                $state = self::VALIDATE_REMOVED;
-            } elseif (array_key_exists('published', $contents[$attributes['href']]->getData()) &&
-                !empty($contents[$attributes['href']]->getData()['published'])
-            ) {
-                continue;
-            } else {
-                $state = self::VALIDATE_UNPUBLISHED;
+            $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
+            if (!array_key_exists($provider . '-' . $attributes['href'], $items)) {
+                $result[$tag] = self::VALIDATE_REMOVED;
+            } elseif (!$items[$provider . '-' . $attributes['href']]->isPublished()) {
+                $result[$tag] = self::VALIDATE_UNPUBLISHED;
             }
-
-            $result[$tag] = $state;
         }
 
         return $result;
     }
 
     /**
-     * Return content by uuid for given attributes.
+     * Return items for given attributes.
      *
      * @param array $attributesByTag
      * @param string $locale
      * @param bool $published
      *
-     * @return Content[]
+     * @return LinkItem[]
      */
-    private function preloadContent($attributesByTag, $locale, $published = true)
+    private function preload($attributesByTag, $locale, $published = true)
     {
-        $uuids = array_map(
-            function ($attributes) {
-                return $attributes['href'];
-            },
-            $attributesByTag
-        );
+        $hrefsByType = [];
+        foreach ($attributesByTag as $attributes) {
+            $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
+            if (!array_key_exists($provider, $hrefsByType)) {
+                $hrefsByType[$provider] = [];
+            }
 
-        $contents = $this->contentRepository->findByUuids(
-            array_unique(array_values($uuids)),
-            $locale,
-            MappingBuilder::create()
-                ->setResolveUrl(true)
-                ->addProperties(['title', 'published'])
-                ->setOnlyPublished($published)
-                ->setHydrateGhost(false)
-                ->getMapping()
-        );
+            $hrefsByType[$provider][] = $attributes['href'];
+        }
 
         $result = [];
-        foreach ($contents as $content) {
-            $result[$content->getId()] = $content;
+        foreach ($hrefsByType as $provider => $hrefs) {
+            $items = $this->linkProviderPool->getProvider($provider)->preload(
+                array_unique($hrefs),
+                $locale,
+                $published
+            );
+
+            foreach ($items as $item) {
+                $result[$provider . '-' . $item->getId()] = $item;
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * Returns attribute identified by name or default if not exists.
+     *
+     * @param array $attributes
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    private function getValue(array $attributes, $name, $default = null)
+    {
+        if (array_key_exists($name, $attributes) && !empty($attributes[$name])) {
+            return $attributes[$name];
+        }
+
+        return $default;
+    }
+
+    /**
+     * Returns content or title of given attributes.
+     *
+     * @param array $attributes
+     *
+     * @return string
+     */
+    private function getContent(array $attributes)
+    {
+        if (array_key_exists('content', $attributes)) {
+            return $attributes['content'];
+        }
+
+        return $this->getValue($attributes, 'title', '');
     }
 }

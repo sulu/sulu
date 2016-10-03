@@ -1,10 +1,13 @@
 define([
     'underscore',
+    'config',
     'services/husky/translator',
     'text!sulucontentcss/ckeditor/internal-link-plugin.css'
-], function(_, Translator, editorCSS) {
+], function(_, Config, Translator, editorCSS) {
 
     'use strict';
+
+    var config = Config.get('sulu_content.link_provider.configuration');
 
     var getLinkBySelection = function(selection) {
             var element = selection.getStartElement(),
@@ -15,13 +18,21 @@ define([
                     title: linkElement.getText(),
                     altTitle: linkElement.getAttribute('title'),
                     target: linkElement.getAttribute('target'),
-                    href: linkElement.getAttribute('href')
+                    href: linkElement.getAttribute('href'),
+                    provider: linkElement.getAttribute('provider')
                 };
             }
 
             return {
                 title: selection.getSelectedText()
             };
+        },
+
+        hasLinkBySelection = function(selection) {
+            var element = selection.getStartElement(),
+                linkElement = element.getAscendant('sulu:link', true);
+
+            return !!linkElement && linkElement.is('sulu:link');
         },
 
         render = function(editor, selection, link) {
@@ -35,6 +46,7 @@ define([
             tag.setAttribute('title', link.altTitle);
             tag.setAttribute('href', link.href);
             tag.setAttribute('target', link.target);
+            tag.setAttribute('provider', link.provider);
             tag.setText(link.title);
 
             // only valid pages can be selected.
@@ -66,14 +78,49 @@ define([
                 editor.addCommand('internalLinkDialog', this.getInternalLinkCommand(editor));
                 editor.addCommand('removeInternalLink', this.getRemoveInternalLinkCommand(editor));
 
-                editor.ui.addButton(
-                    'InternalLink',
-                    {
-                        label: sandbox.translate('content.ckeditor.internal-link'),
-                        command: 'internalLinkDialog',
-                        icon: '/bundles/sulucontent/img/icon_link_internal.png'
+                editor.addMenuGroup('sulu_links');
+
+                var items = {};
+                for (var provider in config) {
+                    var command = provider + 'Command';
+                    editor.addCommand(command, this.getInternalLinkCommand(editor, provider));
+
+                    items[provider] = {
+                        label: Translator.translate(config[provider].title),
+                        group: 'sulu_links',
+                        command: command
+                    };
+                }
+
+                items.remove = {
+                    label: Translator.translate('content.ckeditor.internal-link.remove-drop-down'),
+                    icon: '/bundles/sulucontent/img/icon_remove_link_internal.png',
+                    group: 'sulu_links',
+                    command: 'removeInternalLink'
+                };
+
+                editor.addMenuItems(items);
+                editor.ui.add('InternalLink', CKEDITOR.UI_MENUBUTTON, {
+                    label: Translator.translate('content.ckeditor.internal-link'),
+                    modes: {
+                        wysiwyg: 1
+                    },
+                    icon: '/bundles/sulucontent/img/icon_link_internal.png',
+                    onMenu: function() {
+                        var active = {},
+                            hasLink = hasLinkBySelection(editor.getSelection()),
+                            link = getLinkBySelection(editor.getSelection());
+
+                        // Make all items active.
+                        for (var p in items) {
+                            if (!hasLink || (link.provider || 'page') === p) {
+                                active[p] = CKEDITOR.TRISTATE_OFF;
+                            }
+                        }
+
+                        return active;
                     }
-                );
+                });
 
                 if (editor.contextMenu) {
                     this.addMenuSuluGroup(editor);
@@ -92,36 +139,39 @@ define([
             addMenuSuluGroup: function(editor) {
                 editor.addMenuGroup('suluGroup');
                 editor.addMenuItem('internalLinkItem', {
-                    label: sandbox.translate('content.ckeditor.internal-link.edit'),
+                    label: Translator.translate('content.ckeditor.internal-link.edit'),
                     icon: '/bundles/sulucontent/img/icon_link_internal.png',
                     command: 'internalLinkDialog',
                     group: 'suluGroup'
                 });
                 editor.addMenuItem('removeInternalLinkItem', {
-                    label: sandbox.translate('content.ckeditor.internal-link.remove'),
+                    label: Translator.translate('content.ckeditor.internal-link.remove'),
                     icon: '/bundles/sulucontent/img/icon_remove_link_internal.png',
                     command: 'removeInternalLink',
                     group: 'suluGroup'
                 });
             },
 
-            getInternalLinkCommand: function(editor) {
+            getInternalLinkCommand: function(editor, provider) {
                 return {
                     dialogName: 'internalLinkDialog',
                     allowedContent: 'sulu:link[title,target,sulu:validation-state,!href]',
                     requiredContent: 'sulu:link[href]',
                     exec: function() {
-                        var $element = $('<div/>');
+                        var $element = $('<div/>'),
+                            link = getLinkBySelection(editor.getSelection());
+
                         $('#content').append($element);
 
                         sandbox.start([
                             {
-                                name: 'ckeditor-internal-link@sulucontent',
+                                name: 'ckeditor/link@sulucontent',
                                 options: {
                                     el: $element,
+                                    provider: link.provider || provider || 'page',
                                     webspace: editor.config.webspace,
                                     locale: editor.config.locale,
-                                    link: getLinkBySelection(editor.getSelection()),
+                                    link: link,
                                     saveCallback: function(link) {
                                         sandbox.stop($element);
                                         render(editor, editor.getSelection(), link);

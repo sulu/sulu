@@ -146,6 +146,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('document.xml');
         $loader->load('serializer.xml');
         $loader->load('command.xml');
+        $loader->load('link-tag.xml');
     }
 
     private function processTemplates(ContainerBuilder $container, $config)

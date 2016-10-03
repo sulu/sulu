@@ -791,6 +791,14 @@
                 <source>sulu-content.create</source>
                 <target>Aanmaken</target>
             </trans-unit>
+            <trans-unit id="71" resname="content.ckeditor.page-link">
+                <source>content.ckeditor.page-link</source>
+                <target>Pagina</target>
+            </trans-unit>
+            <trans-unit id="72" resname="content.ckeditor.internal-link.remove-drop-down">
+                <source>content.ckeditor.internal-link.remove-drop-down</source>
+                <target>Verwijder</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

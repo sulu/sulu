@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
     * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
+    * FEATURE     #2967 [ContentBundle]       Refactored link-tag to allow extending over provider
 
 * 1.4.0-RC1 (2016-10-06)
     * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
