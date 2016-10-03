@@ -305,23 +305,17 @@ define([
 
 
                 removeBlockHandler: function(event) {
-                    Husky.sulu.showDeleteDialog(
-                        function(confirmed) {
-                            if (confirmed) {
-                                var $removeButton = $(event.target),
-                                    $element = $removeButton.closest('.' + this.propertyName + '-element');
+                    var $removeButton = $(event.target),
+                        $element = $removeButton.closest('.' + this.propertyName + '-element');
 
-                                if (this.canRemove()) {
-                                    Husky.stop($element.find('*'));
-                                    Husky.stop($element);
-                                    $element.remove();
-                                    this.checkFullAndEmpty();
-                                }
+                    if (this.canRemove()) {
+                        Husky.stop($element.find('*'));
+                        Husky.stop($element);
+                        $element.remove();
+                        this.checkFullAndEmpty();
+                    }
 
-                                $(form.$el).trigger('form-remove', [this.propertyName]);
-                            }
-                        }.bind(this)
-                    );
+                    $(form.$el).trigger('form-remove', [this.propertyName]);
                 },
 
                 /**

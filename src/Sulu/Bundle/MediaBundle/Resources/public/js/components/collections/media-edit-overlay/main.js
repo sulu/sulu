@@ -396,7 +396,7 @@ define([
                                     description: 'sulu-media.external-server-description',
                                     callback: function(confirmed) {
                                         if (!confirmed) {
-                                            return false;
+                                            return;
                                         }
 
                                         imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
@@ -483,6 +483,7 @@ define([
 
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
                 this.clipboard = this.sandbox.clipboard.initialize('.fa-clipboard');
+                this.sandbox.emit('husky.overlay.alert.close');
             }.bind(this));
 
             // change language (single-edit)
@@ -525,6 +526,10 @@ define([
                     $target.show();
                 }, 2000, $target, $item, $info);
             }.bind(this), '.fa-clipboard');
+
+            this.sandbox.on('husky.dropzone.file-version.uploading', function() {
+                this.sandbox.emit('husky.overlay.alert.close');
+            }.bind(this));
 
             this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
             this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
@@ -571,7 +576,11 @@ define([
                     if (!confirmed) {
                         return;
                     }
+
+                    this.sandbox.emit('husky.overlay.alert.show-loader');
                     this.sandbox.emit('husky.dropzone.file-version.add-image', newMediaUrl);
+
+                    return false;
                 }.bind(this)
             });
         },
