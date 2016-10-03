@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_media');
         $rootNode->children()
+            ->scalarNode('adobe_creative_key')->defaultNull()->end()
             ->arrayNode('image_format_files')
                 ->prototype('scalar')->end()
             ->end()
