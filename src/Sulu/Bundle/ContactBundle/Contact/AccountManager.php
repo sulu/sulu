@@ -64,7 +64,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     public function __construct(
         ObjectManager $em,
-        TagmanagerInterface $tagManager,
+        TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
         AccountFactory $accountFactory,
         AccountRepository $accountRepository,
