@@ -21,11 +21,6 @@ class MemoizeTwigExtensionTraitTest extends \PHPUnit_Framework_TestCase
     protected $trait;
 
     /**
-     * @var \ReflectionMethod
-     */
-    protected $reflectionMethod;
-
-    /**
      * @var \ReflectionProperty
      */
     protected $reflectionProperty;
@@ -34,32 +29,8 @@ class MemoizeTwigExtensionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->trait = $this->getMockForTrait(MemoizeTwigExtensionTrait::class);
 
-        $this->reflectionMethod = new \ReflectionMethod(get_class($this->trait), 'convertTwigFunctions');
-        $this->reflectionMethod->setAccessible(true);
-
         $this->reflectionProperty = new \ReflectionProperty(get_class($this->trait), 'extension');
         $this->reflectionProperty->setAccessible(true);
-    }
-
-    public function testConvert()
-    {
-        $before = [
-            new \Twig_SimpleFunction('sulu_content_load', [new \stdClass(), 'load']),
-            new \Twig_SimpleFunction(
-                'sulu_content_load_parent',
-                function () {
-                }
-            ),
-        ];
-
-        /** @var \Twig_SimpleFunction[] $result */
-        $result = $this->reflectionMethod->invokeArgs($this->trait, [$before, $this]);
-
-        $this->assertEquals('sulu_content_load', $result[0]->getName());
-        $this->assertEquals([$this, 'load'], $result[0]->getCallable());
-
-        $this->assertEquals('sulu_content_load_parent', $result[1]->getName());
-        $this->assertEquals($before[1]->getCallable(), $result[1]->getCallable());
     }
 
     public function testGetFunctions()

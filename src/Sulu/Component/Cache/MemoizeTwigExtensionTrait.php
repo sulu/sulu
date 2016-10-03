@@ -26,24 +26,11 @@ trait MemoizeTwigExtensionTrait
      */
     public function getFunctions()
     {
-        return $this->convertTwigFunctions($this->extension->getFunctions(), $this);
-    }
-
-    /**
-     * Convert simple twig functions to use a new context.
-     *
-     * @param \Twig_SimpleFunction[] $functions
-     * @param mixed $context
-     *
-     * @return \Twig_SimpleFunction[]
-     */
-    protected function convertTwigFunctions(array $functions, $context)
-    {
         $result = [];
-        foreach ($functions as $function) {
+        foreach ($this->extension->getFunctions() as $function) {
             $callable = $function->getCallable();
             if (is_array($callable)) {
-                $callable[0] = $context;
+                $callable[0] = $this;
             }
 
             $result[] = new \Twig_SimpleFunction($function->getName(), $callable);
