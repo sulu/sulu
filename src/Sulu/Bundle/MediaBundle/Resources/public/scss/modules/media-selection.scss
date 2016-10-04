@@ -126,6 +126,10 @@
         width: 100%;
         padding: 20px;
         overflow: auto;
+
+        .collection-view .sulu-title {
+            width: auto;
+        }
     }
 
     .toolbar-container {
