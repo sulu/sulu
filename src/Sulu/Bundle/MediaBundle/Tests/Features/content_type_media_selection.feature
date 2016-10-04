@@ -29,4 +29,5 @@ Feature: Content type media selection
         Then I expect to see "1" ".items-list li" elements
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         And I expect a success notification to appear

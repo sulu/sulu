@@ -35,4 +35,5 @@ Feature: Single select content type
         And I click on the element "#select_1"
         When I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear

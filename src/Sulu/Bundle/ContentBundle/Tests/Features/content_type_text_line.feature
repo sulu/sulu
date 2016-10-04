@@ -20,4 +20,5 @@ Feature: Text line content type
         And wait a second
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
