@@ -17,24 +17,9 @@ use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 /**
  * Provides memoized Twig functions to handle snippets.
  */
-class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
+class MemoizedSnippetTwigExtension extends \Twig_Extension
 {
     use MemoizeTwigExtensionTrait;
-
-    /**
-     * @var SnippetTwigExtensionInterface
-     */
-    protected $extension;
-
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
 
     /**
      * @param SnippetTwigExtensionInterface $extension
@@ -54,13 +39,5 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadSnippet($uuid, $locale = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'loadSnippet'], $this->lifeTime);
     }
 }

@@ -17,24 +17,9 @@ use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 /**
  * Provides memoized twig functions for sitemap.
  */
-class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
+class MemoizedSitemapTwigExtension extends \Twig_Extension
 {
     use MemoizeTwigExtensionTrait;
-
-    /**
-     * @var SitemapTwigExtensionInterface
-     */
-    protected $extension;
-
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
 
     /**
      * @param SitemapTwigExtensionInterface $extension
@@ -54,21 +39,5 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'sitemapUrlFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sitemapFunction($locale = null, $webspaceKey = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'sitemapFunction'], $this->lifeTime);
     }
 }

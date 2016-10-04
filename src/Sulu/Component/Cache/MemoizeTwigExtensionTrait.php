@@ -17,9 +17,19 @@ namespace Sulu\Component\Cache;
 trait MemoizeTwigExtensionTrait
 {
     /**
-     * @var \Twig_Extension
+     * @var \Twig_ExtensionInterface
      */
     protected $extension;
+
+    /**
+     * @var MemoizeInterface
+     */
+    protected $memoizeCache;
+
+    /**
+     * @var int
+     */
+    protected $lifeTime;
 
     /**
      * {@see \Twig_Extension::getFunctions}.
@@ -29,11 +39,13 @@ trait MemoizeTwigExtensionTrait
         $result = [];
         foreach ($this->extension->getFunctions() as $function) {
             $callable = $function->getCallable();
-            if (is_array($callable)) {
-                $callable[0] = $this;
-            }
 
-            $result[] = new \Twig_SimpleFunction($function->getName(), $callable);
+            $result[] = new \Twig_SimpleFunction(
+                $function->getName(),
+                function () use ($callable) {
+                    return $this->memoizeCache->memoize($callable, $this->lifeTime);
+                }
+            );
         }
 
         return $result;

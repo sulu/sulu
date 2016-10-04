@@ -17,24 +17,9 @@ use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 /**
  * Provides memoized Interface to load content.
  */
-class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
+class MemoizedContentTwigExtension extends \Twig_Extension
 {
     use MemoizeTwigExtensionTrait;
-
-    /**
-     * @var ContentTwigExtensionInterface
-     */
-    protected $extension;
-
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
 
     /**
      * @param ContentTwigExtensionInterface $extension
@@ -46,22 +31,6 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadParent($uuid)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'loadParent'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load($uuid)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'load'], $this->lifeTime);
     }
 
     /**
