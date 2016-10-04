@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2959 [MediaBundle]         Fixed length of underline in media selection overlay
     * BUGFIX      #2957 [MediaBundle]         Show missing image in media selection
     * FEATURE     #2951 [MediaBundle]         Added adobe creative sdk to edit uploaded images
     * FEATURE     #2947 [MediaBundle]         Redesign of media selection overlay

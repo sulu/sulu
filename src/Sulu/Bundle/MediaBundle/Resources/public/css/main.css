@@ -570,11 +570,15 @@
   padding: 20px;
   overflow: auto;
 }
-/* line 131, ../scss/modules/media-selection.scss */
+/* line 130, ../scss/modules/media-selection.scss */
+.media-selection-overlay .list-container .collection-view .sulu-title {
+  width: auto;
+}
+/* line 135, ../scss/modules/media-selection.scss */
 .media-selection-overlay .toolbar-container {
   background: #52B6CA;
 }
-/* line 135, ../scss/modules/media-selection.scss */
+/* line 139, ../scss/modules/media-selection.scss */
 .media-selection-overlay .back {
   display: inline-block;
   vertical-align: top;
@@ -586,7 +590,7 @@
   margin-right: -5px;
   color: #fff;
 }
-/* line 147, ../scss/modules/media-selection.scss */
+/* line 151, ../scss/modules/media-selection.scss */
 .media-selection-overlay .toolbar {
   display: inline-block;
   vertical-align: top;
