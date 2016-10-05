@@ -38,7 +38,7 @@ class SitemapController extends WebsiteController
 
         $pool = $this->get('sulu_website.sitemap.pool');
         if (!$pool->needsIndex()) {
-            return $this->sitemapAction($request, $pool->getFirstAlias());
+            return $this->sitemapPaginatedAction($request, $pool->getFirstAlias(), 1);
         }
 
         return $this->setCacheLifetime(
@@ -47,33 +47,19 @@ class SitemapController extends WebsiteController
     }
 
     /**
-     * Render sitemap.xml for a single provider.
-     * If this provider has multiple-pages a sitemapindex will be rendered.
+     * Redirect to the first page of a single sitemap provider.
      *
-     * @param Request $request
      * @param string $alias
      *
      * @return Response
      */
-    public function sitemapAction(Request $request, $alias)
+    public function sitemapAction($alias)
     {
-        $dumpDir = $this->getDumpDir($request);
-        if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '.xml')) {
-            return $this->createBinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '.xml');
+        if (!$this->get('sulu_website.sitemap.pool')->hasProvider($alias)) {
+            return new Response(null, 404);
         }
 
-        $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
-
-        if (1 >= ($maxPage = (int) $provider->getMaxPage())) {
-            return $this->sitemapPaginatedAction($request, $alias, 1);
-        }
-
-        return $this->setCacheLifetime(
-            $this->render(
-                'SuluWebsiteBundle:Sitemap:sitemap-paginated-index.xml.twig',
-                ['alias' => $alias, 'maxPage' => $maxPage]
-            )
-        );
+        return $this->redirectToRoute('sulu_website.paginated_sitemap', ['alias' => $alias, 'page' => 1], 301);
     }
 
     /**
@@ -92,6 +78,10 @@ class SitemapController extends WebsiteController
             return $this->createBinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml');
         }
 
+        if (!$this->get('sulu_website.sitemap.pool')->hasProvider($alias)) {
+            return new Response(null, 404);
+        }
+
         $portal = $request->get('_sulu')->getAttribute('portal');
         $webspace = $request->get('_sulu')->getAttribute('webspace');
         $localization = $request->get('_sulu')->getAttribute('localization');
@@ -101,6 +91,11 @@ class SitemapController extends WebsiteController
         }
 
         $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
+
+        if ($provider->getMaxPage() < $page) {
+            return new Response(null, 404);
+        }
+
         $entries = $provider->build(
             $page,
             $portal->getKey(),

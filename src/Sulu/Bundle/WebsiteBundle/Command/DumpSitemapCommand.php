@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Command;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -93,7 +94,13 @@ class DumpSitemapCommand extends ContainerAwareCommand
         $output->writeln('Start dumping "sitemap.xml" files:');
 
         $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+
+        /** @var PortalInformation $portalInformation */
         foreach ($webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
+            if (RequestAnalyzerInterface::MATCH_TYPE_FULL !== $portalInformation->getType()) {
+                continue;
+            }
+
             $this->dumpSitemap($portalInformation);
         }
     }
@@ -105,7 +112,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private function dumpSitemap(PortalInformation $portalInformation)
     {
-        if (-1 !== strpos($portalInformation->getUrl(), '{host}')) {
+        if (false !== strpos($portalInformation->getUrl(), '{host}')) {
             if (!$this->defaultHost) {
                 return;
             }
@@ -114,19 +121,18 @@ class DumpSitemapCommand extends ContainerAwareCommand
         }
 
         if (!$this->sitemapProviderPool->needsIndex()) {
-            return $this->dumpFile(
+            $this->dumpFile(
                 '/' . $portalInformation->getUrl() . '/sitemap.xml',
-                $this->renderProviderSitemap($this->sitemapProviderPool->getFirstAlias(), $portalInformation)
+                $this->renderSitemap($this->sitemapProviderPool->getFirstAlias(), 1, $portalInformation)
             );
+
+            return;
         }
 
         $this->dumpFile('/' . $portalInformation->getUrl() . '/sitemap.xml', $this->renderIndex($portalInformation));
 
         foreach ($this->sitemapProviderPool->getProviders() as $alias => $provider) {
-            $this->dumpFile(
-                '/' . $portalInformation->getUrl() . '/sitemaps/' . $alias . '.xml',
-                $this->renderProviderSitemap($alias, $portalInformation)
-            );
+            $this->dumpProviderSitemap($alias, $portalInformation);
         }
     }
 
@@ -135,26 +141,17 @@ class DumpSitemapCommand extends ContainerAwareCommand
      *
      * @param string $alias
      * @param PortalInformation $portalInformation
-     *
-     * @return string
      */
-    private function renderProviderSitemap($alias, PortalInformation $portalInformation)
+    private function dumpProviderSitemap($alias, PortalInformation $portalInformation)
     {
         $provider = $this->sitemapProviderPool->getProvider($alias);
-        if (1 >= ($maxPage = (int) $provider->getMaxPage())) {
-            return $this->renderSitemap($alias, 1, $portalInformation);
-        }
+        $maxPage = $provider->getMaxPage();
 
         $pathFormat = '/%s/sitemaps/%s-%s.xml';
         for ($page = 1; $page <= $maxPage; ++$page) {
             $path = sprintf($pathFormat, $portalInformation->getUrl(), $alias, $page);
             $this->dumpFile($path, $this->renderSitemap($alias, $page, $portalInformation));
         }
-
-        return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-paginated-index.xml.twig',
-            ['alias' => $alias, 'maxPage' => $maxPage]
-        );
     }
 
     /**

@@ -75,13 +75,29 @@ class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testGetIndex()
     {
-        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages'));
-        $this->providers['articles']->createSitemap('articles')->willReturn(new Sitemap('articles'));
+        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 1));
+        $this->providers['articles']->createSitemap('articles')->willReturn(new Sitemap('articles', 1));
 
         $result = $this->pool->getIndex();
 
         $this->assertCount(2, $result);
         $this->assertEquals('pages', $result[0]->getAlias());
         $this->assertEquals('articles', $result[1]->getAlias());
+    }
+
+    public function needsIndexSingleProvider()
+    {
+        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 1));
+        $pool = new SitemapProviderPool(['pages' => $this->providers['pages']->reval()]);
+
+        $this->assertFalse($pool->needsIndex());
+    }
+
+    public function needsIndexSingleProviderMultiplePages()
+    {
+        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 2));
+        $pool = new SitemapProviderPool(['pages' => $this->providers['pages']->reval()]);
+
+        $this->assertFalse($pool->needsIndex());
     }
 }

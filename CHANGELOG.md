@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
+    * BUGFIX      #2962 [WebsiteBundle]       Removed nested-sitemapindex
     * BUGFIX      #2959 [MediaBundle]         Fixed length of underline in media selection overlay
     * BUGFIX      #2959 [All]                 Fixed compatibility for twig 1.26
     * BUGFIX      #2957 [MediaBundle]         Show missing image in media selection
