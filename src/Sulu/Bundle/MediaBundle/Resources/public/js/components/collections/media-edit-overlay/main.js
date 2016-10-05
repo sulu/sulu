@@ -17,6 +17,7 @@ define([
     './cropping-slide',
     'services/sulumedia/media-manager',
     'services/sulumedia/file-icons',
+    'services/sulumedia/image-editor',
     'text!./info.html',
     'text!./copyright.html',
     'text!./versions.html',
@@ -28,6 +29,7 @@ define([
     croppingSlide,
     mediaManager,
     fileIcons,
+    imageEditor,
     infoTemplate,
     copyrightTemplate,
     versionsTemplate,
@@ -316,6 +318,7 @@ define([
                         instanceName: 'media-edit',
                         skin: 'wide',
                         startingSlide: startingSlide,
+                        supportKeyInput: false,
                         slides: [
                             {
                                 title: this.media.title,
@@ -374,20 +377,57 @@ define([
          * @param {Object} $element The dom element to start the select in
          */
         startEditActionSelect: function($element) {
+            var config;
+
+            if (imageEditor.editingIsPossible()) {
+                config = {
+                    data: [
+                        {
+                            name: this.sandbox.translate('sulu-media.crop'),
+                            callback: function() {
+                                this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                            }.bind(this)
+                        },
+                        {
+                            name: this.sandbox.translate('sulu-media.edit-original'),
+                            callback: function() {
+                                this.sandbox.sulu.showConfirmationDialog({
+                                    title: 'sulu-media.external-server-title',
+                                    description: 'sulu-media.external-server-description',
+                                    callback: function(confirmed) {
+                                        if (!confirmed) {
+                                            return;
+                                        }
+
+                                        imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
+                                    }.bind(this)
+                                });
+                            }.bind(this)
+                        }
+                    ]
+                }
+            } else {
+                config = {
+                    defaultLabel: this.sandbox.translate('sulu-media.crop'),
+                    icon: 'crop',
+                    noItemsCallback: function() {
+                        this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                    }.bind(this),
+                    data: []
+                }
+            }
+
             this.sandbox.start([{
                 name: 'select@husky',
-                options: {
+                options: this.sandbox.util.extend(true, {}, {
                     el: $element,
-                    defaultLabel: this.sandbox.translate('sulu-media.crop'),
+                    defaultLabel: this.sandbox.translate('sulu-media.edit-image'),
                     instanceName: 'edit-action-select',
                     fixedLabel: true,
                     skin: 'white-border',
-                    icon: 'crop',
-                    repeatSelect: true,
-                    noItemsCallback: function() {
-                        this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
-                    }.bind(this)
-                }
+                    icon: 'paint-brush',
+                    repeatSelect: true
+                }, config)
             }]);
         },
 
@@ -443,6 +483,7 @@ define([
 
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
                 this.clipboard = this.sandbox.clipboard.initialize('.fa-clipboard');
+                this.sandbox.emit('husky.overlay.alert.close');
             }.bind(this));
 
             // change language (single-edit)
@@ -486,6 +527,10 @@ define([
                 }, 2000, $target, $item, $info);
             }.bind(this), '.fa-clipboard');
 
+            this.sandbox.on('husky.dropzone.file-version.uploading', function() {
+                this.sandbox.emit('husky.overlay.alert.close');
+            }.bind(this));
+
             this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
             this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
         },
@@ -515,6 +560,29 @@ define([
 
                 this.initialize();
             }.bind(this));
+        },
+
+        /**
+         * Sets the new file version for a media by a given url. Shows
+         * a confirmation dialog to the user to confirm the change.
+         *
+         * @param {String} newMediaUrl The url to the new media
+         */
+        setNewVersionByUrl: function(newMediaUrl) {
+            this.sandbox.sulu.showConfirmationDialog({
+                title: 'sulu-media.new-version-will-be-created',
+                description: 'sulu-media.new-version-will-be-created-description',
+                callback: function(confirmed) {
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.overlay.alert.show-loader');
+                    this.sandbox.emit('husky.dropzone.file-version.add-image', newMediaUrl);
+
+                    return false;
+                }.bind(this)
+            });
         },
 
         /**

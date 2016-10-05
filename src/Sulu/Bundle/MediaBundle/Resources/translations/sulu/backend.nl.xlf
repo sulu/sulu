@@ -366,6 +366,26 @@
                 <source>sulu-media.following-crops-out-of-date</source>
                 <target>Uitsneden van de volgende afbeeldingsformaten zijn verouderd</target>
             </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Origineel aanpassen</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Nieuwe versie van de afbeelding wordt aangemaakt</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Een nieuwe versie van de afbeelding wordt aangemaakt.  Bestaande crops kunnen vervallen.</target>
+            </trans-unit>
+            <trans-unit id="9f4145cacc77352w11ajs3a487a32217b" resname="sulu-media.external-server-title">
+                <source>sulu-media.external-server-title</source>
+                <target>Let Op</target>
+            </trans-unit>
+            <trans-unit id="2f4125ca4cb7c52wc1ajs3a48ea32817a" resname="sulu-media.external-server-description">
+                <source>sulu-media.external-server-description</source>
+                <target>Het bestand wordt verstuurd naar een externe server om bewerkt te kunnen worden.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

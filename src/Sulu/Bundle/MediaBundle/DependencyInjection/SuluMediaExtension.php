@@ -158,6 +158,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $config['upload']['max_filesize']
         );
 
+        // Adobe creative sdk
+        $container->setParameter(
+            'sulu_media.adobe_creative_key',
+            $config['adobe_creative_key']
+        );
+
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

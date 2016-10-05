@@ -249,10 +249,10 @@
                     options.title,
                     options.description,
                     function() {
-                        options.callback(false);
+                        return options.callback(false);
                     },
                     function() {
-                        options.callback(true);
+                        return options.callback(true);
                     },
                     {
                         okDefaultText: options.buttonTitle || 'public.ok'

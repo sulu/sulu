@@ -3,6 +3,10 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #XXXX [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
+    * BUGFIX      #2959 [MediaBundle]         Fixed length of underline in media selection overlay
+    * BUGFIX      #2959 [All]                 Fixed compatibility for twig 1.26
+    * BUGFIX      #2957 [MediaBundle]         Show missing image in media selection
+    * FEATURE     #2951 [MediaBundle]         Added adobe creative sdk to edit uploaded images
     * FEATURE     #2947 [MediaBundle]         Redesign of media selection overlay
     * BUGFIX      #2949 [MediaBundle]         Renamed toolbar entries in media section to avoid deleting collections by accident
     * BUGFIX      #2936 [MediaBundle]         Fixed cutted media format toolbar dropdown 

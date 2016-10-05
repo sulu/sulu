@@ -1,4 +1,7 @@
 .white-box .content .items-list li .media-selection-item {
+    .image {
+        width: 70px;
+    }
 
     .crop {
         display: none;
@@ -123,6 +126,10 @@
         width: 100%;
         padding: 20px;
         overflow: auto;
+
+        .collection-view .sulu-title {
+            width: auto;
+        }
     }
 
     .toolbar-container {
