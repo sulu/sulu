@@ -31,7 +31,8 @@ Feature: Collection management
     Scenario: Delete collection
         Given the media collection "Foobar" exists
         And I am editing the media collection "Foobar"
-        When I click deleteCollection from the drop down
+        When I click toolbar item "edit"
+        And I click toolbar item "deleteCollection"
         And I expect a confirmation dialog to appear
         And I confirm
         Then I expect a success notification to appear
@@ -56,9 +57,7 @@ Feature: Collection management
         And I wait for the column navigation column 2
         And I double click the column navigation item "Foobar"
         And I click the ok button
-        Then I expect a success notification to appear
-        And I am editing the media collection "Foobar"
-        And I click on the element ".fa-chevron-left"
+        Then I am editing the media collection "Dornbirn"
         Then I expect to see "Foobar"
 
     Scenario: Delete item

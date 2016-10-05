@@ -21,4 +21,5 @@ Feature: Text editor content type
         And I fill in CKEditor instance "text_editor" with "Hello this is some text"
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear

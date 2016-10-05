@@ -19,4 +19,5 @@ Feature: Checkbox content type
         And I click on the element "#checkbox"
         When I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
