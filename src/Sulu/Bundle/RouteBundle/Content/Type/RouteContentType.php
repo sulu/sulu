@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\RouteBundle\Content\Type;
 
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -39,5 +41,15 @@ class RouteContentType extends SimpleContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams(PropertyInterface $property = null)
+    {
+        return [
+            'inputType' => new PropertyParameter('inputType', 'full')
+        ];
     }
 }

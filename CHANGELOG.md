@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #XXXX [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
     * FEATURE     #2947 [MediaBundle]         Redesign of media selection overlay
     * BUGFIX      #2949 [MediaBundle]         Renamed toolbar entries in media section to avoid deleting collections by accident
     * BUGFIX      #2936 [MediaBundle]         Fixed cutted media format toolbar dropdown 
@@ -40,7 +41,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2850 [ContentBundle]       Ordered response of template action alphabetically
     * BUGFIX      #2848 [ContentBundle]       Fixed preview serialization to include date and authors
     * ENHANCEMENT #2782 [MediaBundle]         Cleaned up media selection overlay styling
-    * ENHANCMENT  #2845 [MediaBundle]         New version of of configuring image formats
+    * ENHANCEMENT #2845 [MediaBundle]         New version of of configuring image formats
     * ENHANCEMENT #2843 [MediaBundle]         Limit bugfix and style fixes for collections
     * BUGFIX      #2774 [SecurityBundle]      Added translations to settings user role for hovering single permission
     * BUGFIX      #2798 [ContactBundle]       Contact cards are now ordered correctly and by fullName by default
