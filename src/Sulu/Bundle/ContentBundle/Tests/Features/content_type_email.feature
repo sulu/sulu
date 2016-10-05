@@ -27,7 +27,6 @@ Feature: Email content type
         When I fill in "husky-input-email" with "<email>"
         And I click the save icon
         And I click toolbar item "savePublish"
-        And I click the save icon
         And I confirm
         Then there should be 1 form errors
         Examples:
