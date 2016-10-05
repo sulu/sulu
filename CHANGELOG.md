@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
     * BUGFIX      #2959 [MediaBundle]         Fixed length of underline in media selection overlay
     * BUGFIX      #2959 [All]                 Fixed compatibility for twig 1.26
     * BUGFIX      #2957 [MediaBundle]         Show missing image in media selection
@@ -44,7 +45,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2850 [ContentBundle]       Ordered response of template action alphabetically
     * BUGFIX      #2848 [ContentBundle]       Fixed preview serialization to include date and authors
     * ENHANCEMENT #2782 [MediaBundle]         Cleaned up media selection overlay styling
-    * ENHANCMENT  #2845 [MediaBundle]         New version of of configuring image formats
+    * ENHANCEMENT #2845 [MediaBundle]         New version of of configuring image formats
     * ENHANCEMENT #2843 [MediaBundle]         Limit bugfix and style fixes for collections
     * BUGFIX      #2774 [SecurityBundle]      Added translations to settings user role for hovering single permission
     * BUGFIX      #2798 [ContactBundle]       Contact cards are now ordered correctly and by fullName by default
