@@ -49,7 +49,7 @@ class RouteContentType extends SimpleContentType
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
-            'inputType' => new PropertyParameter('inputType', 'full')
+            'inputType' => new PropertyParameter('inputType', 'full'),
         ];
     }
 }
