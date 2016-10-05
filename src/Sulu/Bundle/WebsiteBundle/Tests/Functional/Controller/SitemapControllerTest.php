@@ -15,6 +15,11 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SitemapControllerTest extends SuluTestCase
 {
+    public function setUp()
+    {
+        $this->initPhpcr();
+    }
+
     public function testIndex()
     {
         $client = $this->createWebsiteClient();
@@ -31,14 +36,8 @@ class SitemapControllerTest extends SuluTestCase
     public function testProvider()
     {
         $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', '/sitemaps/pages.xml');
-        $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
-        $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:loc'));
-        $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:lastmod'));
-        $this->assertEquals('http://localhost', $crawler->filterXPath('//x:urlset/x:url[1]/x:loc[1]')->text());
+        $client->request('GET', '/sitemaps/pages.xml');
+        $this->assertHttpStatusCode(301, $client->getResponse());
     }
 
     public function testPaginated()
@@ -52,5 +51,21 @@ class SitemapControllerTest extends SuluTestCase
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:loc'));
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:lastmod'));
         $this->assertEquals('http://localhost', $crawler->filterXPath('//x:urlset/x:url[1]/x:loc[1]')->text());
+    }
+
+    public function testPaginatedOverMax()
+    {
+        $client = $this->createWebsiteClient();
+        $crawler = $client->request('GET', '/sitemaps/pages-2.xml');
+        $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    public function testNotExistingProvider()
+    {
+        $client = $this->createWebsiteClient();
+        $crawler = $client->request('GET', '/sitemaps/test-2.xml');
+        $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 }

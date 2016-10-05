@@ -24,6 +24,13 @@ class Sitemap
     private $alias;
 
     /**
+     * Maximum pages of sitemap.
+     *
+     * @var int
+     */
+    private $maxPage;
+
+    /**
      * Datetime of last modification.
      *
      * @var \DateTime
@@ -32,11 +39,13 @@ class Sitemap
 
     /**
      * @param string $alias
+     * @param int $maxPage
      * @param \DateTime $lastmod
      */
-    public function __construct($alias, \DateTime $lastmod = null)
+    public function __construct($alias, $maxPage, \DateTime $lastmod = null)
     {
         $this->alias = $alias;
+        $this->maxPage = $maxPage;
         $this->lastmod = $lastmod;
     }
 
@@ -48,6 +57,16 @@ class Sitemap
     public function getAlias()
     {
         return $this->alias;
+    }
+
+    /**
+     * Returns max-page.
+     *
+     * @return int
+     */
+    public function getMaxPage()
+    {
+        return $this->maxPage;
     }
 
     /**

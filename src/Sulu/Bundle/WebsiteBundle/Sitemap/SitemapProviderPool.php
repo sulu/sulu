@@ -29,6 +29,11 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     private $aliases;
 
     /**
+     * @var Sitemap[]
+     */
+    private $index;
+
+    /**
      * @param SitemapProviderInterface[] $providers
      */
     public function __construct(array $providers)
@@ -78,7 +83,13 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
      */
     public function needsIndex()
     {
-        return count($this->providers) > 1;
+        return 1 < count($this->providers)
+            || 1 < array_reduce(
+                $this->getIndex(),
+                function ($v1, Sitemap $v2) {
+                    return $v1 + $v2->getMaxPage();
+                }
+            );
     }
 
     /**
@@ -86,11 +97,15 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
      */
     public function getIndex()
     {
-        $result = [];
-        foreach ($this->providers as $alias => $provider) {
-            $result[] = $provider->createSitemap($alias);
+        if ($this->index) {
+            return $this->index;
         }
 
-        return $result;
+        $this->index = [];
+        foreach ($this->providers as $alias => $provider) {
+            $this->index[] = $provider->createSitemap($alias);
+        }
+
+        return $this->index;
     }
 }
