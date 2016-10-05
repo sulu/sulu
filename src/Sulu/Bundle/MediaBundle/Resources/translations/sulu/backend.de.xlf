@@ -386,6 +386,14 @@
                 <source>sulu-media.external-server-description</source>
                 <target>Die Datei wird zur Bearbeitung an einen externen Server geschickt.</target>
             </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Format wechseln?</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>Der aktuelle Ausschnitt geht beim Wechseln verloren.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

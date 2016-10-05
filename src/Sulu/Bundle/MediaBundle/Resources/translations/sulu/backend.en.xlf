@@ -386,6 +386,14 @@
                 <source>sulu-media.external-server-description</source>
                 <target>The file will be transferred to an external server for editing.</target>
             </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Change format?</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>The current crop will be dismissed.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

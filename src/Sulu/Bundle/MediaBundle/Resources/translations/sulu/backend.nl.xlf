@@ -386,6 +386,14 @@
                 <source>sulu-media.external-server-description</source>
                 <target>Het bestand wordt verstuurd naar een externe server om bewerkt te kunnen worden.</target>
             </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Formaat wijzigen?</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>De huidige uitsnede zal verloren gaan.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
