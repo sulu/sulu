@@ -28007,51 +28007,23 @@ define('services/husky/util',['sprintf'], function(sprintf) {
          * base64 string for that image
          *
          * @param {Object} $img The image dom element
+         * @param {string} mimeType The mime type of the image
          *
          * @returns {string} the base64 string
          */
-        getBase64FromImageTag = function($img) {
-            var canvas = document.createElement('canvas'), ctx, dataUrl;
+        getBlobFromImageTag = function($img, mimeType) {
+            var deferred = $.Deferred(), canvas = document.createElement('canvas'), ctx;
 
             canvas.width = $img.get(0).width;
             canvas.height = $img.get(0).height;
             ctx = canvas.getContext('2d');
             ctx.drawImage($img.get(0), 0, 0);
-            dataUrl = canvas.toDataURL('image/png');
 
-            return dataUrl.replace(/^data:image\/(png|jpg);base64,/, '');
-        },
+            canvas.toBlob(function(blob) {
+                deferred.resolve(blob);
+            }, mimeType);
 
-        /**
-         * Converts a base64 string to a blob
-         *
-         * @param {String} b64Data The base64 string
-         * @param {String} contentType The content type of the base64 string
-         *
-         * @returns {Blob}
-         */
-        base64toBlob = function(b64Data, contentType) {
-            var byteCharacters = atob(b64Data),
-                byteArrays = [],
-                sliceSize = 512,
-                byteNumbers, byteArray, blob, slice, i;
-
-            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                byteNumbers = new Array(slice.length);
-                for (i = 0; i < slice.length; i++) {
-                    byteNumbers[i] = slice.charCodeAt(i);
-                }
-
-                byteArray = new Uint8Array(byteNumbers);
-
-                byteArrays.push(byteArray);
-            }
-
-            blob = new Blob(byteArrays, {type: contentType});
-
-            return blob;
+            return deferred.promise();
         },
 
         /**
@@ -28408,11 +28380,10 @@ define('services/husky/util',['sprintf'], function(sprintf) {
      *
      * @returns {Object} a promise which gets resolved with the image blob
      */
-    Util.prototype.loadImageAsBlob = function(imageUrl) {
+    Util.prototype.loadImageAsBlob = function(imageUrl, mimeType) {
         var $container = $('<div/>'),
             $img = $('<img crossOrigin="Anonymous" src="' + imageUrl + '"/>'),
-            whenImageLoaded = $.Deferred(),
-            base64Image, blob;
+            whenImageLoaded = $.Deferred();
 
         $container.width(0);
         $container.height(0);
@@ -28420,11 +28391,10 @@ define('services/husky/util',['sprintf'], function(sprintf) {
         $('body').append($container);
 
         $img.on('load', function() {
-            base64Image = getBase64FromImageTag($img);
-            $container.remove();
-            blob = base64toBlob(base64Image, 'image/png');
-            blob.name = 'blob.png';
-            whenImageLoaded.resolve(blob);
+            getBlobFromImageTag($img, mimeType).then(function(blob) {
+                $container.remove();
+                whenImageLoaded.resolve(blob);
+            });
         });
         $container.append($img);
 
@@ -45657,10 +45627,15 @@ define('__component__$dropzone@husky',[], function() {
          * Adds an image to the the dropzone by a given url.
          *
          * @param {String} url The url to first load the image from and than upload it via the dropzone
+         * @param {string} mimeType The mime type of the loaded image
+         * @param {string} fileName The name under which the file should be saved
          */
-        addImage: function(url) {
-            this.sandbox.util.loadImageAsBlob(url).then(function(imageBlob) {
-                this.dropzone.addFile(imageBlob);
+        addImage: function(url, mimeType, fileName) {
+            this.sandbox.util.loadImageAsBlob(url, mimeType).then(function(imageBlob) {
+                if (!!fileName) {
+                    imageBlob.name = fileName;
+                }
+                this.dropzone.addFile(imageBlob, mimeType);
             }.bind(this));
         },
 

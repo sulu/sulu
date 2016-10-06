@@ -17,7 +17,6 @@ define(['config', 'jquery'], function(Config, $) {
         require(['//feather.aviary.com/imaging/v3/editor.js'], function() {
             featherEditor = new Aviary.Feather({
                 apiKey: Config.get('sulu-media').adobeCreativeKey,
-                fileFormat: 'png',
                 theme: 'minimum',
                 enableCORS: true,
                 language: app.sandbox.sulu.user.locale
@@ -57,7 +56,6 @@ define(['config', 'jquery'], function(Config, $) {
             $img.on('load', function() {
                 featherEditor.launch({
                     image: $img,
-                    url: absoluteImagePath,
                     onSave: function(imageID, newURL) {
                         featherEditor.close();
                         whenImageEdited.resolve(newURL);

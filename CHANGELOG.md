@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2999 [MediaBundle]         Added correct mime type to image after editing with aviary 
     * FEATURE     #2994 [HTTPCacheBundle]     Added cachelifetime types and introduced cron-expressions to calculate cachelifetime 
     * BUGFIX      #2992 [ContentBundle]       Fixed page-link-provider without request
     * BUGFIX      #2991 [MediaBundle]         Reintroduced media deep-link
