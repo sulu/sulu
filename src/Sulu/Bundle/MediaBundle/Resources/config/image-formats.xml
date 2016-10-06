@@ -21,15 +21,6 @@
         </meta>
         <scale x="400" y="400" mode="inset"/>
     </format>
-    <format key="200x180-inset">
-        <meta>
-            <title lang="en">Media preview (Sulu)</title>
-            <title lang="de">Medien Vorschau (Sulu)</title>
-            <title lang="fr">Prévisualisation média (Sulu)</title>
-            <title lang="nl">Media voorbeeld (Sulu)</title>
-        </meta>
-        <scale x="200" y="180" mode="inset"/>
-    </format>
     <format key="260x">
         <meta>
             <title lang="en">Masonry preview (Sulu)</title>
