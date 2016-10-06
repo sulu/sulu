@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\JsConfigInterface;
 use Sulu\Bundle\ContentBundle\Markup\Link\LinkProviderPoolInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Passes the link-provider configuration into the js-config.

@@ -13,7 +13,7 @@
  * @class ckeditor/link/list
  * @constructor
  */
-define(['underscore'], function(_) {
+define(['underscore', 'services/husky/expression-language'], function(_, ExpressionLanguage) {
 
     'use strict';
 
@@ -28,7 +28,7 @@ define(['underscore'], function(_) {
                 hrefUrl: '',
                 idKey: 'id',
                 titleKey: 'title',
-                publishedExpression: '',
+                publishedExpression: [],
                 resultKey: null,
                 searchFields: [],
                 matchings: [],
@@ -68,7 +68,7 @@ define(['underscore'], function(_) {
             var url = _.template(this.options.hrefUrl, this.options);
             this.sandbox.util.load(url).then(function(data) {
                 this.options.setHref(
-                    data[this.options.idKey], data[this.options.titleKey], this.isPublised(item)
+                    data[this.options.idKey], data[this.options.titleKey], this.isPublished(item)
                 );
             }.bind(this));
         },
@@ -96,7 +96,7 @@ define(['underscore'], function(_) {
                         sortable: false,
                         clickCallback: function(id, item) {
                             this.options.selectCallback(
-                                item[this.options.idKey], item[this.options.titleKey], this.isPublised(item)
+                                item[this.options.idKey], item[this.options.titleKey], this.isPublished(item)
                             );
                         }.bind(this),
                         selectedCounter: false,
@@ -130,8 +130,8 @@ define(['underscore'], function(_) {
             this.sandbox.emit('husky.datagrid.article-link.url.update', {type: null});
         },
 
-        isPublised: function(context) {
-            return _.template(this.options.publishedExpression, context);
+        isPublished: function(context) {
+            return ExpressionLanguage.evaluate(this.options.publishedExpression, context);
         }
     };
 });

@@ -83,7 +83,7 @@ class LinkItem
     /**
      * Indicates published state of link.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPublished()
     {
