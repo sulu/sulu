@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.4.0-RC1 (2016-10-06)
     * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
     * BUGFIX      #2962 [WebsiteBundle]       Removed nested-sitemapindex
     * BUGFIX      #2959 [MediaBundle]         Fixed length of underline in media selection overlay

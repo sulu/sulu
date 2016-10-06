@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 1.4.0-RC1
 
 ### Refactored category management in backend
 
