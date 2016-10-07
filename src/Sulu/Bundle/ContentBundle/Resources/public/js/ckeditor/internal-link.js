@@ -116,6 +116,8 @@ define([
                             if (!hasLink || (link.provider || 'page') === p) {
                                 active[p] = CKEDITOR.TRISTATE_OFF;
                             }
+
+                            active.remove = CKEDITOR.TRISTATE_OFF;
                         }
 
                         return active;
