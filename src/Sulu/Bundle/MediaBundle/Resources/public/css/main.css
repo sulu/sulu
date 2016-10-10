@@ -80,7 +80,6 @@
 /* line 23, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area {
   position: absolute;
-  cursor: move;
   z-index: 20;
   background: rgba(0, 0, 0, 0.0001);
   top: 0;
@@ -88,7 +87,7 @@
   width: 0;
   height: 0;
 }
-/* line 37, ../scss/modules/area-selection.scss */
+/* line 36, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines {
   position: absolute;
   top: 0;
@@ -96,40 +95,30 @@
   width: 100%;
   height: 100%;
   border: 2px solid #fff;
+  display: table;
 }
-/* line 45, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines::before, .sulu-area-selection .area .lines::after {
-  opacity: 0;
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: 1px solid #fff;
-  -moz-transition: opacity 200ms;
-  -o-transition: opacity 200ms;
-  -webkit-transition: opacity 200ms;
-  transition: opacity 200ms;
+/* line 46, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .top, .sulu-area-selection .area .lines .middle, .sulu-area-selection .area .lines .bottom {
+  height: calc(100% / 3);
+  display: table-row;
 }
-/* line 58, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines::before {
-  top: 33.33%;
-  bottom: 33.33%;
-  border-width: 1px 0;
+/* line 51, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .bottom > * {
+  border-bottom: none;
 }
-/* line 64, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines::after {
-  left: 33.33%;
-  right: 33.33%;
-  border-width: 0 1px;
+/* line 55, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .left, .sulu-area-selection .area .lines .center, .sulu-area-selection .area .lines .right {
+  width: calc(100% / 3);
+  cursor: pointer;
+  display: table-cell;
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff;
 }
-/* line 71, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines:hover::after, .sulu-area-selection .area .lines:hover::before {
-  opacity: 1;
+/* line 63, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .right {
+  border-right: none;
 }
-/* line 77, ../scss/modules/area-selection.scss */
+/* line 69, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle {
   position: absolute;
   width: 20px;
@@ -138,13 +127,13 @@
   background: #fff;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
-/* line 86, ../scss/modules/area-selection.scss */
+/* line 78, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle.south-east {
   bottom: -10px;
   right: -10px;
   cursor: se-resize;
 }
-/* line 93, ../scss/modules/area-selection.scss */
+/* line 85, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .minimum-size-info {
   opacity: 0;
   position: absolute;
@@ -163,11 +152,11 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 109, ../scss/modules/area-selection.scss */
+/* line 101, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area.minimum-size-reached .minimum-size-info {
   opacity: 1;
 }
-/* line 114, ../scss/modules/area-selection.scss */
+/* line 106, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container {
   position: absolute;
   top: 0;
@@ -177,7 +166,7 @@
   overflow: hidden;
   z-index: 10;
 }
-/* line 123, ../scss/modules/area-selection.scss */
+/* line 115, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container .backdrop {
   position: absolute;
   outline: 5000px solid rgba(0, 0, 0, 0.6);
@@ -186,26 +175,26 @@
   width: 0;
   height: 0;
 }
-/* line 135, ../scss/modules/area-selection.scss */
+/* line 127, ../scss/modules/area-selection.scss */
 .sulu-area-selection img {
   display: block;
 }
 
-/* line 1, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container {
+/* line 1, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide {
   margin: -20px;
 }
-/* line 4, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .toolbar-container {
+/* line 4, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .toolbar-container {
   background: #52B6CA;
 }
-/* line 8, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .label-container {
+/* line 8, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .label-container {
   height: 0;
   overflow: visible;
 }
-/* line 13, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .back {
+/* line 13, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .back {
   display: inline-block;
   vertical-align: top;
   width: 50px;
@@ -216,18 +205,18 @@
   margin-right: -5px;
   color: #fff;
 }
-/* line 25, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .toolbar {
+/* line 25, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .toolbar {
   display: inline-block;
   vertical-align: top;
 }
-/* line 30, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .area-selection {
+/* line 30, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .area-selection {
   width: 100%;
   height: 420px;
 }
-/* line 35, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .hint {
+/* line 35, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .hint {
   text-align: center;
   font-size: 12px;
   color: #999;

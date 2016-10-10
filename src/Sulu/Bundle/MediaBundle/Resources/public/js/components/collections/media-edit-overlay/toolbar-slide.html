@@ -7,5 +7,5 @@
     </div>
     <div class="label-container"></div>
     <div class="area-selection"></div>
-    <div class="hint">(<%= hint %>)</div>
+    <% if (typeof hint !== 'undefined') { %><div class="hint">(<%= hint %>)</div><% } %>
 </div>

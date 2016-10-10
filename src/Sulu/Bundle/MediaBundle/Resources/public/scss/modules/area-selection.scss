@@ -41,37 +41,30 @@
             height: 100%;
             border: 2px solid $white;
 
-            &::before, &::after {
-                opacity: 0;
-                content: '';
-                display: block;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                border: 1px solid $white;
-                @include transition(opacity 200ms);
+            display: table;
+
+            .top, .middle, .bottom {
+                height: calc(100% / 3);
+                display: table-row;
             }
 
-            &::before {
-                top: 33.33%;
-                bottom: 33.33%;
-                border-width: 1px 0;
+            .bottom > * {
+                border-bottom: none;
             }
 
-            &::after {
-                left: 33.33%;
-                right: 33.33%;
-                border-width: 0 1px;
+            .left, .center, .right {
+                width: calc(100% / 3);
+                cursor: pointer;
+                display: table-cell;
+                border-bottom: 1px solid $white;
+                border-right: 1px solid $white;
             }
 
-            &:hover, &.visible {
-                &::after, &::before {
-                    opacity: 1;
-                }
+            .right {
+                border-right: none;
             }
         }
+
 
         .handle {
             $handleRadius: 10px;

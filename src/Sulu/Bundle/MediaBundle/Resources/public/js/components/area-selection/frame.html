@@ -2,7 +2,25 @@
     <img class="image" draggable="false" src="<%= image %>"/>
     <div class="area">
         <div class="minimum-size-info"><%= minimumSizeInfo %></div>
-        <div class="lines<% if(tileSelectable) { %> visible <% } %>"></div>
+        <div class="lines">
+            <% if(tileSelectable) { %>
+            <div class="top">
+                <div class="left">&nbsp;</div>
+                <div class="center">&nbsp;</div>
+                <div class="right">&nbsp;</div>
+            </div>
+            <div class="middle">
+                <div class="left"></div>
+                <div class="center"></div>
+                <div class="right"></div>
+            </div>
+            <div class="bottom">
+                <div class="left"></div>
+                <div class="center"></div>
+                <div class="right"></div>
+            </div>
+            <% } %>
+        </div>
         <% if(resizeable) { %><div class="handle south-east"></div><% } %>
     </div>
     <div class="backdrop-container">
