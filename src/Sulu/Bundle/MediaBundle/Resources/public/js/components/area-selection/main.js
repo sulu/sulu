@@ -23,7 +23,10 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
         image: null,
         areaGuidingWidth: null,
         areaGuidingHeight: null,
-        data: null
+        data: null,
+        resizeable: true,
+        draggable: true,
+        tileSelectable: false
     },
 
     translations = {
@@ -103,19 +106,23 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 height: null
             });
 
-            // Variables which are needed for dragging the area over the area
-            this.dragging = {
-                enabled: false,
-                clickOffsetLeft: 0,
-                clickOffsetTop: 0
-            };
+            if (!!this.options.draggable) {
+                // Variables which are needed for dragging the area over the area
+                this.dragging = {
+                    enabled: false,
+                    clickOffsetLeft: 0,
+                    clickOffsetTop: 0
+                };
+            }
 
-            // Variables which are needed for changing the width and height of the area
-            this.resizing = {
-                enabled: false,
-                clickOffsetLeft: 0,
-                clickOffsetTop: 0
-            };
+            if (!!this.options.resizeable) {
+                // Variables which are needed for changing the width and height of the area
+                this.resizing = {
+                    enabled: false,
+                    clickOffsetLeft: 0,
+                    clickOffsetTop: 0
+                };
+            }
 
             // Holds the data set by the user
             this.data = this.options.data;
@@ -146,12 +153,16 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Places the selection within the frame. Gets called after the frame has been rendered and the image been loaded.
          */
         placeSelection: function() {
-            if (!!this.areaGuidingWidth) {
-                this.physicalAreaGuidingWidth = this.areaGuidingWidth * this.$frame.width() / this.originalWidth;
+            if (!this.areaGuidingWidth) {
+                this.areaGuidingWidth = this.originalWidth;
             }
-            if (!!this.areaGuidingHeight) {
-                this.physicalAreaGuidingHeight = this.areaGuidingHeight * this.$frame.height() / this.originalHeight;
+
+            if (!this.areaGuidingHeight) {
+                this.areaGuidingHeight = this.originalHeight;
             }
+
+            this.physicalAreaGuidingWidth = this.areaGuidingWidth * this.$frame.width() / this.originalWidth;
+            this.physicalAreaGuidingHeight = this.areaGuidingHeight * this.$frame.height() / this.originalHeight;
 
             if ((!!this.areaGuidingWidth && this.areaGuidingWidth > this.originalWidth) ||
                 (!!this.areaGuidingHeight && this.areaGuidingHeight > this.originalHeight) ||
@@ -182,7 +193,9 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
         renderFrame: function() {
             this.$frame = $(_.template(frameTemplate, {
                 image: this.options.image,
-                minimumSizeInfo: this.sandbox.translate(translations.minimumSizeReached)
+                minimumSizeInfo: this.sandbox.translate(translations.minimumSizeReached),
+                resizeable: this.options.resizeable,
+                tileSelectable: this.options.tileSelectable
             }));
 
             var whenImageLoaded = $.Deferred(),
@@ -207,6 +220,10 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
             this.area.$el.hide();
             this.$backdrop = this.$frame.find('.backdrop');
             this.$backdrop.hide();
+
+            if (!!this.options.draggable) {
+                this.area.$el.css('cursor', 'move');
+            }
 
             return whenImageLoaded;
         },
@@ -253,6 +270,10 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Binds the events for moving the area within the image frame
          */
         bindDragEvents: function() {
+            if (!this.options.draggable) {
+                return;
+            }
+
             this.area.$el.on('mousedown', ':not(.handle)', function(event) {
                 this.dragging.enabled = true;
                 this.dragging.clickOffsetLeft = event.pageX - this.area.$el.offset().left;
@@ -282,6 +303,10 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Binds the events for resizing the area within the image frame
          */
         bindResizeEvents: function() {
+            if (!this.options.resizeable) {
+                return;
+            }
+
             this.area.$el.on('mousedown', '.handle.south-east', function(event) {
                 this.resizing.enabled = true;
                 this.resizing.clickOffsetLeft = event.pageX - this.area.$el.offset().left - this.area.$el.width();
@@ -369,8 +394,12 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 height: Math.floor(size.height * this.originalHeight / this.$frame.height())
             }));
 
-            if ((!!this.areaGuidingWidth && this.$el.data('area').width <= this.areaGuidingWidth)
-                || (!!this.areaGuidingHeight && this.$el.data('area').height <= this.areaGuidingHeight)
+            if (
+                (
+                    (!!this.areaGuidingWidth && this.$el.data('area').width <= this.areaGuidingWidth)
+                    || (!!this.areaGuidingHeight && this.$el.data('area').height <= this.areaGuidingHeight)
+                )
+                && !!this.options.resizeable
             ) {
                 this.area.$el.addClass('minimum-size-reached');
             } else {

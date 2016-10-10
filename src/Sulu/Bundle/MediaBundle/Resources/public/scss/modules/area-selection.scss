@@ -22,7 +22,6 @@
 
     .area {
         position: absolute;
-        cursor: move;
         z-index: 20;
         // The area needs a background due to old IEs not being able to hover over transparent elements
         // http://stackoverflow.com/questions/3998917/ie8-div-hover-only-works-when-background-color-is-set-very-strange-why
@@ -67,7 +66,7 @@
                 border-width: 0 1px;
             }
 
-            &:hover {
+            &:hover, &.visible {
                 &::after, &::before {
                     opacity: 1;
                 }

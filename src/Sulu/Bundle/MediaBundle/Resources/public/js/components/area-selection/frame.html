@@ -2,8 +2,8 @@
     <img class="image" draggable="false" src="<%= image %>"/>
     <div class="area">
         <div class="minimum-size-info"><%= minimumSizeInfo %></div>
-        <div class="lines"></div>
-        <div class="handle south-east"></div>
+        <div class="lines<% if(tileSelectable) { %> visible <% } %>"></div>
+        <% if(resizeable) { %><div class="handle south-east"></div><% } %>
     </div>
     <div class="backdrop-container">
         <div class="backdrop"></div>
