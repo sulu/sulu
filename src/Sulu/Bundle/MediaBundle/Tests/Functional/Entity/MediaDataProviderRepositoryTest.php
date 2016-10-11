@@ -176,7 +176,6 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $fileVersionMeta->setFileVersion($fileVersion);
         $fileVersion->addMeta($fileVersionMeta);
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setName($title);
         $fileVersion->setSize(0);
         $fileVersion->setMimeType($mimeType);

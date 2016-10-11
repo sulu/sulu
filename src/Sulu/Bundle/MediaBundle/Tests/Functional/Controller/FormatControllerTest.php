@@ -71,7 +71,6 @@ class FormatControllerTest extends SuluTestCase
         $fileVersion->setName('My file version');
         $fileVersion->setSize(10);
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setFile($file);
         $file->addFileVersion($fileVersion);
 

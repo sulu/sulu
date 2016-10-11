@@ -73,7 +73,6 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $file->setVersion(1);
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setName('dummy.gif');
         $fileVersion->setMimeType('gif');
         $fileVersion->setStorageOptions(['a' => 'b']);

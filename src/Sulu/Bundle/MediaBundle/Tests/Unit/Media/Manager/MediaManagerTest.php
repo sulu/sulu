@@ -298,6 +298,72 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaManager->save($uploadedFile->reveal(), ['id' => 1], 42);
     }
 
+    public function testSaveWithChangedFocusPoint()
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersion->getFocusPointX()->willReturn(null);
+        $fileVersion->getFocusPointY()->willReturn(null);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldBeCalled();
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testSaveWithSameFocusPoint()
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersion->getFocusPointX()->willReturn(1);
+        $fileVersion->getFocusPointY()->willReturn(2);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
     public function provideGetByIds()
     {
         $media1 = $this->createMedia(1);
