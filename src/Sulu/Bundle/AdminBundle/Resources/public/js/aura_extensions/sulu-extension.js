@@ -94,7 +94,8 @@
                             callback(data);
                         }.bind(this))
                         .fail(function(data) {
-                            app.sandbox.logger.log('data could not be loaded:', data);
+                            app.logger.log('data could not be loaded:', data);
+                            callback(null);
                         }.bind(this));
                 }
             };
