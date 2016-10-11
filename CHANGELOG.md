@@ -25,7 +25,8 @@ CHANGELOG for Sulu
     * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
     * FEATURE     #2967 [ContentBundle]       Refactored link-tag to allow extending over provider
     * FEATURE     #2966 [MediaBundle]         Added warning when unsaved crop will be lost
-
+    * ENHANCEMENT #2948 [AdminBundle]         Replace colors and images by overwritable variables
+    
 * 1.4.0-RC1 (2016-10-06)
     * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
     * BUGFIX      #2962 [WebsiteBundle]       Removed nested-sitemapindex
