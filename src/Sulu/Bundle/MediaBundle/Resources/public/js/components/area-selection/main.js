@@ -18,59 +18,91 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
     'use strict';
 
     var defaults = {
-        eventNamespace: 'sulu.area-selection',
-        instanceName: '',
-        image: null,
-        areaGuidingWidth: null,
-        areaGuidingHeight: null,
-        data: null,
-        resizeable: true,
-        draggable: true,
-        tileSelectable: false
-    },
+            eventNamespace: 'sulu.area-selection',
+            instanceName: '',
+            image: null,
+            areaGuidingWidth: null,
+            areaGuidingHeight: null,
+            data: null,
+            resizeable: true,
+            draggable: true,
+            tileSelectable: false,
+            tileRow: 1,
+            tileColumn: 1
+        },
 
-    translations = {
-        minimumSizeReached: 'sulu-media.minimum-size-reached'
-    },
+        translations = {
+            minimumSizeReached: 'sulu-media.minimum-size-reached'
+        },
 
-    /**
-     * Raised when the component has been successfully initialized.
-     * @event sulu.area-selection.initialized
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    },
+        constants = {
+            selectedTileClass: 'selected'
+        },
 
-    /**
-     * Raised when the area the component selects has changed.
-     * @event sulu.area-selection.area-changed
-     */
-    AREA_CHANGED = function() {
-        return createEventName.call(this, 'area-changed');
-    },
+        /**
+         * Raised when the component has been successfully initialized.
+         * @event sulu.area-selection.initialized
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
 
-    /**
-     * Listens on and sets the area-guide dimensions of the component
-     *
-     * @param {Number} areaGuidingWidth The new area-guide-width
-     * @param {Number} areaGuidingHeight The new area-guide-height
-     * @param {Object} data The new data to use
-     *
-     * @event sulu.area-selection.change-area-guide-dimensions
-     */
-    SET_AREA_GUIDE_DIMENSIONS = function() {
-        return createEventName.call(this, 'set-area-guide-dimensions');
-    },
+        /**
+         * Raised when the area the component selects has changed.
+         * @event sulu.area-selection.area-changed
+         */
+        AREA_CHANGED = function() {
+            return createEventName.call(this, 'area-changed');
+        },
 
-    /**
-     * returns normalized event names
-     */
-    createEventName = function(postFix) {
-        return this.options.eventNamespace +
-            '.' + (!!this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-    };
+        /**
+         * Raised when a new tile of the grid is selected.
+         *
+         * @event sulu.area-selection.area-changed
+         */
+        TILE_SELECTED = function() {
+            return createEventName.call(this, 'tile-selected');
+        },
+
+        /**
+         * Listens on and sets the area-guide dimensions of the component
+         *
+         * @param {Number} areaGuidingWidth The new area-guide-width
+         * @param {Number} areaGuidingHeight The new area-guide-height
+         * @param {Object} data The new data to use
+         *
+         * @event sulu.area-selection.change-area-guide-dimensions
+         */
+        SET_AREA_GUIDE_DIMENSIONS = function() {
+            return createEventName.call(this, 'set-area-guide-dimensions');
+        },
+
+        /**
+         * returns normalized event names
+         */
+        createEventName = function(postFix) {
+            return this.options.eventNamespace +
+                '.' + (!!this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
 
     return {
+
+        placeTileSelection: function () {
+            if (!this.options.tileSelectable
+                || !$.isNumeric(this.options.tileRow)
+                || !$.isNumeric(this.options.tileColumn)
+            ) {
+                return;
+            }
+
+            var $tile = this.$el.find(
+                [
+                    '.lines *:nth-child(', this.options.tileRow + 1, ') ',
+                    '.tile:nth-child(', this.options.tileColumn + 1, ')'
+                ].join('')
+            );
+            this.selectTile($tile);
+        },
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -133,6 +165,7 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 this.bindDomEvents();
                 this.bindDragEvents();
                 this.bindResizeEvents();
+                this.placeTileSelection();
                 this.sandbox.emit(INITIALIZED.call(this), this.originalWidth, this.originalHeight);
             }.bind(this));
         },
@@ -202,10 +235,13 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 $image = this.$frame.find('.image');
 
             $image.one('load', function() {
+                var rectangle;
+
                 this.setImageSize($image);
                 // Fix the width and the height due to a rendering bug in firefox.
-                this.$frame.width($image.width());
-                this.$frame.height($image.height());
+                rectangle = $image[0].getBoundingClientRect();
+                this.$frame.width(rectangle.width);
+                this.$frame.height(rectangle.height);
                 this.$frame.removeClass('invisible');
                 whenImageLoaded.resolve();
             }.bind(this));
@@ -226,6 +262,16 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
             }
 
             return whenImageLoaded;
+        },
+
+        /**
+         * Makes the given tile the selected one.
+         *
+         * @param $tile
+         */
+        selectTile: function($tile) {
+            this.$el.find('.lines .tile').removeClass(constants.selectedTileClass);
+            $tile.addClass(constants.selectedTileClass);
         },
 
         /**
@@ -254,6 +300,13 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 var coordinates = this.dataToCoordinates(this.getMaximumCenteredData());
                 this.setAreaPosition(coordinates);
                 this.setAreaSize(coordinates);
+            }.bind(this));
+
+            this.area.$el.on('click', '.tile', function(event) {
+                var $tile = $(event.currentTarget);
+
+                this.selectTile($tile);
+                this.sandbox.emit(TILE_SELECTED.call(this), $tile.index(), $tile.parent().index());
             }.bind(this));
 
             // Prevent text-selection when moving the area

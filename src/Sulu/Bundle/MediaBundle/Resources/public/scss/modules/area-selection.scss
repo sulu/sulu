@@ -52,16 +52,35 @@
                 border-bottom: none;
             }
 
-            .left, .center, .right {
+            .tile {
+                position: relative;
+
                 width: calc(100% / 3);
                 cursor: pointer;
                 display: table-cell;
                 border-bottom: 1px solid $white;
                 border-right: 1px solid $white;
-            }
 
-            .right {
-                border-right: none;
+                &:before {
+                    content: '';
+
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+
+                    background-color: $black;
+                    opacity: 0.6;
+                }
+
+                &.selected:before {
+                    background-color: $white;
+                }
+
+                &.right {
+                    border-right: none;
+                }
             }
         }
 

@@ -107,18 +107,34 @@
   border-bottom: none;
 }
 /* line 55, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines .left, .sulu-area-selection .area .lines .center, .sulu-area-selection .area .lines .right {
+.sulu-area-selection .area .lines .tile {
+  position: relative;
   width: calc(100% / 3);
   cursor: pointer;
   display: table-cell;
   border-bottom: 1px solid #fff;
   border-right: 1px solid #fff;
 }
-/* line 63, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines .right {
+/* line 64, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #000;
+  opacity: 0.6;
+}
+/* line 77, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile.selected:before {
+  background-color: #fff;
+}
+/* line 81, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile.right {
   border-right: none;
 }
-/* line 69, ../scss/modules/area-selection.scss */
+/* line 88, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle {
   position: absolute;
   width: 20px;
@@ -127,13 +143,13 @@
   background: #fff;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
-/* line 78, ../scss/modules/area-selection.scss */
+/* line 97, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle.south-east {
   bottom: -10px;
   right: -10px;
   cursor: se-resize;
 }
-/* line 85, ../scss/modules/area-selection.scss */
+/* line 104, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .minimum-size-info {
   opacity: 0;
   position: absolute;
@@ -152,11 +168,11 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 101, ../scss/modules/area-selection.scss */
+/* line 120, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area.minimum-size-reached .minimum-size-info {
   opacity: 1;
 }
-/* line 106, ../scss/modules/area-selection.scss */
+/* line 125, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container {
   position: absolute;
   top: 0;
@@ -166,7 +182,7 @@
   overflow: hidden;
   z-index: 10;
 }
-/* line 115, ../scss/modules/area-selection.scss */
+/* line 134, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container .backdrop {
   position: absolute;
   outline: 5000px solid rgba(0, 0, 0, 0.6);
@@ -175,7 +191,7 @@
   width: 0;
   height: 0;
 }
-/* line 127, ../scss/modules/area-selection.scss */
+/* line 146, ../scss/modules/area-selection.scss */
 .sulu-area-selection img {
   display: block;
 }

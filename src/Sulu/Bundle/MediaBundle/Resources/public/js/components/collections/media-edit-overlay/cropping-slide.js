@@ -482,7 +482,6 @@ define([
         };
 
     return {
-
         sandbox: null,
         media: null,
         formats: null,
