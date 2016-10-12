@@ -48,7 +48,7 @@ define([
         },
 
         constants = {
-            thumbnailFormat: '200x180-inset',
+            thumbnailFormat: '260x',
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             fileDropzoneSelector: '#file-version-change',
@@ -219,8 +219,6 @@ define([
             $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate,
-                formatBytes: this.sandbox.util.formatBytes,
-                crop: this.sandbox.util.cropMiddle,
                 icon: iconClass,
                 thumbnailFormat: constants.thumbnailFormat
             }));
@@ -324,6 +322,10 @@ define([
                         slides: [
                             {
                                 title: this.media.title,
+                                subTitle: this.sandbox.util.cropMiddle(
+                                    this.media.mimeType + ', ' + this.sandbox.util.formatBytes(this.media.size),
+                                    32
+                                ),
                                 tabs: tabs,
                                 languageChanger: {
                                     locales: this.sandbox.sulu.locales,

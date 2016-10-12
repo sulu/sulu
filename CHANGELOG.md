@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
+
 * 1.4.0-RC1 (2016-10-06)
     * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
     * BUGFIX      #2962 [WebsiteBundle]       Removed nested-sitemapindex
