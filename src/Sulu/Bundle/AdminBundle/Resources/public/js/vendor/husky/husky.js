@@ -43605,7 +43605,7 @@ define('__component__$ckeditor@husky',[], function() {
  * @params {String} [options.instanceName] instance name of the component
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
- * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'wide', 'responsive-width'
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'small', 'medium', 'large', 'responsive-width'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
  * @params {Boolean} [options.contentSpacing] Defines if there should be a spacing between overlay borders and content
  * @params {String} [options.type] The type of the overlay ('normal' or 'warning')
@@ -43681,6 +43681,7 @@ define('__component__$overlay@husky',[], function() {
             data: '',
             panelContent: '',
             tabs: null,
+            contentSpacing: true,
             okInactive: false,
             buttonsDefaultAlign: 'center',
             cancelDefaultText: 'public.cancel',
@@ -44597,7 +44598,6 @@ define('__component__$overlay@husky',[], function() {
             }
         }
     };
-
 });
 
 /**

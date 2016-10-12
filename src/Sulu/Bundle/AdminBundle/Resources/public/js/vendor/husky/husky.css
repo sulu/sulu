@@ -6214,7 +6214,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 
 /* line 6, ../scss/modules/overlay.scss */
 .husky-overlay-container {
-  width: 580px;
+  width: 440px;
   border-radius: 3px;
   display: inline-block;
   vertical-align: middle;
@@ -6237,46 +6237,46 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   /* FIXME select in slides hidden */
   overflow: hidden;
 }
-/* line 28, ../scss/modules/overlay.scss */
-.husky-overlay-container.wide {
-  width: 860px;
+/* line 29, ../scss/modules/overlay.scss */
+.husky-overlay-container.small, .husky-overlay-container.small .slides .slide, .husky-overlay-container.small .overlay-footer {
+  width: 440px;
 }
-/* line 31, ../scss/modules/overlay.scss */
-.husky-overlay-container.wide .slides .slide {
-  width: 860px;
+/* line 35, ../scss/modules/overlay.scss */
+.husky-overlay-container.medium, .husky-overlay-container.medium .slides .slide, .husky-overlay-container.medium .overlay-footer {
+  width: 580px;
 }
-/* line 34, ../scss/modules/overlay.scss */
-.husky-overlay-container.wide .slides .slide .overlay-footer {
+/* line 41, ../scss/modules/overlay.scss */
+.husky-overlay-container.large, .husky-overlay-container.large .slides .slide, .husky-overlay-container.large .overlay-footer {
   width: 860px;
 }
 @media (min-width: 880px) {
-  /* line 42, ../scss/modules/overlay.scss */
+  /* line 48, ../scss/modules/overlay.scss */
+  .husky-overlay-container.responsive-width, .husky-overlay-container.responsive-width .slides .slide, .husky-overlay-container.responsive-width .slides .slide .overlay-footer {
+    width: 580px;
+  }
+}
+@media (min-width: 1024px) {
+  /* line 54, ../scss/modules/overlay.scss */
   .husky-overlay-container.responsive-width, .husky-overlay-container.responsive-width .slides .slide, .husky-overlay-container.responsive-width .slides .slide .overlay-footer {
     width: 860px;
   }
 }
-@media (min-width: 1024px) {
-  /* line 48, ../scss/modules/overlay.scss */
-  .husky-overlay-container.responsive-width, .husky-overlay-container.responsive-width .slides .slide, .husky-overlay-container.responsive-width .slides .slide .overlay-footer {
-    width: 940px;
-  }
-}
 @media (min-width: 1600px) {
-  /* line 54, ../scss/modules/overlay.scss */
+  /* line 60, ../scss/modules/overlay.scss */
   .husky-overlay-container.responsive-width, .husky-overlay-container.responsive-width .slides .slide, .husky-overlay-container.responsive-width .slides .slide .overlay-footer {
     width: 1360px;
   }
 }
-/* line 61, ../scss/modules/overlay.scss */
+/* line 67, ../scss/modules/overlay.scss */
 .husky-overlay-container.alert .overlay-header {
   height: 70px;
 }
-/* line 63, ../scss/modules/overlay.scss */
+/* line 69, ../scss/modules/overlay.scss */
 .husky-overlay-container.alert .overlay-header .title {
   line-height: normal;
   padding-top: 40px;
 }
-/* line 70, ../scss/modules/overlay.scss */
+/* line 76, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides {
   position: relative;
   left: 0px;
@@ -6287,13 +6287,13 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   -webkit-transition: left, 500ms;
   transition: left, 500ms;
 }
-/* line 77, ../scss/modules/overlay.scss */
+/* line 83, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides .slide {
   display: inline-block;
   vertical-align: top;
-  width: 580px;
+  width: 440px;
 }
-/* line 83, ../scss/modules/overlay.scss */
+/* line 89, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides.no-animation {
   -moz-transition: none;
   -o-transition: none;
@@ -6301,14 +6301,14 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transition: none;
 }
 
-/* line 89, ../scss/modules/overlay.scss */
+/* line 95, ../scss/modules/overlay.scss */
 .overlay-header {
   position: relative;
   background: #fff;
   border-radius: 3px 3px 0 0;
   height: 100px;
 }
-/* line 95, ../scss/modules/overlay.scss */
+/* line 101, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999;
   font-size: 24px;
@@ -6321,11 +6321,11 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   line-height: 100px;
   text-align: center;
 }
-/* line 109, ../scss/modules/overlay.scss */
+/* line 115, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .title {
   line-height: 75px;
 }
-/* line 113, ../scss/modules/overlay.scss */
+/* line 119, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .sub-title {
   font-size: 12px;
   color: #999;
@@ -6333,7 +6333,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   text-align: center;
 }
 
-/* line 122, ../scss/modules/overlay.scss */
+/* line 128, ../scss/modules/overlay.scss */
 .overlay-subheader {
   background: #fff;
   padding: 0 20px;
@@ -6344,7 +6344,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   display: table;
   table-layout: auto;
 }
-/* line 132, ../scss/modules/overlay.scss */
+/* line 138, ../scss/modules/overlay.scss */
 .overlay-subheader .overlay-tabs {
   display: table-cell;
   width: 100%;
@@ -6352,14 +6352,14 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 140, ../scss/modules/overlay.scss */
+/* line 146, ../scss/modules/overlay.scss */
 .overlay-subheader .panel {
   display: table-cell;
   white-space: nowrap;
   padding-left: 20px;
   border-left: 1px solid #e9e9e9;
 }
-/* line 147, ../scss/modules/overlay.scss */
+/* line 153, ../scss/modules/overlay.scss */
 .overlay-subheader .panel-content {
   display: inline-block;
   vertical-align: middle;
@@ -6368,45 +6368,45 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   padding-right: 20px;
   margin-right: 20px;
 }
-/* line 155, ../scss/modules/overlay.scss */
+/* line 161, ../scss/modules/overlay.scss */
 .overlay-subheader .panel-content::before {
   content: '';
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 }
-/* line 162, ../scss/modules/overlay.scss */
+/* line 168, ../scss/modules/overlay.scss */
 .overlay-subheader .panel-content > * {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 168, ../scss/modules/overlay.scss */
+/* line 174, ../scss/modules/overlay.scss */
 .overlay-subheader .language-changer {
   display: inline-block;
   width: 80px;
   height: 100%;
 }
-/* line 173, ../scss/modules/overlay.scss */
+/* line 179, ../scss/modules/overlay.scss */
 .overlay-subheader .language-changer::before {
   content: '';
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 }
-/* line 180, ../scss/modules/overlay.scss */
+/* line 186, ../scss/modules/overlay.scss */
 .overlay-subheader .language-changer > * {
   width: 100%;
   display: inline-block;
   vertical-align: middle;
 }
 
-/* line 188, ../scss/modules/overlay.scss */
+/* line 194, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 20px;
   border-top: 1px solid #ddd;
   text-align: center;
   border-radius: 0 0 3px 3px;
-  width: 580px;
+  width: 440px;
   position: absolute;
   bottom: 0;
   left: auto;
@@ -6417,45 +6417,45 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   content: ' ';
   display: block;
 }
-/* line 199, ../scss/modules/overlay.scss */
+/* line 205, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 115px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 205, ../scss/modules/overlay.scss */
+/* line 211, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 0;
 }
-/* line 209, ../scss/modules/overlay.scss */
+/* line 215, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 214, ../scss/modules/overlay.scss */
+/* line 220, ../scss/modules/overlay.scss */
 .overlay-footer .btn.just-text {
   background: transparent;
   color: #000;
   font-size: 12px;
 }
-/* line 221, ../scss/modules/overlay.scss */
+/* line 227, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 225, ../scss/modules/overlay.scss */
+/* line 231, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 230, ../scss/modules/overlay.scss */
+/* line 236, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
-/* line 235, ../scss/modules/overlay.scss */
+/* line 241, ../scss/modules/overlay.scss */
 .overlay-footer .loader {
   float: right;
   margin-left: 20px;
@@ -6463,32 +6463,32 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   width: 115px;
 }
 
-/* line 243, ../scss/modules/overlay.scss */
+/* line 249, ../scss/modules/overlay.scss */
 .overlay-content {
   position: relative;
   white-space: normal;
 }
-/* line 247, ../scss/modules/overlay.scss */
+/* line 253, ../scss/modules/overlay.scss */
 .overlay-content .message {
-  padding: 10px 105px 40px;
+  padding: 10px 20px 40px;
   background: #fff;
   font-size: 16px;
   color: #999;
   text-align: center;
 }
-/* line 253, ../scss/modules/overlay.scss */
+/* line 259, ../scss/modules/overlay.scss */
 .overlay-content .message ul {
   border: 1px solid #ddd;
   list-style-position: inside;
   text-align: left;
   padding: 10px;
 }
-/* line 261, ../scss/modules/overlay.scss */
+/* line 267, ../scss/modules/overlay.scss */
 .overlay-content.content-spacing {
   padding: 20px;
 }
 
-/* line 266, ../scss/modules/overlay.scss */
+/* line 272, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper {
   width: 100%;
   height: 100%;
@@ -6499,7 +6499,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   text-align: center;
   -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 275, ../scss/modules/overlay.scss */
+/* line 281, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper .husky-overlay-scroll-wrapper {
   position: absolute;
   top: 0;
@@ -6509,7 +6509,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   overflow: auto;
   white-space: nowrap;
 }
-/* line 284, ../scss/modules/overlay.scss */
+/* line 290, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper .husky-overlay-scroll-wrapper::before {
   content: '';
   display: inline-block;
@@ -6517,7 +6517,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   vertical-align: middle;
   margin-right: -0.25em;
 }
-/* line 293, ../scss/modules/overlay.scss */
+/* line 299, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper .husky-overlay-backdrop {
   position: absolute;
   top: 0;
@@ -6753,241 +6753,205 @@ hr.divider.small {
   text-align: center;
 }
 
-/* line 10, ../scss/modules/grid.scss */
+/* line 11, ../scss/modules/grid.scss */
 .grid {
   display: block;
 }
 
-/* line 14, ../scss/modules/grid.scss */
+/* line 15, ../scss/modules/grid.scss */
 .grid-row {
   margin-bottom: 20px;
 }
-/* line 17, ../scss/modules/grid.scss */
+/* line 18, ../scss/modules/grid.scss */
 .grid-row.small {
   margin-bottom: 10px;
 }
-/* line 20, ../scss/modules/grid.scss */
+/* line 21, ../scss/modules/grid.scss */
 .grid-row.no-spacing {
   margin-bottom: 0;
 }
-/* line 23, ../scss/modules/grid.scss */
+/* line 24, ../scss/modules/grid.scss */
 .grid-row.divider {
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #ccc;
 }
-/* line 28, ../scss/modules/grid.scss */
+/* line 29, ../scss/modules/grid.scss */
 .grid-row::after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 34, ../scss/modules/grid.scss */
+/* line 35, ../scss/modules/grid.scss */
 .grid-row img {
   max-width: 100%;
 }
 
-/* line 43, ../scss/modules/grid.scss */
+/* line 42, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-1.floating:nth-child(n+13) {
   margin-top: 10px;
 }
-/* line 48, ../scss/modules/grid.scss */
+/* line 47, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-2.floating:nth-child(n+7) {
   margin-top: 10px;
 }
-/* line 53, ../scss/modules/grid.scss */
+/* line 52, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-3.floating:nth-child(n+5) {
   margin-top: 10px;
 }
-/* line 58, ../scss/modules/grid.scss */
+/* line 57, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-4.floating:nth-child(n+4) {
   margin-top: 10px;
 }
-/* line 63, ../scss/modules/grid.scss */
+/* line 62, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-6.floating:nth-child(n+3) {
   margin-top: 10px;
 }
-/* line 68, ../scss/modules/grid.scss */
+/* line 67, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-12.floating:nth-child(n+2) {
   margin-top: 10px;
 }
 
-/* line 74, ../scss/modules/grid.scss */
+/* line 73, ../scss/modules/grid.scss */
 [class*="grid-col-"] {
   float: left;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 20px;
   min-height: 1px;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
-/* line 79, ../scss/modules/grid.scss */
-[class*="grid-col-"]:last-of-type {
-  padding-right: 0;
-}
-/* line 82, ../scss/modules/grid.scss */
+/* line 78, ../scss/modules/grid.scss */
 [class*="grid-col-"]:first-of-type {
   padding-left: 0;
-  padding-right: 8px;
 }
-/* line 86, ../scss/modules/grid.scss */
+/* line 81, ../scss/modules/grid.scss */
 [class*="grid-col-"]:only-of-type {
   padding-left: 0;
-  padding-right: 0;
 }
-/* line 90, ../scss/modules/grid.scss */
+/* line 84, ../scss/modules/grid.scss */
 [class*="grid-col-"].no-padding {
   padding: 0;
 }
 
-/* line 95, ../scss/modules/grid.scss */
+/* line 89, ../scss/modules/grid.scss */
 .grid-col-1 {
-  width: 8.33%;
+  width: calc((100% - 220px) / 12);
 }
-/* line 99, ../scss/modules/grid.scss */
+/* line 93, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(n+13) {
   margin-top: 20px;
 }
-/* line 103, ../scss/modules/grid.scss */
+/* line 97, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n+1) {
   padding-left: 0;
-  padding-right: 8px;
-}
-/* line 108, ../scss/modules/grid.scss */
-.grid-col-1.floating:nth-child(12n) {
-  padding-right: 0;
 }
 
-/* line 114, ../scss/modules/grid.scss */
+/* line 103, ../scss/modules/grid.scss */
 .grid-col-2 {
-  width: 16.66%;
+  width: calc((100% - 220px) / 6 + 20px);
 }
-/* line 118, ../scss/modules/grid.scss */
+/* line 107, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(n+7) {
   margin-top: 20px;
 }
-/* line 122, ../scss/modules/grid.scss */
+/* line 111, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n+1) {
   padding-left: 0;
-  padding-right: 8px;
-}
-/* line 127, ../scss/modules/grid.scss */
-.grid-col-2.floating:nth-child(6n) {
-  padding-right: 0;
 }
 
-/* line 133, ../scss/modules/grid.scss */
+/* line 117, ../scss/modules/grid.scss */
 .grid-col-3 {
-  width: 25%;
+  width: calc((100% - 220px) / 4 + 40px);
 }
-/* line 137, ../scss/modules/grid.scss */
+/* line 121, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(n+5) {
   margin-top: 20px;
 }
-/* line 141, ../scss/modules/grid.scss */
+/* line 125, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n+1) {
   padding-left: 0;
-  padding-right: 8px;
-}
-/* line 146, ../scss/modules/grid.scss */
-.grid-col-3.floating:nth-child(4n) {
-  padding-right: 0;
 }
 
-/* line 152, ../scss/modules/grid.scss */
+/* line 131, ../scss/modules/grid.scss */
 .grid-col-4 {
-  width: 33.33%;
+  width: calc((100% - 220px) / 3 + 60px);
 }
-/* line 156, ../scss/modules/grid.scss */
+/* line 135, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(n+4) {
   margin-top: 20px;
 }
-/* line 160, ../scss/modules/grid.scss */
+/* line 139, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n+1) {
   padding-left: 0;
-  padding-right: 8px;
-}
-/* line 165, ../scss/modules/grid.scss */
-.grid-col-4.floating:nth-child(3n) {
-  padding-right: 0;
 }
 
-/* line 171, ../scss/modules/grid.scss */
+/* line 145, ../scss/modules/grid.scss */
 .grid-col-5 {
-  width: 41.66%;
+  width: calc((100% - 220px) / 12 * 5 + 80px);
 }
 
-/* line 175, ../scss/modules/grid.scss */
+/* line 149, ../scss/modules/grid.scss */
 .grid-col-6 {
-  width: 50%;
+  width: calc((100% - 220px) / 2 + 100px);
 }
-/* line 180, ../scss/modules/grid.scss */
+/* line 153, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(n+3) {
   margin-top: 20px;
 }
-/* line 184, ../scss/modules/grid.scss */
+/* line 157, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(odd) {
   padding-left: 0;
-  padding-right: 8px;
-}
-/* line 189, ../scss/modules/grid.scss */
-.grid-col-6.floating:nth-child(even) {
-  padding-right: 0;
 }
 
-/* line 195, ../scss/modules/grid.scss */
+/* line 163, ../scss/modules/grid.scss */
 .grid-col-7 {
-  width: 58.33%;
+  width: calc((100% - 220px) / 12 * 7 + 120px);
 }
 
-/* line 199, ../scss/modules/grid.scss */
+/* line 167, ../scss/modules/grid.scss */
 .grid-col-8 {
-  width: 66.66%;
+  width: calc((100% - 220px) / 1.5 + 140px);
 }
 
-/* line 203, ../scss/modules/grid.scss */
+/* line 171, ../scss/modules/grid.scss */
 .grid-col-9 {
-  width: 75%;
+  width: calc((100% - 220px) / 4 * 3 + 160px);
 }
 
-/* line 207, ../scss/modules/grid.scss */
+/* line 175, ../scss/modules/grid.scss */
 .grid-col-10 {
-  width: 83.33%;
+  width: calc((100% - 220px) / 12 * 10 + 180px);
 }
 
-/* line 211, ../scss/modules/grid.scss */
+/* line 179, ../scss/modules/grid.scss */
 .grid-col-11 {
-  width: 91.66%;
+  width: calc((100% - 220px) / 12 * 11 + 200px);
 }
 
-/* line 215, ../scss/modules/grid.scss */
+/* line 183, ../scss/modules/grid.scss */
 .grid-col-12 {
   width: 100%;
 }
-/* line 219, ../scss/modules/grid.scss */
+/* line 187, ../scss/modules/grid.scss */
 .grid-col-12.floating:nth-child(n+2) {
   margin-top: 20px;
 }
-/* line 222, ../scss/modules/grid.scss */
+/* line 190, ../scss/modules/grid.scss */
 .grid-col-12.floating:nth-child(n) {
   padding-left: 0;
-  padding-right: 0;
 }
 
 @media (max-width: 580px) {
-  /* line 231, ../scss/modules/grid.scss */
+  /* line 198, ../scss/modules/grid.scss */
   [class*="grid-col-"] {
     width: 100%;
     margin-top: 15px;
     padding-left: 0;
-    padding-right: 0;
   }
-  /* line 238, ../scss/modules/grid.scss */
+  /* line 204, ../scss/modules/grid.scss */
   [class*="grid-col-"]:first-of-type {
     margin-top: 0;
-    padding-right: 0;
-  }
-  /* line 244, ../scss/modules/grid.scss */
-  [class*="grid-col-"].floating:nth-child(n) {
-    padding-right: 0;
   }
 }
 /* line 5, ../scss/modules/form.scss */

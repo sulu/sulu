@@ -292,6 +292,7 @@ define([
                                 data: this.templates.skeleton({
                                     title: this.translations.allMedias
                                 }),
+                                contentSpacing: false,
                                 buttons: buttons,
                                 contentSpacing: false,
                                 okCallback: function() {

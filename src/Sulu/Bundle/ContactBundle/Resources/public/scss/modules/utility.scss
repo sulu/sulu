@@ -76,8 +76,8 @@
   }
 
   label {
-    line-height: 14px;
-    text-overflow: hidden;
+    line-height: 30px;
+    text-overflow: ellipsis;
     &.hidden {
       display: none;
     }

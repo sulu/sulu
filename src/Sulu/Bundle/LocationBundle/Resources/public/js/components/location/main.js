@@ -463,7 +463,7 @@ define([], function() {
                 this.formData.zoom = this.sandbox.dom.find('.zoom', form).val();
                 this.updateLocation();
             }.bind(this));
-            
+
             this.sandbox.dom.find('.' + this.constants.mapProviderSelectClass).on('change', function (el) {
                 this.formData.mapProvider = $(el.currentTarget).val();
                 this.renderMap('overlay', {
@@ -492,7 +492,7 @@ define([], function() {
                         removeOnClose: false,
                         container: this.$el,
                         instanceName: 'location-content.' + this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.configureLocation),

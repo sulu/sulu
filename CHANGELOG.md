@@ -18,6 +18,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2797 [ContentBundle]       When removing resource locator in history now asks for conformation
     * BUGFIX      #2934 [WebsiteBundle]       Fixed cache-clearer if using varnisch
     * BUGFIX      #2900 [ContentBundle]       Improved bug with grid elements not floating correctly
+    * BUGFIX      #2930 [All]                 Fixed the overlays to match the grid system
     * ENHANCEMENT #2927 [ContactBundle]       Enables the extensibility of matchings for contact-selection
     * BUGFIX      #2925 [WebsiteBundle]       Fixed seo when no data is available
     * FEATURE     #2920 [WebsiteBundle]       Seo info as twig template to make it rewriteable

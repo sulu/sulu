@@ -9,8 +9,11 @@
     margin-bottom: 60px;
 
     label {
-        display: inline;
+        display: inline-block;
         color: $black;
+        vertical-align: top;
+        width: 476px;
+        white-space: normal;
     }
 
     label.disabled {

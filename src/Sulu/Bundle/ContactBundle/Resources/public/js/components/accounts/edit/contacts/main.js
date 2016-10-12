@@ -92,7 +92,7 @@ define([
                         removeOnClose: true,
                         instanceName: 'new-contact',
                         data: template,
-                        skin: 'wide',
+                        skin: 'medium',
                         okCallback: addNewContact.bind(this)
                     }
                 }
