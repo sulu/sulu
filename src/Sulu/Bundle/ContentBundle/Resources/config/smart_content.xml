@@ -20,8 +20,16 @@
         </service>
 
         <!-- content provider -->
+        <service id="sulu_content.smart_content.data_provider.content.proxy_factory.configuration"
+                 class="ProxyManager\Configuration" public="false">
+            <call method="setProxiesTargetDir">
+                <argument>%sulu.cache_dir%</argument>
+            </call>
+        </service>
         <service id="sulu_content.smart_content.data_provider.content.proxy_factory"
-                 class="%sulu_content.smart_content.data_provider.content.proxy_factory.class%"/>
+                 class="%sulu_content.smart_content.data_provider.content.proxy_factory.class%">
+            <argument type="service" id="sulu_content.smart_content.data_provider.content.proxy_factory.configuration"/>
+        </service>
         <service id="sulu_content.smart_content.data_provider.content.query_builder"
                  class="%sulu_content.smart_content.data_provider.content.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
