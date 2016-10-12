@@ -30,27 +30,69 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
     private $engine;
 
     /**
+     * @var string
+     */
+    private $baseDirectory;
+
+    /**
      * @param SitemapProviderPoolInterface $sitemapProviderPool
      * @param EngineInterface $engine
+     * @param string $baseDirectory
      */
-    public function __construct(SitemapProviderPoolInterface $sitemapProviderPool, EngineInterface $engine)
-    {
+    public function __construct(
+        SitemapProviderPoolInterface $sitemapProviderPool,
+        EngineInterface $engine,
+        $baseDirectory
+    ) {
         $this->sitemapProviderPool = $sitemapProviderPool;
         $this->engine = $engine;
+        $this->baseDirectory = $baseDirectory;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renderIndex()
+    public function getIndexDumpPath($scheme, $webspaceKey, $locale, $url)
+    {
+        return sprintf(
+            '%s/%s/%s/%s/%s/sitemap.xml',
+            rtrim($this->baseDirectory, '/'),
+            $scheme,
+            $webspaceKey,
+            $locale,
+            $url
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function renderIndex($domain = null, $scheme = null)
     {
         if (!$this->needsIndex()) {
-            return null;
+            return;
         }
 
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $this->sitemapProviderPool->getIndex()]
+            ['sitemaps' => $this->sitemapProviderPool->getIndex(), 'domain' => $domain, 'scheme' => $scheme]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDumpPath($scheme, $webspaceKey, $locale, $url, $alias, $page)
+    {
+        return sprintf(
+            '%s/%s/%s/%s/%s/sitemaps/%s-%s.xml',
+            rtrim($this->baseDirectory, '/'),
+            $scheme,
+            $webspaceKey,
+            $locale,
+            $url,
+            $alias,
+            $page
         );
     }
 
@@ -60,12 +102,12 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
     public function renderSitemap($alias, $page, $locale, Portal $portal, $host, $scheme)
     {
         if (!$this->sitemapProviderPool->hasProvider($alias)) {
-            return null;
+            return;
         }
 
         $provider = $this->sitemapProviderPool->getProvider($alias);
         if ($provider->getMaxPage() < $page) {
-            return null;
+            return;
         }
 
         $entries = $provider->build($page, $portal->getKey(), $locale);

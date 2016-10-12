@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Component\HttpCache\HttpCache;
+use Sulu\Component\Webspace\Portal;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,9 +32,8 @@ class SitemapController extends WebsiteController
      */
     public function indexAction(Request $request)
     {
-        $dumpDir = $this->getDumpDir($request);
-        if ($this->get('filesystem')->exists($dumpDir . '/sitemap.xml')) {
-            return $this->createBinaryFileResponse($dumpDir . '/sitemap.xml');
+        if (null !== ($response = $this->getDumpedIndex($request))) {
+            return $response;
         }
 
         $sitemap = $this->get('sulu_website.sitemap.xml_renderer')->renderIndex();
@@ -44,6 +44,36 @@ class SitemapController extends WebsiteController
         }
 
         return $this->setCacheLifetime(new Response($sitemap));
+    }
+
+    /**
+     * Returns index-response if dumped file exists.
+     *
+     * @param Request $request
+     *
+     * @return null|BinaryFileResponse
+     */
+    private function getDumpedIndex(Request $request)
+    {
+        /** @var Portal $portal */
+        $portal = $request->get('_sulu')->getAttribute('portal');
+        $localization = $request->get('_sulu')->getAttribute('localization');
+        if (!$localization) {
+            $localization = $portal->getXDefaultLocalization();
+        }
+
+        $path = $this->get('sulu_website.sitemap.xml_renderer')->getIndexDumpPath(
+            $request->getScheme(),
+            $portal->getWebspace()->getKey(),
+            $localization->getLocale(),
+            $request->getHttpHost()
+        );
+
+        if (!$this->get('filesystem')->exists($path)) {
+            return;
+        }
+
+        return $this->createBinaryFileResponse($path);
     }
 
     /**
@@ -73,9 +103,8 @@ class SitemapController extends WebsiteController
      */
     public function sitemapPaginatedAction(Request $request, $alias, $page)
     {
-        $dumpDir = $this->getDumpDir($request);
-        if ($this->get('filesystem')->exists($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml')) {
-            return $this->createBinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml');
+        if (null !== ($response = $this->getDumpedSitemap($request, $alias, $page))) {
+            return $response;
         }
 
         $portal = $request->get('_sulu')->getAttribute('portal');
@@ -101,17 +130,37 @@ class SitemapController extends WebsiteController
     }
 
     /**
-     * Returns dump-dir.
+     * Returns index-response if dumped file exists.
      *
      * @param Request $request
+     * @param string $alias
+     * @param int $page
      *
-     * @return string
+     * @return null|BinaryFileResponse
      */
-    public function getDumpDir(Request $request)
+    private function getDumpedSitemap(Request $request, $alias, $page)
     {
-        $dumpDir = $this->getParameter('sulu_website.sitemap.dump_dir');
+        /** @var Portal $portal */
+        $portal = $request->get('_sulu')->getAttribute('portal');
+        $localization = $request->get('_sulu')->getAttribute('localization');
+        if (!$localization) {
+            $localization = $portal->getXDefaultLocalization();
+        }
 
-        return sprintf('%s/%s/%s', $dumpDir, $request->getScheme(), $request->getHttpHost());
+        $path = $this->get('sulu_website.sitemap.xml_renderer')->getDumpPath(
+            $request->getScheme(),
+            $portal->getWebspace()->getKey(),
+            $localization->getLocale(),
+            $request->getHttpHost(),
+            $alias,
+            $page
+        );
+
+        if (!$this->get('filesystem')->exists($path)) {
+            return;
+        }
+
+        return $this->createBinaryFileResponse($path);
     }
 
     /**

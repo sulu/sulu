@@ -71,32 +71,6 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     }
 
     /**
-     * TODO remove
-     *
-     * {@inheritdoc}
-     */
-    public function getFirstAlias()
-    {
-        return reset($this->aliases);
-    }
-
-    /**
-     * TODO remove
-     *
-     * {@inheritdoc}
-     */
-    public function needsIndex()
-    {
-        return 1 < count($this->providers)
-            || 1 < array_reduce(
-                $this->getIndex(),
-                function ($v1, Sitemap $v2) {
-                    return $v1 + $v2->getMaxPage();
-                }
-            );
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getIndex()
