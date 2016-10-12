@@ -700,7 +700,7 @@ define([
                         removeOnClose: true,
                         instanceName: 'add-address',
                         data: addressTemplate,
-                        skin: 'medium',
+                        skin: 'large',
                         okCallback: addAddressOkClicked.bind(this, mapperId),
                         cancelCallback: removeAddressFormEvents.bind(this)
                     }
