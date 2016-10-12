@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2977 [AdminBundle]         Fixed sulu.loadUserSettings() when key does not exist
     * BUGFIX      #3001 [ContentBundle]       Fixed apostrophe bug in template
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
     * BUGFIX      #2929 [MediaBundle]         Return system collection media only with granted permissions
