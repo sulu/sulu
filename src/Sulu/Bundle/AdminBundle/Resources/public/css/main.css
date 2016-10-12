@@ -475,7 +475,7 @@ input, select {
   width: 100%;
   height: 100%;
   background: #000;
-  opacity: 0.5;
+  opacity: 0.2;
   -moz-transition: opacity 500ms;
   -o-transition: opacity 500ms;
   -webkit-transition: opacity 500ms;
