@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
     * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
 
 * 1.4.0-RC1 (2016-10-06)
