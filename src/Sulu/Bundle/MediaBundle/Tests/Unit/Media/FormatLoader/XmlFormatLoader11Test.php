@@ -58,6 +58,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '400x400',
+                'internal' => false,
                 'meta' => [
                     'title' => [],
                 ],
@@ -84,11 +85,13 @@ class XmlFormatLoader11Test extends WebspaceTestCase
             ],
             $result['400x400']
         );
+        $this->assertNotNull($result['400x400']['internal']);
 
         $this->assertArrayHasKey('400x-inset', $result);
         $this->assertEquals(
             [
                 'key' => '400x-inset',
+                'internal' => true,
                 'meta' => [
                     'title' => [
                         'en' => 'My 400 Format',
@@ -109,11 +112,13 @@ class XmlFormatLoader11Test extends WebspaceTestCase
             ],
             $result['400x-inset']
         );
+        $this->assertNotNull($result['400x-inset']['internal']);
 
         $this->assertArrayHasKey('200x180-inset', $result);
         $this->assertEquals(
             [
                 'key' => '200x180-inset',
+                'internal' => false,
                 'meta' => [
                     'title' => [],
                 ],
@@ -129,6 +134,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
             ],
             $result['200x180-inset']
         );
+        $this->assertNotNull($result['200x180-inset']['internal']);
     }
 
     /**

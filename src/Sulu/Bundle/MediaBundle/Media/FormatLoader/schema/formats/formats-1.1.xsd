@@ -23,6 +23,7 @@
             <xs:element type="optionsType" name="options" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
         <xs:attribute name="key" type="xs:string" use="required"/>
+        <xs:attribute name="internal" type="xs:boolean" default="false"/>
     </xs:complexType>
 
     <xs:complexType name="optionsType">
@@ -36,7 +37,7 @@
             <xs:element name="title" type="titleType" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="scaleType">
         <xs:attribute name="x" type="xs:positiveInteger"/>
         <xs:attribute name="y" type="xs:positiveInteger"/>
@@ -50,7 +51,7 @@
             <xs:element name="transformation" type="transformationType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="titleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">

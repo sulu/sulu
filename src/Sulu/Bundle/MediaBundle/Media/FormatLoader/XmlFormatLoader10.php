@@ -48,6 +48,14 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
     /**
      * {@inheritdoc}
      */
+    protected function getInternalFlagFromFormatNode(\DOMNode $formatNode)
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
         return [
