@@ -290,23 +290,26 @@
 /* line 11, ../scss/modules/node.scss */
 .copy-locales-overlay-content label,
 .copy-locale-overlay-content label {
-  display: inline;
+  display: inline-block;
   color: #000;
+  vertical-align: top;
+  width: 476px;
+  white-space: normal;
 }
-/* line 16, ../scss/modules/node.scss */
+/* line 19, ../scss/modules/node.scss */
 .copy-locales-overlay-content label.disabled,
 .copy-locale-overlay-content label.disabled {
   color: #999;
   cursor: default;
 }
-/* line 21, ../scss/modules/node.scss */
+/* line 24, ../scss/modules/node.scss */
 .copy-locales-overlay-content .info,
 .copy-locale-overlay-content .info {
   font-size: 14px;
   color: #999;
 }
 
-/* line 27, ../scss/modules/node.scss */
+/* line 30, ../scss/modules/node.scss */
 #copy-locale-overlay-select {
   margin-left: 20px;
   margin-top: 10px;
