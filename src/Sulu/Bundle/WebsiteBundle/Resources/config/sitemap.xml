@@ -13,5 +13,10 @@
 
             <tag name="sulu.sitemap.provider" alias="pages"/>
         </service>
+
+        <service id="sulu_website.sitemap.xml_renderer" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer">
+            <argument type="service" id="sulu_website.sitemap.pool"/>
+            <argument type="service" id="templating"/>
+        </service>
     </services>
 </container>

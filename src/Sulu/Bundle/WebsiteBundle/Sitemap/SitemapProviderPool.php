@@ -71,6 +71,8 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     }
 
     /**
+     * TODO remove
+     *
      * {@inheritdoc}
      */
     public function getFirstAlias()
@@ -79,6 +81,8 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     }
 
     /**
+     * TODO remove
+     *
      * {@inheritdoc}
      */
     public function needsIndex()

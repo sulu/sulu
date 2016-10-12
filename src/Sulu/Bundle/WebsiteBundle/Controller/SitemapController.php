@@ -36,14 +36,14 @@ class SitemapController extends WebsiteController
             return $this->createBinaryFileResponse($dumpDir . '/sitemap.xml');
         }
 
-        $pool = $this->get('sulu_website.sitemap.pool');
-        if (!$pool->needsIndex()) {
-            return $this->sitemapPaginatedAction($request, $pool->getFirstAlias(), 1);
+        $sitemap = $this->get('sulu_website.sitemap.xml_renderer')->renderIndex();
+        if (!$sitemap) {
+            $aliases = array_keys($this->get('sulu_website.sitemap.pool')->getProviders());
+
+            return $this->sitemapPaginatedAction($request, reset($aliases), 1);
         }
 
-        return $this->setCacheLifetime(
-            $this->render('SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig', ['sitemaps' => $pool->getIndex()])
-        );
+        return $this->setCacheLifetime(new Response($sitemap));
     }
 
     /**
@@ -78,43 +78,26 @@ class SitemapController extends WebsiteController
             return $this->createBinaryFileResponse($dumpDir . '/sitemaps/' . $alias . '-' . $page . '.xml');
         }
 
-        if (!$this->get('sulu_website.sitemap.pool')->hasProvider($alias)) {
-            return new Response(null, 404);
-        }
-
         $portal = $request->get('_sulu')->getAttribute('portal');
-        $webspace = $request->get('_sulu')->getAttribute('webspace');
         $localization = $request->get('_sulu')->getAttribute('localization');
-
         if (!$localization) {
-            $localization = $portal->getDefaultLocalization();
+            $localization = $portal->getXDefaultLocalization();
         }
 
-        $provider = $this->get('sulu_website.sitemap.pool')->getProvider($alias);
+        $sitemap = $this->get('sulu_website.sitemap.xml_renderer')->renderSitemap(
+            $alias,
+            $page,
+            $localization->getLocale(),
+            $portal,
+            $request->getHttpHost(),
+            $request->getScheme()
+        );
 
-        if ($provider->getMaxPage() < $page) {
+        if (!$sitemap) {
             return new Response(null, 404);
         }
 
-        $entries = $provider->build(
-            $page,
-            $portal->getKey(),
-            $localization->getLocale()
-        );
-
-        return $this->setCacheLifetime(
-            $this->render(
-                'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-                [
-                    'webspaceKey' => $webspace->getKey(),
-                    'locale' => $localization->getLocale(),
-                    'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
-                    'domain' => $request->getHttpHost(),
-                    'scheme' => $request->getScheme(),
-                    'entries' => $entries,
-                ]
-            )
-        );
+        return $this->setCacheLifetime(new Response($sitemap));
     }
 
     /**
