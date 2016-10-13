@@ -18,7 +18,6 @@ define(function() {
     'use strict';
 
     return {
-
         defaults: {
             options: {
                 link: {},

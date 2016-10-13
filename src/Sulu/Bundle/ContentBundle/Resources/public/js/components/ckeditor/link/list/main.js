@@ -13,7 +13,7 @@
  * @class ckeditor/link/list
  * @constructor
  */
-define(['underscore', 'services/husky/expression-language'], function(_, ExpressionLanguage) {
+define(['underscore', 'services/husky/expression'], function(_, Expression) {
 
     'use strict';
 
@@ -131,7 +131,7 @@ define(['underscore', 'services/husky/expression-language'], function(_, Express
         },
 
         isPublished: function(context) {
-            return ExpressionLanguage.evaluate(this.options.publishedExpression, context);
+            return Expression.evaluate(this.options.publishedExpression, context);
         }
     };
 });

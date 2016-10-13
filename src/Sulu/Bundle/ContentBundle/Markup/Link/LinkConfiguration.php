@@ -30,6 +30,7 @@ class LinkConfiguration implements \JsonSerializable
      * @var array
      */
     protected $componentOptions;
+
     /**
      * @var array
      */

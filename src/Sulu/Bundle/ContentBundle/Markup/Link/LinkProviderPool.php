@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Markup\Link;
 
 /**
- * Holds all providers.
+ * Contains all providers.
  */
 class LinkProviderPool implements LinkProviderPoolInterface
 {

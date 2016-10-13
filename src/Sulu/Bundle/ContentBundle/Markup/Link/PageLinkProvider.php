@@ -106,7 +106,7 @@ class PageLinkProvider implements LinkProviderInterface
      */
     protected function getLinkItem(Content $content, $locale, $scheme)
     {
-        $published = array_key_exists('published', $content->getData()) && !empty($content['published']);
+        $published = !empty($content->getPropertyWithDefault('published'));
         $url = $this->webspaceManager->findUrlByResourceLocator(
             $content->getUrl(),
             $this->environment,
@@ -116,6 +116,6 @@ class PageLinkProvider implements LinkProviderInterface
             $scheme
         );
 
-        return new LinkItem($content->getId(), $content['title'], $url, $published);
+        return new LinkItem($content->getId(), $content->getPropertyWithDefault('title'), $url, $published);
     }
 }
