@@ -402,6 +402,10 @@
                 <source>sulu-media.unsaved-crop-description</source>
                 <target>De huidige uitsnede zal verloren gaan.</target>
             </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Uitsneden zijn opgeslagen, maar zijn niet zichtbaar in deze voorbeeldweergave</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -402,6 +402,10 @@
                 <source>sulu-media.unsaved-crop-description</source>
                 <target>Le cadrage tel qu’il apparait sur l’écran se perd si on change le format.</target>
             </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Les cadrages sont enregistrés mais ne sont pas visualisés dans l'aperçu</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

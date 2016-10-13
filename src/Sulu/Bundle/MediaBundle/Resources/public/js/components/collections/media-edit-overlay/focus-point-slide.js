@@ -91,6 +91,11 @@ define(['services/sulumedia/media-manager', 'text!./toolbar-slide.html'], functi
             mediaManager.save(this.media).then(function() {
                 this.sandbox.emit('husky.toolbar.' + this.instanceName + '.item.disable', 'save');
             }.bind(this));
+
+            this.sandbox.emit(
+                'sulu.media-edit.preview.loading',
+                this.sandbox.translate('sulu-media.saved-crops-not-visible')
+            );
         };
 
     return {
