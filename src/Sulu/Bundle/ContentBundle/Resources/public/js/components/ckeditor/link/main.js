@@ -164,7 +164,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, formTem
                         removeOnClose: true,
                         el: $element,
                         container: this.$el,
-                        skin: 'medium',
+                        skin: 'large',
                         instanceName: 'internal-link',
                         slides: [
                             {
