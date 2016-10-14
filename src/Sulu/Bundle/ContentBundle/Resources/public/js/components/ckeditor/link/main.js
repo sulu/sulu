@@ -10,19 +10,21 @@
 /**
  * Overlay for internal-link plugin.
  *
- * @class CKEditorInternalLink
+ * @class ckeditor/link
  * @constructor
  */
-define(['underscore', 'text!./form.html'], function(_, formTemplate) {
+define(['underscore', 'config', 'text!./form.html'], function(_, Config, formTemplate) {
 
     'use strict';
 
-    var formSelector = '#internal-link-form';
+    var formSelector = '#internal-link-form',
+        config = Config.get('sulu_content.link_provider.configuration');
 
     return {
 
         defaults: {
             options: {
+                provider: 'page',
                 link: {},
                 saveCallback: function(label) {
                 },
@@ -32,7 +34,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
 
             templates: {
                 form: formTemplate,
-                contentDatasource: '<div id="href-select" class="data-source-content"/>'
+                providerDatasource: '<div id="provider-data-source"/>'
             },
 
             translations: {
@@ -49,6 +51,8 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
         },
 
         initialize: function() {
+            this.config = config[this.options.provider];
+
             this.initializeDialog();
         },
 
@@ -74,6 +78,8 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
             }
 
             this.options.saveCallback(this.getData());
+
+            this.sandbox.stop();
         },
 
         validate: function() {
@@ -91,6 +97,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
 
             return _.defaults(data, {
                 href: this.href,
+                provider: this.options.provider,
                 published: this.hrefPublished,
                 title: !!this.options.link.title ? this.options.link.title : this.hrefTitle
             });
@@ -100,30 +107,34 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
             return this.sandbox.form.setData(formSelector, data);
         },
 
-        setHref: function(href) {
-            this.href = href.id;
-            this.hrefTitle = href.title;
+        setHref: function(id, title, published) {
+            this.href = id;
+            this.hrefTitle = title;
+            this.hrefPublished = !!published;
 
             var $value = $('#internal-link-href-value');
-            $value.val(href.title);
+            $value.val(title);
             $('#internal-link-href-button-clear').show();
         },
 
         initializeDialog: function() {
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
-            this.sandbox.dom.append(this.$el, $element);
+            var title = this.translations.internalLink + ': ' + this.sandbox.translate(this.config.title),
+                $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+                data = $(this.templates.providerDatasource()),
+                tabs = null,
+                buttons = [
+                    {
+                        type: 'cancel',
+                        align: 'left'
+                    },
+                    {
+                        type: 'ok',
+                        text: this.translations.save,
+                        align: 'right'
+                    }
+                ];
 
-            var buttons = [
-                {
-                    type: 'cancel',
-                    align: 'left'
-                },
-                {
-                    type: 'ok',
-                    text: this.translations.save,
-                    align: 'right'
-                }
-            ];
+            this.sandbox.dom.append(this.$el, $element);
 
             if (!!this.options.link.href) {
                 buttons.push({
@@ -137,6 +148,14 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                 });
             }
 
+            if (!!this.config.slideOptions.tabs) {
+                tabs = _.map(this.config.slideOptions.tabs, function(tab) {
+                    return _.extend({data: data}, tab)
+                });
+
+                data = null;
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -145,18 +164,19 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                         removeOnClose: true,
                         el: $element,
                         container: this.$el,
-                        skin: 'medium',
+                        skin: 'large',
                         instanceName: 'internal-link',
                         slides: [
                             {
-                                title: this.translations.internalLink,
+                                title: title,
                                 data: this.templates.form({translations: this.translations}),
                                 buttons: buttons,
                                 okCallback: this.save.bind(this)
                             },
                             {
-                                title: this.translations.internalLink,
-                                data: this.templates.contentDatasource(),
+                                title: title,
+                                data: data,
+                                tabs: tabs,
                                 cssClass: 'data-source-slide',
                                 contentSpacing: false,
                                 buttons: [
@@ -194,52 +214,34 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                         }
                     },
                     {
-                        name: 'content-datasource@sulucontent',
-                        options: {
-                            el: '#href-select',
-                            selected: this.options.link.href,
+                        name: this.config.component,
+                        options: _.extend({}, this.config.componentOptions, {
+                            el: '#provider-data-source',
+                            link: this.options.link,
                             webspace: this.options.webspace,
                             locale: this.options.locale,
-                            selectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=all',
-                            rootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=all',
-                            resultKey: 'nodes',
-                            instanceName: 'internal-link',
-                            instanceNamePrefix: '',
-                            showStatus: true,
-                            selectCallback: function(id, path, title, item) {
+                            setHref: function(id, title, published) {
+                                if (!!id && !!title) {
+                                    this.setHref(id, title, published);
+                                }
+
+                                this.showHrefInput();
+                            }.bind(this),
+                            selectCallback: function(id, title, published) {
                                 var $value = $('#internal-link-href-value');
                                 $value.val(title);
                                 $('#internal-link-href-button-clear').show();
 
                                 this.href = id;
                                 this.hrefTitle = title;
-                                this.hrefPublished = !!item.published;
+                                this.hrefPublished = !!published;
                                 this.sandbox.emit('husky.overlay.internal-link.slide-to', 0);
                                 $('.href-container').removeClass('husky-validate-error');
                             }.bind(this)
-                        }
+                        })
                     }
                 ]
-            ).then(function() {
-                if (!this.options.link.href) {
-                    this.showHrefInput();
-
-                    return;
-                }
-
-                this.sandbox.once('husky.column-navigation.internal-link.loaded', function() {
-                    this.sandbox.emit('husky.column-navigation.internal-link.get-breadcrumb', function(breadcrumb) {
-                        if (breadcrumb.length === 0) {
-                            this.showHrefInput();
-
-                            return;
-                        }
-
-                        this.setHref(breadcrumb[breadcrumb.length - 1]);
-                        this.showHrefInput();
-                    }.bind(this));
-                }.bind(this));
-            }.bind(this));
+            );
         },
 
         showHrefInput: function() {
