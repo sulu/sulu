@@ -324,7 +324,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=50x50');
 
         $this->assertRegExp(
-            '/\/uploads\/media\/50x50\/\d{2}\/' . $media->getId() . '-photo.jpeg\?v=1/',
+            '/\/uploads\/media\/50x50\/\d{2}\/' . $media->getId() . '-photo.jpg\?v=1-0/',
             $client->getResponse()->headers->get('location')
         );
     }
