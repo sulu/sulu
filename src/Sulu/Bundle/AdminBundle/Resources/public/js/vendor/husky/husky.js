@@ -43720,7 +43720,6 @@ define('__component__$overlay@husky',[], function() {
             data: '',
             panelContent: '',
             tabs: null,
-            contentSpacing: true,
             okInactive: false,
             buttonsDefaultAlign: 'center',
             cancelDefaultText: 'public.cancel',
@@ -46075,7 +46074,6 @@ define('__component__$input@husky',[], function() {
             },
             date: {
                 frontIcon: 'calendar',
-                placeholder: 'TT - MM - JJJJ',
                 renderMethod: 'datepicker'
             },
             time: {
