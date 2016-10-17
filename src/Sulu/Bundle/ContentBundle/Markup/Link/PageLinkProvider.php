@@ -65,7 +65,12 @@ class PageLinkProvider implements LinkProviderInterface
      */
     public function getConfiguration()
     {
-        return new LinkConfiguration('content.ckeditor.page-link', 'ckeditor/link/page@sulucontent');
+        return new LinkConfiguration(
+            'content.ckeditor.page-link',
+            'ckeditor/link/page@sulucontent',
+            [],
+            ['noSpacing' => true]
+        );
     }
 
     /**
