@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2955 [ContentBundle]       Fixed changing block types when maxOccurs are reached
+    * HOTFIX      #2959 [All]                 Fixed compatibility for twig 1.26
 
 * 1.3.1 (2016-09-15)
     * HOTFIX      #2922 [WebsiteBundle]       Avoid seo information injected by url
