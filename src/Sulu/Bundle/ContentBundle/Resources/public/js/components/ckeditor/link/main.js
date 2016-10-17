@@ -178,7 +178,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, formTem
                                 data: data,
                                 tabs: tabs,
                                 cssClass: 'data-source-slide',
-                                contentSpacing: false,
+                                contentSpacing: !this.config.slideOptions.noSpacing,
                                 buttons: [
                                     {
                                         type: 'cancel',

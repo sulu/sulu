@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2985 [ContentBundle]       Fixed link-provider overlay-spacing
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
     * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
     * FEATURE     #2967 [ContentBundle]       Refactored link-tag to allow extending over provider
