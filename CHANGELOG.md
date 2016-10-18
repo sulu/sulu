@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2988 [ContentBundle]       Fixed sulu-link if selection in ckeditor is empty
     * BUGFIX      #2985 [ContentBundle]       Fixed link-provider overlay-spacing
     * BUGFIX      #2983 [AdminBundle]         Removed default placeholder for datepicker
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content

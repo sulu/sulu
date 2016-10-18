@@ -68,7 +68,7 @@ define(['underscore', 'services/husky/expression'], function(_, Expression) {
             var url = _.template(this.options.hrefUrl, this.options);
             this.sandbox.util.load(url).then(function(data) {
                 this.options.setHref(
-                    data[this.options.idKey], data[this.options.titleKey], this.isPublished(item)
+                    data[this.options.idKey], data[this.options.titleKey], this.isPublished(data)
                 );
             }.bind(this));
         },
