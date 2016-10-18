@@ -58,7 +58,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
  *
- * @deprecated since 1.0-? use the DocumentManager instead.
+ * @deprecated since 1.0-? use the DocumentManager instead
  */
 class ContentMapper implements ContentMapperInterface
 {
@@ -942,7 +942,7 @@ class ContentMapper implements ContentMapperInterface
         $shortPath = $this->inspector->getContentPath($originalDocument);
 
         $documentData = [
-            'uuid' => $document->getUuid(),
+            'uuid' => $originalDocument->getUuid(),
             'nodeType' => $redirectType,
             'path' => $shortPath,
             'changed' => $document->getChanged(),
