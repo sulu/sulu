@@ -10,6 +10,10 @@ define([
     var config = Config.get('sulu_content.link_provider.configuration');
 
     var getLinkBySelection = function(selection) {
+            if (!selection.getStartElement()) {
+                return null;
+            }
+
             var element = selection.getStartElement(),
                 linkElement = element.getAscendant('sulu:link', true);
 
@@ -29,6 +33,10 @@ define([
         },
 
         hasLinkBySelection = function(selection) {
+            if (!selection.getStartElement()) {
+                return false;
+            }
+
             var element = selection.getStartElement(),
                 linkElement = element.getAscendant('sulu:link', true);
 
