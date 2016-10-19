@@ -77,6 +77,10 @@ define([
             this.bindCollectionViewEvents();
             this.bindManagerEvents();
             this.bindOverlayEvents();
+
+            if (this.options.editId) {
+                this.editMedia(this.options.editId);
+            }
         },
 
         bindCollectionViewEvents: function() {
