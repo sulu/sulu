@@ -8,6 +8,7 @@
             <index columns="mimeType"/>
             <index columns="size"/>
             <index columns="version"/>
+            <index columns="name"/>
         </indexes>
 
         <id name="id" type="integer" column="id">

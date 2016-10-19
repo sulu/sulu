@@ -694,7 +694,7 @@ class ContentMapper implements ContentMapperInterface
         $shortPath = $this->inspector->getContentPath($originalDocument);
 
         $documentData = [
-            'uuid' => $document->getUuid(),
+            'uuid' => $originalDocument->getUuid(),
             'nodeType' => $redirectType,
             'path' => $shortPath,
             'changed' => $document->getChanged(),

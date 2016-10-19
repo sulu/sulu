@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2989 [ContentBundle]       Fixed internal-link-uuid in query-builder
+    * HOTFIX      #2989 [MediaBundle]         Added file-version name database-index
+
 * 1.3.2 (2016-11-03)
     * HOTFIX      #2995 [MediaBundle]         Fixed namespace collision in media entity
     * HOTFIX      #2955 [ContentBundle]       Fixed changing block types when maxOccurs are reached
