@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2992 [ContentBundle]       Fixed page-link-provider without request
     * BUGFIX      #2991 [MediaBundle]         Reintroduced media deep-link
     * BUGFIX      #2988 [ContentBundle]       Fixed sulu-link if selection in ckeditor is empty
     * BUGFIX      #2985 [ContentBundle]       Fixed link-provider overlay-spacing

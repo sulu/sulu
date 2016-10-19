@@ -75,7 +75,6 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
-        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $this->request->getScheme()->willReturn($this->scheme);
 
         $this->pageLinkProvider = new PageLinkProvider(
@@ -96,6 +95,8 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testPreload()
     {
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1'),
             $this->createContent(2, 'Test 2', '/test-2', new \DateTime('-1 day')),
@@ -108,9 +109,9 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             Argument::that(
                 function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
-                    && !$mapping->shouldHydrateGhost()
-                    && $mapping->onlyPublished()
-                    && ['title', 'published'] === $mapping->getProperties();
+                        && !$mapping->shouldHydrateGhost()
+                        && $mapping->onlyPublished()
+                        && ['title', 'published'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -138,6 +139,8 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testPreloadRemoved()
     {
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1'),
             $this->createContent(2, 'Test 2', '/test-2', new \DateTime('-1 day')),
@@ -149,9 +152,9 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             Argument::that(
                 function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
-                    && !$mapping->shouldHydrateGhost()
-                    && $mapping->onlyPublished()
-                    && ['title', 'published'] === $mapping->getProperties();
+                        && !$mapping->shouldHydrateGhost()
+                        && $mapping->onlyPublished()
+                        && ['title', 'published'] === $mapping->getProperties();
                 }
             )
         )->shouldBeCalledTimes(1)->willReturn($contents);
@@ -170,6 +173,38 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/' . $this->locale . $contents[1]->getUrl(), $result[1]->getUrl());
         $this->assertEquals($contents[1]->getPropertyWithDefault('title'), $result[1]->getTitle());
         $this->assertEquals(!empty($contents[1]->getPropertyWithDefault('published')), $result[1]->isPublished());
+    }
+
+    public function testPreloadNoRequest()
+    {
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+
+        $contents = [
+            $this->createContent(1, 'Test 1', '/test-1'),
+        ];
+
+        $this->contentRepository->findByUuids(
+            [1],
+            $this->locale,
+            Argument::that(
+                function (MappingInterface $mapping) {
+                    return $mapping->resolveUrl()
+                    && !$mapping->shouldHydrateGhost()
+                    && $mapping->onlyPublished()
+                    && ['title', 'published'] === $mapping->getProperties();
+                }
+            )
+        )->shouldBeCalledTimes(1)->willReturn($contents);
+
+        /** @var LinkItem[] $result */
+        $result = $this->pageLinkProvider->preload([1], $this->locale, true);
+
+        $this->assertCount(1, $result);
+
+        $this->assertEquals($contents[0]->getId(), $result[0]->getId());
+        $this->assertEquals('/' . $this->locale . $contents[0]->getUrl(), $result[0]->getUrl());
+        $this->assertEquals($contents[0]->getPropertyWithDefault('title'), $result[0]->getTitle());
+        $this->assertEquals(!empty($contents[0]->getPropertyWithDefault('published')), $result[0]->isPublished());
     }
 
     /**

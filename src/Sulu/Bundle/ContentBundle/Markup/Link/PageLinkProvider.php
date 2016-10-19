@@ -79,7 +79,10 @@ class PageLinkProvider implements LinkProviderInterface
     public function preload(array $hrefs, $locale, $published = true)
     {
         $request = $this->requestStack->getCurrentRequest();
-        $scheme = $request->getScheme();
+        $scheme = 'http';
+        if ($request) {
+            $scheme = $request->getScheme();
+        }
 
         $contents = $this->contentRepository->findByUuids(
             array_unique(array_values($hrefs)),
