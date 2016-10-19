@@ -11,7 +11,9 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
+use Prophecy\Argument;
 use Sulu\Component\Content\Metadata\Loader\XmlLoader;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 
 class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,18 +22,30 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
      */
     private $loader;
 
+    /**
+     * @var CacheLifetimeResolverInterface
+     */
+    private $cacheLifetimeResolver;
+
     public function setUp()
     {
-        $this->loader = new XmlLoader();
+        $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $this->loader = new XmlLoader($this->cacheLifetimeResolver->reveal());
     }
 
     public function testLoadTemplate()
     {
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
         $result = $this->load('template.xml');
     }
 
     public function testLoadBlockMetaTitles()
     {
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
         $result = $this->load('template_block_types.xml');
 
         $blockTypes = $result->getProperty('block1')->getComponents();
@@ -46,6 +60,9 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadBlockTypeWithoutMeta()
     {
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
         $result = $this->load('template_block_type_without_meta.xml');
 
         $this->assertCount(1, $result->getProperty('block1')->getComponents());
@@ -53,6 +70,9 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
 
     private function load($name)
     {
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
         $result = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Page/' . $name
         );

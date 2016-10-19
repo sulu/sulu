@@ -24,6 +24,7 @@
         </service>
 
         <service id="sulu_http_cache.handler.public" class="Sulu\Component\HttpCache\Handler\PublicHandler">
+            <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument>%sulu_http_cache.handler.public.max_age%</argument>
             <argument>%sulu_http_cache.handler.public.shared_max_age%</argument>
             <argument>%sulu_http_cache.handler.public.use_page_ttl%</argument>
@@ -31,6 +32,7 @@
         </service>
 
         <service id="sulu_http_cache.handler.debug" class="Sulu\Component\HttpCache\Handler\DebugHandler">
+            <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument>%sulu_http_cache.handler.aggregate.handlers%</argument>
             <argument>%sulu_http_cache.proxy_client.name%</argument>
             <tag name="sulu_http_cache.handler" alias="debug" />

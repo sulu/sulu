@@ -38,6 +38,7 @@ class SuluHttpCacheExtension extends Extension
         $loader->load('event-subscribers.xml');
         $loader->load('proxy-client.xml');
         $loader->load('structure-cache-handlers.xml');
+        $loader->load('services.xml');
 
         $this->configureProxyClient($config['proxy_client'], $container);
         $this->configureStructureCacheHandlers($config['handlers'], $container);

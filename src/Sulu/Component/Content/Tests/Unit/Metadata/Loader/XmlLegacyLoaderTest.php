@@ -12,7 +12,9 @@
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
 use InvalidArgumentException;
+use Prophecy\Argument;
 use Sulu\Component\Content\Metadata\Loader\XmlLegacyLoader;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 
 class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +32,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'tags' => [
                 [
                     'name' => 'some.random.structure.tag',
@@ -260,7 +262,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'properties' => [
                 'title_section' => [
                     'name' => 'title_section',
@@ -330,7 +332,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'properties' => [],
             'tags' => [],
             'meta' => [],
@@ -358,7 +360,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_block',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
-            'cacheLifetime' => 4800,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 4800],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -641,7 +643,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_block_types',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
-            'cacheLifetime' => 4800,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 4800],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -853,7 +855,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_sections',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1058,7 +1060,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_nesting_params',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1124,7 +1126,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template_meta_params',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1194,7 +1196,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'The tag with the name "sulu.rlp" is required, but was not found in the template "template"'
         );
 
-        $templateReader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
             implode(
                 DIRECTORY_SEPARATOR,
@@ -1206,7 +1210,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testWithoutRlpTagTypePageInternal()
     {
-        $templateReader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
             implode(
                 DIRECTORY_SEPARATOR,
@@ -1226,7 +1232,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'The tag with the name "sulu.rlp" is required, but was not found in the template "template"'
         );
 
-        $templateReader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
             implode(
                 DIRECTORY_SEPARATOR,
@@ -1238,7 +1246,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testWithoutRlpTagTypeHomeInternal()
     {
-        $templateReader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
             implode(
                 DIRECTORY_SEPARATOR,
@@ -1253,7 +1263,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testWithoutRlpTagTypeSnippet()
     {
-        $templateReader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
             implode(
                 DIRECTORY_SEPARATOR,
@@ -1269,12 +1281,17 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     public function testCacheLifeTimeZero()
     {
         $result = $this->loadFixture('template_lifetime_0.xml');
-        $this->assertSame(0, $result['cacheLifetime']);
+        $this->assertEquals(
+            ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 0],
+            $result['cacheLifetime']
+        );
     }
 
     public function testWithoutRlpTagTypeSnippetInternal()
     {
-        $templateReader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
             implode(
                 DIRECTORY_SEPARATOR,
@@ -1297,7 +1314,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifetime' => 2400,
+            'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'tags' => [],
             'meta' => [
                 'title' => [
@@ -1347,6 +1364,41 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($x));
     }
 
+    public function testLoadCacheLifetimeExpression()
+    {
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_EXPRESSION, '@daily')->willReturn(true);
+        $xmlLegacyLoader = new XmlLegacyLoader($resolver->reveal());
+        $result = $xmlLegacyLoader->load(
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_expression.xml']
+            ),
+            'page'
+        );
+
+        $this->assertEquals(
+            ['type' => CacheLifetimeResolverInterface::TYPE_EXPRESSION, 'value' => '@daily'],
+            $result['cacheLifetime']
+        );
+    }
+
+    public function testLoadCacheLifetimeInvalidExpression()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_EXPRESSION, 'test')->willReturn(false);
+        $xmlLegacyLoader = new XmlLegacyLoader($resolver->reveal());
+        $result = $xmlLegacyLoader->load(
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_invalid_expression.xml']
+            ),
+            'page'
+        );
+    }
+
     private function arrayRecursiveDiff($aArray1, $aArray2)
     {
         $aReturn = [];
@@ -1373,7 +1425,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     private function loadFixture($name, $type = 'page')
     {
-        $xmlLegacyLoader = new XmlLegacyLoader();
+        $resolver = $this->prophesize(CacheLifetimeResolverInterface::class);
+        $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
+        $xmlLegacyLoader = new XmlLegacyLoader($resolver->reveal());
         $result = $xmlLegacyLoader->load(
             implode(DIRECTORY_SEPARATOR, [$this->getResourceDirectory(), 'DataFixtures', 'Page', $name]),
             $type
