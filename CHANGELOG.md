@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2995 [MediaBundle]         Fixed namespace collision in media entity
     * HOTFIX      #2955 [ContentBundle]       Fixed changing block types when maxOccurs are reached
     * HOTFIX      #2959 [All]                 Fixed compatibility for twig 1.26
 
