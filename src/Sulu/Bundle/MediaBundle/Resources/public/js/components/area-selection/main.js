@@ -36,7 +36,17 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
         },
 
         constants = {
-            selectedTileClass: 'selected'
+            tileRows: 3,
+            tileColumns: 3,
+            selectedTileClass: 'selected',
+            arrowUpClass: 'up',
+            arrowUpRightClass: 'up-right',
+            arrowRightClass: 'right',
+            arrowDownRightClass: 'down-right',
+            arrowDownClass: 'down',
+            arrowDownLeftClass: 'down-left',
+            arrowLeftClass: 'left',
+            arrowUpLeftClass: 'up-left'
         },
 
         /**
@@ -261,6 +271,17 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 this.area.$el.css('cursor', 'move');
             }
 
+            if (!!this.options.tileSelectable) {
+                this.$lines = this.$el.find('.lines');
+                this.$tileArrows = this.$lines.find('.tile .arrow');
+
+                this.$tileArrowMatrix = [
+                    [this.$tileArrows[0], this.$tileArrows[3], this.$tileArrows[6]],
+                    [this.$tileArrows[1], this.$tileArrows[4], this.$tileArrows[7]],
+                    [this.$tileArrows[2], this.$tileArrows[5], this.$tileArrows[8]]
+                ];
+            }
+
             return whenImageLoaded;
         },
 
@@ -272,6 +293,39 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
         selectTile: function($tile) {
             this.$el.find('.lines .tile').removeClass(constants.selectedTileClass);
             $tile.addClass(constants.selectedTileClass);
+
+            this.setTileArrows($tile);
+        },
+
+        setTileArrows: function($tile) {
+            var x = $tile.index(),
+                y = $tile.parent().index();
+
+            this.$tileArrows.removeClass(constants.arrowUpClass);
+            this.$tileArrows.removeClass(constants.arrowUpRightClass);
+            this.$tileArrows.removeClass(constants.arrowRightClass);
+            this.$tileArrows.removeClass(constants.arrowDownRightClass);
+            this.$tileArrows.removeClass(constants.arrowDownClass);
+            this.$tileArrows.removeClass(constants.arrowDownLeftClass);
+            this.$tileArrows.removeClass(constants.arrowLeftClass);
+            this.$tileArrows.removeClass(constants.arrowUpLeftClass);
+
+            this.setTileArrow(x, y - 1, constants.arrowUpClass);
+            this.setTileArrow(x + 1, y - 1, constants.arrowUpRightClass);
+            this.setTileArrow(x + 1, y, constants.arrowRightClass);
+            this.setTileArrow(x + 1, y + 1, constants.arrowDownRightClass);
+            this.setTileArrow(x, y + 1, constants.arrowDownClass);
+            this.setTileArrow(x - 1, y + 1, constants.arrowDownLeftClass);
+            this.setTileArrow(x - 1, y, constants.arrowLeftClass);
+            this.setTileArrow(x - 1, y - 1, constants.arrowUpLeftClass);
+        },
+
+        setTileArrow: function(x, y, className) {
+            if (x < 0 || y < 0 || x >= constants.tileColumns || y >= constants.tileRows) {
+                return;
+            }
+
+            $(this.$tileArrowMatrix[x][y]).addClass(className);
         },
 
         /**

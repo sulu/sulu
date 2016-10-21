@@ -43,6 +43,63 @@
 
             display: table;
 
+            .arrow {
+                color: $white;
+                font-size: 40px;
+                position: absolute;
+                top: calc(50% - 20px);
+                left: 0;
+                right: 0;
+
+                &:before {
+                    opacity: 0.99;
+                }
+
+                &.up:before {
+                    content: "";
+                }
+
+                &.up-right {
+                    transform: rotate(-45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.right:before {
+                    content: "";
+                }
+
+                &.down-right {
+                    transform: rotate(45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.down:before {
+                    content: "";
+                }
+
+                &.down-left {
+                    transform: rotate(-45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.left:before {
+                    content: "";
+                }
+
+                &.up-left {
+                    transform: rotate(45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+            }
+
             .top, .middle, .bottom {
                 height: calc(100% / 3);
                 display: table-row;
