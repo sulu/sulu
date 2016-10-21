@@ -330,6 +330,14 @@
                 <source>sulu-media.crop</source>
                 <target>Ausschnitte festlegen</target>
             </trans-unit>
+            <trans-unit id="215163ca7f64952w137j533499fa1b118" resname="sulu-media.focus-point">
+                <source>sulu-media.focus-point</source>
+                <target>Fokuspunkt setzen</target>
+            </trans-unit>
+            <trans-unit id="2111636a7f94951w13aj53l4993a1by18" resname="sulu-media.save-and-recrop">
+                <source>sulu-media.save-and-recrop</source>
+                <target>Speichern &amp; neu ausschneiden</target>
+            </trans-unit>
             <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
                 <source>sulu-media.crop-save-success</source>
                 <target>Ausschnitt erfolgreich gespeichert</target>

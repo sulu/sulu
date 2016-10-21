@@ -74,7 +74,7 @@ define(['services/sulumedia/media-manager', 'text!./toolbar-slide.html'], functi
                         {
                             id: 'save',
                             icon: 'floppy-o',
-                            title: 'public.save-and-apply',
+                            title: 'sulu-media.save-and-recrop',
                             disabled: true,
                             callback: saveClickHandler.bind(this)
                         }
