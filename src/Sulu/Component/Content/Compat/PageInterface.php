@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Compat\StructureExtension\StructureExtensionInterface;
-
 /**
  * Structure for template.
  */
@@ -35,7 +33,7 @@ interface PageInterface extends StructureInterface
     /**
      * cacheLifeTime of template definition.
      *
-     * @return int
+     * @return array
      */
     public function getCacheLifeTime();
 
@@ -62,7 +60,7 @@ interface PageInterface extends StructureInterface
     public function setNavContexts($navContexts);
 
     /**
-     * @return StructureExtensionInterface[]
+     * @return array
      */
     public function getExt();
 

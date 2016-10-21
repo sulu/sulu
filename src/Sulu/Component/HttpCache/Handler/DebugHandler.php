@@ -14,6 +14,7 @@ namespace Sulu\Component\HttpCache\Handler;
 use Sulu\Component\Content\Compat\PageInterface;
 use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,6 +30,11 @@ class DebugHandler implements HandlerUpdateResponseInterface
     const HEADER_STRUCTURE_TTL = 'X-Sulu-Page-TTL';
 
     /**
+     * @var CacheLifetimeResolverInterface
+     */
+    private $cacheLifetimeResolver;
+
+    /**
      * @var string[]
      */
     private $handlerNames;
@@ -39,13 +45,16 @@ class DebugHandler implements HandlerUpdateResponseInterface
     private $proxyClientName;
 
     /**
-     * @param array List of handlers (strings)
-     * @param string Current proxy client nme
+     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
+     * @param array $handlerNames List of handlers (strings)
+     * @param string $proxyClientName Current proxy client name
      */
     public function __construct(
+        CacheLifetimeResolverInterface $cacheLifetimeResolver,
         $handlerNames,
         $proxyClientName
     ) {
+        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->handlerNames = $handlerNames;
         $this->proxyClientName = $proxyClientName;
     }
@@ -62,7 +71,9 @@ class DebugHandler implements HandlerUpdateResponseInterface
 
         // Structures implementing PageInterface have a TTL
         if ($structure instanceof PageInterface) {
-            $response->headers->set(self::HEADER_STRUCTURE_TTL, $structure->getCacheLifeTime());
+            $cacheLifetimeData = $structure->getCacheLifeTime();
+            $cacheLifeTime = $this->cacheLifetimeResolver->resolve($cacheLifetimeData['type'], $cacheLifetimeData['value']);
+            $response->headers->set(self::HEADER_STRUCTURE_TTL, $cacheLifeTime);
         }
     }
 }

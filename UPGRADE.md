@@ -1,5 +1,62 @@
 # Upgrade
 
+## dev-develop
+
+### Page-Templates
+
+The cache-lifetime of page-templates was extended by the `type` attribute.
+This attribute is optional and default set to seconds which behaves like
+before and set the `max-age` to given integer.
+
+There is now a second type `expression` which allows you to define the
+lifetime with a cron-expression which enhances the developer to define
+that a page has to be invalidated at a specific time of the day (or
+whatever you need).
+
+__BEFORE:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+__NOW:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+
+    <!-- releases cache each day at mitnight -->
+    <cacheLifetime type="expression">@daily</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+Therefor we changed the type of the return value for `Sulu\Component\Content\Compat\StructureInterface::getCacheLifeTime`
+to array. This array contains the `type` and the `value` of the configured
+cache-lifetime.
+
+For resolving this array to a concrete second value we introduced the service
+`sulu_http_cache.cache_lifetime.resolver` there you can call the `resolve`
+function which returns the concrete second value.
+
 ## 1.4.0-RC1
 
 ### Refactored category management in backend
