@@ -15,6 +15,9 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 
+/**
+ * Calculate the crop for the given image based on the give focus point.
+ */
 class Focus implements FocusInterface
 {
     const FOCUS_LEFT = 0;
@@ -26,13 +29,7 @@ class Focus implements FocusInterface
     const FOCUS_BOTTOM = 2;
 
     /**
-     * @param ImageInterface $image The image to crop
-     * @param int $x The x coordinate of the focus point
-     * @param int $y The y coordinate of the focuse point
-     * @param int $width The desired width of the resulting image
-     * @param int $height The desired height of the resulting image
-     *
-     * @return ImageInterface
+     * {@inheritdoc}
      */
     public function focus(ImageInterface $image, $x, $y, $width, $height)
     {

@@ -19,6 +19,8 @@ use Imagine\Image\ImageInterface;
 interface FocusInterface
 {
     /**
+     * Crops the given image based on a set focus point.
+     *
      * @param ImageInterface $image The image to crop
      * @param int $x The x coordinate of the focus point
      * @param int $y The y coordinate of the focuse point

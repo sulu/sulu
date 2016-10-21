@@ -215,6 +215,15 @@ class ImagineImageConverter implements ImageConverterInterface
         );
     }
 
+    /**
+     * Crops the given image according to the focus point defined in the file version.
+     *
+     * @param ImageInterface $image
+     * @param FileVersion $fileVersion
+     * @param array $scale
+     *
+     * @return ImageInterface
+     */
     private function applyFocus(ImageInterface $image, FileVersion $fileVersion, array $scale)
     {
         return $this->modifyAllLayers(
