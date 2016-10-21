@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
+use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -22,6 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
@@ -364,6 +366,20 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->increaseSubVersion()->shouldNotBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testVideoUploadWithoutFFmpeg()
+    {
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.ogg');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('video/ogg');
+        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class);
+
+        $this->mediaRepository->createNew()->willReturn(new Media());
+
+        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
     }
 
     public function provideGetByIds()
