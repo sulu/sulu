@@ -19,18 +19,6 @@ use Sulu\Component\Webspace\Portal;
 interface XmlSitemapRendererInterface
 {
     /**
-     * Returns path of sitemap-index.
-     *
-     * @param string $scheme
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $url
-     *
-     * @return string
-     */
-    public function getIndexDumpPath($scheme, $webspaceKey, $locale, $url);
-
-    /**
      * Render sitemap-index.
      *
      * If returns null there is no index available.
@@ -41,20 +29,6 @@ interface XmlSitemapRendererInterface
      * @return null|string
      */
     public function renderIndex($domain = null, $scheme = null);
-
-    /**
-     * Returns path of sitemap.
-     *
-     * @param string $scheme
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $url
-     * @param string $alias
-     * @param int $page
-     *
-     * @return string
-     */
-    public function getDumpPath($scheme, $webspaceKey, $locale, $url, $alias, $page);
 
     /**
      * Render sitemap for a given alias.

@@ -30,38 +30,15 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
     private $engine;
 
     /**
-     * @var string
-     */
-    private $baseDirectory;
-
-    /**
      * @param SitemapProviderPoolInterface $sitemapProviderPool
      * @param EngineInterface $engine
-     * @param string $baseDirectory
      */
     public function __construct(
         SitemapProviderPoolInterface $sitemapProviderPool,
-        EngineInterface $engine,
-        $baseDirectory
+        EngineInterface $engine
     ) {
         $this->sitemapProviderPool = $sitemapProviderPool;
         $this->engine = $engine;
-        $this->baseDirectory = $baseDirectory;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIndexDumpPath($scheme, $webspaceKey, $locale, $url)
-    {
-        return sprintf(
-            '%s/%s/%s/%s/%s/sitemap.xml',
-            rtrim($this->baseDirectory, '/'),
-            $scheme,
-            $webspaceKey,
-            $locale,
-            $url
-        );
     }
 
     /**
@@ -76,23 +53,6 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
             ['sitemaps' => $this->sitemapProviderPool->getIndex(), 'domain' => $domain, 'scheme' => $scheme]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDumpPath($scheme, $webspaceKey, $locale, $url, $alias, $page)
-    {
-        return sprintf(
-            '%s/%s/%s/%s/%s/sitemaps/%s-%s.xml',
-            rtrim($this->baseDirectory, '/'),
-            $scheme,
-            $webspaceKey,
-            $locale,
-            $url,
-            $alias,
-            $page
         );
     }
 

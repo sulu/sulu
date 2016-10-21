@@ -17,7 +17,14 @@
         <service id="sulu_website.sitemap.xml_renderer" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer">
             <argument type="service" id="sulu_website.sitemap.pool"/>
             <argument type="service" id="templating"/>
+        </service>
+
+        <service id="sulu_website.sitemap.xml_dumper" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumper">
+            <argument type="service" id="sulu_website.sitemap.xml_renderer"/>
+            <argument type="service" id="sulu_website.sitemap.pool"/>
+            <argument type="service" id="filesystem"/>
             <argument type="string">%sulu_website.sitemap.dump_dir%</argument>
+            <argument type="string">%sulu_website.sitemap.default_host%</argument>
         </service>
     </services>
 </container>

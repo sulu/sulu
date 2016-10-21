@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Command;
 
-use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
-use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface;
+use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,19 +27,14 @@ use Symfony\Component\Filesystem\Filesystem;
 class DumpSitemapCommand extends ContainerAwareCommand
 {
     /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
 
     /**
-     * @var XmlSitemapRendererInterface
+     * @var XmlSitemapDumperInterface
      */
-    private $sitemapRenderer;
+    private $sitemapDumper;
 
     /**
      * @var Filesystem
@@ -64,11 +59,6 @@ class DumpSitemapCommand extends ContainerAwareCommand
     /**
      * @var string
      */
-    private $defaultHost;
-
-    /**
-     * @var string
-     */
     private $scheme = 'http';
 
     /**
@@ -87,14 +77,12 @@ class DumpSitemapCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $this->sitemapProviderPool = $this->getContainer()->get('sulu_website.sitemap.pool');
-        $this->sitemapRenderer = $this->getContainer()->get('sulu_website.sitemap.xml_renderer');
+        $this->sitemapDumper = $this->getContainer()->get('sulu_website.sitemap.xml_dumper');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->filesystem = new Filesystem();
 
         $this->environment = $this->getContainer()->getParameter('kernel.environment');
         $this->baseDirectory = $this->getContainer()->getParameter('sulu_website.sitemap.dump_dir');
-        $this->defaultHost = $this->getContainer()->getParameter('sulu_website.sitemap.default_host');
 
         if ($input->getOption('https')) {
             $this->scheme = 'https';
@@ -107,130 +95,38 @@ class DumpSitemapCommand extends ContainerAwareCommand
         $output->writeln('Start dumping "sitemap.xml" files:');
 
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
-            foreach ($webspace->getAllLocalizations() as $localization) {
-                $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
+            $this->dumpWebspace($webspace);
+        }
+    }
+
+    /**
+     * Dump given webspace.
+     *
+     * @param Webspace $webspace
+     */
+    private function dumpWebspace(Webspace $webspace)
+    {
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $this->output->writeln(sprintf(' - %s (%s)', $webspace->getKey(), $localization->getLocale()));
+            $this->dumpPortalInformations(
+                $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
                     $webspace->getKey(),
                     $localization->getLocale(),
                     $this->environment
-                );
-                foreach ($portalInformations as $portalInformation) {
-                    $this->dumpSitemap($portalInformation);
-                }
-            }
-        }
-    }
-
-    /**
-     * Dump sitemaps for portal-information.
-     *
-     * @param PortalInformation $portalInformation
-     */
-    private function dumpSitemap(PortalInformation $portalInformation)
-    {
-        if (false !== strpos($portalInformation->getUrl(), '{host}')) {
-            if (!$this->defaultHost) {
-                return;
-            }
-
-            $portalInformation->setUrl(str_replace('{host}', $this->defaultHost, $portalInformation->getUrl()));
-        }
-
-        $filePath = $this->sitemapRenderer->getIndexDumpPath(
-            $this->scheme,
-            $portalInformation->getWebspaceKey(),
-            $portalInformation->getLocale(),
-            $portalInformation->getHost()
-        );
-
-        $sitemap = $this->sitemapRenderer->renderIndex($portalInformation->getHost(), $this->scheme);
-        if (!$sitemap) {
-            $aliases = array_keys($this->sitemapProviderPool->getProviders());
-
-            $this->dumpFile(
-                $filePath,
-                $this->sitemapRenderer->renderSitemap(
-                    reset($aliases),
-                    1,
-                    $portalInformation->getLocale(),
-                    $portalInformation->getPortal(),
-                    $portalInformation->getHost(),
-                    $this->scheme
                 )
             );
-
-            return;
-        }
-
-        $this->dumpFile($filePath, $sitemap);
-
-        foreach ($this->sitemapProviderPool->getProviders() as $alias => $provider) {
-            $this->dumpProviderSitemap($alias, $portalInformation);
         }
     }
 
     /**
-     * Render sitemap for provider.
+     * Dump given portal-informations.
      *
-     * @param string $alias
-     * @param PortalInformation $portalInformation
+     * @param PortalInformation[] $portalInformations
      */
-    private function dumpProviderSitemap($alias, PortalInformation $portalInformation)
+    private function dumpPortalInformations(array $portalInformations)
     {
-        $page = 1;
-        do {
-            $sitemap = $this->sitemapRenderer->renderSitemap(
-                $alias,
-                $page,
-                $portalInformation->getLocale(),
-                $portalInformation->getPortal(),
-                $portalInformation->getHost(),
-                $this->scheme
-            );
-
-            $this->dumpFile(
-                $this->sitemapRenderer->getDumpPath(
-                    $this->scheme,
-                    $portalInformation->getWebspaceKey(),
-                    $portalInformation->getLocale(),
-                    $portalInformation->getHost(),
-                    $alias,
-                    $page++
-                ),
-                $sitemap
-            );
-        } while ($sitemap !== null);
-    }
-
-    /**
-     * Dump content into given filename.
-     *
-     * @param string $filePath
-     * @param string $content
-     */
-    private function dumpFile($filePath, $content)
-    {
-        if (!$content) {
-            return;
+        foreach ($portalInformations as $portalInformation) {
+            $this->sitemapDumper->dumpPortalInformation($portalInformation, $this->scheme);
         }
-
-        $this->output->writeln(sprintf(' - %s://%s', $this->scheme, $this->extractUrl($filePath)));
-
-        $this->filesystem->dumpFile($filePath, $content);
-    }
-
-    /**
-     * Returns url of given sitemap-dump path.
-     *
-     * @param $path
-     *
-     * @return string
-     */
-    private function extractUrl($path)
-    {
-        $path = substr($path, strlen($this->baseDirectory) + strlen($this->scheme) + 2);
-
-        preg_match('/([^\/]+)\/([^\/]+)\/(?<url>.+)/', $path, $matches);
-
-        return $matches['url'];
     }
 }

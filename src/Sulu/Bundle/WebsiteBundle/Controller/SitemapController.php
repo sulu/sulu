@@ -62,7 +62,7 @@ class SitemapController extends WebsiteController
             $localization = $portal->getXDefaultLocalization();
         }
 
-        $path = $this->get('sulu_website.sitemap.xml_renderer')->getIndexDumpPath(
+        $path = $this->get('sulu_website.sitemap.xml_dumper')->getIndexDumpPath(
             $request->getScheme(),
             $portal->getWebspace()->getKey(),
             $localization->getLocale(),
@@ -147,7 +147,7 @@ class SitemapController extends WebsiteController
             $localization = $portal->getXDefaultLocalization();
         }
 
-        $path = $this->get('sulu_website.sitemap.xml_renderer')->getDumpPath(
+        $path = $this->get('sulu_website.sitemap.xml_dumper')->getDumpPath(
             $request->getScheme(),
             $portal->getWebspace()->getKey(),
             $localization->getLocale(),
