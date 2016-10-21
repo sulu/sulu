@@ -80,6 +80,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.image.loader"/>
             <argument type="service" id="sulu_media.image.transformation_pool" />
+            <argument type="service" id="sulu_media.image.focus" />
             <argument type="service" id="sulu_media.image.scaler" />
             <argument type="service" id="sulu_media.image.cropper" />
             <argument>%sulu_media.image.formats%</argument>
@@ -91,6 +92,7 @@
             <argument>%sulu_media.ghost_script.path%</argument>
         </service>
 
+        <service id="sulu_media.image.focus" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus"/>
         <service id="sulu_media.image.scaler" class="%sulu_media.image.scaler.class%" />
         <service id="sulu_media.image.cropper" class="%sulu_media.image.cropper.class%" />
 

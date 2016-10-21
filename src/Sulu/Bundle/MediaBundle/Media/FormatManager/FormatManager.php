@@ -292,7 +292,7 @@ class FormatManager implements FormatManagerInterface
     {
         $info = pathinfo($filename);
 
-        switch($mimeType) {
+        switch ($mimeType) {
             case 'image/png':
             case 'image/svg+xml':
                 $extension = 'png';

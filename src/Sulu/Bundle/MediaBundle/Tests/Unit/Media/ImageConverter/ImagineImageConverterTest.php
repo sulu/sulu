@@ -19,6 +19,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\FocusInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageLoaderInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter;
@@ -49,6 +50,11 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
     private $transformationPool;
 
     /**
+     * @var FocusInterface
+     */
+    private $focus;
+
+    /**
      * @var ScalerInterface
      */
     private $scaler;
@@ -69,6 +75,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->imageLoader = $this->prophesize(ImageLoaderInterface::class);
         $this->transformationPool = $this->prophesize(TransformationPoolInterface::class);
+        $this->focus = $this->prophesize(FocusInterface::class);
         $this->scaler = $this->prophesize(ScalerInterface::class);
         $this->cropper = $this->prophesize(CropperInterface::class);
 
@@ -77,6 +84,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
             $this->storage->reveal(),
             $this->imageLoader->reveal(),
             $this->transformationPool->reveal(),
+            $this->focus->reveal(),
             $this->scaler->reveal(),
             $this->cropper->reveal(),
             [
@@ -107,6 +115,34 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
         $imagineImage->get('jpg', [])->willReturn('new-image-content');
+
+        $this->focus->focus(Argument::any())->shouldNotBeCalled();
+
+        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
+    }
+
+    public function testConvertNoFocusOnInset()
+    {
+        $imagineImage = $this->prophesize(ImageInterface::class);
+        $palette = $this->prophesize(PaletteInterface::class);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test.jpg');
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions('{}');
+
+        $this->storage->load('test.jpg', 1, '{}')->willReturn('uploads/test.jpg');
+        $this->imageLoader->load('uploads/test.jpg')->willReturn('image-content');
+        $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
+
+        $imagineImage->palette()->willReturn($palette->reveal());
+        $imagineImage->strip()->shouldBeCalled();
+        $imagineImage->layers()->willReturn(['']);
+        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
+
+        $imagineImage->get('jpg', [])->willReturn('new-image-content');
+
+        $this->focus->focus(Argument::any())->shouldNotBeCalled();
 
         $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
     }

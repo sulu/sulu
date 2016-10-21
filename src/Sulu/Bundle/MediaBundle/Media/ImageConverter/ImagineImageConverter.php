@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsExcept
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\FocusInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
@@ -50,6 +51,11 @@ class ImagineImageConverter implements ImageConverterInterface
     private $transformationPool;
 
     /**
+     * @var FocusInterface
+     */
+    private $focus;
+
+    /**
      * @var ScalerInterface
      */
     private $scaler;
@@ -65,22 +71,30 @@ class ImagineImageConverter implements ImageConverterInterface
     private $formats;
 
     /**
+     * @param ImagineInterface $imagine
+     * @param StorageInterface $storage
+     * @param ImageLoaderInterface $imageLoader
      * @param TransformationPoolInterface $transformationPool
+     * @param FocusInterface $focus
      * @param ScalerInterface $scaler
+     * @param CropperInterface $cropper
+     * @param array $formats
      */
     public function __construct(
         ImagineInterface $imagine,
         StorageInterface $storage,
         ImageLoaderInterface $imageLoader,
         TransformationPoolInterface $transformationPool,
+        FocusInterface $focus,
         ScalerInterface $scaler,
         CropperInterface $cropper,
-        $formats
+        array $formats
     ) {
         $this->imagine = $imagine;
         $this->storage = $storage;
         $this->imageLoader = $imageLoader;
         $this->transformationPool = $transformationPool;
+        $this->focus = $focus;
         $this->scaler = $scaler;
         $this->cropper = $cropper;
         $this->formats = $formats;
@@ -115,7 +129,11 @@ class ImagineImageConverter implements ImageConverterInterface
             $this->formats[$formatKey]
         );
         if (isset($cropParameters)) {
-            $image = $this->applyCrop($image, $cropParameters);
+            $image = $this->applyFormatCrop($image, $cropParameters);
+        }
+
+        if (isset($format['scale']) && $format['scale']['mode'] !== ImageInterface::THUMBNAIL_INSET) {
+            $image = $this->applyFocus($image, $fileVersion, $format['scale']);
         }
 
         if (isset($format['scale'])) {
@@ -181,7 +199,7 @@ class ImagineImageConverter implements ImageConverterInterface
      *
      * @return ImageInterface The cropped image
      */
-    private function applyCrop(ImageInterface $image, array $cropParameters)
+    private function applyFormatCrop(ImageInterface $image, array $cropParameters)
     {
         return $this->modifyAllLayers(
             $image,
@@ -192,6 +210,22 @@ class ImagineImageConverter implements ImageConverterInterface
                     $cropParameters['y'],
                     $cropParameters['width'],
                     $cropParameters['height']
+                );
+            }
+        );
+    }
+
+    private function applyFocus(ImageInterface $image, FileVersion $fileVersion, array $scale)
+    {
+        return $this->modifyAllLayers(
+            $image,
+            function(ImageInterface $layer) use ($fileVersion, $scale) {
+                return $this->focus->focus(
+                    $layer,
+                    $fileVersion->getFocusPointX(),
+                    $fileVersion->getFocusPointY(),
+                    $scale['x'],
+                    $scale['y']
                 );
             }
         );
