@@ -41,8 +41,6 @@
             height: 100%;
             border: 2px solid $white;
 
-            display: table;
-
             .arrow {
                 color: $white;
                 font-size: 40px;
@@ -102,7 +100,6 @@
 
             .top, .middle, .bottom {
                 height: calc(100% / 3);
-                display: table-row;
             }
 
             .bottom > * {
@@ -112,9 +109,11 @@
             .tile {
                 position: relative;
 
+                float: left;
+
+                height: 100%;
                 width: calc(100% / 3);
                 cursor: pointer;
-                display: table-cell;
                 border-bottom: 1px solid $white;
                 border-right: 1px solid $white;
 

@@ -96,9 +96,8 @@
   width: 100%;
   height: 100%;
   border: 2px solid #fff;
-  display: table;
 }
-/* line 46, ../scss/modules/area-selection.scss */
+/* line 44, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow {
   color: #fff;
   font-size: 40px;
@@ -107,77 +106,77 @@
   left: 0;
   right: 0;
 }
-/* line 54, ../scss/modules/area-selection.scss */
+/* line 52, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow:before {
   opacity: 0.99;
 }
-/* line 58, ../scss/modules/area-selection.scss */
+/* line 56, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.up:before {
   content: "";
 }
-/* line 62, ../scss/modules/area-selection.scss */
+/* line 60, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.up-right {
   transform: rotate(-45deg);
 }
-/* line 64, ../scss/modules/area-selection.scss */
+/* line 62, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.up-right:before {
   content: "";
 }
-/* line 69, ../scss/modules/area-selection.scss */
+/* line 67, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.right:before {
   content: "";
 }
-/* line 73, ../scss/modules/area-selection.scss */
+/* line 71, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.down-right {
   transform: rotate(45deg);
 }
-/* line 75, ../scss/modules/area-selection.scss */
+/* line 73, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.down-right:before {
   content: "";
 }
-/* line 80, ../scss/modules/area-selection.scss */
+/* line 78, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.down:before {
   content: "";
 }
-/* line 84, ../scss/modules/area-selection.scss */
+/* line 82, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.down-left {
   transform: rotate(-45deg);
 }
-/* line 86, ../scss/modules/area-selection.scss */
+/* line 84, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.down-left:before {
   content: "";
 }
-/* line 91, ../scss/modules/area-selection.scss */
+/* line 89, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.left:before {
   content: "";
 }
-/* line 95, ../scss/modules/area-selection.scss */
+/* line 93, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.up-left {
   transform: rotate(45deg);
 }
-/* line 97, ../scss/modules/area-selection.scss */
+/* line 95, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .arrow.up-left:before {
   content: "";
 }
-/* line 103, ../scss/modules/area-selection.scss */
+/* line 101, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .top, .sulu-area-selection .area .lines .middle, .sulu-area-selection .area .lines .bottom {
   height: calc(100% / 3);
-  display: table-row;
 }
-/* line 108, ../scss/modules/area-selection.scss */
+/* line 105, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .bottom > * {
   border-bottom: none;
 }
-/* line 112, ../scss/modules/area-selection.scss */
+/* line 109, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .tile {
   position: relative;
+  float: left;
+  height: 100%;
   width: calc(100% / 3);
   cursor: pointer;
-  display: table-cell;
   border-bottom: 1px solid #fff;
   border-right: 1px solid #fff;
 }
-/* line 121, ../scss/modules/area-selection.scss */
+/* line 120, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .tile:before {
   content: '';
   position: absolute;
@@ -188,15 +187,15 @@
   background-color: #000;
   opacity: 0.6;
 }
-/* line 134, ../scss/modules/area-selection.scss */
+/* line 133, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .tile.selected:before {
   background-color: #fff;
 }
-/* line 138, ../scss/modules/area-selection.scss */
+/* line 137, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines .tile.right {
   border-right: none;
 }
-/* line 145, ../scss/modules/area-selection.scss */
+/* line 144, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle {
   position: absolute;
   width: 20px;
@@ -205,13 +204,13 @@
   background: #fff;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
-/* line 154, ../scss/modules/area-selection.scss */
+/* line 153, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle.south-east {
   bottom: -10px;
   right: -10px;
   cursor: se-resize;
 }
-/* line 161, ../scss/modules/area-selection.scss */
+/* line 160, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .minimum-size-info {
   opacity: 0;
   position: absolute;
@@ -230,11 +229,11 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 177, ../scss/modules/area-selection.scss */
+/* line 176, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area.minimum-size-reached .minimum-size-info {
   opacity: 1;
 }
-/* line 182, ../scss/modules/area-selection.scss */
+/* line 181, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container {
   position: absolute;
   top: 0;
@@ -244,7 +243,7 @@
   overflow: hidden;
   z-index: 10;
 }
-/* line 191, ../scss/modules/area-selection.scss */
+/* line 190, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container .backdrop {
   position: absolute;
   outline: 5000px solid rgba(0, 0, 0, 0.6);
@@ -253,7 +252,7 @@
   width: 0;
   height: 0;
 }
-/* line 203, ../scss/modules/area-selection.scss */
+/* line 202, ../scss/modules/area-selection.scss */
 .sulu-area-selection img {
   display: block;
 }
