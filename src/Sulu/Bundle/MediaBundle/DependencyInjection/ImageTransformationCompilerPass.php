@@ -20,17 +20,20 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ImageTransformationCompilerPass implements CompilerPassInterface
 {
+    const POOL_SERVICE_ID = 'sulu_media.image.transformation_pool';
+    const TAG = 'sulu_media.image.transformation';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('sulu_media.image.transformation_manager')) {
+        if (!$container->hasDefinition(self::POOL_SERVICE_ID)) {
             return;
         }
 
-        $definition = $container->getDefinition('sulu_media.image.transformation_manager');
-        $taggedServices = $container->findTaggedServiceIds('sulu_media.image.transformation');
+        $definition = $container->getDefinition(self::POOL_SERVICE_ID);
+        $taggedServices = $container->findTaggedServiceIds(self::TAG);
 
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {
