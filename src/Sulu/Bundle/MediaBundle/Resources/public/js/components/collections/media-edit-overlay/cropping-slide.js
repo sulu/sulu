@@ -55,7 +55,7 @@ define([
                 'sulu.area-selection.cropping-' + this.media.id + '.set-area-guide-dimensions',
                 this.selectedFormat.scale.x,
                 this.selectedFormat.scale.y,
-                getSelectionDataFromFormat.call(this, this.selectedFormat)
+                getSelectionDataFromFormat.call(this, this.formatCrops[this.selectedFormat.key])
             );
         },
 
@@ -143,7 +143,7 @@ define([
                 newImageSrc = this.media.thumbnails[format.key] + '&t=' + (new Date().getTime());
 
             // Update the local data
-            this.formats[format.key] = format;
+            this.formatCrops[format.key] = format;
             this.selectedFormat = format;
             this.saved = true;
 
@@ -341,7 +341,7 @@ define([
                     height: format.options.cropHeight,
                     x: format.options.cropX,
                     y: format.options.cropY
-                }
+                };
             }
         },
 
@@ -356,10 +356,10 @@ define([
 
             $.each(this.formats, function(key, format) {
                 styleClass = null;
-                if (!!format.options && !FormatManager.cropOptionsAreValid(
-                        format.options,
-                        format.scale.x,
-                        format.scale.y,
+                if (!!this.formatCrops[key] && !!this.formatCrops[key].options && !FormatManager.cropOptionsAreValid(
+                        this.formatCrops[key].options,
+                        this.formatCrops[key].scale.x,
+                        this.formatCrops[key].scale.y,
                         this.imageWidth,
                         this.imageHeight
                     )) {
@@ -370,7 +370,7 @@ define([
 
                 items.push({
                     id: key,
-                    title: format.title,
+                    title: this.formatCrops[key].title || key,
                     styleClass: styleClass
                 });
             }.bind(this));
@@ -426,15 +426,15 @@ define([
         getFirstCroppableFormat = function() {
             var croppableFormat = null;
 
-            $.each(this.formats, function(key, format) {
+            $.each(this.formats, function(key) {
                 if (!croppableFormat && FormatManager.cropPossibleInInFormat(
-                        format.scale.x,
-                        format.scale.y,
+                        this.formatCrops[key].scale.x,
+                        this.formatCrops[key].scale.y,
                         this.imageWidth,
                         this.imageHeight
                     )
                 ) {
-                    croppableFormat = format;
+                    croppableFormat = this.formatCrops[key];
                 }
             }.bind(this));
 
@@ -449,15 +449,15 @@ define([
         getFormatsWithInvalidCrops = function() {
             var formats = [];
 
-            $.each(this.formats, function(key, format) {
-                if (!!format.options && !FormatManager.cropOptionsAreValid(
-                        format.options,
-                        format.scale.x,
-                        format.scale.y,
+            $.each(this.formats, function(key) {
+                if (!!this.formatCrops[key] && !!this.formatCrops[key].options && !FormatManager.cropOptionsAreValid(
+                        this.formatCrops[key].options,
+                        this.formatCrops[key].scale.x,
+                        this.formatCrops[key].scale.y,
                         this.imageWidth,
                         this.imageHeight
                     )) {
-                    formats.push(format);
+                    formats.push(this.formatCrops[key]);
                 }
             }.bind(this));
 
@@ -499,12 +499,14 @@ define([
          * @param {Object} $overlay The dom element of the main overlay
          * @param {Object} sandbox The sandbox of the overlay
          * @param {Object} media The media which should get cropped
+         * @param {Object} formats An array which defines which formats should be shown
          * @param {Function} onBack The function to execute when clicked on back
          */
-        initialize: function($overlay, sandbox, media, onBack) {
+        initialize: function($overlay, sandbox, media, formats, onBack) {
             this.$overlay = $overlay;
             this.sandbox = sandbox;
             this.media = media;
+            this.formats = formats;
             this.onBack = onBack;
             this.saved = true;
             this.$el = $(_.template(elementTemplate, {
@@ -534,8 +536,8 @@ define([
 
             bindCustomEvents.call(this);
             bindDomEvents.call(this);
-            FormatManager.loadFormats(this.media.id, this.sandbox.sulu.user.locale).then(function(formats) {
-                this.formats = formats;
+            FormatManager.loadFormats(this.media.id, this.sandbox.sulu.user.locale).then(function(formatCrops) {
+                this.formatCrops = formatCrops;
                 startAreaSelection.call(this).then(function() {
                     showInvalidCropsLabel.call(this, getFormatsWithInvalidCrops.call(this));
                     startToolbar.call(this)

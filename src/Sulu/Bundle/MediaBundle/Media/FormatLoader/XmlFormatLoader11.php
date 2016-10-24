@@ -33,6 +33,20 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     /**
      * {@inheritdoc}
      */
+    protected function getInternalFlagFromFormatNode(\DOMNode $formatNode)
+    {
+        $internalNode = $this->xpath->query('@internal', $formatNode)->item(0);
+
+        if (!$internalNode) {
+            return false;
+        }
+
+        return $internalNode->nodeValue === 'true';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
         $meta = [

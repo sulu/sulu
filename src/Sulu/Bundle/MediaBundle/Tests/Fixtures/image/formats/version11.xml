@@ -20,7 +20,7 @@
         </options>
     </format>
 
-    <format key="400x-inset">
+    <format key="400x-inset" internal="true">
         <meta>
             <title lang="en">My 400 Format</title>
             <title lang="de">Mein 400 Format</title>

@@ -15,14 +15,14 @@
                     </span>
                 </div>
 
-                <% _.each(_.keys(media.thumbnails), function(formatName) { var formatUrl = media.thumbnails[formatName]; %>
+                <% _.each(_.keys(formatUrls), function(formatName) { %>
                 <div class="media-edit-link">
-                    <a href="<%= formatUrl %>" class="media-edit-title" target="_blank">
-                        <%= formatName %>
+                    <a href="<%= formatUrls[formatName] %>" class="media-edit-title" target="_blank">
+                        <%= formatTitles[formatName] || formatName %>
                         <i class="fa fa-cloud-download"></i>
                     </a>
                     <span class="media-edit-icons">
-                        <i class="fa fa-clipboard" data-clipboard-text="<%= domain + formatUrl %>" title=" <%= translate('sulu.media.copy_url') %>"></i>
+                        <i class="fa fa-clipboard" data-clipboard-text="<%= domain + formatUrls[formatName] %>" title=" <%= translate('sulu.media.copy_url') %>"></i>
                         <span class="media-edit-copied" style="display:none;">
                             <%= translate('sulu.media.copied_url') %>
                         </span>

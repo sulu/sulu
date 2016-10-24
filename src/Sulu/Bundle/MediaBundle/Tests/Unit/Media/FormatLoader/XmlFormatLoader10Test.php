@@ -58,6 +58,7 @@ class XmlFormatLoader10Test extends WebspaceTestCase
         $this->assertEquals(
             [
                 'key' => '640x480',
+                'internal' => false,
                 'meta' => [
                     'title' => [],
                 ],
@@ -84,11 +85,13 @@ class XmlFormatLoader10Test extends WebspaceTestCase
             ],
             $result['640x480']
         );
+        $this->assertNotNull($result['640x480']['internal']);
 
         $this->assertArrayHasKey('300x', $result);
         $this->assertEquals(
             [
                 'key' => '300x',
+                'internal' => false,
                 'meta' => [
                     'title' => [],
                 ],
@@ -104,6 +107,7 @@ class XmlFormatLoader10Test extends WebspaceTestCase
             ],
             $result['300x']
         );
+        $this->assertNotNull($result['300x']['internal']);
     }
 
     /**

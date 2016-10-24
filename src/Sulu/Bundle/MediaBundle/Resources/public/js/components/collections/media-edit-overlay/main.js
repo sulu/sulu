@@ -67,6 +67,16 @@ define([
             multipleOverlaySkin: 'medium'
         },
 
+        imageFormats = config.get('sulu-media')['formats'],
+
+        nonInternalImageFormats = Object.keys(imageFormats).reduce(function(previous, current) {
+            if (!imageFormats[current].internal) {
+                previous[current] = imageFormats[current];
+            }
+
+            return previous;
+        }, {}),
+
         resetPreviewUrl = function(id) {
             return '/admin/api/media/' + id + '/preview';
         },
@@ -211,7 +221,8 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview, $formats, $categories, iconClass;
+            var $info, $copyright, $versions, $preview, $formats,
+                $categories, iconClass, formatUrls, formatTitles;
 
             this.media = media;
 
@@ -241,8 +252,28 @@ define([
                 translate: this.sandbox.translate
             }));
 
+            formatUrls = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                previous[current] = this.media.thumbnails[current];
+
+                return previous;
+            }.bind(this), {});
+
+            formatTitles = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                var format = nonInternalImageFormats[current];
+
+                previous[current] = null;
+
+                if (!!format && format.meta && format.meta.title) {
+                    previous[current] = format.meta.title[this.sandbox.sulu.user.locale];
+                }
+
+                return previous;
+            }.bind(this), {});
+
             $formats = this.sandbox.dom.createElement(_.template(formatsTemplate, {
                 media: this.media,
+                formatUrls: formatUrls,
+                formatTitles: formatTitles,
                 domain: window.location.protocol + '//' + window.location.host,
                 translate: this.sandbox.translate
             }));
@@ -301,8 +332,8 @@ define([
             );
 
             if (this.media.type.name === 'image') {
-                $editActionSelect = $('<div class="edit-action-select"/>')
-                croppingSlide.initialize(this.$el, this.sandbox, this.media, function() {
+                $editActionSelect = $('<div class="edit-action-select"/>');
+                croppingSlide.initialize(this.$el, this.sandbox, this.media, nonInternalImageFormats, function() {
                     this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
                 }.bind(this));
                 startingSlide = (this.options.startingSlide === 'crop') ? 1 : startingSlide;

@@ -188,6 +188,7 @@
                 </argument>
                 <argument key="maxFilesize" type="string">%sulu_media.upload.max_filesize%</argument>
                 <argument key="adobeCreativeKey" type="string">%sulu_media.adobe_creative_key%</argument>
+                <argument key="formats" type="string">%sulu_media.image.formats%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

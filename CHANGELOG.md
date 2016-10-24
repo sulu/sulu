@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2988 [ContentBundle]       Fixed sulu-link if selection in ckeditor is empty
     * BUGFIX      #2985 [ContentBundle]       Fixed link-provider overlay-spacing
     * BUGFIX      #2983 [AdminBundle]         Removed default placeholder for datepicker
+    * FEATURE     #2979 [MediaBundle]         Hide internal formats in UI
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
     * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
     * FEATURE     #2967 [ContentBundle]       Refactored link-tag to allow extending over provider
