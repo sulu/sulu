@@ -222,7 +222,7 @@ define([
          */
         editSingleMedia: function(media) {
             var $info, $copyright, $versions, $preview, $formats,
-                $categories, iconClass, formatUrls;
+                $categories, iconClass, formatUrls, formatTitles;
 
             this.media = media;
 
@@ -258,9 +258,22 @@ define([
                 return previous;
             }.bind(this), {});
 
+            formatTitles = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                var format = nonInternalImageFormats[current];
+
+                previous[current] = null;
+
+                if (!!format && format.meta && format.meta.title) {
+                    previous[current] = format.meta.title[this.sandbox.sulu.user.locale];
+                }
+
+                return previous;
+            }.bind(this), {});
+
             $formats = this.sandbox.dom.createElement(_.template(formatsTemplate, {
                 media: this.media,
-                formats: formatUrls,
+                formatUrls: formatUrls,
+                formatTitles: formatTitles,
                 domain: window.location.protocol + '//' + window.location.host,
                 translate: this.sandbox.translate
             }));
