@@ -406,6 +406,11 @@ class MediaManager implements MediaManagerInterface
                 || (isset($data['focusPointY']) && $data['focusPointY'] != $currentFileVersion->getFocusPointY())
             ) {
                 $currentFileVersion->increaseSubVersion();
+                $this->formatManager->purge(
+                    $mediaEntity->getId(),
+                    $currentFileVersion->getName(),
+                    $currentFileVersion->getStorageOptions()
+                );
             }
         }
 

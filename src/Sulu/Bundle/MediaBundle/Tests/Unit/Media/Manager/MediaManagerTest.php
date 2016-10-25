@@ -317,6 +317,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);
         $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
 
         $media->setChanger(Argument::any())->shouldBeCalled();
         $media->setChanged(Argument::any())->shouldBeCalled();
@@ -327,6 +328,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setFocusPointX(1)->shouldBeCalled();
         $fileVersion->setFocusPointY(2)->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldBeCalled();
+        $this->formatManager->purge(1, 'test', [])->shouldBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
