@@ -434,7 +434,8 @@ define([
                                             return;
                                         }
 
-                                        imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
+                                        imageEditor.editImage(this.media.url.split('?')[0])
+                                            .then(this.setNewVersionByUrl.bind(this));
                                     }.bind(this)
                                 });
                             }.bind(this)
@@ -613,7 +614,12 @@ define([
                     }
 
                     this.sandbox.emit('husky.overlay.alert.show-loader');
-                    this.sandbox.emit('husky.dropzone.file-version.add-image', newMediaUrl);
+                    this.sandbox.emit(
+                        'husky.dropzone.file-version.add-image',
+                        newMediaUrl,
+                        this.media.mimeType,
+                        this.media.name
+                    );
 
                     return false;
                 }.bind(this)
