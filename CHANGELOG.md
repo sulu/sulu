@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
     * BUGFIX      #2929 [MediaBundle]         Return system collection media only with granted permissions
+    * FEATURE     #3002 [MediaBundle]         Added config for choosing formats which can be cropped in media selection
     * FEATURE     #2999 [MediaBundle]         Added correct mime type to image after editing with aviary 
     * FEATURE     #2994 [HTTPCacheBundle]     Added cachelifetime types and introduced cron-expressions to calculate cachelifetime 
     * FEATURE     #3000 [MediaBundle]         Added paste media transformation

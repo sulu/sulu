@@ -135,8 +135,9 @@ define(function() {
          * @param mediaIds medias to edit in overlay
          * @param locale medias are saved for given locale
          * @param startingSlide The starting slide of the overlay
+         * @param formats An array of the formats to show in the cropping slide
          */
-        startEditMediaOverlay: function(mediaIds, locale, startingSlide) {
+        startEditMediaOverlay: function(mediaIds, locale, startingSlide, formats) {
             if (!!overlayOpened) {
                 return false;
             }
@@ -153,7 +154,8 @@ define(function() {
                     el: $container,
                     mediaIds: mediaIds,
                     locale: locale,
-                    startingSlide: startingSlide
+                    startingSlide: startingSlide,
+                    formats: formats
                 }
             }]);
             registerOpenedOverlay.call(this, 'sulu.media-edit.closed');

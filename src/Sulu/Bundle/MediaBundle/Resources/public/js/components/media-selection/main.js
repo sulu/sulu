@@ -25,6 +25,7 @@ define([
             eventNamespace: 'sulu.media-selection',
             thumbnailKey: 'thumbnails',
             thumbnailSize: '50x50',
+            formats: [],
             resultKey: 'media',
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
@@ -136,7 +137,13 @@ define([
                 event.stopImmediatePropagation();
 
                 var id = $(event.currentTarget).parents('a').data('id');
-                OverlayManager.startEditMediaOverlay.call(this, id, UserSettingsManager.getMediaLocale(), 'crop');
+                OverlayManager.startEditMediaOverlay.call(
+                    this,
+                    id,
+                    UserSettingsManager.getMediaLocale(),
+                    'crop',
+                    this.options.formats
+                );
             }.bind(this));
 
             this.$el.on('click', 'a.link', function(e) {
