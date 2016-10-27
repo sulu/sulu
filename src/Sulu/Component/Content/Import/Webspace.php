@@ -23,7 +23,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -111,7 +111,7 @@ class Webspace implements WebspaceInterface
         DocumentInspector $documentInspector,
         DocumentRegistry $documentRegistry,
         LegacyPropertyFactory $legacyPropertyFactory,
-        RlpStrategyInterface $rlpStrategy,
+        TreeLeafEditStrategy $rlpStrategy,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ContentImportManagerInterface $contentImportManager,
@@ -287,7 +287,7 @@ class Webspace implements WebspaceInterface
         $node->setProperty(sprintf('i18n:%s-template', $locale), $structureType);
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
-
+        
         if ($this->getParser($format)->getPropertyData('title', $data) === '') {
             throw new \Exception(
                 sprintf('Document(%s) has not set any title', $document->getUuid())
