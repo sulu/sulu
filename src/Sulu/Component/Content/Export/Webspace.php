@@ -95,9 +95,7 @@ class Webspace implements WebspaceInterface
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
-     *
      * @return string
-     *
      * @throws \Exception
      */
     public function export(
@@ -127,7 +125,6 @@ class Webspace implements WebspaceInterface
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
-     *
      * @return array
      */
     public function getExportData(
@@ -144,10 +141,12 @@ class Webspace implements WebspaceInterface
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
         $documentData = [];
 
-        $output->writeln('<info>Loading Data…</info>');
+        if ($output !== null) {
+            $output->writeln('<info>Loading Data…</info>');
 
-        $progress = new ProgressBar($output, count($documents));
-        $progress->start();
+            $progress = new ProgressBar($output, count($documents));
+            $progress->start();
+        }
 
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
@@ -162,15 +161,19 @@ class Webspace implements WebspaceInterface
                 'extensions' => $extensionData,
             ];
 
-            $progress->advance();
+            if ($output !== null) {
+                $progress->advance();
+            }
         }
 
-        $progress->finish();
+        if ($output !== null) {
+            $progress->finish();
 
-        $output->writeln([
-            '',
-            '<info>Render Xliff…</info>',
-        ]);
+            $output->writeln([
+                '',
+                '<info>Render Xliff…</info>',
+            ]);
+        }
 
         return [
             'webspaceKey' => $webspaceKey,

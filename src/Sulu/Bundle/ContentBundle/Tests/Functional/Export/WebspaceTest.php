@@ -61,7 +61,7 @@ class WebspaceTest extends SuluTestCase
     public function test12Xliff()
     {
         $documents = $this->prepareData();
-        $exportData = $this->webspaceExporter->getExportData('sulu_io', 'en', '1.2.xliff');
+        $exportData = $this->webspaceExporter->getExportData('sulu_io', 'en', null, '1.2.xliff');
 
         $expectedResult = [
             'webspaceKey' => 'sulu_io',
@@ -77,7 +77,7 @@ class WebspaceTest extends SuluTestCase
         // Ignore uuids
         unset($exportData['documents'][0]['uuid']);
         unset($exportData['documents'][1]['uuid']);
-
+        
         $this->assertEquals(
             $expectedResult,
             $exportData
@@ -111,6 +111,7 @@ class WebspaceTest extends SuluTestCase
         return [
             [
                 'title' => 'Test1',
+                'subtitle' => 'subtitle',
                 'url' => '/test-1',
                 'article' => 'Lorem Ipsum dolorem apsum',
                 'block' => [
@@ -128,6 +129,7 @@ class WebspaceTest extends SuluTestCase
             ],
             [
                 'title' => 'Test2',
+                'subtitle' => 'subtitle',
                 'url' => '/test-2',
                 'article' => 'asdfasdf',
                 'block' => [
@@ -203,6 +205,10 @@ class WebspaceTest extends SuluTestCase
 
         switch ($name) {
             case 'title':
+                $type = 'text_line';
+                $translate = true;
+                break;
+            case 'subtitle':
                 $type = 'text_line';
                 $translate = true;
                 break;
@@ -523,6 +529,7 @@ class WebspaceTest extends SuluTestCase
         }
 
         $this->documentManager->persist($document, $locale, $persistOptions);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         return $document;
