@@ -76,6 +76,7 @@ class WebspaceImportTest extends SuluTestCase
             $importData['webspaceKey'],
             $importData['locale'],
             $importData['filePath'],
+            null,
             $importData['format'],
             '',
             false

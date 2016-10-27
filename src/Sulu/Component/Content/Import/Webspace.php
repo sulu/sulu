@@ -148,9 +148,11 @@ class Webspace implements WebspaceInterface
         $importedCounter = 0;
         $successCounter = 0;
 
-        $progress = new ProgressBar($output, count($parsedDataList));
-        $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
-        $progress->start();
+        if ($output !== null) {
+            $progress = new ProgressBar($output, count($parsedDataList));
+            $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
+            $progress->start();
+        }
 
         foreach ($parsedDataList as $parsedData) {
             // mapping data
@@ -171,10 +173,14 @@ class Webspace implements WebspaceInterface
                 $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
             }
 
-            $progress->advance();
+            if ($output !== null) {
+                $progress->advance();
+            }
         }
 
-        $progress->finish();
+        if ($output !== null) {
+            $progress->finish();
+        }
 
         return [
             $importedCounter,

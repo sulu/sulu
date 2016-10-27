@@ -95,7 +95,9 @@ class Webspace implements WebspaceInterface
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
+     *
      * @return string
+     *
      * @throws \Exception
      */
     public function export(
@@ -125,6 +127,7 @@ class Webspace implements WebspaceInterface
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
+     *
      * @return array
      */
     public function getExportData(
