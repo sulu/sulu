@@ -77,7 +77,7 @@ class WebspaceTest extends SuluTestCase
         // Ignore uuids
         unset($exportData['documents'][0]['uuid']);
         unset($exportData['documents'][1]['uuid']);
-        
+
         $this->assertEquals(
             $expectedResult,
             $exportData

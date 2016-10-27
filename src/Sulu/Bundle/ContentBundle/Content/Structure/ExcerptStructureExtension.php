@@ -85,6 +85,15 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     private $factory;
 
+    /**
+     * ExcerptStructureExtension constructor.
+     *
+     * @param StructureManagerInterface $structureManager
+     * @param ContentTypeManagerInterface $contentTypeManager
+     * @param ContentExportManagerInterface $contentExportManager
+     * @param ContentImportManagerInterface $contentImportManager
+     * @param Factory $factory
+     */
     public function __construct(
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
@@ -94,9 +103,9 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->contentExportManager = $contentExportManager;
         $this->contentImportManager = $contentImportManager;
         $this->factory = $factory;
-        $this->contentExportManager = $contentExportManager;
     }
 
     /**

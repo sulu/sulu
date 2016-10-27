@@ -18,6 +18,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Export\ContentExportManagerInterface;
+use Sulu\Component\Content\Import\ContentImportManagerInterface;
 
 class ExcerptStructureExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,12 +39,14 @@ class ExcerptStructureExtensionTest extends \PHPUnit_Framework_TestCase
         $factory = $this->prophesize(Factory::class);
         $node = $this->prophesize(NodeInterface::class);
         $contentExportManager = $this->prophesize(ContentExportManagerInterface::class);
+        $contentImportManager = $this->prophesize(ContentImportManagerInterface::class);
 
         $excerptExtension = new ExcerptStructureExtension(
             $structureManager->reveal(),
             $contentTypeManager->reveal(),
-            $factory->reveal(),
-            $contentExportManager->reveal()
+            $contentExportManager->reveal(),
+            $contentImportManager->reveal(),
+            $factory->reveal()
         );
 
         $excerptExtension->save($node->reveal(), [], 'sulu_io', 'de');
@@ -66,12 +69,14 @@ class ExcerptStructureExtensionTest extends \PHPUnit_Framework_TestCase
         $factory = $this->prophesize(Factory::class);
         $node = $this->prophesize(NodeInterface::class);
         $contentExportManager = $this->prophesize(ContentExportManagerInterface::class);
+        $contentImportManager = $this->prophesize(ContentImportManagerInterface::class);
 
         $excerptExtension = new ExcerptStructureExtension(
             $structureManager->reveal(),
             $contentTypeManager->reveal(),
-            $factory->reveal(),
-            $contentExportManager->reveal()
+            $contentExportManager->reveal(),
+            $contentImportManager->reveal(),
+            $factory->reveal()
         );
 
         $excerptExtension->load($node->reveal(), 'sulu_io', 'de');
