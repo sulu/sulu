@@ -207,8 +207,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         $webspaceKey,
         $languageCode,
         $segmentKey = null
-    )
-    {
+    ) {
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 

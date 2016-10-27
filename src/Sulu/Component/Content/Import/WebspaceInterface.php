@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Import;
 
-use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
-
 /**
  * Interface for Webspace import.
  */
@@ -31,6 +29,7 @@ interface WebspaceInterface
      * @param $output
      * @param string $format
      * @param string $uuid
+     *
      * @return array
      */
     public function import(

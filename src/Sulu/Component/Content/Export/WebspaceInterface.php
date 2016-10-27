@@ -24,6 +24,7 @@ interface WebspaceInterface
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
+     *
      * @return string
      */
     public function export(
@@ -44,6 +45,7 @@ interface WebspaceInterface
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes
+     *
      * @return string
      */
     public function getExportData(

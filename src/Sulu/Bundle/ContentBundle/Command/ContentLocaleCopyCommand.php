@@ -146,7 +146,7 @@ EOT
                 return;
             }
         }
-        
+
         if ($structure->getType() && $structure->getType()->getName() === 'ghost') {
             $this->output->writeln(
                 '<info>Processing aborted: </info>' .

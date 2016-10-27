@@ -287,11 +287,12 @@ class Webspace implements WebspaceInterface
         $node->setProperty(sprintf('i18n:%s-template', $locale), $structureType);
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
-        
+
         if ($this->getParser($format)->getPropertyData('title', $data) === '') {
             throw new \Exception(
                 sprintf('Document(%s) has not set any title', $document->getUuid())
             );
+
             return;
         }
 
@@ -375,6 +376,7 @@ class Webspace implements WebspaceInterface
     /**
      * @param $key
      * @param $value
+     *
      * @return mixed|object
      */
     protected function getSetterValue($key, $value)
@@ -383,7 +385,7 @@ class Webspace implements WebspaceInterface
             return;
         }
 
-        switch($key) {
+        switch ($key) {
             case 'redirectTarget':
                 $value = $this->documentManager->find($value);
                 break;
