@@ -1,0 +1,1 @@
+define(function(){"use strict";return{setLastSelectedPage:function(a,b){App.sulu.saveUserSetting(a+"ColumnNavigationSelected",b)}}});

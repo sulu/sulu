@@ -213,8 +213,7 @@ define([
                     // if no action icon is rendered the data should not be loaded
                     return;
                 }
-
-                this.setLastSelected(item.id);
+                
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
                 } else {
@@ -563,7 +562,7 @@ define([
          * @param {String} id
          */
         setLastSelected: function(id) {
-            this.sandbox.sulu.saveUserSetting(this.options.webspace + 'ColumnNavigationSelected', id);
+            UserSettings.setLastSelectedPage(this.options.webspace , id);
         },
 
         /**
