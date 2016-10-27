@@ -102,6 +102,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2684 [ContentBundle]       Disabled options in toolbar item which are not avialable when editing a page
     * FEATURE     #2689 [ContentBundle]       Added functionality to delete a draft
     * BUGFIX      #2683 [MediaBundle]         Removed selected datagrid from media selection overlay
+    * FEATURE     #2466 [ContentBundle]       Webspace xliff 1.2 Export
     * FEATURE     #2559 [CoreBundle]          Renamed parameters.yml to parameters.yml.dist so you can use a local version
     * BUGFIX      #2678 [ContentBundle]       Fixed error caused by draft label when opening a ghost page
     * BUGFIX      #2668 [ContentBundle]       Fixed resource locator generation for pages with unpublished parents
@@ -604,6 +605,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1736 [AdminBundle]     Fixed layout for content form
     * ENHANCEMENT #1760 [SecurityBundle]  Added missing joins on query for security
     * BUGFIX      #1759 [ContactBundle]   Fixed upload avatar when category is selected
+    * FEATURE     #1758 [ContentBundle]   Webspace xliff 1.2 Import
     * BUGFIX      #1750 [SecurityBundle]  Added seraialization groups for user
     * BUGFIX      #1756 [ContentBundle]   Added excerpt values (title, description, tags and categories) to search
                                           indexing
@@ -616,6 +618,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1733 [ContentBundle]   Added empty locale condition to fix empty locale bug
     * ENHANCEMENT #1719 [SearchBundle]    Updated search to only return granted documents
     * BUGFIX      #1733 [ContactBundle]   Added delete warning and download icon for contact avatar and account logo
+    * FEATURE     #1686 [ContentBundle]   Webspace xliff 1.2 Export
     * BUGFIX      #1733 [MediaBundle]     Fixed a few media-selection bugs
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier

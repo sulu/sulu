@@ -1,0 +1,78 @@
+{% block main %}
+    {{ block('pages') }}
+{% endblock main %}
+
+{% if false %} {# avoid output of block directly #}
+    {# Iterate over the pages #}
+    {%- block pages -%}
+        {%- for document in documents -%}
+            {% spaceless %}
+                {% set settings = document.settings %}
+                {% set content = document.content %}
+                {% set extensions = document.extensions %}
+                {% set prefix = '' %}
+            {% endspaceless %}{{ block('page') }}
+        {%- endfor -%}
+    {%- endblock pages -%}
+
+    {# Output page #}
+    {% block page %}
+        {{- block('content') -}}
+        {{- block('extensions') -}}
+        {{- block('settings') -}}
+    {% endblock page %}
+
+    {# Output content #}
+    {%- block content -%}
+        {% set properties = content %}
+        {{- block('properties') -}}
+    {%- endblock content -%}
+
+    {# Output extensions #}
+    {%- block extensions -%}
+        {%- for key, extension in extensions -%}
+            {% set prefixBefore = prefix %}
+            {% set prefix = prefix ~ key ~ '-' %}
+            {% set properties = extension %}
+            {{- block('properties') -}}
+            {% set prefix = prefixBefore %}
+        {%- endfor -%}
+    {%- endblock extensions -%}
+
+    {# Output settings #}
+    {%- block settings -%}
+        {% set properties = settings %}
+        {{- block('properties') -}}
+    {%- endblock settings -%}
+
+    {# Output properties #}
+    {%- block properties -%}
+        {%- for property in properties -%}
+            {% if property.value is defined %}
+                {{- block('model') -}}
+            {% endif %}
+            {%- if property.children is defined -%}
+                {%- for key, child in property.children -%}
+                    {% set prefixBefore = prefix %}
+                    {% set prefix = prefix ~ property.name ~ '#' ~ key ~ '-' %}
+                    {% set properties = child %}
+                    {{- block('properties') -}}
+                    {% set prefix = prefixBefore %}
+                {%- endfor -%}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endblock properties -%}
+
+    {# Output model #}
+    {%- block model -%}
+        {% spaceless %}
+            {% set name = prefix ~ property.name %}
+            {% set options = property.options|default('') %}
+            {% set value = property.value %}
+            {% set type = property.type|default('') %}
+        {% endspaceless %}{{- block('view') -}}
+    {%- endblock model -%}
+
+    {# View #}
+    {%- block view -%}{%- endblock view -%}
+{% endif %}

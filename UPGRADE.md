@@ -793,6 +793,24 @@ __nested properties:__
 </div>
 ```
 
+### Content Type Export Interface added
+
+All default content type implement the new `ContentTypeExportInterface`.  
+Content types which were exportable need to implement this interface and tag for which export `format` they are available.  
+
+``` xml
+        <service id="client_website.content.type.checkbox" class="%client_website.content.type.checkbox.class%">
+            <tag name="sulu.content.type" alias="custom_checkbox"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+```
+
+### Extensions constructor changed
+
+Extensions can also be exportable for this they need to implement the new `ExportExtensionInterface`.  
+In the sulu excerpt extension the constructor changed, if you extend or overwrite this extension you maybe need to add
+the `sulu_content.export.manager` service to the constructor.
+
 ### ApiCategory
 The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories
 (without translation) is called in the same request.
