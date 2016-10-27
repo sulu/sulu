@@ -33,6 +33,20 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
     /**
      * {@inheritdoc}
      */
+    protected function getInternalFlagFromFormatNode(\DOMNode $formatNode)
+    {
+        $internalNode = $this->xpath->query('@internal', $formatNode)->item(0);
+
+        if (!$internalNode) {
+            return false;
+        }
+
+        return $internalNode->nodeValue === 'true';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
         $meta = [
@@ -75,8 +89,8 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
             }
 
             $scale = [
-                'x' => ($xNode !== null) ? $xNode->nodeValue : null,
-                'y' => ($yNode !== null) ? $yNode->nodeValue : null,
+                'x' => ($xNode !== null) ? intval($xNode->nodeValue) : null,
+                'y' => ($yNode !== null) ? intval($yNode->nodeValue) : null,
                 'mode' => ($modeNode !== null) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
                 'retina' => $retina,
                 'forceRatio' => $forceRatio,

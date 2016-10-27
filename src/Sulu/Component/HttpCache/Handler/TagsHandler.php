@@ -47,10 +47,8 @@ class TagsHandler implements
     private $structuresToInvalidate;
 
     /**
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param CacheHandler             $cacheInvalidator
-     * @param string                   $environment      - kernel envionment, dev, prod, etc
-     * @param null                     $logger
+     * @param ProxyClientInterface $proxyClient
+     * @param ContentTypeManagerInterface $contentTypeManager
      */
     public function __construct(
         ProxyClientInterface $proxyClient,

@@ -337,9 +337,6 @@ define([
          * @param {String} title translation key part ('content.contents.settings.<<title>>.title')
          */
         moveOrCopySelected: function(item, editCallback, title) {
-            // wait for click on column navigation to send request
-            this.sandbox.once('husky.column-navigation.overlay.action', editCallback);
-
             // wait for closing overlay to unbind events
             this.sandbox.once('husky.overlay.node.closed', function() {
                 this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
@@ -348,7 +345,8 @@ define([
             this.startColumnNavigationOverlay(
                 'content.contents.settings.' + title + '.title',
                 templates.columnNavigation(),
-                item
+                item,
+                editCallback
             );
         },
 
@@ -358,7 +356,7 @@ define([
          * @param {String} template template for the content
          * @param {Object} item item selected in main column-navigation
          */
-        startColumnNavigationOverlay: function(titleKey, template, item) {
+        startColumnNavigationOverlay: function(titleKey, template, item, editCallback) {
             // wait for overlay initialized to initialize column navigation
             this.sandbox.once('husky.overlay.node.initialized', function() {
                 this.startOverlayColumnNavigation(item.id);
@@ -367,7 +365,7 @@ define([
 
             // prepare and start overlay
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
-                buttons = [{type: 'cancel', align: 'right'}];
+                buttons = [{type: 'cancel', align: 'left'}, {type: 'ok', align: 'right'}];
             this.sandbox.dom.append(this.$el, $element);
 
             this.sandbox.start([
@@ -381,13 +379,21 @@ define([
                         instanceName: 'node',
                         skin: 'responsive-width',
                         contentSpacing: false,
-                        slides: [
-                            {
-                                title: this.sandbox.translate(titleKey),
-                                data: template,
-                                buttons: buttons,
-                            }
-                        ]
+                        title: this.sandbox.translate(titleKey),
+                        data: template,
+                        buttons: buttons,
+                        cancelCallback: function() {
+                            this.sandbox.stop('#child-column-navigation');
+                        }.bind(this),
+                        okCallback: function () {
+                            this.sandbox.emit('husky.column-navigation.overlay.get-marked', function (collections) {
+                                this.sandbox.stop('#child-column-navigation');
+                                if (Object.keys(collections).length === 1) {
+                                    var value = collections[Object.keys(collections)];
+                                    editCallback(value);
+                                }
+                            }.bind(this));
+                        }.bind(this)
                     }
                 }
             ]);
@@ -414,13 +420,14 @@ define([
                             hasSubName: 'hasChildren',
                             url: url,
                             instanceName: 'overlay',
-                            actionIcon: 'fa-check-circle',
                             showOptions: false,
                             responsive: false,
                             sortable: false,
                             skin: 'fixed-height-small',
                             disableIds: [id],
-                            disabledChildren: true
+                            disabledChildren: true,
+                            markable: true,
+                            singleMarkable: true
                         }
                     }
                 ]
@@ -493,6 +500,8 @@ define([
                         url: this.getUrl(this.getLastSelected()),
                         fallbackUrl: this.getUrl(),
                         actionIcon: getActionIcon.bind(this),
+                        showActionButtonOnGhost: true,
+                        actionButtonOnGhostText: this.sandbox.translate('sulu-content.create'),
                         addButton: addButtonEnabler.bind(this),
                         data: [
                             {

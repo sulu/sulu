@@ -20,6 +20,7 @@ Feature: Url content type
         Then I expect to see "<scheme>"
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
         Examples:
         | url | scheme |
@@ -34,6 +35,7 @@ Feature: Url content type
         And I leave the selector "#this_url .specific-part-input"
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then there should be 1 form errors
         Examples:
             | url |

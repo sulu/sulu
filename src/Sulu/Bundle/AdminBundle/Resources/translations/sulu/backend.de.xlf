@@ -978,6 +978,10 @@
                 <source>public.items</source>
                 <target>Objekte</target>
             </trans-unit>
+            <trans-unit id="c337c52dae1354cc4123c0b4831a23233" resname="public.save-and-apply">
+                <source>public.save-and-apply</source>
+                <target>Speichern &amp; anwenden</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -775,6 +775,30 @@
                 <source>sulu-content.teaser.no-teaser</source>
                 <target>No teaser selected</target>
             </trans-unit>
+            <trans-unit id="67" resname="sulu.overlay.publish">
+                <source>sulu.overlay.publish</source>
+                <target>Publish?</target>
+            </trans-unit>
+            <trans-unit id="68" resname="sulu.overlay.publish-desc">
+                <source>sulu.overlay.publish-desc</source>
+                <target>Your data will be publicly available. Do you wish to proceed?</target>
+            </trans-unit>
+            <trans-unit id="69" resname="sulu-content.resource-locator.delete">
+                 <source>sulu-content.resource-locator.delete</source>
+                 <target>The URL will be deleted for all draft and live versions of this page. This cannot be undone. Do you wish to proceed?</target>
+             </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Create</target>
+            </trans-unit>
+            <trans-unit id="71" resname="content.ckeditor.page-link">
+                <source>content.ckeditor.page-link</source>
+                <target>Page</target>
+            </trans-unit>
+            <trans-unit id="72" resname="content.ckeditor.internal-link.remove-drop-down">
+                <source>content.ckeditor.internal-link.remove-drop-down</source>
+                <target>Remove</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

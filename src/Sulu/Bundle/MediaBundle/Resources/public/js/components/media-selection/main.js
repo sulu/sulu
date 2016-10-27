@@ -13,7 +13,11 @@
  * @class MediaSelection
  * @constructor
  */
-define(['underscore'], function(_) {
+define([
+    'underscore',
+    'services/sulumedia/overlay-manager',
+    'services/sulumedia/user-settings-manager'
+], function(_, OverlayManager, UserSettingsManager) {
 
     'use strict';
 
@@ -41,7 +45,8 @@ define(['underscore'], function(_) {
                 upload: 'media-selection.upload-new',
                 collection: 'media-selection.upload-to-collection',
                 createNewCollection: 'media-selection.create-new-collection',
-                newCollection: 'media-selection.new-collection'
+                newCollection: 'media-selection.new-collection',
+                crop: 'sulu-media.crop'
             }
         },
 
@@ -62,25 +67,31 @@ define(['underscore'], function(_) {
         },
 
         templates = {
-            contentItem: function(id, collection, title, thumbnail, fallbackLocale) {
+            contentItem: function(id, collection, title, thumbnail, fallbackLocale, type, cropText) {
                 var content = [
-                    '<a href="#" class="link" data-id="', id, '" data-collection="', collection, '">'
+                    '<a href="#" class="media-selection-item link" data-id="', id, '" data-collection="', collection, '">'
                 ];
 
                 if (thumbnail) {
                     content.push([
-                        '    <img src="', thumbnail, '"/>'
+                        '<span class="image">',
+                        '    <img src="', thumbnail, '"/>',
+                        '</span>'
                     ].join(''));
                 }
 
                 if (fallbackLocale) {
+                    content.push('<div class="badges">');
                     content.push('    <span class="badge">', fallbackLocale, '</span>');
+                    content.push('</div>');
                 }
 
-                content.push(
-                    '    <span class="title">', title, '</span>',
-                    '</a>'
-                );
+                content.push('<span class="title">', title, '</span>');
+                if (type === 'image') {
+                    content.push('<span class="crop"><span class="fa-crop"></span>', cropText, '</span>');
+                }
+
+                content.push('</a>');
 
                 return content.join('');
             }
@@ -120,7 +131,15 @@ define(['underscore'], function(_) {
          * Bind events to dom elements
          */
         bindDomEvents = function() {
-            this.sandbox.dom.on(this.$el, 'click', function(e) {
+            this.$el.on('click', '.crop', function(event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                var id = $(event.currentTarget).parents('a').data('id');
+                OverlayManager.startEditMediaOverlay.call(this, id, UserSettingsManager.getMediaLocale(), 'crop');
+            }.bind(this));
+
+            this.$el.on('click', 'a.link', function(e) {
                 var id = this.sandbox.dom.data(e.currentTarget, 'id'),
                     collection = this.sandbox.dom.data(e.currentTarget, 'collection');
 
@@ -130,7 +149,7 @@ define(['underscore'], function(_) {
                 );
 
                 return false;
-            }.bind(this), 'a.link');
+            }.bind(this));
         },
 
         /**
@@ -237,7 +256,9 @@ define(['underscore'], function(_) {
                 item.collection,
                 item.title,
                 item.thumbnails ? item.thumbnails[this.options.thumbnailSize] : null,
-                item.locale !== this.options.locale ? item.locale : null
+                item.locale !== this.options.locale ? item.locale : null,
+                item.type,
+                this.sandbox.translate(this.options.translations.crop)
             );
         },
 

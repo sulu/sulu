@@ -33,5 +33,6 @@ Feature: Snippet content type
         And I click the ok button
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
         And I expect to see "Penguin"

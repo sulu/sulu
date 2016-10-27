@@ -747,7 +747,7 @@ class ContentRepository implements ContentRepositoryInterface
             $locale = $shadowLocale;
         }
 
-        $name = sprintf('%s%s', $locale, ucfirst($name));
+        $name = sprintf('%s%s', $locale, str_replace('-', '_', ucfirst($name)));
 
         try {
             return $row->getValue($name);

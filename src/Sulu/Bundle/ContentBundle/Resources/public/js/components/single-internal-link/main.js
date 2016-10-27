@@ -140,18 +140,11 @@ define([], function() {
 
         bindCustomEvents = function() {
             this.sandbox.on('husky.overlay.single-internal-link.' + this.options.instanceName + '.initialized', initColumnNavigation.bind(this));
-
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', function(item) {
-                setData.call(this, item.id);
-                loadSelectedNode.call(this);
-                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-
-                this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.close');
-            }.bind(this));
         },
 
         bindDomEvents = function() {
             this.sandbox.dom.on('#' + this.options.ids.clearButton, 'click', function() {
+                this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.unmark', this.data);
                 setData.call(this, '');
                 this.$input.val('');
 
@@ -176,21 +169,37 @@ define([], function() {
                         removeOnClose: false,
                         instanceName: 'single-internal-link.' + this.options.instanceName,
                         skin: 'responsive-width',
-                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.overlayTitle),
                                 data: templates.data(this.options),
-                                buttons: [
-                                    {
-                                        type: 'cancel'
-                                    }
-                                ]
+                                contentSpacing: false,
+                                okCallback: overlayOkCallback.bind(this)
                             }
                         ]
                     }
                 }
             ]);
+        },
+
+        /**
+         * initialize column navigation
+         */
+        overlayOkCallback = function () {
+            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.get-marked', function (markedCollections) {
+                if (Object.keys(markedCollections).length > 0) {
+                    setData.call(this, Object.keys(markedCollections)[0]);
+                    loadSelectedNode.call(this);
+                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+
+                    this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.close');
+                } else {
+                    setData.call(this, '');
+                    this.$input.val('');
+
+                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+                }
+            }.bind(this));
         },
 
         /**
@@ -208,13 +217,14 @@ define([], function() {
                             selected: this.data,
                             url: url,
                             instanceName: this.options.instanceName,
-                            actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showOptions: false,
                             responsive: false,
                             sortable: false,
                             skin: 'fixed-height-small',
-                            disableIds: this.options.disabledIds
+                            disableIds: this.options.disabledIds,
+                            markable: true,
+                            singleMarkable: true
                         }
                     }
                 ]

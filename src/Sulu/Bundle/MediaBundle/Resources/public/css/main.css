@@ -50,6 +50,189 @@
   top: -60px;
 }
 
+/* line 1, ../scss/modules/area-selection.scss */
+.sulu-area-selection {
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+/* line 9, ../scss/modules/area-selection.scss */
+.sulu-area-selection::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+/* line 17, ../scss/modules/area-selection.scss */
+.sulu-area-selection .frame {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 23, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area {
+  position: absolute;
+  cursor: move;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.0001);
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+/* line 37, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #fff;
+}
+/* line 45, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines::before, .sulu-area-selection .area .lines::after {
+  opacity: 0;
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid #fff;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
+/* line 58, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines::before {
+  top: 33.33%;
+  bottom: 33.33%;
+  border-width: 1px 0;
+}
+/* line 64, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines::after {
+  left: 33.33%;
+  right: 33.33%;
+  border-width: 0 1px;
+}
+/* line 71, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines:hover::after, .sulu-area-selection .area .lines:hover::before {
+  opacity: 1;
+}
+/* line 77, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+}
+/* line 86, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .handle.south-east {
+  bottom: -10px;
+  right: -10px;
+  cursor: se-resize;
+}
+/* line 93, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .minimum-size-info {
+  opacity: 0;
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #fff;
+  font-size: 12px;
+  text-align: right;
+  padding-right: 15px;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
+/* line 109, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area.minimum-size-reached .minimum-size-info {
+  opacity: 1;
+}
+/* line 114, ../scss/modules/area-selection.scss */
+.sulu-area-selection .backdrop-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  z-index: 10;
+}
+/* line 123, ../scss/modules/area-selection.scss */
+.sulu-area-selection .backdrop-container .backdrop {
+  position: absolute;
+  outline: 5000px solid rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+/* line 135, ../scss/modules/area-selection.scss */
+.sulu-area-selection img {
+  display: block;
+}
+
+/* line 1, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container {
+  margin: -20px;
+}
+/* line 4, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .toolbar-container {
+  background: #52B6CA;
+}
+/* line 8, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .label-container {
+  height: 0;
+  overflow: visible;
+}
+/* line 13, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .back {
+  display: inline-block;
+  vertical-align: top;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: -5px;
+  color: #fff;
+}
+/* line 25, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .toolbar {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 30, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .area-selection {
+  width: 100%;
+  height: 420px;
+}
+/* line 35, ../scss/modules/cropping-slide.scss */
+.sulu-cropping-container .hint {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+}
+
 /* line 5, ../scss/modules/masonry-decorator.scss */
 .masonry-container .empty-list {
   background: none;
@@ -152,7 +335,7 @@
   transform: scale(1.05);
 }
 /* line 103, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint {
+.masonry-container .action-icons-overlay {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -165,7 +348,7 @@
   transition: opacity 200ms;
 }
 /* line 112, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint::before {
+.masonry-container .action-icons-overlay::before {
   content: "";
   display: block;
   position: absolute;
@@ -178,7 +361,7 @@
   border-radius: 0 0 3px 3px;
 }
 /* line 125, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint span {
+.masonry-container .action-icons-overlay .action-icons {
   display: block;
   position: absolute;
   top: 50%;
@@ -191,153 +374,176 @@
   font-size: 24px;
 }
 /* line 132, ../scss/modules/masonry-decorator.scss */
-.masonry-container .edit-hint:hover {
+.masonry-container .action-icons-overlay .action-icon {
+  padding: 10px;
+}
+/* line 136, ../scss/modules/masonry-decorator.scss */
+.masonry-container .action-icons-overlay:hover {
   opacity: 1;
 }
-/* line 137, ../scss/modules/masonry-decorator.scss */
+/* line 141, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info {
   height: 80px;
   text-align: left;
   padding: 20px 20px 0 20px;
   position: relative;
 }
-/* line 143, ../scss/modules/masonry-decorator.scss */
+/* line 147, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .main {
   font-size: 0;
   line-height: 18px;
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 150, ../scss/modules/masonry-decorator.scss */
+/* line 154, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .title {
   font-size: 14px;
 }
-/* line 154, ../scss/modules/masonry-decorator.scss */
+/* line 158, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .description {
   font-size: 12px;
   line-height: 12px;
   color: #999;
 }
-/* line 160, ../scss/modules/masonry-decorator.scss */
+/* line 164, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons {
   position: absolute;
   bottom: 5px;
   right: 20px;
 }
-/* line 166, ../scss/modules/masonry-decorator.scss */
+/* line 170, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons > * {
   display: inline-block;
   margin-left: 5px;
 }
-/* line 171, ../scss/modules/masonry-decorator.scss */
+/* line 175, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .icons > *::before {
   color: transparent;
 }
-/* line 175, ../scss/modules/masonry-decorator.scss */
+/* line 179, ../scss/modules/masonry-decorator.scss */
 .masonry-container .masonry-info .badge {
-  margin-top: -11px;
+  vertical-align: super;
   margin-right: 3px;
 }
 
-/* line 1, ../scss/modules/media-selection-overlay.scss */
+/* line 2, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item .image {
+  width: 70px;
+}
+/* line 6, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item .crop {
+  display: none;
+  color: #000;
+  text-decoration: none;
+}
+/* line 11, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item .crop span {
+  margin-right: 5px;
+}
+/* line 17, ../scss/modules/media-selection.scss */
+.white-box .content .items-list li .media-selection-item:hover .crop {
+  display: table-cell;
+}
+
+/* line 23, ../scss/modules/media-selection.scss */
 .media-selection-overlay {
   height: 500px;
 }
 @media (min-width: 900px) {
-  /* line 5, ../scss/modules/media-selection-overlay.scss */
+  /* line 27, ../scss/modules/media-selection.scss */
   .media-selection-overlay, .media-selection-overlay .slides .slide, .media-selection-overlay .slides .slide .overlay-footer {
     width: 860px;
   }
 }
 @media (min-width: 1200px) {
-  /* line 10, ../scss/modules/media-selection-overlay.scss */
+  /* line 32, ../scss/modules/media-selection.scss */
   .media-selection-overlay, .media-selection-overlay .slides .slide, .media-selection-overlay .slides .slide .overlay-footer {
     width: 1140px;
   }
 }
 @media (min-width: 1600px) {
-  /* line 15, ../scss/modules/media-selection-overlay.scss */
+  /* line 37, ../scss/modules/media-selection.scss */
   .media-selection-overlay, .media-selection-overlay .slides .slide, .media-selection-overlay .slides .slide .overlay-footer {
     width: 1420px;
   }
 }
-/* line 21, ../scss/modules/media-selection-overlay.scss */
+/* line 43, ../scss/modules/media-selection.scss */
 .media-selection-overlay .slide.media-selection-overlay {
   height: 429px;
 }
-/* line 24, ../scss/modules/media-selection-overlay.scss */
-.media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-  height: 328px;
+/* line 46, ../scss/modules/media-selection.scss */
+.media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+  height: 378px;
 }
 @media (min-height: 700px) {
-  /* line 1, ../scss/modules/media-selection-overlay.scss */
+  /* line 23, ../scss/modules/media-selection.scss */
   .media-selection-overlay {
     height: 600px;
   }
-  /* line 29, ../scss/modules/media-selection-overlay.scss */
+  /* line 51, ../scss/modules/media-selection.scss */
   .media-selection-overlay .slide.media-selection-overlay {
     height: 529px;
   }
-  /* line 32, ../scss/modules/media-selection-overlay.scss */
-  .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-    height: 428px;
+  /* line 54, ../scss/modules/media-selection.scss */
+  .media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+    height: 478px;
   }
 }
 @media (min-height: 800px) {
-  /* line 1, ../scss/modules/media-selection-overlay.scss */
+  /* line 23, ../scss/modules/media-selection.scss */
   .media-selection-overlay {
     height: 700px;
   }
-  /* line 38, ../scss/modules/media-selection-overlay.scss */
+  /* line 60, ../scss/modules/media-selection.scss */
   .media-selection-overlay .slide.media-selection-overlay {
     height: 629px;
   }
-  /* line 41, ../scss/modules/media-selection-overlay.scss */
-  .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-    height: 528px;
+  /* line 63, ../scss/modules/media-selection.scss */
+  .media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+    height: 578px;
   }
 }
 @media (min-height: 900px) {
-  /* line 1, ../scss/modules/media-selection-overlay.scss */
+  /* line 23, ../scss/modules/media-selection.scss */
   .media-selection-overlay {
     height: 800px;
   }
-  /* line 47, ../scss/modules/media-selection-overlay.scss */
+  /* line 69, ../scss/modules/media-selection.scss */
   .media-selection-overlay .slide.media-selection-overlay {
     height: 729px;
   }
-  /* line 50, ../scss/modules/media-selection-overlay.scss */
-  .media-selection-overlay .list-container, .media-selection-overlay .navigation-container {
-    height: 628px;
+  /* line 72, ../scss/modules/media-selection.scss */
+  .media-selection-overlay .list-container, .media-selection-overlay .dropzone-wrapper-container {
+    height: 678px;
   }
 }
-/* line 56, ../scss/modules/media-selection-overlay.scss */
-.media-selection-overlay.dropzone-overlay-opened .container .list-container {
+/* line 78, ../scss/modules/media-selection.scss */
+.media-selection-overlay.dropzone-overlay-opened .list-container {
   overflow: hidden;
 }
-/* line 61, ../scss/modules/media-selection-overlay.scss */
+/* line 83, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container {
   padding-right: 20px;
 }
-/* line 64, ../scss/modules/media-selection-overlay.scss */
+/* line 86, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 69, ../scss/modules/media-selection-overlay.scss */
+/* line 91, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 74, ../scss/modules/media-selection-overlay.scss */
+/* line 96, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container > div {
   width: 100%;
 }
-/* line 77, ../scss/modules/media-selection-overlay.scss */
+/* line 99, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container .husky-overlay-wrapper {
   position: absolute;
 }
-/* line 80, ../scss/modules/media-selection-overlay.scss */
+/* line 102, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container .husky-overlay-container {
   position: absolute;
   top: 0;
@@ -348,31 +554,46 @@
   border-radius: 0;
   border: 0;
 }
-/* line 91, ../scss/modules/media-selection-overlay.scss */
+/* line 113, ../scss/modules/media-selection.scss */
 .media-selection-overlay .dropzone-container .husky-overlay-container .slide {
   width: 100%;
 }
-/* line 98, ../scss/modules/media-selection-overlay.scss */
-.media-selection-overlay .container .navigation-container {
-  float: left;
-  width: 250px;
+/* line 119, ../scss/modules/media-selection.scss */
+.media-selection-overlay .dropzone-wrapper-container {
+  position: absolute;
+  width: 100%;
 }
-/* line 103, ../scss/modules/media-selection-overlay.scss */
-.media-selection-overlay .container .list-container {
-  float: right;
+/* line 124, ../scss/modules/media-selection.scss */
+.media-selection-overlay .list-container {
   position: relative;
-  width: calc(100% - 250px);
+  width: 100%;
   padding: 20px;
   overflow: auto;
 }
-/* line 111, ../scss/modules/media-selection-overlay.scss */
-.media-selection-overlay .container::before, .media-selection-overlay .container::after {
-  content: " ";
-  display: table;
+/* line 130, ../scss/modules/media-selection.scss */
+.media-selection-overlay .list-container .collection-view .sulu-title {
+  width: auto;
 }
-/* line 116, ../scss/modules/media-selection-overlay.scss */
-.media-selection-overlay .container::after {
-  clear: both;
+/* line 135, ../scss/modules/media-selection.scss */
+.media-selection-overlay .toolbar-container {
+  background: #52B6CA;
+}
+/* line 139, ../scss/modules/media-selection.scss */
+.media-selection-overlay .back {
+  display: inline-block;
+  vertical-align: top;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: -5px;
+  color: #fff;
+}
+/* line 151, ../scss/modules/media-selection.scss */
+.media-selection-overlay .toolbar {
+  display: inline-block;
+  vertical-align: top;
 }
 
 /* line 6, ../scss/modules/collection-select-overlay.scss */
@@ -381,7 +602,7 @@
 }
 /* line 10, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-content {
-  margin: 0;
+  padding: 0;
 }
 /* line 14, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-footer {
@@ -447,21 +668,25 @@ a.media-edit-link,
 
 /* line 55, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image {
-  background-position: center center;
-  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: url("../img/checked.gif");
+  border: 1px #fff solid;
+  border-radius: 3px;
   width: 100%;
-  height: 180px;
-  position: relative;
+  height: 100%;
 }
-/* line 62, ../scss/modules/media-edit-overlay.scss */
+/* line 68, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image.icon {
   color: #999;
   font-size: 150px;
   text-align: center;
   vertical-align: middle;
-  padding-top: 15px;
 }
-/* line 70, ../scss/modules/media-edit-overlay.scss */
+/* line 75, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image .file-version-change,
 .media-edit-preview-image img {
   position: absolute;
@@ -472,59 +697,77 @@ a.media-edit-link,
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   font-size: 14px;
+  max-height: 100%;
+  max-width: 100%;
 }
-/* line 79, ../scss/modules/media-edit-overlay.scss */
+/* line 86, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-/* line 83, ../scss/modules/media-edit-overlay.scss */
+/* line 90, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 91, ../scss/modules/media-edit-overlay.scss */
+/* line 98, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container {
   background-color: #ddd;
-  width: 250px;
-  height: 250px;
+  position: relative;
+  text-align: center;
 }
-/* line 97, ../scss/modules/media-edit-overlay.scss */
-#media-preview .media-edit-preview-image {
-  background-size: cover;
-  width: 100%;
-  height: 100%;
+/* line 104, ../scss/modules/media-edit-overlay.scss */
+#media-preview .media-edit-preview-image-container:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
 }
-/* line 103, ../scss/modules/media-edit-overlay.scss */
+/* line 111, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   height: 100%;
 }
-/* line 107, ../scss/modules/media-edit-overlay.scss */
+/* line 121, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 114, ../scss/modules/media-edit-overlay.scss */
+/* line 128, ../scss/modules/media-edit-overlay.scss */
 .overlay-footer .btn.media-reset-preview-action.hide {
   display: none;
 }
 
-/* line 119, ../scss/modules/media-edit-overlay.scss */
-#media-info textarea.description {
-  height: 90px;
-  min-height: 90px;
+/* line 133, ../scss/modules/media-edit-overlay.scss */
+#media-info .info-label-container {
+  overflow: visible;
+  position: absolute;
+  height: 0;
+  top: 0;
+  left: 0;
+  right: 0;
 }
-/* line 124, ../scss/modules/media-edit-overlay.scss */
+/* line 142, ../scss/modules/media-edit-overlay.scss */
+#media-info textarea.description {
+  height: 80px;
+  min-height: 80px;
+}
+/* line 147, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview {
+  position: relative;
   text-align: center;
 }
-/* line 127, ../scss/modules/media-edit-overlay.scss */
-#media-info .media-info-preview span.description {
-  font-size: 12px;
-  color: #999;
+/* line 151, ../scss/modules/media-edit-overlay.scss */
+#media-info .media-info-preview:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
 }
 
 /* line 1, ../scss/modules/media-play-video-overlay.scss */

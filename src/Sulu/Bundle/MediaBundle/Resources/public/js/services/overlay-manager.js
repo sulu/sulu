@@ -21,7 +21,11 @@ define(function() {
          */
         getOverlayContainer = function(containerId) {
             var $element = $('<div id="' + containerId + '"/>');
-            $('body').append($element);
+            if (!!this && !!this.$el) {
+                this.$el.append($element);
+            } else {
+                $('body').append($element);
+            }
 
             return $element;
         },
@@ -130,8 +134,9 @@ define(function() {
          * Start media-edit overlay to edit given mediaIds
          * @param mediaIds medias to edit in overlay
          * @param locale medias are saved for given locale
+         * @param startingSlide The starting slide of the overlay
          */
-        startEditMediaOverlay: function(mediaIds, locale) {
+        startEditMediaOverlay: function(mediaIds, locale, startingSlide) {
             if (!!overlayOpened) {
                 return false;
             }
@@ -139,14 +144,16 @@ define(function() {
             if (!$.isArray(mediaIds)) {
                 mediaIds = [mediaIds];
             }
-            var $container = getOverlayContainer('edit-media-overlay');
+            var $container = getOverlayContainer.call(this, 'edit-media-overlay');
+            startingSlide = (typeof startingSlide === 'undefined') ? 'edit' : startingSlide;
 
             this.sandbox.start([{
                 name: 'collections/media-edit-overlay@sulumedia',
                 options: {
                     el: $container,
                     mediaIds: mediaIds,
-                    locale: locale
+                    locale: locale,
+                    startingSlide: startingSlide
                 }
             }]);
             registerOpenedOverlay.call(this, 'sulu.media-edit.closed');

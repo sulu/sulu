@@ -22,7 +22,7 @@ interface FormatManagerInterface
     /**
      * Return the image by a given url.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $formatName
      *
      * @return Response
@@ -39,22 +39,46 @@ interface FormatManagerInterface
     public function getMediaProperties($url);
 
     /**
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
-     * @param array  $storageOptions
-     * @param int    $version
+     * @param array $storageOptions
+     * @param int $version
+     * @param int $subVersion
      * @param string $mimeType
      *
      * @return array
      */
-    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType);
+    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType);
+
+    /**
+     * Returns a definition of a format with a given key. The returned formats contain
+     * the passed format options merged into them.
+     *
+     * @param string $formatKey
+     * @param string $locale
+     * @param array $formatOptions
+     *
+     * @return array
+     */
+    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = []);
+
+    /**
+     * Returns all definitions of image formats. The returned formats contain the passed
+     * format-options merged into them.
+     *
+     * @param string $locale
+     * @param array $formatOptions
+     *
+     * @return array
+     */
+    public function getFormatDefinitions($locale = null, array $formatOptions = []);
 
     /**
      * Delete the image by the given parameters.
      *
-     * @param int    $idMedia
+     * @param int $idMedia
      * @param string $fileName
-     * @param array  $options
+     * @param array $options
      *
      * @return bool
      */

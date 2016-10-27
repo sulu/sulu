@@ -640,6 +640,7 @@ class CollectionManager implements CollectionManagerInterface
             $fileVersion->getName(),
             $fileVersion->getStorageOptions(),
             $fileVersion->getVersion(),
+            $fileVersion->getSubVersion(),
             $fileVersion->getMimeType()
         );
 
@@ -695,6 +696,7 @@ class CollectionManager implements CollectionManagerInterface
 
         if ($entity && $entity->getId()) {
             $apiEntity->setMediaCount($this->collectionRepository->countMedia($entity));
+            $apiEntity->setSubCollectionCount($this->collectionRepository->countSubCollections($entity));
         }
 
         return $this->addPreview($apiEntity);
@@ -708,7 +710,11 @@ class CollectionManager implements CollectionManagerInterface
     protected function getCurrentUser()
     {
         if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
-            return $this->tokenStorage ? $token->getUser() : null;
+            $user = $token->getUser();
+
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
         }
 
         return;

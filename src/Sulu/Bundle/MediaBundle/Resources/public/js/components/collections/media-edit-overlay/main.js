@@ -14,26 +14,41 @@
  */
 define([
     'config',
+    './cropping-slide',
     'services/sulumedia/media-manager',
     'services/sulumedia/file-icons',
+    'services/sulumedia/image-editor',
     'text!./info.html',
     'text!./copyright.html',
     'text!./versions.html',
     'text!./preview.html',
     'text!./formats.html',
     'text!./categories.html'
-], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate, categoriesTemplate) {
+], function(
+    config,
+    croppingSlide,
+    mediaManager,
+    fileIcons,
+    imageEditor,
+    infoTemplate,
+    copyrightTemplate,
+    versionsTemplate,
+    previewTemplate,
+    formatsTemplate,
+    categoriesTemplate
+) {
 
     'use strict';
 
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            instanceName: ''
+            instanceName: '',
+            startingSlide: 'edit'
         },
 
         constants = {
-            thumbnailFormat: '200x180-inset',
+            thumbnailFormat: '260x',
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             fileDropzoneSelector: '#file-version-change',
@@ -47,8 +62,20 @@ define([
             multiEditClass: 'multi-edit',
             loadingClass: 'loading',
             loaderClass: 'media-edit-loader',
-            resetPreviewActionClass: 'media-reset-preview-action'
+            resetPreviewActionClass: 'media-reset-preview-action',
+            singleOverlaySkin: 'large',
+            multipleOverlaySkin: 'medium'
         },
+
+        imageFormats = config.get('sulu-media')['formats'],
+
+        nonInternalImageFormats = Object.keys(imageFormats).reduce(function(previous, current) {
+            if (!imageFormats[current].internal) {
+                previous[current] = imageFormats[current];
+            }
+
+            return previous;
+        }, {}),
 
         resetPreviewUrl = function(id) {
             return '/admin/api/media/' + id + '/preview';
@@ -103,7 +130,7 @@ define([
             this.medias = null;
             this.$multiple = null;
 
-            this.startLoadingOverlay();
+            this.startLoadingOverlay(this.options.mediaIds.length > 1);
             this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
                 this.editMedia(medias);
             }.bind(this));
@@ -114,7 +141,7 @@ define([
         /**
          * Starts the loading overlay
          */
-        startLoadingOverlay: function() {
+        startLoadingOverlay: function(multiple) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.loadingClass + '"/>'),
                 $loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '" />');
 
@@ -138,7 +165,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.edit.loading'),
                         data: $loader,
-                        skin: 'wide',
+                        skin: !!multiple ? constants.multipleOverlaySkin : constants.singleOverlaySkin,
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit.loading',
@@ -194,7 +221,8 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview, $formats, $categories, iconClass;
+            var $info, $copyright, $versions, $preview, $formats,
+                $categories, iconClass, formatUrls, formatTitles;
 
             this.media = media;
 
@@ -202,8 +230,6 @@ define([
             $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate,
-                formatBytes: this.sandbox.util.formatBytes,
-                crop: this.sandbox.util.cropMiddle,
                 icon: iconClass,
                 thumbnailFormat: constants.thumbnailFormat
             }));
@@ -226,8 +252,28 @@ define([
                 translate: this.sandbox.translate
             }));
 
+            formatUrls = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                previous[current] = this.media.thumbnails[current];
+
+                return previous;
+            }.bind(this), {});
+
+            formatTitles = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                var format = nonInternalImageFormats[current];
+
+                previous[current] = null;
+
+                if (!!format && format.meta && format.meta.title) {
+                    previous[current] = format.meta.title[this.sandbox.sulu.user.locale];
+                }
+
+                return previous;
+            }.bind(this), {});
+
             $formats = this.sandbox.dom.createElement(_.template(formatsTemplate, {
                 media: this.media,
+                formatUrls: formatUrls,
+                formatTitles: formatTitles,
                 domain: window.location.protocol + '//' + window.location.host,
                 translate: this.sandbox.translate
             }));
@@ -245,7 +291,8 @@ define([
          * Starts the actual overlay for single-edit
          */
         startSingleOverlay: function($info, $copyright, $formats, $versions, $preview, $categories) {
-            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>'),
+                $editActionSelect, startingSlide = 0;
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
 
@@ -284,6 +331,14 @@ define([
                 }
             );
 
+            if (this.media.type.name === 'image') {
+                $editActionSelect = $('<div class="edit-action-select"/>');
+                croppingSlide.initialize(this.$el, this.sandbox, this.media, nonInternalImageFormats, function() {
+                    this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
+                }.bind(this));
+                startingSlide = (this.options.startingSlide === 'crop') ? 1 : startingSlide;
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -292,15 +347,22 @@ define([
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
-                        skin: 'wide',
+                        skin: constants.singleOverlaySkin,
+                        startingSlide: startingSlide,
+                        supportKeyInput: false,
                         slides: [
                             {
                                 title: this.media.title,
+                                subTitle: this.sandbox.util.cropMiddle(
+                                    this.media.mimeType + ', ' + this.sandbox.util.formatBytes(this.media.size),
+                                    32
+                                ),
                                 tabs: tabs,
                                 languageChanger: {
                                     locales: this.sandbox.sulu.locales,
                                     preSelected: this.options.locale
                                 },
+                                panelContent: $editActionSelect,
                                 propagateEvents: false,
                                 okCallback: this.singleOkCallback.bind(this),
                                 cancelCallback: function() {
@@ -330,11 +392,79 @@ define([
                                         align: 'right'
                                     }
                                 ]
-                            }
+                            },
+                            croppingSlide.getSlideDefinition()
                         ]
                     }
                 }
-            ]);
+            ]).then(function() {
+                if (this.media.type.name === 'image') {
+                    this.startEditActionSelect($editActionSelect);
+                    croppingSlide.start();
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Starts the edit action select which provides actions
+         * to navigate to the cropping slide.
+         *
+         * @param {Object} $element The dom element to start the select in
+         */
+        startEditActionSelect: function($element) {
+            var config;
+
+            if (imageEditor.editingIsPossible()) {
+                config = {
+                    data: [
+                        {
+                            name: this.sandbox.translate('sulu-media.crop'),
+                            callback: function() {
+                                this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                            }.bind(this)
+                        },
+                        {
+                            name: this.sandbox.translate('sulu-media.edit-original'),
+                            callback: function() {
+                                this.sandbox.sulu.showConfirmationDialog({
+                                    title: 'sulu-media.external-server-title',
+                                    description: 'sulu-media.external-server-description',
+                                    callback: function(confirmed) {
+                                        if (!confirmed) {
+                                            return;
+                                        }
+
+                                        imageEditor.editImage(this.media.url.split('?')[0])
+                                            .then(this.setNewVersionByUrl.bind(this));
+                                    }.bind(this)
+                                });
+                            }.bind(this)
+                        }
+                    ]
+                }
+            } else {
+                config = {
+                    defaultLabel: this.sandbox.translate('sulu-media.crop'),
+                    icon: 'crop',
+                    noItemsCallback: function() {
+                        this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                    }.bind(this),
+                    data: []
+                }
+            }
+
+            this.sandbox.start([{
+                name: 'select@husky',
+                options: this.sandbox.util.extend(true, {}, {
+                    el: $element,
+                    defaultLabel: this.sandbox.translate('sulu-media.edit-image'),
+                    instanceName: 'edit-action-select',
+                    fixedLabel: true,
+                    skin: 'white-border',
+                    icon: 'paint-brush',
+                    repeatSelect: true
+                }, config)
+            }]);
         },
 
         /**
@@ -389,6 +519,7 @@ define([
 
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
                 this.clipboard = this.sandbox.clipboard.initialize('.fa-clipboard');
+                this.sandbox.emit('husky.overlay.alert.close');
             }.bind(this));
 
             // change language (single-edit)
@@ -432,6 +563,10 @@ define([
                 }, 2000, $target, $item, $info);
             }.bind(this), '.fa-clipboard');
 
+            this.sandbox.on('husky.dropzone.file-version.uploading', function() {
+                this.sandbox.emit('husky.overlay.alert.close');
+            }.bind(this));
+
             this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
             this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
         },
@@ -453,6 +588,7 @@ define([
          */
         languageChangedSingle: function(locale) {
             this.saveSingleMedia().then(function() {
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
                 this.options.locale = locale;
 
@@ -460,6 +596,34 @@ define([
 
                 this.initialize();
             }.bind(this));
+        },
+
+        /**
+         * Sets the new file version for a media by a given url. Shows
+         * a confirmation dialog to the user to confirm the change.
+         *
+         * @param {String} newMediaUrl The url to the new media
+         */
+        setNewVersionByUrl: function(newMediaUrl) {
+            this.sandbox.sulu.showConfirmationDialog({
+                title: 'sulu-media.new-version-will-be-created',
+                description: 'sulu-media.new-version-will-be-created-description',
+                callback: function(confirmed) {
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.overlay.alert.show-loader');
+                    this.sandbox.emit(
+                        'husky.dropzone.file-version.add-image',
+                        newMediaUrl,
+                        this.media.mimeType,
+                        this.media.name
+                    );
+
+                    return false;
+                }.bind(this)
+            });
         },
 
         /**
@@ -471,6 +635,7 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
 
                 this.unbindSingleOverlayEvents();
@@ -489,6 +654,7 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', media.id, media);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
 
                 this.unbindSingleOverlayEvents();
@@ -595,6 +761,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.multiple-edit.title'),
                         data: this.$multiple,
+                        skin: constants.multipleOverlaySkin,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
                             preSelected: this.options.locale

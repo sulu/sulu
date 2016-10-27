@@ -101,6 +101,8 @@ class Content implements \ArrayAccess
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $url;
 
@@ -167,6 +169,23 @@ class Content implements \ArrayAccess
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Returns value for given property or given default.
+     *
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getPropertyWithDefault($name, $default = null)
+    {
+        if (!array_key_exists($name, $this->data)) {
+            return $default;
+        }
+
+        return $this->data[$name];
     }
 
     /**

@@ -80,6 +80,13 @@
             <orm:joins ref="fileVersion"/>
         </property>
 
+        <property name="subVersion" display="none">
+            <orm:field-name>subVersion</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
         <property name="size" list:translation="media.media.size" display="always" list:type="bytes">
             <orm:field-name>size</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>

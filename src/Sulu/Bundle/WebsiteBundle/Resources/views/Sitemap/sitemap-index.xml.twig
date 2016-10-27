@@ -1,0 +1,25 @@
+{% spaceless %}
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% import _self as self %}
+    {% for sitemap in sitemaps %}
+    {% for page in range(1, sitemap.maxPage) %}
+    <sitemap>
+        {{ self.loc(sitemap.alias, page, scheme|default(), domain|default()) }}
+
+        {% if sitemap.lastmod %}
+        <lastmod>{{ sitemap.lastmod|date('c') }}</lastmod>
+        {% endif %}
+    </sitemap>
+    {% endfor %}
+    {% endfor %}
+</sitemapindex>
+{% endspaceless %}
+
+{% macro loc(alias, page, scheme, domain) %}
+    {% if scheme|default() and domain|default() %}
+        <loc>{{ scheme }}://{{ domain }}{{ path('sulu_website.paginated_sitemap', {alias: alias, page: page}) }}</loc>
+    {% else %}
+        <loc>{{ url('sulu_website.paginated_sitemap', {alias: alias, page: page}) }}</loc>
+    {% endif %}
+{% endmacro %}

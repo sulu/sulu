@@ -132,6 +132,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     private function addFormatFromFormatNode(\DOMNode $formatNode, &$formats)
     {
         $key = $this->getKeyFromFormatNode($formatNode);
+        $internal = $this->getInternalFlagFromFormatNode($formatNode);
 
         $meta = $this->getMetaFromFormatNode($formatNode);
         $scale = $this->getScaleFromFormatNode($formatNode);
@@ -140,6 +141,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
 
         $formats[$key] = [
             'key' => $key,
+            'internal' => $internal,
             'meta' => $meta,
             'scale' => $scale,
             'transformations' => $transformations,
@@ -201,6 +203,15 @@ abstract class BaseXmlFormatLoader extends FileLoader
      * @return string
      */
     abstract protected function getKeyFromFormatNode(\DOMNode $formatNode);
+
+    /**
+     * For a given format node returns the internal flag of the format.
+     *
+     * @param \DOMNode $formatNode
+     *
+     * @return bool
+     */
+    abstract protected function getInternalFlagFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the meta information of the format.

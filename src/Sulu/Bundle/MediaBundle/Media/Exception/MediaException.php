@@ -179,6 +179,20 @@ class MediaException extends Exception
      */
     const EXCEPTION_CODE_ORIGINAL_FILE_NOT_FOUND = 5027;
 
+    /**
+     * Format is not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_FORMAT_NOT_FOUND = 5028;
+
+    /**
+     * Format options parameter is missing.
+     *
+     * @var int
+     */
+    const EXCEPTION_FORMAT_OPTIONS_MISSING_PARAMETER = 5029;
+
     public function toArray()
     {
         return [

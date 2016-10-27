@@ -43,7 +43,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *          "cget_media",
  *          parameters = {
  *              "collection" = "expr(object.getId())",
- *              "limit" = 9999,
  *              "types" = "{types}",
  *              "locale" = "expr(object.getLocale())"
  *          }
@@ -125,6 +124,11 @@ class Collection extends ApiWrapper
      * @var int
      */
     protected $mediaCount = 0;
+
+    /**
+     * @var int
+     */
+    protected $subCollectionCount = 0;
 
     public function __construct(CollectionInterface $collection, $locale)
     {
@@ -513,6 +517,36 @@ class Collection extends ApiWrapper
     public function setMediaCount($mediaCount)
     {
         $this->mediaCount = $mediaCount;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return int The number of sub collections contained by the collection
+     */
+    public function getSubCollectionCount()
+    {
+        return $this->subCollectionCount;
+    }
+
+    /**
+     * @param int $subCollectionCount The new number of sub collections
+     */
+    public function setSubCollectionCount($subCollectionCount)
+    {
+        $this->subCollectionCount = $subCollectionCount;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * Returns the total number of all types of sub objects of this collection.
+     *
+     * @return int
+     */
+    public function getObjectCount()
+    {
+        return $this->getMediaCount() + $this->getSubCollectionCount();
     }
 
     /**

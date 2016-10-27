@@ -230,42 +230,57 @@
             };
 
             /**
+             * Shows a standard confirmation dialog
+             * @param {object} options
+             * @param {function} options.callback The callback which should be called on a button click, the only
+             *                                    parameter passed is true when the action was confirmed and false
+             *                                    otherwise
+             * @param {string} options.title The title of the dialog
+             * @param {string} options.description The description shown in the dialog
+             * @param {string} options.buttonTitle The title of the ok button
+             */
+            app.sandbox.sulu.showConfirmationDialog = function(options) {
+                if (!options.callback || typeof(options.callback) !== 'function') {
+                    throw 'callback must be a function';
+                }
+
+                app.sandbox.emit(
+                    'sulu.overlay.show-warning',
+                    options.title,
+                    options.description,
+                    function() {
+                        return options.callback(false);
+                    },
+                    function() {
+                        return options.callback(true);
+                    },
+                    {
+                        okDefaultText: options.buttonTitle || 'public.ok'
+                    }
+                )
+            };
+
+            /**
              * Shows a standard delete warning dialog
              * @param callback {Function} callback function to execute after dialog got closed. The callback gets always
              *                            executed (with true or false as first argument, whether the dialog got
              *                            confirmed or not)
              * @param title {String} custom title of the dialog
              * @param description {String} custom description of the dialog
+             * @param description {Array} custom options of the dialog
              */
             app.sandbox.sulu.showDeleteDialog = function(callback, title, description) {
-                // check if callback is a function
-                if (!!callback && typeof(callback) !== 'function') {
-                    throw 'callback is not a function';
-                }
                 if (typeof title !== 'string') {
                     title = app.sandbox.util.capitalizeFirstLetter(app.sandbox.translate('public.delete')) + '?';
                 }
                 description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
 
-                // show warning dialog
-                app.sandbox.emit('sulu.overlay.show-warning',
-                    title,
-                    description,
-
-                    function() {
-                        // cancel callback
-                        callback(false);
-                    }.bind(this),
-
-                    function() {
-                        // ok callback
-                        callback(true);
-                    }.bind(this),
-
-                    {
-                        okDefaultText: 'public.delete'
-                    }
-                );
+                app.sandbox.sulu.showConfirmationDialog({
+                    callback: callback,
+                    title: title,
+                    description: description,
+                    buttonTitle: 'public.delete'
+                });
             };
 
             /*********
@@ -558,6 +573,21 @@
                             }
                         ]);
                     }.bind(this));
+            };
+
+            app.sandbox.sulu.showLoader = function($element) {
+                this.sandbox.start(
+                    [
+                        {
+                            name: 'loader@husky',
+                            options: {
+                                el: $element,
+                                size: '100px',
+                                color: '#ccc'
+                            }
+                        }
+                    ]
+                );
             };
         }
     });

@@ -125,6 +125,7 @@ define(['services/husky/util'], function(util) {
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             titleKey: 'title',
+            descriptionKey: 'url',
             imageKey: 'image',
             pathKey: 'path',
             localeKey: 'locale',
@@ -219,7 +220,10 @@ define(['services/husky/util'], function(util) {
                 '<% if (!!image) { %>',
                 '        <span class="image"><img src="<%= image %>"/></span>',
                 '<% } %>',
-                '        <span class="value"><%= value %></span>',
+                '        <span class="value" title="<%= value %>"><%= (typeof cropper === "function") ? cropper(value, 42) : value %></span>',
+                '<% if (!!description) { %>',
+                '        <span class="description" title="<%= description %>"><%= (typeof cropper === "function") ? cropper(description, 55) : description %></span>',
+                '<% } %>',
                 '    </a>',
                 '</li>'
             ].join(''),
@@ -228,80 +232,79 @@ define(['services/husky/util'], function(util) {
             ].join(''),
             overlayContent: {
                 main: [
-                    '<div class="smart-overlay-content">',
+                    '<div class="smart-overlay-content grid">',
                     '</div>'
                 ].join(''),
 
                 dataSource: [
-                    '<div class="item-half left">',
-                    '    <span class="desc"><%= dataSourceLabelStr %></span>',
-                    '    <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
-                    '    <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
-                    '</div>'
-                ].join(''),
-
-                categories: [
-                    '<div class="item">',
-                    '    <div class="categories-loader"></div>',
-                    '    <div class="categories" style="display: none;">',
-                    '        <span class="desc"><%= categoriesLabelStr %></span>',
-                    '        <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
-                    '        <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-6">',
+                    '        <span class="desc"><%= dataSourceLabelStr %></span>',
+                    '        <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
+                    '        <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '    </div>',
+                    '    <div class="grid-col-6">',
+                    '        <div class="check<%= disabled %>">',
+                    '            <label>',
+                    '                <div class="custom-checkbox">',
+                    '                    <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
+                    '                    <span class="icon"></span>',
+                    '                </div>',
+                    '                <span class="description"><%= includeSubStr %></span>',
+                    '            </label>',
+                    '        </div>',
                     '    </div>',
                     '</div>'
                 ].join(''),
 
-                subFolders: [
-                    '<div class="item-half">',
-                    '    <div class="check<%= disabled %>">',
-                    '        <label>',
-                    '            <div class="custom-checkbox">',
-                    '                <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
-                    '                <span class="icon"></span>',
-                    '            </div>',
-                    '            <span class="description"><%= includeSubStr %></span>',
-                    '        </label>',
+                categories: [
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-12">',
+                    '        <div class="categories-loader"></div>',
+                    '        <div class="categories" style="display: none;">',
+                    '            <span class="desc"><%= categoriesLabelStr %></span>',
+                    '            <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
+                    '            <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
+                    '        </div>',
                     '    </div>',
                     '</div>'
                 ].join(''),
 
                 tagList: [
-                    '<div class="item-half left tags<%= disabled %>">',
-                    '    <span class="desc"><%= filterByTagsStr %></span>',
-                    '    <div class="' + constants.tagListClass + '"></div>',
-                    '</div>'
-                ].join(''),
-
-                tagOperator: [
-                    '<div class="item-half<%= disabled %>">',
-                    '    <span class="desc">&nbsp;</span>',
-                    '    <div class="' + constants.tagOperatorClass + '"></div>',
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-6 tags<%= disabled %>">',
+                    '        <span class="desc"><%= filterByTagsStr %></span>',
+                    '        <div class="' + constants.tagListClass + '"></div>',
+                    '    </div>',
+                    '    <div class="grid-col-6 <%= disabled %>">',
+                    '        <span class="desc">&nbsp;</span>',
+                    '        <div class="' + constants.tagOperatorClass + '"></div>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 sortBy: [
-                    '<div class="item-half left">',
-                    '    <span class="desc"><%= sortByStr %></span>',
-                    '    <div class="' + constants.sortByDropdownClass + '"></div>',
-                    '</div>'
-                ].join(''),
-
-                sortMethod: [
-                    '<div class="item-half">',
-                    '    <span class="desc">&nbsp;</span>',
-                    '    <div class="' + constants.sortMethodDropdownClass + '"></div>',
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-6">',
+                    '        <span class="desc"><%= sortByStr %></span>',
+                    '        <div class="' + constants.sortByDropdownClass + '"></div>',
+                    '    </div>',
+                    '    <div class="grid-col-6">',
+                    '        <span class="desc">&nbsp;</span>',
+                    '        <div class="' + constants.sortMethodDropdownClass + '"></div>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 presentAs: [
-                    '<div class="item-half left">',
+                    '<div class="grid-col-6">',
                     '    <span class="desc"><%= presentAsStr %></span>',
                     '    <div class="' + constants.presentAsDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 limitResult: [
-                    '<div class="item-half">',
+                    '<div class="grid-col-6">',
                     '    <span class="desc"><%= limitResultToStr %></span>',
                     '    <input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
@@ -630,11 +633,13 @@ define(['services/husky/util'], function(util) {
                     this.sandbox.dom.append(ul, _.template(template, {
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
+                        description: item[this.options.descriptionKey] || null,
                         image: item[this.options.imageKey] || null,
                         webspace: this.options.webspace,
                         locale: this.options.locale,
                         num: (index + 1),
-                        icons: this.getItemIcons(item)
+                        icons: this.getItemIcons(item),
+                        cropper: this.sandbox.util.cropMiddle
                     }));
                 }.bind(this));
 
@@ -814,6 +819,7 @@ define(['services/husky/util'], function(util) {
                     data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
                     cssClass: 'data-source-slide',
                     okInactive: true,
+                    contentSpacing: false,
                     buttons: [
                         {
                             type: 'cancel',
@@ -893,7 +899,7 @@ define(['services/husky/util'], function(util) {
                         removeOnClose: false,
                         container: this.$el,
                         instanceName: 'smart-content.' + this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: slides
                     }
                 }
@@ -1059,19 +1065,20 @@ define(['services/husky/util'], function(util) {
         },
 
         appendOverlayContent: function($container, data) {
+            var $subContainer;
+
             if (!!this.options.has.datasource) {
                 $container.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
-                    dataSourceValStr: ''
-                }));
-                $container.append(_.template(templates.overlayContent.subFolders)({
+                    dataSourceValStr: '',
                     includeSubStr: this.sandbox.translate(this.translations.includeSubFolders),
                     includeSubCheckedStr: (data.includeSubFolders) ? ' checked' : '',
                     disabled: (this.overlayDisabled.subFolders) ? ' disabled' : ''
                 }));
                 $container.append('<div class="clear"></div>');
             }
+
             if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
                 $container.append(_.template(templates.overlayContent.categories)({
                     categoriesLabelStr: this.sandbox.translate(this.translations.categoryLabel),
@@ -1079,37 +1086,43 @@ define(['services/husky/util'], function(util) {
                     categoriesButtonStr: this.sandbox.translate(this.translations.categoryButton)
                 }));
             }
+
             if (!!this.options.has.tags && !!this.options.displayOptions.tags) {
                 $container.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
-                $container.append(_.template(templates.overlayContent.tagOperator)({
-                    disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
-                }));
                 $container.append('<div class="clear"></div>');
             }
+
             if (!!this.options.has.sorting && !!this.options.displayOptions.sorting) {
                 $container.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
-                $container.append(_.template(templates.overlayContent.sortMethod)());
 
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.presentAs && !!this.options.displayOptions.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0
-            ) {
-                $container.append(_.template(templates.overlayContent.presentAs)({
+
+            $subContainer = $('<div class="grid-row"/>');
+
+            if (!!this.options.has.presentAs && !!this.options.displayOptions.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
+                $subContainer.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
+
             if (!!this.options.has.limit && !!this.options.displayOptions.limit) {
-                $container.append(_.template(templates.overlayContent.limitResult)({
+                $subContainer.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
                     limitResult: (data.limitResult > 0) ? data.limitResult : '',
                     disabled: (this.overlayDisabled.limitResult) ? ' disabled' : ''
                 }));
             }
+
+            if ($subContainer.find('> *').length > 0 ) {
+                $container.append($subContainer);
+            }
+
             $container.append('<div class="clear"></div>');
         },
 

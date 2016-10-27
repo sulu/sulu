@@ -100,7 +100,7 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        skin: 'wide',
+                        skin: 'medium',
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-play-video.loading',
@@ -169,7 +169,7 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        skin: 'wide',
+                        skin: 'medium',
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-play-video',

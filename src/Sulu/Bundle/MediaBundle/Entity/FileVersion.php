@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -29,6 +29,11 @@ class FileVersion implements AuditableInterface
      * @var int
      */
     private $version;
+
+    /**
+     * @var int
+     */
+    private $subVersion;
 
     /**
      * @var int
@@ -86,6 +91,11 @@ class FileVersion implements AuditableInterface
     private $meta = [];
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $formatOptions = [];
+
+    /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
      * @Exclude
      */
@@ -129,6 +139,7 @@ class FileVersion implements AuditableInterface
         $this->contentLanguages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->publishLanguages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formatOptions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
         $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -179,6 +190,30 @@ class FileVersion implements AuditableInterface
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set subVersion.
+     *
+     * @param int $subVersion
+     *
+     * @return FileVersion
+     */
+    public function setSubVersion($subVersion)
+    {
+        $this->subVersion = $subVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get subVersion.
+     *
+     * @return int
+     */
+    public function getSubVersion()
+    {
+        return $this->subVersion;
     }
 
     /**
@@ -438,6 +473,30 @@ class FileVersion implements AuditableInterface
     }
 
     /**
+     * Adds a format-options entity to the file-version.
+     *
+     * @param FormatOptions $formatOptions
+     *
+     * @return FileVersion
+     */
+    public function addFormatOptions(FormatOptions $formatOptions)
+    {
+        $this->formatOptions[$formatOptions->getFormatKey()] = $formatOptions;
+
+        return $this;
+    }
+
+    /**
+     * Get formatOptions.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFormatOptions()
+    {
+        return $this->formatOptions;
+    }
+
+    /**
      * Set file.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\File $file
@@ -585,15 +644,15 @@ class FileVersion implements AuditableInterface
             /** @var FileVersionMeta[] $newMetaList */
             $newMetaList = [];
             $defaultMetaLocale = $this->getDefaultMeta()->getLocale();
-
             /** @var FileVersionContentLanguage[] $newContentLanguageList */
             $newContentLanguageList = [];
-
             /** @var FileVersionPublishLanguage[] $newPublishLanguageList */
             $newPublishLanguageList = [];
+            /** @var FormatOptions[] $newFormatOptionsArray */
+            $newFormatOptionsArray = [];
 
-            /** @var FileVersionMeta $meta */
             foreach ($this->meta as $meta) {
+                /** @var FileVersionMeta $meta */
                 $newMetaList[] = clone $meta;
             }
 
@@ -607,8 +666,8 @@ class FileVersion implements AuditableInterface
                 }
             }
 
-            /** @var FileVersionContentLanguage $contentLanguage */
             foreach ($this->contentLanguages as $contentLanguage) {
+                /** @var FileVersionContentLanguage $contentLanguage */
                 $newContentLanguageList[] = clone $contentLanguage;
             }
 
@@ -618,8 +677,8 @@ class FileVersion implements AuditableInterface
                 $this->addContentLanguage($newContentLanguage);
             }
 
-            /** @var FileVersionPublishLanguage $publishLanguage */
             foreach ($this->publishLanguages as $publishLanguage) {
+                /** @var FileVersionPublishLanguage $publishLanguage */
                 $newPublishLanguageList[] = clone $publishLanguage;
             }
 
@@ -627,6 +686,18 @@ class FileVersion implements AuditableInterface
             foreach ($newPublishLanguageList as $newPublishLanguage) {
                 $newPublishLanguage->setFileVersion($this);
                 $this->addPublishLanguage($newPublishLanguage);
+            }
+
+            foreach ($this->formatOptions as $formatOptions) {
+                /** @var FormatOptions $formatOptions */
+                $newFormatOptionsArray[] = clone $formatOptions;
+            }
+
+            $this->formatOptions->clear();
+            foreach ($newFormatOptionsArray as $newFormatOptions) {
+                /** @var FormatOptions $newFormatOptions */
+                $newFormatOptions->setFileVersion($this);
+                $this->addFormatOptions($newFormatOptions);
             }
         }
     }
@@ -678,11 +749,11 @@ class FileVersion implements AuditableInterface
     /**
      * Add categories.
      *
-     * @param Category $categories´
+     * @param CategoryInterface $categories´
      *
      * @return self
      */
-    public function addCategory(Category $categories)
+    public function addCategory(CategoryInterface $categories)
     {
         $this->categories[] = $categories;
 

@@ -18,7 +18,9 @@ require.config({
         'services/sulumedia/media-router': '../../sulumedia/js/services/media-router',
         'services/sulumedia/overlay-manager': '../../sulumedia/js/services/overlay-manager',
         'services/sulumedia/collection-manager': '../../sulumedia/js/services/collection-manager',
+        'services/sulumedia/image-editor': '../../sulumedia/js/services/image-editor',
         'services/sulumedia/media-manager': '../../sulumedia/js/services/media-manager',
+        'services/sulumedia/format-manager': '../../sulumedia/js/services/format-manager',
         'services/sulumedia/user-settings-manager': '../../sulumedia/js/services/user-settings-manager',
         'services/sulumedia/file-icons': '../../sulumedia/js/services/file-icons',
 

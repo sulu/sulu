@@ -28,7 +28,7 @@
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="internal" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="cacheLifetimeType" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="meta">
@@ -55,7 +55,7 @@
     <xs:complexType name="langType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="lang" use="required" type="xs:string" />
+                <xs:attribute name="lang" use="required" type="xs:string"/>
                 <xs:attributeGroup ref="defaultAttributes"/>
             </xs:extension>
         </xs:simpleContent>
@@ -149,10 +149,34 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
                 <xs:attribute type="xs:int" name="priority" use="optional"/>
-                <xs:anyAttribute namespace="##any" processContents="lax" />
+                <xs:anyAttribute namespace="##any" processContents="lax"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:complexType name="cacheLifetimeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" default="seconds">
+                    <xs:simpleType>
+                        <xs:union memberTypes="cacheLifetimeTypeEnum cacheLifetimeTypeAnyString"/>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="cacheLifetimeTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="seconds"/>
+            <xs:enumeration value="expression"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="cacheLifetimeTypeAnyString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-zA-Z]*"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="paramsType">
         <xs:sequence>

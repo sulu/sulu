@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
@@ -100,16 +101,16 @@ class FormatManager implements FormatManagerInterface
     private $videoThumbnailService;
 
     /**
-     * @param MediaRepository         $mediaRepository
-     * @param StorageInterface        $originalStorage
-     * @param FormatCacheInterface    $formatCache
+     * @param MediaRepository $mediaRepository
+     * @param StorageInterface $originalStorage
+     * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
      * @param VideoThumbnailServiceInterface $videoThumbnailService
-     * @param string                  $ghostScriptPath
-     * @param string                  $saveImage
-     * @param array                   $previewMimeTypes
-     * @param array                   $responseHeaders
-     * @param array                   $formats
+     * @param string $ghostScriptPath
+     * @param string $saveImage
+     * @param array $previewMimeTypes
+     * @param array $responseHeaders
+     * @param array $formats
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -139,20 +140,22 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function returnImage($id, $formatName)
+    public function returnImage($id, $formatKey)
     {
         $setExpireHeaders = false;
 
         try {
-            // Load Media.
-            $media = $this->mediaRepository->findMediaById($id);
+            $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey);
 
             if (!$media) {
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
 
             // Load Media Data.
-            list($fileName, $version, $storageOptions, $mimeType) = $this->getMediaData($media);
+            list($fileName, $version, $storageOptions, $formatOptions, $mimeType) = $this->getMediaData(
+                $media,
+                $formatKey
+            );
 
             try {
                 // Check if file has supported preview.
@@ -161,8 +164,8 @@ class FormatManager implements FormatManagerInterface
                 }
 
                 // Get format options.
-                $format = $this->getFormat($formatName);
-                $formatOptions = $format['options'];
+                $format = $this->getFormat($formatKey);
+                $imagineOptions = $format['options'];
 
                 // Load Original.
                 $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
@@ -172,7 +175,7 @@ class FormatManager implements FormatManagerInterface
                 $this->prepareMedia($mimeType, $original);
 
                 // Convert Media to format.
-                $image = $this->converter->convert($original, $format);
+                $image = $this->converter->convert($original, $format, $formatOptions);
 
                 // Remove profiles and comments.
                 $image->strip();
@@ -188,7 +191,7 @@ class FormatManager implements FormatManagerInterface
                 // Get image.
                 $responseContent = $image->get(
                     $imageExtension,
-                    $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
+                    $this->getOptionsFromImage($image, $imageExtension, $imagineOptions)
                 );
 
                 // HTTP Headers
@@ -202,22 +205,22 @@ class FormatManager implements FormatManagerInterface
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
-                        $formatName
+                        $formatKey
                     );
                 }
             } catch (MediaException $exc) {
                 // Return when available a file extension icon.
                 list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon(
-                    $formatName,
+                    $formatKey,
                     $this->getRealFileExtension($fileName),
                     $exc
                 );
             }
             $responseMimeType = 'image/' . $imageExtension;
         } catch (MediaException $e) {
-            $responseContent = $e->getCode() . ': ' . $e->getMessage();
+            $responseContent = null;
             $status = 404;
-            $responseMimeType = 'text/plain';
+            $responseMimeType = null;
         }
 
         // Clear temp files.
@@ -233,7 +236,7 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
+    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType)
     {
         $formats = [];
         if ($this->checkPreviewSupported($mimeType)) {
@@ -243,7 +246,8 @@ class FormatManager implements FormatManagerInterface
                     $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
                     $storageOptions,
                     $format['key'],
-                    $version
+                    $version,
+                    $subVersion
                 );
             }
         }
@@ -268,11 +272,57 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * Clears the format cache.
+     * {@inheritdoc}
      */
     public function clearCache()
     {
         $this->formatCache->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = [])
+    {
+        if (!isset($this->formats[$formatKey])) {
+            throw new FormatNotFoundException($formatKey);
+        }
+
+        $format = $this->formats[$formatKey];
+        $title = $format['key'];
+
+        if (array_key_exists($locale, $format['meta']['title'])) {
+            $title = $format['meta']['title'][$locale];
+        } elseif (count($format['meta']['title']) > 0) {
+            $title = array_values($format['meta']['title'])[0];
+        }
+
+        $formatArray = [
+            'key' => $format['key'],
+            'title' => $title,
+            'scale' => $format['scale'],
+            'options' => (!empty($formatOptions)) ? $formatOptions : null,
+        ];
+
+        return $formatArray;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatDefinitions($locale = null, array $formatOptions = [])
+    {
+        $definitionsArray = [];
+
+        foreach ($this->formats as $format) {
+            $options = [];
+            if (array_key_exists($format['key'], $formatOptions)) {
+                $options = $formatOptions[$format['key']];
+            }
+            $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale, $options);
+        }
+
+        return $definitionsArray;
     }
 
     /**
@@ -359,19 +409,19 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param ImageInterface $image
-     * @param string         $imageExtension
-     * @param array          $formatOptions
+     * @param string $imageExtension
+     * @param array $imagineOptions
      *
      * @return array
      */
-    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
+    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
     {
         $options = [];
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {
             $options['animated'] = true;
         }
 
-        return array_merge($options, $formatOptions);
+        return array_merge($options, $imagineOptions);
     }
 
     /**
@@ -461,6 +511,7 @@ class FormatManager implements FormatManagerInterface
         switch ($extension) {
             case 'png':
             case 'gif':
+            case 'jpeg':
                 // do nothing
                 break;
             case 'svg':
@@ -547,15 +598,17 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param MediaInterface $media
+     * @param string $formatKey
      *
      * @return array
      *
      * @throws ImageProxyMediaNotFoundException
      */
-    protected function getMediaData(MediaInterface $media)
+    protected function getMediaData(MediaInterface $media, $formatKey)
     {
         $fileName = null;
         $storageOptions = null;
+        $formatOptions = null;
         $version = null;
         $mimeType = null;
 
@@ -568,6 +621,7 @@ class FormatManager implements FormatManagerInterface
                     $fileName = $fileVersion->getName();
                     $storageOptions = $fileVersion->getStorageOptions();
                     $mimeType = $fileVersion->getMimeType();
+                    $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
                     break;
                 }
             }
@@ -578,7 +632,7 @@ class FormatManager implements FormatManagerInterface
             throw new ImageProxyMediaNotFoundException('Media file version was not found');
         }
 
-        return [$fileName, $version, $storageOptions, $mimeType];
+        return [$fileName, $version, $storageOptions, $formatOptions, $mimeType];
     }
 
     /**

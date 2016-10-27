@@ -2,8 +2,8 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\Keyword" table="ca_keywords"
-            repository-class="Sulu\Bundle\CategoryBundle\Entity\KeywordRepository">
+
+    <mapped-superclass name="Sulu\Bundle\CategoryBundle\Entity\Keyword" table="ca_keywords">
         <indexes>
             <index columns="keyword"/>
         </indexes>
@@ -19,7 +19,7 @@
         <field name="locale" column="locale" type="string" length="5" nullable="false"/>
         <field name="keyword" column="keyword" type="string" length="255" nullable="false"/>
 
-        <many-to-many target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" field="categoryTranslations"
+        <many-to-many target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface" field="categoryTranslations"
                       inversed-by="keywords">
             <join-table name="ca_category_translations_keywords">
                 <join-columns>
@@ -30,5 +30,5 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
-    </entity>
+    </mapped-superclass>
 </doctrine-mapping>

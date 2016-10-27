@@ -142,21 +142,25 @@ define(['config'], function(Config) {
         },
 
         deleteUrl = function(e) {
-            var $currentElement = this.sandbox.dom.$(e.currentTarget),
-                $element = this.sandbox.dom.parent($currentElement),
-                id = this.sandbox.dom.data($element, 'id');
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (confirmed === true) {
+                    var $currentElement = this.sandbox.dom.$(e.currentTarget),
+                        $element = this.sandbox.dom.parent($currentElement),
+                        id = this.sandbox.dom.data($element, 'id');
 
-            startOptionsLoader.call(this, $element);
+                    startOptionsLoader.call(this, $element);
 
-            this.sandbox.util.save(this.items[id]._links.delete, 'DELETE')
-                .then(function() {
-                    stopOptionsLoader.call(this, $element);
-                    this.sandbox.dom.remove($element);
-                }.bind(this))
-                .fail(function() {
-                    // FIXME message
-                    stopOptionsLoader.call(this, $element);
-                });
+                    this.sandbox.util.save(this.items[id]._links.delete, 'DELETE')
+                        .then(function() {
+                            stopOptionsLoader.call(this, $element);
+                            this.sandbox.dom.remove($element);
+                        }.bind(this))
+                        .fail(function() {
+                            // FIXME message
+                            stopOptionsLoader.call(this, $element);
+                        });
+                }
+            }.bind(this), 'public.delete', 'sulu-content.resource-locator.delete');
         },
 
         setValue = function(value) {
@@ -232,7 +236,7 @@ define(['config'], function(Config) {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'url-history',
-                        skin: 'wide',
+                        skin: 'medium',
                         data: content
                     }
                 }

@@ -36,6 +36,7 @@ Feature: Content management
         And I fill in "body" with "Dornbirn is great"
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         And I expect a success notification to appear
         And I click the back icon
         Then I expect to see "Dornbirn"
@@ -52,6 +53,7 @@ Feature: Content management
         Then I expect the page state to be "Test"
         When I click the save icon
         And I click toolbar item "publish"
+        And I confirm
         And I expect the "sulu.content.initialized" event
         Then I expect the page state to be "Published"
         When I fill in "title" with "Dornbirn"

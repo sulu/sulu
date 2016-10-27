@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -355,6 +355,17 @@ class Media extends ApiWrapper
     public function getVersion()
     {
         return $this->getFileVersion()->getVersion();
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("subVersion")
+     *
+     * @return int
+     */
+    public function getSubVersion()
+    {
+        return $this->getFileVersion()->getSubVersion();
     }
 
     /**

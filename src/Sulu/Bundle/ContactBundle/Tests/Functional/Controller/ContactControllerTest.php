@@ -12,9 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
@@ -297,21 +294,21 @@ class ContactControllerTest extends SuluTestCase
 
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
         $this->category = $category;
 
         // name for first category
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('First Category');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
         // meta for first category
-        $categoryMeta = new CategoryMeta();
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
         $categoryMeta->setKey('description');
         $categoryMeta->setValue('Description of Category');
@@ -322,21 +319,21 @@ class ContactControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('en');
 
         $this->category2 = $category2;
 
         // name for second category
-        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans2->setLocale('de');
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
 
         // meta for second category
-        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
         $categoryMeta2->setValue('Description of second Category');
@@ -374,6 +371,7 @@ class ContactControllerTest extends SuluTestCase
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('avatar.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -397,6 +395,7 @@ class ContactControllerTest extends SuluTestCase
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('media1.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -417,6 +416,7 @@ class ContactControllerTest extends SuluTestCase
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setName('media2.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);

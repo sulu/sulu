@@ -45,6 +45,11 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
             'services' => [
                 'factory' => 'sulu_search.search.factory',
             ],
+            'persistence' => [
+                'doctrine_orm' => [
+                    'enabled' => true,
+                ],
+            ],
         ]);
     }
 

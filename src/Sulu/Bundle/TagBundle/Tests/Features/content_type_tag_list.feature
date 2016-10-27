@@ -26,6 +26,7 @@ Feature: Content type: Tag list
         And I wait a second
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
         And the tag "boo" should exist
         And the tag "bim" should exist

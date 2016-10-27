@@ -128,6 +128,7 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['name'],
                 $listResponse[$i]['storageOptions'],
                 $listResponse[$i]['version'],
+                $listResponse[$i]['subVersion'],
                 $listResponse[$i]['mimeType']
             );
 
@@ -221,6 +222,7 @@ class MediaController extends AbstractMediaController implements
 
         // field which will be needed afterwards to generate route
         $listBuilder->addSelectField($fieldDescriptors['version']);
+        $listBuilder->addSelectField($fieldDescriptors['subVersion']);
         $listBuilder->addSelectField($fieldDescriptors['name']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['mimeType']);

@@ -26,7 +26,24 @@
     {% endif %}
 
     <div class="fixed-width">
+        <div class="grid-row">
+        {# initialize columns #}
+        {% set columns = 0 %}
         {% for property in template.properties if property != firstSection %}
+
+            {# set propertyColspan with default if colspan is not set #}
+            {% set propertyColspan = property.colspan != "" ? property.colspan : 12 %}
+
+            {# create new row if there are more then 12 colspans in a row #}
+            {% if columns + propertyColspan <= 12 %}
+                {# set current amount of colspans #}
+                {% set columns = columns + propertyColspan %}
+            {% else %}
+                </div>
+                <div class="grid-row">
+                {# set current amount of colspans #}
+                {% set columns = propertyColspan %}
+            {% endif %}
 
             {# get params for property #}
             {% set params = sulu_get_params(property) %}
@@ -82,6 +99,7 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
+        </div>
     </div>
 </form>
 

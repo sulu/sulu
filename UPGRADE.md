@@ -2,6 +2,122 @@
 
 ## dev-develop
 
+### Page-Templates
+
+The cache-lifetime of page-templates was extended by the `type` attribute.
+This attribute is optional and default set to seconds which behaves like
+before and set the `max-age` to given integer.
+
+There is now a second type `expression` which allows you to define the
+lifetime with a cron-expression which enhances the developer to define
+that a page has to be invalidated at a specific time of the day (or
+whatever you need).
+
+__BEFORE:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+__NOW:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+
+    <!-- releases cache each day at mitnight -->
+    <cacheLifetime type="expression">@daily</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+Therefor we changed the type of the return value for `Sulu\Component\Content\Compat\StructureInterface::getCacheLifeTime`
+to array. This array contains the `type` and the `value` of the configured
+cache-lifetime.
+
+For resolving this array to a concrete second value we introduced the service
+`sulu_http_cache.cache_lifetime.resolver` there you can call the `resolve`
+function which returns the concrete second value.
+
+## 1.4.0-RC1
+
+### Refactored category management in backend
+
+The backend of the category bundle was refactored and the category related entities were implemented extensible.
+This lead to the following changes:
+
+**API:**
+`/categories`: renamed parameter `parent` which accepted an id to `rootKey` which accepts a key
+`/categories/{key}/children` was replaced with `/categories/{id}/children`
+
+**Classes:**
+`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface` 
+`Category\KeywordRepositoryInterface` moved to `Entity\KeywordRepositoryInterface`
+`Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException` 
+`Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException` 
+`Category\Exception\KeyNotUniqueException` was replaced with `Exception\CategoryKeyNotUniqueException` 
+
+**Methods:**
+Removed: `Api\Category::setName($name)`
+Replacement: `Api\Category::setTranslation(CategoryTranslationInterface $translation)`
+Reason: The api-entity cannot create a translation-entity as the translation-entity is implemented extensible.
+
+Removed: `Api\Category::setMeta($metaArrays)`
+Replacement: `Api\Category::setMeta($metaEntities)`
+Reason: The api-entity cannot create a meta-entity as the meta-entity is implemented extensible.
+
+Deprecated: `CategoryRepositoryInterface::findCategoryByIds(array $ids)`
+Replacement: `CategoryRepositoryInterface::findCategoriesByIds(array $ids)`
+
+Deprecated: `CategoryRepositoryInterface::findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentId($parentId = null)`
+
+Deprecated: `CategoryRepositoryInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentKey($parentKey = null)`
+
+Deprecated: `CategoryManagerInterface::find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentId($parentId = null)`
+
+Deprecated: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentKey($parentKey = null)`
+
+**Container Parameters/Definitions:**
+Deprecated: `sulu_category.entity.category` 
+Replacement: `sulu.model.category.class` 
+
+Deprecated: `sulu_category.entity.keyword`
+Replacement: `sulu.model.keyword.class`
+
+Deprecated: `sulu_category.category_repository`
+Replacement: `sulu.repository.category`
+
+Deprecated: `sulu_category.keyword_repository`
+Replacement: `sulu.repository.keyword`
+
+**Extensibility**
+Every association of the `Category` entity must be of the type `CategoryInterface` to ensure extensibility
+Every association of the `CategoryTranslation` entity must be of the type `CategoryTranslationInterface` to ensure extensibility
+Every association of the `CategoryMeta` entity must be of the type `CategoryMetaInterface` to ensure extensibility
+Every association of the `Keyword` entity must be of the type `KeywordInterface` to ensure extensibility
+
 ### New definition mechanism for image-formats
 
 A new structure for the image-formats configuration files was introduced.
@@ -70,6 +186,18 @@ sulu_route:
 
 The class `DataNavigationItem` got removed and is not supported
 anymore. Please use other forms of navigating instead.
+
+## 1.3.1
+
+If Sulu is used in combination with a port, the port has to be included in the
+URLs of the webspace configuration. So if you want to use Sulu on port 8080 the
+configuration has to look like this:
+
+```xml
+<url>sulu.lo:8080/{localization}</url>
+```
+
+The port can still be emitted if the standard HTTP or HTTPS port is used.
 
 ## 1.3.0-RC3
 
@@ -178,7 +306,7 @@ The image format "150x100" as well as the format "200x200" got removed
 from the backend formats. If a website relied on this format,
 it should be - as all image formats a website needs - defined
 in the theme specific config file.
-(http://docs.sulu.io/en/latest/book/creating-a-basic-website/adding-a-theme.html#configure-image-formats)
+(http://docs.sulu.io/en/latest/book/creating-a-basic-website/configuring-image-formats.html)
 
 ### PHPCR
 To adapt to the new PHPCR structure execute the migrations:

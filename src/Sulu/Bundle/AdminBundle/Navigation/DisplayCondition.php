@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 /**
  * This class represents a condition for the content-navigation item.
  */
-class DisplayCondition
+class DisplayCondition implements \JsonSerializable
 {
     const OPERATOR_EQUAL = 'eq';
     const OPERATOR_NOT_EQUAL = 'neq';
@@ -63,5 +63,17 @@ class DisplayCondition
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'property' => $this->property,
+            'operator' => $this->operator,
+            'value' => $this->value,
+        ];
     }
 }

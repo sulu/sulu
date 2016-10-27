@@ -153,14 +153,14 @@
             <tag name="sulu_route.defaults_provider"/>
         </service>
 
-        <!-- markup -->
-        <service id="sulu_content.markup" class="Sulu\Bundle\ContentBundle\Markup\LinkTag">
-            <argument type="service" id="sulu_content.content_repository"/>
+        <!-- builder -->
+        <service id="sulu_core.build.builder.node_order" class="Sulu\Bundle\ContentBundle\Build\NodeOrderBuilder">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="request_stack"/>
-            <argument type="string">%kernel.environment%</argument>
-
-            <tag name="sulu_markup.tag" tag="link" type="html"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="massive_build.builder" />
         </service>
     </services>
 </container>

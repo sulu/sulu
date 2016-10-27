@@ -65,7 +65,7 @@
             </order-by>
         </many-to-many>
 
-        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface">
             <join-table name="co_contact_categories">
                 <join-columns>
                     <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>

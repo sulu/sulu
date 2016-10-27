@@ -111,7 +111,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         }
 
         $resourceLocator = substr(
-            $request->getHost() . $path,
+            $request->getHttpHost() . $path,
             strlen($portalInformation->getUrl())
         );
 

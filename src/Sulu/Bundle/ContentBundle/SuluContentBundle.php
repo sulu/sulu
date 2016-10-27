@@ -39,5 +39,13 @@ class SuluContentBundle extends Bundle
                 'alias'
             )
         );
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass(
+                'sulu_content.link_tag.provider_pool',
+                'sulu.link.provider',
+                0,
+                'alias'
+            )
+        );
     }
 }

@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\FFProbe;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -216,7 +216,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->mediaRepository->findMediaById($id);
         if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
+            throw new MediaNotFoundException($id);
         }
 
         return $mediaEntity;
@@ -478,6 +478,7 @@ class MediaManager implements MediaManagerInterface
         $fileVersion->setCreator($user);
         $fileVersion->setChanger($user);
         $fileVersion->setVersion(1);
+        $fileVersion->setSubVersion(0);
         $fileVersion->setFile($file);
 
         $file->addFileVersion($fileVersion);
@@ -603,7 +604,7 @@ class MediaManager implements MediaManagerInterface
 
                         if (is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
-                            $categories = $this->categoryRepository->findCategoryByIds($categoryIds);
+                            $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
 
                             foreach ($categories as $category) {
                                 $media->addCategory($category);
@@ -723,6 +724,7 @@ class MediaManager implements MediaManagerInterface
                     $previewImage->getName(),
                     $previewImage->getStorageOptions(),
                     $previewImage->getVersion(),
+                    $previewImage->getSubVersion(),
                     $previewImage->getMimeType()
                 );
             } else {
@@ -731,6 +733,7 @@ class MediaManager implements MediaManagerInterface
                     $media->getName(),
                     $media->getStorageOptions(),
                     $media->getVersion(),
+                    $media->getSubVersion(),
                     $media->getMimeType()
                 );
             }
@@ -769,6 +772,7 @@ class MediaManager implements MediaManagerInterface
                         $latestVersion->getName(),
                         $latestVersion->getStorageOptions(),
                         $latestVersion->getVersion(),
+                        $latestVersion->getSubVersion(),
                         $latestVersion->getMimeType()
                     )
                 );
@@ -780,6 +784,7 @@ class MediaManager implements MediaManagerInterface
                     $media->getName(),
                     $media->getStorageOptions(),
                     $media->getVersion(),
+                    $media->getSubVersion(),
                     $media->getMimeType()
                 )
             );

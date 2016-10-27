@@ -30,6 +30,7 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
             key: 'public.key',
             yes: 'public.yes',
             no: 'public.no',
+            description: 'public.description',
             categoryKey: 'sulu.category.category-key',
             keywords: 'sulu.category.keywords',
             keywordDeleteLabel: 'labels.success.delete-desc',
@@ -40,7 +41,8 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
             conflictDetach: 'sulu.category.keyword_conflict.detach',
             mergeTitle: 'sulu.category.keyword_merge.title',
             mergeMessage: 'sulu.category.keyword_merge.message',
-            categoryName: 'sulu.category.category-name'
+            categoryName: 'sulu.category.category-name',
+            medias: 'sulu.category.medias'
         }
     };
 
@@ -68,6 +70,10 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
             // resolve conflict
             this.sandbox.on('husky.datagrid.data.save.failed', function(jqXHR, textStatus, error, data) {
                 this.handleFail(jqXHR, data);
+            }.bind(this));
+
+            this.sandbox.on('sulu.content.changed', function() {
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
 
             this.sandbox.emit('sulu.tab.initialize', this.name);
@@ -127,7 +133,8 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
             return this.templates.form({
                 placeholder: placeholder,
                 translations: this.translations,
-                keywords: !!this.data.id
+                keywords: !!this.data.id,
+                locale: this.options.locale
             });
         },
 

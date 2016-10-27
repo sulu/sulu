@@ -60,12 +60,12 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
      */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $url = $request->getHost() . $request->getPathInfo();
-        $urlInfo = parse_url($request->getScheme() . '://' . $url);
+        $host = $request->getHttpHost();
+        $url = $host . $request->getPathInfo();
         foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
-            $portalUrl = $this->replacer->replaceHost($portalInformation->getUrl(), $urlInfo['host']);
+            $portalUrl = $this->replacer->replaceHost($portalInformation->getUrl(), $host);
             $portalInformation->setUrl($portalUrl);
-            $portalRedirect = $this->replacer->replaceHost($portalInformation->getRedirect(), $urlInfo['host']);
+            $portalRedirect = $this->replacer->replaceHost($portalInformation->getRedirect(), $host);
             $portalInformation->setRedirect($portalRedirect);
         }
 

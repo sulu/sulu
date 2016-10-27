@@ -59,6 +59,15 @@ interface CollectionRepositoryInterface
     public function countMedia(CollectionInterface $collection);
 
     /**
+     * Returns the number of sub collections contained in a given collection.
+     *
+     * @param CollectionInterface $collection The collectionf or which the number of sub collections should be returned
+     *
+     * @return int The number of sub collection in the given collection
+     */
+    public function countSubCollections(CollectionInterface $collection);
+
+    /**
      * Finds the collection with a given id.
      *
      * @param int $id

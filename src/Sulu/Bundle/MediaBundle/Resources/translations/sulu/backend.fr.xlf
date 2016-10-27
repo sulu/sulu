@@ -6,17 +6,9 @@
                 <source>navigation.media</source>
                 <target>Assets</target>
             </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
-                <source>navigation.media.collections</source>
-                <target>Dossiers</target>
-            </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
                 <source>navigation.media.collections</source>
                 <target>Tous les dossiers</target>
-            </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
-                <source>navigation.media.collections.search</source>
-                <target>Filtrer les dossiers...</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -130,13 +122,17 @@
                 <source>sulu.media.edit.loading</source>
                 <target>Chargement du Media</target>
             </trans-unit>
+            <trans-unit id="243d19ff2f64452633a5c72169f22258" resname="sulu.collection.edit">
+                <source>sulu.collection.edit</source>
+                <target>Editer le dossier</target>
+            </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
                 <source>sulu.collection.move</source>
                 <target>Déplacer dossier</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
-                <source>navigation.media.collections.empty</source>
-                <target>Pas de dossiers</target>
+            <trans-unit id="213d994f2f6465a633a5ce2169f22258" resname="sulu.collection.delete">
+                <source>sulu.collection.delete</source>
+                <target>Supprimer dossier</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
@@ -306,10 +302,6 @@
                 <source>sulu-media.ckeditor.media-link.edit.remove</source>
                 <target>Enlever lien média</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="sulu-media.selection.overlay.title">
-                <source>sulu-media.selection.overlay.title</source>
-                <target>Médias</target>
-            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
                 <source>sulu-media.selection.overlay.save</source>
                 <target>Importer</target>
@@ -317,6 +309,90 @@
             <trans-unit id="243d11ca3f64352w337js55369f111118" resname="sulu-media.upload-files">
                 <source>sulu-media.upload-files</source>
                 <target>Uploader des fichiers</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js33469f111118" resname="sulu-media.remove-crop">
+                <source>sulu-media.remove-crop</source>
+                <target>Réinitialiser le cadrage</target>
+            </trans-unit>
+            <trans-unit id="243123ca3f64352w337js33469f111118" resname="sulu-media.image-formats">
+                <source>sulu-media.image-formats</source>
+                <target>Formats d'image</target>
+            </trans-unit>
+            <trans-unit id="143123ca3f64352w337js33469f111118" resname="sulu-media.crop-double-click-hint">
+                <source>sulu-media.crop-double-click-hint</source>
+                <target>Avec un double clic le cadrage est maximé et centré</target>
+            </trans-unit>
+            <trans-unit id="155123ca3f64352w337js33469f111118" resname="sulu-media.edit-image">
+                <source>sulu-media.edit-image</source>
+                <target>Modifier l'image</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w337js33469f111118" resname="sulu-media.crop">
+                <source>sulu-media.crop</source>
+                <target>Déterminer des cadrages</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
+                <source>sulu-media.crop-save-success</source>
+                <target>Enregistrement du cadrage achevé réussi</target>
+            </trans-unit>
+            <trans-unit id="221143ca3f64352w117js33469f111118" resname="sulu-media.crop-remove-success">
+                <source>sulu-media.crop-remove-success</source>
+                <target>Réinitialisation du cadrage achevée réussie</target>
+            </trans-unit>
+            <trans-unit id="112143ca3f64352w117js33469f111118" resname="sulu-media.crop-not-possible">
+                <source>sulu-media.crop-not-possible</source>
+                <target>Découper n'est pas possible</target>
+            </trans-unit>
+            <trans-unit id="112145ca3e64352w117js33469f111119" resname="sulu-media.image-too-small">
+                <source>sulu-media.image-too-small</source>
+                <target>L'image originale est trop petite</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33469f111119" resname="sulu-media.crop-out-of-date">
+                <source>sulu-media.crop-out-of-date</source>
+                <target>Cadrage dépassé</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33488f111119" resname="sulu-media.crop-out-of-date-text">
+                <source>sulu-media.crop-out-of-date-text</source>
+                <target>Le cadrage défini est dépassé à la suite d'une image téléchargée ou d'un format d'image</target>
+            </trans-unit>
+            <trans-unit id="123145ca3e64352w117js33488f121119" resname="sulu-media.minimum-size-reached">
+                <source>sulu-media.minimum-size-reached</source>
+                <target>Taille minimale atteinte</target>
+            </trans-unit>
+            <trans-unit id="123145cabe64352w117js33488a321119" resname="sulu-media.crops-out-of-date">
+                <source>sulu-media.crops-out-of-date</source>
+                <target>Cadrages dépassés</target>
+            </trans-unit>
+            <trans-unit id="123145cabe77352w117js33488a321119" resname="sulu-media.following-crops-out-of-date">
+                <source>sulu-media.following-crops-out-of-date</source>
+                <target>Les cadrages pour les formats suivants sont caducs</target>
+            </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Modifier l'image originale</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Nouvelle version d'image sera créé</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Nouvelle version d'image créé. Cadrages définis peuvent être obsolètes.</target>
+            </trans-unit>
+            <trans-unit id="9f4145cacc77352w11ajs3a487a32217b" resname="sulu-media.external-server-title">
+                <source>sulu-media.external-server-title</source>
+                <target>Indice</target>
+            </trans-unit>
+            <trans-unit id="2f4125ca4cb7c52wc1ajs3a48ea32817a" resname="sulu-media.external-server-description">
+                <source>sulu-media.external-server-description</source>
+                <target>Le document est transmis au serveur extérieur pour l’éditer.</target>
+            </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Changer format de l'image</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>Le cadrage tel qu’il apparait sur l’écran se perd si on change le format.</target>
             </trans-unit>
         </body>
     </file>

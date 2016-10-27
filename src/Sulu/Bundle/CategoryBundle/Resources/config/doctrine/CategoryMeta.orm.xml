@@ -3,8 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\CategoryMeta" table="ca_category_meta">
-
+    <mapped-superclass name="Sulu\Bundle\CategoryBundle\Entity\CategoryMeta" table="ca_category_meta">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -13,7 +12,7 @@
         <field name="value" column="value" type="string" length="255"/>
         <field name="locale" column="locale" type="string" length="5" nullable="true"/>
 
-        <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="meta">
+        <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="meta">
             <cascade>
                 <cascade-all/>
             </cascade>
@@ -21,6 +20,5 @@
                 <join-column name="idCategories" on-delete="CASCADE" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-
-    </entity>
+    </mapped-superclass>
 </doctrine-mapping>

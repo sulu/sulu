@@ -15,13 +15,24 @@ define([
     'use strict';
 
     var mediaRoutes = {
-        rootCollection: 'media/collections/:locale',
-        rootCollectionWithoutLocale: 'media/collections',
-        editCollection: 'media/collections/:locale/edit::id/:content',
-        editCollectionWithoutLocale: 'media/collections/edit::id/:content',
-        editMedia: 'media/collections/:locale/edit::id/:content/edit::mediaId',
-        editMediaWithoutLocale: 'media/collections/edit::id/:content/edit::mediaId'
-    };
+            rootCollection: 'media/collections/:locale',
+            rootCollectionWithoutLocale: 'media/collections',
+            editCollection: 'media/collections/:locale/edit::id/:content',
+            editCollectionWithoutLocale: 'media/collections/edit::id/:content',
+            editMedia: 'media/collections/:locale/edit::id/:content/edit::mediaId',
+            editMediaWithoutLocale: 'media/collections/edit::id/:content/edit::mediaId'
+        },
+
+        prepareRoute = function(route, parameter) {
+            var preparedRoute = route;
+            for (var name in parameter) {
+                if (parameter.hasOwnProperty(name)) {
+                    preparedRoute = preparedRoute.replace(':' + name, parameter[name]);
+                }
+            }
+
+            return preparedRoute;
+        };
 
     return {
         /**
@@ -37,10 +48,10 @@ define([
                 var mediaEditAppendix = (!!mediaId) ? '/edit:' + mediaId : '';
                 Mediator.emit(
                     'sulu.router.navigate',
-                    mediaRoutes.editCollection
-                        .replace(':locale', locale)
-                        .replace(':id', collectionId)
-                        .replace(':content', 'files') + mediaEditAppendix,
+                    prepareRoute(
+                        mediaRoutes.editCollection,
+                        {locale: locale, id: collectionId, content: 'files'}
+                    ) + mediaEditAppendix,
                     true,
                     true
                 );
@@ -56,7 +67,7 @@ define([
          */
         toRootCollection: function(locale) {
             locale = locale || UserSettingsManager.getMediaLocale();
-            Mediator.emit('sulu.router.navigate', mediaRoutes.rootCollection.replace(':locale', locale), true, true);
+            Mediator.emit('sulu.router.navigate', prepareRoute(mediaRoutes.rootCollection, {locale: locale}), true, true);
         },
 
         /**
@@ -108,6 +119,16 @@ define([
             routes.push({
                 route: mediaRoutes.editMedia,
                 callback: function(locale, id, content, mediaId) {
+                    Mediator.emit(
+                        'sulu.router.navigate',
+                        prepareRoute(
+                            mediaRoutes.editCollection,
+                            {locale: locale, id: id, content: content}
+                        ),
+                        false,
+                        false
+                    );
+
                     return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '" data-aura-locale="' + locale + '" data-aura-edit-id="' + mediaId + '"/>';
                 }
             });

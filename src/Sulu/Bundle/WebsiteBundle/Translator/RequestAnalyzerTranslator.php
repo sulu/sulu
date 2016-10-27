@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Translator;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -86,7 +87,7 @@ class RequestAnalyzerTranslator implements TranslatorInterface
             return;
         }
 
-        $this->translator->setLocale($this->requestAnalyzer->getCurrentLocalization()->getLocale());
+        $this->translator->setLocale($this->requestAnalyzer->getCurrentLocalization()->getLocale(Localization::LCID));
         $this->initialized = true;
     }
 }

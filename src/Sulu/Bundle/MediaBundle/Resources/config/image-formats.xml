@@ -3,28 +3,67 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
 
-    <format key="400x400">
+    <format key="400x400" internal="true">
+        <meta>
+            <title lang="en">Contact avatar (Sulu)</title>
+            <title lang="de">Kontaktavatar (Sulu)</title>
+            <title lang="fr">Avatar du contact (Sulu)</title>
+            <title lang="nl">Contact avatar (Sulu)</title>
+        </meta>
         <scale x="400" y="400"/>
     </format>
-    <format key="400x400-inset">
+    <format key="400x400-inset" internal="true">
+        <meta>
+            <title lang="en">Organization logo (Sulu)</title>
+            <title lang="de">Organisationslogo (Sulu)</title>
+            <title lang="fr">Logo d'organisation (Sulu)</title>
+            <title lang="nl">Organisatie logo (Sulu)</title>
+        </meta>
         <scale x="400" y="400" mode="inset"/>
     </format>
-    <format key="200x180-inset">
-        <scale x="200" y="180" mode="inset"/>
-    </format>
-    <format key="260x">
+    <format key="260x" internal="true">
+        <meta>
+            <title lang="en">Masonry preview (Sulu)</title>
+            <title lang="de">Masonry Vorschau (Sulu)</title>
+            <title lang="fr">Prévisualisation maçonnerie (Sulu)</title>
+            <title lang="nl">Masonry voorbeeld (Sulu)</title>
+        </meta>
         <scale x="260"/>
     </format>
-    <format key="170x170">
+    <format key="170x170" internal="true">
+        <meta>
+            <title lang="en">Search (Sulu)</title>
+            <title lang="de">Suche (Sulu)</title>
+            <title lang="fr">Recherche (Sulu)</title>
+            <title lang="nl">Zoeken (Sulu)</title>
+        </meta>
         <scale x="170" y="170"/>
     </format>
-    <format key="100x100">
+    <format key="100x100" internal="true">
+        <meta>
+            <title lang="en">Contact card (Sulu)</title>
+            <title lang="de">Personenkarte (Sulu)</title>
+            <title lang="fr">Carte personnelle (Sulu)</title>
+            <title lang="nl">Contact kaart (Sulu)</title>
+        </meta>
         <scale x="100" y="100"/>
     </format>
-    <format key="100x100-inset">
+    <format key="100x100-inset" internal="true">
+        <meta>
+            <title lang="en">Organization card (Sulu)</title>
+            <title lang="de">Organisationskarte (Sulu)</title>
+            <title lang="fr">Carte d'organisation (Sulu)</title>
+            <title lang="nl">Organisatie kaart (Sulu)</title>
+        </meta>
         <scale x="100" y="100" mode="inset"/>
     </format>
-    <format key="50x50">
+    <format key="50x50" internal="true">
+        <meta>
+            <title lang="en">Small thumbnail (Sulu)</title>
+            <title lang="de">Kleines Thumbnail (Sulu)</title>
+            <title lang="fr">Image miniature (Sulu)</title>
+            <title lang="nl">Kleine thumbnail (Sulu)</title>
+        </meta>
         <scale x="50" y="50"/>
     </format>
 </formats>
