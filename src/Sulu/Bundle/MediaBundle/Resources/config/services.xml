@@ -78,7 +78,7 @@
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
             <argument type="service" id="sulu_media.adapter"/>
             <argument type="service" id="sulu_media.storage" />
-            <argument type="service" id="sulu_media.image.loader"/>
+            <argument type="service" id="sulu_media.image.media_extractor"/>
             <argument type="service" id="sulu_media.image.transformation_pool" />
             <argument type="service" id="sulu_media.image.focus" />
             <argument type="service" id="sulu_media.image.scaler" />
@@ -86,7 +86,7 @@
             <argument>%sulu_media.image.formats%</argument>
         </service>
 
-        <service id="sulu_media.image.loader" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\FileImageLoader">
+        <service id="sulu_media.image.media_extractor" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor">
             <argument type="service" id="sulu_media.adapter"/>
             <argument type="service" id="sulu_media.video_thumbnail_generator"/>
             <argument>%sulu_media.ghost_script.path%</argument>

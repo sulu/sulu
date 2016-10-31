@@ -41,9 +41,9 @@ class ImagineImageConverter implements ImageConverterInterface
     private $storage;
 
     /**
-     * @var ImageLoaderInterface
+     * @var MediaImageExtractorInterface
      */
-    private $imageLoader;
+    private $mediaImageExtractor;
 
     /**
      * @var TransformationPoolInterface
@@ -73,7 +73,7 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * @param ImagineInterface $imagine
      * @param StorageInterface $storage
-     * @param ImageLoaderInterface $imageLoader
+     * @param MediaImageExtractorInterface $mediaImageExtractor
      * @param TransformationPoolInterface $transformationPool
      * @param FocusInterface $focus
      * @param ScalerInterface $scaler
@@ -83,7 +83,7 @@ class ImagineImageConverter implements ImageConverterInterface
     public function __construct(
         ImagineInterface $imagine,
         StorageInterface $storage,
-        ImageLoaderInterface $imageLoader,
+        MediaImageExtractorInterface $mediaImageExtractor,
         TransformationPoolInterface $transformationPool,
         FocusInterface $focus,
         ScalerInterface $scaler,
@@ -92,7 +92,7 @@ class ImagineImageConverter implements ImageConverterInterface
     ) {
         $this->imagine = $imagine;
         $this->storage = $storage;
-        $this->imageLoader = $imageLoader;
+        $this->mediaImageExtractor = $mediaImageExtractor;
         $this->transformationPool = $transformationPool;
         $this->focus = $focus;
         $this->scaler = $scaler;
@@ -105,16 +105,16 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     public function convert(FileVersion $fileVersion, $formatKey)
     {
-        $path = $this->storage->load(
+        $content = $this->storage->loadAsString(
             $fileVersion->getName(),
             $fileVersion->getVersion(),
             $fileVersion->getStorageOptions()
         );
 
-        $content = $this->imageLoader->load($path);
+        $extractedImage = $this->mediaImageExtractor->extract($content);
 
         try {
-            $image = $this->imagine->load($content);
+            $image = $this->imagine->load($extractedImage);
         } catch (RuntimeException $e) {
             throw new InvalidFileTypeException($e->getMessage());
         }
@@ -153,7 +153,7 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $imagineOptions = $format['options'];
 
-        $imageExtension = $this->getImageExtension($path);
+        $imageExtension = $this->getImageExtension($fileVersion->getName());
 
         return $image->get(
             $imageExtension,

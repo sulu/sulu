@@ -14,14 +14,14 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 /**
  * Defines the interface for loading the binary data of an image representing a file.
  */
-interface ImageLoaderInterface
+interface MediaImageExtractorInterface
 {
     /**
-     * Loads the file at the given path and returns the binary data of an image representing that file.
+     * Extracts an image out of the given content.
      *
-     * @param string $path
+     * @param string $content
      *
      * @return string
      */
-    public function load($path);
+    public function extract($content);
 }

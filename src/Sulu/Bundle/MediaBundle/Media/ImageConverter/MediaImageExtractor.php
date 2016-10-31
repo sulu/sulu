@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\OriginalFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
@@ -22,7 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 /**
  * Loads the image from a media at the path located on the locale filesystem.
  */
-class FileImageLoader implements ImageLoaderInterface
+class MediaImageExtractor implements MediaImageExtractorInterface
 {
     /**
      * @var ImagineInterface
@@ -52,58 +51,55 @@ class FileImageLoader implements ImageLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($path)
+    public function extract($content)
     {
-        if (!file_exists($path)) {
-            throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
-        }
-
         $finfo = new \finfo();
-        $mimeType = $finfo->file($path, FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($content, FILEINFO_MIME_TYPE);
 
         if ($mimeType === 'application/pdf') {
-            return $this->convertPdfToImage($path);
+            return $this->convertPdfToImage($content);
         }
 
         if ($mimeType === 'image/vnd.adobe.photoshop') {
-            return $this->convertPsdToImage($path);
+            return $this->convertPsdToImage($content);
         }
 
         if ($mimeType === 'image/svg+xml') {
-            return $this->convertSvgToImage($path);
+            return $this->convertSvgToImage($content);
         }
 
         if (fnmatch('video/*', $mimeType)) {
-            return $this->convertVideoToImage($path);
+            return $this->convertVideoToImage($content);
         }
 
-        return file_get_contents($path);
+        return $content;
     }
 
     /**
      * Converts the first page of pdf to an image using ghostscript.
      *
-     * @param string $path
+     * @param string $content
      *
      * @return string
      *
      * @throws GhostScriptNotFoundException
      */
-    private function convertPdfToImage($path)
+    private function convertPdfToImage($content)
     {
-        $command = $this->ghostScriptPath .
-            ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=%stdout -dJPEGQ=100 -r300x300 -q ' .
-            $path .
-            ' -c quit';
+        $temporaryFilePath = $this->createTemporaryFile($content);
 
-        $output = shell_exec($command);
+        $command = $this->ghostScriptPath .
+            ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $temporaryFilePath . ' ' .
+            '-dJPEGQ=100 -r300x300 -q ' . $temporaryFilePath . ' -c quit 2> /dev/null';
+
+        shell_exec($command);
+        $output = file_get_contents($temporaryFilePath);
+        unlink($temporaryFilePath);
 
         if (!$output) {
             throw new GhostScriptNotFoundException(
                 'Ghostscript was not found at "' .
                 $this->ghostScriptPath .
-                '" or user has no Permission for "' .
-                $path .
                 '"'
             );
         }
@@ -114,34 +110,35 @@ class FileImageLoader implements ImageLoaderInterface
     /**
      * Converts a PSD to a png using imagine. Only works with Imagick and not with GD.
      *
-     * @param $path
+     * @param string $content
      *
      * @return string
      *
      * @throws InvalidMimeTypeForPreviewException
      */
-    private function convertPsdToImage($path)
+    private function convertPsdToImage($content)
     {
+        $temporaryFilePath = $this->createTemporaryFile($content);
+
         try {
-            $image = $this->imagine->open($path);
+            $image = $this->imagine->open($temporaryFilePath);
             $image = $image->layers()[0];
+
+            unlink($temporaryFilePath);
 
             return $image->get('png');
         } catch (RuntimeException $e) {
+            unlink($temporaryFilePath);
             throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
     }
 
-    /**
-     * Converts a SVG to a png using imagine.
-     *
-     * @param $path
-     *
-     * @return string
-     */
-    private function convertSvgToImage($path)
+    private function convertSvgToImage($content)
     {
-        $image = $this->imagine->open($path);
+        $temporaryFilePath = $this->createTemporaryFile($content);
+
+        $image = $this->imagine->open($temporaryFilePath);
+        unlink($temporaryFilePath);
 
         return $image->get('png');
     }
@@ -149,25 +146,35 @@ class FileImageLoader implements ImageLoaderInterface
     /**
      * Converts one frame of a video to an image using FFMPEG.
      *
-     * @param $path
+     * @param string $content
      *
      * @return string
      *
      * @throws OriginalFileNotFoundException
      */
-    private function convertVideoToImage($path)
+    private function convertVideoToImage($content)
     {
-        $tempFile = tempnam(sys_get_temp_dir(), 'media_original') . '.jpg';
-        $this->videoThumbnail->generate($path, '00:00:02:01', $tempFile);
+        $temporaryFilePath = $this->createTemporaryFile($content);
+        $this->videoThumbnail->generate($temporaryFilePath, '00:00:02:01', $temporaryFilePath);
 
-        $file = file_get_contents($tempFile);
+        $extractedImage = file_get_contents($temporaryFilePath);
+        unlink($temporaryFilePath);
 
-        unlink($tempFile);
+        return $extractedImage;
+    }
 
-        if (!$file) {
-            throw new OriginalFileNotFoundException($path);
-        }
+    /**
+     * Returns the path to a temporary file containing the given content.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    private function createTemporaryFile($content)
+    {
+        $path = tempnam(sys_get_temp_dir(), 'media');
+        file_put_contents($path, $content);
 
-        return $file;
+        return $path;
     }
 }

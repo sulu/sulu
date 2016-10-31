@@ -115,9 +115,7 @@ class FormatManager implements FormatManagerInterface
 
             $fileVersion = $this->getLatestFileVersion($media);
 
-            if (!$this->checkMimeTypeSupported($fileVersion->getMimeType())
-                || $fileVersion->getMimeType() === 'image/svg+xml'
-            ) {
+            if (!$this->checkMimeTypeSupported($fileVersion->getMimeType())) {
                 throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType());
             }
 

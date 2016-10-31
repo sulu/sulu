@@ -21,8 +21,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\FocusInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
-use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageLoaderInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractorInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPoolInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -40,9 +40,9 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
     private $storage;
 
     /**
-     * @var ImageLoaderInterface
+     * @var MediaImageExtractorInterface
      */
-    private $imageLoader;
+    private $mediaImageExtractor;
 
     /**
      * @var TransformationPoolInterface
@@ -73,7 +73,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
     {
         $this->imagine = $this->prophesize(ImagineInterface::class);
         $this->storage = $this->prophesize(StorageInterface::class);
-        $this->imageLoader = $this->prophesize(ImageLoaderInterface::class);
+        $this->mediaImageExtractor = $this->prophesize(MediaImageExtractorInterface::class);
         $this->transformationPool = $this->prophesize(TransformationPoolInterface::class);
         $this->focus = $this->prophesize(FocusInterface::class);
         $this->scaler = $this->prophesize(ScalerInterface::class);
@@ -82,7 +82,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $this->imagineImageConverter = new ImagineImageConverter(
             $this->imagine->reveal(),
             $this->storage->reveal(),
-            $this->imageLoader->reveal(),
+            $this->mediaImageExtractor->reveal(),
             $this->transformationPool->reveal(),
             $this->focus->reveal(),
             $this->scaler->reveal(),
@@ -105,8 +105,8 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions('{}');
 
-        $this->storage->load('test.jpg', 1, '{}')->willReturn('uploads/test.jpg');
-        $this->imageLoader->load('uploads/test.jpg')->willReturn('image-content');
+        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -131,8 +131,8 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions('{}');
 
-        $this->storage->load('test.jpg', 1, '{}')->willReturn('uploads/test.jpg');
-        $this->imageLoader->load('uploads/test.jpg')->willReturn('image-content');
+        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -157,8 +157,8 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions('{}');
 
-        $this->storage->load('test.svg', 1, '{}')->willReturn('uploads/test.svg');
-        $this->imageLoader->load('uploads/test.svg')->willReturn('image-content');
+        $this->storage->loadAsString('test.svg', 1, '{}')->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -182,8 +182,8 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions('{}');
 
-        $this->storage->load('test.jpg', 1, '{}')->willReturn('uploads/test.jpg');
-        $this->imageLoader->load('uploads/test.jpg')->willReturn('image-content');
+        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -206,8 +206,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions('{}');
 
-        $this->storage->load('test.jpg', 1, '{}')->willReturn('uploads/test.jpg');
-        $this->imageLoader->load('uploads/test.jpg')->willThrow(ImageProxyMediaNotFoundException::class);
+        $this->storage->loadAsString('test.jpg', 1, '{}')->willThrow(ImageProxyMediaNotFoundException::class);
 
         $this->imagineImageConverter->convert($fileVersion, '640x480');
     }
