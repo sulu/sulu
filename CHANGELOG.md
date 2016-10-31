@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
     * FEATURE     #2999 [MediaBundle]         Added correct mime type to image after editing with aviary 
     * FEATURE     #2994 [HTTPCacheBundle]     Added cachelifetime types and introduced cron-expressions to calculate cachelifetime 
+    * FEATURE     #3000 [MediaBundle]         Added paste media transformation
     * BUGFIX      #2992 [ContentBundle]       Fixed page-link-provider without request
     * BUGFIX      #2991 [MediaBundle]         Reintroduced media deep-link
     * BUGFIX      #2988 [ContentBundle]       Fixed sulu-link if selection in ckeditor is empty

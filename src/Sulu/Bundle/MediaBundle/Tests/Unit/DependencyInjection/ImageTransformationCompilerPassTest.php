@@ -36,16 +36,16 @@ class ImageTransformationCompilerPassTest extends AbstractCompilerPassTestCase
     public function if_compiler_pass_collects_services_by_adding_method_calls_these_will_exist()
     {
         $transformationManager = new Definition();
-        $this->setDefinition('sulu_media.image.transformation_manager', $transformationManager);
+        $this->setDefinition(ImageTransformationCompilerPass::POOL_SERVICE_ID, $transformationManager);
 
         $transformation = new Definition();
-        $transformation->addTag('sulu_media.image.transformation', ['alias' => 'resize']);
+        $transformation->addTag(ImageTransformationCompilerPass::TAG, ['alias' => 'resize']);
         $this->setDefinition('sulu_media.image.transformation.resize', $transformation);
 
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'sulu_media.image.transformation_manager',
+            ImageTransformationCompilerPass::POOL_SERVICE_ID,
             'add',
             [
                 new Reference('sulu_media.image.transformation.resize'),
