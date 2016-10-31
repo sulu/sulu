@@ -153,7 +153,7 @@ class FileImageLoader implements ImageLoaderInterface
         $tempFile = tempnam(sys_get_temp_dir(), 'media_original') . '.jpg';
         $this->videoThumbnail->generate($path, '00:00:02:01', $tempFile);
 
-        $file = @file_get_contents($tempFile);
+        $file = file_get_contents($tempFile);
 
         unlink($tempFile);
 
