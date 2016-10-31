@@ -132,6 +132,13 @@ class FileImageLoader implements ImageLoaderInterface
         }
     }
 
+    /**
+     * Converts a SVG to a png using imagine.
+     *
+     * @param $path
+     *
+     * @return string
+     */
     private function convertSvgToImage($path)
     {
         $image = $this->imagine->open($path);
