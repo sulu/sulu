@@ -20,12 +20,24 @@ use Imagine\Image\Point;
  */
 class Focus implements FocusInterface
 {
+    /**
+     * 0 is the x value if the focus point is set on the most left column.
+     */
     const FOCUS_LEFT = 0;
 
+    /**
+     * 2 is the x value if the focus point is set on the most right column.
+     */
     const FOCUS_RIGHT = 2;
 
+    /**
+     * 0 is the y value if the focus point is set on the most top row.
+     */
     const FOCUS_TOP = 0;
 
+    /**
+     * 2 is the y value if the focus point is set on the most bottom row.
+     */
     const FOCUS_BOTTOM = 2;
 
     /**
