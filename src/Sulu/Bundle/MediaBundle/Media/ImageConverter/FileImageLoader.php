@@ -58,7 +58,9 @@ class FileImageLoader implements ImageLoaderInterface
             throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
         }
 
-        $mimeType = (new \finfo())->file($path, FILEINFO_MIME_TYPE);
+        $finfo = new \finfo();
+        $mimeType = $finfo->file($path, FILEINFO_MIME_TYPE);
+
         if ($mimeType === 'application/pdf') {
             return $this->convertPdfToImage($path);
         }

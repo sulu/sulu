@@ -128,7 +128,8 @@ class FormatManager implements FormatManagerInterface
             $status = 200;
             $setExpireHeaders = true;
 
-            $mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($responseContent);
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($responseContent);
 
             // Save image.
             if ($this->saveImage) {
