@@ -11,18 +11,19 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
-use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Exception\RuntimeException;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
-use Imagine\Imagick\Imagine;
-use Imagine\Imagick\Imagine as ImagickImagine;
-use RuntimeException;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
+use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\FocusInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
 /**
  * Sulu imagine converter for media.
@@ -30,9 +31,29 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 class ImagineImageConverter implements ImageConverterInterface
 {
     /**
+     * @var ImagineInterface
+     */
+    private $imagine;
+
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    /**
+     * @var MediaImageExtractorInterface
+     */
+    private $mediaImageExtractor;
+
+    /**
      * @var TransformationPoolInterface
      */
     private $transformationPool;
+
+    /**
+     * @var FocusInterface
+     */
+    private $focus;
 
     /**
      * @var ScalerInterface
@@ -45,64 +66,99 @@ class ImagineImageConverter implements ImageConverterInterface
     private $cropper;
 
     /**
-     * @param TransformationPoolInterface $transformationManager
+     * @var array
+     */
+    private $formats;
+
+    /**
+     * @param ImagineInterface $imagine
+     * @param StorageInterface $storage
+     * @param MediaImageExtractorInterface $mediaImageExtractor
+     * @param TransformationPoolInterface $transformationPool
+     * @param FocusInterface $focus
      * @param ScalerInterface $scaler
+     * @param CropperInterface $cropper
+     * @param array $formats
      */
     public function __construct(
-        TransformationPoolInterface $transformationManager,
+        ImagineInterface $imagine,
+        StorageInterface $storage,
+        MediaImageExtractorInterface $mediaImageExtractor,
+        TransformationPoolInterface $transformationPool,
+        FocusInterface $focus,
         ScalerInterface $scaler,
-        CropperInterface $cropper
+        CropperInterface $cropper,
+        array $formats
     ) {
-        $this->transformationPool = $transformationManager;
+        $this->imagine = $imagine;
+        $this->storage = $storage;
+        $this->mediaImageExtractor = $mediaImageExtractor;
+        $this->transformationPool = $transformationPool;
+        $this->focus = $focus;
         $this->scaler = $scaler;
         $this->cropper = $cropper;
+        $this->formats = $formats;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convert($originalPath, array $format, $formatOptions)
+    public function convert(FileVersion $fileVersion, $formatKey)
     {
-        $imagine = $this->newImage();
-        $image = null;
+        $content = $this->storage->loadAsString(
+            $fileVersion->getName(),
+            $fileVersion->getVersion(),
+            $fileVersion->getStorageOptions()
+        );
+
+        $extractedImage = $this->mediaImageExtractor->extract($content);
 
         try {
-            $image = $imagine->open($originalPath);
-        } catch (\RuntimeException $e) {
-            if (file_exists($originalPath)) {
-                throw new InvalidFileTypeException($e->getMessage());
-            }
-            throw new ImageProxyMediaNotFoundException($e->getMessage());
+            $image = $this->imagine->load($extractedImage);
+        } catch (RuntimeException $e) {
+            throw new InvalidFileTypeException($e->getMessage());
         }
 
         $image = $this->toRGB($image);
 
-        $cropParameters = $this->getCropParameters($image, $formatOptions, $format);
+        $format = $this->getFormat($formatKey);
+
+        $cropParameters = $this->getCropParameters(
+            $image,
+            $fileVersion->getFormatOptions()->get($formatKey),
+            $this->formats[$formatKey]
+        );
         if (isset($cropParameters)) {
-            $image = $this->applyCrop($image, $cropParameters);
+            $image = $this->applyFormatCrop($image, $cropParameters);
         }
+
+        if (isset($format['scale']) && $format['scale']['mode'] !== ImageInterface::THUMBNAIL_INSET) {
+            $image = $this->applyFocus($image, $fileVersion, $format['scale']);
+        }
+
         if (isset($format['scale'])) {
             $image = $this->applyScale($image, $format['scale']);
         }
+
         if (isset($format['transformations'])) {
             $image = $this->applyTransformations($image, $format['transformations']);
         }
 
-        return $image;
-    }
+        $image->strip();
 
-    /**
-     * Creates a new image.
-     *
-     * @return ImageInterface
-     */
-    private function newImage()
-    {
-        try {
-            return new ImagickImagine();
-        } catch (RuntimeException $ex) {
-            return new GdImagine();
+        // Set Interlacing to plane for smaller image size.
+        if (count($image->layers()) == 1) {
+            $image->interlace(ImageInterface::INTERLACE_PLANE);
         }
+
+        $imagineOptions = $format['options'];
+
+        $imageExtension = $this->getImageExtension($fileVersion->getName());
+
+        return $image->get(
+            $imageExtension,
+            $this->getOptionsFromImage($image, $imageExtension, $imagineOptions)
+        );
     }
 
     /**
@@ -143,7 +199,7 @@ class ImagineImageConverter implements ImageConverterInterface
      *
      * @return ImageInterface The cropped image
      */
-    private function applyCrop(ImageInterface $image, array $cropParameters)
+    private function applyFormatCrop(ImageInterface $image, array $cropParameters)
     {
         return $this->modifyAllLayers(
             $image,
@@ -154,6 +210,31 @@ class ImagineImageConverter implements ImageConverterInterface
                     $cropParameters['y'],
                     $cropParameters['width'],
                     $cropParameters['height']
+                );
+            }
+        );
+    }
+
+    /**
+     * Crops the given image according to the focus point defined in the file version.
+     *
+     * @param ImageInterface $image
+     * @param FileVersion $fileVersion
+     * @param array $scale
+     *
+     * @return ImageInterface
+     */
+    private function applyFocus(ImageInterface $image, FileVersion $fileVersion, array $scale)
+    {
+        return $this->modifyAllLayers(
+            $image,
+            function(ImageInterface $layer) use ($fileVersion, $scale) {
+                return $this->focus->focus(
+                    $layer,
+                    $fileVersion->getFocusPointX(),
+                    $fileVersion->getFocusPointY(),
+                    $scale['x'],
+                    $scale['y']
                 );
             }
         );
@@ -267,5 +348,72 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         return $image;
+    }
+
+    /**
+     * Return the options for the given format.
+     *
+     * @param $formatKey
+     *
+     * @return array
+     *
+     * @throws ImageProxyInvalidImageFormat
+     */
+    private function getFormat($formatKey)
+    {
+        if (!isset($this->formats[$formatKey])) {
+            throw new ImageProxyInvalidImageFormat('Format was not found');
+        }
+
+        return $this->formats[$formatKey];
+    }
+
+    /**
+     * @param ImageInterface $image
+     * @param string $imageExtension
+     * @param array $imagineOptions
+     *
+     * @return array
+     */
+    private function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
+    {
+        $options = [];
+        if (count($image->layers()) > 1 && $imageExtension == 'gif') {
+            $options['animated'] = true;
+        }
+
+        return array_merge($options, $imagineOptions);
+    }
+
+    /**
+     * Maps the given file type to a new extension.
+     *
+     * @param string $fileName
+     *
+     * @return string
+     */
+    private function getImageExtension($fileName)
+    {
+        $pathInfo = pathinfo($fileName);
+        $extension = null;
+        if (isset($pathInfo['extension'])) {
+            $extension = $pathInfo['extension'];
+        }
+
+        switch ($extension) {
+            case 'png':
+            case 'gif':
+            case 'jpeg':
+                // do nothing
+                break;
+            case 'svg':
+                $extension = 'png';
+                break;
+            default:
+                $extension = 'jpg';
+                break;
+        }
+
+        return $extension;
     }
 }

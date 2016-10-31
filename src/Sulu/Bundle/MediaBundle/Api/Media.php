@@ -1002,4 +1002,50 @@ class Media extends ApiWrapper
 
         return $apiCategories;
     }
+
+    /**
+     * Returns the x coordinate of the focus point.
+     *
+     * @VirtualProperty
+     * @SerializedName("focusPointX")
+     *
+     * @return int
+     */
+    public function getFocusPointX()
+    {
+        return $this->getFileVersion()->getFocusPointX();
+    }
+
+    /**
+     * Sets the x coordinate of the focus point.
+     *
+     * @param int $focusPointX
+     */
+    public function setFocusPointX($focusPointX)
+    {
+        $this->getFileVersion()->setFocusPointX($focusPointX);
+    }
+
+    /**
+     * Returns the y coordinate of the focus point.
+     *
+     * @VirtualProperty
+     * @SerializedName("focusPointY")
+     *
+     * @return int
+     */
+    public function getFocusPointY()
+    {
+        return $this->getFileVersion()->getFocusPointY();
+    }
+
+    /**
+     * Sets the y coordinate of the focus point.
+     *
+     * @param int $focusPointY
+     */
+    public function setFocusPointY($focusPointY)
+    {
+        $this->getFileVersion()->setFocusPointY($focusPointY);
+    }
 }

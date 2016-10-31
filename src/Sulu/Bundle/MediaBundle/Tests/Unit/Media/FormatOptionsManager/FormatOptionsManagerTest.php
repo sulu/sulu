@@ -95,7 +95,6 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $file->setVersion(1);
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $file->addFileVersion($fileVersion);
 
         $this->media[0]->addFile($file);

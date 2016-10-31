@@ -310,9 +310,8 @@ class MediaManager implements MediaManagerInterface
      * @param $data
      * @param UserInterface $user
      *
-     * @throws MediaNotFoundException
      * @throws FileVersionNotFoundException
-     * @throws FileNotFoundException
+     * @throws InvalidMediaTypeException
      *
      * @return Media
      */
@@ -402,6 +401,17 @@ class MediaManager implements MediaManagerInterface
             $data['mimeType'] = null;
             $data['storageOptions'] = null;
             $data['changed'] = date('Y-m-d H:i:s');
+
+            if ((isset($data['focusPointX']) && $data['focusPointX'] != $currentFileVersion->getFocusPointX())
+                || (isset($data['focusPointY']) && $data['focusPointY'] != $currentFileVersion->getFocusPointY())
+            ) {
+                $currentFileVersion->increaseSubVersion();
+                $this->formatManager->purge(
+                    $mediaEntity->getId(),
+                    $currentFileVersion->getName(),
+                    $currentFileVersion->getStorageOptions()
+                );
+            }
         }
 
         $media = new Media($mediaEntity, $data['locale'], null);
@@ -478,7 +488,6 @@ class MediaManager implements MediaManagerInterface
         $fileVersion->setCreator($user);
         $fileVersion->setChanger($user);
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setFile($file);
 
         $file->addFileVersion($fileVersion);
@@ -519,7 +528,9 @@ class MediaManager implements MediaManagerInterface
                 ($attribute === 'description' && $value !== null) ||
                 ($attribute === 'copyright' && $value !== null) ||
                 ($attribute === 'credits' && $value !== null) ||
-                ($attribute === 'categories' && $value !== null)
+                ($attribute === 'categories' && $value !== null) ||
+                ($attribute === 'focusPointX' && $value !== null) ||
+                ($attribute === 'focusPointY' && $value !== null)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -610,6 +621,12 @@ class MediaManager implements MediaManagerInterface
                                 $media->addCategory($category);
                             }
                         }
+                        break;
+                    case 'focusPointX':
+                        $media->setFocusPointX($value);
+                        break;
+                    case 'focusPointY':
+                        $media->setFocusPointY($value);
                         break;
                 }
             }

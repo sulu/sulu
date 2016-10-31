@@ -15,6 +15,7 @@
 define([
     'config',
     './cropping-slide',
+    './focus-point-slide',
     'services/sulumedia/media-manager',
     'services/sulumedia/file-icons',
     'services/sulumedia/image-editor',
@@ -27,6 +28,7 @@ define([
 ], function(
     config,
     croppingSlide,
+    focusPointSlide,
     mediaManager,
     fileIcons,
     imageEditor,
@@ -336,6 +338,9 @@ define([
                 croppingSlide.initialize(this.$el, this.sandbox, this.media, nonInternalImageFormats, function() {
                     this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
                 }.bind(this));
+                focusPointSlide.initialize(this.sandbox, this.media, function() {
+                    this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
+                }.bind(this));
                 startingSlide = (this.options.startingSlide === 'crop') ? 1 : startingSlide;
             }
 
@@ -393,7 +398,8 @@ define([
                                     }
                                 ]
                             },
-                            croppingSlide.getSlideDefinition()
+                            croppingSlide.getSlideDefinition(),
+                            focusPointSlide.getSlideDefinition()
                         ]
                     }
                 }
@@ -401,6 +407,7 @@ define([
                 if (this.media.type.name === 'image') {
                     this.startEditActionSelect($editActionSelect);
                     croppingSlide.start();
+                    focusPointSlide.start();
                 }
             }.bind(this));
         },
@@ -412,45 +419,40 @@ define([
          * @param {Object} $element The dom element to start the select in
          */
         startEditActionSelect: function($element) {
-            var config;
+            var config = {
+                data: [
+                    {
+                        name: this.sandbox.translate('sulu-media.crop'),
+                        callback: function() {
+                            this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                        }.bind(this)
+                    },
+                    {
+                        name: this.sandbox.translate('sulu-media.focus-point'),
+                        callback: function() {
+                            this.sandbox.emit('husky.overlay.media-edit.slide-to', 2);
+                        }.bind(this)
+                    }
+                ]
+            };
 
             if (imageEditor.editingIsPossible()) {
-                config = {
-                    data: [
-                        {
-                            name: this.sandbox.translate('sulu-media.crop'),
-                            callback: function() {
-                                this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
-                            }.bind(this)
-                        },
-                        {
-                            name: this.sandbox.translate('sulu-media.edit-original'),
-                            callback: function() {
-                                this.sandbox.sulu.showConfirmationDialog({
-                                    title: 'sulu-media.external-server-title',
-                                    description: 'sulu-media.external-server-description',
-                                    callback: function(confirmed) {
-                                        if (!confirmed) {
-                                            return;
-                                        }
+                config.data.push({
+                    name: this.sandbox.translate('sulu-media.edit-original'),
+                    callback: function() {
+                        this.sandbox.sulu.showConfirmationDialog({
+                            title: 'sulu-media.external-server-title',
+                            description: 'sulu-media.external-server-description',
+                            callback: function(confirmed) {
+                                if (!confirmed) {
+                                    return;
+                                }
 
-                                        imageEditor.editImage(this.media.url.split('?')[0])
-                                            .then(this.setNewVersionByUrl.bind(this));
-                                    }.bind(this)
-                                });
+                                imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
                             }.bind(this)
-                        }
-                    ]
-                }
-            } else {
-                config = {
-                    defaultLabel: this.sandbox.translate('sulu-media.crop'),
-                    icon: 'crop',
-                    noItemsCallback: function() {
-                        this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
-                    }.bind(this),
-                    data: []
-                }
+                        });
+                    }.bind(this)
+                });
             }
 
             this.sandbox.start([{

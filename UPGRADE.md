@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Media StorageInterface
+
+The `StorageInterface` in the `Sulu\Bundle\MediaBundle\Media\Storage` namespace
+got a new `loadAsString` method, which should return the file for the given
+parameters as a binary string. If you have already developed your own storage
+implementation you have to add this method.
+
 ### Page-Templates
 
 The cache-lifetime of page-templates was extended by the `type` attribute.

@@ -59,7 +59,7 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function save($tmpPath, $id, $fileName, $options, $format)
+    public function save($content, $id, $fileName, $options, $format)
     {
         $savePath = $this->getPath($this->path, $id, $fileName, $format);
         if (!is_dir(dirname($savePath))) {
@@ -67,7 +67,7 @@ class LocalFormatCache implements FormatCacheInterface
         }
 
         try {
-            $this->filesystem->copy($tmpPath, $savePath);
+            $this->filesystem->dumpFile($savePath, $content);
         } catch (IOException $ioException) {
             return false;
         }

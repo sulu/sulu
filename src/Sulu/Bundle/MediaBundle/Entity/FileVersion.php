@@ -33,7 +33,7 @@ class FileVersion implements AuditableInterface
     /**
      * @var int
      */
-    private $subVersion;
+    private $subVersion = 0;
 
     /**
      * @var int
@@ -132,6 +132,16 @@ class FileVersion implements AuditableInterface
     private $categories = [];
 
     /**
+     * @var int
+     */
+    private $focusPointX;
+
+    /**
+     * @var int
+     */
+    private $focusPointY;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -193,15 +203,16 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set subVersion.
+     * Increases the subversion. Required for cache busting on certain operations which change the image without
+     * creating a new file version.
      *
      * @param int $subVersion
      *
      * @return FileVersion
      */
-    public function setSubVersion($subVersion)
+    public function increaseSubVersion()
     {
-        $this->subVersion = $subVersion;
+        ++$this->subVersion;
 
         return $this;
     }
@@ -776,5 +787,45 @@ class FileVersion implements AuditableInterface
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Returns the x coordinate of the focus point.
+     *
+     * @return int
+     */
+    public function getFocusPointX()
+    {
+        return $this->focusPointX;
+    }
+
+    /**
+     * Sets the x coordinate of the focus point.
+     *
+     * @param int $focusPointX
+     */
+    public function setFocusPointX($focusPointX)
+    {
+        $this->focusPointX = $focusPointX;
+    }
+
+    /**
+     * Returns the y coordinate of the focus point.
+     *
+     * @return int
+     */
+    public function getFocusPointY()
+    {
+        return $this->focusPointY;
+    }
+
+    /**
+     * Sets the y coordinate of the focus point.
+     *
+     * @param int $focusPointY
+     */
+    public function setFocusPointY($focusPointY)
+    {
+        $this->focusPointY = $focusPointY;
     }
 }

@@ -20,7 +20,7 @@ interface FormatCacheInterface
     /**
      * Save image and return the url to the image.
      *
-     * @param string $tmpPath
+     * @param string $content
      * @param int $id
      * @param string $fileName
      * @param array $options
@@ -28,7 +28,7 @@ interface FormatCacheInterface
      *
      * @return bool
      */
-    public function save($tmpPath, $id, $fileName, $options, $format);
+    public function save($content, $id, $fileName, $options, $format);
 
     /**
      * Delete the image by the given parameters.

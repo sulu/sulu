@@ -18,56 +18,101 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
     'use strict';
 
     var defaults = {
-        eventNamespace: 'sulu.area-selection',
-        instanceName: '',
-        image: null,
-        areaGuidingWidth: null,
-        areaGuidingHeight: null,
-        data: null
-    },
+            eventNamespace: 'sulu.area-selection',
+            instanceName: '',
+            image: null,
+            areaGuidingWidth: null,
+            areaGuidingHeight: null,
+            data: null,
+            resizeable: true,
+            draggable: true,
+            tileSelectable: false,
+            tileRow: 1,
+            tileColumn: 1
+        },
 
-    translations = {
-        minimumSizeReached: 'sulu-media.minimum-size-reached'
-    },
+        translations = {
+            minimumSizeReached: 'sulu-media.minimum-size-reached'
+        },
 
-    /**
-     * Raised when the component has been successfully initialized.
-     * @event sulu.area-selection.initialized
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    },
+        constants = {
+            tileRows: 3,
+            tileColumns: 3,
+            selectedTileClass: 'selected',
+            arrowUpClass: 'up',
+            arrowUpRightClass: 'up-right',
+            arrowRightClass: 'right',
+            arrowDownRightClass: 'down-right',
+            arrowDownClass: 'down',
+            arrowDownLeftClass: 'down-left',
+            arrowLeftClass: 'left',
+            arrowUpLeftClass: 'up-left'
+        },
 
-    /**
-     * Raised when the area the component selects has changed.
-     * @event sulu.area-selection.area-changed
-     */
-    AREA_CHANGED = function() {
-        return createEventName.call(this, 'area-changed');
-    },
+        /**
+         * Raised when the component has been successfully initialized.
+         * @event sulu.area-selection.initialized
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
 
-    /**
-     * Listens on and sets the area-guide dimensions of the component
-     *
-     * @param {Number} areaGuidingWidth The new area-guide-width
-     * @param {Number} areaGuidingHeight The new area-guide-height
-     * @param {Object} data The new data to use
-     *
-     * @event sulu.area-selection.change-area-guide-dimensions
-     */
-    SET_AREA_GUIDE_DIMENSIONS = function() {
-        return createEventName.call(this, 'set-area-guide-dimensions');
-    },
+        /**
+         * Raised when the area the component selects has changed.
+         * @event sulu.area-selection.area-changed
+         */
+        AREA_CHANGED = function() {
+            return createEventName.call(this, 'area-changed');
+        },
 
-    /**
-     * returns normalized event names
-     */
-    createEventName = function(postFix) {
-        return this.options.eventNamespace +
-            '.' + (!!this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-    };
+        /**
+         * Raised when a new tile of the grid is selected.
+         *
+         * @event sulu.area-selection.area-changed
+         */
+        TILE_SELECTED = function() {
+            return createEventName.call(this, 'tile-selected');
+        },
+
+        /**
+         * Listens on and sets the area-guide dimensions of the component
+         *
+         * @param {Number} areaGuidingWidth The new area-guide-width
+         * @param {Number} areaGuidingHeight The new area-guide-height
+         * @param {Object} data The new data to use
+         *
+         * @event sulu.area-selection.change-area-guide-dimensions
+         */
+        SET_AREA_GUIDE_DIMENSIONS = function() {
+            return createEventName.call(this, 'set-area-guide-dimensions');
+        },
+
+        /**
+         * returns normalized event names
+         */
+        createEventName = function(postFix) {
+            return this.options.eventNamespace +
+                '.' + (!!this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
 
     return {
+
+        placeTileSelection: function () {
+            if (!this.options.tileSelectable
+                || !$.isNumeric(this.options.tileRow)
+                || !$.isNumeric(this.options.tileColumn)
+            ) {
+                return;
+            }
+
+            var $tile = this.$el.find(
+                [
+                    '.lines *:nth-child(', this.options.tileRow + 1, ') ',
+                    '.tile:nth-child(', this.options.tileColumn + 1, ')'
+                ].join('')
+            );
+            this.selectTile($tile);
+        },
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -103,19 +148,23 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 height: null
             });
 
-            // Variables which are needed for dragging the area over the area
-            this.dragging = {
-                enabled: false,
-                clickOffsetLeft: 0,
-                clickOffsetTop: 0
-            };
+            if (!!this.options.draggable) {
+                // Variables which are needed for dragging the area over the area
+                this.dragging = {
+                    enabled: false,
+                    clickOffsetLeft: 0,
+                    clickOffsetTop: 0
+                };
+            }
 
-            // Variables which are needed for changing the width and height of the area
-            this.resizing = {
-                enabled: false,
-                clickOffsetLeft: 0,
-                clickOffsetTop: 0
-            };
+            if (!!this.options.resizeable) {
+                // Variables which are needed for changing the width and height of the area
+                this.resizing = {
+                    enabled: false,
+                    clickOffsetLeft: 0,
+                    clickOffsetTop: 0
+                };
+            }
 
             // Holds the data set by the user
             this.data = this.options.data;
@@ -126,6 +175,7 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 this.bindDomEvents();
                 this.bindDragEvents();
                 this.bindResizeEvents();
+                this.placeTileSelection();
                 this.sandbox.emit(INITIALIZED.call(this), this.originalWidth, this.originalHeight);
             }.bind(this));
         },
@@ -146,12 +196,16 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Places the selection within the frame. Gets called after the frame has been rendered and the image been loaded.
          */
         placeSelection: function() {
-            if (!!this.areaGuidingWidth) {
-                this.physicalAreaGuidingWidth = this.areaGuidingWidth * this.$frame.width() / this.originalWidth;
+            if (!this.areaGuidingWidth) {
+                this.areaGuidingWidth = this.originalWidth;
             }
-            if (!!this.areaGuidingHeight) {
-                this.physicalAreaGuidingHeight = this.areaGuidingHeight * this.$frame.height() / this.originalHeight;
+
+            if (!this.areaGuidingHeight) {
+                this.areaGuidingHeight = this.originalHeight;
             }
+
+            this.physicalAreaGuidingWidth = this.areaGuidingWidth * this.$frame.width() / this.originalWidth;
+            this.physicalAreaGuidingHeight = this.areaGuidingHeight * this.$frame.height() / this.originalHeight;
 
             if ((!!this.areaGuidingWidth && this.areaGuidingWidth > this.originalWidth) ||
                 (!!this.areaGuidingHeight && this.areaGuidingHeight > this.originalHeight) ||
@@ -182,17 +236,22 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
         renderFrame: function() {
             this.$frame = $(_.template(frameTemplate, {
                 image: this.options.image,
-                minimumSizeInfo: this.sandbox.translate(translations.minimumSizeReached)
+                minimumSizeInfo: this.sandbox.translate(translations.minimumSizeReached),
+                resizeable: this.options.resizeable,
+                tileSelectable: this.options.tileSelectable
             }));
 
             var whenImageLoaded = $.Deferred(),
                 $image = this.$frame.find('.image');
 
             $image.one('load', function() {
+                var rectangle;
+
                 this.setImageSize($image);
                 // Fix the width and the height due to a rendering bug in firefox.
-                this.$frame.width($image.width());
-                this.$frame.height($image.height());
+                rectangle = $image[0].getBoundingClientRect();
+                this.$frame.width(rectangle.width);
+                this.$frame.height(rectangle.height);
                 this.$frame.removeClass('invisible');
                 whenImageLoaded.resolve();
             }.bind(this));
@@ -208,7 +267,65 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
             this.$backdrop = this.$frame.find('.backdrop');
             this.$backdrop.hide();
 
+            if (!!this.options.draggable) {
+                this.area.$el.css('cursor', 'move');
+            }
+
+            if (!!this.options.tileSelectable) {
+                this.$lines = this.$el.find('.lines');
+                this.$tileArrows = this.$lines.find('.tile .arrow');
+
+                this.$tileArrowMatrix = [
+                    [this.$tileArrows[0], this.$tileArrows[3], this.$tileArrows[6]],
+                    [this.$tileArrows[1], this.$tileArrows[4], this.$tileArrows[7]],
+                    [this.$tileArrows[2], this.$tileArrows[5], this.$tileArrows[8]]
+                ];
+            }
+
             return whenImageLoaded;
+        },
+
+        /**
+         * Makes the given tile the selected one.
+         *
+         * @param $tile
+         */
+        selectTile: function($tile) {
+            this.$el.find('.lines .tile').removeClass(constants.selectedTileClass);
+            $tile.addClass(constants.selectedTileClass);
+
+            this.setTileArrows($tile);
+        },
+
+        setTileArrows: function($tile) {
+            var x = $tile.index(),
+                y = $tile.parent().index();
+
+            this.$tileArrows.removeClass(constants.arrowUpClass);
+            this.$tileArrows.removeClass(constants.arrowUpRightClass);
+            this.$tileArrows.removeClass(constants.arrowRightClass);
+            this.$tileArrows.removeClass(constants.arrowDownRightClass);
+            this.$tileArrows.removeClass(constants.arrowDownClass);
+            this.$tileArrows.removeClass(constants.arrowDownLeftClass);
+            this.$tileArrows.removeClass(constants.arrowLeftClass);
+            this.$tileArrows.removeClass(constants.arrowUpLeftClass);
+
+            this.setTileArrow(x, y - 1, constants.arrowUpClass);
+            this.setTileArrow(x + 1, y - 1, constants.arrowUpRightClass);
+            this.setTileArrow(x + 1, y, constants.arrowRightClass);
+            this.setTileArrow(x + 1, y + 1, constants.arrowDownRightClass);
+            this.setTileArrow(x, y + 1, constants.arrowDownClass);
+            this.setTileArrow(x - 1, y + 1, constants.arrowDownLeftClass);
+            this.setTileArrow(x - 1, y, constants.arrowLeftClass);
+            this.setTileArrow(x - 1, y - 1, constants.arrowUpLeftClass);
+        },
+
+        setTileArrow: function(x, y, className) {
+            if (x < 0 || y < 0 || x >= constants.tileColumns || y >= constants.tileRows) {
+                return;
+            }
+
+            $(this.$tileArrowMatrix[x][y]).addClass(className);
         },
 
         /**
@@ -239,6 +356,13 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 this.setAreaSize(coordinates);
             }.bind(this));
 
+            this.area.$el.on('click', '.tile', function(event) {
+                var $tile = $(event.currentTarget);
+
+                this.selectTile($tile);
+                this.sandbox.emit(TILE_SELECTED.call(this), $tile.index(), $tile.parent().index());
+            }.bind(this));
+
             // Prevent text-selection when moving the area
             this.area.$el.on('mousedown', function() {
                 $(document).on('selectstart.area-selection' + this.options.instanceName, false);
@@ -253,6 +377,10 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Binds the events for moving the area within the image frame
          */
         bindDragEvents: function() {
+            if (!this.options.draggable) {
+                return;
+            }
+
             this.area.$el.on('mousedown', ':not(.handle)', function(event) {
                 this.dragging.enabled = true;
                 this.dragging.clickOffsetLeft = event.pageX - this.area.$el.offset().left;
@@ -282,6 +410,10 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Binds the events for resizing the area within the image frame
          */
         bindResizeEvents: function() {
+            if (!this.options.resizeable) {
+                return;
+            }
+
             this.area.$el.on('mousedown', '.handle.south-east', function(event) {
                 this.resizing.enabled = true;
                 this.resizing.clickOffsetLeft = event.pageX - this.area.$el.offset().left - this.area.$el.width();
@@ -369,8 +501,12 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
                 height: Math.floor(size.height * this.originalHeight / this.$frame.height())
             }));
 
-            if ((!!this.areaGuidingWidth && this.$el.data('area').width <= this.areaGuidingWidth)
-                || (!!this.areaGuidingHeight && this.$el.data('area').height <= this.areaGuidingHeight)
+            if (
+                (
+                    (!!this.areaGuidingWidth && this.$el.data('area').width <= this.areaGuidingWidth)
+                    || (!!this.areaGuidingHeight && this.$el.data('area').height <= this.areaGuidingHeight)
+                )
+                && !!this.options.resizeable
             ) {
                 this.area.$el.addClass('minimum-size-reached');
             } else {

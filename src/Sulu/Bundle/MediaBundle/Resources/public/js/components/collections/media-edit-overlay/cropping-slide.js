@@ -16,8 +16,8 @@
 define([
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/format-manager',
-    'text!./cropping.html'
-], function(UserSettingsManager, FormatManager, elementTemplate) {
+    'text!./toolbar-slide.html'
+], function(UserSettingsManager, FormatManager, toolbarSlideTemplate) {
 
     'use strict';
 
@@ -482,7 +482,6 @@ define([
         };
 
     return {
-
         sandbox: null,
         media: null,
         formats: null,
@@ -509,7 +508,7 @@ define([
             this.formats = formats;
             this.onBack = onBack;
             this.saved = true;
-            this.$el = $(_.template(elementTemplate, {
+            this.$el = $(_.template(toolbarSlideTemplate, {
                 hint: this.sandbox.translate('sulu-media.crop-double-click-hint')
             }));
         },
