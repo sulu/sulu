@@ -41573,7 +41573,11 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Boolean} [options.showStatus] hide or display status of elements
  * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
  * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
+<<<<<<< 76cfc9f9d9eb8f8abf34f388ef807f5629319370
  * @params {Boolean} [options.singleMarkable] If true just one item is markable
+=======
+ * @params {Boolean} [options.actionOnGhostPage] If true action Button on ghost page will be shown
+>>>>>>> Added actionOnGhostPage option in column navigation
  * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
  * @params {Array} [options.disableIds] an array of uuids which will be disabled
  * @params {Array} [options.disabledChildren] an array of uuids which will be disabled
@@ -41616,6 +41620,7 @@ define('__component__$column-navigation@husky',[],function() {
             responsive: true,
             showOptions: true,
             showStatus: true,
+            actionOnGhost: false,
             premarkedIds: [],
             disableIds: [],
             disabledChildren: false,
@@ -42377,8 +42382,8 @@ define('__component__$column-navigation@husky',[],function() {
                 actionIcon = this.options.unmarkIcon;
             }
 
-            // show action icon only for non-ghost pages
-            if ((!data[this.options.typeName] || data[this.options.typeName].name !== 'ghost') &&
+            // show action icon only for non-ghost pages if actionOnGhost is disabled
+            if ((!data[this.options.typeName] || (data[this.options.typeName].name !== 'ghost' || this.options.actionOnGhost)) &&
                 this.options.showActionIcon === true && actionIcon && !disabled
             ) {
                 this.sandbox.dom.append($container, '<span class="' + actionIcon + ' action col-icon"></span>');

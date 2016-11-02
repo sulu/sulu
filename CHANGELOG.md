@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2898 [CustomUrlBundle]     Added action button for ghost pages in custom url target selection
     * BUGFIX      #3009 [ContentBundle]       Fixed skin of teaser-select overlay
     * BUGFIX      #3001 [ContentBundle]       Fixed apostrophe bug in template
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
