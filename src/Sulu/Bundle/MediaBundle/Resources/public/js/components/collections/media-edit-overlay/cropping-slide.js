@@ -354,7 +354,7 @@ define([
         getFormatDropdownItems = function() {
             var items = [], styleClass;
 
-            $.each(this.formats, function(key, format) {
+            $.each(this.formats, function(key) {
                 styleClass = null;
                 if (!!this.formatCrops[key] && !!this.formatCrops[key].options && !FormatManager.cropOptionsAreValid(
                         this.formatCrops[key].options,
@@ -364,7 +364,7 @@ define([
                         this.imageHeight
                     )) {
                     styleClass = 'warning';
-                } else if (!!format.options) {
+                } else if (!!this.formatCrops[key].options) {
                     styleClass = 'checked';
                 }
 
@@ -424,9 +424,14 @@ define([
          * @returns the first format in which the image can be cropped. Returns null if no such format exists.
          */
         getFirstCroppableFormat = function() {
-            var croppableFormat = null;
+            var croppableFormat = null,
+                firstFormat = null;
 
             $.each(this.formats, function(key) {
+                if (!firstFormat) {
+                    firstFormat = this.formatCrops[key];
+                }
+
                 if (!croppableFormat && FormatManager.cropPossibleInInFormat(
                         this.formatCrops[key].scale.x,
                         this.formatCrops[key].scale.y,
@@ -438,7 +443,7 @@ define([
                 }
             }.bind(this));
 
-            return croppableFormat;
+            return croppableFormat || firstFormat;
         },
 
         /**

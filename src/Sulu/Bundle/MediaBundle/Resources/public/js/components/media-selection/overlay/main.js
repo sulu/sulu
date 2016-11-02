@@ -294,7 +294,6 @@ define([
                                 }),
                                 contentSpacing: false,
                                 buttons: buttons,
-                                contentSpacing: false,
                                 okCallback: function() {
                                     this.save();
                                 }.bind(this)
