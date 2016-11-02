@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
@@ -47,22 +47,6 @@ class XmlSitemapRendererTest extends \PHPUnit_Framework_TestCase
         $this->engine = $this->prophesize(EngineInterface::class);
 
         $this->renderer = new XmlSitemapRenderer($this->providerPoolInterface->reveal(), $this->engine->reveal(), '/');
-    }
-
-    public function testGetDumpPath()
-    {
-        $this->assertEquals(
-            '/http/sulu_io/en/sulu.lo/sitemaps/pages-1.xml',
-            $this->renderer->getDumpPath('http', 'sulu_io', 'en', 'sulu.lo', 'pages', 1)
-        );
-    }
-
-    public function testGetIndexDumpPath()
-    {
-        $this->assertEquals(
-            '/http/sulu_io/en/sulu.lo/sitemap.xml',
-            $this->renderer->getIndexDumpPath('http', 'sulu_io', 'en', 'sulu.lo')
-        );
     }
 
     public function testRenderIndexNoNeed()

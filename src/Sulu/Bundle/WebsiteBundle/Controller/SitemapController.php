@@ -32,7 +32,7 @@ class SitemapController extends WebsiteController
      */
     public function indexAction(Request $request)
     {
-        if (null !== ($response = $this->getDumpedIndex($request))) {
+        if (null !== ($response = $this->getDumpedIndexResponse($request))) {
             return $response;
         }
 
@@ -53,7 +53,7 @@ class SitemapController extends WebsiteController
      *
      * @return null|BinaryFileResponse
      */
-    private function getDumpedIndex(Request $request)
+    private function getDumpedIndexResponse(Request $request)
     {
         /** @var Portal $portal */
         $portal = $request->get('_sulu')->getAttribute('portal');
@@ -103,7 +103,7 @@ class SitemapController extends WebsiteController
      */
     public function sitemapPaginatedAction(Request $request, $alias, $page)
     {
-        if (null !== ($response = $this->getDumpedSitemap($request, $alias, $page))) {
+        if (null !== ($response = $this->getDumpedSitemapResponse($request, $alias, $page))) {
             return $response;
         }
 
@@ -138,7 +138,7 @@ class SitemapController extends WebsiteController
      *
      * @return null|BinaryFileResponse
      */
-    private function getDumpedSitemap(Request $request, $alias, $page)
+    private function getDumpedSitemapResponse(Request $request, $alias, $page)
     {
         /** @var Portal $portal */
         $portal = $request->get('_sulu')->getAttribute('portal');

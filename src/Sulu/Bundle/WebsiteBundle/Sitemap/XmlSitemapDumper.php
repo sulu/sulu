@@ -98,32 +98,9 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
     }
 
     /**
-     * Dump given portal-information.
-     *
-     * @param PortalInformation $portalInformation
-     * @param string $scheme
+     * {@inheritdoc}
      */
     public function dumpPortalInformation(PortalInformation $portalInformation, $scheme)
-    {
-        $this->dumpFile(
-            $this->getIndexDumpPath(
-                $scheme,
-                $portalInformation->getWebspaceKey(),
-                $portalInformation->getLocale(),
-                $portalInformation->getHost()
-            ),
-            $this->renderIndex($portalInformation, $scheme)
-        );
-    }
-
-    /**
-     * Dump sitemaps for portal-information and return sitemap-index.
-     *
-     * @param PortalInformation $portalInformation
-     *
-     * @return string
-     */
-    private function renderIndex(PortalInformation $portalInformation, $scheme)
     {
         if (false !== strpos($portalInformation->getUrl(), '{host}')) {
             if (!$this->defaultHost) {
@@ -133,17 +110,25 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
             $portalInformation->setUrl(str_replace('{host}', $this->defaultHost, $portalInformation->getUrl()));
         }
 
+        $dumpPath = $this->getIndexDumpPath(
+            $scheme,
+            $portalInformation->getWebspaceKey(),
+            $portalInformation->getLocale(),
+            $portalInformation->getHost()
+        );
         $sitemap = $this->sitemapRenderer->renderIndex($portalInformation->getHost(), $scheme);
         if (!$sitemap) {
             $aliases = array_keys($this->sitemapProviderPool->getProviders());
-
-            return $this->sitemapRenderer->renderSitemap(
-                reset($aliases),
-                1,
-                $portalInformation->getLocale(),
-                $portalInformation->getPortal(),
-                $portalInformation->getHost(),
-                $scheme
+            $this->dumpFile(
+                $dumpPath,
+                $this->sitemapRenderer->renderSitemap(
+                    reset($aliases),
+                    1,
+                    $portalInformation->getLocale(),
+                    $portalInformation->getPortal(),
+                    $portalInformation->getHost(),
+                    $scheme
+                )
             );
 
             return;
@@ -153,7 +138,7 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
             $this->dumpProviderSitemap($alias, $portalInformation, $scheme);
         }
 
-        return $sitemap;
+        $this->dumpFile($dumpPath, $sitemap);
     }
 
     /**
@@ -161,6 +146,7 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
      *
      * @param string $alias
      * @param PortalInformation $portalInformation
+     * @param string $scheme
      */
     private function dumpProviderSitemap($alias, PortalInformation $portalInformation, $scheme)
     {
@@ -182,7 +168,7 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
                     $portalInformation->getLocale(),
                     $portalInformation->getHost(),
                     $alias,
-                    $page++
+                    $page
                 ),
                 $sitemap
             );
@@ -197,10 +183,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
      */
     private function dumpFile($filePath, $content)
     {
-        if (!$content) {
-            return;
-        }
-
         $this->filesystem->dumpFile($filePath, $content);
     }
 }
