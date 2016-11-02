@@ -176,6 +176,11 @@ define([
                 this.selectedFormat.scale.y,
                 getSelectionDataFromFormat.call(this, format)
             );
+
+            this.sandbox.emit(
+                'sulu.media-edit.preview.loading',
+                this.sandbox.translate('sulu-media.saved-crops-not-visible')
+            );
         },
 
         /**

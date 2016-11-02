@@ -402,6 +402,10 @@
                 <source>sulu-media.unsaved-crop-description</source>
                 <target>Der aktuelle Ausschnitt geht beim Wechseln verloren.</target>
             </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Die Ausschnitte wurde gespeichert, werden aber in dieser Voransicht nicht dargestellt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -19,6 +19,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2985 [ContentBundle]       Fixed link-provider overlay-spacing
     * BUGFIX      #2983 [AdminBundle]         Removed default placeholder for datepicker
     * FEATURE     #2979 [MediaBundle]         Hide internal formats in UI
+    * ENHANCEMENT #2982 [MediaBundle]         Added loader on preview image when crops have been changed
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
     * FEATURE     #2972 [MediaBundle]         Focus point for media cropping
     * BUGFIX      #2981 [WebsiteBundle]       Fixed dumping of sitemaps

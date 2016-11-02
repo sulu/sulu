@@ -60,12 +60,16 @@ define([
             multipleEditTagsSelector: '.media-tags',
             descriptionCheckboxSelector: '#show-descriptions',
             tagsCheckboxSelector: '#show-tags',
+            previewSelector: '.media-edit-preview-image',
+            previewLoaderSelector: '.media-edit-preview-loader',
+            previewLoaderHintSelector: '.media-edit-preview-loader .hint',
             previewImgSelector: '.media-edit-preview-image img',
             singleEditClass: 'single-edit',
             multiEditClass: 'multi-edit',
             loadingClass: 'loading',
             loaderClass: 'media-edit-loader',
             resetPreviewActionClass: 'media-reset-preview-action',
+            previewImageLoaderDuration: 3000,
             singleOverlaySkin: 'large',
             multipleOverlaySkin: 'medium'
         },
@@ -98,6 +102,14 @@ define([
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
+        },
+
+        /**
+         * starts a loader with the passed text in the preview image
+         * @event sulu.media-edit.preview.loading
+         */
+        LOADING_PREVIEW = function() {
+            return createEventName.call(this, 'preview.loading')
         },
 
         /** returns normalized event names */
@@ -146,6 +158,8 @@ define([
 
             // for single edit
             this.media = null;
+
+            this.loaderTimeout = null;
 
             // for multiple edit
             this.medias = null;
@@ -590,6 +604,8 @@ define([
 
             this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
             this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
+
+            this.sandbox.on(LOADING_PREVIEW.call(this), this.startPreviewImageLoader.bind(this));
         },
 
         /**
@@ -681,6 +697,44 @@ define([
                 this.unbindSingleOverlayEvents();
                 this.initialize();
             }.bind(this));
+        },
+
+        /**
+         * Start a loader in the preview image with a text hint.
+         *
+         * @param hint {String}
+         */
+        startPreviewImageLoader: function(hint) {
+            this.showPreviewImageLoader(hint);
+
+            this.sandbox.once('husky.overlay.media-edit.slide-to', function() {
+                this.loaderTimeout = setTimeout(function() {
+                    this.hidePreviewImageLoader();
+                    this.loaderTimeout = null;
+                }.bind(this), constants.previewImageLoaderDuration);
+            }, this);
+        },
+
+        /**
+         * Shows the loader for the preview image.
+         *
+         * @param {String} hint
+         */
+        showPreviewImageLoader: function(hint) {
+            $(constants.previewSelector).hide();
+            $(constants.previewLoaderSelector).show();
+
+            $(constants.previewLoaderHintSelector).text(hint);
+        },
+
+        /**
+         * Hide the loader for the preview image.
+         */
+        hidePreviewImageLoader: function() {
+            $(constants.previewSelector).show();
+            $(constants.previewLoaderSelector).hide();
+
+            $(constants.previewLoaderHintSelector).text('');
         },
 
         /**
@@ -954,6 +1008,11 @@ define([
          * Called when component gets destroyed
          */
         destroy: function() {
+            if (!!this.loaderTimeout) {
+                clearTimeout(this.loaderTimeout);
+                this.loaderTimeout = null;
+            }
+
             this.sandbox.emit(CLOSED.call(this));
         }
     };

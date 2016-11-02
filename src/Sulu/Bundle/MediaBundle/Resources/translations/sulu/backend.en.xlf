@@ -402,6 +402,10 @@
                 <source>sulu-media.unsaved-crop-description</source>
                 <target>The current crop will be dismissed.</target>
             </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Crops have been saved but are not visible in this preview</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
