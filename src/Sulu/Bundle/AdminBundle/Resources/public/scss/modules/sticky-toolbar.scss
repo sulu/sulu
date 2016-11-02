@@ -1,9 +1,12 @@
+// Colors
+$stickyToolbarBackgroundColor: #f1f1f1 !default;
+
 .sticky-toolbar.fixed {
     .list-toolbar-container {
         width: 100%;
         padding-right: 100px;
         position: absolute;
-        background: #f1f1f1;
+        background: $stickyToolbarBackgroundColor;
         z-index: 98;
         top: 30px;
         padding-top: 10px;
