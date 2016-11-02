@@ -155,7 +155,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function buildSystemCollections($locale, $userId)
     {
-        $root = $this->getOrCreateRoot('system_collections', 'System', $locale, $userId);
+        $root = $this->getOrCreateRoot(SystemCollectionManagerInterface::COLLECTION_KEY, 'System', $locale, $userId);
         $collections = ['root' => $root->getId()];
         $collections = array_merge($collections, $this->iterateOverCollections($this->config, $userId, $root->getId()));
 

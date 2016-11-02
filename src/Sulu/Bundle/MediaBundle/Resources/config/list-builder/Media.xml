@@ -33,6 +33,12 @@
             <orm:field-name>SuluMediaBundle:FileVersion.defaultMeta</orm:field-name>
         </orm:join>
     </orm:joins>
+    <orm:joins name="collection">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+            <orm:field-name>%sulu.model.media.class%.collection</orm:field-name>
+        </orm:join>
+    </orm:joins>
 
     <properties>
         <property name="id" list:translation="public.id" display="no" list:type="integer">
@@ -143,6 +149,20 @@
             <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
 
             <orm:joins ref="fileVersionMeta"/>
+        </property>
+
+        <property name="lft" display="never">
+            <orm:field-name>lft</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+
+            <orm:joins ref="collection"/>
+        </property>
+
+        <property name="rgt" display="never">
+            <orm:field-name>rgt</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+
+            <orm:joins ref="collection"/>
         </property>
     </properties>
 </class>
