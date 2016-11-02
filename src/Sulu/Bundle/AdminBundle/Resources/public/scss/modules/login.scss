@@ -3,7 +3,7 @@ $loginMediaContainerBackgroundColor: $grayDarkLighter !default;
 $loginMediaDarkenerBackgroundColor: $black !default;
 $loginContentContainerBackgroundColor: $blue !default;
 $loginMessageTextColor: $white !default;
-$loginHuskeyValidateTextColor: $red !default;
+$loginValidateTextColor: $red !default;
 $loginBoxFrameFooterBtnBorderColor: $white !default;
 $loginBoxFrameFooterInactiveBorderColor: $grayDarkLighter !default;
 $loginBoxFrameFooterInactiveTextColor: $grayDarkLighter !default;
@@ -148,7 +148,7 @@ $loginSuccessIconBackgroundImage: '../img/login-success.svg' !default;
                         }
 
                         .husky-validate {
-                            color: $loginHuskeyValidateTextColor;
+                            color: $loginValidateTextColor;
                         }
                     }
 
