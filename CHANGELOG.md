@@ -2,7 +2,6 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-<<<<<<< 1e02cebe9a9ffdada2d97e3a2a8b416be4532d06
     * BUGFIX      #2977 [AdminBundle]         Fixed sulu.loadUserSettings() when key does not exist
     * BUGFIX      #3001 [ContentBundle]       Fixed apostrophe bug in template
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
@@ -16,9 +15,6 @@ CHANGELOG for Sulu
     * BUGFIX      #2985 [ContentBundle]       Fixed link-provider overlay-spacing
     * BUGFIX      #2983 [AdminBundle]         Removed default placeholder for datepicker
     * FEATURE     #2979 [MediaBundle]         Hide internal formats in UI
-=======
-    * BUGFIX      #2977 [AdminBundle]         Removed deprecated method sulu.loadUserSettings()
->>>>>>> Removed faulty method sulu.loadUserSetting entirely
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
     * FEATURE     #2972 [MediaBundle]         Focus point for media cropping
     * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
