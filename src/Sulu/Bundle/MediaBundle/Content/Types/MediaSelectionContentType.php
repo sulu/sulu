@@ -63,6 +63,7 @@ class MediaSelectionContentType extends ComplexContentType
                 ],
                 'collection'
             ),
+            'formats' => new PropertyParameter('formats', []),
         ];
     }
 
