@@ -126,6 +126,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                         openOnStart: true,
                         removeOnClose: true,
                         cssClass: 'type-' + type.name,
+                        skin: 'large',
                         slides: [
                             {
                                 title: this.sandbox.translate(type.title),

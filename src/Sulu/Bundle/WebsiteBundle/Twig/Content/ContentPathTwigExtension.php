@@ -58,7 +58,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null)
+    public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
     {
         // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
         // done (this is important for external-links in navigations)
@@ -84,6 +84,16 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
             $domain,
             $scheme
         );
+        if (!$withoutDomain && !$url) {
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $route,
+                $this->environment,
+                $locale,
+                $webspaceKey,
+                null,
+                $scheme
+            );
+        }
 
         return $url ?: $route;
     }
