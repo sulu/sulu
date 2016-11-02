@@ -159,6 +159,8 @@ define([
             // for single edit
             this.media = null;
 
+            this.loaderTimeout = null;
+
             // for multiple edit
             this.medias = null;
             this.$multiple = null;
@@ -706,10 +708,18 @@ define([
             this.showPreviewImageLoader(hint);
 
             this.sandbox.once('husky.overlay.media-edit.slide-to', function() {
-                setTimeout(this.hidePreviewImageLoader, constants.previewImageLoaderDuration);
+                this.loaderTimeout = setTimeout(function() {
+                    this.hidePreviewImageLoader();
+                    this.loaderTimeout = null;
+                }.bind(this), constants.previewImageLoaderDuration);
             }, this);
         },
 
+        /**
+         * Shows the loader for the preview image.
+         *
+         * @param {String} hint
+         */
         showPreviewImageLoader: function(hint) {
             $(constants.previewSelector).hide();
             $(constants.previewLoaderSelector).show();
@@ -717,6 +727,9 @@ define([
             $(constants.previewLoaderHintSelector).text(hint);
         },
 
+        /**
+         * Hide the loader for the preview image.
+         */
         hidePreviewImageLoader: function() {
             $(constants.previewSelector).show();
             $(constants.previewLoaderSelector).hide();
@@ -995,6 +1008,11 @@ define([
          * Called when component gets destroyed
          */
         destroy: function() {
+            if (!!this.loaderTimeout) {
+                clearTimeout(this.loaderTimeout);
+                this.loaderTimeout = null;
+            }
+
             this.sandbox.emit(CLOSED.call(this));
         }
     };
