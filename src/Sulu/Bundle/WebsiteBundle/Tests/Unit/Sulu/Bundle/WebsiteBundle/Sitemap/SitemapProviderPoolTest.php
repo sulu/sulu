@@ -63,16 +63,6 @@ class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->pool->hasProvider('test'));
     }
 
-    public function testGetFirstAlias()
-    {
-        $this->assertEquals('pages', $this->pool->getFirstAlias());
-    }
-
-    public function testNeedsIndex()
-    {
-        $this->assertTrue($this->pool->needsIndex());
-    }
-
     public function testGetIndex()
     {
         $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 1));
@@ -83,21 +73,5 @@ class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $result);
         $this->assertEquals('pages', $result[0]->getAlias());
         $this->assertEquals('articles', $result[1]->getAlias());
-    }
-
-    public function needsIndexSingleProvider()
-    {
-        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 1));
-        $pool = new SitemapProviderPool(['pages' => $this->providers['pages']->reval()]);
-
-        $this->assertFalse($pool->needsIndex());
-    }
-
-    public function needsIndexSingleProviderMultiplePages()
-    {
-        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 2));
-        $pool = new SitemapProviderPool(['pages' => $this->providers['pages']->reval()]);
-
-        $this->assertFalse($pool->needsIndex());
     }
 }

@@ -42,20 +42,6 @@ interface SitemapProviderPoolInterface
     public function hasProvider($alias);
 
     /**
-     * Returns first alias.
-     *
-     * @return string
-     */
-    public function getFirstAlias();
-
-    /**
-     * Indicates that the sitemap-index is needed.
-     *
-     * @return bool
-     */
-    public function needsIndex();
-
-    /**
      * Returns list of available sitemaps.
      *
      * @return Sitemap[]
