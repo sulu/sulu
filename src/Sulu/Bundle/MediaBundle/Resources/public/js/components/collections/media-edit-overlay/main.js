@@ -46,7 +46,8 @@ define([
 
         defaults = {
             instanceName: '',
-            startingSlide: 'edit'
+            startingSlide: 'edit',
+            formats: []
         },
 
         constants = {
@@ -114,6 +115,8 @@ define([
          * Initializes the overlay component
          */
         initialize: function() {
+            var formatCount;
+
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {
                 locale: this.sandbox.sulu.getDefaultContentLocale()
@@ -121,6 +124,22 @@ define([
 
             if (!this.options.mediaIds) {
                 throw new Error('media-ids are not defined');
+            }
+
+            this.imageFormats = nonInternalImageFormats;
+
+            formatCount = this.options.formats.length;
+            if (formatCount > 0) {
+                this.imageFormats = Object.keys(nonInternalImageFormats).reduce(function (previous, current) {
+                    for (var i = 0; i < formatCount; ++i) {
+                        if (this.options.formats[i] === nonInternalImageFormats[current].key) {
+                            previous[current] = nonInternalImageFormats[current];
+                            return previous;
+                        }
+                    }
+
+                    return previous;
+                }.bind(this), {});
             }
 
             this.options.previewInitialized = false;
@@ -335,7 +354,7 @@ define([
 
             if (this.media.type.name === 'image') {
                 $editActionSelect = $('<div class="edit-action-select"/>');
-                croppingSlide.initialize(this.$el, this.sandbox, this.media, nonInternalImageFormats, function() {
+                croppingSlide.initialize(this.$el, this.sandbox, this.media, this.imageFormats, function() {
                     this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
                 }.bind(this));
                 focusPointSlide.initialize(this.sandbox, this.media, function() {
