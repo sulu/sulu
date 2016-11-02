@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### Admin User Settings
+
+The method `sulu.loadUserSetting()` was removed from the Sulu Aura.js extension located in `Sulu/Bundle/AdminBundle/Resources/public/js/aura_extensions/sulu-extension.js`. 
+Instead the method `sulu.getUserSetting()` should be used, which provides same functionality, but is called differently (no need to provide neither URL nor callback in addition to the key).
+
+ 
 ### Media StorageInterface
 
 The `StorageInterface` in the `Sulu\Bundle\MediaBundle\Media\Storage` namespace
