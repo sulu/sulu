@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -295,9 +296,13 @@ class MediaManager implements MediaManagerInterface
         $mimeType = $uploadedFile->getMimeType();
         $properties = [];
 
-        // if the file is a video we add the duration
-        if (fnmatch('video/*', $mimeType)) {
-            $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+        try {
+            // if the file is a video we add the duration
+            if (fnmatch('video/*', $mimeType)) {
+                $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+            }
+        } catch (ExecutableNotFoundException $e) {
+            // Exception is thrown if ffmpeg is not installed -> duration is not set
         }
 
         return $properties;
