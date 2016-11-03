@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.4.0-RC2 (2016-11-03)
     * BUGFIX      #3010 [MediaBundle]         Fixed background of media overlay for preview icons
     * BUGFIX      #2899 [ContentBundle]       Disabled self referencing on internal links
     * FEATURE     #2898 [CustomUrlBundle]     Added action button for ghost pages in custom url target selection

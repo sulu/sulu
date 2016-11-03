@@ -766,28 +766,20 @@ a.media-edit-link,
   width: 100%;
   height: 100%;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
 /* line 89, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 68, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image[class^=fa-] {
   background: none;
   border: none;
   margin-top: 30px;
 }
-/* line 74, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 95, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image.icon {
   color: #999;
   font-size: 150px;
   text-align: center;
   vertical-align: middle;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 96, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 81, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 102, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image .file-version-change,
 .media-edit-preview-image img {
   position: absolute;
@@ -801,50 +793,30 @@ a.media-edit-link,
   max-height: 100%;
   max-width: 100%;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 107, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 92, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 113, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 111, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 96, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 117, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 119, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 104, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 125, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container {
   background-color: #ddd;
   position: relative;
   text-align: center;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 125, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 110, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 131, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container:before {
   content: '';
   display: block;
   padding-top: 100%;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 132, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 117, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 138, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change {
   position: absolute;
   top: 0;
@@ -854,30 +826,18 @@ a.media-edit-link,
   width: 100%;
   height: 100%;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 142, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 127, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 148, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 149, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 134, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 155, ../scss/modules/media-edit-overlay.scss */
 .overlay-footer .btn.media-reset-preview-action.hide {
   display: none;
 }
 
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 154, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 139, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 160, ../scss/modules/media-edit-overlay.scss */
 #media-info .info-label-container {
   overflow: visible;
   position: absolute;
@@ -886,29 +846,17 @@ a.media-edit-link,
   left: 0;
   right: 0;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 163, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 148, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 169, ../scss/modules/media-edit-overlay.scss */
 #media-info textarea.description {
   height: 80px;
   min-height: 80px;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 168, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 153, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 174, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview {
   position: relative;
   text-align: center;
 }
-<<<<<<< c67fe81b84d9f04be9acc9f09d65dd364d0711c8
-/* line 172, ../scss/modules/media-edit-overlay.scss */
-=======
-/* line 157, ../scss/modules/media-edit-overlay.scss */
->>>>>>> fixed background of media overlay for preview icons
+/* line 178, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview:before {
   content: '';
   display: block;
