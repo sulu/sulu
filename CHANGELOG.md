@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2899 [ContentBundle]       Disabled self referencing on internal links
     * FEATURE     #2898 [CustomUrlBundle]     Added action button for ghost pages in custom url target selection
     * BUGFIX      #3009 [ContentBundle]       Fixed skin of teaser-select overlay
+    * BUGFIX      #2977 [AdminBundle]         Fixed sulu.loadUserSettings() when key does not exist
     * BUGFIX      #3001 [ContentBundle]       Fixed apostrophe bug in template
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
     * BUGFIX      #2929 [MediaBundle]         Return system collection media only with granted permissions
