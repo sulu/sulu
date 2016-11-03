@@ -3,3 +3,6 @@ framework:
         storage_id: session.storage.mock_file
     profiler:
         enabled: false
+
+sulu_document_manager:
+    default_session: default
