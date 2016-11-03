@@ -362,20 +362,23 @@ define([
                 //TODO: make cleaner
                 addChild: function(type, data, fireEvent, index, keepExpanded) {
                     var options, template, $template, newSubForm,
-                        dfd = Husky.data.deferred();
-
-                    if (typeof index === 'undefined' || index === null) {
-                        index = this.getChildren().length;
-                    }
+                        dfd = Husky.data.deferred(),
+                        hasIndex = !(typeof index === 'undefined' || index === null);
 
                     if (!this.templates.hasOwnProperty(type)) {
                         type = this.options.default;
                     }
 
-                    if (this.canAdd()) {
-                        // remove index
+                    // remove index
+                    if (!!hasIndex) {
                         Husky.dom.remove(Husky.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
+                    }
 
+                    if (!hasIndex) {
+                        index = this.getChildren().length;
+                    }
+
+                    if (this.canAdd()) {
                         // FIXME this should not be necessary (see https://github.com/sulu-io/sulu/issues/1263)
                         data.type = type;
 
