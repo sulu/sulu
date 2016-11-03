@@ -96,6 +96,8 @@ define(['services/sulumedia/media-manager', 'text!./toolbar-slide.html'], functi
                 'sulu.media-edit.preview.loading',
                 this.sandbox.translate('sulu-media.saved-crops-not-visible')
             );
+
+            this.sandbox.emit('sulu.media-edit.formats.update');
         };
 
     return {
