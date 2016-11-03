@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes
+
 * 1.4.0-RC2 (2016-11-03)
     * BUGFIX      #3010 [MediaBundle]         Fixed background of media overlay for preview icons
     * BUGFIX      #2899 [ContentBundle]       Disabled self referencing on internal links
