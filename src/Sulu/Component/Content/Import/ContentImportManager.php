@@ -30,7 +30,8 @@ class ContentImportManager implements ContentImportManagerInterface
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
      */
-    public function __construct(ContentTypeManagerInterface $contentTypeManager) {
+    public function __construct(ContentTypeManagerInterface $contentTypeManager)
+    {
         $this->contentTypeManager = $contentTypeManager;
     }
 

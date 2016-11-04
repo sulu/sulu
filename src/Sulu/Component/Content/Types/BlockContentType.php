@@ -299,7 +299,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             $languageCode,
             $segmentKey
         );
-
     }
 
     /**

@@ -31,7 +31,8 @@ class ExportTwigExtension extends \Twig_Extension
     /**
      * @param ContentExportManagerInterface $contentExportManager
      */
-    public function __construct(ContentExportManagerInterface $contentExportManager) {
+    public function __construct(ContentExportManagerInterface $contentExportManager)
+    {
         $this->contentExportManager = $contentExportManager;
     }
 

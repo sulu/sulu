@@ -370,8 +370,7 @@ class Webspace implements WebspaceInterface
         $format,
         $data,
         $overrideSettings
-    )
-    {
+    ) {
         if ('true' !== $overrideSettings) {
             return;
         }

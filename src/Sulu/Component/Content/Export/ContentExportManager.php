@@ -32,7 +32,8 @@ class ContentExportManager implements ContentExportManagerInterface
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
      */
-    public function __construct(ContentTypeManagerInterface $contentTypeManager) {
+    public function __construct(ContentTypeManagerInterface $contentTypeManager)
+    {
         $this->contentTypeManager = $contentTypeManager;
     }
 
