@@ -21,43 +21,43 @@
                 <target></target>
             </trans-unit>
 
-            <!-- seo-title:  -->
+            <!-- seo-title: -->
             <trans-unit id="4" resname="seo-title">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-description:  -->
+            <!-- seo-description: -->
             <trans-unit id="5" resname="seo-description">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-keywords:  -->
+            <!-- seo-keywords: -->
             <trans-unit id="6" resname="seo-keywords">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-canonicalUrl:  -->
+            <!-- seo-canonicalUrl: -->
             <trans-unit id="7" resname="seo-canonicalUrl" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-noIndex:  -->
+            <!-- seo-noIndex: -->
             <trans-unit id="8" resname="seo-noIndex" translate="no">
                 <source>0</source>
                 <target>0</target>
             </trans-unit>
 
-            <!-- seo-noFollow:  -->
+            <!-- seo-noFollow: -->
             <trans-unit id="9" resname="seo-noFollow" translate="no">
                 <source>0</source>
                 <target>0</target>
             </trans-unit>
 
-            <!-- seo-hideInSitemap:  -->
+            <!-- seo-hideInSitemap: -->
             <trans-unit id="10" resname="seo-hideInSitemap" translate="no">
                 <source>0</source>
                 <target>0</target>
@@ -105,109 +105,109 @@
                 <target></target>
             </trans-unit>
 
-            <!-- structureType:  -->
+            <!-- structureType: -->
             <trans-unit id="18" resname="structureType" translate="no">
                 <source>overview</source>
                 <target>overview</target>
             </trans-unit>
 
-            <!-- published:  -->
+            <!-- published: -->
             <trans-unit id="19" resname="published" translate="no">
                 <source>2016-08-01T06:55:45+00:00</source>
                 <target>2016-08-01T06:55:45+00:00</target>
             </trans-unit>
 
-            <!-- created:  -->
+            <!-- created: -->
             <trans-unit id="20" resname="created" translate="no">
                 <source>2016-08-01T06:55:45+00:00</source>
                 <target>2016-08-01T06:55:45+00:00</target>
             </trans-unit>
 
-            <!-- changed:  -->
+            <!-- changed: -->
             <trans-unit id="21" resname="changed" translate="no">
                 <source>2016-08-01T06:55:45+00:00</source>
                 <target>2016-08-01T06:55:45+00:00</target>
             </trans-unit>
 
-            <!-- creator:  -->
+            <!-- creator: -->
             <trans-unit id="22" resname="creator" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- changer:  -->
+            <!-- changer: -->
             <trans-unit id="23" resname="changer" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- locale:  -->
+            <!-- locale: -->
             <trans-unit id="24" resname="locale" translate="no">
                 <source>en</source>
                 <target>en</target>
             </trans-unit>
 
-            <!-- navigationContexts:  -->
+            <!-- navigationContexts: -->
             <trans-unit id="25" resname="navigationContexts" translate="no">
                 <source>[]</source>
                 <target>[]</target>
             </trans-unit>
 
-            <!-- permissions:  -->
+            <!-- permissions: -->
             <trans-unit id="26" resname="permissions" translate="no">
                 <source>[]</source>
                 <target>[]</target>
             </trans-unit>
 
-            <!-- shadowLocale:  -->
+            <!-- shadowLocale: -->
             <trans-unit id="27" resname="shadowLocale" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- originalLocale:  -->
+            <!-- originalLocale: -->
             <trans-unit id="28" resname="originalLocale" translate="no">
                 <source>en</source>
                 <target>en</target>
             </trans-unit>
 
-            <!-- resourceSegment:  -->
+            <!-- resourceSegment: -->
             <trans-unit id="29" resname="resourceSegment" translate="no">
                 <source>/</source>
                 <target>/</target>
             </trans-unit>
 
-            <!-- webspaceName:  -->
+            <!-- webspaceName: -->
             <trans-unit id="30" resname="webspaceName" translate="no">
                 <source>sulu_lo</source>
                 <target>sulu_lo</target>
             </trans-unit>
 
-            <!-- redirectExternal:  -->
+            <!-- redirectExternal: -->
             <trans-unit id="31" resname="redirectExternal" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- redirectType:  -->
+            <!-- redirectType: -->
             <trans-unit id="32" resname="redirectType" translate="no">
                 <source>1</source>
                 <target>1</target>
             </trans-unit>
 
-            <!-- redirectTarget:  -->
+            <!-- redirectTarget: -->
             <trans-unit id="33" resname="redirectTarget" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- workflowStage:  -->
+            <!-- workflowStage: -->
             <trans-unit id="34" resname="workflowStage" translate="no">
                 <source>2</source>
                 <target>2</target>
             </trans-unit>
 
-            <!-- path:  -->
+            <!-- path: -->
             <trans-unit id="35" resname="path" translate="no">
                 <source>/cmf/sulu_lo/contents</source>
                 <target>/cmf/sulu_lo/contents</target>
@@ -236,43 +236,43 @@
                 <target><![CDATA[<p>Lorem ipsum</p>]]></target>
             </trans-unit>
 
-            <!-- seo-title:  -->
+            <!-- seo-title: -->
             <trans-unit id="41" resname="seo-title">
                 <source></source>
                 <target>SEO Title</target>
             </trans-unit>
 
-            <!-- seo-description:  -->
+            <!-- seo-description: -->
             <trans-unit id="42" resname="seo-description">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-keywords:  -->
+            <!-- seo-keywords: -->
             <trans-unit id="43" resname="seo-keywords">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-canonicalUrl:  -->
+            <!-- seo-canonicalUrl: -->
             <trans-unit id="44" resname="seo-canonicalUrl" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- seo-noIndex:  -->
+            <!-- seo-noIndex: -->
             <trans-unit id="45" resname="seo-noIndex" translate="no">
                 <source>0</source>
                 <target>0</target>
             </trans-unit>
 
-            <!-- seo-noFollow:  -->
+            <!-- seo-noFollow: -->
             <trans-unit id="46" resname="seo-noFollow" translate="no">
                 <source>0</source>
                 <target>0</target>
             </trans-unit>
 
-            <!-- seo-hideInSitemap:  -->
+            <!-- seo-hideInSitemap: -->
             <trans-unit id="47" resname="seo-hideInSitemap" translate="no">
                 <source>0</source>
                 <target>0</target>
@@ -320,109 +320,109 @@
                 <target></target>
             </trans-unit>
 
-            <!-- structureType:  -->
+            <!-- structureType: -->
             <trans-unit id="55" resname="structureType" translate="no">
                 <source>default</source>
                 <target>default</target>
             </trans-unit>
 
-            <!-- published:  -->
+            <!-- published: -->
             <trans-unit id="56" resname="published" translate="no">
                 <source>2016-08-01T06:56:55+00:00</source>
                 <target>2016-08-01T06:56:55+00:00</target>
             </trans-unit>
 
-            <!-- created:  -->
+            <!-- created: -->
             <trans-unit id="57" resname="created" translate="no">
                 <source>2016-08-01T06:56:31+00:00</source>
                 <target>2016-08-01T06:56:31+00:00</target>
             </trans-unit>
 
-            <!-- changed:  -->
+            <!-- changed: -->
             <trans-unit id="58" resname="changed" translate="no">
                 <source>2016-08-01T06:56:55+00:00</source>
                 <target>2016-08-01T06:56:55+00:00</target>
             </trans-unit>
 
-            <!-- creator:  -->
+            <!-- creator: -->
             <trans-unit id="59" resname="creator" translate="no">
                 <source>1</source>
                 <target>1</target>
             </trans-unit>
 
-            <!-- changer:  -->
+            <!-- changer: -->
             <trans-unit id="60" resname="changer" translate="no">
                 <source>1</source>
                 <target>1</target>
             </trans-unit>
 
-            <!-- locale:  -->
+            <!-- locale: -->
             <trans-unit id="61" resname="locale" translate="no">
                 <source>en</source>
                 <target>en</target>
             </trans-unit>
 
-            <!-- navigationContexts:  -->
+            <!-- navigationContexts: -->
             <trans-unit id="62" resname="navigationContexts" translate="no">
                 <source>[]</source>
                 <target><![CDATA[["main"]]]></target>
             </trans-unit>
 
-            <!-- permissions:  -->
+            <!-- permissions: -->
             <trans-unit id="63" resname="permissions" translate="no">
                 <source>[]</source>
                 <target>[]</target>
             </trans-unit>
 
-            <!-- shadowLocale:  -->
+            <!-- shadowLocale: -->
             <trans-unit id="64" resname="shadowLocale" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- originalLocale:  -->
+            <!-- originalLocale: -->
             <trans-unit id="65" resname="originalLocale" translate="no">
                 <source>en</source>
                 <target>en</target>
             </trans-unit>
 
-            <!-- resourceSegment:  -->
+            <!-- resourceSegment: -->
             <trans-unit id="66" resname="resourceSegment" translate="no">
                 <source>/uebersicht</source>
                 <target>/uebersicht</target>
             </trans-unit>
 
-            <!-- webspaceName:  -->
+            <!-- webspaceName: -->
             <trans-unit id="67" resname="webspaceName" translate="no">
                 <source>sulu_lo</source>
                 <target>sulu_lo</target>
             </trans-unit>
 
-            <!-- redirectExternal:  -->
+            <!-- redirectExternal: -->
             <trans-unit id="68" resname="redirectExternal" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- redirectType:  -->
+            <!-- redirectType: -->
             <trans-unit id="69" resname="redirectType" translate="no">
                 <source>1</source>
                 <target>1</target>
             </trans-unit>
 
-            <!-- redirectTarget:  -->
+            <!-- redirectTarget: -->
             <trans-unit id="70" resname="redirectTarget" translate="no">
                 <source></source>
                 <target></target>
             </trans-unit>
 
-            <!-- workflowStage:  -->
+            <!-- workflowStage: -->
             <trans-unit id="71" resname="workflowStage" translate="no">
                 <source>2</source>
                 <target>2</target>
             </trans-unit>
 
-            <!-- path:  -->
+            <!-- path: -->
             <trans-unit id="72" resname="path" translate="no">
                 <source>/cmf/sulu_lo/contents/uebersicht</source>
                 <target>/cmf/sulu_lo/contents/uebersicht</target>

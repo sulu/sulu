@@ -109,19 +109,21 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
      */
     public function exportData($propertyValue)
     {
-        if (is_array($propertyValue)) {
-            foreach ($propertyValue as &$propertyValueItem) {
-                if (is_string($propertyValueItem)) {
-                    $tag = $this->tagManager->findByName($propertyValueItem);
-                    if ($tag) {
-                        $propertyValueItem = $tag->getId();
-                    }
+        if (false === is_array($propertyValue)) {
+            return '';
+        }
+
+        foreach ($propertyValue as &$propertyValueItem) {
+            if (is_string($propertyValueItem)) {
+                $tag = $this->tagManager->findByName($propertyValueItem);
+                if ($tag) {
+                    $propertyValueItem = $tag->getId();
                 }
             }
+        }
 
-            if (!empty($propertyValue)) {
-                return json_encode($propertyValue);
-            }
+        if (!empty($propertyValue)) {
+            return json_encode($propertyValue);
         }
 
         return '';
@@ -143,6 +145,7 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         if (!empty($tagIds)) {
             $tagNames = $this->tagManager->resolveTagIds($tagIds);
         }
+
         $property->setValue($tagNames);
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }

@@ -79,7 +79,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
         /** @var WebspaceInterface $webspaceImporter */
         $webspaceImporter = $this->getContainer()->get('sulu_content.import.webspace');
 
-        list($count, $fails, $successes, $failed) = $webspaceImporter->import(
+        $import = $webspaceImporter->import(
             $webspaceKey,
             $locale,
             $filePath,
@@ -91,9 +91,9 @@ class WebspaceImportCommand extends ContainerAwareCommand
         );
 
         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-            $output->writeln(sprintf('<info>Imported %s/%s</info>', $successes, $count));
+            $output->writeln(sprintf('<info>Imported %s/%s</info>', $import->successes, $import->count));
         }
 
-        return $fails;
+        return $import->fails;
     }
 }

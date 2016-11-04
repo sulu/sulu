@@ -27,7 +27,11 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\NullOutput;
 
+/**
+ * Import Content by given xliff file from Export.
+ */
 class Webspace implements WebspaceInterface
 {
     /**
@@ -137,7 +141,7 @@ class Webspace implements WebspaceInterface
         $webspaceKey,
         $locale,
         $filePath,
-        $output,
+        $output = null,
         $format = '1.2.xliff',
         $uuid = null,
         $overrideSettings = false,
@@ -148,11 +152,13 @@ class Webspace implements WebspaceInterface
         $importedCounter = 0;
         $successCounter = 0;
 
-        if ($output !== null) {
-            $progress = new ProgressBar($output, count($parsedDataList));
-            $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
-            $progress->start();
+        if (null === $output) {
+            $output = new NullOutput();
         }
+
+        $progress = new ProgressBar($output, count($parsedDataList));
+        $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
+        $progress->start();
 
         foreach ($parsedDataList as $parsedData) {
             // mapping data
@@ -161,33 +167,35 @@ class Webspace implements WebspaceInterface
             }
 
             // filter for specific uuid
-            if (!$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
-                ++$importedCounter;
-
-                if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale, $overrideSettings)) {
-                    $failedImports[] = $parsedData;
-                } else {
-                    ++$successCounter;
-                }
-
-                $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
-            }
-
-            if ($output !== null) {
+            // !$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid
+            if ($uuid && (!isset($parsedData['uuid']) || $uuid !== $parsedData['uuid'])) {
                 $progress->advance();
+                continue;
             }
+
+            ++$importedCounter;
+
+            if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale, $overrideSettings)) {
+                $failedImports[] = $parsedData;
+            } else {
+                ++$successCounter;
+            }
+
+            $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
+
+
+            $progress->advance();
         }
 
-        if ($output !== null) {
-            $progress->finish();
-        }
+        $progress->finish();
 
-        return [
-            $importedCounter,
-            count($failedImports),
-            $successCounter,
-            $failedImports,
-        ];
+        $return = new \stdClass();
+        $return->count = $importedCounter;
+        $return->fails = count($failedImports);
+        $return->successes = $successCounter;
+        $return->failed = $failedImports;
+
+        return $return;
     }
 
     /**
@@ -202,11 +210,7 @@ class Webspace implements WebspaceInterface
         $uuid = null;
 
         try {
-            if (
-                !isset($parsedData['uuid'])
-                || !isset($parsedData['structureType'])
-                || !isset($parsedData['data'])
-            ) {
+            if (!isset($parsedData['uuid']) || !isset($parsedData['structureType']) || !isset($parsedData['data'])) {
                 throw new \Exception('uuid, structureType or data for import not found.');
             }
 
@@ -313,7 +317,10 @@ class Webspace implements WebspaceInterface
             // don't generate a new url when one exists
             $doImport = true;
             if ($property->getContentTypeName() == 'resource_locator') {
+                $doImport = false;
+
                 if (!$document->getResourceSegment()) {
+                    $doImport = true;
                     $parent = $document->getParent();
 
                     if ($parent instanceof BasePageDocument) {
@@ -327,8 +334,6 @@ class Webspace implements WebspaceInterface
                             $data
                         );
                     }
-                } else {
-                    $doImport = false;
                 }
             }
 
@@ -357,7 +362,15 @@ class Webspace implements WebspaceInterface
      * @param string $format
      * @param array $data
      */
-    protected function setDocumentSettings($document, $structureType, $webspaceKey, $locale, $format, $data, $overrideSettings)
+    protected function setDocumentSettings(
+        BasePageDocument $document,
+        $structureType,
+        $webspaceKey,
+        $locale,
+        $format,
+        $data,
+        $overrideSettings
+    )
     {
         if ('true' !== $overrideSettings) {
             return;
@@ -459,11 +472,13 @@ class Webspace implements WebspaceInterface
     ) {
         $contentType = $property->getContentTypeName();
 
-        if ($this->contentImportManager->hasImport($contentType, $format)) {
-            $translateProperty = $this->legacyPropertyFactory->createTranslatedProperty($property, $locale, $structure);
-            $translateProperty->setValue($value);
-            $this->contentImportManager->import($contentType, $node, $translateProperty, null, $webspaceKey, $locale);
+        if (!$this->contentImportManager->hasImport($contentType, $format)) {
+            return;
         }
+
+        $translateProperty = $this->legacyPropertyFactory->createTranslatedProperty($property, $locale, $structure);
+        $translateProperty->setValue($value);
+        $this->contentImportManager->import($contentType, $node, $translateProperty, null, $webspaceKey, $locale);
     }
 
     /**

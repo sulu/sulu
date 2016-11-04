@@ -206,18 +206,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
     }
 
     /**
-     * Set data to given property.
-     *
-     * @param array $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $refs = isset($data) ? $data : [];
-        $property->setValue($refs);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function exportData($propertyValue)

@@ -144,11 +144,11 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
      */
     public function exportData($propertyValue)
     {
-        if (is_string($propertyValue)) {
-            return $propertyValue;
+        if (false === is_string($propertyValue)) {
+            return '';
         }
 
-        return '';
+        return $propertyValue;
     }
 
     /**

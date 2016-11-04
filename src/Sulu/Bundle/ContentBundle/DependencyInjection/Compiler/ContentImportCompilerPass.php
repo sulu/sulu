@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\DependencyInjection\Compiler;
 
+use Sulu\Component\Content\Import\Webspace;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -35,10 +36,20 @@ class ContentImportCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition(self::CONTENT_IMPORT_SERVICE_ID);
         $taggedServices = $container->findTaggedServiceIds(self::IMPORT_SERVICE_TAG);
         foreach ($taggedServices as $id => $tagAttributes) {
-            foreach ($tagAttributes as $attributes) {
-                $format = $attributes['format'];
-                $definition->addMethodCall('add', [new Reference($id), $format]);
-            }
+            $this->addTagAttributes($definition, $id, $tagAttributes);
+        }
+    }
+
+    /**
+     * @param Webspace $definition
+     * @param int $id
+     * @param $tagAttributes
+     */
+    private function addTagAttributes(Webspace $definition, $id, $tagAttributes)
+    {
+        foreach ($tagAttributes as $attributes) {
+            $format = $attributes['format'];
+            $definition->addMethodCall('add', [new Reference($id), $format]);
         }
     }
 }

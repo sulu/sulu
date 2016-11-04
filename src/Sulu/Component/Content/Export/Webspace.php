@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Export;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
@@ -21,8 +22,12 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Templating\EngineInterface;
 
+/**
+ * Export Content by given locale to xliff file.
+ */
 class Webspace implements WebspaceInterface
 {
     /**
@@ -88,17 +93,7 @@ class Webspace implements WebspaceInterface
     }
 
     /**
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $output
-     * @param string $format
-     * @param string $uuid
-     * @param array $nodes
-     * @param array $ignoredNodes
-     *
-     * @return string
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
     public function export(
         $webspaceKey,
@@ -120,36 +115,30 @@ class Webspace implements WebspaceInterface
     }
 
     /**
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $output
-     * @param string $format
-     * @param string $uuid
-     * @param array $nodes
-     * @param array $ignoredNodes
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getExportData(
         $webspaceKey,
         $locale,
-        $output,
+        $output = null,
         $format = '1.2.xliff',
         $uuid = null,
         $nodes = null,
         $ignoredNodes = null
     ) {
-        /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $documents */
+        /** @var PageDocument[] $documents */
         $documents = $this->getDocuments($webspaceKey, $locale, $uuid, $nodes, $ignoredNodes);
-        /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
+        /** @var PageDocument[] $loadedDocuments */
         $documentData = [];
 
-        if ($output !== null) {
-            $output->writeln('<info>Loading Data…</info>');
-
-            $progress = new ProgressBar($output, count($documents));
-            $progress->start();
+        if (null === $output) {
+            $output = new NullOutput();
         }
+
+        $output->writeln('<info>Loading Data…</info>');
+
+        $progress = new ProgressBar($output, count($documents));
+        $progress->start();
 
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
@@ -164,19 +153,15 @@ class Webspace implements WebspaceInterface
                 'extensions' => $extensionData,
             ];
 
-            if ($output !== null) {
-                $progress->advance();
-            }
+            $progress->advance();
         }
 
-        if ($output !== null) {
-            $progress->finish();
+        $progress->finish();
 
-            $output->writeln([
-                '',
-                '<info>Render Xliff…</info>',
-            ]);
-        }
+        $output->writeln([
+            '',
+            '<info>Render Xliff…</info>',
+        ]);
 
         return [
             'webspaceKey' => $webspaceKey,
@@ -187,6 +172,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns a array of the given content data of the document.
+     *
      * @param BasePageDocument $document
      * @param $locale
      * @param $format
@@ -210,6 +197,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns the Content as a flat array.
+     *
      * @param PropertyMetadata[] $properties
      * @param $propertyValues
      * @param $format
@@ -300,6 +289,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns a array with the given value (name, value and options).
+     *
      * @param $name
      * @param $value
      * @param array $options
@@ -326,6 +317,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns a flat array with the extensions of the given document.
+     *
      * @param BasePageDocument $document
      * @param string $format
      *
@@ -348,6 +341,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns a flat array with the settings of the given document.
+     *
      * @param BasePageDocument $document
      * @param string $format
      *
@@ -419,6 +414,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns all Documents from given webspace.
+     *
      * @param string $webspaceKey
      * @param string $locale
      * @param string $uuid
@@ -442,6 +439,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Create the query to get all documents from given webspace and language.
+     *
      * @param $webspaceKey
      * @param $locale
      * @param string $uuid
@@ -520,6 +519,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns node path from given uuid.
+     *
      * @param $uuids
      *
      * @return string[]

@@ -25,6 +25,13 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
      */
     const SEO_EXTENSION_NAME = 'seo';
 
+    const SEO_ATTRIBUTES = [
+        'hideInSitemap',
+        'noIndex',
+        'noFollow',
+        'canonicalUrl',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -84,7 +91,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
     public function export($properties, $format = null)
     {
         $data = [];
-
         foreach ($properties as $key => $property) {
             $value = $property;
             if (is_bool($value)) {
@@ -94,7 +100,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
             $data[$key] = [
                 'name' => $key,
                 'value' => $value,
-                'type' => '', // TODO content type
                 'options' => $this->getExportOption($key, $format),
             ];
         }
@@ -110,27 +115,22 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
      */
     protected function getExportOption($key, $format)
     {
-        if ($format == '1.2.xliff') {
-            $translate = true;
-
-            if (in_array(
-                $key,
-                [
-                    'hideInSitemap',
-                    'noIndex',
-                    'noFollow',
-                    'canonicalUrl',
-                ]
-            )) {
-                $translate = false;
-            }
-
-            return [
-                'translate' => $translate,
-            ];
+        if ('1.2.xliff' !== $format) {
+            return;
         }
 
-        return;
+        $translate = true;
+
+        if (in_array(
+            $key,
+            self::SEO_ATTRIBUTES
+        )) {
+            $translate = false;
+        }
+
+        return [
+            'translate' => $translate,
+        ];
     }
 
     /**

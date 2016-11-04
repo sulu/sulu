@@ -20,6 +20,8 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 interface ContentImportManagerInterface
 {
     /**
+     * Starts content import.
+     *
      * @param $contentTypeName
      * @param NodeInterface $node
      * @param PropertyInterface $property
@@ -39,6 +41,8 @@ interface ContentImportManagerInterface
     );
 
     /**
+     * Check can import type by given typename.
+     *
      * @param $contentTypeName
      * @param $format
      *

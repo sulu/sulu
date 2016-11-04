@@ -14,6 +14,9 @@ namespace Sulu\Component\Content\Export;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 
+/**
+ * Content Export Manager to export languages from Webspace.
+ */
 class ContentExportManager implements ContentExportManagerInterface
 {
     /**
@@ -29,12 +32,15 @@ class ContentExportManager implements ContentExportManagerInterface
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
      */
-    public function __construct(
-        ContentTypeManagerInterface $contentTypeManager
-    ) {
+    public function __construct(ContentTypeManagerInterface $contentTypeManager) {
         $this->contentTypeManager = $contentTypeManager;
     }
 
+    /**
+     * @param $contentTypeName
+     * @param $format
+     * @param $options
+     */
     public function add($contentTypeName, $format, $options)
     {
         if (!isset($this->contentTypeOptions[$contentTypeName])) {
@@ -88,10 +94,11 @@ class ContentExportManager implements ContentExportManagerInterface
      */
     protected function existOptions($contentTypeName, $format)
     {
-        if (isset($this->contentTypeOptions[$contentTypeName])) {
-            if (isset($this->contentTypeOptions[$contentTypeName][$format])) {
-                return true;
-            }
+        if (
+            isset($this->contentTypeOptions[$contentTypeName]) &&
+            isset($this->contentTypeOptions[$contentTypeName][$format])
+        ) {
+            return true;
         }
 
         return false;

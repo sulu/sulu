@@ -158,6 +158,30 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $userId,
         $webspaceKey,
         $languageCode,
+        $segmentKey
+    ) {
+        return $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, false);
+    }
+
+    /**
+     * Save the value from given property.
+     *
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     * @param $userId
+     * @param $webspaceKey
+     * @param $languageCode
+     * @param $segmentKey
+     * @param bool $isImport
+     *
+     * @throws UnexpectedPropertyType
+     */
+    private function doWrite(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
         $segmentKey,
         $isImport = false
     ) {
@@ -257,16 +281,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         );
 
         if ($isImport && $contentType instanceof ContentTypeExportInterface) {
-            $contentType->importData(
-                $node,
-                $blockPropertyWrapper,
-                $userId,
-                $webspaceKey,
-                $languageCode,
-                $segmentKey
-            );
-        } else {
-            $contentType->write(
+            return $contentType->importData(
                 $node,
                 $blockPropertyWrapper,
                 $userId,
@@ -275,6 +290,16 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 $segmentKey
             );
         }
+
+        $contentType->write(
+            $node,
+            $blockPropertyWrapper,
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
     }
 
     /**
@@ -386,6 +411,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $languageCode,
         $segmentKey = null
     ) {
-        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
+        $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
 }

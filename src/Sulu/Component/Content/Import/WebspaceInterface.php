@@ -36,7 +36,7 @@ interface WebspaceInterface
         $webspaceKey,
         $locale,
         $filePath,
-        $output,
+        $output = null,
         $format = '1.2.xliff',
         $uuid = null,
         $exportSuluVersion = '1.3'

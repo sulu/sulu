@@ -86,8 +86,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     private $factory;
 
     /**
-     * ExcerptStructureExtension constructor.
-     *
      * @param StructureManagerInterface $structureManager
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param ContentExportManagerInterface $contentExportManager

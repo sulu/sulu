@@ -17,6 +17,8 @@ namespace Sulu\Component\Content\Export;
 interface WebspaceInterface
 {
     /**
+     * Export all data from given webspace and locale.
+     *
      * @param string $webspaceKey
      * @param string $locale
      * @param $output
@@ -38,6 +40,8 @@ interface WebspaceInterface
     );
 
     /**
+     * Load all content, extension and settings from given webspace and locale.
+     *
      * @param string $webspaceKey
      * @param string $locale
      * @param $output
@@ -51,7 +55,7 @@ interface WebspaceInterface
     public function getExportData(
         $webspaceKey,
         $locale,
-        $output,
+        $output = null,
         $format = '1.2.xliff',
         $uuid = null,
         $nodes = null,

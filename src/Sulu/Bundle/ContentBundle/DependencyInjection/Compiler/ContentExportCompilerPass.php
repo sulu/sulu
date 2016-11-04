@@ -32,19 +32,40 @@ class ContentExportCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $definition = $container->getDefinition(self::CONTENT_EXPORT_SERVICE_ID);
         $taggedServices = $container->findTaggedServiceIds(self::STRUCTURE_EXTENSION_TAG);
         foreach ($taggedServices as $id => $tagAttributes) {
-            $contentTypeServiceDefinition = $container->getDefinition($id);
-            $tags = $contentTypeServiceDefinition->getTag(RegisterContentTypesCompilerPass::CONTENT_TYPE_TAG);
-            foreach ($tags as $tag) {
-                $contentTypeName = $tag['alias'];
-                foreach ($tagAttributes as $attributes) {
-                    $format = $attributes['format'];
-                    unset($attributes['format']);
-                    $definition->addMethodCall('add', [$contentTypeName, $format, $attributes]);
-                }
-            }
+            $this->processTagAttributes($container, $id, $tagAttributes);
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param $id
+     * @param $tagAttributes
+     */
+    private function processTagAttributes(ContainerBuilder $container, $id, $tagAttributes)
+    {
+        $definition = $container->getDefinition(self::CONTENT_EXPORT_SERVICE_ID);
+        $contentTypeServiceDefinition = $container->getDefinition($id);
+        $tags = $contentTypeServiceDefinition->getTag(RegisterContentTypesCompilerPass::CONTENT_TYPE_TAG);
+
+        foreach ($tags as $tag) {
+            $contentTypeName = $tag['alias'];
+            $this->exportAttribute($tagAttributes, $contentTypeName, $definition);
+        }
+    }
+
+    /**
+     * @param $tagAttributes
+     * @param $contentTypeName
+     * @param $definition
+     */
+    private function exportAttribute($tagAttributes, $contentTypeName, $definition)
+    {
+        foreach ($tagAttributes as $attributes) {
+            $format = $attributes['format'];
+            unset($attributes['format']);
+            $definition->addMethodCall('add', [$contentTypeName, $format, $attributes]);
         }
     }
 }

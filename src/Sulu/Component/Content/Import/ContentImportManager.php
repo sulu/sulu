@@ -17,6 +17,9 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Import\Exception\ContentTypeImportMissingException;
 
+/**
+ * Import content by given xliff file from ContentExportManager.
+ */
 class ContentImportManager implements ContentImportManagerInterface
 {
     /**
@@ -27,9 +30,7 @@ class ContentImportManager implements ContentImportManagerInterface
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
      */
-    public function __construct(
-        ContentTypeManagerInterface $contentTypeManager
-    ) {
+    public function __construct(ContentTypeManagerInterface $contentTypeManager) {
         $this->contentTypeManager = $contentTypeManager;
     }
 
