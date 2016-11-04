@@ -76,9 +76,7 @@ abstract class SuluKernel extends Kernel
     {
         return array_merge(
             parent::getKernelParameters(),
-            [
-                'sulu.context' => $this->getContext(),
-            ]
+            ['sulu.context' => $this->getContext()]
         );
     }
 }
