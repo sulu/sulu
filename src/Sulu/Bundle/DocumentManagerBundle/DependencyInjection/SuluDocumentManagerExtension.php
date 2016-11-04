@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -21,6 +22,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 {
     public function prepend(ContainerBuilder $container)
     {
+        $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
         $configs = $container->getExtensionConfig($this->getAlias());
         $parameterBag = $container->getParameterBag();
         $configs = $parameterBag->resolveValue($configs);
@@ -42,7 +44,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
                 ],
             ];
 
-            if (isset($config['default_session'])) {
+            if (!$preview && isset($config['default_session'])) {
                 $doctrinePhpcrConfig['session']['default_session'] = $config['default_session'];
             }
 
@@ -103,6 +105,8 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
     private function configureDocumentManager($config, ContainerBuilder $container)
     {
         $debug = $config['debug'];
+        $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
+        $context = $container->getParameter('sulu.context');
 
         $dispatcherId = $debug ? 'sulu_document_manager.event_dispatcher.debug' : 'sulu_document_manager.event_dispatcher.standard';
         $container->setAlias('sulu_document_manager.event_dispatcher', $dispatcherId);
@@ -116,13 +120,20 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
 
-        $defaultSession = 'doctrine_phpcr.session';
-        $container->setAlias('sulu_document_manager.default_session', $defaultSession);
-
-        $liveSession = $defaultSession;
+        $liveSession = 'doctrine_phpcr.live_session';
         if (isset($config['live_session'])) {
             $liveSession = sprintf('doctrine_phpcr.%s_session', $config['live_session']);
         }
+
+        $defaultSession = 'doctrine_phpcr.default_session';
+        if (!$preview && isset($config['default_session'])) {
+            $defaultSession = sprintf('doctrine_phpcr.%s_session', $config['default_session']);
+        }
+
+        if (!$preview && $context === SuluKernel::CONTEXT_WEBSITE) {
+            $defaultSession = $liveSession;
+        }
+        $container->setAlias('sulu_document_manager.default_session', $defaultSession);
 
         $container->setAlias(
             'sulu_document_manager.live_session',

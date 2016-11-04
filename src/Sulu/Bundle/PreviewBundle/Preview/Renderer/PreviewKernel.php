@@ -78,4 +78,12 @@ class PreviewKernel extends \WebsiteKernel
 
         return $cacheDirectory;
     }
+
+    public function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            ['sulu.preview' => true]
+        );
+    }
 }
