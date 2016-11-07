@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.2.9 (2016-11-07)
     * HOTFIX      #2989 [ContentBundle]       Fixed internal-link-uuid in query-builder
     * HOTFIX      #2989 [MediaBundle]         Added file-version name database-index 
 
