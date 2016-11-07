@@ -72,7 +72,7 @@ class WebspaceImportTest extends SuluTestCase
             'filePath' => $this->path,
         ];
 
-        list($count, $fails, $successes, $failed) = $this->webspaceImporter->import(
+        $import = $this->webspaceImporter->import(
             $importData['webspaceKey'],
             $importData['locale'],
             $importData['filePath'],
@@ -106,7 +106,7 @@ class WebspaceImportTest extends SuluTestCase
         );
 
         // import
-        $this->assertEquals($successes, 2);
+        $this->assertEquals($import->successes, 2);
 
         // structure
         $this->assertEquals($loadedDocuments[0]->getTitle(), 'test 0 imported');
