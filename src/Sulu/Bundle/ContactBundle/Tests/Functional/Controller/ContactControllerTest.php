@@ -371,7 +371,6 @@ class ContactControllerTest extends SuluTestCase
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setName('avatar.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -395,7 +394,6 @@ class ContactControllerTest extends SuluTestCase
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setName('media1.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -416,7 +414,6 @@ class ContactControllerTest extends SuluTestCase
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setName('media2.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);

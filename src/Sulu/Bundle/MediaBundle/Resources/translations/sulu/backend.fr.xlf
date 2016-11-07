@@ -330,6 +330,14 @@
                 <source>sulu-media.crop</source>
                 <target>Déterminer des cadrages</target>
             </trans-unit>
+            <trans-unit id="215163ca7f64952w137j533499fa1b118" resname="sulu-media.focus-point">
+                <source>sulu-media.focus-point</source>
+                <target>Définir la position</target>
+            </trans-unit>
+            <trans-unit id="2111636a7f94951w13aj53l4993a1by18" resname="sulu-media.save-and-recrop">
+                <source>sulu-media.save-and-recrop</source>
+                <target>Enregistrer &amp; recadrer</target>
+            </trans-unit>
             <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
                 <source>sulu-media.crop-save-success</source>
                 <target>Enregistrement du cadrage achevé réussi</target>
@@ -393,6 +401,10 @@
             <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
                 <source>sulu-media.unsaved-crop-description</source>
                 <target>Le cadrage tel qu’il apparait sur l’écran se perd si on change le format.</target>
+            </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Les cadrages sont enregistrés mais ne sont pas visualisés dans l'aperçu</target>
             </trans-unit>
         </body>
     </file>

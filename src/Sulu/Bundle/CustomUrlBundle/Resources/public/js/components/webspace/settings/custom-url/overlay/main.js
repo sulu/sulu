@@ -339,6 +339,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                         name: 'content-datasource@sulucontent',
                         options: {
                             el: '#target-select',
+                            actionOnGhost: true,
                             selected: (!!this.data.targetDocument ? this.data.targetDocument.uuid : null),
                             webspace: this.options.webspace.key,
                             locale: this.sandbox.sulu.getDefaultContentLocale(),

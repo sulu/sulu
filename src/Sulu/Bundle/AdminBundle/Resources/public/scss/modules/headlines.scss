@@ -1,3 +1,6 @@
+// Colors
+$contentTitleBorderColor: $grayLighterer !default;
+
 /** header options menu toggle **/
 /** ========================== **/
 /** only shown when parent has class
@@ -29,7 +32,7 @@
     }
 
     &.underlined {
-        border-bottom: 2px solid $grayLighterer;
+        border-bottom: 2px solid $contentTitleBorderColor;
     }
 
     margin-bottom: 30px;

@@ -16,8 +16,8 @@
 define([
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/format-manager',
-    'text!./cropping.html'
-], function(UserSettingsManager, FormatManager, elementTemplate) {
+    'text!./toolbar-slide.html'
+], function(UserSettingsManager, FormatManager, toolbarSlideTemplate) {
 
     'use strict';
 
@@ -176,6 +176,13 @@ define([
                 this.selectedFormat.scale.y,
                 getSelectionDataFromFormat.call(this, format)
             );
+
+            this.sandbox.emit(
+                'sulu.media-edit.preview.loading',
+                this.sandbox.translate('sulu-media.saved-crops-not-visible')
+            );
+
+            this.sandbox.emit('sulu.media-edit.formats.update');
         },
 
         /**
@@ -354,7 +361,7 @@ define([
         getFormatDropdownItems = function() {
             var items = [], styleClass;
 
-            $.each(this.formats, function(key, format) {
+            $.each(this.formats, function(key) {
                 styleClass = null;
                 if (!!this.formatCrops[key] && !!this.formatCrops[key].options && !FormatManager.cropOptionsAreValid(
                         this.formatCrops[key].options,
@@ -364,7 +371,7 @@ define([
                         this.imageHeight
                     )) {
                     styleClass = 'warning';
-                } else if (!!format.options) {
+                } else if (!!this.formatCrops[key].options) {
                     styleClass = 'checked';
                 }
 
@@ -424,9 +431,14 @@ define([
          * @returns the first format in which the image can be cropped. Returns null if no such format exists.
          */
         getFirstCroppableFormat = function() {
-            var croppableFormat = null;
+            var croppableFormat = null,
+                firstFormat = null;
 
             $.each(this.formats, function(key) {
+                if (!firstFormat) {
+                    firstFormat = this.formatCrops[key];
+                }
+
                 if (!croppableFormat && FormatManager.cropPossibleInInFormat(
                         this.formatCrops[key].scale.x,
                         this.formatCrops[key].scale.y,
@@ -438,7 +450,7 @@ define([
                 }
             }.bind(this));
 
-            return croppableFormat;
+            return croppableFormat || firstFormat;
         },
 
         /**
@@ -482,7 +494,6 @@ define([
         };
 
     return {
-
         sandbox: null,
         media: null,
         formats: null,
@@ -509,7 +520,7 @@ define([
             this.formats = formats;
             this.onBack = onBack;
             this.saved = true;
-            this.$el = $(_.template(elementTemplate, {
+            this.$el = $(_.template(toolbarSlideTemplate, {
                 hint: this.sandbox.translate('sulu-media.crop-double-click-hint')
             }));
         },

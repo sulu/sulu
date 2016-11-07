@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Log\NullLogger;
@@ -104,6 +105,20 @@ class LocalStorage implements StorageInterface
         }
 
         return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadAsString($fileName, $version, $storageOption)
+    {
+        $path = $this->load($fileName, $version, $storageOption);
+
+        if (!$path || !file_exists($path)) {
+            throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
+        }
+
+        return file_get_contents($path);
     }
 
     /**

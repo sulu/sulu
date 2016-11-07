@@ -1,3 +1,11 @@
+// Colors
+$blueRowBackgroundColor: $blue !default;
+$toolbarRowLeftBackgroundColor: $blueRowBackgroundColor !default;
+$toolbarRowRightBackgroundColor: $blueRowBackgroundColor !default;
+$toolbarRowBackTextColor: $white !default;
+$toolbarRowLanguageChangerBackgroundColor: $white !default;
+$tabsBackgroundColor: $white !default;
+
 .sulu-header {
     width: 100%;
     height: $headerHeight;
@@ -7,7 +15,7 @@
     z-index: 120;
 
     .blue-row {
-        background: $blue;
+        background: $blueRowBackgroundColor;
         height: $headerHeight;
         width: 100%;
         position: absolute;
@@ -27,7 +35,7 @@
         .left-container {
             display: table-cell;
             width: 50px;
-            background: $blue;
+            background: $toolbarRowLeftBackgroundColor;
             vertical-align: top;
             position: relative;
             z-index: 500;
@@ -48,10 +56,10 @@
             vertical-align: top;
             position: relative;
             z-index: 500;
-            background: $blue;
+            background: $toolbarRowRightBackgroundColor;
         }
         .back {
-            color: $white;
+            color: $toolbarRowBackTextColor;
             text-align: center;
             line-height: $headerHeight;
             cursor: pointer;
@@ -62,7 +70,7 @@
             margin-top: 10px;
             line-height: 30px;
             padding-left: 8px;
-            background: $white;
+            background: $toolbarRowLanguageChangerBackgroundColor;
             border-radius: $borderRadius;
             font-size: $smallFontSize;
             position: relative;
@@ -91,7 +99,7 @@
         .tabs {
             padding: 0 50px;
             overflow: auto;
-            background: $white;
+            background: $tabsBackgroundColor;
             @include single-transition(padding, $shrinkAnimationDuration);
         }
     }

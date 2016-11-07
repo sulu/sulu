@@ -1,4 +1,4 @@
-<div class="sulu-cropping-container">
+<div class="toolbar-slide">
     <div class="toolbar-container">
         <div class="back">
             <span class="fa-chevron-left"></span>
@@ -7,5 +7,5 @@
     </div>
     <div class="label-container"></div>
     <div class="area-selection"></div>
-    <div class="hint">(<%= hint %>)</div>
+    <% if (typeof hint !== 'undefined') { %><div class="hint">(<%= hint %>)</div><% } %>
 </div>

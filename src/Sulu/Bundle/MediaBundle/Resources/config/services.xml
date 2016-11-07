@@ -69,12 +69,30 @@
             <tag name="sulu_media.format_cache" alias="local" />
         </service>
 
+        <!-- Imagine Adapters -->
+        <service id="sulu_media.adapter" alias="sulu_media.adapter.gd"/>
+        <service id="sulu_media.adapter.gd" class="Imagine\Gd\Imagine" public="false"/>
+        <service id="sulu_media.adapter.imagick" class="Imagine\Imagick\Imagine" public="false"/>
+        <service id="sulu_media.adapter.gmagick" class="Imagine\Gmagick\Imagine" public="false"/>
+
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
+            <argument type="service" id="sulu_media.adapter"/>
+            <argument type="service" id="sulu_media.storage" />
+            <argument type="service" id="sulu_media.image.media_extractor"/>
             <argument type="service" id="sulu_media.image.transformation_pool" />
+            <argument type="service" id="sulu_media.image.focus" />
             <argument type="service" id="sulu_media.image.scaler" />
             <argument type="service" id="sulu_media.image.cropper" />
+            <argument>%sulu_media.image.formats%</argument>
         </service>
 
+        <service id="sulu_media.image.media_extractor" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor">
+            <argument type="service" id="sulu_media.adapter"/>
+            <argument type="service" id="sulu_media.video_thumbnail_generator"/>
+            <argument>%sulu_media.ghost_script.path%</argument>
+        </service>
+
+        <service id="sulu_media.image.focus" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus"/>
         <service id="sulu_media.image.scaler" class="%sulu_media.image.scaler.class%" />
         <service id="sulu_media.image.cropper" class="%sulu_media.image.cropper.class%" />
 
@@ -82,6 +100,12 @@
 
         <service id="sulu_media.image.transformation.crop" class="%sulu_media.image.transformation.crop.class%">
             <tag name="sulu_media.image.transformation" alias="crop" />
+        </service>
+
+        <service id="sulu_media.image.transformation.paste" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation">
+            <argument type="service" id="file_locator"/>
+
+            <tag name="sulu_media.image.transformation" alias="paste" />
         </service>
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
@@ -125,15 +149,12 @@
 
         <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%">
             <argument type="service" id="sulu.repository.media" />
-            <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
-            <argument type="service" id="sulu_media.video_thumbnail_generator"/>
-            <argument type="string">%sulu_media.ghost_script.path%</argument>
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
-            <argument type="string">%sulu_media.format_manager.mime_types%</argument>
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
             <argument>%sulu_media.image.formats%</argument>
+            <argument>%sulu_media.format_manager.mime_types%</argument>
         </service>
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">

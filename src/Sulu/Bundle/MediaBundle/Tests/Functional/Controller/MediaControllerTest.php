@@ -248,7 +248,6 @@ class MediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setSubVersion(0);
         $fileVersion->setName($name . '.' . $extension);
         $fileVersion->setMimeType($mimeType);
         $fileVersion->setFile($file);
@@ -825,12 +824,15 @@ class MediaControllerTest extends SuluTestCase
                 'contentLanguages' => [
                     'en-gb',
                 ],
+                'focusPointX' => 0,
+                'focusPointY' => 0,
                 'publishLanguages' => [
                     'en-gb',
                     'en-au',
                     'en',
                     'de',
-                ], 'categories' => [
+                ],
+                'categories' => [
                     $this->category->getId(), $this->category2->getId(),
                 ],
             ],
@@ -852,6 +854,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('New Image Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals('My credits', $response->credits);
+        $this->assertEquals(0, $response->focusPointX);
+        $this->assertEquals(0, $response->focusPointY);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(
@@ -1092,6 +1096,8 @@ class MediaControllerTest extends SuluTestCase
                 'description' => 'Update Description',
                 'copyright' => 'My copyright',
                 'credits' => 'My credits',
+                'focusPointX' => 1,
+                'focusPointY' => 2,
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -1116,6 +1122,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('Update Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals('My credits', $response->credits);
+        $this->assertEquals(1, $response->focusPointX);
+        $this->assertEquals(2, $response->focusPointY);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(

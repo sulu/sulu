@@ -168,6 +168,16 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
+        if ($config['adapter'] === 'auto') {
+            $container->setAlias(
+                'sulu_media.adapter',
+                'sulu_media.adapter.' . (class_exists('Imagick') ? 'imagick' : 'gd')
+            );
+        } else {
+            // set used adapter for imagine
+            $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $config['adapter']);
+        }
+
         // enable search
         if (true === $config['search']['enabled']) {
             if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {

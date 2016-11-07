@@ -142,7 +142,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         }
 
         $formatOptions = $this->setDataOnEntity($formatOptions, $data);
-        $fileVersion->setSubVersion($fileVersion->getSubVersion() + 1);
+        $fileVersion->increaseSubVersion();
 
         $this->em->persist($formatOptions);
         $this->em->persist($fileVersion);
@@ -167,7 +167,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
         if (isset($formatOptions)) {
             $fileVersion->getFormatOptions()->remove($formatKey);
-            $fileVersion->setSubVersion($fileVersion->getSubVersion() + 1);
+            $fileVersion->increaseSubVersion();
             $this->em->remove($formatOptions);
             $this->em->persist($fileVersion);
             $this->purgeMedia($mediaId, $fileVersion);

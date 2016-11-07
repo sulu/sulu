@@ -26,6 +26,15 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('sulu_media');
         $rootNode->children()
             ->scalarNode('adobe_creative_key')->defaultNull()->end()
+            ->scalarNode('adapter')
+                ->defaultValue('auto')
+                ->validate()
+                    ->ifTrue(function ($v) {
+                        return !in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
+                    })
+                    ->thenInvalid('Invalid imagine adapted specified: %s')
+                ->end()
+            ->end()
             ->arrayNode('image_format_files')
                 ->prototype('scalar')->end()
             ->end()

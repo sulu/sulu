@@ -18,6 +18,8 @@ interface SystemCollectionManagerInterface
 {
     const COLLECTION_TYPE = 'collection.system';
 
+    const COLLECTION_KEY = 'system_collections';
+
     /**
      * Builds cache for system collections.
      */

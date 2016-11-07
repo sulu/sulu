@@ -22,7 +22,6 @@
 
     .area {
         position: absolute;
-        cursor: move;
         z-index: 20;
         // The area needs a background due to old IEs not being able to hover over transparent elements
         // http://stackoverflow.com/questions/3998917/ie8-div-hover-only-works-when-background-color-is-set-very-strange-why
@@ -42,37 +41,105 @@
             height: 100%;
             border: 2px solid $white;
 
-            &::before, &::after {
-                opacity: 0;
-                content: '';
-                display: block;
+            .arrow {
+                color: $white;
+                font-size: 40px;
                 position: absolute;
-                top: 0;
-                bottom: 0;
+                top: calc(50% - 20px);
                 left: 0;
                 right: 0;
-                border: 1px solid $white;
-                @include transition(opacity 200ms);
+
+                &:before {
+                    opacity: 0.99;
+                }
+
+                &.up:before {
+                    content: "";
+                }
+
+                &.up-right {
+                    transform: rotate(-45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.right:before {
+                    content: "";
+                }
+
+                &.down-right {
+                    transform: rotate(45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.down:before {
+                    content: "";
+                }
+
+                &.down-left {
+                    transform: rotate(-45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.left:before {
+                    content: "";
+                }
+
+                &.up-left {
+                    transform: rotate(45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
             }
 
-            &::before {
-                top: 33.33%;
-                bottom: 33.33%;
-                border-width: 1px 0;
+            .top, .middle, .bottom {
+                height: calc(100% / 3);
             }
 
-            &::after {
-                left: 33.33%;
-                right: 33.33%;
-                border-width: 0 1px;
+            .bottom > * {
+                border-bottom: none;
             }
 
-            &:hover {
-                &::after, &::before {
-                    opacity: 1;
+            .tile {
+                position: relative;
+
+                float: left;
+
+                height: 100%;
+                width: calc(100% / 3);
+                cursor: pointer;
+                border-bottom: 1px solid $white;
+                border-right: 1px solid $white;
+
+                &:before {
+                    content: '';
+
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+
+                    background-color: $black;
+                    opacity: 0.6;
+                }
+
+                &.selected:before {
+                    background-color: $white;
+                }
+
+                &.right {
+                    border-right: none;
                 }
             }
         }
+
 
         .handle {
             $handleRadius: 10px;

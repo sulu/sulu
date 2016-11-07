@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*----------------------------------------*/
 /* line 1, ../scss/modules/collection.scss */
 .list-toolbar-container {
@@ -80,7 +81,6 @@
 /* line 23, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area {
   position: absolute;
-  cursor: move;
   z-index: 20;
   background: rgba(0, 0, 0, 0.0001);
   top: 0;
@@ -88,7 +88,7 @@
   width: 0;
   height: 0;
 }
-/* line 37, ../scss/modules/area-selection.scss */
+/* line 36, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .lines {
   position: absolute;
   top: 0;
@@ -97,39 +97,105 @@
   height: 100%;
   border: 2px solid #fff;
 }
-/* line 45, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines::before, .sulu-area-selection .area .lines::after {
-  opacity: 0;
+/* line 44, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow {
+  color: #fff;
+  font-size: 40px;
+  position: absolute;
+  top: calc(50% - 20px);
+  left: 0;
+  right: 0;
+}
+/* line 52, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow:before {
+  opacity: 0.99;
+}
+/* line 56, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.up:before {
+  content: "";
+}
+/* line 60, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.up-right {
+  transform: rotate(-45deg);
+}
+/* line 62, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.up-right:before {
+  content: "";
+}
+/* line 67, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.right:before {
+  content: "";
+}
+/* line 71, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.down-right {
+  transform: rotate(45deg);
+}
+/* line 73, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.down-right:before {
+  content: "";
+}
+/* line 78, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.down:before {
+  content: "";
+}
+/* line 82, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.down-left {
+  transform: rotate(-45deg);
+}
+/* line 84, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.down-left:before {
+  content: "";
+}
+/* line 89, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.left:before {
+  content: "";
+}
+/* line 93, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.up-left {
+  transform: rotate(45deg);
+}
+/* line 95, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .arrow.up-left:before {
+  content: "";
+}
+/* line 101, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .top, .sulu-area-selection .area .lines .middle, .sulu-area-selection .area .lines .bottom {
+  height: calc(100% / 3);
+}
+/* line 105, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .bottom > * {
+  border-bottom: none;
+}
+/* line 109, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: calc(100% / 3);
+  cursor: pointer;
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff;
+}
+/* line 120, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile:before {
   content: '';
-  display: block;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  border: 1px solid #fff;
-  -moz-transition: opacity 200ms;
-  -o-transition: opacity 200ms;
-  -webkit-transition: opacity 200ms;
-  transition: opacity 200ms;
+  background-color: #000;
+  opacity: 0.6;
 }
-/* line 58, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines::before {
-  top: 33.33%;
-  bottom: 33.33%;
-  border-width: 1px 0;
+/* line 133, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile.selected:before {
+  background-color: #fff;
 }
-/* line 64, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines::after {
-  left: 33.33%;
-  right: 33.33%;
-  border-width: 0 1px;
+/* line 137, ../scss/modules/area-selection.scss */
+.sulu-area-selection .area .lines .tile.right {
+  border-right: none;
 }
-/* line 71, ../scss/modules/area-selection.scss */
-.sulu-area-selection .area .lines:hover::after, .sulu-area-selection .area .lines:hover::before {
-  opacity: 1;
-}
-/* line 77, ../scss/modules/area-selection.scss */
+/* line 144, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle {
   position: absolute;
   width: 20px;
@@ -138,13 +204,13 @@
   background: #fff;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
-/* line 86, ../scss/modules/area-selection.scss */
+/* line 153, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .handle.south-east {
   bottom: -10px;
   right: -10px;
   cursor: se-resize;
 }
-/* line 93, ../scss/modules/area-selection.scss */
+/* line 160, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area .minimum-size-info {
   opacity: 0;
   position: absolute;
@@ -163,11 +229,11 @@
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
-/* line 109, ../scss/modules/area-selection.scss */
+/* line 176, ../scss/modules/area-selection.scss */
 .sulu-area-selection .area.minimum-size-reached .minimum-size-info {
   opacity: 1;
 }
-/* line 114, ../scss/modules/area-selection.scss */
+/* line 181, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container {
   position: absolute;
   top: 0;
@@ -177,7 +243,7 @@
   overflow: hidden;
   z-index: 10;
 }
-/* line 123, ../scss/modules/area-selection.scss */
+/* line 190, ../scss/modules/area-selection.scss */
 .sulu-area-selection .backdrop-container .backdrop {
   position: absolute;
   outline: 5000px solid rgba(0, 0, 0, 0.6);
@@ -186,26 +252,26 @@
   width: 0;
   height: 0;
 }
-/* line 135, ../scss/modules/area-selection.scss */
+/* line 202, ../scss/modules/area-selection.scss */
 .sulu-area-selection img {
   display: block;
 }
 
-/* line 1, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container {
+/* line 1, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide {
   margin: -20px;
 }
-/* line 4, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .toolbar-container {
+/* line 4, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .toolbar-container {
   background: #52B6CA;
 }
-/* line 8, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .label-container {
+/* line 8, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .label-container {
   height: 0;
   overflow: visible;
 }
-/* line 13, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .back {
+/* line 13, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .back {
   display: inline-block;
   vertical-align: top;
   width: 50px;
@@ -216,18 +282,18 @@
   margin-right: -5px;
   color: #fff;
 }
-/* line 25, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .toolbar {
+/* line 25, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .toolbar {
   display: inline-block;
   vertical-align: top;
 }
-/* line 30, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .area-selection {
+/* line 30, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .area-selection {
   width: 100%;
   height: 420px;
 }
-/* line 35, ../scss/modules/cropping-slide.scss */
-.sulu-cropping-container .hint {
+/* line 35, ../scss/modules/toolbar-slide.scss */
+.toolbar-slide .hint {
   text-align: center;
   font-size: 12px;
   color: #999;
@@ -667,6 +733,27 @@ a.media-edit-link,
 }
 
 /* line 55, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-loader {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px #fff solid;
+  border-radius: 3px;
+}
+/* line 65, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-loader .loader {
+  margin-top: 80px;
+  opacity: 0.3;
+}
+/* line 70, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-loader .hint {
+  color: #999;
+  margin-top: 14px;
+}
+
+/* line 76, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image {
   position: absolute;
   top: 0;
@@ -679,14 +766,20 @@ a.media-edit-link,
   width: 100%;
   height: 100%;
 }
-/* line 68, ../scss/modules/media-edit-overlay.scss */
+/* line 89, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-image[class^=fa-] {
+  background: none;
+  border: none;
+  margin-top: 30px;
+}
+/* line 95, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image.icon {
   color: #999;
   font-size: 150px;
   text-align: center;
   vertical-align: middle;
 }
-/* line 75, ../scss/modules/media-edit-overlay.scss */
+/* line 102, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image .file-version-change,
 .media-edit-preview-image img {
   position: absolute;
@@ -700,30 +793,30 @@ a.media-edit-link,
   max-height: 100%;
   max-width: 100%;
 }
-/* line 86, ../scss/modules/media-edit-overlay.scss */
+/* line 113, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-/* line 90, ../scss/modules/media-edit-overlay.scss */
+/* line 117, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 98, ../scss/modules/media-edit-overlay.scss */
+/* line 125, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container {
   background-color: #ddd;
   position: relative;
   text-align: center;
 }
-/* line 104, ../scss/modules/media-edit-overlay.scss */
+/* line 131, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container:before {
   content: '';
   display: block;
   padding-top: 100%;
 }
-/* line 111, ../scss/modules/media-edit-overlay.scss */
+/* line 138, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change {
   position: absolute;
   top: 0;
@@ -733,18 +826,18 @@ a.media-edit-link,
   width: 100%;
   height: 100%;
 }
-/* line 121, ../scss/modules/media-edit-overlay.scss */
+/* line 148, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 128, ../scss/modules/media-edit-overlay.scss */
+/* line 155, ../scss/modules/media-edit-overlay.scss */
 .overlay-footer .btn.media-reset-preview-action.hide {
   display: none;
 }
 
-/* line 133, ../scss/modules/media-edit-overlay.scss */
+/* line 160, ../scss/modules/media-edit-overlay.scss */
 #media-info .info-label-container {
   overflow: visible;
   position: absolute;
@@ -753,17 +846,17 @@ a.media-edit-link,
   left: 0;
   right: 0;
 }
-/* line 142, ../scss/modules/media-edit-overlay.scss */
+/* line 169, ../scss/modules/media-edit-overlay.scss */
 #media-info textarea.description {
   height: 80px;
   min-height: 80px;
 }
-/* line 147, ../scss/modules/media-edit-overlay.scss */
+/* line 174, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview {
   position: relative;
   text-align: center;
 }
-/* line 151, ../scss/modules/media-edit-overlay.scss */
+/* line 178, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview:before {
   content: '';
   display: block;
