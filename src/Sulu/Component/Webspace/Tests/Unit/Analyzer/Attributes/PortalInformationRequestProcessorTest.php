@@ -25,11 +25,11 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var PortalInformationRequestProcessor
      */
-    private $provider;
+    private $portalInformationRequestProcessor;
 
     public function setUp()
     {
-        $this->provider = new PortalInformationRequestProcessor();
+        $this->portalInformationRequestProcessor = new PortalInformationRequestProcessor();
     }
 
     /**
@@ -69,7 +69,7 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => $config['path_info']]
         );
 
-        $attributes = $this->provider->process(
+        $attributes = $this->portalInformationRequestProcessor->process(
             $request,
             new RequestAttributes(['portalInformation' => $portalInformation])
         );
@@ -124,7 +124,7 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => $config['path_info']]
         );
 
-        $attributes = $this->provider->process(
+        $attributes = $this->portalInformationRequestProcessor->process(
             $request,
             new RequestAttributes(['portalInformation' => $portalInformation])
         );
@@ -148,9 +148,37 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
     }
 
+    public function testProcessWithPort()
+    {
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            null,
+            null,
+            null,
+            'sulu.lo:8000/test'
+        );
+
+        $request = new Request(
+            [],
+            [],
+            [],
+            [],
+            [],
+            ['HTTP_HOST' => 'sulu.lo:8000', 'REQUEST_URI' => '/test/path/to']
+        );
+
+        $attributes = $this->portalInformationRequestProcessor->process(
+            $request,
+            new RequestAttributes(['portalInformation' => $portalInformation])
+        );
+
+        $this->assertEquals('/path/to', $attributes->getAttribute('resourceLocator'));
+        $this->assertEquals('/test', $attributes->getAttribute('resourceLocatorPrefix'));
+    }
+
     public function testValidate()
     {
-        $this->assertTrue($this->provider->validate(new RequestAttributes()));
+        $this->assertTrue($this->portalInformationRequestProcessor->validate(new RequestAttributes()));
     }
 
     public function provideProcess()
