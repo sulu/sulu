@@ -73,10 +73,12 @@
         <service id="sulu.content.type.multiple_select" class="Sulu\Bundle\ContentBundle\Content\Types\MultipleSelect">
             <argument>%sulu.content.type.multiple_select.template%</argument>
             <tag name="sulu.content.type" alias="multiple_select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.single_select" class="Sulu\Bundle\ContentBundle\Content\Types\SingleSelect">
             <argument>%sulu.content.type.single_select.template%</argument>
             <tag name="sulu.content.type" alias="single_select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
     </services>
 </container>

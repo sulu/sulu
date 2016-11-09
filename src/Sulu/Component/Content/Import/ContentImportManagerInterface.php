@@ -34,6 +34,7 @@ interface ContentImportManagerInterface
         $contentTypeName,
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,

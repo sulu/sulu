@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
+use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
@@ -47,5 +48,21 @@ class MultipleSelect extends SimpleContentType
         return [
             'values' => new PropertyParameter('values', [], 'collection'),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($value, true));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

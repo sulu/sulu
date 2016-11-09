@@ -194,6 +194,10 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             return '';
         }
 
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
         return '';
     }
 
@@ -203,11 +207,13 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
+        $property->setValue($value);
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 

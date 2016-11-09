@@ -222,22 +222,24 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 $blockPropertyType = $blockProperty->getProperties($i);
 
                 // save type property
-                $typeProperty->setValue($blockPropertyType->getName());
                 $this->writeProperty(
                     $typeProperty,
                     $property,
+                    $blockPropertyType->getName(),
                     $i,
                     $node,
                     $userId,
                     $webspaceKey,
                     $languageCode,
-                    $segmentKey
+                    $segmentKey,
+                    $isImport
                 );
 
                 foreach ($blockProperty->getProperties($i)->getChildProperties() as $subProperty) {
                     $this->writeProperty(
                         $subProperty,
                         $property,
+                        $subProperty->getValue(),
                         $i,
                         $node,
                         $userId,
@@ -259,6 +261,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     private function writeProperty(
         PropertyInterface $property,
         PropertyInterface $blockProperty,
+        $value,
         $index,
         NodeInterface $node,
         $userId,
@@ -270,6 +273,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         // save sub property
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
         $blockPropertyWrapper = new BlockPropertyWrapper($property, $blockProperty, $index);
+        $blockPropertyWrapper->setValue($value);
 
         // TODO find a better why for change Types (same hack is used in ContentMapper:save )
         $contentType->remove(
@@ -284,6 +288,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             return $contentType->importData(
                 $node,
                 $blockPropertyWrapper,
+                $value,
                 $userId,
                 $webspaceKey,
                 $languageCode,
@@ -405,11 +410,13 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
+        $property->setValue($value);
         $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
 }

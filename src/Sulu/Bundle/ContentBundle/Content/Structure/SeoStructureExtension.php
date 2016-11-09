@@ -161,8 +161,16 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
      */
     protected function convertCheckboxData(&$data, $key, $default = false)
     {
-        if (!empty($data[$key]) && $data[$key] !== '0') {
+        if ($data[$key] === '0') {
+            $data[$key] = false;
+
+            return;
+        }
+
+        if ($data[$key] === '1') {
             $data[$key] = true;
+
+            return;
         }
 
         $data[$key] = $default;

@@ -417,12 +417,13 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($property->getValue(), true));
+        $property->setValue(json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 

@@ -305,11 +305,9 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         foreach ($this->getExcerptStructure()->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-            if (
-                isset($data[$property->getName()])
+            if (isset($data[$property->getName()])
                 && $this->contentImportManager->hasImport($property->getContentTypeName(), $format)
             ) {
-                $property->setValue($data[$property->getName()]);
                 /** @var ContentTypeExportInterface $contentType */
                 $contentType->importData(
                     $node,
@@ -319,6 +317,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
                         $this->languageNamespace,
                         $this->additionalPrefix
                     ),
+                    $data[$property->getName()],
                     null, // userid
                     $webspaceKey,
                     $languageCode,

@@ -157,11 +157,13 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
+        $property->setValue($value);
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

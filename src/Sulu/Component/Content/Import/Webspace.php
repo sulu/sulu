@@ -476,8 +476,7 @@ class Webspace implements WebspaceInterface
         }
 
         $translateProperty = $this->legacyPropertyFactory->createTranslatedProperty($property, $locale, $structure);
-        $translateProperty->setValue($value);
-        $this->contentImportManager->import($contentType, $node, $translateProperty, null, $webspaceKey, $locale);
+        $this->contentImportManager->import($contentType, $node, $translateProperty, $value, null, $webspaceKey, $locale);
     }
 
     /**

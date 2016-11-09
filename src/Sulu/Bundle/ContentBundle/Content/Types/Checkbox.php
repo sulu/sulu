@@ -74,18 +74,24 @@ class Checkbox extends SimpleContentType
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        if ($property->getValue() === '0') {
-            $property->setValue(false);
+        $preparedValue = true;
+
+        if ($value === '0') {
+            $preparedValue = false;
         }
 
-        parent::importData($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+        parent::importData($node, $property, $preparedValue, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

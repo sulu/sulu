@@ -184,13 +184,12 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
      */
     public function exportData($propertyValue)
     {
-        if (is_string($propertyValue)) {
-            return $propertyValue;
+        if (!is_array($propertyValue)) {
+            return '';
         }
-        if (is_array($propertyValue)) {
-            if (!empty($propertyValue)) {
-                return json_encode($propertyValue);
-            }
+
+        if (!empty($propertyValue)) {
+            return json_encode($propertyValue);
         }
 
         return '';
@@ -202,12 +201,13 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($property->getValue(), true));
+        $property->setValue(json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

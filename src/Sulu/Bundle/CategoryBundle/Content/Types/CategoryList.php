@@ -143,11 +143,7 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
      */
     public function exportData($propertyValue)
     {
-        if (is_array($propertyValue) && count($propertyValue) > 0 && isset($propertyValue[0]['id'])) {
-            foreach ($propertyValue as &$propertyValueItem) {
-                $propertyValueItem = $propertyValueItem['id'];
-            }
-
+        if (is_array($propertyValue) && count($propertyValue) > 0) {
             return json_encode($propertyValue);
         }
 
@@ -160,12 +156,13 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($property->getValue()));
+        $property->setValue(json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

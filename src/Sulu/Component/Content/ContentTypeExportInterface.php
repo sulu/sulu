@@ -29,6 +29,7 @@ interface ContentTypeExportInterface
     /**
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param mixed $value
      * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
@@ -37,6 +38,7 @@ interface ContentTypeExportInterface
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,

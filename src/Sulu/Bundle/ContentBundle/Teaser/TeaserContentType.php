@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Teaser;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -124,5 +125,24 @@ class TeaserContentType extends SimpleContentType
         }
 
         return array_merge($default, $property->getValue());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        if (!empty($value)) {
+            $value = json_decode($value);
+        }
+
+        parent::importData($node, $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

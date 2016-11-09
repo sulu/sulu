@@ -135,13 +135,14 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
         $tagNames = [];
-        $tagIds = json_decode($property->getValue());
+        $tagIds = json_decode($value);
         if (!empty($tagIds)) {
             $tagNames = $this->tagManager->resolveTagIds($tagIds);
         }

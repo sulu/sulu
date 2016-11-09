@@ -223,12 +223,13 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($property->getValue()));
+        $property->setValue(json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }
