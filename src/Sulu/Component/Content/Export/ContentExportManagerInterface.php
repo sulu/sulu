@@ -18,8 +18,7 @@ interface ContentExportManagerInterface
 {
     /**
      * Add ContentType and the format.
-     * This will be set on the Content-Type Service like:
-     * <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+     * This will be set on the Content-Type Service.
      *
      * @param $contentTypeName
      * @param $format

@@ -25,7 +25,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
      */
     const SEO_EXTENSION_NAME = 'seo';
 
-    const SEO_ATTRIBUTES = [
+    protected $seoAttributes = [
         'hideInSitemap',
         'noIndex',
         'noFollow',
@@ -124,7 +124,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
 
         if (in_array(
             $key,
-            self::SEO_ATTRIBUTES
+            $this->seoAttributes
         )) {
             $translate = false;
         }
