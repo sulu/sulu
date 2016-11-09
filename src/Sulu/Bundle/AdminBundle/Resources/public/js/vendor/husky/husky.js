@@ -42873,7 +42873,9 @@ define('__component__$column-navigation@husky',[],function() {
          */
         mark: function(id, item) {
             var $element = this.$find('li[data-id="' + id + '"]');
-            if (!!$element.length) {
+
+            // mark only non-ghost pages if showActionButtonOnGhost is disabled
+            if (!!$element.length && (!item.type || item.type.name !== 'ghost' || this.options.showActionButtonOnGhost)) {
                 // if single markable unmark all the others
                 if (this.options.singleMarkable === true) {
                     $.each(this.marked, function (key, value) {
