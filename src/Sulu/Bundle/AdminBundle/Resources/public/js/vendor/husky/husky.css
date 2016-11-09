@@ -9634,17 +9634,26 @@ a.btn-black, a.btn-highlight {
   border: none;
   white-space: nowrap;
 }
-/* line 29, ../scss/modules/matrix.scss */
+/* line 28, ../scss/modules/matrix.scss */
+.table.matrix td.value > span:last-child {
+  display: none;
+  padding-left: 3px;
+}
+/* line 35, ../scss/modules/matrix.scss */
+.table.matrix td.value:hover > span:last-child {
+  display: inline;
+}
+/* line 40, ../scss/modules/matrix.scss */
 .table.matrix td.all {
   text-align: left;
   padding-left: 16px;
   color: #000;
 }
-/* line 34, ../scss/modules/matrix.scss */
+/* line 45, ../scss/modules/matrix.scss */
 .table.matrix td.section {
   color: #999;
 }
-/* line 39, ../scss/modules/matrix.scss */
+/* line 50, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon {
   border: 1px solid #000;
   color: #000;
@@ -9656,7 +9665,7 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   text-align: center;
 }
-/* line 52, ../scss/modules/matrix.scss */
+/* line 63, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon.is-active {
   color: #fff;
   border-color: #5DC774;

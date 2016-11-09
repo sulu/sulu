@@ -18,7 +18,8 @@ define([
         permissionData,
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
-        formSelector = '#role-form';
+        formSelector = '#role-form',
+        someSelected = true;
 
     return {
 
@@ -48,9 +49,7 @@ define([
         },
 
         bindDOMEvents: function() {
-            this.sandbox.dom.on('#select-all', 'click', function() {
-                this.sandbox.emit('husky.matrix.set-all');
-            }.bind(this));
+            this.sandbox.dom.on('#change-all', 'click', this.selectAllOrNone.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -160,6 +159,8 @@ define([
         },
 
         changePermission: function(data) {
+            var activatedButtons = $('#matrix').find('.is-active');
+
             if (typeof(data.value) === 'string') {
                 this.setPermission(data.section, data.value, data.activated);
             } else {
@@ -172,6 +173,8 @@ define([
                 // unset god status as soon as one permission is removed
                 this.sandbox.dom.attr('#god', {checked: false});
             }
+
+            this.changeSelectAllNoneButton(activatedButtons.length);
         },
 
         setPermission: function(section, value, activated) {
@@ -224,6 +227,32 @@ define([
             this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.data}));
             //starts the dropdown-component
             this.sandbox.start(this.$el);
+
+            if (!!this.data.permissions) {
+                this.changeSelectAllNoneButton(this.data.permissions.length);
+            }
+        },
+
+        selectAllOrNone: function () {
+            if(!!someSelected) {
+                this.sandbox.emit('husky.matrix.unset-all');
+                someSelected = false;
+                $('#change-all').html(this.sandbox.translate('security.roles.all'));
+            } else if(!someSelected) {
+                this.sandbox.emit('husky.matrix.set-all');
+                someSelected = true;
+                $('#change-all').html(this.sandbox.translate('security.roles.none'));
+            }
+        },
+
+        changeSelectAllNoneButton: function(numButton) {
+            if(!!numButton){
+                $('#change-all').html(this.sandbox.translate('security.roles.none'));
+                someSelected = true;
+            } else if(!numButton) {
+                $('#change-all').html(this.sandbox.translate('security.roles.all'));
+                someSelected = false;
+            }
         },
 
         listenForChange: function() {
