@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 interface ContentImportManagerInterface
 {
     /**
-     * Starts content import.
+     * Import property of a document.
      *
      * @param $contentTypeName
      * @param NodeInterface $node

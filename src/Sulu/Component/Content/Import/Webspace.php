@@ -199,6 +199,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Import document by locale into given webspace.
+     *
      * @param array $parsedData
      * @param string $webspaceKey
      * @param string $locale
@@ -276,6 +278,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Loops all documents and imports all properties of the documents.
+     *
      * @param BasePageDocument $document
      * @param string $structureType
      * @param string $webspaceKey
@@ -355,6 +359,9 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Set all Settings for the given documents and import them.
+     * Import property -o must be set to true.
+     *
      * @param BasePageDocument $document
      * @param string $structureType
      * @param string $webspaceKey
@@ -392,6 +399,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Prepare the settings value for the respective setter.
+     *
      * @param $key
      * @param $value
      *
@@ -419,6 +428,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Importing the Extensions like SEO- and Excerption-Tab.
+     *
      * @param ExportExtensionInterface $extension
      * @param string $extensionKey
      * @param NodeInterface $node
@@ -453,6 +464,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Prepare document-property and import them.
+     *
      * @param PropertyInterface $property
      * @param NodeInterface $node
      * @param string $value
@@ -480,6 +493,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns the correct parser like XLIFF1.2.
+     *
      * @param $format
      *
      * @return WebspaceFormatImportInterface
@@ -496,8 +511,10 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Generates a url by given strategy and property.
+     *
      * @param PropertyInterface[] $properties
-     * @param string $parentPath
+     * @param string $parentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @param string $format

@@ -38,9 +38,7 @@ class ContentExportManager implements ContentExportManagerInterface
     }
 
     /**
-     * @param $contentTypeName
-     * @param $format
-     * @param $options
+     * {@inheritdoc}
      */
     public function add($contentTypeName, $format, $options)
     {

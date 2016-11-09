@@ -42,6 +42,7 @@ class ContentImportManager implements ContentImportManagerInterface
         $contentTypeName,
         NodeInterface $node,
         PropertyInterface $property,
+        $value,
         $userId,
         $webspaceKey,
         $languageCode,
@@ -53,7 +54,7 @@ class ContentImportManager implements ContentImportManagerInterface
             throw new ContentTypeImportMissingException($contentTypeName);
         }
 
-        $contentType->importData($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+        $contentType->importData($node, $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

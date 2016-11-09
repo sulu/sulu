@@ -17,12 +17,16 @@ namespace Sulu\Component\Content\Import;
 interface WebspaceInterface
 {
     /**
+     * Add import format like XLIFF1.2.
+     *
      * @param WebspaceFormatImportInterface $service
      * @param $format
      */
     public function add($service, $format);
 
     /**
+     * Starts language import for given webspace and locale.
+     *
      * @param string $webspaceKey
      * @param string $locale
      * @param string $filePath

@@ -17,6 +17,10 @@ namespace Sulu\Component\Content\Export;
 interface ContentExportManagerInterface
 {
     /**
+     * Add ContentType and the format.
+     * This will be set on the Content-Type Service like:
+     * <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+     *
      * @param $contentTypeName
      * @param $format
      * @param $options
@@ -24,12 +28,16 @@ interface ContentExportManagerInterface
     public function add($contentTypeName, $format, $options);
 
     /**
+     * Export data for document by given Content-Type.
+     *
      * @param $contentTypeName
      * @param $propertyValue
      */
     public function export($contentTypeName, $propertyValue);
 
     /**
+     * Checks the content-type if this has an export.
+     *
      * @param $contentTypeName
      * @param $format
      *
@@ -38,6 +46,8 @@ interface ContentExportManagerInterface
     public function hasExport($contentTypeName, $format);
 
     /**
+     * Returns the export options by the given content-type.
+     *
      * @param $contentTypeName
      * @param $format
      *

@@ -231,6 +231,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Creates and returns a property-array.
+     *
      * @param PropertyMetadata $property
      * @param PropertyValue $propertyValue
      * @param string $format
@@ -248,6 +250,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Creates and Returns a property-array for content-type Block.
+     *
      * @param BlockMetadata $property
      * @param PropertyValue $propertyValue
      * @param $format
@@ -495,6 +499,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Build query to return only specific nodes.
+     *
      * @param $nodes
      * @param bool|false $not
      *
@@ -549,6 +555,8 @@ class Webspace implements WebspaceInterface
     }
 
     /**
+     * Returns export template for given format like XLIFF1.2.
+     *
      * @param $format
      *
      * @return string
