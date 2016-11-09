@@ -648,7 +648,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.example.org', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionEndingSlash()
+    public function testGetCollectionTrailingSlash()
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -680,11 +680,11 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
-        $this->assertEquals('sulu.lo', $route->getDefaults()['url']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('de/qwertz', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionEndingSlashForHomepage()
+    public function testGetCollectionTrailingSlashForHomepage()
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -711,6 +711,58 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/de/']);
+
+        // Test the route provider
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('/de', $route->getDefaults()['url']);
+    }
+
+    public function testGetCollectionTrailingSlashForHomepageWithoutLocalization()
+    {
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $this->requestAnalyzer->getPortal()->willReturn($portal);
+
+        $localization = new Localization('de', 'at');
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $this->requestAnalyzer->getResourceLocator()->willReturn('/');
+        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('');
+        $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.lo');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de_at')->willReturn('some-uuid');
+
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $document->getRedirectType()->willReturn(RedirectType::NONE);
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $this->documentManager->find('some-uuid', 'de_at', ['load_ghost_content' => false])->willReturn($document->reveal());
+
+        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
+
+        $metadata = new Metadata();
+        $metadata->setAlias('page');
+        $structureMetadata = new StructureMetadata();
+        $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
+        $this->documentInspector->getStructureMetadata($document->reveal())->willReturn($structureMetadata);
+
+        $pageBridge = $this->prophesize(PageBridge::class);
+        $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
+
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
 
         // Test the route provider
@@ -718,8 +770,33 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
+        $this->assertEquals($pageBridge->reveal(), $route->getDefaults()['structure']);
+    }
+
+    public function testGetCollectionWithDoubleSlashOnly()
+    {
+        $localization = new Localization('de', 'at');
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
+
+        $this->requestAnalyzer->getResourceLocator()->willReturn('/');
+        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL);
+        $this->requestAnalyzer->getRedirect()->willReturn('sulu.lo/de-at');
+        $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.lo');
+
+        $this->urlReplacer->replaceCountry(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de-at');
+        $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de-at');
+        $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de-at');
+
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '//']);
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
         $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
-        $this->assertEquals('sulu.lo', $route->getDefaults()['url']);
+        $this->assertEquals('/{wildcard}', $route->getPath());
+        $this->assertEquals('.*', $route->getRequirements()['wildcard']);
+        $this->assertEquals('sulu.lo/de-at', $route->getDefaults()['redirect']);
     }
 
     public function testGetCollectionMovedResourceLocator()
