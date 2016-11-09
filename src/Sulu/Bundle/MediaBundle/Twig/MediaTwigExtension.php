@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Twig;
 
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 /**
@@ -50,15 +51,23 @@ class MediaTwigExtension extends \Twig_Extension
      * @param int|MediaInterface $media id to resolve
      * @param string $locale
      *
-     * @return MediaApi
+     * @return MediaApi|null
      */
     public function resolveMediaFunction($media, $locale)
     {
+        if (!$media) {
+            return;
+        }
+
         if (is_object($media)) {
             return $this->resolveMediaObject($media, $locale);
         }
 
-        return $this->mediaManager->getById($media, $locale);
+        try {
+            return $this->mediaManager->getById($media, $locale);
+        } catch (MediaNotFoundException $e) {
+            return;
+        }
     }
 
     /**

@@ -2,6 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
+    * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
+    * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
+    * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension 
+    * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes
     * BUGFIX      #3014 [PreviewBundle]       Use the correct PHPCR session for the preview
     * FEATURE     #1758 [ContentBundle]       Webspace xliff 1.2 Import
@@ -35,7 +40,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2981 [WebsiteBundle]       Fixed dumping of sitemaps
     * FEATURE     #2967 [ContentBundle]       Refactored link-tag to allow extending over provider
     * ENHANCEMENT #2948 [AdminBundle]         Replace colors and images by overwritable variables
-    
+
 * 1.4.0-RC1 (2016-10-06)
     * ENHANCEMENT #2964 [RouteBundle]         Content type route: Added possibility to pass parameter 'inputType' to component
     * BUGFIX      #2962 [WebsiteBundle]       Removed nested-sitemapindex

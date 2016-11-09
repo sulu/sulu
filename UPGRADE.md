@@ -1,5 +1,14 @@
 # Upgrade
 
+## dev-develop
+
+### Ports in webspace config
+
+From now on the the port has to be a part of the URL in the webspace
+configuration. So if you are running your website on a different port than the
+default port of the protocol you are using, you have to change the webspace
+config. The port must still be omitted when the `{host}` placeholder is used.
+
 ## 1.4.0-RC2
 
 ### Admin User Settings
