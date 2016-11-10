@@ -116,9 +116,9 @@ class WebspaceImportCommand extends ContainerAwareCommand
 
         $output->writeln([
             '',
+            '',
             '<info>Import Result</info>',
             '<info>===============</info>',
-            '',
             '<info>' . $import->successes . ' Documents imported.</info>',
             '<comment>' . count($import->failed) . ' Documents ignored.</comment>',
         ]);
