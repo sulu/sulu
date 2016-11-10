@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3021 [MediaBundle]         Added default locale to media selection overlay
     * HOTFIX      #2989 [ContentBundle]       Fixed internal-link-uuid in query-builder
     * HOTFIX      #2989 [MediaBundle]         Added file-version name database-index
     * HOTFIX      #3015 [HTTPCacheBundle]     Activate cache handlers only in prod-environment
