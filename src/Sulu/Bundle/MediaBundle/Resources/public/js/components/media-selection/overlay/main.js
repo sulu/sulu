@@ -65,6 +65,7 @@ define([
                 singleSelect: false,
                 removeable: true,
                 instanceName: null,
+                locale: UserSettingsManager.getMediaLocale(),
                 types: null,
                 removeOnClose: false,
                 openOnStart: false,
