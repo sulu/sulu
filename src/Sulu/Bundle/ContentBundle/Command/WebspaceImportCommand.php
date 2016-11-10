@@ -127,7 +127,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             return;
         }
 
-        // If more then 20 infos print only in log
+        // If more than 20 exceptions write only into log.
         if (count($import->exceptionStore['ignore']) > 20) {
             foreach ($import->exceptionStore['ignore'] as $msg) {
                 $logger->info($msg);
