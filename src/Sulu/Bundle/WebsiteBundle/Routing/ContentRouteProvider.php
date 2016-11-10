@@ -129,7 +129,7 @@ class ContentRouteProvider implements RouteProviderInterface
             // redirect webspace correctly with locale
             $collection->add(
                 'redirect_' . uniqid(),
-                $this->getRedirectWebSpaceRoute($request)
+                $this->getRedirectWebSpaceRoute()
             );
         } elseif (
             $request->getRequestFormat() === 'html' &&
@@ -177,7 +177,10 @@ class ContentRouteProvider implements RouteProviderInterface
                     // redirect page to page without slash at the end
                     $collection->add(
                         'redirect_' . uniqid(),
-                        $this->getRedirectWebSpaceRoute($request)
+                        $this->getRedirectRoute(
+                            $request,
+                            $this->requestAnalyzer->getResourceLocatorPrefix() . rtrim($resourceLocator, '/')
+                        )
                     );
                 } elseif ($document->getRedirectType() === RedirectType::INTERNAL) {
                     // redirect internal link
@@ -292,11 +295,9 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param Request $request
-     *
      * @return Route
      */
-    protected function getRedirectWebSpaceRoute(Request $request)
+    protected function getRedirectWebSpaceRoute()
     {
         $localization = $this->defaultLocaleProvider->getDefaultLocale();
 
@@ -306,11 +307,16 @@ class ContentRouteProvider implements RouteProviderInterface
         $redirect = $this->urlReplacer->replaceLocalization($redirect, $localization->getLocale(Localization::DASH));
 
         // redirect by information from webspace config
+        // has to be done for all routes, because double slashes introduce problems otherwise
         return new Route(
-            $request->getPathInfo(), [
+            '/{wildcard}',
+            [
                 '_controller' => 'SuluWebsiteBundle:Redirect:redirectWebspace',
                 'url' => $this->requestAnalyzer->getPortalUrl(),
                 'redirect' => $redirect,
+            ],
+            [
+                'wildcard' => '.*',
             ]
         );
     }
