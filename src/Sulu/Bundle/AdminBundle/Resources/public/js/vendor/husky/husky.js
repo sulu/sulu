@@ -22153,6 +22153,67 @@ return!1},null,null,20);if(e.config.autoUpdateElementJquery&&b.is("textarea")&&a
 return!0}return g.call(b,d)});if(i.length){var b=new a.Deferred;a.when.apply(this,i).done(function(){b.resolveWith(k)});return b.promise()}return f}var f=a(this).eq(0),c=f.data("ckeditorInstance");return f.is("textarea")&&c?c.getData():g.call(f)}})))})(window.jQuery);
 define("jqueryAdapter", function(){});
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/ckeditor
+ */
+
+define('pasteFromWordPlugin',[],function() {
+
+    'use strict';
+
+    var addText = function(editor, content) {
+        var element = editor.document.createElement('p');
+        element.setHtml(content);
+        editor.insertElement(element);
+    };
+
+    return function(sandbox) {
+        return {
+            init: function(editor) {
+                editor.addCommand('pasteFromWordDialog', {
+                    dialogName: 'pasteFromWordDialog',
+                    exec: function() {
+                        var $element = $('<div/>');
+                        $('body').append($element);
+
+                        sandbox.start([
+                            {
+                                name: 'ckeditor/plugins/paste-from-word@husky',
+                                options: {
+                                    el: $element,
+                                    title: editor.lang.pastefromword.title,
+                                    info: editor.lang.clipboard.copyError,
+                                    message: editor.lang.clipboard.pasteMsg,
+                                    saveCallback: function(content) {
+                                        sandbox.stop($element);
+                                        addText(editor, content);
+                                    }
+                                }
+                            }
+                        ]);
+                    }
+                });
+
+                editor.ui.addButton(
+                    'PasteFromWord',
+                    {
+                        label: editor.lang.pastefromword.toolbar,
+                        command: 'pasteFromWordDialog',
+                        toolbar: 'clipboard,50'
+                    }
+                );
+            }
+        };
+    };
+});
+
 ;(function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     define('html.sortable',['jquery'], factory);
@@ -43606,6 +43667,92 @@ define('__component__$ckeditor@husky',[], function() {
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
+ * @module husky/components/ckeditor
+ */
+
+/**
+ * Overlay for paste-from-word plugin.
+ *
+ * @class PasteFromWord
+ * @constructor
+ */
+define('__component__$ckeditor/plugins/paste-from-word@husky',['underscore'], function(_) {
+
+    'use strict';
+
+    var defaults = {
+        title: 'Paste from Word',
+        info: '',
+        saveCallback: function(content) {
+        }
+    };
+
+    return {
+
+        templates: {
+            form: _.template('<p class="input-description"><%= info %></p><p class="input-description"><%= message %></p><textarea class="form-element"></textarea>')
+        },
+
+        initialize: function() {
+            this.options = this.sandbox.util.extend(true, {}, defaults.options, this.options);
+
+            this.initializeDialog();
+        },
+
+        initializeDialog: function() {
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
+            this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        openOnStart: true,
+                        removeOnClose: true,
+                        el: $element,
+                        container: this.$el,
+                        instanceName: 'paste-from-word',
+                        slides: [
+                            {
+                                title: this.options.title,
+                                data: this.templates.form({info: this.options.info, message: this.options.message}),
+                                buttons: [
+                                    {
+                                        type: 'cancel',
+                                        align: 'left'
+                                    },
+                                    {
+                                        type: 'ok',
+                                        text: 'OK',
+                                        align: 'right'
+                                    }
+                                ],
+                                okCallback: function() {
+                                    var text = this.$el.find('textarea').val();
+
+                                    this.options.saveCallback(text.split("\n").join('</p><p>'));
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                }
+            ]);
+
+            this.sandbox.once('husky.overlay.paste-from-word.opened', function() {
+                this.$el.find('textarea').focus();
+            }.bind(this));
+        }
+    };
+});
+
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
  * @module husky/components/overlay
  */
 
@@ -47869,7 +48016,8 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
     require.config({
         paths: {
             ckeditor: 'bower_components/ckeditor/ckeditor',
-            jqueryAdapter: 'bower_components/ckeditor/adapters/jquery'
+            jqueryAdapter: 'bower_components/ckeditor/adapters/jquery',
+            pasteFromWordPlugin: 'husky_components/ckeditor/plugins/paste-from-word/plugin'
         },
         shim: {
             jqueryAdapter: {
@@ -47878,7 +48026,13 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
         }
     });
 
-    define('husky_extensions/ckeditor-extension',['underscore', 'services/husky/util', 'ckeditor', 'jqueryAdapter'], function(_, Util) {
+    define('husky_extensions/ckeditor-extension',[
+        'underscore',
+        'services/husky/util',
+        'pasteFromWordPlugin',
+        'ckeditor',
+        'jqueryAdapter'
+    ], function(_, Util, PasteFromWordPlugin) {
 
         var getConfig = function() {
             return {
@@ -47966,14 +48120,13 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         basicstyles: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike'],
                         blockstyles: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                         list: ['NumberedList', 'BulletedList'],
-                        paste: ['PasteFromWord'],
                         links: ['Link'],
                         insert: ['Table'],
                         styles: ['Styles'],
                         code: ['Source']
                     },
                     toolbar,
-                    plugins = ['justify', 'format', 'sourcearea', 'link', 'table', 'pastefromword', 'autogrow'],
+                    plugins = ['justify', 'format', 'sourcearea', 'link', 'table', 'autogrow'],
                     icons = {
                         Format: 'font',
                         Strike: 'strikethrough',
@@ -48104,18 +48257,18 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                                 var infoTab = dialogDefinition.getContents('info'),
                                     targetTab = dialogDefinition.getContents('target'),
 
-                                // get a reference to the link type
+                                    // get a reference to the link type
                                     linkOptions = infoTab.get('linkType'),
                                     targetOptions = targetTab.get('linkTargetType'),
 
-                                // list of included link options
+                                    // list of included link options
                                     includedLinkOptions = [
                                         'url',
                                         'email'
                                     ],
                                     selectedLinkOption = [],
 
-                                // list of included link target options
+                                    // list of included link target options
                                     includedTargetOptions = [
                                         'notSet',
                                         '_blank',
@@ -48153,6 +48306,12 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         }
                     }
                 };
+
+                app.sandbox.ckeditor.addPlugin(
+                    'huskyPasteFromWord',
+                    new PasteFromWordPlugin(app.sandboxes.create('plugin-paste-from-word'))
+                );
+                app.sandbox.ckeditor.addToolbarButton('paste', 'PasteFromWord');
             }
 
         };
