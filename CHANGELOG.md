@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3022 [ContentBundle]       Fixed property-value offset set
     * ENHANCEMENT #3190 [ContentBundle]       Extracted automation handler
     * ENHANCEMENT #3188 [AutomationBundle]    Extracted the automation-bundle
     * BUGFIX      #3183 [ContentBundle]       Fixed grid usage in conten form

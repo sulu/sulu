@@ -87,7 +87,7 @@ class PropertyValue implements \ArrayAccess
             return;
         }
 
-        $this->value[$offset] = array_merge($this->value[$offset], $value);
+        $this->value[$offset] = $value;
     }
 
     /**
