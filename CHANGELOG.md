@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.4.0 (2016-11-10)
     * BUGFIX      #3022 [ContentBundle]       Fix cases in navigation translations
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
