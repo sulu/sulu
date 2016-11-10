@@ -26,7 +26,7 @@
         </service>
 
         <service id="sulu_document_manager.node_manager" class="Sulu\Component\DocumentManager\NodeManager" public="false">
-            <argument type="service" id="doctrine_phpcr.session" />
+            <argument type="service" id="sulu_document_manager.default_session" />
         </service>
 
         <service id="sulu_document_manager.node_helper" class="Sulu\Component\DocumentManager\NodeHelper"/>
