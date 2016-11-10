@@ -18,7 +18,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 /**
  * Simple implementation of ContentTypes.
  */
-abstract class SimpleContentType implements ContentTypeInterface
+abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExportInterface
 {
     /**
      * name of content type.
@@ -60,7 +60,7 @@ abstract class SimpleContentType implements ContentTypeInterface
             $value = $node->getPropertyValue($property->getName());
         }
 
-        $property->setValue($value);
+        $property->setValue($this->decodeValue($value));
 
         return $value;
     }
@@ -86,7 +86,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     ) {
         $value = $property->getValue();
         if ($value != null) {
-            $node->setProperty($property->getName(), $this->removeIllegalCharacters($value));
+            $node->setProperty($property->getName(), $this->removeIllegalCharacters($this->encodeValue($value)));
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
@@ -166,6 +166,58 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_bool($propertyValue)) {
+            if ($propertyValue) {
+                return '1';
+            }
+
+            return '';
+        }
+
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        if (is_string($this->defaultValue)) {
+            return $this->defaultValue;
+        }
+
+        if (is_bool($this->defaultValue)) {
+            if ($this->defaultValue) {
+                return '1';
+            }
+
+            return '';
+        }
+
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue($value);
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * Remove illegal characters from content string, else PHPCR would throw an `PHPCR\ValueFormatException`
      * if an illegal characters is detected.
      *
@@ -176,5 +228,29 @@ abstract class SimpleContentType implements ContentTypeInterface
     protected function removeIllegalCharacters($content)
     {
         return preg_replace(NodeProcessor::VALIDATE_STRING, '', $content);
+    }
+
+    /**
+     * Prepares value for database.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    protected function encodeValue($value)
+    {
+        return $value;
+    }
+
+    /**
+     * Decodes value from database.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    protected function decodeValue($value)
+    {
+        return $value;
     }
 }

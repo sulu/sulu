@@ -328,11 +328,11 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf011" resname="sulu.content.form.settings.all-nav-contexts">
                 <source>sulu.content.form.settings.all-nav-contexts</source>
-                <target>All navigations</target>
+                <target>all navigations</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
                 <source>sulu.content.form.settings.no-nav-contexts</source>
-                <target>No navigation</target>
+                <target>no navigation</target>
             </trans-unit>
             <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
                 <source>sulu.content.form.settings.shadow_page</source>
@@ -746,6 +746,58 @@
             <trans-unit id="59" resname="labels.error.remove-draft-desc">
                 <source>labels.error.remove-draft-desc</source>
                 <target>The draft could not be deleted.</target>
+            </trans-unit>
+            <trans-unit id="60" resname="sulu-content.teaser.content">
+                <source>sulu-content.teaser.content</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="61" resname="sulu-content.teaser.edit">
+                <source>sulu-content.teaser.edit</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="62" resname="sulu-content.teaser.edited">
+                <source>sulu-content.teaser.edited</source>
+                <target>edited</target>
+            </trans-unit>
+            <trans-unit id="63" resname="sulu-content.teaser.reset">
+                <source>sulu-content.teaser.reset</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="64" resname="sulu-content.teaser.apply">
+                <source>sulu-content.teaser.apply</source>
+                <target>Apply</target>
+            </trans-unit>
+            <trans-unit id="65" resname="sulu-content.teaser.cancel">
+                <source>sulu-content.teaser.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="66" resname="sulu-content.teaser.no-teaser">
+                <source>sulu-content.teaser.no-teaser</source>
+                <target>No teaser selected</target>
+            </trans-unit>
+            <trans-unit id="67" resname="sulu.overlay.publish">
+                <source>sulu.overlay.publish</source>
+                <target>Publish?</target>
+            </trans-unit>
+            <trans-unit id="68" resname="sulu.overlay.publish-desc">
+                <source>sulu.overlay.publish-desc</source>
+                <target>Your data will be publicly available. Do you wish to proceed?</target>
+            </trans-unit>
+            <trans-unit id="69" resname="sulu-content.resource-locator.delete">
+                 <source>sulu-content.resource-locator.delete</source>
+                 <target>The URL will be deleted for all draft and live versions of this page. This cannot be undone. Do you wish to proceed?</target>
+             </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Create</target>
+            </trans-unit>
+            <trans-unit id="71" resname="content.ckeditor.page-link">
+                <source>content.ckeditor.page-link</source>
+                <target>Page</target>
+            </trans-unit>
+            <trans-unit id="72" resname="content.ckeditor.internal-link.remove-drop-down">
+                <source>content.ckeditor.internal-link.remove-drop-down</source>
+                <target>Remove</target>
             </trans-unit>
         </body>
     </file>

@@ -1,0 +1,37 @@
+// Colors
+$breadcrumbTextColor: $grayLight !default;
+$breadcrumbHoverTextColor: $black !default;
+$breadcrumbIconTextColor: $grayLighter !default;
+$breadcrumbSeperatorTextColor: $black !default;
+
+.sulu-breadcrumb {
+    $colorTransitionDuration: 80ms;
+    padding-bottom: 5px;
+
+    .breadcrumb {
+        cursor: pointer;
+        font-size: $smallFontSize;
+        color: $breadcrumbTextColor;
+
+        &, .icon {
+            @include transition(color $colorTransitionDuration);
+        }
+
+        &:hover, &:hover .icon {
+            color: $breadcrumbHoverTextColor;
+        }
+    }
+
+    .icon {
+        color: $breadcrumbIconTextColor;
+        font-size: 9px;
+        margin-right: 5px;
+    }
+
+    .separator {
+        display: inline-block;
+        margin: 0 10px 0 5px;
+        font-size: 9px;
+        color: $breadcrumbSeperatorTextColor;
+    }
+}

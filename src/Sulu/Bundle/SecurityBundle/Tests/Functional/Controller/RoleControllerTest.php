@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
@@ -18,6 +19,21 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class RoleControllerTest extends SuluTestCase
 {
+    /**
+     * @var ObjectManager
+     */
+    private $em;
+
+    /**
+     * @var Role
+     */
+    private $role1;
+
+    /**
+     * @var Role
+     */
+    private $role2;
+
     /**
      * @var SecurityType
      */
@@ -476,6 +492,25 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('11230', $response->message);
+    }
+
+    public function testPutWithExistingName()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'PUT',
+            '/api/roles/' . $this->role2->getId(),
+            [
+                'name' => 'Sulu Administrator',
+                'system' => 'Sulu',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertHttpStatusCode(409, $client->getResponse());
+        $this->assertEquals(1101, $response->code);
     }
 
     public function testDelete()

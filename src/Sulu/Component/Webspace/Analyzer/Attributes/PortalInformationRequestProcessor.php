@@ -66,12 +66,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         $attributes['resourceLocator'] = $resourceLocator;
         $attributes['format'] = $format;
 
-        $host = $request->getHost();
-        if ($portalInformation->getType() !== RequestAnalyzerInterface::MATCH_TYPE_WILDCARD) {
-            $urlInfo = parse_url($request->getScheme() . '://' . $portalInformation->getUrl());
-            $host = $urlInfo['host'];
-        }
-        $attributes['resourceLocatorPrefix'] = substr($portalInformation->getUrl(), strlen($host));
+        $attributes['resourceLocatorPrefix'] = substr($portalInformation->getUrl(), strlen($request->getHttpHost()));
 
         if (null !== $format) {
             $request->setRequestFormat($format);

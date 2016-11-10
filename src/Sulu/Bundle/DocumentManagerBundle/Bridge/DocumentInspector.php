@@ -306,7 +306,7 @@ class DocumentInspector extends BaseDocumentInspector
         $node = $this->getNode($page);
 
         $structure = $this->getStructureMetadata($page);
-        $rlpProperty = $structure->getPropertyByTagName('sulu.rlp');
+        $resourceLocatorProperty = $structure->getPropertyByTagName('sulu.rlp');
 
         foreach ($webspace->getAllLocalizations() as $localization) {
             $resolvedLocale = $localization->getLocalization();
@@ -341,7 +341,7 @@ class DocumentInspector extends BaseDocumentInspector
             }
 
             $url = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedContentName($rlpProperty->getName(), $locale),
+                $this->encoder->localizedContentName($resourceLocatorProperty->getName(), $locale),
                 null
             );
 

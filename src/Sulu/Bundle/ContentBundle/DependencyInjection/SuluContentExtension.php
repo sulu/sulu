@@ -137,6 +137,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $loader->load('services.xml');
         $loader->load('smart_content.xml');
+        $loader->load('teaser.xml');
         $loader->load('content_types.xml');
         $loader->load('structure.xml');
         $loader->load('extension.xml');
@@ -144,7 +145,9 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
+        $loader->load('export.xml');
         $loader->load('command.xml');
+        $loader->load('link-tag.xml');
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
@@ -200,6 +203,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $container->setParameter(
             'sulu.content.type.single_select.template',
             $config['types']['single_select']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.teaser_selection.template',
+            $config['types']['teaser_selection']['template']
         );
     }
 

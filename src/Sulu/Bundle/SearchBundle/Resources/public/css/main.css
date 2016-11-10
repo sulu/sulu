@@ -201,11 +201,16 @@
   line-height: 40px;
 }
 /* line 47, ../scss/modules/dropdown-input.scss */
+.dropdown-input-trigger-container .husky-select-label {
+  height: 40px;
+  line-height: 40px;
+}
+/* line 52, ../scss/modules/dropdown-input.scss */
 .dropdown-input-trigger-container .dropdown-list {
   color: #000;
 }
 
-/* line 52, ../scss/modules/dropdown-input.scss */
+/* line 57, ../scss/modules/dropdown-input.scss */
 .dropdown-input-entry {
   width: 100%;
   border: 0;
@@ -213,12 +218,12 @@
   padding: 0 70px 0 10px;
   border-radius: 0 2px 2px 0;
 }
-/* line 59, ../scss/modules/dropdown-input.scss */
+/* line 64, ../scss/modules/dropdown-input.scss */
 .dropdown-input-entry:focus {
   outline: 0;
 }
 
-/* line 64, ../scss/modules/dropdown-input.scss */
+/* line 69, ../scss/modules/dropdown-input.scss */
 .dropdown-input-action-icon {
   position: absolute;
   right: 10px;
@@ -227,7 +232,7 @@
   cursor: pointer;
 }
 
-/* line 72, ../scss/modules/dropdown-input.scss */
+/* line 77, ../scss/modules/dropdown-input.scss */
 .dropdown-input-clear {
   display: none;
   position: absolute;

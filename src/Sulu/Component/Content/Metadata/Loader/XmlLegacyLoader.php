@@ -16,6 +16,7 @@ use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -70,6 +71,19 @@ class XmlLegacyLoader implements LoaderInterface
         'shadow-on',
         'shadow-base',
     ];
+
+    /**
+     * @var CacheLifetimeResolverInterface
+     */
+    private $cacheLifetimeResolver;
+
+    /**
+     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
+     */
+    public function __construct(CacheLifetimeResolverInterface $cacheLifetimeResolver)
+    {
+        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
+    }
 
     /**
      * {@inheritdoc}
@@ -150,7 +164,7 @@ class XmlLegacyLoader implements LoaderInterface
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
                 'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
-                'cacheLifetime' => (int) $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
@@ -179,7 +193,7 @@ class XmlLegacyLoader implements LoaderInterface
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-                'cacheLifetime' => (int) $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
@@ -298,6 +312,46 @@ class XmlLegacyLoader implements LoaderInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Load cache lifetime metadata.
+     *
+     * @param $path
+     * @param \DOMXPath $xpath
+     *
+     * @return array
+     */
+    private function loadCacheLifetime($path, \DOMXPath $xpath)
+    {
+        $nodeList = $xpath->query($path);
+
+        if (!$nodeList->length) {
+            return [
+                'type' => CacheLifetimeResolverInterface::TYPE_SECONDS,
+                'value' => 0,
+            ];
+        }
+
+        // get first node
+        $node = $nodeList->item(0);
+
+        $type = $node->getAttribute('type');
+        if ('' === $type) {
+            $type = CacheLifetimeResolverInterface::TYPE_SECONDS;
+        }
+
+        $value = $node->nodeValue;
+        if (!$this->cacheLifetimeResolver->supports($type, $value)) {
+            throw new \InvalidArgumentException(
+                sprintf('CacheLifetime "%s" with type "%s" not supported.', $value, $type)
+            );
+        }
+
+        return [
+            'type' => $type,
+            'value' => $value,
+        ];
     }
 
     /**

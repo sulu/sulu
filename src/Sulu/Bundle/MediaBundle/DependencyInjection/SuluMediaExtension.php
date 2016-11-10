@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -48,7 +52,27 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             ],
                         ],
                     ],
+                    'image_format_files' => [
+                        '%kernel.root_dir%/config/image-formats.xml',
+                        __DIR__ . '/../Resources/config/image-formats.xml',
+                    ],
                     'search' => ['enabled' => $container->hasExtension('massive_search')],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            MediaNotFoundException::class => 404,
+                            FileVersionNotFoundException::class => 404,
+                            FormatNotFoundException::class => 404,
+                            FormatOptionsMissingParameterException::class => 400,
+                        ],
+                    ],
                 ]
             );
         }
@@ -63,10 +87,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
 
         // image-formats
-        $container->setParameter(
-            'sulu_media.image_format_file',
-            $container->getParameterBag()->resolveValue($config['image_format_file'])
-        );
+        $container->setParameter('sulu_media.image_format_files', $config['image_format_files']);
 
         // system collections
         $container->setParameter('sulu_media.system_collections', $config['system_collections']);
@@ -137,9 +158,25 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $config['upload']['max_filesize']
         );
 
+        // Adobe creative sdk
+        $container->setParameter(
+            'sulu_media.adobe_creative_key',
+            $config['adobe_creative_key']
+        );
+
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        if ($config['adapter'] === 'auto') {
+            $container->setAlias(
+                'sulu_media.adapter',
+                'sulu_media.adapter.' . (class_exists('Imagick') ? 'imagick' : 'gd')
+            );
+        } else {
+            // set used adapter for imagine
+            $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $config['adapter']);
+        }
 
         // enable search
         if (true === $config['search']['enabled']) {

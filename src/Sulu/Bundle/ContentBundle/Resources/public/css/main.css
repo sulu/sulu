@@ -290,23 +290,26 @@
 /* line 11, ../scss/modules/node.scss */
 .copy-locales-overlay-content label,
 .copy-locale-overlay-content label {
-  display: inline;
+  display: inline-block;
   color: #000;
+  vertical-align: top;
+  width: 476px;
+  white-space: normal;
 }
-/* line 16, ../scss/modules/node.scss */
+/* line 19, ../scss/modules/node.scss */
 .copy-locales-overlay-content label.disabled,
 .copy-locale-overlay-content label.disabled {
   color: #999;
   cursor: default;
 }
-/* line 21, ../scss/modules/node.scss */
+/* line 24, ../scss/modules/node.scss */
 .copy-locales-overlay-content .info,
 .copy-locale-overlay-content .info {
   font-size: 14px;
   color: #999;
 }
 
-/* line 27, ../scss/modules/node.scss */
+/* line 30, ../scss/modules/node.scss */
 #copy-locale-overlay-select {
   margin-left: 20px;
   margin-top: 10px;
@@ -426,4 +429,173 @@
 /* line 2, ../scss/modules/ckeditor.scss */
 #ckeditor-form .input-description.matrix {
   margin-top: -20px;
+}
+
+/* line 4, ../scss/modules/teaser-selection.scss */
+.teaser-selection .white-box .content {
+  max-height: inherit;
+}
+/* line 10, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .fa-plus-circle .dropdown-toggle::after {
+  border-top: 6px solid #fff;
+}
+/* line 14, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .fa-plus-circle .husky-dropdown-trigger {
+  width: 45px !important;
+}
+/* line 19, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .selected-counter {
+  left: 75px !important;
+}
+/* line 23, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .present-as.icon {
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+/* line 28, ../scss/modules/teaser-selection.scss */
+.teaser-selection .header .present-as.icon .selected-text {
+  font-size: 14px;
+  padding-left: 5px;
+}
+/* line 35, ../scss/modules/teaser-selection.scss */
+.teaser-selection .husky-overlay-container.type-content .overlay-content {
+  padding: 0;
+}
+/* line 39, ../scss/modules/teaser-selection.scss */
+.teaser-selection .image .image-content {
+  font-size: 46px;
+  color: #ddd;
+  position: relative;
+  top: 8px;
+}
+/* line 46, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view {
+  width: 100%;
+}
+/* line 49, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .value {
+  float: left;
+  width: 65%;
+}
+/* line 53, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .value .image {
+  float: left;
+}
+/* line 57, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .value .description {
+  line-height: 14px;
+  margin-top: -10px;
+  margin-bottom: 0;
+  font-size: 12px;
+}
+/* line 65, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .type {
+  float: left;
+  width: 20%;
+}
+/* line 70, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view .options {
+  float: left;
+  line-height: 50px;
+  width: 15%;
+}
+/* line 76, ../scss/modules/teaser-selection.scss */
+.teaser-selection .view::after {
+  clear: both;
+}
+/* line 81, ../scss/modules/teaser-selection.scss */
+.teaser-selection .move, .teaser-selection .num, .teaser-selection .remove {
+  vertical-align: top;
+  line-height: 50px;
+}
+/* line 86, ../scss/modules/teaser-selection.scss */
+.teaser-selection .remove {
+  top: inherit !important;
+  margin-top: 5px !important;
+}
+/* line 91, ../scss/modules/teaser-selection.scss */
+.teaser-selection a.btn {
+  display: inline-block;
+}
+/* line 94, ../scss/modules/teaser-selection.scss */
+.teaser-selection a.btn.edit-teaser {
+  padding: 0;
+}
+/* line 100, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image {
+  float: left;
+  width: 50px;
+}
+/* line 104, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image .image-content {
+  height: 50px;
+  overflow: hidden;
+  display: inline-block;
+}
+/* line 110, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .image img {
+  padding: 0 !important;
+}
+/* line 115, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .form {
+  width: calc(100% - 56px);
+  margin-left: 55px;
+}
+/* line 120, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint {
+  width: 100%;
+  height: 50px;
+  position: relative;
+  top: -60px;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
+/* line 130, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: black;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 3px 3px;
+}
+/* line 143, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint span {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 24px;
+}
+/* line 150, ../scss/modules/teaser-selection.scss */
+.teaser-selection .edit .edit-hint:hover {
+  opacity: 1;
+}
+
+/* line 159, ../scss/modules/teaser-selection.scss */
+.teaser-selection-container .view, .teaser-selection-container .edit {
+  display: inline-block;
+}
+/* line 162, ../scss/modules/teaser-selection.scss */
+.teaser-selection-container .view .hidden, .teaser-selection-container .edit .hidden {
+  display: none;
+}
+/* line 167, ../scss/modules/teaser-selection.scss */
+.teaser-selection-container .edit {
+  width: 90%;
 }

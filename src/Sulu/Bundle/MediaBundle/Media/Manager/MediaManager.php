@@ -13,8 +13,9 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -216,7 +217,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->mediaRepository->findMediaById($id);
         if (!$mediaEntity) {
-            throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
+            throw new MediaNotFoundException($id);
         }
 
         return $mediaEntity;
@@ -295,9 +296,13 @@ class MediaManager implements MediaManagerInterface
         $mimeType = $uploadedFile->getMimeType();
         $properties = [];
 
-        // if the file is a video we add the duration
-        if (fnmatch('video/*', $mimeType)) {
-            $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+        try {
+            // if the file is a video we add the duration
+            if (fnmatch('video/*', $mimeType)) {
+                $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+            }
+        } catch (ExecutableNotFoundException $e) {
+            // Exception is thrown if ffmpeg is not installed -> duration is not set
         }
 
         return $properties;
@@ -310,9 +315,8 @@ class MediaManager implements MediaManagerInterface
      * @param $data
      * @param UserInterface $user
      *
-     * @throws MediaNotFoundException
      * @throws FileVersionNotFoundException
-     * @throws FileNotFoundException
+     * @throws InvalidMediaTypeException
      *
      * @return Media
      */
@@ -402,6 +406,17 @@ class MediaManager implements MediaManagerInterface
             $data['mimeType'] = null;
             $data['storageOptions'] = null;
             $data['changed'] = date('Y-m-d H:i:s');
+
+            if ((isset($data['focusPointX']) && $data['focusPointX'] != $currentFileVersion->getFocusPointX())
+                || (isset($data['focusPointY']) && $data['focusPointY'] != $currentFileVersion->getFocusPointY())
+            ) {
+                $currentFileVersion->increaseSubVersion();
+                $this->formatManager->purge(
+                    $mediaEntity->getId(),
+                    $currentFileVersion->getName(),
+                    $currentFileVersion->getStorageOptions()
+                );
+            }
         }
 
         $media = new Media($mediaEntity, $data['locale'], null);
@@ -518,7 +533,9 @@ class MediaManager implements MediaManagerInterface
                 ($attribute === 'description' && $value !== null) ||
                 ($attribute === 'copyright' && $value !== null) ||
                 ($attribute === 'credits' && $value !== null) ||
-                ($attribute === 'categories' && $value !== null)
+                ($attribute === 'categories' && $value !== null) ||
+                ($attribute === 'focusPointX' && $value !== null) ||
+                ($attribute === 'focusPointY' && $value !== null)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -603,12 +620,18 @@ class MediaManager implements MediaManagerInterface
 
                         if (is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
-                            $categories = $this->categoryRepository->findCategoryByIds($categoryIds);
+                            $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
 
                             foreach ($categories as $category) {
                                 $media->addCategory($category);
                             }
                         }
+                        break;
+                    case 'focusPointX':
+                        $media->setFocusPointX($value);
+                        break;
+                    case 'focusPointY':
+                        $media->setFocusPointY($value);
                         break;
                 }
             }
@@ -723,6 +746,7 @@ class MediaManager implements MediaManagerInterface
                     $previewImage->getName(),
                     $previewImage->getStorageOptions(),
                     $previewImage->getVersion(),
+                    $previewImage->getSubVersion(),
                     $previewImage->getMimeType()
                 );
             } else {
@@ -731,6 +755,7 @@ class MediaManager implements MediaManagerInterface
                     $media->getName(),
                     $media->getStorageOptions(),
                     $media->getVersion(),
+                    $media->getSubVersion(),
                     $media->getMimeType()
                 );
             }
@@ -769,6 +794,7 @@ class MediaManager implements MediaManagerInterface
                         $latestVersion->getName(),
                         $latestVersion->getStorageOptions(),
                         $latestVersion->getVersion(),
+                        $latestVersion->getSubVersion(),
                         $latestVersion->getMimeType()
                     )
                 );
@@ -780,6 +806,7 @@ class MediaManager implements MediaManagerInterface
                     $media->getName(),
                     $media->getStorageOptions(),
                     $media->getVersion(),
+                    $media->getSubVersion(),
                     $media->getMimeType()
                 )
             );

@@ -1,0 +1,15 @@
+<div id="{{ id|raw }}"
+     class="teaser-selection-container"
+     data-property='{{ property|json_encode }}'
+     data-mapper-property="{{ property.name }}"
+     data-form="true"
+     data-type="teaser-selection"
+     data-type-instance-name="{{ id|raw }}"
+     data-aura-navigate-event="sulu.content.navigate"
+     data-aura-component="teaser-selection@sulucontent"
+     data-aura-instance-name="{{ id|raw }}"
+     data-aura-locale="{{ languageCode }}"
+     data-aura-webspace-key="{{ webspaceKey }}"
+     data-aura-present-as='{{ sulu_parameter_to_select(params.present_as.value, userLocale) | json_encode }}'
+     data-aura-types='{{ params.providerConfiguration|json_encode }}'>
+</div>

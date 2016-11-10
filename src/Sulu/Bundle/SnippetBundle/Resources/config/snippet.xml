@@ -30,6 +30,7 @@
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="form.factory" />
             <argument type="service" id="sulu_hash.request_hash_checker"/>
+            <argument type="service" id="sulu_core.list_rest_helper"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

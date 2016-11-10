@@ -12,7 +12,6 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
-use Sulu\Component\Webspace\Loader\DelegatingFileLoader;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
@@ -20,12 +19,14 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\Replacer;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebspaceManagerTest extends WebspaceTestCase
 {
     /**
-     * @var DelegatingFileLoader
+     * @var DelegatingLoader
      */
     protected $loader;
 
@@ -52,10 +53,13 @@ class WebspaceManagerTest extends WebspaceTestCase
         $locator->locate(Argument::any())->will(function($arguments) {
             return $arguments[0];
         });
-        $this->loader = new DelegatingFileLoader([
+
+        $resolver = new LoaderResolver([
             new XmlFileLoader11($locator->reveal()),
             new XmlFileLoader10($locator->reveal()),
         ]);
+
+        $this->loader = new DelegatingLoader($resolver);
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,

@@ -153,6 +153,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                         instanceName: 'custom-urls',
                         openOnStart: true,
                         removeOnClose: true,
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.translations.overlayTitle,
@@ -196,6 +197,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                                         align: 'center'
                                     }
                                 ],
+                                contentSpacing: false,
                                 cancelCallback: function() {
                                     this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
 
@@ -337,6 +339,7 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                         name: 'content-datasource@sulucontent',
                         options: {
                             el: '#target-select',
+                            actionOnGhost: true,
                             selected: (!!this.data.targetDocument ? this.data.targetDocument.uuid : null),
                             webspace: this.options.webspace.key,
                             locale: this.sandbox.sulu.getDefaultContentLocale(),

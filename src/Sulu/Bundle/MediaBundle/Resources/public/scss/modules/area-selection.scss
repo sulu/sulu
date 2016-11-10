@@ -1,0 +1,205 @@
+.sulu-area-selection {
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    white-space: nowrap;
+    @include user-select(none);
+
+    &::before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -0.25em;
+    }
+
+    .frame {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .area {
+        position: absolute;
+        z-index: 20;
+        // The area needs a background due to old IEs not being able to hover over transparent elements
+        // http://stackoverflow.com/questions/3998917/ie8-div-hover-only-works-when-background-color-is-set-very-strange-why
+        background: rgba(0, 0, 0, 0.0001);
+
+        // get overwritten in the components javascript
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+
+        .lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid $white;
+
+            .arrow {
+                color: $white;
+                font-size: 40px;
+                position: absolute;
+                top: calc(50% - 20px);
+                left: 0;
+                right: 0;
+
+                &:before {
+                    opacity: 0.99;
+                }
+
+                &.up:before {
+                    content: "";
+                }
+
+                &.up-right {
+                    transform: rotate(-45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.right:before {
+                    content: "";
+                }
+
+                &.down-right {
+                    transform: rotate(45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.down:before {
+                    content: "";
+                }
+
+                &.down-left {
+                    transform: rotate(-45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+
+                &.left:before {
+                    content: "";
+                }
+
+                &.up-left {
+                    transform: rotate(45deg);
+                    &:before {
+                        content: "";
+                    }
+                }
+            }
+
+            .top, .middle, .bottom {
+                height: calc(100% / 3);
+            }
+
+            .bottom > * {
+                border-bottom: none;
+            }
+
+            .tile {
+                position: relative;
+
+                float: left;
+
+                height: 100%;
+                width: calc(100% / 3);
+                cursor: pointer;
+                border-bottom: 1px solid $white;
+                border-right: 1px solid $white;
+
+                &:before {
+                    content: '';
+
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+
+                    background-color: $black;
+                    opacity: 0.6;
+                }
+
+                &.selected:before {
+                    background-color: $white;
+                }
+
+                &.right {
+                    border-right: none;
+                }
+            }
+        }
+
+
+        .handle {
+            $handleRadius: 10px;
+            position: absolute;
+            width: $handleRadius * 2;
+            height: $handleRadius * 2;
+            border-radius: $handleRadius;
+            background: $white;
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+
+            &.south-east {
+                bottom: -$handleRadius;
+                right: -$handleRadius;
+                cursor: se-resize;
+            }
+        }
+
+        .minimum-size-info {
+            opacity: 0;
+            position: absolute;
+            bottom: -20px;
+            right: 0;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            color: $white;
+            font-size: $smallFontSize;
+            text-align: right;
+            padding-right: 15px;
+            @include transition(opacity 200ms);
+        }
+
+        &.minimum-size-reached .minimum-size-info {
+            opacity: 1;
+        }
+    }
+
+    .backdrop-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        overflow: hidden;
+        z-index: 10;
+
+        .backdrop {
+            position: absolute;
+            outline: 5000px solid rgba(0, 0, 0, 0.6);
+
+            // gets overwritten in the components javascript
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+        }
+    }
+
+    img {
+        display: block;
+    }
+}

@@ -20,6 +20,13 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu_admin.name%</argument>
         </service>
+        <service id="sulu_content.js_config.webspace_input_types"
+                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceInputTypesJsConfig">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+
+            <tag name="sulu.js_config"/>
+        </service>
 
         <!-- content -->
         <service id="sulu_content.content_navigation_provider" class="%sulu_content.content_navigation_provider.class%">
@@ -75,7 +82,7 @@
 
         <!-- resource locator -->
         <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
         </service>
 
@@ -88,6 +95,8 @@
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu_content.export.manager" />
+            <argument type="service" id="sulu_content.import.manager" />
             <argument type="service" id="massive_search.factory" />
 
             <tag name="sulu.structure.extension"/>
@@ -144,18 +153,7 @@
             <tag name="sulu_route.defaults_provider"/>
         </service>
 
-        <!-- markup -->
-        <service id="sulu_content.markup" class="Sulu\Bundle\ContentBundle\Markup\LinkTag">
-            <argument type="service" id="sulu_content.content_repository"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="request_stack"/>
-            <argument type="string">%kernel.environment%</argument>
-
-            <tag name="sulu_markup.tag" tag="link" type="html"/>
-        </service>
-
         <!-- builder -->
-
         <service id="sulu_core.build.builder.node_order" class="Sulu\Bundle\ContentBundle\Build\NodeOrderBuilder">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.default_session"/>

@@ -1,0 +1,40 @@
+.toolbar-slide {
+    margin: -20px;
+
+    .toolbar-container {
+        background: $blue;
+    }
+
+    .label-container {
+        height: 0;
+        overflow: visible;
+    }
+
+    .back {
+        display: inline-block;
+        vertical-align: top;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+        margin-right: -5px;
+        color: $white;
+    }
+
+    .toolbar {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .area-selection {
+        width: 100%;
+        height: 420px;
+    }
+
+    .hint {
+        text-align: center;
+        font-size: $smallFontSize;
+        color: $grayLight;
+    }
+}

@@ -14,26 +14,44 @@
  */
 define([
     'config',
+    './cropping-slide',
+    './focus-point-slide',
     'services/sulumedia/media-manager',
     'services/sulumedia/file-icons',
+    'services/sulumedia/image-editor',
     'text!./info.html',
     'text!./copyright.html',
     'text!./versions.html',
     'text!./preview.html',
     'text!./formats.html',
     'text!./categories.html'
-], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate, categoriesTemplate) {
+], function(
+    config,
+    croppingSlide,
+    focusPointSlide,
+    mediaManager,
+    fileIcons,
+    imageEditor,
+    infoTemplate,
+    copyrightTemplate,
+    versionsTemplate,
+    previewTemplate,
+    formatsTemplate,
+    categoriesTemplate
+) {
 
     'use strict';
 
     var namespace = 'sulu.media-edit.',
 
         defaults = {
-            instanceName: ''
+            instanceName: '',
+            startingSlide: 'edit',
+            formats: []
         },
 
         constants = {
-            thumbnailFormat: '200x180-inset',
+            thumbnailFormat: '260x',
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             fileDropzoneSelector: '#file-version-change',
@@ -42,16 +60,33 @@ define([
             multipleEditTagsSelector: '.media-tags',
             descriptionCheckboxSelector: '#show-descriptions',
             tagsCheckboxSelector: '#show-tags',
+            previewSelector: '.media-edit-preview-image',
+            previewLoaderSelector: '.media-edit-preview-loader',
+            previewLoaderHintSelector: '.media-edit-preview-loader .hint',
             previewImgSelector: '.media-edit-preview-image img',
             singleEditClass: 'single-edit',
             multiEditClass: 'multi-edit',
             loadingClass: 'loading',
             loaderClass: 'media-edit-loader',
-            resetPreviewActionClass: 'media-reset-preview-action'
+            resetPreviewActionClass: 'media-reset-preview-action',
+            previewImageLoaderDuration: 3000,
+            singleOverlaySkin: 'large',
+            multipleOverlaySkin: 'medium',
+            formatTabId: 'media-formats'
         },
 
+        imageFormats = config.get('sulu-media')['formats'],
+
+        nonInternalImageFormats = Object.keys(imageFormats).reduce(function(previous, current) {
+            if (!imageFormats[current].internal) {
+                previous[current] = imageFormats[current];
+            }
+
+            return previous;
+        }, {}),
+
         resetPreviewUrl = function(id) {
-            return '/admin/api/media/' + id + '/preview';
+            return '/admin/api/media/' + id + '/preview?locale=' + this.options.locale;
         },
 
         /**
@@ -70,6 +105,21 @@ define([
             return createEventName.call(this, 'initialized');
         },
 
+        /**
+         * starts a loader with the passed text in the preview image
+         * @event sulu.media-edit.preview.loading
+         */
+        LOADING_PREVIEW = function() {
+            return createEventName.call(this, 'preview.loading');
+        },
+
+        /**
+         * triggers the format tab to be updated with new URLs
+         */
+        UPDATE_FORMATS = function() {
+            return createEventName.call(this, 'formats.update');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -85,6 +135,8 @@ define([
          * Initializes the overlay component
          */
         initialize: function() {
+            var formatCount;
+
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {
                 locale: this.sandbox.sulu.getDefaultContentLocale()
@@ -94,16 +146,34 @@ define([
                 throw new Error('media-ids are not defined');
             }
 
+            this.imageFormats = nonInternalImageFormats;
+
+            formatCount = this.options.formats.length;
+            if (formatCount > 0) {
+                this.imageFormats = Object.keys(nonInternalImageFormats).reduce(function (previous, current) {
+                    for (var i = 0; i < formatCount; ++i) {
+                        if (this.options.formats[i] === nonInternalImageFormats[current].key) {
+                            previous[current] = nonInternalImageFormats[current];
+                            return previous;
+                        }
+                    }
+
+                    return previous;
+                }.bind(this), {});
+            }
+
             this.options.previewInitialized = false;
 
             // for single edit
             this.media = null;
 
+            this.loaderTimeout = null;
+
             // for multiple edit
             this.medias = null;
             this.$multiple = null;
 
-            this.startLoadingOverlay();
+            this.startLoadingOverlay(this.options.mediaIds.length > 1);
             this.loadMedias(this.options.mediaIds, this.options.locale).then(function(medias) {
                 this.editMedia(medias);
             }.bind(this));
@@ -114,7 +184,7 @@ define([
         /**
          * Starts the loading overlay
          */
-        startLoadingOverlay: function() {
+        startLoadingOverlay: function(multiple) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.loadingClass + '"/>'),
                 $loader = this.sandbox.dom.createElement('<div class="' + constants.loaderClass + '" />');
 
@@ -138,7 +208,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.edit.loading'),
                         data: $loader,
-                        skin: 'wide',
+                        skin: !!multiple ? constants.multipleOverlaySkin : constants.singleOverlaySkin,
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit.loading',
@@ -194,71 +264,25 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview, $formats, $categories, iconClass;
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>'),
+                $editActionSelect, startingSlide = 0;
 
             this.media = media;
-
-            iconClass = fileIcons.getByMimeType(media.mimeType);
-            $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
-                media: this.media,
-                translate: this.sandbox.translate,
-                formatBytes: this.sandbox.util.formatBytes,
-                crop: this.sandbox.util.cropMiddle,
-                icon: iconClass,
-                thumbnailFormat: constants.thumbnailFormat
-            }));
-            this.removePlaceholderOnImgLoad($info, iconClass);
-
-            $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
-                media: this.media,
-                translate: this.sandbox.translate
-            }));
-
-            if (media.type.name !== 'image') {
-                $preview = this.sandbox.dom.createElement(_.template(previewTemplate, {
-                    media: this.media,
-                    translate: this.sandbox.translate
-                }));
-            }
-
-            $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
-                media: this.media,
-                translate: this.sandbox.translate
-            }));
-
-            $formats = this.sandbox.dom.createElement(_.template(formatsTemplate, {
-                media: this.media,
-                domain: window.location.protocol + '//' + window.location.host,
-                translate: this.sandbox.translate
-            }));
-
-            $categories = this.sandbox.dom.createElement(_.template(categoriesTemplate, {
-                categoryLocale: this.options.locale,
-                media: this.media,
-                translate: this.sandbox.translate
-            }));
-
-            this.startSingleOverlay($info, $copyright, $formats, $versions, $preview, $categories);
-        },
-
-        /**
-         * Starts the actual overlay for single-edit
-         */
-        startSingleOverlay: function($info, $copyright, $formats, $versions, $preview, $categories) {
-            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
 
-            var tabs = [
-                {title: this.sandbox.translate('public.info'), data: $info},
-                {title: this.sandbox.translate('sulu.media.licence'), data: $copyright}
-            ];
+            var infoTab = $(this.renderInfoTab()),
+                previewTab = this.renderPreviewTab(),
+                tabs = [
+                    {title: this.sandbox.translate('public.info'), data: infoTab},
+                    {title: this.sandbox.translate('sulu.media.licence'), data: this.renderCopyrightTab()}
+                ];
 
-            if (!!$preview) {
+            if (previewTab) {
                 tabs.push(
                     {
                         title: this.sandbox.translate('sulu.media.preview-tab'),
-                        data: $preview
+                        data: previewTab
                     }
                 );
             }
@@ -266,23 +290,36 @@ define([
             tabs.push(
                 {
                     title: this.sandbox.translate('sulu.media.formats'),
-                    data: $formats
+                    data: $('<div id="' + constants.formatTabId + '">' + this.renderFormatsTab() + '</div>')
                 }
             );
 
             tabs.push(
                 {
                     title: this.sandbox.translate('sulu.media.categories'),
-                    data: $categories
+                    data: this.renderCategoriesTab()
                 }
             );
 
             tabs.push(
                 {
                     title: this.sandbox.translate('sulu.media.history'),
-                    data: $versions
+                    data: this.renderVersionTab()
                 }
             );
+
+            if (this.media.type.name === 'image') {
+                $editActionSelect = $('<div class="edit-action-select"/>');
+                croppingSlide.initialize(this.$el, this.sandbox, this.media, this.imageFormats, function() {
+                    this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
+                }.bind(this));
+                focusPointSlide.initialize(this.sandbox, this.media, function() {
+                    this.sandbox.emit('husky.overlay.media-edit.slide-to', 0);
+                }.bind(this));
+                startingSlide = (this.options.startingSlide === 'crop') ? 1 : startingSlide;
+            }
+
+            this.removePlaceholderOnImgLoad(infoTab, fileIcons.getByMimeType(this.media.mimeType));
 
             this.sandbox.start([
                 {
@@ -292,15 +329,22 @@ define([
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
-                        skin: 'wide',
+                        skin: constants.singleOverlaySkin,
+                        startingSlide: startingSlide,
+                        supportKeyInput: false,
                         slides: [
                             {
                                 title: this.media.title,
+                                subTitle: this.sandbox.util.cropMiddle(
+                                    this.media.mimeType + ', ' + this.sandbox.util.formatBytes(this.media.size),
+                                    32
+                                ),
                                 tabs: tabs,
                                 languageChanger: {
                                     locales: this.sandbox.sulu.locales,
                                     preSelected: this.options.locale
                                 },
+                                panelContent: $editActionSelect,
                                 propagateEvents: false,
                                 okCallback: this.singleOkCallback.bind(this),
                                 cancelCallback: function() {
@@ -330,11 +374,162 @@ define([
                                         align: 'right'
                                     }
                                 ]
-                            }
+                            },
+                            croppingSlide.getSlideDefinition(),
+                            focusPointSlide.getSlideDefinition()
                         ]
                     }
                 }
-            ]);
+            ]).then(function() {
+                if (this.media.type.name === 'image') {
+                    this.startEditActionSelect($editActionSelect);
+                    croppingSlide.start();
+                    focusPointSlide.start();
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Renders the content for the info tab
+         * @returns {Element|*|Object}
+         */
+        renderInfoTab: function() {
+            return this.sandbox.dom.createElement(_.template(infoTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate,
+                icon: fileIcons.getByMimeType(this.media.mimeType),
+                thumbnailFormat: constants.thumbnailFormat
+            }));
+        },
+
+        /**
+         * Renders the content for the copyright tab
+         */
+        renderCopyrightTab: function() {
+            return _.template(copyrightTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            });
+        },
+
+        /**
+         * Renders the content for the formats tab
+         */
+        renderFormatsTab: function() {
+            var formatUrls = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                    previous[current] = this.media.thumbnails[current];
+
+                    return previous;
+                }.bind(this), {}),
+
+                formatTitles = Object.keys(nonInternalImageFormats).reduce(function(previous, current) {
+                    var format = nonInternalImageFormats[current];
+
+                    previous[current] = null;
+
+                    if (!!format && format.meta && format.meta.title) {
+                        previous[current] = format.meta.title[this.sandbox.sulu.user.locale];
+                    }
+
+                    return previous;
+                }.bind(this), {});
+
+            return _.template(formatsTemplate, {
+                media: this.media,
+                formatUrls: formatUrls,
+                formatTitles: formatTitles,
+                domain: window.location.protocol + '//' + window.location.host,
+                translate: this.sandbox.translate
+            });
+        },
+
+        /**
+         * Renders the content for the preview tab
+         */
+        renderPreviewTab: function() {
+            if (this.media.type.name === 'image') {
+                return;
+            }
+
+            return _.template(previewTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            });
+        },
+
+        /**
+         * Renders the content for the categories tab
+         */
+        renderCategoriesTab: function() {
+            return _.template(categoriesTemplate, {
+                categoryLocale: this.options.locale,
+                media: this.media,
+                translate: this.sandbox.translate
+            });
+        },
+
+        renderVersionTab: function() {
+            return _.template(versionsTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            });
+        },
+
+        /**
+         * Starts the edit action select which provides actions
+         * to navigate to the cropping slide.
+         *
+         * @param {Object} $element The dom element to start the select in
+         */
+        startEditActionSelect: function($element) {
+            var config = {
+                data: [
+                    {
+                        name: this.sandbox.translate('sulu-media.crop'),
+                        callback: function() {
+                            this.sandbox.emit('husky.overlay.media-edit.slide-to', 1);
+                        }.bind(this)
+                    },
+                    {
+                        name: this.sandbox.translate('sulu-media.focus-point'),
+                        callback: function() {
+                            this.sandbox.emit('husky.overlay.media-edit.slide-to', 2);
+                        }.bind(this)
+                    }
+                ]
+            };
+
+            if (imageEditor.editingIsPossible()) {
+                config.data.push({
+                    name: this.sandbox.translate('sulu-media.edit-original'),
+                    callback: function() {
+                        this.sandbox.sulu.showConfirmationDialog({
+                            title: 'sulu-media.external-server-title',
+                            description: 'sulu-media.external-server-description',
+                            callback: function(confirmed) {
+                                if (!confirmed) {
+                                    return;
+                                }
+
+                                imageEditor.editImage(this.media.url).then(this.setNewVersionByUrl.bind(this));
+                            }.bind(this)
+                        });
+                    }.bind(this)
+                });
+            }
+
+            this.sandbox.start([{
+                name: 'select@husky',
+                options: this.sandbox.util.extend(true, {}, {
+                    el: $element,
+                    defaultLabel: this.sandbox.translate('sulu-media.edit-image'),
+                    instanceName: 'edit-action-select',
+                    fixedLabel: true,
+                    skin: 'white-border',
+                    icon: 'paint-brush',
+                    repeatSelect: true
+                }, config)
+            }]);
         },
 
         /**
@@ -342,11 +537,11 @@ define([
          * and displayed when completely loaded. When the loading has finished
          * the placeholder gets removed.
          *
-         * @param $container
+         * @param container
          * @param placeholderClass
          */
-        removePlaceholderOnImgLoad: function($container, placeholderClass) {
-            var $img = $container.find(constants.previewImgSelector);
+        removePlaceholderOnImgLoad: function(container, placeholderClass) {
+            var $img = $(container).find(constants.previewImgSelector);
             if (!!$img.length) {
                 $img.hide();
                 $img.load(function() {
@@ -389,6 +584,7 @@ define([
 
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
                 this.clipboard = this.sandbox.clipboard.initialize('.fa-clipboard');
+                this.sandbox.emit('husky.overlay.alert.close');
             }.bind(this));
 
             // change language (single-edit)
@@ -432,8 +628,15 @@ define([
                 }, 2000, $target, $item, $info);
             }.bind(this), '.fa-clipboard');
 
+            this.sandbox.on('husky.dropzone.file-version.uploading', function() {
+                this.sandbox.emit('husky.overlay.alert.close');
+            }.bind(this));
+
             this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
             this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
+
+            this.sandbox.on(LOADING_PREVIEW.call(this), this.startPreviewImageLoader.bind(this));
+            this.sandbox.on(UPDATE_FORMATS.call(this), this.updateFormatsTab.bind(this));
         },
 
         /**
@@ -453,6 +656,7 @@ define([
          */
         languageChangedSingle: function(locale) {
             this.saveSingleMedia().then(function() {
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
                 this.options.locale = locale;
 
@@ -460,6 +664,34 @@ define([
 
                 this.initialize();
             }.bind(this));
+        },
+
+        /**
+         * Sets the new file version for a media by a given url. Shows
+         * a confirmation dialog to the user to confirm the change.
+         *
+         * @param {String} newMediaUrl The url to the new media
+         */
+        setNewVersionByUrl: function(newMediaUrl) {
+            this.sandbox.sulu.showConfirmationDialog({
+                title: 'sulu-media.new-version-will-be-created',
+                description: 'sulu-media.new-version-will-be-created-description',
+                callback: function(confirmed) {
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.overlay.alert.show-loader');
+                    this.sandbox.emit(
+                        'husky.dropzone.file-version.add-image',
+                        newMediaUrl,
+                        this.media.mimeType,
+                        this.media.name
+                    );
+
+                    return false;
+                }.bind(this)
+            });
         },
 
         /**
@@ -471,6 +703,7 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', newMedia[0].id, newMedia[0]);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
 
                 this.unbindSingleOverlayEvents();
@@ -489,11 +722,60 @@ define([
                 this.sandbox.emit('sulu.medias.media.saved', media.id, media);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
+                croppingSlide.destroy();
                 this.sandbox.stop(this.$find('*'));
 
                 this.unbindSingleOverlayEvents();
                 this.initialize();
             }.bind(this));
+        },
+
+        /**
+         * Rerenders the format tab, to update the URLs.
+         */
+        updateFormatsTab: function() {
+            mediaManager.loadOrNew(this.media.id, this.options.locale).then(function(media) {
+                this.media = media;
+                $('#' + constants.formatTabId).html(this.renderFormatsTab());
+            }.bind(this));
+        },
+
+        /**
+         * Start a loader in the preview image with a text hint.
+         *
+         * @param hint {String}
+         */
+        startPreviewImageLoader: function(hint) {
+            this.showPreviewImageLoader(hint);
+
+            this.sandbox.once('husky.overlay.media-edit.slide-to', function() {
+                this.loaderTimeout = setTimeout(function() {
+                    this.hidePreviewImageLoader();
+                    this.loaderTimeout = null;
+                }.bind(this), constants.previewImageLoaderDuration);
+            }, this);
+        },
+
+        /**
+         * Shows the loader for the preview image.
+         *
+         * @param {String} hint
+         */
+        showPreviewImageLoader: function(hint) {
+            $(constants.previewSelector).hide();
+            $(constants.previewLoaderSelector).show();
+
+            $(constants.previewLoaderHintSelector).text(hint);
+        },
+
+        /**
+         * Hide the loader for the preview image.
+         */
+        hidePreviewImageLoader: function() {
+            $(constants.previewSelector).show();
+            $(constants.previewLoaderSelector).hide();
+
+            $(constants.previewLoaderHintSelector).text('');
         },
 
         /**
@@ -555,7 +837,7 @@ define([
                     options: {
                         el: constants.previewDropzoneSelector,
                         maxFilesize: config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media/' + this.media.id + '/preview',
+                        url: '/admin/api/media/' + this.media.id + '/preview?locale=' + this.options.locale,
                         method: 'POST',
                         paramName: 'previewImage',
                         showOverlay: false,
@@ -595,6 +877,7 @@ define([
                         el: $container,
                         title: this.sandbox.translate('sulu.media.multiple-edit.title'),
                         data: this.$multiple,
+                        skin: constants.multipleOverlaySkin,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
                             preSelected: this.options.locale
@@ -766,6 +1049,11 @@ define([
          * Called when component gets destroyed
          */
         destroy: function() {
+            if (!!this.loaderTimeout) {
+                clearTimeout(this.loaderTimeout);
+                this.loaderTimeout = null;
+            }
+
             this.sandbox.emit(CLOSED.call(this));
         }
     };

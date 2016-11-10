@@ -2,11 +2,11 @@
   Wookmark plugin
   @name wookmark.js
   @author Christoph Ono (chri@sto.ph or @gbks)
-  @author Sebastian Helzle (sebastian@helzle.net or @sebobo)
-  @version 2.0.1
-  @date 06/16/2015
+  @author Sebastian Helzle (me@helzle.it or @sebobo)
+  @version 2.1.2
+  @date 05/05/2016
   @category jQuery plugin
-  @copyright (c) 2009-2015 Christoph Ono (www.wookmark.com)
+  @copyright (c) 2009-2016 Christoph Ono (www.wookmark.com)
   @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
 */
 /*global define, window, jQuery*/
@@ -68,12 +68,16 @@
   // befor the browsers next animation frame.
   // The parameter `data` has to be an array containing objects, each
   // with the element and the desired css properties.
-  function bulkUpdateCSS(data) {
+  function bulkUpdateCSS(data, callback) {
     executeNextFrame(function () {
       var i, item;
       for (i = 0; i < data.length; i++) {
         item = data[i];
         setCSS(item.el, item.css);
+      }
+      // Run optional callback
+      if (typeof callback === 'function') {
+        executeNextFrame(callback);
       }
     });
   }
@@ -85,7 +89,9 @@
 
   // Remove listener from an element (IE8 compatible)
   function removeEventListener(el, eventName, handler) {
-    if (el.removeEventListener) {
+    if (window.jQuery) {
+      $(el).off(eventName, handler);
+    } else if (el.removeEventListener) {
       el.removeEventListener(eventName, handler);
     } else {
       el.detachEvent('on' + eventName, handler);
@@ -95,7 +101,10 @@
   // Add listener to an element (IE8 compatible)
   function addEventListener(el, eventName, handler) {
     removeEventListener(el, eventName, handler);
-    if (el.addEventListener) {
+
+    if (window.jQuery) {
+      $(el).on(eventName, handler);
+    } else if (el.addEventListener) {
       el.addEventListener(eventName, handler);
     } else {
       el.attachEvent('on' + eventName, function () {
@@ -206,7 +215,7 @@
 
     // Instance variables.
     this.container = container;
-    this.columns = this.containerWidth = this.resizeTimer = null;
+    this.columns = this.resizeTimer = null;
     this.activeItemCount = 0;
     this.placeholders = [];
     this.itemHeightsInitialized = false;
@@ -253,7 +262,7 @@
     // By select all children of the container if no selector is specified
     if (this.itemSelector === undefined) {
       var items = [], child, children = this.container.children,
-        i = children.length;
+          i = children.length;
       while (i--) {
         child = children[i];
         // Skip comment nodes on IE8
@@ -507,6 +516,8 @@
           result.push(item);
         }
       }
+    } else {
+      return items;
     }
     return result;
   };
@@ -524,7 +535,7 @@
     if (this.items.length > 0 && (itemWidth === undefined || (itemWidth === 0 && !this.flexibleWidth))) {
       itemWidth = getWidth(this.items[0]);
     } else if (typeof itemWidth === 'string' && itemWidth.indexOf('%') >= 0) {
-      itemWidth = parseFloat(this.itemWidth) / 100 * innerWidth;
+      itemWidth = parseFloat(itemWidth) / 100 * innerWidth;
     }
 
     // Calculate flexible item width if option is set
@@ -553,7 +564,7 @@
   // Main layout method.
   Wookmark.prototype.layout = function (force, callback) {
     // Do nothing if container isn't visible
-    if (isHidden(this.container)) { return; }
+    if (!force && isHidden(this.container)) { return; }
 
     // Calculate basic layout parameters.
     var calculatedItemWidth = this.getItemWidth(),
@@ -561,16 +572,15 @@
       containerWidth = getWidth(this.container),
       innerWidth = containerWidth - 2 * this.outerOffset,
       columns = Math.floor((innerWidth + this.offset) / columnWidth),
-      offset = 0,
+      offset,
       maxHeight = 0,
       activeItems = this.getActiveItems(),
       activeItemsLength = activeItems.length,
-      item,
-      i = activeItemsLength;
+      item;
 
     // Cache item heights
-    if (this.itemHeightsDirty || !this.itemHeightsInitialized) {
-      while (i--) {
+    if (force || this.itemHeightsDirty || !this.itemHeightsInitialized) {
+      for (var i = 0; i < activeItemsLength; i++) {
         item = activeItems[i];
 
         if (this.flexibleWidth) {
@@ -629,7 +639,7 @@
   // Perform a full layout update.
   Wookmark.prototype.layoutFull = function (columnWidth, columns, offset) {
     var item, k = 0, i = 0, activeItems, activeItemCount, shortest = null, shortestIndex = null,
-      sideOffset, heights = [], itemBulkCSS = [], leftAligned = this.align === 'left';
+        sideOffset, heights = [], itemBulkCSS = [], leftAligned = this.align === 'left', self = this;
 
     this.columns = [];
 
@@ -680,7 +690,13 @@
       i++;
     }
 
-    bulkUpdateCSS(itemBulkCSS);
+    // Update all css in the next frame and mark container as initalised
+    bulkUpdateCSS(itemBulkCSS, function () {
+      // Initialisation done
+      if (!hasClass(self.container, 'wookmark-initialised')) {
+        addClass(self.container, 'wookmark-initialised');
+      }
+    });
 
     // Return longest column
     return Math.max.apply(Math, heights);

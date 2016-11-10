@@ -67,6 +67,7 @@ define([], function() {
             hideTabsClass: 'tabs-hidden',
             tabsContentClass: 'tabs-content',
             contentTitleClass: 'sulu-title',
+            breadcrumbContainerClass: 'sulu-breadcrumb',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'}
@@ -106,7 +107,9 @@ define([], function() {
             ].join(''),
             titleElement: [
                 '<div class="' + constants.contentTitleClass + '">',
-                '   <h2 class="content-title <% if(!!underline){ %>underlined<% } %>"><%= title %></h2>',
+                '   <div class="content-title <% if(!!underline){ %>underlined<% } %>">',
+                '       <h2><%= title %></h2>',
+                '   </div>',
                 '</div>'
             ].join('')
         },
@@ -134,13 +137,23 @@ define([], function() {
         },
 
         /**
-         * emited if the language changer got changed
+         * Emitted if the language changer got changed
          *
          * @event sulu.header.[INSTANCE_NAME].language-changed
          * @param {string} the language which got changed to
          */
         LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
+        },
+
+        /**
+         * Emitted when a breadcrumb item got clicked
+         *
+         * @event sulu.header.[INSTANCE_NAME].breadcrumb-clicked
+         * @param {Object} The data of the breadcrumb item
+         */
+        BREADCRUMB_CLICKED = function() {
+            return createEventName.call(this, 'breadcrumb-clicked');
         },
 
         /**
@@ -164,7 +177,7 @@ define([], function() {
         },
 
         /**
-         * listens on and renderes a title
+         * listens on and renders a title
          *
          * @event sulu.header.[INSTANCE_NAME].set-title
          * @param {String} the title to render
@@ -340,7 +353,6 @@ define([], function() {
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
             this.oldScrollPosition = 0;
-            this.$tabs = null;
             this.tabsAction = null;
 
             this.bindCustomEvents();
@@ -393,16 +405,44 @@ define([], function() {
          */
         renderTitle: function() {
             var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title,
-                underline = this.options.underline;
+                $element;
 
             this.removeTitle();
-
             if (!!title) {
-                $('.page').prepend(this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement, {
+                $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement, {
                     title: this.sandbox.translate(title),
-                    underline: underline
-                })));
+                    underline: this.options.underline
+                }));
+                $('.page').prepend($element);
+                this.renderBreadcrumb($element.children().first());
             }
+        },
+
+        /**
+         * Renders the breadcrumb into a given container. If no breadcrumb
+         * got passed, this method does nothing.
+         *
+         * @param {Object} $container The container to render the breadcrumb in
+         */
+        renderBreadcrumb: function($container) {
+            var breadcrumbs = this.options.breadcrumb, $element;
+            breadcrumbs = (typeof breadcrumbs === 'function') ? breadcrumbs() : breadcrumbs;
+
+            if (!breadcrumbs) {
+                return;
+            }
+
+            $element = $('<div class="' + constants.breadcrumbContainerClass + '"/>');
+            $container.append($element);
+
+            this.sandbox.start([{
+                name: 'breadcrumbs@suluadmin',
+                options: {
+                    el: $element,
+                    instanceName:'header',
+                    breadcrumbs: breadcrumbs
+                }
+            }]);
         },
 
         /**
@@ -496,7 +536,7 @@ define([], function() {
         },
 
         /**
-         * Renderes and starts the language-changer dropdown
+         * Renders and starts the language-changer dropdown
          */
         startLanguageChanger: function() {
             if (!!this.options.toolbarLanguageChanger) {
@@ -578,6 +618,10 @@ define([], function() {
             this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
             this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
 
+            this.sandbox.on('sulu.breadcrumbs.header.breadcrumb-clicked', function(breadcrumbData) {
+                this.sandbox.emit(BREADCRUMB_CLICKED.call(this), breadcrumbData);
+            }.bind(this));
+
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
             this.sandbox.on(SAVED.call(this), this.saved.bind(this));
@@ -618,7 +662,7 @@ define([], function() {
         },
 
         /**
-         * Renderes and starts a tab-content component if specified. if not emits an event
+         * Renders and starts a tab-content component if specified. if not emits an event
          * @param tabItem {Object} the Tabs object
          */
         tabChangedHandler: function(tabItem) {

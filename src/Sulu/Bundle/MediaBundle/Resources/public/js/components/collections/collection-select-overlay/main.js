@@ -114,7 +114,7 @@ define(function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'responsive-width',
                         propagateEvents: false,
                         title: this.sandbox.translate('sulu.media.move.overlay-title'),
                         data: templates.columnNavigation(),
@@ -164,7 +164,7 @@ define(function() {
                         'collections': [
                             {
                                 'id': 'root',
-                                'title': this.sandbox.translate('navigation.media.collections'),
+                                'title': this.sandbox.translate('sulu.media.all-collections'),
                                 'hasSub': true,
                                 '_links': {
                                     'children': {'href': '/admin/api/collections?sortBy=title&locale=' + this.options.locale}

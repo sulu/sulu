@@ -640,6 +640,7 @@ class CollectionManager implements CollectionManagerInterface
             $fileVersion->getName(),
             $fileVersion->getStorageOptions(),
             $fileVersion->getVersion(),
+            $fileVersion->getSubVersion(),
             $fileVersion->getMimeType()
         );
 
@@ -657,12 +658,12 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * prepare an api entity.
+     * Prepare an api entity.
      *
-     * @param CollectionEntity   $entity
-     * @param string             $locale
-     * @param CollectionEntity[] $entities           nested set
-     * @param array              $breadcrumbEntities
+     * @param CollectionInterface $entity
+     * @param string $locale
+     * @param CollectionEntity[] $entities nested set
+     * @param array $breadcrumbEntities
      *
      * @return Collection
      */
@@ -693,6 +694,11 @@ class CollectionManager implements CollectionManagerInterface
             $apiEntity->setBreadcrumb($breadcrumbApiEntities);
         }
 
+        if ($entity && $entity->getId()) {
+            $apiEntity->setMediaCount($this->collectionRepository->countMedia($entity));
+            $apiEntity->setSubCollectionCount($this->collectionRepository->countSubCollections($entity));
+        }
+
         return $this->addPreview($apiEntity);
     }
 
@@ -704,7 +710,11 @@ class CollectionManager implements CollectionManagerInterface
     protected function getCurrentUser()
     {
         if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
-            return $this->tokenStorage ? $token->getUser() : null;
+            $user = $token->getUser();
+
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
         }
 
         return;

@@ -49,7 +49,15 @@ define(function() {
             },
 
             setLastVisitedCollection: function(collectionId) {
-                app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+                if (!!collectionId) {
+                    app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+                } else if (!!app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey)) {
+                    app.sandbox.sulu.deleteUserSetting(lastVisitedCollectionKey);
+                }
+            },
+
+            getLastVisitedCollection: function() {
+                return app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey);
             },
 
             getDropdownPageSize: function() {

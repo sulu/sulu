@@ -60,11 +60,11 @@
             </trans-unit>
             <trans-unit id="aa9d596361fe589c984464479c6198cb" resname="security.roles.all">
                 <source>security.roles.all</source>
-                <target>Sélectionner tout</target>
+                <target>Activer tous</target>
             </trans-unit>
             <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff0" resname="security.roles.none">
                 <source>security.roles.none</source>
-                <target>Ne rien sélectionner</target>
+                <target>Déactiver tous</target>
             </trans-unit>
             <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff1" resname="security.roles.security-type">
                 <source>security.roles.security-type</source>
@@ -133,6 +133,30 @@
             <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
                 <source>sulu-security.role.saved</source>
                 <target>Rôle supprimée avec succès</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236l" resname="security.permissions.view">
+                <source>security.permissions.view</source>
+                <target>Regarder</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236z" resname="security.permissions.add">
+                <source>security.permissions.add</source>
+                <target>Ajouter</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236c" resname="security.permissions.edit">
+                <source>security.permissions.edit</source>
+                <target>Éditer</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236q" resname="security.permissions.delete">
+                <source>security.permissions.delete</source>
+                <target>Effacer</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236t" resname="security.permissions.security">
+                <source>security.permissions.security</source>
+                <target>Sécurité</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236x" resname="security.permissions.live">
+                <source>security.permissions.live</source>
+                <target>En direct</target>
             </trans-unit>
         </body>
     </file>

@@ -12,20 +12,22 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Image\ImageInterface;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 
 /**
  * Defines the operations of the ImageConverter
- * The ImageConverter is a interface to manage conversions of an Image.
+ * The ImageConverter is an interface to manage conversions of an Image. Converts
+ * a media given by its original path according to the information passed in the format.
  */
 interface ImageConverterInterface
 {
     /**
      * Convert an image and return the tmpPath.
      *
-     * @param string $originalPath
-     * @param array  $formatOptions
+     * @param FileVersion $media
+     * @param string $formatKey
      *
      * @return ImageInterface
      */
-    public function convert($originalPath, $formatOptions);
+    public function convert(FileVersion $fileVersion, $formatKey);
 }

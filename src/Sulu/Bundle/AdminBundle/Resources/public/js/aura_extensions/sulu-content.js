@@ -309,6 +309,7 @@ define(function() {
                         el: $container,
                         noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
                         title: (!!header.title) ? header.title : false,
+                        breadcrumb: (!!header.breadcrumb) ? header.breadcrumb : false,
                         underline: header.hasOwnProperty('underline') ? header.underline : true,
 
                         toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},

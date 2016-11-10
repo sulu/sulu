@@ -25,8 +25,10 @@ define([
     'jquery',
     'underscore',
     'services/sulumedia/overlay-manager',
-    'services/sulumedia/user-settings-manager'
-], function($, _, OverlayManager, UserSettingsManager) {
+    'services/sulumedia/user-settings-manager',
+    'text!sulumedia/components/collections/masonry-decorator/item.html',
+    'text!sulumedia/components/collections/masonry-decorator/empty-indicator.html'
+], function($, _, OverlayManager, UserSettingsManager, itemTemplate, emptyTemplate) {
 
     'use strict';
 
@@ -34,7 +36,7 @@ define([
             unselectOnBackgroundClick: true,
             selectable: true,
             selectOnAction: false,
-            imageFormat: '190x',
+            imageFormat: '260x',
             emptyListTranslation: 'public.empty-list',
             fields: {
                 image: 'thumbnails',
@@ -46,7 +48,8 @@ define([
                 description: ', '
             },
             emptyIcon: 'fa-coffee',
-            noImgIcon: function(item) {
+            actionIcons: ['fa-pencil'],
+            noImgIcon: function() {
                 return 'fa-file-o';
             }
         },
@@ -55,52 +58,15 @@ define([
             masonryGridId: 'masonry-grid',
             emptyIndicatorClass: 'empty-list',
 
-            itemHeadClass: 'item-head',
-            itemInfoClass: 'item-info',
-
             selectedClass: 'selected',
             loadingClass: 'loading',
 
-            headIconClass: 'head-icon',
-            headImageClass: 'head-image',
+            iconClass: 'image-icon',
+            imageClass: 'image',
+            noImageClass: 'no-image',
             actionNavigatorClass: 'action-navigator',
             downloadNavigatorClass: 'download-navigator',
             playVideoNavigatorClass: 'play-video-navigator'
-        },
-
-        templates = {
-            emptyIndicator: [
-                '<div class="' + constants.emptyIndicatorClass + '" style="display: none">',
-                '   <div class="<%= icon %> icon"></div>',
-                '   <span><%= text %></span>',
-                '</div>'
-            ].join(''),
-            item: [
-                '<div class="masonry-item <% if (image !== "") { %>' + constants.loadingClass + '<% } %>">',
-                '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
-                '       <div class="<%= icon %> ' + constants.headIconClass + '"></div>',
-                '       <% if (image !== "") { %>',
-                '       <img ondragstart="return false;" class="' + constants.headImageClass + '" src="<%= image %>"/>',
-                '       <% } %>',
-                '   </div>',
-                '   <div class="masonry-info">',
-                '       <% if (!!fallbackLocale) { %>',
-                '       <span class="badge"><%= fallbackLocale %></span>',
-                '       <% } %>',
-                '       <span class="title ' + constants.actionNavigatorClass + '"><%= title %></span><br/>',
-                '       <span class="description ' + constants.actionNavigatorClass + '"><%= description %></span>',
-                '   </div>',
-                '   <div class="masonry-footer">',
-                '       <% if (!!selectable) { %>',
-                '       <div class="footer-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
-                '       <% } %>',
-                '       <div class="fa-cloud-download footer-download footer-icon ' + constants.downloadNavigatorClass + '"></div>',
-                '       <% if (!!isVideo) { %>',
-                '           <span class="fa-play footer-play-video footer-icon ' + constants.playVideoNavigatorClass + '"></span>',
-                '       <% } %>',
-                '   </div>',
-                '</div>'
-            ].join('')
         },
 
         /**
@@ -199,7 +165,6 @@ define([
 
                 this.renderRecords(data.embedded, true);
                 this.rendered = true;
-
             },
 
             /**
@@ -211,7 +176,7 @@ define([
                 this.$el = this.sandbox.dom.createElement('<div class="masonry-container"/>');
 
                 // render empty indicator
-                var $empty = this.sandbox.util.template(templates.emptyIndicator, {
+                var $empty = this.sandbox.util.template(emptyTemplate, {
                     text: this.sandbox.translate(this.options.emptyListTranslation),
                     icon: this.options.emptyIcon
                 });
@@ -242,8 +207,8 @@ define([
                 this.sandbox.masonry.initialize('#' + this.masonryGridId, {
                     align: 'left',
                     direction: 'left',
-                    itemWidth: 190,
-                    offset: 30,
+                    itemWidth: 260,
+                    offset: 20,
                     verticalOffset: 20,
                     possibleFilters: [constants.selectedClass]
                 });
@@ -267,7 +232,9 @@ define([
              */
             renderRecords: function(records, appendAtBottom) {
                 this.updateEmptyIndicatorVisibility();
-                var deferreds = _.map(records, function(record) {
+                var itemLoadedDeferreds = [];
+
+                records.forEach(function(record) {
                     var item = processContentFilters.call(this, record);
                     var image = item[this.options.fields.image].url || '',
                         title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title),
@@ -277,31 +244,10 @@ define([
                             this.options.separators.description
                         ),
                         isVideo = (item.type === 'video'),
-                        deferred = $.Deferred(),
-                        items = [
-                            {
-                                id: 'download',
-                                name: 'sulu.media.download_original',
-                                url: window.location.protocol + '//' + window.location.host + item.url
-                            },
-                            {id: 'divider', divider: true},
-                            {
-                                id: window.location.protocol + '//' + window.location.host + item.url,
-                                name: 'sulu.media.copy_original',
-                                info: 'sulu.media.copy_url',
-                                clickedInfo: 'sulu.media.copied_url'
-                            }
-                        ].concat(_.map(record.thumbnails, function(url, format) {
-                            return {
-                                id: window.location.protocol + '//' + window.location.host + url,
-                                name: format,
-                                info: 'sulu.media.copy_url',
-                                clickedInfo: 'sulu.media.copied_url'
-                            };
-                        }));
+                        itemLoadedDeferred;
 
                     // pass the found data to a render method
-                    this.renderItem(
+                    itemLoadedDeferred = this.renderItem(
                         item.id,
                         image,
                         title,
@@ -312,30 +258,17 @@ define([
                         this.options.noImgIcon(item)
                     );
 
-                    this.sandbox.start([
-                        {
-                            name: 'dropdown@husky',
-                            options: {
-                                el: this.$items[item.id].find('.' + constants.downloadNavigatorClass),
-                                instanceName: item.id,
-                                data: items
-                            }
-                        }
-                    ]);
-
-                    this.sandbox.once('husky.dropdown.' + item.id + '.rendered', function() {
-                        deferred.resolve();
-                    });
-
-                    return deferred;
+                    itemLoadedDeferreds.push(itemLoadedDeferred);
                 }.bind(this));
 
-                $.when.apply($, deferreds).then(function() {
-                    this.clipboard = this.sandbox.clipboard.initialize('.' + constants.downloadNavigatorClass + ' li', {
-                        text: function(trigger) {
-                            return trigger.getAttribute('data-id');
-                        }
-                    });
+                // When all items have been completly loaded
+                $.when.apply($, itemLoadedDeferreds).then(function() {
+                    // Safari removed the class before masonry got to position the elements
+                    // which led to undesired rendering glitches. Positioning the task
+                    // at the end of the execution stack fixes the issue.
+                    _.delay(function() {
+                        this.$el.find('.masonry-item').removeClass(constants.loadingClass);
+                    }.bind(this), 0);
                 }.bind(this));
             },
 
@@ -349,20 +282,26 @@ define([
              * @param isVideo
              * @param appendAtBottom
              * @param icon
+             *
+             * @return {Object} a promise which gets resolved, when the item has been loaded
              */
             renderItem: function(id, image, title, fallbackLocale, description, isVideo, appendAtBottom, icon) {
+                var titleWidth = this.getTitleTextWidth(!!fallbackLocale),
+                    itemLoadedDeferred = $.Deferred();
+
                 this.$items[id] = this.sandbox.dom.createElement(
-                    this.sandbox.util.template(templates.item, {
+                    this.sandbox.util.template(itemTemplate, {
                         image: image,
-                        title: this.sandbox.util.cropMiddle(String(title), 20),
+                        title: this.sandbox.util.cropMiddle(String(title), titleWidth),
                         fallbackLocale: fallbackLocale,
-                        description: this.sandbox.util.cropMiddle(String(description), 32),
+                        description: this.sandbox.util.cropMiddle(String(description), 35),
                         isVideo: isVideo,
                         domain: window.location.protocol + '//' + window.location.host,
                         selectable: this.options.selectable,
-                        icon: icon
+                        placeholderIcon: icon
                     })
                 );
+                this.$items[id].addClass(constants.loadingClass);
 
                 if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
                     this.selectRecord(id);
@@ -375,12 +314,119 @@ define([
                 }
 
                 if (!!image) {
-                    this.bindItemLoadingEvents(id);
+                    this.bindItemLoadingEvents(id, itemLoadedDeferred);
                 } else {
-                    this.itemLoadedHandler(this.$items[id]);
+                    this.itemLoadedHandler(this.$items[id], itemLoadedDeferred);
                 }
+                this.renderActionIcons(id);
 
                 this.bindItemEvents(id);
+
+                return itemLoadedDeferred;
+            },
+
+            /**
+             * Renders the action icon into an item with a given id.
+             *
+             * @param {Number} id
+             */
+            renderActionIcons: function(id) {
+                this.options.actionIcons.forEach(function(actionIcon) {
+                    var item = this.datagrid.getRecordById(id),
+                        iconClass = (typeof actionIcon === 'string') ? actionIcon : actionIcon.icon,
+                        $icon = $('<div class="' + iconClass + ' action-icon"/>');
+
+                    if (!actionIcon.type || actionIcon.type === item.type) {
+                        this.$items[id].find('.action-icons').append($icon);
+                        if (!!actionIcon.action) {
+                            $icon.on('click', function(event) {
+                                event.stopPropagation();
+                                actionIcon.action(item);
+                            }.bind(this));
+                        }
+                    }
+                }.bind(this));
+            },
+
+            /**
+             * Starts the download dropdown for a given record
+             *
+             * @param {Object} record The data from which the dropdown gets initialized and started.
+             */
+            startDownloadDropdown: function(id) {
+                // Ensure that dropdown only gets started if not already started
+                if (!!this.$items[id].find('.' + constants.downloadNavigatorClass).children().length) {
+                    return;
+                }
+
+                var record = this.datagrid.getRecordById(id),
+                    dropdownItems = [
+                        {
+                            id: 'download',
+                            name: 'sulu.media.download_original',
+                            url: window.location.protocol + '//' + window.location.host + record.url
+                        },
+                        {id: 'divider', divider: true},
+                        {
+                            id: window.location.protocol + '//' + window.location.host + record.url,
+                            name: 'sulu.media.copy_original',
+                            info: 'sulu.media.copy_url',
+                            clickedInfo: 'sulu.media.copied_url'
+                        }
+                    ].concat(_.map(record.thumbnails, function(url, format) {
+                        return {
+                            id: window.location.protocol + '//' + window.location.host + url,
+                            name: format,
+                            info: 'sulu.media.copy_url',
+                            clickedInfo: 'sulu.media.copied_url'
+                        };
+                    })),
+                    $element = $('<span class="fa-cloud-download"/>');
+
+                this.$items[id].find('.' + constants.downloadNavigatorClass).append($element);
+
+                this.sandbox.start([
+                    {
+                        name: 'dropdown@husky',
+                        options: {
+                            el: $element,
+                            instanceName: id,
+                            data: dropdownItems
+                        }
+                    }
+                ]);
+
+                this.sandbox.once('husky.dropdown.' + record.id + '.rendered', function() {
+                    this.clipboard = this.sandbox.clipboard.initialize('.' + constants.downloadNavigatorClass + ' li', {
+                        text: function(trigger) {
+                            return trigger.getAttribute('data-id');
+                        }
+                    });
+                }.bind(this));
+            },
+
+            /**
+             * Stops the download dropdown for a given record
+             *
+             * {Integer} id The id for the item for which the dropdown gets stopped
+             */
+            stopDownloadDropdown: function(id) {
+                this.sandbox.stop(this.$items[id].find('.' + constants.downloadNavigatorClass + ' *'));
+            },
+
+            /**
+             * Returns the number of characters which the title of an item can have at most
+             *
+             * @param {boolean} hasBatch True iff item has a batch which displays the fallback locale
+             * @returns {number} The number of characters allowed at most
+             */
+            getTitleTextWidth: function(hasBatch) {
+                var width = 29;
+                if (hasBatch) {
+                    width -= 3;
+                }
+
+                return width;
             },
 
             /**
@@ -415,6 +461,23 @@ define([
                     }.bind(this));
                 }
 
+                this.$items[id].on('mouseenter', function() {
+                    this.startDownloadDropdown(id);
+                }.bind(this));
+
+                this.$items[id].on('mouseleave', function() {
+                    this.stopDownloadDropdown(id);
+                }.bind(this));
+
+                this.bindItemDownloadEvents(id);
+            },
+
+            /**
+             * Binds events for an item regarding its download dropdown
+             *
+             * @param {Number|String} id The id of the item
+             */
+            bindItemDownloadEvents: function(id) {
                 this.sandbox.on('husky.dropdown.' + id + '.item.click', function(item) {
                     if (!item.url) {
                         return;
@@ -426,17 +489,19 @@ define([
 
             /**
              * Bind image-loading events on a masonry-grid item
-             * @param id
+             *
+             * @param {Number|String} id The id of the item
+             * @param {Object} itemLoadedDeferred A promise to resolve when the item has been completely loaded
              */
-            bindItemLoadingEvents: function(id) {
-                this.sandbox.dom.one($(this.$items[id]).find('.' + constants.headImageClass), 'load', function() {
-                    this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.headIconClass));
-                    this.itemLoadedHandler(this.$items[id]);
+            bindItemLoadingEvents: function(id, itemLoadedDeferred) {
+                this.sandbox.dom.one($(this.$items[id]).find('.' + constants.imageClass), 'load', function() {
+                    this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.iconClass));
+                    this.itemLoadedHandler(this.$items[id], itemLoadedDeferred);
                 }.bind(this));
 
-                this.sandbox.dom.one($(this.$items[id]).find('.' + constants.headImageClass), 'error', function() {
-                    this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.headImageClass));
-                    this.itemLoadedHandler(this.$items[id]);
+                this.sandbox.dom.one($(this.$items[id]).find('.' + constants.imageClass), 'error', function() {
+                    this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.imageClass));
+                    this.itemLoadedHandler(this.$items[id], itemLoadedDeferred);
                 }.bind(this));
             },
 
@@ -444,10 +509,28 @@ define([
              * Marks an item as loaded and performs post loading tasks.
              *
              * @param {Object} $item The dom element of the loaded item
+             * @param {Object} itemLoadedDeferred A promise to resolve when the item has been completely loaded
              */
-            itemLoadedHandler: function($item) {
+            itemLoadedHandler: function($item, itemLoadedDeferred) {
+                this.lockItemImageHeight($item);
+
+                if ($item.find('.' + constants.iconClass).length !== 0) {
+                    $item.addClass(constants.noImageClass);
+                }
+
                 this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
-                this.sandbox.dom.removeClass($item, constants.loadingClass);
+
+                itemLoadedDeferred.resolve();
+            },
+
+            /**
+             * For a given hidden item. This method locks the height of the image container.
+             * This is necessary for making the zoom effect on hover possible.
+             *
+             * @param {Object} $tem The dom object of the item
+             */
+            lockItemImageHeight: function($item) {
+                $item.find('.masonry-image').height($item.find('.masonry-image').height());
             },
 
             /**
@@ -487,7 +570,16 @@ define([
              */
             addRecord: function(record, appendAtBottom) {
                 this.renderRecords([record], appendAtBottom);
-                this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
+            },
+
+            /**
+             * Adds multiple records to the view
+             * @param record
+             * @param appendAtBottom
+             * @public
+             */
+            addRecords: function(records, appendAtBottom) {
+                this.renderRecords(records, appendAtBottom);
             },
 
             /**

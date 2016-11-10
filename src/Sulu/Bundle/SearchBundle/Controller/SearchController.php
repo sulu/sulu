@@ -113,6 +113,7 @@ class SearchController
         }
 
         $query->indexes($indexes);
+        $query->setLimit($limit);
 
         $time = microtime(true) - $startTime;
 

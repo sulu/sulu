@@ -52,19 +52,51 @@ a.media-edit-link,
     color: $grayLight;
 }
 
+.media-edit-preview-loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    border: 1px $white solid;
+    border-radius: $borderRadius;
+
+    & .loader {
+        margin-top: 80px;
+        opacity: 0.3;
+    }
+
+    & .hint {
+        color: $grayLight;
+        margin-top: 14px;
+    }
+}
+
 .media-edit-preview-image {
-    background-position: center center;
-    background-repeat: no-repeat;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background: url('../img/checked.gif');
+    border: 1px $white solid;
+    border-radius: $borderRadius;
     width: 100%;
-    height: 180px;
-    position: relative;
+    height: 100%;
+
+    &[class^=fa-] {
+        background: none;
+        border: none;
+        margin-top: 30px;
+    }
 
     &.icon {
         color: $grayLight;
         font-size: 150px;
         text-align: center;
         vertical-align: middle;
-        padding-top: 15px;
     }
 
     .file-version-change,
@@ -74,6 +106,8 @@ a.media-edit-link,
         left: 50%;
         @include translate(-50%, -50%);
         font-size: $baseFontSize;
+        max-height: 100%;
+        max-width: 100%;
     }
 
     #file-version-change {
@@ -90,17 +124,24 @@ a.media-edit-link,
 #media-preview {
     .media-edit-preview-image-container {
         background-color: #ddd;
-        width: 250px;
-        height: 250px;
-    }
 
-    .media-edit-preview-image {
-        background-size: cover;
-        width: 100%;
-        height: 100%;
+        position: relative;
+        text-align: center;
+
+        &:before {
+            content: '';
+            display: block;
+            padding-top: 100%;
+        }
     }
 
     #preview-image-change {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
         width: 100%;
         height: 100%;
 
@@ -116,17 +157,28 @@ a.media-edit-link,
 }
 
 #media-info {
+    .info-label-container {
+        overflow: visible;
+        position: absolute;
+        height: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
     textarea.description {
-        height: 90px;
-        min-height: 90px;
+        height: 80px;
+        min-height: 80px;
     }
 
     .media-info-preview {
+        position: relative;
         text-align: center;
 
-        span.description {
-            font-size: 12px;
-            color: $grayLight;
+        &:before {
+            content: '';
+            display: block;
+            padding-top: 100%;
         }
     }
 }

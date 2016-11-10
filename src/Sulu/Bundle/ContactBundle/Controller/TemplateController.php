@@ -82,17 +82,10 @@ class TemplateController extends RestController
 
     private function getCategoryUrl($key)
     {
-        if ($key !== null) {
-            return $this->generateUrl(
-                'get_category_children',
-                ['key' => $key, 'flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc']
-            );
-        } else {
-            return $this->generateUrl(
-                'get_categories',
-                ['flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc']
-            );
-        }
+        return $this->generateUrl(
+            'get_categories',
+            ['flat' => 'true', 'rootKey' => $key, 'sortBy' => 'name', 'sortOrder' => 'asc']
+        );
     }
 
     /**

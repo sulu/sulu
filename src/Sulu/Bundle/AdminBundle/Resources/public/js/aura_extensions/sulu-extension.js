@@ -78,28 +78,6 @@
             };
 
             /**
-             * load user settings
-             * @param key
-             * @param url Where to get data from, if not already available
-             * @param callback Function to return settings value
-             */
-            app.sandbox.sulu.loadUserSetting = function(key, url, callback) {
-                if (!!app.sandbox.sulu.userSettings[key]) {
-                    callback(app.sandbox.sulu.userSettings[key]);
-                } else {
-                    // get from server
-                    app.sandbox.util.load(url)
-                        .then(function(data) {
-                            app.sandbox.sulu.userSettings[key] = data;
-                            callback(data);
-                        }.bind(this))
-                        .fail(function(data) {
-                            app.sandbox.logger.log('data could not be loaded:', data);
-                        }.bind(this));
-                }
-            };
-
-            /**
              * loads an url and matches it against user settings
              * @param key Defines which setting to compare with
              * @param excludeAttributes Defines which Attributes should NOT be taken from user-settings and from fields API instead
@@ -249,10 +227,10 @@
                     options.title,
                     options.description,
                     function() {
-                        options.callback(false);
+                        return options.callback(false);
                     },
                     function() {
-                        options.callback(true);
+                        return options.callback(true);
                     },
                     {
                         okDefaultText: options.buttonTitle || 'public.ok'
@@ -267,6 +245,7 @@
              *                            confirmed or not)
              * @param title {String} custom title of the dialog
              * @param description {String} custom description of the dialog
+             * @param description {Array} custom options of the dialog
              */
             app.sandbox.sulu.showDeleteDialog = function(callback, title, description) {
                 if (typeof title !== 'string') {
@@ -572,6 +551,21 @@
                             }
                         ]);
                     }.bind(this));
+            };
+
+            app.sandbox.sulu.showLoader = function($element) {
+                this.sandbox.start(
+                    [
+                        {
+                            name: 'loader@husky',
+                            options: {
+                                el: $element,
+                                size: '100px',
+                                color: '#ccc'
+                            }
+                        }
+                    ]
+                );
             };
         }
     });

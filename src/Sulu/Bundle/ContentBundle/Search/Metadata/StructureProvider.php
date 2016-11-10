@@ -40,6 +40,8 @@ use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 class StructureProvider implements ProviderInterface
 {
     const FIELD_STRUCTURE_TYPE = '_structure_type';
+    const FIELD_TEASER_DESCRIPTION = '_teaser_description';
+    const FIELD_TEASER_MEDIA = '_teaser_media';
 
     /**
      * @var Factory
@@ -303,6 +305,13 @@ class StructureProvider implements ProviderInterface
 
     private function mapProperty(PropertyMetadata $property, $metadata)
     {
+        if ($metadata instanceof IndexMetadata && $property->hasTag('sulu.teaser.description')) {
+            $this->mapTeaserDescription($property, $metadata);
+        }
+        if ($metadata instanceof IndexMetadata && $property->hasTag('sulu.teaser.media')) {
+            $this->mapTeaserMedia($property, $metadata);
+        }
+
         if (false === $property->hasTag('sulu.search.field')) {
             return;
         }
@@ -375,5 +384,31 @@ class StructureProvider implements ProviderInterface
         );
 
         return $field;
+    }
+
+    private function mapTeaserDescription(PropertyMetadata $property, IndexMetadata $metadata)
+    {
+        $metadata->addFieldMapping(
+            self::FIELD_TEASER_DESCRIPTION,
+            [
+                'type' => 'string',
+                'field' => $this->getContentField($property),
+                'aggregate' => true,
+                'indexed' => false,
+            ]
+        );
+    }
+
+    private function mapTeaserMedia(PropertyMetadata $property, IndexMetadata $metadata)
+    {
+        $metadata->addFieldMapping(
+            self::FIELD_TEASER_MEDIA,
+            [
+                'type' => 'json',
+                'field' => $this->getContentField($property),
+                'aggregate' => true,
+                'indexed' => false,
+            ]
+        );
     }
 }

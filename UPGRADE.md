@@ -1,5 +1,214 @@
 # Upgrade
 
+## dev-develop
+
+### Ports in webspace config
+
+From now on the the port has to be a part of the URL in the webspace
+configuration. So if you are running your website on a different port than the
+default port of the protocol you are using, you have to change the webspace
+config. The port must still be omitted when the `{host}` placeholder is used.
+
+## 1.4.0-RC2
+
+### Admin User Settings
+
+The method `sulu.loadUserSetting()` was removed from the Sulu Aura.js extension located in `Sulu/Bundle/AdminBundle/Resources/public/js/aura_extensions/sulu-extension.js`. 
+Instead the method `sulu.getUserSetting()` should be used, which provides same functionality, but is called differently (no need to provide neither URL nor callback in addition to the key).
+
+ 
+### Media StorageInterface
+
+The `StorageInterface` in the `Sulu\Bundle\MediaBundle\Media\Storage` namespace
+got a new `loadAsString` method, which should return the file for the given
+parameters as a binary string. If you have already developed your own storage
+implementation you have to add this method.
+
+### Page-Templates
+
+The cache-lifetime of page-templates was extended by the `type` attribute.
+This attribute is optional and default set to seconds which behaves like
+before and set the `max-age` to given integer.
+
+There is now a second type `expression` which allows you to define the
+lifetime with a cron-expression which enhances the developer to define
+that a page has to be invalidated at a specific time of the day (or
+whatever you need).
+
+__BEFORE:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+__NOW:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+
+    <!-- releases cache each day at mitnight -->
+    <cacheLifetime type="expression">@daily</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+Therefor we changed the type of the return value for `Sulu\Component\Content\Compat\StructureInterface::getCacheLifeTime`
+to array. This array contains the `type` and the `value` of the configured
+cache-lifetime.
+
+For resolving this array to a concrete second value we introduced the service
+`sulu_http_cache.cache_lifetime.resolver` there you can call the `resolve`
+function which returns the concrete second value.
+
+## 1.4.0-RC1
+
+### Refactored category management in backend
+
+The backend of the category bundle was refactored and the category related entities were implemented extensible.
+This lead to the following changes:
+
+**API:**
+`/categories`: renamed parameter `parent` which accepted an id to `rootKey` which accepts a key
+`/categories/{key}/children` was replaced with `/categories/{id}/children`
+
+**Classes:**
+`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface` 
+`Category\KeywordRepositoryInterface` moved to `Entity\KeywordRepositoryInterface`
+`Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException` 
+`Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException` 
+`Category\Exception\KeyNotUniqueException` was replaced with `Exception\CategoryKeyNotUniqueException` 
+
+**Methods:**
+Removed: `Api\Category::setName($name)`
+Replacement: `Api\Category::setTranslation(CategoryTranslationInterface $translation)`
+Reason: The api-entity cannot create a translation-entity as the translation-entity is implemented extensible.
+
+Removed: `Api\Category::setMeta($metaArrays)`
+Replacement: `Api\Category::setMeta($metaEntities)`
+Reason: The api-entity cannot create a meta-entity as the meta-entity is implemented extensible.
+
+Deprecated: `CategoryRepositoryInterface::findCategoryByIds(array $ids)`
+Replacement: `CategoryRepositoryInterface::findCategoriesByIds(array $ids)`
+
+Deprecated: `CategoryRepositoryInterface::findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentId($parentId = null)`
+
+Deprecated: `CategoryRepositoryInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentKey($parentKey = null)`
+
+Deprecated: `CategoryManagerInterface::find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentId($parentId = null)`
+
+Deprecated: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentKey($parentKey = null)`
+
+**Container Parameters/Definitions:**
+Deprecated: `sulu_category.entity.category` 
+Replacement: `sulu.model.category.class` 
+
+Deprecated: `sulu_category.entity.keyword`
+Replacement: `sulu.model.keyword.class`
+
+Deprecated: `sulu_category.category_repository`
+Replacement: `sulu.repository.category`
+
+Deprecated: `sulu_category.keyword_repository`
+Replacement: `sulu.repository.keyword`
+
+**Extensibility**
+Every association of the `Category` entity must be of the type `CategoryInterface` to ensure extensibility
+Every association of the `CategoryTranslation` entity must be of the type `CategoryTranslationInterface` to ensure extensibility
+Every association of the `CategoryMeta` entity must be of the type `CategoryMetaInterface` to ensure extensibility
+Every association of the `Keyword` entity must be of the type `KeywordInterface` to ensure extensibility
+
+### New definition mechanism for image-formats
+
+A new structure for the image-formats configuration files was introduced.
+For an explanation on how to define image-formats in the new way please
+refer to the documentation (http://docs.sulu.io/en/latest/book/image-formats.html).
+
+Out of the box, image-formats defined in the old way do still work,
+but the `XMLLoader` and commands are marked as deprecated.
+However when using more profound functionality regarding the image-formats,
+there are some BC breaks:
+
+#### `sulu_media.image_format_file` changed to `sulu_media.image_format_files`
+The configuration `sulu_media.image_format_file` of the MediaBundle
+was changed to `sulu_media.image_format_files` and the type was changed
+from a scalar to an array.
+
+#### "Command" renamed to "Transformation"
+Internally the concept of a command on an image was renamed to 
+"transformation". This renaming was consequently executed throughout the
+MediaBundle. This BC break is only important when custom commands have
+been created. To update the custom commands (now transformations) they now have
+to implement the `TransformationInterface` instead of the `CommandInterface`.
+Moreover the service tag under which a transformation gets registered changed
+from `sulu_media.image.command` to `sulu_media.image.transformation`. The namespaces
+containing "Command" were changed to contain "Transformation" instead.
+Note that there was a slight change in the `TransformationInterface` itself.
+The `execute` method has to return an image and the passed parameter is not
+a reference anymore.
+
+#### Array structure of `sulu_media.image.formats`
+The structure of the arrays in which the formats are stored under
+the symfony parameter `sulu_media.image.formats` changed. `name` was
+renamed to `key`, `commands` was renamed to `transformation` and consequently
+`command` to `transformation.`. In addition the first `scale` or `resize` command
+is now not contained in the `commands` array anymore, but represented by the `scale`
+sub-array of the format.
+
+### ListRestHelper
+
+The `ListRestHelper` has changed its constructor, it takes the `RequestStack`
+instead of a `Request` now.
+
+### RouteGenerator
+
+The configuration for the route-generator has changed:
+
+**Before:**
+```
+sulu_route:
+    mappings:
+        AppBundle\Entity\Example:
+            route_schema: /example/{object.getTitle()}
+```
+
+**After:**
+```
+sulu_route:
+    mappings:
+        AppBundle\Entity\Example:
+            generator: schema
+            options:
+                route_schema: /example/{object.getTitle()}
+```
+
+### Data-Navigation
+
+The class `DataNavigationItem` got removed and is not supported
+anymore. Please use other forms of navigating instead.
+
 ## 1.3.1
 
 If Sulu is used in combination with a port, the port has to be included in the
@@ -23,6 +232,12 @@ to
 `public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);`
 
 Also the `generateForUuid` method of the `RlpStrategyInterface` got removed.
+
+### 190x Image Format
+
+The image format "190x" got removed as it was only used in and old
+design. If this format is needed for a website please redefine it
+in the corresponding config file.
 
 ### Address country is nullable
 
@@ -727,6 +942,24 @@ __nested properties:__
     {% endif %}
 </div>
 ```
+
+### Content Type Export Interface added
+
+All default content type implement the new `ContentTypeExportInterface`.  
+Content types which were exportable need to implement this interface and tag for which export `format` they are available.  
+
+``` xml
+        <service id="client_website.content.type.checkbox" class="%client_website.content.type.checkbox.class%">
+            <tag name="sulu.content.type" alias="custom_checkbox"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+```
+
+### Extensions constructor changed
+
+Extensions can also be exportable for this they need to implement the new `ExportExtensionInterface`.  
+In the sulu excerpt extension the constructor changed, if you extend or overwrite this extension you maybe need to add
+the `sulu_content.export.manager` service to the constructor.
 
 ### ApiCategory
 The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories

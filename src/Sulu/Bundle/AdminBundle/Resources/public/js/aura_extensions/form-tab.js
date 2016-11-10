@@ -55,6 +55,8 @@ define(['underscore', 'jquery'], function(_, $) {
             this.$el.html(this.getTemplate());
 
             this.createForm(data);
+
+            this.rendered();
         },
 
         createForm: function(data) {
@@ -71,7 +73,7 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function can be overwritten by the implementation to load the component.
+         * This function can be overwritten by the implementation to load the component.
          *
          * For best-practice the default implementation should be used.
          */
@@ -84,7 +86,7 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function can be overwritten by the implementation to initialize the component.
+         * This function can be overwritten by the implementation to initialize the component.
          *
          * For best-practice the default implementation should be used.
          */
@@ -93,7 +95,14 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function can be overwritten by the implementation to enable save-button.
+         * This function can be overwritten by the implementation.
+         */
+        rendered: function() {
+            this.sandbox.emit('sulu.tab.rendered', this.name);
+        },
+
+        /**
+         * This function can be overwritten by the implementation to enable save-button.
          *
          * For best-practice the default implementation should be used.
          */
@@ -102,7 +111,7 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function can be overwritten by the implementation to process the data which was returned
+         * This function can be overwritten by the implementation to process the data which was returned
          * by the rest-api.
          *
          * For best-practice the default implementation should be used.
@@ -114,7 +123,7 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function has to be overwritten by the implementation to convert the data from "options.data".
+         * This function has to be overwritten by the implementation to convert the data from "options.data".
          *
          * @param {object} data
          */
@@ -123,7 +132,7 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function has to be overwritten by the implementation to save the data.
+         * This function has to be overwritten by the implementation to save the data.
          *
          * @param {object} data
          */
@@ -132,14 +141,14 @@ define(['underscore', 'jquery'], function(_, $) {
         },
 
         /**
-         * This method function has to be overwritten by the implementation to generate the form-template.
+         * This function has to be overwritten by the implementation to generate the form-template.
          */
         getTemplate: function() {
             throw new Error('"getTemplate" not implemented');
         },
 
         /**
-         * This method function has to be overwritten by the implementation. It should return the id for the form.
+         * This function has to be overwritten by the implementation. It should return the id for the form.
          */
         getFormId: function() {
             throw new Error('"getFormId" not implemented');

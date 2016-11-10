@@ -25,6 +25,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
@@ -128,6 +129,7 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['name'],
                 $listResponse[$i]['storageOptions'],
                 $listResponse[$i]['version'],
+                $listResponse[$i]['subVersion'],
                 $listResponse[$i]['mimeType']
             );
 
@@ -219,8 +221,32 @@ class MediaController extends AbstractMediaController implements
             $listBuilder->in($fieldDescriptors['type'], $types);
         }
 
+        if (!$this->getSecurityChecker()->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
+            $systemCollection = $this->getCollectionRepository()
+                ->findCollectionByKey(SystemCollectionManagerInterface::COLLECTION_KEY);
+
+            $lftExpression = $listBuilder->createWhereExpression(
+                $fieldDescriptors['lft'],
+                $systemCollection->getLft(),
+                ListBuilderInterface::WHERE_COMPARATOR_LESS
+            );
+            $rgtExpression = $listBuilder->createWhereExpression(
+                $fieldDescriptors['rgt'],
+                $systemCollection->getRgt(),
+                ListBuilderInterface::WHERE_COMPARATOR_GREATER
+            );
+
+            $listBuilder->addExpression(
+                $listBuilder->createOrExpression([
+                    $lftExpression,
+                    $rgtExpression,
+                ])
+            );
+        }
+
         // field which will be needed afterwards to generate route
         $listBuilder->addSelectField($fieldDescriptors['version']);
+        $listBuilder->addSelectField($fieldDescriptors['subVersion']);
         $listBuilder->addSelectField($fieldDescriptors['name']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['mimeType']);

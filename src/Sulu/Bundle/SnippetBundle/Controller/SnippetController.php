@@ -95,6 +95,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private $requestHashChecker;
 
+    /**
+     * @var ListRestHelper
+     */
+    private $listRestHelper;
+
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -105,7 +110,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         DefaultSnippetManagerInterface $defaultSnippetManager,
         DocumentManager $documentManager,
         FormFactory $formFactory,
-        RequestHashChecker $requestHashChecker
+        RequestHashChecker $requestHashChecker,
+        ListRestHelper $listRestHelper
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -117,6 +123,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->documentManager = $documentManager;
         $this->formFactory = $formFactory;
         $this->requestHashChecker = $requestHashChecker;
+        $this->listRestHelper = $listRestHelper;
     }
 
     /**
@@ -129,7 +136,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     public function cgetAction(Request $request)
     {
         $locale = $this->getLocale($request);
-        $listRestHelper = new ListRestHelper($request);
 
         // if the type parameter is falsy, assign NULL to $type
         $type = $request->query->get('type', null) ?: null;
@@ -144,19 +150,19 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             $snippets = $this->snippetRepository->getSnippets(
                 $locale,
                 $type,
-                $listRestHelper->getOffset(),
-                $listRestHelper->getLimit(),
-                $listRestHelper->getSearchPattern(),
-                $listRestHelper->getSortColumn(),
-                $listRestHelper->getSortOrder()
+                $this->listRestHelper->getOffset(),
+                $this->listRestHelper->getLimit(),
+                $this->listRestHelper->getSearchPattern(),
+                $this->listRestHelper->getSortColumn(),
+                $this->listRestHelper->getSortOrder()
             );
 
             $total = $this->snippetRepository->getSnippetsAmount(
                 $locale,
                 $type,
-                $listRestHelper->getSearchPattern(),
-                $listRestHelper->getSortColumn(),
-                $listRestHelper->getSortOrder()
+                $this->listRestHelper->getSearchPattern(),
+                $this->listRestHelper->getSortColumn(),
+                $this->listRestHelper->getSortOrder()
             );
         }
 
@@ -165,8 +171,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             'snippets',
             'get_snippets',
             $request->query->all(),
-            $listRestHelper->getPage(),
-            $listRestHelper->getLimit(),
+            $this->listRestHelper->getPage(),
+            $this->listRestHelper->getLimit(),
             $total
         );
 

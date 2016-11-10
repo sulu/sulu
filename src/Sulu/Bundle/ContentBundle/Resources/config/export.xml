@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_content.export.webspace.formats" type="collection">
+            <parameter key="1.2.xliff">SuluContentBundle:Export:Webspace/1.2.xliff.twig</parameter>
+        </parameter>
+    </parameters>
+
+    <services>
+        <service id="sulu_content.export.manager" class="Sulu\Component\Content\Export\ContentExportManager">
+            <argument type="service" id="sulu.content.type_manager" />
+        </service>
+
+        <service id="sulu_content.export.webspace" class="Sulu\Component\Content\Export\Webspace">
+            <argument type="service" id="templating" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_content.extension.manager" />
+            <argument type="service" id="sulu_content.export.manager" />
+            <argument>%sulu_content.export.webspace.formats%</argument>
+        </service>
+
+        <service id="sulu_content.import.manager" class="Sulu\Component\Content\Import\ContentImportManager">
+            <argument type="service" id="sulu.content.type_manager" />
+        </service>
+
+        <service id="sulu_content.import.webspace" class="Sulu\Component\Content\Import\Webspace">
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument type="service" id="sulu.content.rlp.strategy.tree" />
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_content.extension.manager" />
+            <argument type="service" id="sulu_content.import.manager" />
+            <argument type="service" id="logger" />
+            <argument type="service" id="sulu_content.import.webspace.xliff12" />
+        </service>
+
+        <service id="sulu_content.import.webspace.xliff12" class="Sulu\Component\Content\Import\Format\Xliff12">
+            <tag name="sulu.content.import.service" format="1.2.xliff" />
+        </service>
+
+        <service id="sulu_content.export_twig_extension" class="Sulu\Bundle\ContentBundle\Twig\ExportTwigExtension">
+            <tag name="twig.extension"/>
+            <argument type="service" id="sulu_content.export.manager"/>
+        </service>
+    </services>
+</container>

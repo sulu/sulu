@@ -235,7 +235,7 @@ class FilterManager implements FilterManagerInterface
             }
         }
 
-        if (array_key_exists('private', $data) &&  $data['private'] === true) {
+        if (array_key_exists('private', $data) && $data['private'] === true) {
             $filter->setPrivate($data['private']);
             $filter->setUser($user);
         } else {

@@ -121,6 +121,42 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
+    public function countMedia(CollectionInterface $collection)
+    {
+        if (!$collection || !$collection->getId()) {
+            throw new \InvalidArgumentException();
+        }
+
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->select('COUNT(collectionMedia.id)')
+            ->leftJoin('collection.media', 'collectionMedia')
+            ->where('collection.id = :id')
+            ->setParameter('id', $collection->getId());
+
+        return intval($queryBuilder->getQuery()->getSingleScalarResult());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countSubCollections(CollectionInterface $collection)
+    {
+        if (!$collection || !$collection->getId()) {
+            throw new \InvalidArgumentException();
+        }
+
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->select('COUNT(subCollections.id)')
+            ->leftJoin('collection.children', 'subCollections')
+            ->where('collection.id = :id')
+            ->setParameter('id', $collection->getId());
+
+        return intval($queryBuilder->getQuery()->getSingleScalarResult());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = [])
     {
         list($parent, $depth, $search) = [

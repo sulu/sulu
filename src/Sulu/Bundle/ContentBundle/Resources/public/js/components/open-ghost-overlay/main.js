@@ -85,7 +85,7 @@ define(function() {
                         el: $element,
                         container: this.$el,
                         instanceName: instanceName,
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate(titleKey),

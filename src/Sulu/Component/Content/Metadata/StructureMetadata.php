@@ -28,7 +28,7 @@ class StructureMetadata extends ItemMetadata
     public $resource;
 
     /**
-     * @var string
+     * @var array
      */
     public $cacheLifetime;
 
@@ -68,11 +68,15 @@ class StructureMetadata extends ItemMetadata
     public function getProperty($name)
     {
         if (!isset($this->properties[$name])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
-                $name, $this->getName(), implode('", "', array_keys($this->properties)),
-                $this->resource
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
+                    $name,
+                    $this->getName(),
+                    implode('", "', array_keys($this->properties)),
+                    $this->resource
+                )
+            );
         }
 
         return $this->properties[$name];
@@ -139,10 +143,14 @@ class StructureMetadata extends ItemMetadata
         $properties = $this->getPropertiesByTagName($tagName);
 
         if (!$properties) {
-            throw new \InvalidArgumentException(sprintf(
-                'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
-                $tagName, $this->name, $this->resource
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
+                    $tagName,
+                    $this->name,
+                    $this->resource
+                )
+            );
         }
 
         return reset($properties);

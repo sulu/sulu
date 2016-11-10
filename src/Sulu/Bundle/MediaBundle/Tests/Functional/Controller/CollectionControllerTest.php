@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -41,6 +43,11 @@ class CollectionControllerTest extends SuluTestCase
      * @var CollectionType
      */
     private $collectionType2;
+
+    /**
+     * @var MediaType
+     */
+    private $mediaType;
 
     /**
      * @var CacheInterface
@@ -126,18 +133,28 @@ class CollectionControllerTest extends SuluTestCase
             SystemCollectionManagerInterface::COLLECTION_TYPE,
             'System Collections'
         );
+        $this->mediaType = $this->createMediaType();
+        $this->em->persist($this->mediaType);
         $this->em->persist($this->collectionType1);
         $this->em->persist($this->collectionType2);
         $this->em->flush();
 
         $this->collection1 = $this->createCollection(
             $this->collectionType1,
-            ['en-gb' => 'Test Collection', 'de' => 'Test Kollektion']
+            ['en-gb' => 'Test Collection', 'de' => 'Test Kollektion'],
+            null,
+            null,
+            5
         );
     }
 
-    private function createCollection(CollectionType $collectionType, $title = [], $parent = null, $key = null)
-    {
+    private function createCollection(
+        CollectionType $collectionType,
+        $title = [],
+        $parent = null,
+        $key = null,
+        $numberOfMedia = 0
+    ) {
         // Collection
         $collection = new Collection();
 
@@ -178,7 +195,22 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
+        $this->addMedia($collection, $numberOfMedia);
+
         return $collection;
+    }
+
+    private function addMedia(Collection $collection, $numberOfMedia)
+    {
+        for ($i = 0; $i < $numberOfMedia; ++$i) {
+            $media = new Media();
+            $media->setType($this->mediaType);
+            $media->setCollection($collection);
+            $collection->addMedia($media);
+            $this->em->persist($media);
+        }
+
+        $this->em->flush();
     }
 
     private function createCollectionType($id, $key, $name, $description = '')
@@ -190,6 +222,15 @@ class CollectionControllerTest extends SuluTestCase
         $collectionType->setDescription($description);
 
         return $collectionType;
+    }
+
+    private function createMediaType()
+    {
+        $mediaType = new MediaType();
+        $mediaType->setName('image');
+        $mediaType->setDescription('This is an image');
+
+        return $mediaType;
     }
 
     private function mapCollections($collections)
@@ -274,7 +315,7 @@ class CollectionControllerTest extends SuluTestCase
     /**
      * @description Test GET all Collections
      */
-    public function testcGet()
+    public function testCGet()
     {
         for ($i = 1; $i <= 15; ++$i) {
             $this->createCollection(
@@ -339,27 +380,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->_embedded->collections);
         $this->assertCount(2, $response->_embedded->collections);
         $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
-        $this->assertEquals('Test Collection A', $response->_embedded->collections[1]->title);
-
-        $client->request(
-            'GET',
-            '/api/collections?sortBy=title&page=2&limit=2',
-            [
-                'locale' => 'en-gb',
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertEquals(2, $response->pages);
-        $this->assertEquals(2, $response->page);
-        $this->assertEquals(2, $response->limit);
-        $this->assertEquals(4, $response->total);
-        $this->assertNotEmpty($response->_embedded->collections);
-        $this->assertCount(2, $response->_embedded->collections);
-        $this->assertEquals('Test Collection B', $response->_embedded->collections[0]->title);
-        $this->assertEquals('Test Collection C', $response->_embedded->collections[1]->title);
+        $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
     }
 
     /**
@@ -397,6 +418,12 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals(3, $response->total);
         $this->assertEquals(2, count($response->_embedded->collections));
+        $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
+        $this->assertEquals(0, $response->_embedded->collections[0]->subCollectionCount);
+        $this->assertEquals(5, $response->_embedded->collections[0]->objectCount);
+        $this->assertEquals(0, $response->_embedded->collections[1]->mediaCount);
+        $this->assertEquals(1, $response->_embedded->collections[1]->subCollectionCount);
+        $this->assertEquals(1, $response->_embedded->collections[1]->objectCount);
     }
 
     /**
@@ -1398,103 +1425,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[4], 'parent' => $titles[3], 'collections' => []], $items);
         $this->assertContains(['title' => $titles[5], 'parent' => $titles[3], 'collections' => [$titles[6]]], $items);
         $this->assertContains(['title' => $titles[6], 'parent' => $titles[5], 'collections' => []], $items);
-    }
-
-    public function testSearchChildren()
-    {
-        list($titles, $ids) = $this->prepareTree();
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/collections/' . $ids[3] . '?depth=1&search=col5',
-            [
-                'locale' => 'en-gb',
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertEquals($titles[3], $response['title']);
-        $this->assertCount(1, $response['_embedded']['collections']);
-        $this->assertEquals($titles[4], $response['_embedded']['collections'][0]['title']);
-    }
-
-    public function testPaginationChildren()
-    {
-        list($titles, $ids, $collections) = $this->prepareTree();
-        $this->createCollection(
-            $this->createCollectionType(9, 'my-type', 'My new type'),
-            ['en-gb' => 'my collection'],
-            $collections[3]
-        );
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/collections/' . $ids[3] . '?depth=1&page=1&limit=2',
-            [
-                'locale' => 'en-gb',
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertEquals($titles[3], $response['title']);
-        $this->assertCount(2, $response['_embedded']['collections']);
-        $items = array_map(
-            function ($collection) {
-                return $collection['title'];
-            },
-            $response['_embedded']['collections']
-        );
-
-        $this->assertContains($titles[4], $items);
-        $this->assertContains($titles[5], $items);
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/collections/' . $ids[3] . '?depth=1&page=2&limit=2',
-            [
-                'locale' => 'en-gb',
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertEquals($titles[3], $response['title']);
-        $this->assertCount(1, $response['_embedded']['collections']);
-        $this->assertEquals('my collection', $response['_embedded']['collections'][0]['title']);
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/collections/' . $ids[3] . '?depth=1&page=1&limit=10',
-            [
-                'locale' => 'en-gb',
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $this->assertEquals($titles[3], $response['title']);
-        $this->assertCount(3, $response['_embedded']['collections']);
-
-        $items = array_map(
-            function ($collection) {
-                return $collection['title'];
-            },
-            $response['_embedded']['collections']
-        );
-
-        $this->assertContains($titles[4], $items);
-        $this->assertContains($titles[5], $items);
-        $this->assertContains('my collection', $items);
     }
 
     public function testPostParentIsSystemCollection()

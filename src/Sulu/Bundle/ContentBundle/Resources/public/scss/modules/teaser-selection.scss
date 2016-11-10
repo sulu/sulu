@@ -1,0 +1,170 @@
+.teaser-selection {
+    $effectDuration: 200ms;
+
+    .white-box .content {
+        max-height: inherit;
+    }
+
+    .header {
+        .fa-plus-circle {
+            .dropdown-toggle::after {
+                border-top: 6px solid $white;
+            }
+
+            .husky-dropdown-trigger {
+                width: 45px !important;
+            }
+        }
+
+        .selected-counter {
+            left: 75px !important;
+        }
+
+        .present-as.icon {
+            width: auto;
+            padding-left: 10px;
+            padding-right: 10px;
+
+            .selected-text {
+                font-size: $baseFontSize;
+                padding-left: 5px;
+            }
+        }
+    }
+
+    .husky-overlay-container.type-content .overlay-content {
+        padding: 0;
+    }
+
+    .image .image-content {
+        font-size: 46px;
+        color: #ddd;
+        position: relative;
+        top: 8px;
+    }
+
+    .view {
+        width: 100%;
+
+        .value {
+            float: left;
+            width: 65%;
+
+            .image {
+                float: left;
+            }
+
+            .description {
+                line-height: 14px;
+                margin-top: -10px;
+                margin-bottom: 0;
+                font-size: 12px;
+            }
+        }
+
+        .type {
+            float: left;
+            width: 20%;
+        }
+
+        .options {
+            float: left;
+            line-height: 50px;
+            width: 15%;
+        }
+
+        &::after {
+            clear: both;
+        }
+    }
+
+    .move, .num, .remove {
+        vertical-align: top;
+        line-height: 50px;
+    }
+
+    .remove {
+        top: inherit !important;
+        margin-top: 5px !important;
+    }
+
+    a.btn {
+        display: inline-block;
+
+        &.edit-teaser {
+            padding: 0;
+        }
+    }
+
+    .edit {
+        .image {
+            float: left;
+            width: 50px;
+
+            .image-content {
+                height: 50px;
+                overflow: hidden;
+                display: inline-block;
+            }
+
+            img {
+                padding: 0 !important;
+            }
+        }
+
+        .form {
+            width: calc(100% - 56px);
+            margin-left: 55px;
+        }
+
+        .edit-hint {
+            width: 100%;
+            height: 50px;
+            position: relative;
+            top: -60px;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            @include transition(opacity $effectDuration);
+
+            &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: black;
+                opacity: 0.6;
+                width: 100%;
+                height: 100%;
+                border-radius: 0 0 $borderRadius $borderRadius;
+            }
+
+            span {
+                display: block;
+                @include centerBlock;
+                color: $white;
+                font-size: 24px;
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+    }
+}
+
+.teaser-selection-container {
+    .view, .edit {
+        display: inline-block;
+
+        .hidden {
+            display: none;
+        }
+    }
+
+    .edit {
+        width: 90%;
+    }
+}

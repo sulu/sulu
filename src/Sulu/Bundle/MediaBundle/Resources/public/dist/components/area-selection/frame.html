@@ -1,0 +1,47 @@
+<div class="frame">
+    <img class="image" draggable="false" src="<%= image %>"/>
+    <div class="area">
+        <div class="minimum-size-info"><%= minimumSizeInfo %></div>
+        <div class="lines">
+            <% if(tileSelectable) { %>
+            <div class="top">
+                <div class="tile left">
+                    <div class="arrow fa"></div>
+                </div>
+                <div class="tile center">
+                    <div class="arrow fa"></div>
+                </div>
+                <div class="tile right">
+                    <div class="arrow fa"></div>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="tile left">
+                    <div class="arrow fa"></div>
+                </div>
+                <div class="tile center">
+                    <div class="arrow fa"></div>
+                </div>
+                <div class="tile right">
+                    <div class="arrow fa"></div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="tile left">
+                    <div class="arrow fa"></div>
+                </div>
+                <div class="tile center">
+                    <div class="arrow fa"></div>
+                </div>
+                <div class="tile right">
+                    <div class="arrow fa"></div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <% if(resizeable) { %><div class="handle south-east"></div><% } %>
+    </div>
+    <div class="backdrop-container">
+        <div class="backdrop"></div>
+    </div>
+</div>

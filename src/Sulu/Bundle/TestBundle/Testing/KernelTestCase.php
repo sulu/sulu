@@ -14,7 +14,9 @@ namespace Sulu\Bundle\TestBundle\Testing;
 use InvalidArgumentException;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Base test tests which require the Sulu kernel / container.
@@ -22,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     private $container;
 

@@ -100,7 +100,7 @@ define([
 
         /**
          * Load media by given id.
-         * @param {Integer} mediaId
+         * @param {Number} mediaId
          * @param {String} locale
          * @returns promise
          */

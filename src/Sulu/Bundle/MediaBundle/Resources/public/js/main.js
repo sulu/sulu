@@ -18,7 +18,9 @@ require.config({
         'services/sulumedia/media-router': '../../sulumedia/js/services/media-router',
         'services/sulumedia/overlay-manager': '../../sulumedia/js/services/overlay-manager',
         'services/sulumedia/collection-manager': '../../sulumedia/js/services/collection-manager',
+        'services/sulumedia/image-editor': '../../sulumedia/js/services/image-editor',
         'services/sulumedia/media-manager': '../../sulumedia/js/services/media-manager',
+        'services/sulumedia/format-manager': '../../sulumedia/js/services/format-manager',
         'services/sulumedia/user-settings-manager': '../../sulumedia/js/services/user-settings-manager',
         'services/sulumedia/file-icons': '../../sulumedia/js/services/file-icons',
 
@@ -29,12 +31,13 @@ require.config({
 
 define([
     'services/sulumedia/media-router',
+    'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
     'extensions/masonry',
     'extensions/sulu-buttons-mediabundle',
     'sulumedia/ckeditor/media-link',
     'css!sulumediacss/main'
-], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons, MediaLinkPlugin) {
+], function(MediaRouter, UserSettingsManager, OverlayManager, MasonryExtension, MediaButtons, MediaLinkPlugin) {
 
     'use strict';
 
@@ -56,32 +59,8 @@ define([
                 };
             });
 
-            // list all collections
-            sandbox.mvc.routes.push({
-                route: 'media/collections/root',
-                callback: function() {
-                    return '<div data-aura-component="collections/root@sulumedia"/>';
-                }
-            });
+            MediaRouter.initialize(app.sandbox.mvc.routes);
 
-            // show a single collection with files and upload
-            sandbox.mvc.routes.push({
-                route: 'media/collections/edit::id/:content',
-                callback: function(id) {
-                    return '<div data-aura-component="collections/edit@sulumedia" data-aura-id="' + id + '"/>';
-                }
-            });
-
-            // show a single collection with files and upload
-            sandbox.mvc.routes.push({
-                route: 'media/collections/edit::id/:content/edit::mediaId',
-                callback: function(id, content, mediaId) {
-                    sandbox.sulu.viewStates['media-file-edit-id'] = parseInt(mediaId);
-                    MediaRouter.toCollection(id);
-                }
-            });
-
-            // ckeditor
             sandbox.ckeditor.addPlugin(
                 'mediaLink',
                 new MediaLinkPlugin(app.sandboxes.create('plugin-media-link'))
@@ -91,25 +70,7 @@ define([
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {
                     return;
-                    }
-
-                this.sandbox.on('husky.data-navigation.collections.selected', function(item) {
-                    if (item === null) {
-                        MediaRouter.toRoot();
-                    }
-                }.bind(this));
-
-                this.sandbox.on('husky.data-navigation.collections.add', function(item) {
-                    OverlayManager.startCreateCollectionOverlay.call(this, item);
-                }.bind(this));
-
-                this.sandbox.on('sulu.media.collection-create.created', function(collection) {
-                    MediaRouter.toCollection(collection.id);
-
-                    this.sandbox.emit('husky.data-navigation.collections.reload', function() {
-                        this.sandbox.emit('husky.data-navigation.collections.select', collection.id);
-                    });
-                }.bind(this));
+                }
 
                 this.sandbox.on('husky.dropzone.error', function(xhr, file) {
                     var title = this.sandbox.translate('sulu.dropzone.error.title'),

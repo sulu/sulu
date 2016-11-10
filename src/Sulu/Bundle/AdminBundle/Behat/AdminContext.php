@@ -411,15 +411,6 @@ EOT;
     }
 
     /**
-     * @Given I expect a data-navigation to appear
-     * @Given I wait for a data-navigation to appear
-     */
-    public function iWaitForADataNavigationToAppear()
-    {
-        $this->waitForSelectorAndAssert('.data-navigation-items');
-    }
-
-    /**
      * @Given I expect an overlay to appear
      * @Given I wait for an overlay to appear
      */

@@ -25,7 +25,19 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_media');
         $rootNode->children()
-            ->scalarNode('image_format_file')->defaultValue('%kernel.root_dir%/config/image-formats.xml')->end()
+            ->scalarNode('adobe_creative_key')->defaultNull()->end()
+            ->scalarNode('adapter')
+                ->defaultValue('auto')
+                ->validate()
+                    ->ifTrue(function ($v) {
+                        return !in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
+                    })
+                    ->thenInvalid('Invalid imagine adapted specified: %s')
+                ->end()
+            ->end()
+            ->arrayNode('image_format_files')
+                ->prototype('scalar')->end()
+            ->end()
             ->arrayNode('system_collections')
                 ->useAttributeAsKey('key')
                 ->prototype('array')

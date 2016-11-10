@@ -78,6 +78,10 @@
                 <source>sulu.category.keyword_conflict.overwrite</source>
                 <target>Overschrijven</target>
             </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11118" resname="sulu.category.medias">
+                <source>sulu.category.medias</source>
+                <target>Media</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

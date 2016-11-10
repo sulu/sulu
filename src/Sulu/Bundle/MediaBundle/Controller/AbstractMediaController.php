@@ -68,15 +68,15 @@ class AbstractMediaController extends RestController
      */
     protected function getTitleFromUpload($request)
     {
-        $title = null;
-
         $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
 
         if ($uploadedFile) {
-            $title = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
-        }
+            if (strpos($uploadedFile->getClientOriginalName(), '.') === false) {
+                return $uploadedFile->getClientOriginalName();
+            }
 
-        return $title;
+            return implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
+        }
     }
 
     /**

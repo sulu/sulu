@@ -185,7 +185,6 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $this->getRequestParameter($request, 'locale', true),
                     [
                         'depth' => $depth,
-                        'search' => $search,
                     ],
                     $limit,
                     $offset,

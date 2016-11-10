@@ -127,14 +127,12 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $resources = [new FileResource($filePath)];
 
             $cache->write(
-                sprintf('<?php $metadata = \'%s\';', serialize($metadata)),
+                serialize($metadata),
                 $resources
             );
         }
 
-        require $cachePath;
-
-        $structure = unserialize($metadata);
+        $structure = unserialize(file_get_contents($cachePath));
 
         $this->cache[$cacheKey] = $structure;
 

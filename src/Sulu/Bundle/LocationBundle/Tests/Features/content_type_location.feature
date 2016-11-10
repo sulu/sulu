@@ -31,6 +31,7 @@ Feature: Location content type
         And wait a second
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
 
         # TODO: Closing and opening does not work

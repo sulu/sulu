@@ -11,11 +11,12 @@ define([
     'services/sulupreview/preview',
     'sulucontent/model/content',
     'sulucontent/services/content-manager',
+    'sulucontent/services/user-settings',
     'sulucontent/components/copy-locale-overlay/main',
     'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/user-manager',
     'sulusecurity/services/security-checker'
-], function(Preview, Content, ContentManager, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
+], function(Preview, Content, ContentManager, UserSettings, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
 
     'use strict';
 
@@ -756,6 +757,9 @@ define([
                         '/' + this.options.language + '/edit:' + this.data.id + '/settings'
                     );
                 }
+                
+                // set current page as last selected one
+                UserSettings.setLastSelectedPage(this.options.webspace , this.options.id);
             }
 
             this.setHeaderBar(true);

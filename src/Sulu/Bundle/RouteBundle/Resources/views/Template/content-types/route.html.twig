@@ -1,0 +1,11 @@
+<div id="{{ id|raw }}"
+     class="preview-update trigger-save-button"
+     data-property='{{ property|json_encode }}'
+     data-mapper-property="{{ property.name }}"
+     data-form="true"
+     data-type="resourceLocator"
+     data-aura-component="resource-locator@sulucontent"
+     data-type-instance-name="{{ id|raw }}"
+     data-aura-input-type="{{ params.inputType.value }}"
+     data-type-input-type="{{ params.inputType.value }}"
+     {% if property.mandatory %}data-validation-required="true"{% endif %}></div>

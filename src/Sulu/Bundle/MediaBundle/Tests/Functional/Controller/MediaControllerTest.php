@@ -13,9 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -71,12 +69,12 @@ class MediaControllerTest extends SuluTestCase
     private $audioType;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category;
 
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     private $category2;
 
@@ -134,21 +132,21 @@ class MediaControllerTest extends SuluTestCase
     {
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
         $this->category = $category;
 
         // name for first category
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('First Category');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
         // meta for first category
-        $categoryMeta = new CategoryMeta();
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
         $categoryMeta->setKey('description');
         $categoryMeta->setValue('Description of Category');
@@ -157,21 +155,21 @@ class MediaControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('de');
 
         $this->category2 = $category2;
 
         // name for second category
-        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans2->setLocale('de');
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
 
         // meta for second category
-        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
         $categoryMeta2->setValue('Description of second Category');
@@ -826,12 +824,15 @@ class MediaControllerTest extends SuluTestCase
                 'contentLanguages' => [
                     'en-gb',
                 ],
+                'focusPointX' => 0,
+                'focusPointY' => 0,
                 'publishLanguages' => [
                     'en-gb',
                     'en-au',
                     'en',
                     'de',
-                ], 'categories' => [
+                ],
+                'categories' => [
                     $this->category->getId(), $this->category2->getId(),
                 ],
             ],
@@ -853,6 +854,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('New Image Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals('My credits', $response->credits);
+        $this->assertEquals(0, $response->focusPointX);
+        $this->assertEquals(0, $response->focusPointY);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(
@@ -929,6 +932,42 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
 
         $this->assertEquals('photo.jpeg', $response->name);
+        $this->assertNotNull($response->id);
+    }
+
+    /**
+     * Test POST to create a new Media without details.
+     *
+     * @group postWithoutDetails
+     */
+    public function testPostWithoutExtension()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $imagePath = $this->getImagePath();
+        $this->assertTrue(file_exists($imagePath));
+        $photo = new UploadedFile($imagePath, 'photo', 'image/jpeg', 160768);
+
+        $client->request(
+            'POST',
+            '/api/media',
+            [
+                'locale' => 'en',
+                'collection' => $this->collection->getId(),
+            ],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
+
+        $this->assertEquals(1, count($client->getRequest()->files->all()));
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertEquals($this->mediaDefaultTitle, $response->title);
+
+        $this->assertEquals('photo', $response->name);
         $this->assertNotNull($response->id);
     }
 
@@ -1057,6 +1096,8 @@ class MediaControllerTest extends SuluTestCase
                 'description' => 'Update Description',
                 'copyright' => 'My copyright',
                 'credits' => 'My credits',
+                'focusPointX' => 1,
+                'focusPointY' => 2,
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -1081,6 +1122,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('Update Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals('My credits', $response->credits);
+        $this->assertEquals(1, $response->focusPointX);
+        $this->assertEquals(2, $response->focusPointY);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(

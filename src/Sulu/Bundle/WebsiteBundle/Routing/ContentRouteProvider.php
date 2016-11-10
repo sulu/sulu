@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -46,9 +46,9 @@ class ContentRouteProvider implements RouteProviderInterface
     private $documentInspector;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyPoolInterface
      */
-    private $rlpStrategy;
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var StructureManagerInterface
@@ -73,7 +73,7 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * @param DocumentManagerInterface $documentManager
      * @param DocumentInspector $documentInspector
-     * @param RlpStrategyInterface $rlpStrategy
+     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param StructureManagerInterface $structureManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param DefaultLocaleProviderInterface $defaultLocaleProvider
@@ -82,7 +82,7 @@ class ContentRouteProvider implements RouteProviderInterface
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         StructureManagerInterface $structureManager,
         RequestAnalyzerInterface $requestAnalyzer,
         DefaultLocaleProviderInterface $defaultLocaleProvider,
@@ -90,7 +90,7 @@ class ContentRouteProvider implements RouteProviderInterface
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
-        $this->rlpStrategy = $rlpStrategy;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->defaultLocaleProvider = $defaultLocaleProvider;
@@ -129,7 +129,7 @@ class ContentRouteProvider implements RouteProviderInterface
             // redirect webspace correctly with locale
             $collection->add(
                 'redirect_' . uniqid(),
-                $this->getRedirectWebSpaceRoute($request)
+                $this->getRedirectWebSpaceRoute()
             );
         } elseif (
             $request->getRequestFormat() === 'html' &&
@@ -147,11 +147,13 @@ class ContentRouteProvider implements RouteProviderInterface
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($portal->getWebspace()->getKey());
+
             try {
                 // load content by url ignore ending trailing slash
                 /** @var PageDocument $document */
                 $document = $this->documentManager->find(
-                    $this->rlpStrategy->loadByResourceLocator(
+                    $resourceLocatorStrategy->loadByResourceLocator(
                         rtrim($resourceLocator, '/'),
                         $portal->getWebspace()->getKey(),
                         $locale
@@ -175,7 +177,10 @@ class ContentRouteProvider implements RouteProviderInterface
                     // redirect page to page without slash at the end
                     $collection->add(
                         'redirect_' . uniqid(),
-                        $this->getRedirectWebSpaceRoute($request)
+                        $this->getRedirectRoute(
+                            $request,
+                            $this->requestAnalyzer->getResourceLocatorPrefix() . rtrim($resourceLocator, '/')
+                        )
                     );
                 } elseif ($document->getRedirectType() === RedirectType::INTERNAL) {
                     // redirect internal link
@@ -237,8 +242,8 @@ class ContentRouteProvider implements RouteProviderInterface
     /**
      * Find the route using the provided route name.
      *
-     * @param string $name       the route name to fetch
-     * @param array  $parameters DEPRECATED the parameters as they are passed
+     * @param string $name the route name to fetch
+     * @param array $parameters DEPRECATED the parameters as they are passed
      *                           to the UrlGeneratorInterface::generate call
      *
      * @return \Symfony\Component\Routing\Route
@@ -262,7 +267,7 @@ class ContentRouteProvider implements RouteProviderInterface
      * simple implementation could be to just repeatedly call
      * $this->getRouteByName() while catching and ignoring eventual exceptions.
      *
-     * @param array $names      the list of names to retrieve
+     * @param array $names the list of names to retrieve
      * @param array $parameters DEPRECATED the parameters as they are passed to
      *                          the UrlGeneratorInterface::generate call. (Only one array, not one
      *                          for each entry in $names
@@ -290,11 +295,9 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param Request $request
-     *
      * @return Route
      */
-    protected function getRedirectWebSpaceRoute(Request $request)
+    protected function getRedirectWebSpaceRoute()
     {
         $localization = $this->defaultLocaleProvider->getDefaultLocale();
 
@@ -304,11 +307,16 @@ class ContentRouteProvider implements RouteProviderInterface
         $redirect = $this->urlReplacer->replaceLocalization($redirect, $localization->getLocale(Localization::DASH));
 
         // redirect by information from webspace config
+        // has to be done for all routes, because double slashes introduce problems otherwise
         return new Route(
-            $request->getPathInfo(), [
+            '/{wildcard}',
+            [
                 '_controller' => 'SuluWebsiteBundle:Redirect:redirectWebspace',
                 'url' => $this->requestAnalyzer->getPortalUrl(),
                 'redirect' => $redirect,
+            ],
+            [
+                'wildcard' => '.*',
             ]
         );
     }
@@ -331,7 +339,7 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param Request            $request
+     * @param Request $request
      * @param PageBridge $content
      *
      * @return Route

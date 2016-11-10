@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formats xmlns="http://schemas.sulu.io/media/formats"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
+
+    <format key="big-squared">
+        <meta>
+            <title lang="en">My big squared format</title>
+            <title lang="de">Mein großes quadratisches Format</title>
+        </meta>
+        <scale x="400" y="400"/>
+    </format>
+    <format key="small-inset">
+        <meta>
+            <title lang="en">My small inset format</title>
+            <title lang="de">Mein kleines inset Format</title>
+        </meta>
+        <scale x="50" y="50" mode="inset"/>
+    </format>
+    <format key="one-side">
+        <meta>
+            <title lang="en">My one sided format</title>
+            <title lang="de">Mein einseitiges Format</title>
+        </meta>
+        <scale x="200"/>
+    </format>
+</formats>

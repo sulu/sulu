@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Sulu\Bundle\MediaBundle\Entity\FormatOptions"
+            table="me_format_options">
+
+        <id name="fileVersion" association-key="true"/>
+        <id name="formatKey" type="string" length="255"/>
+
+        <field name="cropX" type="integer"/>
+        <field name="cropY" type="integer"/>
+        <field name="cropWidth" type="integer"/>
+        <field name="cropHeight" type="integer"/>
+
+        <many-to-one field="fileVersion" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" inversed-by="formatOptions">
+            <join-columns>
+                <join-column name="fileVersion" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formats xmlns="http://schemas.sulu.io/media/formats"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
+
+    <format key="400x400">
+        <scale x="400" y="400" forceRatio="false"/>
+        <transformations>
+            <transformation>
+                <effect>blur</effect>
+                <parameters>
+                    <parameter name="type">gaussian</parameter>
+                    <parameter name="kernel">20</parameter>
+                </parameters>
+            </transformation>
+        </transformations>
+        <options>
+            <option name="jpeg_quality">70</option>
+            <option name="png_compression_level">6</option>
+        </options>
+    </format>
+
+    <format key="400x-inset" internal="true">
+        <meta>
+            <title lang="en">My 400 Format</title>
+            <title lang="de">Mein 400 Format</title>
+        </meta>
+        <scale x="400"/>
+        <options>
+            <option name="jpeg_quality">70</option>
+        </options>
+    </format>
+
+    <format key="200x180-inset">
+        <scale x="200" y="180"/>
+    </format>
+</formats>

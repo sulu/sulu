@@ -31,6 +31,17 @@ interface MediaRepositoryInterface extends RepositoryInterface
     public function findMediaById($id);
 
     /**
+     * Finds the media with a given id, with just enough information
+     * to be able to render the actual media.
+     *
+     * @param $id
+     * @param $formatKey
+     *
+     * @return Media
+     */
+    public function findMediaByIdForRendering($id, $formatKey);
+
+    /**
      * Finds all media, can be filtered with parent.
      *
      * @param array $filter

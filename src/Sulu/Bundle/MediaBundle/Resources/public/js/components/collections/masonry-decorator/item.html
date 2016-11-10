@@ -1,0 +1,30 @@
+<div class="masonry-item">
+    <div class="masonry-info">
+        <div class="main">
+            <% if (!!selectable) { %>
+            <div class="custom-checkbox"><input type="checkbox"><span class="icon"></span></div>
+            <% } %>
+            <% if (!!fallbackLocale) { %>
+            <span class="badge"><%= fallbackLocale %></span>
+            <% } %>
+            <span class="title action-navigator"><%= title %></span>
+        </div>
+        <div class="description"><%= description %></div>
+        <div class="icons">
+            <% if (!!isVideo) { %>
+            <div class="fa-play play-video play-video-navigator"></div>
+            <% } %>
+            <div class="download download-navigator"></div>
+        </div>
+    </div>
+    <div class="masonry-image action-navigator">
+        <div class="<%= placeholderIcon %> image-icon"></div>
+
+        <% if (image !== "") { %>
+        <img class="image" src="<%= image %>"/>
+        <% } %>
+        <div class="action-icons-overlay">
+            <div class="action-icons"></div>
+        </div>
+    </div>
+</div>

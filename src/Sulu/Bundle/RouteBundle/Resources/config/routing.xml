@@ -9,17 +9,27 @@
 
     <services>
         <!-- route-defaults -->
-        <service id="sulu_route.routing.defaults_provider"
-                 class="Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider">
+        <service id="sulu_route.routing.defaults_provider" class="Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider">
             <argument type="collection">%sulu_route.routing.defaults_provider%</argument>
         </service>
 
         <!-- router -->
+        <service id="sulu_route.routing.proxy_factor.configuration" class="ProxyManager\Configuration" public="false">
+            <call method="setProxiesTargetDir">
+                <argument>%sulu.cache_dir%</argument>
+            </call>
+        </service>
+
+        <service id="sulu_route.routing.proxy_factory" class="ProxyManager\Factory\LazyLoadingValueHolderFactory">
+            <argument type="service" id="sulu_route.routing.proxy_factor.configuration"/>
+        </service>
+
         <service id="sulu_route.routing.provider" class="Sulu\Bundle\RouteBundle\Routing\RouteProvider">
             <argument type="service" id="sulu.repository.route"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_route.routing.proxy_factory"/>
 
             <tag name="sulu.context" context="website"/>
         </service>
@@ -37,8 +47,7 @@
             <tag name="sulu.context" context="website"/>
         </service>
 
-        <service id="sulu_route.routing.nested_matcher"
-                 class="Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher">
+        <service id="sulu_route.routing.nested_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher">
             <argument type="service" id="sulu_route.routing.provider"/>
             <argument type="service" id="sulu_route.routing.final_matcher"/>
 

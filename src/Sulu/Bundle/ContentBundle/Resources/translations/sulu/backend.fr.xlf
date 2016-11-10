@@ -747,6 +747,58 @@
                 <source>labels.error.remove-draft-desc</source>
                 <target>Le brouillon ne peut pas être supprimé.</target>
             </trans-unit>
+            <trans-unit id="60" resname="sulu-content.teaser.content">
+                <source>sulu-content.teaser.content</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="61" resname="sulu-content.teaser.edit">
+                <source>sulu-content.teaser.edit</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="62" resname="sulu-content.teaser.edited">
+                <source>sulu-content.teaser.edited</source>
+                <target>édité</target>
+            </trans-unit>
+            <trans-unit id="63" resname="sulu-content.teaser.reset">
+                <source>sulu-content.teaser.reset</source>
+                <target>Réinitialiser</target>
+            </trans-unit>
+            <trans-unit id="64" resname="sulu-content.teaser.apply">
+                <source>sulu-content.teaser.apply</source>
+                <target>Appliquer</target>
+            </trans-unit>
+            <trans-unit id="65" resname="sulu-content.teaser.cancel">
+                <source>sulu-content.teaser.cancel</source>
+                <target>Annuler</target>
+            </trans-unit>
+            <trans-unit id="66" resname="sulu-content.teaser.no-teaser">
+                <source>sulu-content.teaser.no-teaser</source>
+                <target>Pas de teaser sélectionnés</target>
+            </trans-unit>
+            <trans-unit id="67" resname="sulu.overlay.publish">
+                <source>sulu.overlay.publish</source>
+                <target>Publier?</target>
+            </trans-unit>
+            <trans-unit id="68" resname="sulu.overlay.publish-desc">
+                <source>sulu.overlay.publish-desc</source>
+                <target>Tes dates seront accessibles en public. Veux-tu continuer quand même?</target>
+            </trans-unit>
+            <trans-unit id="69" resname="sulu-content.resource-locator.delete">
+                <source>sulu-content.resource-locator.delete</source>
+                <target>L'URL va être effacée pour toutes les versions aussi bien celles en direct que celles d'ébauche. Ce n'est pas possible de la restaurer après. Veux-tu continuer quand même?</target>
+            </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Créer</target>
+            </trans-unit>
+            <trans-unit id="71" resname="content.ckeditor.page-link">
+                <source>content.ckeditor.page-link</source>
+                <target>Page</target>
+            </trans-unit>
+            <trans-unit id="72" resname="content.ckeditor.internal-link.remove-drop-down">
+                <source>content.ckeditor.internal-link.remove-drop-down</source>
+                <target>Enleve</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

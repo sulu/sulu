@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Cache\CacheInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -137,6 +138,10 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
             return;
         }
 
+        if (!$token->getUser() instanceof UserInterface) {
+            return;
+        }
+
         return $token->getUser()->getId();
     }
 
@@ -150,7 +155,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function buildSystemCollections($locale, $userId)
     {
-        $root = $this->getOrCreateRoot('system_collections', 'System', $locale, $userId);
+        $root = $this->getOrCreateRoot(SystemCollectionManagerInterface::COLLECTION_KEY, 'System', $locale, $userId);
         $collections = ['root' => $root->getId()];
         $collections = array_merge($collections, $this->iterateOverCollections($this->config, $userId, $root->getId()));
 

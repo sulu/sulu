@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
@@ -25,7 +26,7 @@ use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 /**
  * content type for block.
  */
-class BlockContentType extends ComplexContentType
+class BlockContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var ContentTypeManagerInterface
@@ -160,6 +161,31 @@ class BlockContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
+        return $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, false);
+    }
+
+    /**
+     * Save the value from given property.
+     *
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     * @param $userId
+     * @param $webspaceKey
+     * @param $languageCode
+     * @param $segmentKey
+     * @param bool $isImport
+     *
+     * @throws UnexpectedPropertyType
+     */
+    private function doWrite(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey,
+        $isImport = false
+    ) {
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
@@ -197,28 +223,31 @@ class BlockContentType extends ComplexContentType
                 $blockPropertyType = $blockProperty->getProperties($i);
 
                 // save type property
-                $typeProperty->setValue($blockPropertyType->getName());
                 $this->writeProperty(
                     $typeProperty,
                     $property,
+                    $blockPropertyType->getName(),
                     $i,
                     $node,
                     $userId,
                     $webspaceKey,
                     $languageCode,
-                    $segmentKey
+                    $segmentKey,
+                    $isImport
                 );
 
                 foreach ($blockProperty->getProperties($i)->getChildProperties() as $subProperty) {
                     $this->writeProperty(
                         $subProperty,
                         $property,
+                        $subProperty->getValue(),
                         $i,
                         $node,
                         $userId,
                         $webspaceKey,
                         $languageCode,
-                        $segmentKey
+                        $segmentKey,
+                        $isImport
                     );
                 }
             }
@@ -233,16 +262,31 @@ class BlockContentType extends ComplexContentType
     private function writeProperty(
         PropertyInterface $property,
         PropertyInterface $blockProperty,
+        $value,
         $index,
         NodeInterface $node,
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey
+        $segmentKey,
+        $isImport = false
     ) {
         // save sub property
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
         $blockPropertyWrapper = new BlockPropertyWrapper($property, $blockProperty, $index);
+        $blockPropertyWrapper->setValue($value);
+
+        if ($isImport && $contentType instanceof ContentTypeExportInterface) {
+            return $contentType->importData(
+                new SuluNode($node),
+                $blockPropertyWrapper,
+                $value,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        }
 
         $contentType->write(
             new SuluNode($node),
@@ -342,5 +386,29 @@ class BlockContentType extends ComplexContentType
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        return $propertyValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue($value);
+        $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
 }

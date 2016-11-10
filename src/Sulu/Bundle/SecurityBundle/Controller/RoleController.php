@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -301,6 +302,8 @@ class RoleController extends RestController implements ClassResourceInterface, S
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
+        } catch (DoctrineUniqueConstraintViolationException $e) {
+            throw new RoleNameAlreadyExistsException($name);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }

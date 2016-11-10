@@ -19,4 +19,5 @@ Feature: Phone content type
         When I fill in "husky-input-phone" with "00331234123123"
         And I click the save icon
         And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear

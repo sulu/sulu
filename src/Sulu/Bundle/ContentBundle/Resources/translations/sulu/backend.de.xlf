@@ -328,11 +328,11 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf011" resname="sulu.content.form.settings.all-nav-contexts">
                 <source>sulu.content.form.settings.all-nav-contexts</source>
-                <target>Allen Navigationen</target>
+                <target>allen Navigationen</target>
             </trans-unit>
             <trans-unit id="aaaaaaa37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
                 <source>sulu.content.form.settings.no-nav-contexts</source>
-                <target>Keiner Navigation</target>
+                <target>keiner Navigation</target>
             </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
                 <source>sulu.content.form.settings.shadow_page</source>
@@ -746,6 +746,58 @@
             <trans-unit id="59" resname="labels.error.remove-draft-desc">
                 <source>labels.error.remove-draft-desc</source>
                 <target>Der Entwurf konnte nicht gelöscht werden.</target>
+            </trans-unit>
+            <trans-unit id="60" resname="sulu-content.teaser.content">
+                <source>sulu-content.teaser.content</source>
+                <target>Seiten</target>
+            </trans-unit>
+            <trans-unit id="61" resname="sulu-content.teaser.edit">
+                <source>sulu-content.teaser.edit</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="62" resname="sulu-content.teaser.edited">
+                <source>sulu-content.teaser.edited</source>
+                <target>editiert</target>
+            </trans-unit>
+            <trans-unit id="63" resname="sulu-content.teaser.reset">
+                <source>sulu-content.teaser.reset</source>
+                <target>Zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="64" resname="sulu-content.teaser.apply">
+                <source>sulu-content.teaser.apply</source>
+                <target>Übernehmen</target>
+            </trans-unit>
+            <trans-unit id="65" resname="sulu-content.teaser.cancel">
+                <source>sulu-content.teaser.cancel</source>
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="66" resname="sulu-content.teaser.no-teaser">
+                <source>sulu-content.teaser.no-teaser</source>
+                <target>Keine Teaser ausgewählt</target>
+            </trans-unit>
+            <trans-unit id="67" resname="sulu.overlay.publish">
+                <source>sulu.overlay.publish</source>
+                <target>Veröffentlichen?</target>
+            </trans-unit>
+            <trans-unit id="68" resname="sulu.overlay.publish-desc">
+                <source>sulu.overlay.publish-desc</source>
+                <target>Ihre Daten werden öffentlich zugänglich. Möchten Sie fortfahren?</target>
+            </trans-unit>
+            <trans-unit id="69" resname="sulu-content.resource-locator.delete">
+                <source>sulu-content.resource-locator.delete</source>
+                <target>Die URL wird für alle Entwurfs- und Live-Versionen dieser Seite gelöscht und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?</target>
+            </trans-unit>
+            <trans-unit id="70" resname="sulu-content.create">
+                <source>sulu-content.create</source>
+                <target>Erstellen</target>
+            </trans-unit>
+            <trans-unit id="71" resname="content.ckeditor.page-link">
+                <source>content.ckeditor.page-link</source>
+                <target>Seite</target>
+            </trans-unit>
+            <trans-unit id="72" resname="content.ckeditor.internal-link.remove-drop-down">
+                <source>content.ckeditor.internal-link.remove-drop-down</source>
+                <target>Löschen</target>
             </trans-unit>
         </body>
     </file>

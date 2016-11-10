@@ -11,20 +11,20 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ListRestHelperTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ObjectManager
+     * @var RequestStack
      */
-    protected $em;
+    protected $requestStack;
 
     public function setUp()
     {
-        $this->em = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
+        $this->requestStack = $this->prophesize(RequestStack::class);
     }
 
     public static function dataFieldsProvider()
@@ -98,7 +98,8 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFields($request)
     {
-        $helper = new ListRestHelper($request, $this->em);
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+        $helper = new ListRestHelper($this->requestStack->reveal());
 
         $this->assertEquals(explode(',', $request->get('fields')), $helper->getFields());
         $this->assertEquals($request->get('sortBy'), $helper->getSortColumn());

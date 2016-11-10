@@ -122,6 +122,7 @@ define([
                         el: '#webspace-analytics-overlay',
                         openOnStart: true,
                         removeOnClose: true,
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.translations.overlayTitle,

@@ -6,17 +6,9 @@
                 <source>navigation.media</source>
                 <target>Media</target>
             </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
-                <source>navigation.media.collections</source>
-                <target>Collecties</target>
-            </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
                 <source>navigation.media.collections</source>
                 <target>Alle collecties</target>
-            </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
-                <source>navigation.media.collections.search</source>
-                <target>Filter collecties...</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -130,13 +122,17 @@
                 <source>sulu.media.edit.loading</source>
                 <target>Media inladen</target>
             </trans-unit>
+            <trans-unit id="243d19ff2f64452633a5c72169f22258" resname="sulu.collection.edit">
+                <source>sulu.collection.edit</source>
+                <target>Bewerk collectie</target>
+            </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
                 <source>sulu.collection.move</source>
                 <target>Verplaats collectie</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
-                <source>navigation.media.collections.empty</source>
-                <target>Geen collectie</target>
+            <trans-unit id="213d994f2f6465a633a5ce2169f22258" resname="sulu.collection.delete">
+                <source>sulu.collection.delete</source>
+                <target>Verwijder collectie</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
@@ -150,8 +146,8 @@
                 <source>media-selection.overlay.all-medias</source>
                 <target>Alle media</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
-                <source>sulu.media.all</source>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all-collections">
+                <source>sulu.media.all-collections</source>
                 <target>Alle media</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
@@ -306,13 +302,109 @@
                 <source>sulu-media.ckeditor.media-link.edit.remove</source>
                 <target>Verwijder media-link</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="sulu-media.selection.overlay.title">
-                <source>sulu-media.selection.overlay.title</source>
-                <target>Media</target>
-            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
                 <source>sulu-media.selection.overlay.save</source>
                 <target>Toepassen</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js55369f111118" resname="sulu-media.upload-files">
+                <source>sulu-media.upload-files</source>
+                <target>Bestanden uploaden</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js33469f111118" resname="sulu-media.remove-crop">
+                <source>sulu-media.remove-crop</source>
+                <target>Verwijder uitsnede</target>
+            </trans-unit>
+            <trans-unit id="243123ca3f64352w337js33469f111118" resname="sulu-media.image-formats">
+                <source>sulu-media.image-formats</source>
+                <target>Afbeeldingsformaten</target>
+            </trans-unit>
+            <trans-unit id="143123ca3f64352w337js33469f111118" resname="sulu-media.crop-double-click-hint">
+                <source>sulu-media.crop-double-click-hint</source>
+                <target>Dubbelklikken om te maximaliseren en te centreren</target>
+            </trans-unit>
+            <trans-unit id="155123ca3f64352w337js33469f111118" resname="sulu-media.edit-image">
+                <source>sulu-media.edit-image</source>
+                <target>Bewerk afbeelding</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w337js33469f111118" resname="sulu-media.crop">
+                <source>sulu-media.crop</source>
+                <target>Uitsnijden</target>
+            </trans-unit>
+            <trans-unit id="215163ca7f64952w137j533499fa1b118" resname="sulu-media.focus-point">
+                <source>sulu-media.focus-point</source>
+                <target>Stel focuspunt in</target>
+            </trans-unit>
+            <trans-unit id="2111636a7f94951w13aj53l4993a1by18" resname="sulu-media.save-and-recrop">
+                <source>sulu-media.save-and-recrop</source>
+                <target>Opslaan &amp; opnieuw uitsnijden</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
+                <source>sulu-media.crop-save-success</source>
+                <target>Uitsnede succesvol opgeslagen</target>
+            </trans-unit>
+            <trans-unit id="221143ca3f64352w117js33469f111118" resname="sulu-media.crop-remove-success">
+                <source>sulu-media.crop-remove-success</source>
+                <target>Uitsnede succesvol verwijderd</target>
+            </trans-unit>
+            <trans-unit id="112143ca3f64352w117js33469f111118" resname="sulu-media.crop-not-possible">
+                <source>sulu-media.crop-not-possible</source>
+                <target>Uitsnijden niet mogelijk</target>
+            </trans-unit>
+            <trans-unit id="112145ca3e64352w117js33469f111119" resname="sulu-media.image-too-small">
+                <source>sulu-media.image-too-small</source>
+                <target>De orginele afbeelding is te klein</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33469f111119" resname="sulu-media.crop-out-of-date">
+                <source>sulu-media.crop-out-of-date</source>
+                <target>Uitsnede vervallen</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33488f111119" resname="sulu-media.crop-out-of-date-text">
+                <source>sulu-media.crop-out-of-date-text</source>
+                <target>De uitsnede is vervallen aangezien een andere upload het afbeeldingsformaat heeft gewijzigd</target>
+            </trans-unit>
+            <trans-unit id="123145ca3e64352w117js33488f121119" resname="sulu-media.minimum-size-reached">
+                <source>sulu-media.minimum-size-reached</source>
+                <target>Minimale grootte bereikt</target>
+            </trans-unit>
+            <trans-unit id="123145cabe64352w117js33488a321119" resname="sulu-media.crops-out-of-date">
+                <source>sulu-media.crops-out-of-date</source>
+                <target>Uitsnede is verouderd</target>
+            </trans-unit>
+            <trans-unit id="123145cabe77352w117js33488a321119" resname="sulu-media.following-crops-out-of-date">
+                <source>sulu-media.following-crops-out-of-date</source>
+                <target>Uitsneden van de volgende afbeeldingsformaten zijn verouderd</target>
+            </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Origineel aanpassen</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Nieuwe versie van de afbeelding wordt aangemaakt</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Een nieuwe versie van de afbeelding wordt aangemaakt.  Bestaande crops kunnen vervallen.</target>
+            </trans-unit>
+            <trans-unit id="9f4145cacc77352w11ajs3a487a32217b" resname="sulu-media.external-server-title">
+                <source>sulu-media.external-server-title</source>
+                <target>Let Op</target>
+            </trans-unit>
+            <trans-unit id="2f4125ca4cb7c52wc1ajs3a48ea32817a" resname="sulu-media.external-server-description">
+                <source>sulu-media.external-server-description</source>
+                <target>Het bestand wordt verstuurd naar een externe server om bewerkt te kunnen worden.</target>
+            </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Formaat wijzigen?</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>De huidige uitsnede zal verloren gaan.</target>
+            </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Uitsneden zijn opgeslagen, maar zijn niet zichtbaar in deze voorbeeldweergave</target>
             </trans-unit>
         </body>
     </file>

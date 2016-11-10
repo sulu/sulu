@@ -12,16 +12,18 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
+use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
@@ -296,6 +298,88 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaRepository->findMediaById(1)->willReturn($media);
 
         $this->mediaManager->save($uploadedFile->reveal(), ['id' => 1], 42);
+    }
+
+    public function testSaveWithChangedFocusPoint()
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersion->getFocusPointX()->willReturn(null);
+        $fileVersion->getFocusPointY()->willReturn(null);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldBeCalled();
+        $this->formatManager->purge(1, 'test', [])->shouldBeCalled();
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testSaveWithSameFocusPoint()
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersion->getFocusPointX()->willReturn(1);
+        $fileVersion->getFocusPointY()->willReturn(2);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testVideoUploadWithoutFFmpeg()
+    {
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.ogg');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('video/ogg');
+        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class);
+
+        $this->mediaRepository->createNew()->willReturn(new Media());
+
+        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
     }
 
     public function provideGetByIds()

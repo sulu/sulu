@@ -27,6 +27,7 @@ define([], function() {
             hidePositionElement: true,
             dataAttribute: 'internal-links',
             actionIcon: 'fa-link',
+            disabledIds: [],
             dataDefault: [],
             navigateEvent: 'sulu.router.navigate',
             publishedStateName: 'publishedState',
@@ -48,11 +49,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(id, value, icons) {
+            contentItem: function(id, value, url, icons, cropper) {
                 return [
-                    '<span class="icons">' + icons + '</span>',
                     '<a href="#" data-id="', id, '" class="link">',
-                    '    <span class="value">', value, '</span>',
+                    '    <span class="icons">' + icons + '</span>',
+                    '    <span class="value" title="', value ,'">', (typeof cropper === 'function') ? cropper(value, 48) : value, '</span>',
+                    '    <span class="description" title="', url ,'">', (typeof cropper === 'function') ? cropper(url, 55) : value ,'</span>',
                     '</a>'
                 ].join('');
             },
@@ -139,7 +141,8 @@ define([], function() {
                             skin: 'fixed-height-small',
                             markable: true,
                             sortable: false,
-                            premarkedIds: data
+                            premarkedIds: data,
+                            disableIds: this.options.disabledIds
                         }
                     }
                 ]
@@ -183,12 +186,12 @@ define([], function() {
                         openOnStart: true,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
                         skin: 'responsive-width',
-                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
                                 cssClass: 'internal-links-overlay-add',
                                 data: templates.data(this.options),
+                                contentSpacing: false,
                                 okCallback: function() {
                                     this.overlayOkCallback();
                                     this.sandbox.stop(getId.call(this, 'columnNavigation'));
@@ -255,7 +258,9 @@ define([], function() {
             return templates.contentItem(
                 item[this.options.idKey],
                 item.title,
-                this.getItemIcons(item)
+                item.url,
+                this.getItemIcons(item),
+                this.sandbox.util.cropMiddle
             );
         },
 

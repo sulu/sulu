@@ -6,17 +6,9 @@
                 <source>navigation.media</source>
                 <target>Assets</target>
             </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
-                <source>navigation.media.collections</source>
-                <target>Collections</target>
-            </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
                 <source>navigation.media.collections</source>
-                <target>Toutes les collections</target>
-            </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
-                <source>navigation.media.collections.search</source>
-                <target>Filtrer les collections...</target>
+                <target>Tous les dossiers</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -40,11 +32,11 @@
             </trans-unit>
             <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
                 <source>sulu.media.new-collection</source>
-                <target>Nouvelle collection</target>
+                    <target>Nouveau dossier</target>
             </trans-unit>
             <trans-unit id="71491ef900232b8755bf0842292e1ff4" resname="sulu.media.add-collection">
                 <source>sulu.media.add-collection</source>
-                <target>Ajouter une nouvelle collection</target>
+                <target>Ajouter un dossier</target>
             </trans-unit>
             <trans-unit id="90a2264459ba0f52ef7a4d3c0298d50" resname="content-navigation.media.settings">
                 <source>content-navigation.media.settings</source>
@@ -64,39 +56,39 @@
             </trans-unit>
             <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
                 <source>media-selection.collections</source>
-                <target>Collections</target>
+                <target>Dossiers</target>
             </trans-unit>
             <trans-unit id="2ed2e1bec2480b32fd6f8022a857c080" resname="media.collections.title">
                 <source>media.collections.title</source>
-                <target>Collections</target>
+                <target>Dossiers</target>
             </trans-unit>
             <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5d" resname="media.collection.title">
                 <source>media.collection.title</source>
-                <target>Titre de la collection</target>
+                <target>Titre du dossier</target>
             </trans-unit>
             <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-save-desc">
                 <source>labels.success.collection-save-desc</source>
-                <target>Collection enregistrée avec succès</target>
+                <target>Dossier enregistre avec succès</target>
             </trans-unit>
             <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-deleted-desc">
                 <source>labels.success.collection-deleted-desc</source>
-                <target>Collection supprimée avec succès</target>
+                <target>Dossier supprime avec succès</target>
             </trans-unit>
             <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5c" resname="sulu.collections.delete-collection">
                 <source>sulu.collections.delete-collection</source>
-                <target>Supprimer collection</target>
+                <target>Supprimer dossier</target>
             </trans-unit>
             <trans-unit id="80a3272459ba0f52ef7a4d3c0298d5f" resname="media-selection.new-collection">
                 <source>media-selection.new-collection</source>
-                <target>Nouvelle collection</target>
+                <target>Nouveau dossier</target>
             </trans-unit>
             <trans-unit id="90a3273459ba0f52ef7a4d3c0298d5f" resname="media-selection.create-new-collection">
                 <source>media-selection.create-new-collection</source>
-                <target>Créer nouvelle collection</target>
+                <target>Créer nouveau dossier</target>
             </trans-unit>
             <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5f" resname="media-selection.upload-to-collection">
                 <source>media-selection.upload-to-collection</source>
-                <target>Upload à la collection</target>
+                <target>Upload à le dossier</target>
             </trans-unit>
             <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5d" resname="media-selection.upload-new">
                 <source>media-selection.upload-new</source>
@@ -116,7 +108,7 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22256" resname="sulu.media.move.overlay-title">
                 <source>sulu.media.move.overlay-title</source>
-                <target>Choisissez nouvelle collection</target>
+                <target>Choisissez nouveau dossier</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
                 <source>labels.success.media-move-desc</source>
@@ -124,19 +116,23 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
                 <source>labels.success.collection-move-desc</source>
-                <target>Collection déplacée avec succès</target>
+                <target>Dossier déplace avec succès</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
                 <source>sulu.media.edit.loading</source>
                 <target>Chargement du Media</target>
             </trans-unit>
+            <trans-unit id="243d19ff2f64452633a5c72169f22258" resname="sulu.collection.edit">
+                <source>sulu.collection.edit</source>
+                <target>Editer le dossier</target>
+            </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
                 <source>sulu.collection.move</source>
-                <target>Déplacer collection</target>
+                <target>Déplacer dossier</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
-                <source>navigation.media.collections.empty</source>
-                <target>Pas de collections</target>
+            <trans-unit id="213d994f2f6465a633a5ce2169f22258" resname="sulu.collection.delete">
+                <source>sulu.collection.delete</source>
+                <target>Supprimer dossier</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
@@ -144,14 +140,14 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22260" resname="sulu.collection.move.overlay-title">
                 <source>sulu.collection.move.overlay-title</source>
-                <target>Déplacer la collection</target>
+                <target>Déplacer le dossier</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-medias">
                 <source>media-selection.overlay.all-medias</source>
                 <target>Tous les Medias</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
-                <source>sulu.media.all</source>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all-collections">
+                <source>sulu.media.all-collections</source>
                 <target>Tous les media</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
@@ -184,7 +180,7 @@
             </trans-unit>
             <trans-unit id="243d88fse564652633a5ca2169f22407" resname="sulu.media.edit-collection">
                 <source>sulu.media.edit-collection</source>
-                <target>Editer la collection</target>
+                <target>Editer le dossier</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5cr443gf22407" resname="sulu.media.upload-new-version">
                 <source>sulu.media.upload-new-version</source>
@@ -200,11 +196,11 @@
             </trans-unit>
             <trans-unit id="243d88440f24652633778k2169f22407" resname="sulu.header.edit-collection">
                 <source>sulu.header.edit-collection</source>
-                <target>Editer la collection</target>
+                <target>Editer le dossier</target>
             </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22407" resname="sulu.header.delete-collection">
                 <source>sulu.header.delete-collection</source>
-                <target>Supprimer la collection</target>
+                <target>Supprimer le dossier</target>
             </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22417" resname="husky.upload.error.file-to-big">
                 <source>husky.upload.error.file-to-big</source>
@@ -306,13 +302,109 @@
                 <source>sulu-media.ckeditor.media-link.edit.remove</source>
                 <target>Enlever lien média</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="sulu-media.selection.overlay.title">
-                <source>sulu-media.selection.overlay.title</source>
-                <target>Médias</target>
-            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
                 <source>sulu-media.selection.overlay.save</source>
                 <target>Importer</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js55369f111118" resname="sulu-media.upload-files">
+                <source>sulu-media.upload-files</source>
+                <target>Uploader des fichiers</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js33469f111118" resname="sulu-media.remove-crop">
+                <source>sulu-media.remove-crop</source>
+                <target>Réinitialiser le cadrage</target>
+            </trans-unit>
+            <trans-unit id="243123ca3f64352w337js33469f111118" resname="sulu-media.image-formats">
+                <source>sulu-media.image-formats</source>
+                <target>Formats d'image</target>
+            </trans-unit>
+            <trans-unit id="143123ca3f64352w337js33469f111118" resname="sulu-media.crop-double-click-hint">
+                <source>sulu-media.crop-double-click-hint</source>
+                <target>Avec un double clic le cadrage est maximé et centré</target>
+            </trans-unit>
+            <trans-unit id="155123ca3f64352w337js33469f111118" resname="sulu-media.edit-image">
+                <source>sulu-media.edit-image</source>
+                <target>Modifier l'image</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w337js33469f111118" resname="sulu-media.crop">
+                <source>sulu-media.crop</source>
+                <target>Déterminer des cadrages</target>
+            </trans-unit>
+            <trans-unit id="215163ca7f64952w137j533499fa1b118" resname="sulu-media.focus-point">
+                <source>sulu-media.focus-point</source>
+                <target>Définir la position</target>
+            </trans-unit>
+            <trans-unit id="2111636a7f94951w13aj53l4993a1by18" resname="sulu-media.save-and-recrop">
+                <source>sulu-media.save-and-recrop</source>
+                <target>Enregistrer &amp; recadrer</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
+                <source>sulu-media.crop-save-success</source>
+                <target>Enregistrement du cadrage achevé réussi</target>
+            </trans-unit>
+            <trans-unit id="221143ca3f64352w117js33469f111118" resname="sulu-media.crop-remove-success">
+                <source>sulu-media.crop-remove-success</source>
+                <target>Réinitialisation du cadrage achevée réussie</target>
+            </trans-unit>
+            <trans-unit id="112143ca3f64352w117js33469f111118" resname="sulu-media.crop-not-possible">
+                <source>sulu-media.crop-not-possible</source>
+                <target>Découper n'est pas possible</target>
+            </trans-unit>
+            <trans-unit id="112145ca3e64352w117js33469f111119" resname="sulu-media.image-too-small">
+                <source>sulu-media.image-too-small</source>
+                <target>L'image originale est trop petite</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33469f111119" resname="sulu-media.crop-out-of-date">
+                <source>sulu-media.crop-out-of-date</source>
+                <target>Cadrage dépassé</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33488f111119" resname="sulu-media.crop-out-of-date-text">
+                <source>sulu-media.crop-out-of-date-text</source>
+                <target>Le cadrage défini est dépassé à la suite d'une image téléchargée ou d'un format d'image</target>
+            </trans-unit>
+            <trans-unit id="123145ca3e64352w117js33488f121119" resname="sulu-media.minimum-size-reached">
+                <source>sulu-media.minimum-size-reached</source>
+                <target>Taille minimale atteinte</target>
+            </trans-unit>
+            <trans-unit id="123145cabe64352w117js33488a321119" resname="sulu-media.crops-out-of-date">
+                <source>sulu-media.crops-out-of-date</source>
+                <target>Cadrages dépassés</target>
+            </trans-unit>
+            <trans-unit id="123145cabe77352w117js33488a321119" resname="sulu-media.following-crops-out-of-date">
+                <source>sulu-media.following-crops-out-of-date</source>
+                <target>Les cadrages pour les formats suivants sont caducs</target>
+            </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Modifier l'image originale</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Nouvelle version d'image sera créé</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Nouvelle version d'image créé. Cadrages définis peuvent être obsolètes.</target>
+            </trans-unit>
+            <trans-unit id="9f4145cacc77352w11ajs3a487a32217b" resname="sulu-media.external-server-title">
+                <source>sulu-media.external-server-title</source>
+                <target>Indice</target>
+            </trans-unit>
+            <trans-unit id="2f4125ca4cb7c52wc1ajs3a48ea32817a" resname="sulu-media.external-server-description">
+                <source>sulu-media.external-server-description</source>
+                <target>Le document est transmis au serveur extérieur pour l’éditer.</target>
+            </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Changer format de l'image</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>Le cadrage tel qu’il apparait sur l’écran se perd si on change le format.</target>
+            </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Les cadrages sont enregistrés mais ne sont pas visualisés dans l'aperçu</target>
             </trans-unit>
         </body>
     </file>

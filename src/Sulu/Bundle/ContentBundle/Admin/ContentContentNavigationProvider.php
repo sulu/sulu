@@ -101,7 +101,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $securityContext = 'sulu.webspaces.' . $options['webspace'];
 
         if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, PermissionTypes::SECURITY)) {
-            $permissions = new ContentNavigationItem('Permissions');
+            $permissions = new ContentNavigationItem('content-navigation.contents.permissions');
             $permissions->setId('tab-permissions');
             $permissions->setAction('permissions');
             $permissions->setPosition(50);
