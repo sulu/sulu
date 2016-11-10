@@ -64,7 +64,7 @@
             </trans-unit>
             <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff0" resname="security.roles.none">
                 <source>security.roles.none</source>
-                <target>Déactiver tous/target>
+                <target>Déactiver tous</target>
             </trans-unit>
             <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff1" resname="security.roles.security-type">
                 <source>security.roles.security-type</source>
