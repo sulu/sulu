@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -418,10 +419,10 @@ class StructureSubscriberTest extends SubscriberTestCase
             'webspace',
             'fr',
             null
-        )->shouldBeCalled();
+        )->shouldNotBeCalled();
 
         $this->contentType->write(
-            $this->node->reveal(),
+            new SuluNode($this->node->reveal()),
             $this->legacyProperty->reveal(),
             null,
             'webspace',

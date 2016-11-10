@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3022 [ContentBundle]       Fix cases in navigation translations
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
@@ -110,6 +111,13 @@ CHANGELOG for Sulu
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
+
+* 1.3.3 (2016-11-10)
+    * HOTFIX      #3021 [MediaBundle]         Added default locale to media selection overlay
+    * HOTFIX      #2989 [ContentBundle]       Fixed internal-link-uuid in query-builder
+    * HOTFIX      #2989 [MediaBundle]         Added file-version name database-index
+    * HOTFIX      #3015 [HTTPCacheBundle]     Activate cache handlers only in prod-environment
+    * HOTFIX      #3017 [ContentBundle]       Changed content-type write handling
 
 * 1.3.2 (2016-11-03)
     * HOTFIX      #2995 [MediaBundle]         Fixed namespace collision in media entity

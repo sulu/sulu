@@ -20,6 +20,7 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 
 /**
@@ -275,18 +276,9 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $blockPropertyWrapper = new BlockPropertyWrapper($property, $blockProperty, $index);
         $blockPropertyWrapper->setValue($value);
 
-        // TODO find a better why for change Types (same hack is used in ContentMapper:save )
-        $contentType->remove(
-            $node,
-            $blockPropertyWrapper,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
-
         if ($isImport && $contentType instanceof ContentTypeExportInterface) {
             return $contentType->importData(
-                $node,
+                new SuluNode($node),
                 $blockPropertyWrapper,
                 $value,
                 $userId,
@@ -297,7 +289,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         }
 
         $contentType->write(
-            $node,
+            new SuluNode($node),
             $blockPropertyWrapper,
             $userId,
             $webspaceKey,

@@ -21,6 +21,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
+use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
@@ -346,16 +347,8 @@ class StructureSubscriber implements EventSubscriberInterface
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $legacyProperty->setValue($value);
 
-            $contentType->remove(
-                $node,
-                $legacyProperty,
-                $webspaceName,
-                $locale,
-                null
-            );
-
             $contentType->write(
-                $node,
+                new SuluNode($node),
                 $legacyProperty,
                 null,
                 $webspaceName,
