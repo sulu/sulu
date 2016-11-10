@@ -44,8 +44,8 @@ class DocumentManagerTest extends SuluTestCase
         $this->initPhpcr();
 
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->defaultSession = $this->getContainer()->get('doctrine_phpcr.session');
-        $this->liveSession = $this->getContainer()->get('doctrine_phpcr.live_session');
+        $this->defaultSession = $this->getContainer()->get('sulu_document_manager.default_session');
+        $this->liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
 
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }

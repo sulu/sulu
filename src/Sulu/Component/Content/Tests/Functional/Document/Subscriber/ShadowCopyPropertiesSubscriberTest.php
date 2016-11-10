@@ -38,7 +38,7 @@ class ShadowCopyPropertiesSubscriberTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
+        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
 
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
 

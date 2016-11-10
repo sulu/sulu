@@ -23,6 +23,8 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
     public function prepend(ContainerBuilder $container)
     {
         $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
+        $context = $container->getParameter('sulu.context');
+
         $configs = $container->getExtensionConfig($this->getAlias());
         $parameterBag = $container->getParameterBag();
         $configs = $parameterBag->resolveValue($configs);
@@ -36,6 +38,28 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             }
         }
 
+        $liveSession = 'live';
+        if (isset($config['live_session'])) {
+            $liveSession = $config['live_session'];
+        }
+
+        $defaultSession = 'default';
+        if (!$preview && isset($config['default_session'])) {
+            $defaultSession = $config['default_session'];
+        }
+
+        if (!$preview && $context === SuluKernel::CONTEXT_WEBSITE) {
+            $defaultSession = $liveSession;
+        }
+
+        $container->prependExtensionConfig(
+            'sulu_document_manager',
+            [
+                'default_session' => $defaultSession,
+                'live_session' => $liveSession,
+            ]
+        );
+
         if ($container->hasExtension('doctrine_phpcr')) {
             $doctrinePhpcrConfig = [
                 'odm' => [],
@@ -44,9 +68,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
                 ],
             ];
 
-            if (!$preview && isset($config['default_session'])) {
-                $doctrinePhpcrConfig['session']['default_session'] = $config['default_session'];
-            }
+            $doctrinePhpcrConfig['session']['default_session'] = $defaultSession;
 
             $container->prependExtensionConfig(
                 'doctrine_phpcr',
@@ -105,8 +127,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
     private function configureDocumentManager($config, ContainerBuilder $container)
     {
         $debug = $config['debug'];
-        $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
-        $context = $container->getParameter('sulu.context');
 
         $dispatcherId = $debug ? 'sulu_document_manager.event_dispatcher.debug' : 'sulu_document_manager.event_dispatcher.standard';
         $container->setAlias('sulu_document_manager.event_dispatcher', $dispatcherId);
@@ -120,24 +140,13 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
 
-        $liveSession = 'doctrine_phpcr.live_session';
-        if (isset($config['live_session'])) {
-            $liveSession = sprintf('doctrine_phpcr.%s_session', $config['live_session']);
-        }
-
-        $defaultSession = 'doctrine_phpcr.default_session';
-        if (!$preview && isset($config['default_session'])) {
-            $defaultSession = sprintf('doctrine_phpcr.%s_session', $config['default_session']);
-        }
-
-        if (!$preview && $context === SuluKernel::CONTEXT_WEBSITE) {
-            $defaultSession = $liveSession;
-        }
-        $container->setAlias('sulu_document_manager.default_session', $defaultSession);
-
+        $container->setAlias(
+            'sulu_document_manager.default_session',
+            $this->getSessionServiceId($config['default_session'])
+        );
         $container->setAlias(
             'sulu_document_manager.live_session',
-            $liveSession
+            $this->getSessionServiceId($config['live_session'])
         );
     }
 
@@ -154,5 +163,17 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         );
 
         $container->setParameter('sulu_document_manager.segments', $pathSegments);
+    }
+
+    /**
+     * Returns the service id for the given session.
+     *
+     * @param string $session The name of the session
+     *
+     * @return string
+     */
+    private function getSessionServiceId($session)
+    {
+        return sprintf('doctrine_phpcr.%s_session', $session);
     }
 }

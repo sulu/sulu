@@ -151,7 +151,7 @@
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.query" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber">
-            <argument type="service" id="doctrine_phpcr.session" />
+            <argument type="service" id="sulu_document_manager.default_session" />
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
