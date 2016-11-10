@@ -27817,6 +27817,10 @@ define('services/husky/url-validator',[],function() {
             schemes = this.getDefaultSchemes();
         }
 
+        if (!url) {
+            return false;
+        }
+
         var match = url.match(getRegexp(schemes));
 
         if (!match) {
