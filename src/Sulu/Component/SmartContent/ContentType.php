@@ -17,6 +17,7 @@ use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Content type for smart selection.
  */
-class ContentType extends ComplexContentType
+class ContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var string
@@ -127,9 +128,8 @@ class ContentType extends ComplexContentType
             $value = $value->toArray();
         }
 
-        if (!empty($value['tags'])) {
-            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
-        }
+        $this->resolveTags($value, 'tags');
+        $this->resolveTags($value, 'websiteTags');
 
         $node->setProperty($property->getName(), json_encode($value));
     }
@@ -253,14 +253,10 @@ class ContentType extends ComplexContentType
         $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
         // resolve tags to id
-        if (!empty($filters['tags'])) {
-            $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
-        }
+        $this->resolveTags($filters, 'tags');
 
         // resolve website tags to id
-        if (!empty($filters['websiteTags'])) {
-            $filters['websiteTags'] = $this->tagManager->resolveTagNames($filters['websiteTags']);
-        }
+        $this->resolveTags($filters, 'websiteTags');
 
         // get provider
         $provider = $this->getProvider($property);
@@ -397,5 +393,64 @@ class ContentType extends ComplexContentType
         }
 
         return intval($page);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($value, true));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * @param $value
+     * @param $key
+     */
+    protected function resolveTags(&$value, $key)
+    {
+        if (isset($value[$key])) {
+            $ids = [];
+            $names = [];
+            foreach ($value[$key] as $tag) {
+                if (is_numeric($tag)) {
+                    $ids[] = $tag;
+                } else {
+                    $names[] = $tag;
+                }
+            }
+
+            if (!empty($names)) {
+                foreach ($this->tagManager->resolveTagNames($names) as $id) {
+                    $ids[] = $id;
+                }
+            }
+
+            $value[$key] = $ids;
+        }
     }
 }

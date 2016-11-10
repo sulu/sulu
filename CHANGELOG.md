@@ -11,6 +11,8 @@ CHANGELOG for Sulu
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes
     * BUGFIX      #3014 [PreviewBundle]       Use the correct PHPCR session for the preview
+    * FEATURE     #1758 [ContentBundle]       Webspace xliff 1.2 Import
+    * FEATURE     #2466 [ContentBundle]       Webspace xliff 1.2 Export
 
 * 1.4.0-RC2 (2016-11-03)
     * BUGFIX      #3010 [MediaBundle]         Fixed background of media overlay for preview icons
@@ -34,11 +36,11 @@ CHANGELOG for Sulu
     * FEATURE     #2979 [MediaBundle]         Hide internal formats in UI
     * ENHANCEMENT #2982 [MediaBundle]         Added loader on preview image when crops have been changed
     * BUGFIX      #2978 [ContentBundle]       Fixed proxy-factory configuration for smart-content
+    * BUGFIX      #2970 [MediaBundle]         Resize image Enk-tag to allow extending over provider
+    * FEATURE     #2966 [MediaBundle]         Added warning when unsaved crop will be lost
     * FEATURE     #2972 [MediaBundle]         Focus point for media cropping
     * BUGFIX      #2981 [WebsiteBundle]       Fixed dumping of sitemaps
-    * BUGFIX      #2970 [MediaBundle]         Resize image in media edit overlay
     * FEATURE     #2967 [ContentBundle]       Refactored link-tag to allow extending over provider
-    * FEATURE     #2966 [MediaBundle]         Added warning when unsaved crop will be lost
     * ENHANCEMENT #2948 [AdminBundle]         Replace colors and images by overwritable variables
 
 * 1.4.0-RC1 (2016-10-06)

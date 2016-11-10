@@ -28,6 +28,7 @@
             <argument type="service" id="sulu_content.teaser.manager"/>
 
             <tag name="sulu.content.type" alias="teaser_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <!-- serialization -->

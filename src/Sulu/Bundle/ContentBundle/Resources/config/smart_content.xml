@@ -58,6 +58,7 @@
             <argument>%sulu.content.type.smart_content.template%</argument>
 
             <tag name="sulu.content.type" alias="smart_content"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
     </services>
 </container>

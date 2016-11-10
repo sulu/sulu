@@ -17,12 +17,13 @@ use Sulu\Bundle\LocationBundle\Map\MapManager;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Symfony\Component\Intl\Intl;
 
 /**
  * ContentType for TextEditor.
  */
-class LocationContentType extends ComplexContentType
+class LocationContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var NodeRepositoryInterface
@@ -136,5 +137,33 @@ class LocationContentType extends ComplexContentType
         }
 
         return $countries;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (false === is_string($propertyValue)) {
+            return '';
+        }
+
+        return $propertyValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue($value);
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

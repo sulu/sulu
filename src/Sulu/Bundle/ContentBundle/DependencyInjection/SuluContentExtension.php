@@ -145,6 +145,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
+        $loader->load('export.xml');
         $loader->load('command.xml');
         $loader->load('link-tag.xml');
     }
