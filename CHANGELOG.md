@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3022 [ContentBundle]       Fix cases in navigation translations
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
