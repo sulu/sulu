@@ -120,7 +120,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             '<info>===============</info>',
             '',
             '<info>' . $import->successes . ' Documents imported.</info>',
-            '<comment>' . count($import->failed) . ' Documents ignored.</comment>'
+            '<comment>' . count($import->failed) . ' Documents ignored.</comment>',
         ]);
 
         if (!isset($import->exceptionStore['ignore'])) {
@@ -129,14 +129,14 @@ class WebspaceImportCommand extends ContainerAwareCommand
 
         // If more then 20 infos print only in log
         if (count($import->exceptionStore['ignore']) > 20) {
-            foreach($import->exceptionStore['ignore'] as $msg) {
+            foreach ($import->exceptionStore['ignore'] as $msg) {
                 $logger->info($msg);
             }
 
             return;
         }
 
-        foreach($import->exceptionStore['ignore'] as $msg) {
+        foreach ($import->exceptionStore['ignore'] as $msg) {
             $output->writeln('<comment>' . $msg . '</comment>');
             $logger->info($msg);
         }
