@@ -27,9 +27,9 @@ class WebspaceExportCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('sulu:webspaces:export')
-            ->addArgument('target', InputArgument::REQUIRED, 'test.xliff')
-            ->addOption('webspace', 'w', InputOption::VALUE_REQUIRED)
-            ->addOption('locale', 'l', InputOption::VALUE_REQUIRED)
+            ->addArgument('target', InputArgument::REQUIRED, 'export.xliff')
+            ->addArgument('webspace', InputArgument::REQUIRED)
+            ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->addOption('nodes', 'm', InputOption::VALUE_REQUIRED)
             ->addOption('ignored-nodes', 'i', InputOption::VALUE_REQUIRED)
@@ -39,12 +39,12 @@ class WebspaceExportCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $webspaceKey = $input->getOption('webspace');
+        $webspaceKey = $input->getArgument('webspace');
         $target = $input->getArgument('target');
         if (!strpos($target, '/') === 0) {
             $target = getcwd() . '/' . $target;
         }
-        $locale = $input->getOption('locale');
+        $locale = $input->getArgument('locale');
         $format = $input->getOption('format');
         $uuid = $input->getOption('uuid');
         $nodes = $input->getOption('nodes');

@@ -28,8 +28,8 @@ class WebspaceImportCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:webspaces:import')
             ->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
-            ->addOption('webspace', 'w', InputOption::VALUE_REQUIRED)
-            ->addOption('locale', 'l', InputOption::VALUE_REQUIRED)
+            ->addArgument('webspace', InputOption::VALUE_REQUIRED)
+            ->addArgument('locale', InputOption::VALUE_REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
             ->addOption('exportSuluVersion', '', InputOption::VALUE_OPTIONAL, '1.2 or 1.3', '1.3')
@@ -39,12 +39,12 @@ class WebspaceImportCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $webspaceKey = $input->getOption('webspace');
+        $webspaceKey = $input->getArgument('webspace');
         $filePath = $input->getArgument('file');
         if (!strpos($filePath, '/') === 0) {
             $filePath = getcwd() . '/' . $filePath;
         }
-        $locale = $input->getOption('locale');
+        $locale = $input->getArgument('locale');
         $format = $input->getOption('format');
         $uuid = $input->getOption('uuid');
         $overrideSettings = $input->getOption('overrideSettings');
@@ -94,6 +94,51 @@ class WebspaceImportCommand extends ContainerAwareCommand
             $output->writeln(sprintf('<info>Imported %s/%s</info>', $import->successes, $import->count));
         }
 
+        $this->printExceptions($output, $import);
+
         return $import->fails;
+    }
+
+    /**
+     * Print the completion message after import is done.
+     *
+     * @param OutputInterface $output
+     * @param stdClass $import
+     */
+    protected function printExceptions($output, $import)
+    {
+        /** @var $logger LoggerInterface */
+        $logger = $this->getContainer()->get('logger');
+
+        if (null === $output) {
+            $output = new NullOutput();
+        }
+
+        $output->writeln([
+            '',
+            '<info>Import Result</info>',
+            '<info>===============</info>',
+            '',
+            '<info>' . $import->successes . ' Documents imported.</info>',
+            '<comment>' . count($import->failed) . ' Documents ignored.</comment>'
+        ]);
+
+        if (!isset($import->exceptionStore['ignore'])) {
+            return;
+        }
+
+        // If more then 20 infos print only in log
+        if (count($import->exceptionStore['ignore']) > 20) {
+            foreach($import->exceptionStore['ignore'] as $msg) {
+                $logger->info($msg);
+            }
+
+            return;
+        }
+
+        foreach($import->exceptionStore['ignore'] as $msg) {
+            $output->writeln('<comment>' . $msg . '</comment>');
+            $logger->info($msg);
+        }
     }
 }

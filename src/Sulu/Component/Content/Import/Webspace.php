@@ -23,9 +23,10 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
-use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -70,7 +71,7 @@ class Webspace implements WebspaceInterface
     protected $contentImportManager;
 
     /**
-     * @var RlpStrategyInterface
+     * @var ResourceLocatorStrategyInterface
      */
     protected $rlpStrategy;
 
@@ -78,6 +79,16 @@ class Webspace implements WebspaceInterface
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+    * @var LegacyPropertyFactory
+    */
+    protected $legacyPropertyFactory;
+    /**
+     * @var array
+     */
+    private $exceptionStore = [];
+
 
     /**
      * @var array
@@ -103,7 +114,7 @@ class Webspace implements WebspaceInterface
      * @param DocumentInspector $documentInspector
      * @param DocumentRegistry $documentRegistry
      * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param RlpStrategyInterface $rlpStrategy
+     * @param ResourceLocatorStrategyInterface $rlpStrategy
      * @param StructureManagerInterface $structureManager
      * @param ExtensionManagerInterface $extensionManager
      * @param ContentImportManagerInterface $contentImportManager
@@ -115,7 +126,7 @@ class Webspace implements WebspaceInterface
         DocumentInspector $documentInspector,
         DocumentRegistry $documentRegistry,
         LegacyPropertyFactory $legacyPropertyFactory,
-        TreeLeafEditStrategy $rlpStrategy,
+        ResourceLocatorStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ContentImportManagerInterface $contentImportManager,
@@ -189,11 +200,13 @@ class Webspace implements WebspaceInterface
 
         $progress->finish();
 
+
         $return = new \stdClass();
         $return->count = $importedCounter;
         $return->fails = count($failedImports);
         $return->successes = $successCounter;
         $return->failed = $failedImports;
+        $return->exceptionStore = $this->exceptionStore;
 
         return $return;
     }
@@ -213,6 +226,7 @@ class Webspace implements WebspaceInterface
 
         try {
             if (!isset($parsedData['uuid']) || !isset($parsedData['structureType']) || !isset($parsedData['data'])) {
+                $this->addException('uuid, structureType or data for import not found.', 'ignore');
                 throw new \Exception('uuid, structureType or data for import not found.');
             }
 
@@ -238,6 +252,8 @@ class Webspace implements WebspaceInterface
             $document->setStructureType($structureType);
 
             if ($document->getWebspaceName() != $webspaceKey) {
+                $this->addException(sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName()), 'ignore');
+
                 throw new \Exception(
                     sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName())
                 );
@@ -249,7 +265,9 @@ class Webspace implements WebspaceInterface
                 );
             }
 
-            $this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data);
+            if (!$this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data)) {
+                return false;
+            }
             $this->setDocumentSettings($document, $structureType, $webspaceKey, $locale, $format, $data, $overrideSettings);
 
             // save document
@@ -260,6 +278,10 @@ class Webspace implements WebspaceInterface
 
             return true;
         } catch (\Exception $e) {
+            if ($e instanceof DocumentManagerException) {
+                return;
+            }
+
             $this->logger->error(
                 sprintf(
                     '<info>%s</info>%s: <error>%s</error>%s',
@@ -303,11 +325,9 @@ class Webspace implements WebspaceInterface
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
 
         if ($this->getParser($format)->getPropertyData('title', $data) === '') {
-            throw new \Exception(
-                sprintf('Document(%s) has not set any title', $document->getUuid())
-            );
+            $this->addException(sprintf('Document(%s) has not set any title', $document->getUuid()), 'ignore');
 
-            return;
+            return false;
         }
 
         // import all content data
@@ -356,6 +376,8 @@ class Webspace implements WebspaceInterface
 
         // set required data
         $document->setTitle($this->getParser($format)->getPropertyData('title', $data));
+
+        return true;
     }
 
     /**
@@ -537,5 +559,25 @@ class Webspace implements WebspaceInterface
         $title = trim(implode(' ', $rlpParts));
 
         return $this->rlpStrategy->generate($title, $parentUuid, $webspaceKey, $locale);
+    }
+
+    /**
+     * Add a specific import exception/warning to the exception store.
+     * This messages will print after the import is done.
+     *
+     * @param string $msg
+     * @param string $type
+     */
+    protected function addException($msg = null, $type = 'info')
+    {
+        if (null === $msg) {
+            return;
+        }
+
+        if (!isset($this->exceptionStore[$type])) {
+            $this->exceptionStore[$type] = [];
+        }
+
+        $this->exceptionStore[$type][] = $msg;
     }
 }
