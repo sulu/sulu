@@ -84,7 +84,7 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
+        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager.property_encoder');

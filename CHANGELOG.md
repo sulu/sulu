@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.4.1 (2016-11-11)
+    * BUGFIX      #3024 [ContentBundle]       Use session from document manager instead of doctrine
+    * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
+
 * 1.4.0 (2016-11-10)
     * BUGFIX      #3022 [ContentBundle]       Fix cases in navigation translations
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links

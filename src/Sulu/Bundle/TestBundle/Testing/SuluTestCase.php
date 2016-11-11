@@ -54,8 +54,8 @@ abstract class SuluTestCase extends KernelTestCase
         parent::setUp();
 
         $this->importer = new PHPCRImporter(
-            $this->getContainer()->get('doctrine_phpcr.session'),
-            $this->getContainer()->get('doctrine_phpcr.live_session')
+            $this->getContainer()->get('sulu_document_manager.default_session'),
+            $this->getContainer()->get('sulu_document_manager.live_session')
         );
     }
 
@@ -150,8 +150,8 @@ abstract class SuluTestCase extends KernelTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('doctrine_phpcr.session');
-        $liveSession = $this->getContainer()->get('doctrine_phpcr.live_session');
+        $session = $this->getContainer()->get('sulu_document_manager.default_session');
+        $liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
 
         if ($session->nodeExists('/cmf')) {
             NodeHelper::purgeWorkspace($session);

@@ -46,7 +46,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->resourceLocatorStrategy = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_leaf_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
+        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
 
 
         $this->initPhpcr();

@@ -96,7 +96,7 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
+        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
