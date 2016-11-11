@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * BUGFIX      #3024 [ContentBundle]       Use session from document manager instead of doctrine
+    * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
 
 * 1.4.0 (2016-11-10)
     * BUGFIX      #3022 [ContentBundle]       Fix cases in navigation translations

@@ -32,7 +32,7 @@ define([
         },
 
         showError = function($element, data, type) {
-            if (-1 === data.indexOf('sulu:validation-state="' + type + '"')) {
+            if (!data || -1 === data.indexOf('sulu:validation-state="' + type + '"')) {
                 return;
             }
 
