@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * BUGFIX      #3024 [ContentBundle]       Use session from document manager instead of doctrine
+
 * 1.4.0 (2016-11-10)
     * BUGFIX      #3022 [ContentBundle]       Fix cases in navigation translations
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
