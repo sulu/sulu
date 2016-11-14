@@ -52683,7 +52683,6 @@ define('husky_extensions/itembox',[],function() {
             },
             translations: {
                 noContentSelected: 'listbox.nocontent-selected',
-                viewAll: 'public.view-all',
                 viewLess: 'public.view-less',
                 of: 'public.of',
                 visible: 'public.visible',
@@ -52858,9 +52857,11 @@ define('husky_extensions/itembox',[],function() {
             render: function() {
                 this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-                var data = this.getData();
+                if (!!this.options.defaultDisplayOption) {
+                    this.options.dataDefault.displayOption = this.options.defaultDisplayOption;
+                }
 
-                this.viewAll = true;
+                var data = this.getData();
 
                 this.ids = {
                     container: 'listbox-' + this.options.instanceName + '-container',
@@ -52962,9 +52963,6 @@ define('husky_extensions/itembox',[],function() {
             loadContent: function(data) {
                 this.$container.addClass(constants.isLoadingClass);
 
-                // reset items visible when new content is loaded
-                this.viewAll = false;
-
                 if (!!data && (!data.length || data.length > 0)) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
@@ -53051,7 +53049,6 @@ define('husky_extensions/itembox',[],function() {
              * @param event
              */
             changeDisplayOption: function(event) {
-                // TODO move display options to own component?
                 var position = this.sandbox.dom.data(event.currentTarget, 'position');
 
                 this.setDisplayOption(position);
