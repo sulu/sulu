@@ -130,7 +130,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $structure->getLanguageCode()->willReturn('en');
         $this->property->getStructure()->willReturn($structure->reveal());
 
-        $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => false])
+        $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => true])
             ->shouldBeCalled();
         $this->contentQueryExecutor->execute('default', ['en'], $this->contentQueryBuilder->reveal())->willReturn([]);
 

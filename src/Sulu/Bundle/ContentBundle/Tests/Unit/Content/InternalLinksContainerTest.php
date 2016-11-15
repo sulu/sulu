@@ -49,7 +49,7 @@ class InternalLinksContainerTest extends \PHPUnit_Framework_TestCase
             new NullLogger(),
             'default',
             'en',
-            false
+            true
         );
 
         $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => false])->shouldBeCalled();
@@ -70,7 +70,7 @@ class InternalLinksContainerTest extends \PHPUnit_Framework_TestCase
             new NullLogger(),
             'default',
             'en',
-            true
+            false
         );
 
         $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => true])->shouldBeCalled();

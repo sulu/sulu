@@ -176,7 +176,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 2, []),
             $this->getDocumentManager(),
             $this->getProxyFactory(),
-            false
+            true
         );
 
         $result = $provider->resolveDataItems(
@@ -214,7 +214,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
             $this->getProxyFactory(),
-            false
+            true
         );
 
         $result = $provider->resolveDataItems(
@@ -255,7 +255,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
             $this->getProxyFactory(),
-            true
+            false
         );
 
         $result = $provider->resolveDataItems(
@@ -296,7 +296,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
             $this->getProxyFactory(),
-            false
+            true
         );
 
         $result = $provider->resolveResourceItems(
@@ -334,7 +334,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                     'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
                     'properties' => ['my-properties' => true],
                     'excluded' => '123-123-123',
-                    'published' => false
+                    'published' => false,
                 ]
             ),
             $this->getContentQueryExecutor(-1, null, $data),
@@ -342,7 +342,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                 ['123-123-123' => $data[0], '123-123-456' => $data[1], '123-123-789' => $data[2]]
             ),
             $this->getProxyFactory(),
-            false
+            true
         );
 
         $result = $provider->resolveDataItems(

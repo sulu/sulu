@@ -50,20 +50,20 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     /**
      * @var bool
      */
-    private $onlyPublished;
+    private $showDrafts;
 
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
         $template,
-        $onlyPublished
+        $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
         $this->template = $template;
-        $this->onlyPublished = $onlyPublished;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -182,7 +182,7 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
             $this->logger,
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
-            $this->onlyPublished
+            $this->showDrafts
         );
 
         return $container->getData();

@@ -91,7 +91,7 @@ class InternalLinksContainer implements ArrayableInterface
     /**
      * @var bool
      */
-    private $onlyPublished;
+    private $showDrafts;
 
     public function __construct(
         $ids,
@@ -101,7 +101,7 @@ class InternalLinksContainer implements ArrayableInterface
         LoggerInterface $logger,
         $webspaceKey,
         $languageCode,
-        $onlyPublished
+        $showDrafts
     ) {
         $this->ids = $ids;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -110,7 +110,7 @@ class InternalLinksContainer implements ArrayableInterface
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
         $this->params = $params;
-        $this->onlyPublished = $onlyPublished;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -138,7 +138,7 @@ class InternalLinksContainer implements ArrayableInterface
                 [
                     'ids' => $this->ids,
                     'properties' => (isset($this->params['properties']) ? $this->params['properties']->getValue() : []),
-                    'published' => $this->onlyPublished,
+                    'published' => !$this->showDrafts,
                 ]
             );
             $pages = $this->contentQueryExecutor->execute(
