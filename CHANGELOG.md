@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3032 [ContentBundle]       Fixed publishing for shadow page targeting drafts
+
 * 1.4.1 (2016-11-11)
     * BUGFIX      #3024 [ContentBundle]       Use session from document manager instead of doctrine
     * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
