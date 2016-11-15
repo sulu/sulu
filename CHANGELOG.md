@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
 
 * 1.4.1 (2016-11-11)
