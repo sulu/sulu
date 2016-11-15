@@ -111,7 +111,8 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $configuration = $provider->getConfiguration();
@@ -125,7 +126,8 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $parameter = $provider->getDefaultPropertyParameter();
@@ -143,7 +145,8 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryBuilder(),
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $result = $provider->resolveDataItems(
@@ -167,11 +170,13 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                     'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
                     'properties' => ['my-properties' => true],
                     'excluded' => '123-123-123',
+                    'published' => false,
                 ]
             ),
             $this->getContentQueryExecutor(2, 2, []),
             $this->getDocumentManager(),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $result = $provider->resolveDataItems(
@@ -203,11 +208,54 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                     'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
                     'properties' => ['my-properties' => true],
                     'excluded' => '123-123-123',
+                    'published' => false,
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
+        );
+
+        $result = $provider->resolveDataItems(
+            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            5,
+            1,
+            2
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+        $this->assertEquals(
+            [new ContentDataItem($data[0], $data[0]), new ContentDataItem($data[1], $data[1])],
+            $result->getItems()
+        );
+        $this->assertTrue($result->getHasNextPage());
+        $this->assertEquals(['123-123-123', '123-123-456'], $result->getReferencedUuids());
+    }
+
+    public function testResolveDataItemsOnlyPublished()
+    {
+        $data = [
+            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+        ];
+
+        $provider = new ContentDataProvider(
+            $this->getContentQueryBuilder(
+                [
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'properties' => ['my-properties' => true],
+                    'excluded' => '123-123-123',
+                    'published' => true,
+                ]
+            ),
+            $this->getContentQueryExecutor(2, 1, $data),
+            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getProxyFactory(),
+            true
         );
 
         $result = $provider->resolveDataItems(
@@ -242,11 +290,13 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                     'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
                     'properties' => ['my-properties' => true],
                     'excluded' => '123-123-123',
+                    'published' => false,
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $result = $provider->resolveResourceItems(
@@ -284,13 +334,15 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                     'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
                     'properties' => ['my-properties' => true],
                     'excluded' => '123-123-123',
+                    'published' => false
                 ]
             ),
             $this->getContentQueryExecutor(-1, null, $data),
             $this->getDocumentManager(
                 ['123-123-123' => $data[0], '123-123-456' => $data[1], '123-123-789' => $data[2]]
             ),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $result = $provider->resolveDataItems(
@@ -322,7 +374,8 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ),
             $this->getContentQueryExecutor(0, 1, [$data]),
             $this->getDocumentManager([$data['uuid'] => $data]),
-            $this->getProxyFactory()
+            $this->getProxyFactory(),
+            false
         );
 
         $result = $provider->resolveDatasource(
