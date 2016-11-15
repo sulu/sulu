@@ -7030,11 +7030,11 @@ input ::-moz-placeholder {
 /* line 90, ../scss/modules/form.scss */
 .form-horizontal .form-group > * {
   display: table-cell;
+  vertical-align: middle;
 }
-/* line 94, ../scss/modules/form.scss */
+/* line 95, ../scss/modules/form.scss */
 .form-horizontal .form-group > :first-child {
   text-align: right;
-  vertical-align: middle;
   padding-right: 20px;
   width: 140px;
 }
