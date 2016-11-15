@@ -311,7 +311,8 @@ class NodeRepository implements NodeRepositoryInterface
                 [],
                 $this->logger,
                 $webspaceKey,
-                $languageCode
+                $languageCode,
+                false
             );
 
             $result = $container->getData();
