@@ -20,7 +20,7 @@ define([], function() {
         this.map = null;
         this.marker = null;
 
-        var gmapApiUrl = 'http://maps.google.com/maps/api/js?sensor=false';
+        var gmapApiUrl = 'https://maps.google.com/maps/api/js?sensor=false';
 
         if (providerOptions.api_key) {
             gmapApiUrl = gmapApiUrl + '&key=' + providerOptions.api_key;
