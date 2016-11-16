@@ -180,6 +180,24 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($node->hasProperty('sulu:content'));
     }
 
+    public function testSaveEmptyRouteNode()
+    {
+        $childDocument = $this->createDocument($this->homeDocument, 'Test-Child', '/test/child');
+        $this->documentManager->persist($childDocument, 'de');
+        $this->documentManager->publish($childDocument, 'de');
+
+        $document = $this->createDocument($this->homeDocument, 'Test-Child', '/test');
+        $this->documentManager->persist($document, 'de');
+
+        $this->phpcrMapper->save($document);
+        $this->sessionManager->getSession()->save();
+
+        $node = $this->session->getNode('/cmf/sulu_io/routes/de/test');
+        $this->assertEquals($node->getPropertyValue('sulu:content'), $this->documentInspector->getNode($document));
+        $this->assertTrue($node->hasProperty('sulu:history'));
+        $this->assertTrue($node->hasProperty('sulu:content'));
+    }
+
     public function testReadFailure()
     {
         $content = $this->session->getNode('/cmf/sulu_io/contents')->addNode('content');

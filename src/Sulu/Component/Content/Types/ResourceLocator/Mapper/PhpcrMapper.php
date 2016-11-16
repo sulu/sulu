@@ -99,6 +99,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 [
                     'path' => $routeDocumentPath,
                     'auto_create' => true,
+                    'override' => true,
                 ]
             );
             $this->documentManager->publish($routeDocument, $locale);
@@ -117,9 +118,9 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             function ($resourceLocator, \PHPCR\NodeInterface $node) {
                 if (false === $node->getPropertyValue('sulu:history') && false !== $resourceLocator) {
                     return $resourceLocator;
-                } else {
-                    return false;
                 }
+
+                return false;
             },
             $webspaceKey,
             $languageCode,
@@ -128,9 +129,9 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
 
         if ($result !== null) {
             return $result;
-        } else {
-            throw new ResourceLocatorNotFoundException();
         }
+
+        throw new ResourceLocatorNotFoundException();
     }
 
     /**
