@@ -119,6 +119,12 @@ CHANGELOG for Sulu
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
 
+* 1.3.5
+    * HOTFIX      #3033 [SnippetBundle]       Handle references to deleted snippets in snippet selection
+
+* 1.3.4 (2016-11-14)
+    * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
+
 * 1.3.3 (2016-11-10)
     * HOTFIX      #3021 [MediaBundle]         Added default locale to media selection overlay
     * HOTFIX      #2989 [ContentBundle]       Fixed internal-link-uuid in query-builder
