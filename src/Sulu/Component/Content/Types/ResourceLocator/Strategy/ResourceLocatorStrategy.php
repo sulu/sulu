@@ -170,15 +170,18 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         }
 
         if (!$this->mapper->unique($path, $webspaceKey, $languageCode)) {
-            $treeContent = $this->loadByResourceLocator($path, $webspaceKey, $languageCode);
+            try {
+                $treeContent = $this->loadByResourceLocator($path, $webspaceKey, $languageCode);
+                // FIXME Required because jackalope-doctrine-dbal does not return references which only exist in the current
+                // session. If it would loadByContent would already return some value, which would make this check obsolete.
+                if ($treeContent === $this->documentInspector->getUuid($document)) {
+                    return false;
+                }
 
-            // FIXME Required because jackalope-doctrine-dbal does not return references which only exist in the current
-            // session. If it would loadByContent would already return some value, which would make this check obsolete.
-            if ($treeContent === $this->documentInspector->getUuid($document)) {
-                return false;
+                throw new ResourceLocatorAlreadyExistsException($path, $treeContent);
+            } catch (ResourceLocatorNotFoundException $exception) {
+                // a node exists but is not a resource-locator.
             }
-
-            throw new ResourceLocatorAlreadyExistsException($path, $treeContent);
         }
 
         $this->mapper->save($document);
