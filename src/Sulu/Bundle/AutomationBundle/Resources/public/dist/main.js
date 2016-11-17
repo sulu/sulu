@@ -1,0 +1,1 @@
+require.config({paths:{suluautomation:"../../suluautomation/dist"}}),define(function(){return{name:"SuluAutomationBundle",initialize:function(a){"use strict"}}});
