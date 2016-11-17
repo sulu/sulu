@@ -181,7 +181,7 @@ define([], function() {
                 return false;
             }.bind(this), 'a.link');
 
-            this.sandbox.on(this.DATA_RETRIEVED(), this.removeInvalidReferences.bind(this));
+            this.sandbox.on(this.DATA_RETRIEVED(), removeInvalidReferences.bind(this));
         },
 
         /**
@@ -223,13 +223,31 @@ define([], function() {
         },
 
         /**
+         * Removes references linking to deleted snippets.
+         *
+         * @param existingSnippets {object} The data returned from the api containing all existing snippets
+         */
+        removeInvalidReferences = function(existingSnippets) {
+            var data = this.getData();
+            var cleanedData = [];
+
+            for (var i = 0; i < data.length; ++i) {
+                if (isArrayContainingSnippet(existingSnippets, data[i])) {
+                    cleanedData.push(data[i]);
+                }
+            }
+
+            this.setData(cleanedData, false);
+        },
+
+        /**
          * Checks if the snippet list contains the snippet with the provided uuid.
          *
          * @param {object} snippets
          * @param {number} snippetUuid
          */
         isArrayContainingSnippet = function(snippets, snippetUuid) {
-            for (var i = 0; i < snippets.length; i++) {
+            for (var i = 0; i < snippets.length; ++i) {
                 if (snippets[i].id === snippetUuid) {
                     return true;
                 }
@@ -293,24 +311,6 @@ define([], function() {
             }
 
             this.setData(data, false);
-        },
-
-        /**
-         * Removes references linking to deleted snippets.
-         *
-         * @param existingSnippets {object} The data returned from the api containing all existing snippets
-         */
-        removeInvalidReferences: function(existingSnippets) {
-            var data = this.getData();
-            var cleanedData = [];
-
-            for (var i = 0; i < data.length; i++) {
-                if (isArrayContainingSnippet(existingSnippets, data[i])) {
-                    cleanedData.push(data[i]);
-                }
-            }
-
-            this.setData(cleanedData, false);
         }
     };
 });
