@@ -47,16 +47,23 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
      */
     private $template;
 
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
-        $template
+        $template,
+        $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
         $this->template = $template;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -174,7 +181,8 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
             array_merge($this->getDefaultParams(), $property->getParams()),
             $this->logger,
             $property->getStructure()->getWebspaceKey(),
-            $property->getStructure()->getLanguageCode()
+            $property->getStructure()->getLanguageCode(),
+            $this->showDrafts
         );
 
         return $container->getData();
