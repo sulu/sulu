@@ -55,16 +55,23 @@ class ContentDataProvider implements DataProviderInterface
      */
     private $proxyFactory;
 
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
         DocumentManagerInterface $documentManager,
-        LazyLoadingValueHolderFactory $proxyFactory
+        LazyLoadingValueHolderFactory $proxyFactory,
+        $showDrafts
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->documentManager = $documentManager;
         $this->proxyFactory = $proxyFactory;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -249,6 +256,7 @@ class ContentDataProvider implements DataProviderInterface
                 'config' => $filters,
                 'properties' => $properties,
                 'excluded' => $filters['excluded'],
+                'published' => !$this->showDrafts,
             ]
         );
 

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -127,6 +128,12 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $container->setAlias(
             'sulu_document_manager.live_session',
             $liveSession
+        );
+
+        $container->setParameter(
+            'sulu_document_manager.show_drafts',
+            $container->getParameter('sulu.context') === SuluKernel::CONTEXT_ADMIN
+            || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
         );
     }
 

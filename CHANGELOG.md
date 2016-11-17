@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * 1.3.5
     * HOTFIX      #3033 [SnippetBundle]       Handle references to deleted snippets in snippet selection
+    * HOTFIX      #3032 [ContentBundle]       Fixed publishing for shadow page targeting drafts
 
 * 1.3.4 (2016-11-14)
     * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
