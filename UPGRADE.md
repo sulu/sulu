@@ -28,6 +28,10 @@ If you dont want to use twig2 please add following line to your ``composer.json`
     "twig/twig": "^1.11"
 }
 ```
+### Media formats uniqueness
+
+The uniqueness of media formats is now checked, and an exception is thrown in
+case duplicated format keys exist.
 
 ### Deprecations
 

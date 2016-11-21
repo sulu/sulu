@@ -18,6 +18,7 @@ use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
  * Class ImageFormatCompilerPass.
@@ -89,6 +90,12 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
         $themeFormats = $loader->load($fileName);
         foreach ($themeFormats as $format) {
+            if (array_key_exists($format['key'], $activeFormats)) {
+                throw new InvalidArgumentException(
+                    sprintf('Media format with key "%s" already exists!', $format['key'])
+                );
+            }
+
             $activeFormats[$format['key']] = $format;
         }
     }
