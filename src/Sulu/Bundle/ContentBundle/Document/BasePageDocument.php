@@ -32,6 +32,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 
 /**
@@ -53,7 +54,8 @@ class BasePageDocument implements
     WebspaceBehavior,
     SecurityBehavior,
     LocalizedAuditableBehavior,
-    LocalizedTitleBehavior
+    LocalizedTitleBehavior,
+    VersionBehavior
 {
     /**
      * The name of this node.
