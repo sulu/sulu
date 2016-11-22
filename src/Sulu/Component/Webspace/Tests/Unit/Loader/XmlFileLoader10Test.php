@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit\Loader;
 
 use Prophecy\Argument;
+use Sulu\Component\Webspace\Exception\InvalidWebspaceException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Symfony\Component\Config\FileLocatorInterface;
@@ -124,5 +125,14 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
         $this->assertEquals(['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'], $webspace->getDefaultTemplates());
         $this->assertEquals(['error-404' => 'test.html.twig', 'error' => 'test.html.twig'], $webspace->getTemplates());
+    }
+
+    public function testLoadWithInvalidWebspaceKey()
+    {
+        $this->setExpectedException(InvalidWebspaceException::class);
+
+        $this->loader->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_deprecated_invalid_webspace_key.xml'
+        );
     }
 }
