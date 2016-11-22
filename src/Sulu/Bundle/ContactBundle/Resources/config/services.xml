@@ -52,8 +52,8 @@
             <factory method="getRepository" service="doctrine"/>
             <argument>%sulu_contact.contact_title.entity%</argument>
         </service>
-        <service id="sulu_contact.country_repository" class="Sulu\Component\Persistence\Repository\ORM\EntityRepository"
-                 factory-method="getRepository" factory-service="doctrine">
+        <service id="sulu_contact.country_repository" class="Sulu\Component\Persistence\Repository\ORM\EntityRepository">
+            <factory service="doctrine" method="getRepository"/>
             <argument>%sulu_contact.country.entity%</argument>
         </service>
         <service id="sulu_contact.account_listener" class="%sulu_contact.account_listener.class%">
