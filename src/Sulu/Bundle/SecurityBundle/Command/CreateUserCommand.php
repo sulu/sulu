@@ -59,7 +59,7 @@ class CreateUserCommand extends ContainerAwareCommand
 
         foreach ($localizations as $localization) {
             /* @var Localization $localization */
-            $locales[] = $localization->getLocalization();
+            $locales[] = $localization->getLocale();
         }
 
         $username = $input->getArgument('username');
