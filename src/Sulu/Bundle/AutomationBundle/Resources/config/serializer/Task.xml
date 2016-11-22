@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Sulu\Bundle\AutomationBundle\Entity\Task" exclusion-policy="ALL">
+        <property name="id" type="integer" expose="true" groups="fullTask,partialTask,api"/>
+        <property name="taskName" type="string" expose="true" groups="fullTask,partialTask,api"/>
+        <property name="schedule" type="DateTime" expose="true" groups="fullTask,partialTask,api"/>
+        <property name="entityClass" type="string" expose="true" groups="fullTask,partialTask,api"/>
+        <property name="entityId" type="string" expose="true" groups="fullTask,partialTask,api"/>
+        <property name="created" type="DateTime" expose="true" groups="fullTask,partialTask"/>
+        <property name="changed" type="DateTime" expose="true" groups="fullTask,partialTask"/>
+
+        <virtual-property method="getCreatorFullname" name="creator" serialized-name="creator" groups="fullTask,partialTask"/>
+        <virtual-property method="getChangerFullname" name="changer" serialized-name="changer" groups="fullTask,partialTask"/>
+    </class>
+</serializer>

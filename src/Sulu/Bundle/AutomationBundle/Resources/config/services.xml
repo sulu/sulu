@@ -9,5 +9,23 @@
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service id="sulu_automation.tasks.manager" class="Sulu\Bundle\AutomationBundle\Tasks\Manager\TaskManager">
+            <argument type="service" id="sulu.repository.task"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <!-- FIXME hack to enable doctrine object constructor -->
+        <!--
+          could be fixed in serializer by changing JMS\SerializerBundle\DependencyInjection\Compiler\DoctrinePass:49
+          from "->replaceArgument(0, new Reference($previousId[$service]))"
+          to   "->replaceArgument(1, new Reference($previousId[$service]))"
+        -->
+        <service id="jms_serializer.object_constructor" alias="sulu_automation.object_constructor" public="false"/>
+        <service id="sulu_automation.object_constructor" class="JMS\Serializer\Construction\DoctrineObjectConstructor"
+                 public="false">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="jms_serializer.unserialize_object_constructor"/>
+        </service>
     </services>
 </container>

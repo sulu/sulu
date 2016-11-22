@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AutomationBundle;
 
+use Sulu\Bundle\AutomationBundle\Tasks\Model\TaskInterface;
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -18,4 +21,18 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SuluAutomationBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $this->buildPersistence(
+            [
+                TaskInterface::class => 'sulu.model.task.class',
+            ],
+            $container
+        );
+    }
 }

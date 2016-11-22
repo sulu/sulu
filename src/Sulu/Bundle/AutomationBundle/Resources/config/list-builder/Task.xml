@@ -1,0 +1,31 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:list="http://schemas.sulu.io/class/list"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <property name="id" list:translation="public.id" display="no" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
+        </property>
+
+        <property name="taskName" list:translation="sulu_automation.task.task-name" display="always">
+            <orm:field-name>taskName</orm:field-name>
+            <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
+        </property>
+
+        <property name="schedule" list:translation="sulu_automation.task.schedule" display="always"
+                  list:type="datetime">
+            <orm:field-name>schedule</orm:field-name>
+            <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
+        </property>
+
+        <property name="entityClass" display="never">
+            <orm:field-name>entityClass</orm:field-name>
+            <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
+        </property>
+
+        <property name="entityId" display="never">
+            <orm:field-name>entityId</orm:field-name>
+            <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
+        </property>
+    </properties>
+</class>

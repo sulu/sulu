@@ -1,0 +1,4 @@
+sulu_automation_api:
+    resource: "@SuluAutomationBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /api

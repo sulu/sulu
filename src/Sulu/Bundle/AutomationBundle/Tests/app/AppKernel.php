@@ -10,10 +10,20 @@
  */
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Test kernel.
  */
 class AppKernel extends SuluTestKernel
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        parent::registerContainerConfiguration($loader);
+
+        $loader->load(__DIR__ . '/config/config.yml');
+    }
 }
