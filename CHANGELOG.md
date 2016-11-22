@@ -2,8 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #3032 [ContentBundle]       Fixed publishing for shadow page targeting drafts
+    * HOTFIX      #3032 [ContentBundle]         Fixed publishing for shadow page targeting drafts
     * BUGFIX      #3035 [DocumentManagerBundle] Fixed bug for save if route already exists empty
+    * HOTFIX      #3039 [ContentBundle]         Fixed wrong parsing of webspace from path
 
 * 1.4.1 (2016-11-11)
     * BUGFIX      #3024 [ContentBundle]       Use session from document manager instead of doctrine

@@ -11,11 +11,62 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Mapper\Translation;
 
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
+use PHPCR\SessionInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 {
-    protected $properties;
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var NodeInterface
+     */
+    private $node;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property1;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property2;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property3;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property4;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property5;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property6;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property7;
+
+    /**
+     * @var SuluNodeHelper
+     */
+    private $helper;
 
     public function setUp()
     {
@@ -98,6 +149,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             ['/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'],
             ['', null],
             ['asdasd', null],
+            ['/cmf/sulu-io/content/articles', 'sulu-io'],
         ];
     }
 

@@ -436,6 +436,15 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertNull($devUrl->getSegment());
     }
 
+    public function testLoadWithInvalidWebspaceKey()
+    {
+        $this->setExpectedException(InvalidWebspaceException::class);
+
+        $this->loader->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/sulu.io_invalid_webspace_key.xml'
+        );
+    }
+
     public function testTemplateWithNonUniqueType()
     {
         $this->setExpectedException(InvalidWebspaceException::class);

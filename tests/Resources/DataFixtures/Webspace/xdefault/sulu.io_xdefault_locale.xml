@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>Sulu CMF</name>
-    <key>sulu.io_xdefault_locale</key>
+    <key>sulu_io_xdefault_locale</key>
 
     <security>
         <system>sulu_io</system>
