@@ -201,7 +201,7 @@ class ManagedStructure extends Structure
         $this->init();
 
         foreach ($this->structureMetadata->getProperties() as $childName => $child) {
-            if (false === $clearMissing && !isset($data[$childName])) {
+            if (false === $clearMissing && !array_key_exists($childName, $data)) {
                 continue;
             }
 
