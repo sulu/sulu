@@ -23,7 +23,6 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
-use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
@@ -111,7 +110,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It shuld lazily initialize a localized property.
+     * It should lazily initialize a localized property.
      */
     public function testGetLocalizedProperty()
     {
@@ -124,6 +123,86 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         $this->propertyMetadata->isLocalized()->willReturn(true);
 
         $this->doGetProperty($name, $contentTypeName, $locale, true);
+    }
+
+    /**
+     * It should bind values.
+     */
+    public function testBind()
+    {
+        $name = 'test';
+        $contentTypeName = 'hello';
+        $locale = 'de';
+
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
+        $this->propertyMetadata->isLocalized()->willReturn(true);
+
+        $this->propertyMetadata->getType()->willReturn($contentTypeName);
+        $this->structureMetadata->getProperties()->willReturn([$name => $this->propertyMetadata]);
+        $this->structureMetadata->getProperty($name)->willReturn($this->propertyMetadata);
+        $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
+
+        $this->propertyFactory->createTranslatedProperty(
+            $this->propertyMetadata->reveal(),
+            $locale,
+            Argument::type(StructureBridge::class)
+        )->willReturn($this->legacyProperty->reveal());
+
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+        $this->inspector->getOriginalLocale($this->document->reveal())->willReturn($locale);
+
+        $this->contentType->read(
+            $this->node->reveal(),
+            $this->legacyProperty->reveal(),
+            'sulu_io',
+            $locale,
+            null
+        )->shouldBeCalledTimes(1);
+
+        $this->legacyProperty->setValue(1);
+
+        $this->structure->bind([$name => 1]);
+    }
+
+    /**
+     * It should bind also null values.
+     */
+    public function testBindNullValue()
+    {
+        $name = 'test';
+        $contentTypeName = 'hello';
+        $locale = 'de';
+
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
+        $this->propertyMetadata->isLocalized()->willReturn(true);
+
+        $this->propertyMetadata->getType()->willReturn($contentTypeName);
+        $this->structureMetadata->getProperties()->willReturn([$name => $this->propertyMetadata]);
+        $this->structureMetadata->getProperty($name)->willReturn($this->propertyMetadata);
+        $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
+
+        $this->propertyFactory->createTranslatedProperty(
+            $this->propertyMetadata->reveal(),
+            $locale,
+            Argument::type(StructureBridge::class)
+        )->willReturn($this->legacyProperty->reveal());
+
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+        $this->inspector->getOriginalLocale($this->document->reveal())->willReturn($locale);
+
+        $this->contentType->read(
+            $this->node->reveal(),
+            $this->legacyProperty->reveal(),
+            'sulu_io',
+            $locale,
+            null
+        )->shouldBeCalledTimes(1);
+
+        $this->legacyProperty->setValue(null);
+
+        $this->structure->bind([$name => null]);
     }
 
     /**

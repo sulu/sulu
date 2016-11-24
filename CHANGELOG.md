@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.4.5 (2016-01-16)
+    * BUGFIX      #3043 [ContentBudle]        Fixed bind null values on managed-structure
+
 * 1.4.4 (2016-01-12)
     * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor
     * HOTFIX      #3139 [MediaBundle]           Fixed scaling issues on crop overlay in page form
