@@ -148,6 +148,12 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             'sulu_document_manager.live_session',
             $this->getSessionServiceId($config['live_session'])
         );
+
+        $container->setParameter(
+            'sulu_document_manager.show_drafts',
+            $container->getParameter('sulu.context') === SuluKernel::CONTEXT_ADMIN
+            || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
+        );
     }
 
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)

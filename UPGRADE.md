@@ -1,5 +1,18 @@
 # Upgrade
 
+## 1.4.2
+
+### Webspace keys
+
+Webspace keys are only allowed to have lower case letters, numbers and `-` or
+`_`. Other characters might cause problems and are therefore already restricted
+in the XSD file. If you have other characters you have to rename your webspace.
+
+In case you have to you also must rename the `/cmf/<webspace>` e.g. using the
+PHPCR shell and reconfigure your role permissions. You should also clear the
+search index with the `massive:search:purge` command and reindex with the
+`massive:search:reindex` command.
+
 ## 1.4.0
 
 ### Ports in webspace config

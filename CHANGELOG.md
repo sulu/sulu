@@ -7,6 +7,11 @@ CHANGELOG for Sulu
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
 
+* 1.4.2 (2016-11-24)
+    * HOTFIX      #3032 [ContentBundle]         Fixed publishing for shadow page targeting drafts
+    * BUGFIX      #3035 [DocumentManagerBundle] Fixed bug for save if route already exists empty
+    * HOTFIX      #3039 [ContentBundle]         Fixed wrong parsing of webspace from path
+
 * 1.4.1 (2016-11-11)
     * BUGFIX      #3024 [ContentBundle]       Use session from document manager instead of doctrine
     * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
@@ -121,6 +126,12 @@ CHANGELOG for Sulu
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
+
+* 1.3.5
+    * HOTFIX      #3033 [SnippetBundle]       Handle references to deleted snippets in snippet selection
+
+* 1.3.4 (2016-11-14)
+    * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor
 
 * 1.3.3 (2016-11-10)
     * HOTFIX      #3021 [MediaBundle]         Added default locale to media selection overlay
