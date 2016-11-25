@@ -3,8 +3,8 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Sulu\Bundle\AutomationBundle\Entity\Task" table="au_task">
-        <id name="id" type="integer" column="id">
-            <generator strategy="AUTO"/>
+        <id name="id" type="guid">
+            <generator strategy="NONE"/>
         </id>
 
         <field name="entityClass" type="string" column="entityClass"/>
@@ -12,5 +12,6 @@
 
         <field name="taskName" type="string" column="taskName"/>
         <field name="schedule" type="datetime" column="schedule"/>
+        <field name="locale" type="string" column="locale" length="5"/>
     </entity>
 </doctrine-mapping>

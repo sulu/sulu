@@ -2,8 +2,13 @@
        xmlns:list="http://schemas.sulu.io/class/list"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
     <properties>
-        <property name="id" list:translation="public.id" display="no" list:type="integer">
+        <property name="id" list:translation="public.id" display="no">
             <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
+        </property>
+
+        <property name="locale" display="never">
+            <orm:field-name>locale</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
 

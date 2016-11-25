@@ -21,9 +21,18 @@ interface TaskInterface extends AuditableInterface
     /**
      * Returns id.
      *
-     * @return int
+     * @return string
      */
     public function getId();
+
+    /**
+     * Set id.
+     *
+     * @param string $id
+     *
+     * @return $this
+     */
+    public function setId($id);
 
     /**
      * Returns task.

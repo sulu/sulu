@@ -37,7 +37,8 @@
         "goodby/csv": "^1.3",
         "doctrine/data-fixtures": "1.1.*",
         "layershifter/tld-extract": "^1.1",
-        "mtdowling/cron-expression": "^1.1"
+        "mtdowling/cron-expression": "^1.1",
+        "ramsey/uuid": "^3.1"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",

@@ -51,6 +51,7 @@ class TaskManagerTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $task = $this->prophesize(TaskInterface::class);
+        $task->setId(Argument::type('string'))->shouldBeCalled();
 
         $this->assertEventDispatched(Events::TASK_CREATE_EVENT, $task->reveal());
         $this->taskRepository->save($task->reveal())->shouldBeCalled()->willReturnArgument(0);

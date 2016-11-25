@@ -23,12 +23,12 @@ define([
         defaults: {
             options: {
                 entityClass: null,
+                locale: null,
                 idKey: 'id'
             },
 
             templates: {
-                skeleton: skeletonTemplate,
-                url: '/admin/api/tasks?entity-class=<%= entityClass %>&entity-id=<%= entityId %>'
+                skeleton: skeletonTemplate
             },
 
             translations: {
@@ -93,7 +93,7 @@ define([
                         name: 'datagrid@husky',
                         options: {
                             el: this.$el.find('.task-list'),
-                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&sortBy=schedule&sortOrder=asc',
+                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=asc',
                             resultKey: 'tasks',
                             instanceName: 'tasks',
                             actionCallback: this.editTask.bind(this),
@@ -159,6 +159,7 @@ define([
         },
 
         saveTask: function(data) {
+            data.locale = this.options.locale;
             data.entityClass = this.options.entityClass;
             data.entityId = this.entityData[this.options.idKey];
 

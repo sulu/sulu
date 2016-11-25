@@ -22,7 +22,7 @@ class Task implements TaskInterface
     use AuditableTrait;
 
     /**
-     * @var int
+     * @var string
      */
     private $id;
 
@@ -35,6 +35,11 @@ class Task implements TaskInterface
      * @var \DateTime
      */
     private $schedule;
+
+    /**
+     * @var string
+     */
+    private $locale;
 
     /**
      * @var string
@@ -55,11 +60,7 @@ class Task implements TaskInterface
     }
 
     /**
-     * Set id.
-     *
-     * @param int $id
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setId($id)
     {
@@ -108,6 +109,30 @@ class Task implements TaskInterface
     public function setSchedule($schedule)
     {
         $this->schedule = $schedule;
+
+        return $this;
+    }
+
+    /**
+     * Returns locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Set locale.
+     *
+     * @param string $locale
+     *
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
 
         return $this;
     }

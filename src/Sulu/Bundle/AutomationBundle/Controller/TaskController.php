@@ -60,11 +60,33 @@ class TaskController extends RestController implements ClassResourceInterface
         if ($entityId = $request->get('entity-id')) {
             $listBuilder->where($fieldDescriptors['entityId'], $entityId);
         }
+        if ($locale = $request->get('locale')) {
+            $listBuilder->where($fieldDescriptors['locale'], $locale);
+        }
+
+        $ids = null;
+        if ($request->get('ids') !== null) {
+            $ids = array_filter(explode(',', $request->get('ids')));
+            $listBuilder->in($fieldDescriptors['id'], $ids);
+        }
+
+        $result = $listBuilder->execute();
+
+        if ($ids) {
+            $sorted = [];
+            foreach ($result as $item) {
+                $sorted[array_search($item['id'], $ids)] = $item;
+            }
+
+            ksort($sorted);
+
+            $result = array_values($sorted);
+        }
 
         return $this->handleView(
             $this->view(
                 new ListRepresentation(
-                    $listBuilder->execute(),
+                    $result,
                     'tasks',
                     'get_tasks',
                     $request->query->all(),
