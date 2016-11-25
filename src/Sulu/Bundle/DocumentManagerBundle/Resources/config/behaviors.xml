@@ -23,6 +23,7 @@
 
         <service id="sulu_document_manager.suscriber.behavior.blame"
                  class="Sulu\Component\Content\Document\Subscriber\BlameSubscriber">
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>

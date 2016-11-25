@@ -11,12 +11,17 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
+use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
-use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -31,6 +36,11 @@ class BlameSubscriber implements EventSubscriberInterface
     const CHANGER = 'changer';
 
     /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
      * @var TokenStorage
      */
     private $tokenStorage;
@@ -38,8 +48,9 @@ class BlameSubscriber implements EventSubscriberInterface
     /**
      * @param TokenStorage $tokenStorage
      */
-    public function __construct(TokenStorage $tokenStorage = null)
+    public function __construct(PropertyEncoder $propertyEncoder, TokenStorage $tokenStorage = null)
     {
+        $this->propertyEncoder = $propertyEncoder;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -50,8 +61,10 @@ class BlameSubscriber implements EventSubscriberInterface
     {
         return [
             Events::CONFIGURE_OPTIONS => 'configureOptions',
-            Events::PERSIST => 'handlePersist',
-            Events::METADATA_LOAD => 'handleMetadataLoad',
+            Events::HYDRATE => 'setBlamesOnDocument',
+            Events::PERSIST => 'setBlamesOnNodeForPersist',
+            Events::PUBLISH => 'setBlamesOnNodeForPublish',
+            Events::RESTORE => ['setChangerForRestore', -32],
         ];
     }
 
@@ -68,47 +81,51 @@ class BlameSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Adds the creator and changer to the metadata for persisting.
+     * Sets the changer and creator of the document.
      *
-     * @param MetadataLoadEvent $event
+     * @param HydrateEvent $event
      */
-    public function handleMetadataLoad(MetadataLoadEvent $event)
+    public function setBlamesOnDocument(HydrateEvent $event)
     {
-        $metadata = $event->getMetadata();
+        $document = $event->getDocument();
 
-        if (!$metadata->getReflectionClass()->isSubclassOf(LocalizedBlameBehavior::class)) {
+        if (!$this->supports($document)) {
             return;
         }
 
-        $encoding = 'system_localized';
-        if ($metadata->getReflectionClass()->isSubclassOf(BlameBehavior::class)) {
-            $encoding = 'system';
-        }
+        $node = $event->getNode();
+        $locale = $event->getLocale();
+        $encoding = $this->getPropertyEncoding($document);
 
-        $metadata->addFieldMapping(
-            'creator',
-            [
-                'encoding' => $encoding,
-            ]
+        $accessor = $event->getAccessor();
+
+        $accessor->set(
+            static::CHANGER,
+            $node->getPropertyValueWithDefault(
+                $this->propertyEncoder->encode($encoding, static::CHANGER, $locale),
+                null
+            )
         );
-        $metadata->addFieldMapping(
-            'changer',
-            [
-                'encoding' => $encoding,
-            ]
+
+        $accessor->set(
+            static::CREATOR,
+            $node->getPropertyValueWithDefault(
+                $this->propertyEncoder->encode($encoding, static::CREATOR, $locale),
+                null
+            )
         );
     }
 
     /**
-     * Persists the data of creator and changer to the Node.
+     * Sets the creator and changer for the persist event.
      *
      * @param PersistEvent $event
      */
-    public function handlePersist(PersistEvent $event)
+    public function setBlamesOnNodeForPersist(PersistEvent $event)
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof LocalizedBlameBehavior) {
+        if (!$this->supports($document)) {
             return;
         }
 
@@ -118,15 +135,89 @@ class BlameSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!$event->getLocale()) {
+        $this->setBlamesOnNode(
+            $document,
+            $event->getNode(),
+            $event->getLocale(),
+            $event->getAccessor(),
+            $userId
+        );
+    }
+
+    /**
+     * Sets the creator and changer for the publish event.
+     *
+     * @param PublishEvent $event
+     */
+    public function setBlamesOnNodeForPublish(PublishEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
             return;
         }
 
-        if (!$document->getCreator()) {
-            $event->getAccessor()->set(self::CREATOR, $userId);
+        $this->setBlamesOnNode(
+            $document,
+            $event->getNode(),
+            $event->getLocale(),
+            $event->getAccessor(),
+            $document->getChanger()
+        );
+    }
+
+    /**
+     * Persists the data of creator and changer to the Node.
+     *
+     * @param LocalizedBlameBehavior $document
+     * @param NodeInterface $node
+     * @param string $locale string
+     * @param $options
+     * @param DocumentAccessor $accessor
+     */
+    public function setBlamesOnNode(
+        LocalizedBlameBehavior $document,
+        NodeInterface $node,
+        $locale,
+        DocumentAccessor $accessor,
+        $userId
+    ) {
+        $encoding = $this->getPropertyEncoding($document);
+
+        $creatorPropertyName = $this->propertyEncoder->encode($encoding, static::CREATOR, $locale);
+        if (!$node->hasProperty($creatorPropertyName)) {
+            $accessor->set(self::CREATOR, $userId);
+            $node->setProperty(
+                $creatorPropertyName,
+                $document->getCreator()
+            );
         }
 
-        $event->getAccessor()->set(self::CHANGER, $userId);
+        $accessor->set(self::CHANGER, $userId);
+        $node->setProperty(
+            $this->propertyEncoder->encode($encoding, static::CHANGER, $locale),
+            $userId
+        );
+    }
+
+    /**
+     * Sets the changer for the restore event.
+     *
+     * @param RestoreEvent $event
+     */
+    public function setChangerForRestore(RestoreEvent $event)
+    {
+        $document = $event->getDocument();
+        if (!$this->supports($event->getDocument())) {
+            return;
+        }
+
+        $encoding = $this->getPropertyEncoding($document);
+
+        $event->getNode()->setProperty(
+            $this->propertyEncoder->encode($encoding, self::CHANGER, $event->getLocale()),
+            $this->getUserId($event->getOptions())
+        );
     }
 
     /**
@@ -164,5 +255,34 @@ class BlameSubscriber implements EventSubscriberInterface
         }
 
         return $user->getId();
+    }
+
+    /**
+     * Returns the encoding kind for the given document.
+     *
+     * @param $document
+     *
+     * @return string
+     */
+    private function getPropertyEncoding($document)
+    {
+        $encoding = 'system_localized';
+        if ($document instanceof BlameBehavior) {
+            $encoding = 'system';
+        }
+
+        return $encoding;
+    }
+
+    /**
+     * Returns if the given document is supported by this subscriber.
+     *
+     * @param $document
+     *
+     * @return bool
+     */
+    private function supports($document)
+    {
+        return $document instanceof LocalizedBlameBehavior;
     }
 }
