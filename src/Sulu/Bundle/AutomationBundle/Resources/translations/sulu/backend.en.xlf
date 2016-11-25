@@ -2,6 +2,38 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
+            <trans-unit id="1">
+                <source>sulu_automation.automation</source>
+                <target>Automation</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>sulu_automation.tasks</source>
+                <target>Tasks</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>sulu_automation.task</source>
+                <target>Task</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>sulu_automation.task.name</source>
+                <target>Task Name</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>sulu_automation.task.schedule</source>
+                <target>Schedule</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>sulu_automation.task.schedule.time</source>
+                <target>Time</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>sulu_automation.task.schedule.date</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>sulu_automation.task.choose</source>
+                <target>Choose ...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_content.automation.content_navigation_provider"
+                 class="Sulu\Bundle\ContentBundle\Admin\ContentAutomationContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="content"/>
+        </service>
+    </services>
+</container>
+

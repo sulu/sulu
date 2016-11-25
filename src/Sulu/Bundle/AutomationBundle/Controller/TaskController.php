@@ -29,6 +29,16 @@ use Symfony\Component\HttpFoundation\Response;
 class TaskController extends RestController implements ClassResourceInterface
 {
     /**
+     * Returns fields for tasks.
+     *
+     * @return Response
+     */
+    public function cgetFieldsAction()
+    {
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors())));
+    }
+
+    /**
      * Returns list of tasks.
      *
      * @param Request $request
@@ -93,7 +103,7 @@ class TaskController extends RestController implements ClassResourceInterface
     {
         $manager = $this->getTaskManager();
         $task = $this->get('serializer')->deserialize(
-            json_encode($request->request->all()),
+            json_encode(array_filter($request->request->all())),
             Task::class,
             'json',
             DeserializationContext::create()->setGroups(['api'])

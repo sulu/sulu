@@ -3,7 +3,9 @@
     <class name="Sulu\Bundle\AutomationBundle\Entity\Task" exclusion-policy="ALL">
         <property name="id" type="integer" expose="true" groups="fullTask,partialTask,api"/>
         <property name="taskName" type="string" expose="true" groups="fullTask,partialTask,api"/>
-        <property name="schedule" type="DateTime" expose="true" groups="fullTask,partialTask,api"/>
+        <property name="schedule" expose="true" groups="fullTask,partialTask,api">
+            <type><![CDATA[DateTime]]></type>
+        </property>
         <property name="entityClass" type="string" expose="true" groups="fullTask,partialTask,api"/>
         <property name="entityId" type="string" expose="true" groups="fullTask,partialTask,api"/>
         <property name="created" type="DateTime" expose="true" groups="fullTask,partialTask"/>

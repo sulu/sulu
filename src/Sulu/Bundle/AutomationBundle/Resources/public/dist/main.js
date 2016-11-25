@@ -1,1 +1,1 @@
-require.config({paths:{suluautomation:"../../suluautomation/dist"}}),define(function(){return{name:"SuluAutomationBundle",initialize:function(a){"use strict"}}});
+require.config({paths:{suluautomation:"../../suluautomation/dist","services/suluautomation/task-manager":"../../suluautomation/dist/services/task-manager"}}),define(function(){return{name:"SuluAutomationBundle",initialize:function(a){"use strict";a.components.addSource("suluautomation","/bundles/suluautomation/dist/components")}}});

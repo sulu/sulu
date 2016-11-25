@@ -1,0 +1,43 @@
+<div class="grid">
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <label for="task-name" class="required m-bottom-10"><%= translations.taskName %></label>
+            <div id="task-name"
+                 data-aura-component="select@husky"
+                 data-aura-data='[{"id":"sulu_content.publish","title":"Publish"},{"id":"sulu_content.unpublish","title":"Unpublish"}]'
+                 data-aura-multiple-select="false"
+                 data-aura-default-label="<%= translations.choose %>"
+                 data-aura-value-name="title"
+                 data-form="true"
+                 data-type="husky-select"
+                 data-validation-required="true"
+                 data-mapper-property="taskName"
+                 data-mapper-return-value="id"/>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col-6 form-group">
+            <label for="husky-input-task-time" class="required"><%= translations.time %></label>
+            <div id="task-time-container"
+                 data-aura-component="input@husky"
+                 data-aura-skin="time"
+                 data-aura-instance-name="task-time"
+                 data-form="true"
+                 data-type="husky-input"
+                 data-validation-required="true"
+                 data-mapper-property="time"/>
+        </div>
+        <div class="grid-col-6 form-group">
+            <label for="husky-input-task-date" class="required"><%= translations.date %></label>
+            <div id="task-date-container"
+                 data-aura-component="input@husky"
+                 data-aura-skin="date"
+                 data-aura-instance-name="task-time"
+                 data-aura-input-id="task-date"
+                 data-form="true"
+                 data-type="husky-input"
+                 data-validation-required="true"
+                 data-mapper-property="date"/>
+        </div>
+    </div>
+</div>

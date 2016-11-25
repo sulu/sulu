@@ -9,7 +9,9 @@
 
 require.config({
     paths: {
-        suluautomation: '../../suluautomation/js'
+        suluautomation: '../../suluautomation/js',
+
+        'services/suluautomation/task-manager': '../../suluautomation/js/services/task-manager'
     }
 });
 
@@ -22,6 +24,7 @@ define(function() {
 
             'use strict';
 
+            app.components.addSource('suluautomation', '/bundles/suluautomation/js/components');
         }
     };
 });
