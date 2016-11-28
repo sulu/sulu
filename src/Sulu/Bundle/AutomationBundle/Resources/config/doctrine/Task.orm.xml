@@ -14,7 +14,7 @@
         <field name="schedule" type="datetime" column="schedule"/>
         <field name="locale" type="string" column="locale" length="5"/>
 
-        <field name="taskId" type="string" nullable="true">
+        <field name="taskId" type="guid" nullable="true">
             <options>
                 <option name="references">
                     <option name="entity">Task\TaskBundle\Entity\Task</option>

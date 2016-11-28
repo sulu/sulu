@@ -40,7 +40,7 @@ class DocumentUnpublishHandler implements AutomationTaskHandlerInterface
      */
     public function handle($workload)
     {
-        $document = $this->documentManager->find($workload['id']);
+        $document = $this->documentManager->find($workload['id'], $workload['locale']);
         $this->documentManager->unpublish($document, $workload['locale']);
         $this->documentManager->flush();
     }

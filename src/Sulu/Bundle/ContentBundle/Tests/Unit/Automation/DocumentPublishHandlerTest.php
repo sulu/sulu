@@ -45,7 +45,7 @@ class DocumentPublishHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle($id = '123-123-123', $locale = 'de')
     {
-        $this->documentManager->find($id)->willReturn($this->prophesize(WorkflowStageBehavior::class));
+        $this->documentManager->find($id, $locale)->willReturn($this->prophesize(WorkflowStageBehavior::class));
         $this->documentManager->publish(Argument::type(WorkflowStageBehavior::class), $locale)->shouldBeCalled();
         $this->documentManager->flush()->shouldBeCalled();
 
