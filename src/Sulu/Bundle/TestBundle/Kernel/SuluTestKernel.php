@@ -15,8 +15,14 @@ use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
+/**
+ * Represents a kernel for sulu-application tests.
+ */
 class SuluTestKernel extends SuluKernel
 {
+    /**
+     * {@inheritdoc}
+     */
     public function registerBundles()
     {
         $bundles = [
@@ -33,6 +39,9 @@ class SuluTestKernel extends SuluKernel
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
+
+            // php-task
+            new \Task\TaskBundle\TaskBundle(),
 
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
@@ -77,6 +86,9 @@ class SuluTestKernel extends SuluKernel
         return $bundles;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
@@ -89,6 +101,9 @@ class SuluTestKernel extends SuluKernel
         });
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCacheDir()
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;

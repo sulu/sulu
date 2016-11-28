@@ -11,6 +11,7 @@
 
 namespace Functional\Controller;
 
+use Sulu\Bundle\AutomationBundle\Tests\Handler\TestHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
@@ -26,9 +27,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGet()
     {
         $postData = [
-            $this->testPost('sulu_content.publish'),
-            $this->testPost('sulu_content.publish'),
-            $this->testPost('sulu_content.publish'),
+            $this->testPost(),
+            $this->testPost(),
+            $this->testPost(),
         ];
 
         $client = $this->createAuthenticatedClient();
@@ -45,8 +46,9 @@ class TaskControllerTest extends SuluTestCase
             $this->assertContains(
                 [
                     'id' => $postData[$i]['id'],
-                    'taskName' => $postData[$i]['taskName'],
+                    'handlerClass' => $postData[$i]['handlerClass'],
                     'schedule' => $postData[$i]['schedule'],
+                    'taskName' => $postData[$i]['taskName'],
                 ],
                 $embedded
             );
@@ -56,9 +58,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithIds()
     {
         $postData = [
-            $this->testPost('sulu_content.publish'),
-            $this->testPost('sulu_content.publish'),
-            $this->testPost('sulu_content.publish'),
+            $this->testPost(),
+            $this->testPost(),
+            $this->testPost(),
         ];
 
         $ids = [$postData[2]['id'], $postData[0]['id']];
@@ -80,9 +82,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithLocales()
     {
         $postData = [
-            $this->testPost('sulu_content.publish', '+1 day', 'ThisClass', 1, 'de'),
-            $this->testPost('sulu_content.publish', '+1 day', 'ThisClass', 1, 'en'),
-            $this->testPost('sulu_content.publish', '+1 day', 'ThisClass', 1, 'de'),
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'de'),
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'en'),
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'de'),
         ];
 
 
@@ -100,8 +102,10 @@ class TaskControllerTest extends SuluTestCase
             $this->assertContains(
                 [
                     'id' => $items[$i]['id'],
+                    'handlerClass' => $items[$i]['handlerClass'],
                     'taskName' => $items[$i]['taskName'],
                     'schedule' => $items[$i]['schedule'],
+                    'handlerClass' => $items[$i]['handlerClass'],
                 ],
                 $embedded
             );
@@ -111,9 +115,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithEntity()
     {
         $postData = [
-            $this->testPost('sulu_content.publish', '+1 day', 'ThisClass', 1),
-            $this->testPost('sulu_content.publish', '+1 day', 'ThisClass', 2),
-            $this->testPost('sulu_content.publish', '+1 day', 'OtherClass', 1),
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1),
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 2),
+            $this->testPost(TestHandler::class, '+1 day', 'OtherClass', 1),
         ];
 
         $client = $this->createAuthenticatedClient();
@@ -129,7 +133,7 @@ class TaskControllerTest extends SuluTestCase
     }
 
     public function testPost(
-        $taskName = 'sulu_content.publish',
+        $handlerClass = TestHandler::class,
         $schedule = '+1 day',
         $entityClass = 'ThisClass',
         $entityId = 1,
@@ -143,7 +147,7 @@ class TaskControllerTest extends SuluTestCase
             'POST',
             '/api/tasks',
             [
-                'taskName' => $taskName,
+                'handlerClass' => $handlerClass,
                 'schedule' => $scheduleDate,
                 'entityClass' => $entityClass,
                 'entityId' => $entityId,
@@ -155,14 +159,14 @@ class TaskControllerTest extends SuluTestCase
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $responseData);
-        $this->assertEquals($taskName, $responseData['taskName']);
+        $this->assertEquals($handlerClass, $responseData['handlerClass']);
         $this->assertEquals($scheduleDate, $responseData['schedule']);
         $this->assertEquals($locale, $responseData['locale']);
 
         return $responseData;
     }
 
-    public function testPut($taskName = 'sulu_content.unpublish', $schedule = '+2 day')
+    public function testPut($handlerClass = TestHandler::class, $schedule = '+2 day')
     {
         $postData = $this->testPost();
 
@@ -173,15 +177,16 @@ class TaskControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tasks/' . $postData['id'],
-            ['taskName' => $taskName, 'schedule' => $scheduleDate]
+            ['handlerClass' => $handlerClass, 'schedule' => $scheduleDate]
         );
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($postData['id'], $responseData['id']);
-        $this->assertEquals($taskName, $responseData['taskName']);
+        $this->assertEquals($handlerClass, $responseData['handlerClass']);
         $this->assertEquals($scheduleDate, $responseData['schedule']);
+        $this->assertEquals(TestHandler::TITLE, $responseData['taskName']);
     }
 
     public function testGet()
@@ -195,7 +200,7 @@ class TaskControllerTest extends SuluTestCase
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($postData['id'], $responseData['id']);
-        $this->assertEquals($postData['taskName'], $responseData['taskName']);
+        $this->assertEquals($postData['handlerClass'], $responseData['handlerClass']);
         $this->assertEquals($postData['schedule'], $responseData['schedule']);
         $this->assertEquals($postData['locale'], $responseData['locale']);
     }
@@ -215,9 +220,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCDelete()
     {
         $postData = [
-            $this->testPost('sulu_content.publish'),
-            $this->testPost('sulu_content.publish'),
-            $this->testPost('sulu_content.publish'),
+            $this->testPost(),
+            $this->testPost(),
+            $this->testPost(),
         ];
 
         $client = $this->createAuthenticatedClient();

@@ -7,6 +7,13 @@
                  class="Sulu\Bundle\ContentBundle\Admin\ContentAutomationContentNavigationProvider">
             <tag name="sulu_admin.content_navigation" alias="content"/>
         </service>
+
+        <service id="sulu_content.aitomation.handle.publish"
+                 class="Sulu\Bundle\ContentBundle\Automation\DocumentPublishHandler">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+
+            <tag name="task.handler"/>
+        </service>
     </services>
 </container>
 

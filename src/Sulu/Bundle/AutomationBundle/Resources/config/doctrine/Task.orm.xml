@@ -10,8 +10,19 @@
         <field name="entityClass" type="string" column="entityClass"/>
         <field name="entityId" type="string" column="entityId"/>
 
-        <field name="taskName" type="string" column="taskName"/>
+        <field name="handlerClass" type="string" column="handlerClass"/>
         <field name="schedule" type="datetime" column="schedule"/>
         <field name="locale" type="string" column="locale" length="5"/>
+
+        <field name="taskId" type="string" nullable="true">
+            <options>
+                <option name="references">
+                    <option name="entity">Task\TaskBundle\Entity\Task</option>
+                    <option name="field">uuid</option>
+                    <option name="onDelete">SET NULL</option>
+                    <option name="onUpdate">CASCADE</option>
+                </option>
+            </options>
+        </field>
     </entity>
 </doctrine-mapping>

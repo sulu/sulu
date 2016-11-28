@@ -1,17 +1,18 @@
 <div class="grid">
     <div class="grid-row">
         <div class="grid-col-6">
-            <label for="task-name" class="required m-bottom-10"><%= translations.taskName %></label>
-            <div id="task-name"
+            <label for="task-handler-class" class="required m-bottom-10"><%= translations.handlerClass %></label>
+            <div id="task-handler-class"
                  data-aura-component="select@husky"
-                 data-aura-data='[{"id":"sulu_content.publish","title":"Publish"},{"id":"sulu_content.unpublish","title":"Unpublish"}]'
+                 data-aura-url="/admin/automation/task-handler?entity-class=<%= entityClass %>"
+                 data-aura-result-key="handlers"
                  data-aura-multiple-select="false"
                  data-aura-default-label="<%= translations.choose %>"
                  data-aura-value-name="title"
                  data-form="true"
                  data-type="husky-select"
                  data-validation-required="true"
-                 data-mapper-property="taskName"
+                 data-mapper-property="handlerClass"
                  data-mapper-return-value="id"/>
         </div>
     </div>

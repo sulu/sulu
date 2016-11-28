@@ -1,3 +1,0 @@
-sulu_automation.tasks:
-    type: rest
-    resource: Sulu\Bundle\AutomationBundle\Controller\TaskController

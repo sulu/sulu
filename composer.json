@@ -38,7 +38,9 @@
         "doctrine/data-fixtures": "1.1.*",
         "layershifter/tld-extract": "^1.1",
         "mtdowling/cron-expression": "^1.1",
-        "ramsey/uuid": "^3.1"
+        "ramsey/uuid": "^3.1",
+        "php-task/task-bundle": "dev-master",
+        "php-task/php-task": "@dev"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",

@@ -39,7 +39,7 @@ interface TaskInterface extends AuditableInterface
      *
      * @return string
      */
-    public function getTaskName();
+    public function getHandlerClass();
 
     /**
      * Returns schedule.
@@ -47,6 +47,13 @@ interface TaskInterface extends AuditableInterface
      * @return \DateTime
      */
     public function getSchedule();
+
+    /**
+     * Returns locale.
+     *
+     * @return string
+     */
+    public function getLocale();
 
     /**
      * Returns entity-class.
@@ -61,6 +68,22 @@ interface TaskInterface extends AuditableInterface
      * @return string
      */
     public function getEntityId();
+
+    /**
+     * Returns taskId.
+     *
+     * @return string
+     */
+    public function getTaskId();
+
+    /**
+     * Set taskId.
+     *
+     * @param string $taskId
+     *
+     * @return $this
+     */
+    public function setTaskId($taskId);
 
     /**
      * Returns creator full-name.

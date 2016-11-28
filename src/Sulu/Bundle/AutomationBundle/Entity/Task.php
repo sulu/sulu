@@ -29,7 +29,7 @@ class Task implements TaskInterface
     /**
      * @var string
      */
-    private $taskName;
+    private $handlerClass;
 
     /**
      * @var \DateTime
@@ -52,6 +52,11 @@ class Task implements TaskInterface
     private $entityId;
 
     /**
+     * @var string
+     */
+    private $taskId;
+
+    /**
      * {@inheritdoc}
      */
     public function getId()
@@ -72,21 +77,21 @@ class Task implements TaskInterface
     /**
      * {@inheritdoc}
      */
-    public function getTaskName()
+    public function getHandlerClass()
     {
-        return $this->taskName;
+        return $this->handlerClass;
     }
 
     /**
      * Set task.
      *
-     * @param string $taskName
+     * @param string $handlerClass
      *
      * @return $this
      */
-    public function setTaskName($taskName)
+    public function setHandlerClass($handlerClass)
     {
-        $this->taskName = $taskName;
+        $this->handlerClass = $handlerClass;
 
         return $this;
     }
@@ -177,6 +182,30 @@ class Task implements TaskInterface
     public function setEntityId($entityId)
     {
         $this->entityId = $entityId;
+
+        return $this;
+    }
+
+    /**
+     * Returns taskId.
+     *
+     * @return string
+     */
+    public function getTaskId()
+    {
+        return $this->taskId;
+    }
+
+    /**
+     * Set taskId.
+     *
+     * @param string $taskId
+     *
+     * @return $this
+     */
+    public function setTaskId($taskId)
+    {
+        $this->taskId = $taskId;
 
         return $this;
     }

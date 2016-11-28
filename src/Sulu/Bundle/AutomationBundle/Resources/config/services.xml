@@ -2,6 +2,12 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_automation.events.create" type="constant">Sulu\Bundle\AutomationBundle\Events\Events::TASK_CREATE_EVENT</parameter>
+        <parameter key="sulu_automation.events.update" type="constant">Sulu\Bundle\AutomationBundle\Events\Events::TASK_UPDATE_EVENT</parameter>
+        <parameter key="sulu_automation.events.remove" type="constant">Sulu\Bundle\AutomationBundle\Events\Events::TASK_REMOVE_EVENT</parameter>
+    </parameters>
+    
     <services>
         <service id="sulu_automation.admin" class="Sulu\Bundle\AutomationBundle\Admin\AutomationAdmin">
             <argument>%sulu_admin.name%</argument>
@@ -12,7 +18,24 @@
 
         <service id="sulu_automation.tasks.manager" class="Sulu\Bundle\AutomationBundle\Tasks\Manager\TaskManager">
             <argument type="service" id="sulu.repository.task"/>
+            <argument type="service" id="sulu_automation.tasks.scheduler"/>
             <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="sulu_automation.tasks.scheduler"
+                 class="Sulu\Bundle\AutomationBundle\Tasks\Scheduler\TaskScheduler">
+            <argument type="service" id="task.storage.task"/>
+            <argument type="service" id="task.storage.task_execution"/>
+            <argument type="service" id="task.handler.factory"/>
+            <argument type="service" id="task.scheduler"/>
+        </service>
+
+        <service id="sulu_automation.serializer.task"
+                 class="Sulu\Bundle\AutomationBundle\Serializer\TaskSerializerSubscriber">
+            <argument type="service" id="task.handler.factory"/>
+
+            <tag name="sulu.context" context="admin"/>
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
         <!-- FIXME hack to enable doctrine object constructor -->

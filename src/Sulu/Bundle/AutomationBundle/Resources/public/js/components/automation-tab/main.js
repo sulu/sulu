@@ -114,6 +114,7 @@ define([
                         name: 'automation-tab/overlay@suluautomation',
                         options: {
                             el: $container,
+                            entityClass: this.options.entityClass,
                             saveCallback: this.saveTask.bind(this),
                             id: id
                         }
@@ -132,6 +133,7 @@ define([
                         name: 'automation-tab/overlay@suluautomation',
                         options: {
                             el: $container,
+                            entityClass: this.options.entityClass,
                             saveCallback: this.saveTask.bind(this)
                         }
                     }

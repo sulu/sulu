@@ -18,6 +18,7 @@ use Sulu\Bundle\AutomationBundle\Tasks\Manager\TaskManager;
 use Sulu\Bundle\AutomationBundle\Tasks\Manager\TaskManagerInterface;
 use Sulu\Bundle\AutomationBundle\Tasks\Model\TaskInterface;
 use Sulu\Bundle\AutomationBundle\Tasks\Model\TaskRepositoryInterface;
+use Sulu\Bundle\AutomationBundle\Tasks\Scheduler\TaskSchedulerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -36,6 +37,11 @@ class TaskManagerTest extends \PHPUnit_Framework_TestCase
     private $eventDispatcher;
 
     /**
+     * @var TaskSchedulerInterface
+     */
+    private $taskScheduler;
+
+    /**
      * @var TaskManagerInterface
      */
     private $taskManager;
@@ -44,14 +50,20 @@ class TaskManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->taskRepository = $this->prophesize(TaskRepositoryInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->taskScheduler = $this->prophesize(TaskSchedulerInterface::class);
 
-        $this->taskManager = new TaskManager($this->taskRepository->reveal(), $this->eventDispatcher->reveal());
+        $this->taskManager = new TaskManager(
+            $this->taskRepository->reveal(),
+            $this->taskScheduler->reveal(),
+            $this->eventDispatcher->reveal()
+        );
     }
 
     public function testCreate()
     {
         $task = $this->prophesize(TaskInterface::class);
         $task->setId(Argument::type('string'))->shouldBeCalled();
+        $this->taskScheduler->schedule($task->reveal())->shouldBeCalled();
 
         $this->assertEventDispatched(Events::TASK_CREATE_EVENT, $task->reveal());
         $this->taskRepository->save($task->reveal())->shouldBeCalled()->willReturnArgument(0);
@@ -62,9 +74,9 @@ class TaskManagerTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $task = $this->prophesize(TaskInterface::class);
+        $this->taskScheduler->reschedule($task->reveal())->shouldBeCalled();
 
         $this->assertEventDispatched(Events::TASK_UPDATE_EVENT, $task->reveal());
-        $this->taskRepository->save($task->reveal())->shouldBeCalled()->willReturnArgument(0);
 
         $this->taskManager->update($task->reveal());
     }
@@ -74,6 +86,8 @@ class TaskManagerTest extends \PHPUnit_Framework_TestCase
         $id = 1;
         $task = $this->prophesize(TaskInterface::class);
         $this->taskRepository->findById($id)->shouldBeCalled()->willReturn($task->reveal());
+        $this->taskScheduler->remove($task->reveal())->shouldBeCalled();
+
         $this->assertEventDispatched(Events::TASK_REMOVE_EVENT, $task->reveal());
         $this->taskRepository->remove($task->reveal())->shouldBeCalled()->willReturnArgument(0);
 
