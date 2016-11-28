@@ -46532,6 +46532,8 @@ define('__component__$input@husky',[], function() {
         bindDatepickerDomEvents: function() {
             this.sandbox.dom.on(this.input.$input, 'focusout', function() {
                 this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
+
+                return false;
             }.bind(this));
         },
 

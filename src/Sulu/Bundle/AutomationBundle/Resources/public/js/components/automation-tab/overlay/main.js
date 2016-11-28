@@ -29,8 +29,8 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
             translations: {
                 task: 'sulu_automation.task',
                 handlerClass: 'sulu_automation.task.name',
-                time: 'sulu_automation.task.time',
-                date: 'sulu_automation.task.date',
+                time: 'sulu_automation.task.schedule.time',
+                date: 'sulu_automation.task.schedule.date',
                 choose: 'sulu_automation.task.choose'
             }
         },
@@ -78,17 +78,9 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
             this.sandbox.once('husky.overlay.task-overlay.opened', function() {
                 this.sandbox.form.create(this.$formContainer).initialized.then(function() {
                     this.sandbox.form.setData(this.$formContainer, this.decodeData(this.data)).then(function() {
-                        this.sandbox.start(this.$formContainer).then(function() {
-                            this.bindDomEvents();
-                        }.bind(this));
+                        this.sandbox.start(this.$formContainer);
                     }.bind(this));
                 }.bind(this));
-            }.bind(this));
-        },
-
-        bindDomEvents: function() {
-            this.sandbox.dom.on('#task-date-container', 'change', function(e) {
-                $(e.currentTarget).data('element').validate();
             }.bind(this));
         },
 
@@ -116,7 +108,14 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
             }
 
             var data = this.encodeData(this.sandbox.form.getData(this.$formContainer));
-            this.options.saveCallback(data);
+            this.sandbox.emit('husky.overlay.task-overlay.show-loader');
+            this.options.saveCallback(data).then(function() {
+                this.sandbox.stop();
+            }.bind(this)).fail(function() {
+                this.sandbox.emit('husky.overlay.task-overlay.hide-loader');
+            }.bind(this));
+
+            return false;
 
             this.sandbox.stop();
         },

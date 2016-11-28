@@ -15,7 +15,7 @@ define(['underscore', 'services/husky/util'], function(_, Util) {
 
     return {
         getUrl: function(entityClass, entityId) {
-            return url({id: null}) + '?entityClass=' + entityClass + '&entity-id=' + entityId;
+            return url({id: null}) + '?entity-class=' + entityClass + '&entity-id=' + entityId;
         },
 
         load: function(id) {

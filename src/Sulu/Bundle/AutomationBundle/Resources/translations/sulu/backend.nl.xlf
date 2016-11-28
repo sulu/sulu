@@ -34,6 +34,14 @@
                 <source>sulu_automation.task.choose</source>
                 <target>Taak kiezen...</target>
             </trans-unit>
+            <trans-unit id="9">
+                <source>sulu_automation.list.creator</source>
+                <target>Aangemaakt door</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>sulu_automation.list.changer</source>
+                <target>Aangepast door</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

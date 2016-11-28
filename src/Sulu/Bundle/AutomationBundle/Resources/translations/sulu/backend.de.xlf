@@ -34,6 +34,14 @@
                 <source>sulu_automation.task.choose</source>
                 <target>Aufgabe wählen ...</target>
             </trans-unit>
+            <trans-unit id="9">
+                <source>sulu_automation.list.creator</source>
+                <target>Erstellt von</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>sulu_automation.list.changer</source>
+                <target>Bearbeitet von</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

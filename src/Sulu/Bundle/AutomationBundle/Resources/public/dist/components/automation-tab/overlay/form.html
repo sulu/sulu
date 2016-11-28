@@ -23,6 +23,7 @@
                  data-aura-component="input@husky"
                  data-aura-skin="time"
                  data-aura-instance-name="task-time"
+                 data-aura-input-id="task-time"
                  data-form="true"
                  data-type="husky-input"
                  data-validation-required="true"
@@ -33,8 +34,9 @@
             <div id="task-date-container"
                  data-aura-component="input@husky"
                  data-aura-skin="date"
-                 data-aura-instance-name="task-time"
+                 data-aura-instance-name="task-date"
                  data-aura-input-id="task-date"
+                 data-aura-datepicker-options='{"startDate": "<%= new Date() %>"}'
                  data-form="true"
                  data-type="husky-input"
                  data-validation-required="true"

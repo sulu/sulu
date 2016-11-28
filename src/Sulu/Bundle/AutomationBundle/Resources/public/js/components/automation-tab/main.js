@@ -56,7 +56,6 @@ define([
 
             this.startTasksComponents();
             this.bindCustomEvents();
-            this.bindDomEvents();
         },
 
         bindCustomEvents: function() {
@@ -165,7 +164,7 @@ define([
             data.entityClass = this.options.entityClass;
             data.entityId = this.entityData[this.options.idKey];
 
-            manager.save(data).then(function(response) {
+            return manager.save(data).then(function(response) {
                 var event = 'husky.datagrid.tasks.record.add';
                 if (!!data.id) {
                     event = 'husky.datagrid.tasks.records.change';

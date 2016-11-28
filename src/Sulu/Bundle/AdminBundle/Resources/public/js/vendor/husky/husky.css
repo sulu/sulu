@@ -8213,56 +8213,57 @@ table {
 }
 /* line 31, ../scss/modules/tables.scss */
 .table thead th {
+  background: #ddd;
   vertical-align: bottom;
   color: #999;
   font-weight: normal;
   line-height: 50px;
 }
-/* line 37, ../scss/modules/tables.scss */
+/* line 38, ../scss/modules/tables.scss */
 .table thead th a {
   color: #000;
   text-decoration: none;
 }
-/* line 41, ../scss/modules/tables.scss */
+/* line 42, ../scss/modules/tables.scss */
 .table thead th a .selected {
   font-weight: bold;
 }
-/* line 47, ../scss/modules/tables.scss */
+/* line 48, ../scss/modules/tables.scss */
 .table thead tr {
   background: #ddd;
 }
-/* line 53, ../scss/modules/tables.scss */
+/* line 54, ../scss/modules/tables.scss */
 .table tbody td {
   vertical-align: middle;
   font-family: Helvetica, Arial;
 }
-/* line 56, ../scss/modules/tables.scss */
+/* line 57, ../scss/modules/tables.scss */
 .table tbody td img {
   max-height: 50px;
   max-width: 50px;
 }
-/* line 61, ../scss/modules/tables.scss */
+/* line 62, ../scss/modules/tables.scss */
 .table tbody tr:nth-child(2n+1) {
   background: #fff;
 }
-/* line 64, ../scss/modules/tables.scss */
+/* line 65, ../scss/modules/tables.scss */
 .table tbody tr:nth-child(2n) {
   background: #f6f6f6;
 }
-/* line 67, ../scss/modules/tables.scss */
+/* line 68, ../scss/modules/tables.scss */
 .table tbody tr.selected {
   border-left-color: #ddd;
 }
-/* line 73, ../scss/modules/tables.scss */
+/* line 74, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 78, ../scss/modules/tables.scss */
+/* line 79, ../scss/modules/tables.scss */
 .table .checkbox-cell {
   width: 20px;
   text-align: center;
 }
-/* line 83, ../scss/modules/tables.scss */
+/* line 84, ../scss/modules/tables.scss */
 .table .custom-checkbox {
   margin: 0 8px;
 }

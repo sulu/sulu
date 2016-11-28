@@ -18,7 +18,7 @@ use Sulu\Bundle\AutomationBundle\Entity\Task;
 use Sulu\Bundle\AutomationBundle\Exception\TaskNotFoundException;
 use Sulu\Bundle\AutomationBundle\TaskHandler\AutomationTaskHandlerInterface;
 use Sulu\Bundle\AutomationBundle\Tasks\Manager\TaskManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -50,7 +50,7 @@ class TaskController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $fieldDescriptors = $this->getFieldDescriptors(DoctrineFieldDescriptor::class);
+        $fieldDescriptors = $this->getFieldDescriptors(DoctrineFieldDescriptorInterface::class);
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
         $listBuilder = $this->prepareListBuilder($fieldDescriptors, $request, $factory->create(Task::class));

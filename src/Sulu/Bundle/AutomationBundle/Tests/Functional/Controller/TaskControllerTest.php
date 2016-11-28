@@ -33,7 +33,7 @@ class TaskControllerTest extends SuluTestCase
         ];
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/tasks');
+        $client->request('GET', '/api/tasks?fields=id,schedule,handlerClass,taskName');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $responseData = json_decode($client->getResponse()->getContent(), true);
@@ -41,7 +41,6 @@ class TaskControllerTest extends SuluTestCase
         $this->assertCount(3, $responseData['_embedded']['tasks']);
 
         $embedded = $responseData['_embedded']['tasks'];
-
         for ($i = 0, $length = count($postData); $i < $length; ++$i) {
             $this->assertContains(
                 [
@@ -89,7 +88,7 @@ class TaskControllerTest extends SuluTestCase
 
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/tasks?locale=de');
+        $client->request('GET', '/api/tasks?locale=de&fields=id,schedule,handlerClass,taskName');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $responseData = json_decode($client->getResponse()->getContent(), true);
@@ -102,10 +101,9 @@ class TaskControllerTest extends SuluTestCase
             $this->assertContains(
                 [
                     'id' => $items[$i]['id'],
-                    'handlerClass' => $items[$i]['handlerClass'],
-                    'taskName' => $items[$i]['taskName'],
                     'schedule' => $items[$i]['schedule'],
                     'handlerClass' => $items[$i]['handlerClass'],
+                    'taskName' => $items[$i]['taskName'],
                 ],
                 $embedded
             );

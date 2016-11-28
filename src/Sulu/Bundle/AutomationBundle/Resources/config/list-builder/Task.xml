@@ -1,6 +1,27 @@
 <class xmlns="http://schemas.sulu.io/class/general"
        xmlns:list="http://schemas.sulu.io/class/list"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <orm:joins name="creator">
+        <orm:join>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.task.class%.creator</orm:field-name>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+            <orm:field-name>%sulu.model.user.class%.contact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="changer">
+        <orm:join>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.task.class%.changer</orm:field-name>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+            <orm:field-name>%sulu.model.user.class%.contact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
     <properties>
         <property name="id" list:translation="public.id" display="no">
             <orm:field-name>id</orm:field-name>
@@ -11,6 +32,7 @@
             <orm:field-name>locale</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
+
         <property name="handlerClass" display="never">
             <orm:field-name>handlerClass</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
@@ -34,5 +56,36 @@
             <orm:field-name>entityId</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
+
+        <concatenation-property name="creator" display="always" orm:glue=" "
+                                list:translation="sulu_automation.list.creator">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="creator"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="creator"/>
+            </orm:field>
+        </concatenation-property>
+
+        <concatenation-property name="changer" orm:glue=" " list:translation="sulu_automation.list.changer">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="changer"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="changer"/>
+            </orm:field>
+        </concatenation-property>
     </properties>
 </class>
