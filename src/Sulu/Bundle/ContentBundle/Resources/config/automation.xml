@@ -14,6 +14,13 @@
 
             <tag name="task.handler"/>
         </service>
+
+        <service id="sulu_content.aitomation.handle.unpublish"
+                 class="Sulu\Bundle\ContentBundle\Automation\DocumentUnpublishHandler">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+
+            <tag name="task.handler"/>
+        </service>
     </services>
 </container>
 

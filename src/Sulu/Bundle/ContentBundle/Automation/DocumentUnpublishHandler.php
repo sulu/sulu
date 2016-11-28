@@ -18,9 +18,9 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Provides handler for publishing documents.
+ * Provides handler for unpublishing documents.
  */
-class DocumentPublishHandler implements AutomationTaskHandlerInterface
+class DocumentUnpublishHandler implements AutomationTaskHandlerInterface
 {
     /**
      * @var DocumentManagerInterface
@@ -41,7 +41,7 @@ class DocumentPublishHandler implements AutomationTaskHandlerInterface
     public function handle($workload)
     {
         $document = $this->documentManager->find($workload['id']);
-        $this->documentManager->publish($document, $workload['locale']);
+        $this->documentManager->unpublish($document, $workload['locale']);
         $this->documentManager->flush();
     }
 
@@ -69,6 +69,6 @@ class DocumentPublishHandler implements AutomationTaskHandlerInterface
      */
     public function getConfiguration()
     {
-        return TaskHandlerConfiguration::create(self::class, 'sulu_content.task_handler.publish');
+        return TaskHandlerConfiguration::create(self::class, 'sulu_content.task_handler.unpublish');
     }
 }

@@ -803,6 +803,10 @@
                  <source>sulu_content.task_handler.publish</source>
                  <target>Publish</target>
              </trans-unit>
+            <trans-unit id="74" resname="sulu_content.task_handler.unpublish">
+                 <source>sulu_content.task_handler.unpublish</source>
+                 <target>Unpublish</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>
