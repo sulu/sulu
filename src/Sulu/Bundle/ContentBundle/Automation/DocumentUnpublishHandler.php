@@ -69,6 +69,6 @@ class DocumentUnpublishHandler implements AutomationTaskHandlerInterface
      */
     public function getConfiguration()
     {
-        return TaskHandlerConfiguration::create(self::class, 'sulu_content.task_handler.unpublish');
+        return TaskHandlerConfiguration::create('sulu_content.task_handler.unpublish');
     }
 }

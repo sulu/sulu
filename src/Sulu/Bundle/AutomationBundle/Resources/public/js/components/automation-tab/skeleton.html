@@ -1,10 +1,22 @@
 <div class="grid">
-    <div class="grid-col-12 form-group">
-        <label for="tasks" class="m-bottom-20"><%= translations.tasks %></label>
+    <div class="grid-row">
+        <div class="grid-col-12 form-group">
+            <label for="tasks"><%= translations.tasks %></label>
 
-        <div id="tasks">
-            <div class="task-list-toolbar"></div>
-            <div class="task-list"></div>
+            <div id="tasks">
+                <div class="task-list-toolbar"></div>
+                <div class="task-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-col-12 form-group">
+            <label for="task-history"><%= translations.taskHistory %></label>
+
+            <div id="task-history">
+                <div class="task-list"></div>
+            </div>
         </div>
     </div>
 </div>

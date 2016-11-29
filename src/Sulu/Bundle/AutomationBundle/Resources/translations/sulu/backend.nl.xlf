@@ -42,6 +42,10 @@
                 <source>sulu_automation.list.changer</source>
                 <target>Aangepast door</target>
             </trans-unit>
+            <trans-unit id="11">
+                <source>sulu_automation.task-history</source>
+                <target>Taakgeschiedenis</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -19,6 +19,9 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
  */
 class TaskControllerTest extends SuluTestCase
 {
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->purgeDatabase();
@@ -48,6 +51,7 @@ class TaskControllerTest extends SuluTestCase
                     'handlerClass' => $postData[$i]['handlerClass'],
                     'schedule' => $postData[$i]['schedule'],
                     'taskName' => $postData[$i]['taskName'],
+                    'status' => $postData[$i]['status'],
                 ],
                 $embedded
             );
@@ -104,6 +108,7 @@ class TaskControllerTest extends SuluTestCase
                     'schedule' => $items[$i]['schedule'],
                     'handlerClass' => $items[$i]['handlerClass'],
                     'taskName' => $items[$i]['taskName'],
+                    'status' => $postData[$i]['status'],
                 ],
                 $embedded
             );
@@ -128,6 +133,70 @@ class TaskControllerTest extends SuluTestCase
 
         $embedded = $responseData['_embedded']['tasks'];
         $this->assertEquals($postData[0]['id'], $embedded[0]['id']);
+    }
+
+    public function testCGetWithFutureSchedule()
+    {
+        $postData = [
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1),
+            $this->testPost(TestHandler::class, '-1 day', 'ThisClass', 2),
+            $this->testPost(TestHandler::class, '+1 day', 'OtherClass', 1),
+        ];
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/tasks?fields=id,schedule,handlerClass,taskName&schedule=future');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(2, $responseData['total']);
+        $this->assertCount(2, $responseData['_embedded']['tasks']);
+
+        $items = [$postData[0], $postData[2]];
+        $embedded = $responseData['_embedded']['tasks'];
+        for ($i = 0, $length = count($items); $i < $length; ++$i) {
+            $this->assertContains(
+                [
+                    'id' => $items[$i]['id'],
+                    'schedule' => $items[$i]['schedule'],
+                    'handlerClass' => $items[$i]['handlerClass'],
+                    'taskName' => $items[$i]['taskName'],
+                    'status' => $postData[$i]['status'],
+                ],
+                $embedded
+            );
+        }
+    }
+
+    public function testCGetWithPastSchedule()
+    {
+        $postData = [
+            $this->testPost(TestHandler::class, '-1 day', 'ThisClass', 1),
+            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 2),
+            $this->testPost(TestHandler::class, '-1 day', 'OtherClass', 1),
+        ];
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/tasks?fields=id,schedule,handlerClass,taskName&schedule=past');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(2, $responseData['total']);
+        $this->assertCount(2, $responseData['_embedded']['tasks']);
+
+        $items = [$postData[0], $postData[2]];
+        $embedded = $responseData['_embedded']['tasks'];
+        for ($i = 0, $length = count($items); $i < $length; ++$i) {
+            $this->assertContains(
+                [
+                    'id' => $items[$i]['id'],
+                    'schedule' => $items[$i]['schedule'],
+                    'handlerClass' => $items[$i]['handlerClass'],
+                    'taskName' => $items[$i]['taskName'],
+                    'status' => $postData[$i]['status'],
+                ],
+                $embedded
+            );
+        }
     }
 
     public function testPost(

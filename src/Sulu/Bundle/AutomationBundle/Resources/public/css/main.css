@@ -1,0 +1,19 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/tasks.scss */
+.husky-table.light .task-state {
+  width: 30px;
+  text-align: center;
+  margin-left: 10px;
+}
+/* line 7, ../scss/modules/tasks.scss */
+.husky-table.light .task-state.fa-check-circle {
+  color: #5DC774;
+}
+/* line 10, ../scss/modules/tasks.scss */
+.husky-table.light .task-state.fa-exclamation-triangle {
+  color: #E8CE33;
+}
+/* line 13, ../scss/modules/tasks.scss */
+.husky-table.light .task-state.fa-ban {
+  color: #EA524E;
+}

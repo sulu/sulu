@@ -16,7 +16,15 @@ define([
 
     'use strict';
 
-    var fields = JSON.parse(fieldsResponse);
+    var fields = JSON.parse(fieldsResponse),
+        historyFields = JSON.parse(fieldsResponse);
+
+    for (var i = 0, length = historyFields.length; i < length; i++) {
+        if (historyFields[i].name === 'status') {
+            historyFields[i].disabled = false;
+            historyFields[i].default = true;
+        }
+    }
 
     return {
 
@@ -34,6 +42,7 @@ define([
             translations: {
                 headline: 'sulu_automation.automation',
                 tasks: 'sulu_automation.tasks',
+                taskHistory: 'sulu_automation.task-history',
 
                 successLabel: 'labels.success',
                 successMessage: 'labels.success.save-desc'
@@ -78,7 +87,7 @@ define([
                     {
                         name: 'list-toolbar@suluadmin',
                         options: {
-                            el: this.$el.find('.task-list-toolbar'),
+                            el: this.$el.find('#tasks .task-list-toolbar'),
                             hasSearch: false,
                             template: this.sandbox.sulu.buttons.get(
                                 {
@@ -91,12 +100,43 @@ define([
                     {
                         name: 'datagrid@husky',
                         options: {
-                            el: this.$el.find('.task-list'),
-                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=asc',
+                            el: this.$el.find('#tasks .task-list'),
+                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=asc&schedule=future',
                             resultKey: 'tasks',
                             instanceName: 'tasks',
                             actionCallback: this.editTask.bind(this),
                             matchings: fields
+                        }
+                    },
+                    {
+                        name: 'datagrid@husky',
+                        options: {
+                            el: this.$el.find('#task-history .task-list'),
+                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=desc&schedule=past',
+                            resultKey: 'tasks',
+                            instanceName: 'task-history',
+                            viewOptions: {
+                                table: {
+                                    selectItem: false,
+                                    cssClass: 'light'
+                                }
+                            },
+                            contentFilters: {
+                                status: function(content) {
+                                    var iconString = 'fa-question';
+                                    switch (content) {
+                                        case 'completed':
+                                            iconString = 'fa-check-circle';
+                                            break;
+                                        case 'failed':
+                                            iconString = 'fa-ban';
+                                            break;
+                                    }
+
+                                    return '<span class="' + iconString + ' task-state"/>';
+                                }
+                            },
+                            matchings: historyFields
                         }
                     }
                 ]

@@ -41,7 +41,8 @@ class TaskHandlerController extends Controller
         $handlers = [];
         foreach ($handlerFactory->getHandlers() as $handler) {
             if ($handler instanceof AutomationTaskHandlerInterface && $handler->supports($entityClass)) {
-                $handlers[] = $handler->getConfiguration();
+                $configuration = $handler->getConfiguration();
+                $handlers[] = ['id' => get_class($handler), 'title' => $configuration->getTitle()];
             }
         }
 

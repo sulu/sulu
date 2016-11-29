@@ -10,12 +10,13 @@
 require.config({
     paths: {
         suluautomation: '../../suluautomation/js',
+        suluautomationcss: '../../suluautomation/js/css',
 
         'services/suluautomation/task-manager': '../../suluautomation/js/services/task-manager'
     }
 });
 
-define(function() {
+define(['css!suluautomationcss/main'], function() {
     return {
 
         name: "SuluAutomationBundle",

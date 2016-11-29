@@ -14,25 +14,19 @@ namespace Sulu\Bundle\AutomationBundle\TaskHandler;
 /**
  * Contains configuration for task-handler.
  */
-class TaskHandlerConfiguration implements \JsonSerializable
+class TaskHandlerConfiguration
 {
     /**
      * Create a new configuration.
      *
-     * @param string $entityClass
      * @param string $title
      *
      * @return static
      */
-    public static function create($entityClass, $title)
+    public static function create($title)
     {
-        return new self($entityClass, $title);
+        return new self($title);
     }
-
-    /**
-     * @var string
-     */
-    private $handlerClass;
 
     /**
      * @var string
@@ -40,23 +34,11 @@ class TaskHandlerConfiguration implements \JsonSerializable
     private $title;
 
     /**
-     * @param string $handlerClass
      * @param string $title
      */
-    private function __construct($handlerClass, $title)
+    private function __construct($title)
     {
-        $this->handlerClass = $handlerClass;
         $this->title = $title;
-    }
-
-    /**
-     * Returns entityClass.
-     *
-     * @return string
-     */
-    public function getHandlerClass()
-    {
-        return $this->handlerClass;
     }
 
     /**
@@ -67,13 +49,5 @@ class TaskHandlerConfiguration implements \JsonSerializable
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
-    {
-        return ['id' => $this->handlerClass, 'title' => $this->getTitle()];
     }
 }

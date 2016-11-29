@@ -43,7 +43,7 @@ class TestHandler implements AutomationTaskHandlerInterface
      */
     public function getConfiguration()
     {
-        return TaskHandlerConfiguration::create(self::class, self::TITLE);
+        return TaskHandlerConfiguration::create(self::TITLE);
     }
 
     /**

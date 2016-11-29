@@ -31,6 +31,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TaskController extends RestController implements ClassResourceInterface
 {
+    private static $scheduleComparators = [
+        'future' => ListBuilderInterface::WHERE_COMPARATOR_GREATER_THAN,
+        'past' => ListBuilderInterface::WHERE_COMPARATOR_LESS,
+    ];
+
     /**
      * Returns fields for tasks.
      *
@@ -56,13 +61,8 @@ class TaskController extends RestController implements ClassResourceInterface
         $listBuilder = $this->prepareListBuilder($fieldDescriptors, $request, $factory->create(Task::class));
         $result = $this->executeListBuilder($fieldDescriptors, $request, $listBuilder);
 
-        $handlerFactory = $this->get('task.handler.factory');
         for ($i = 0; $i < count($result); ++$i) {
-            $handler = $handlerFactory->create($result[$i]['handlerClass']);
-
-            if ($handler instanceof AutomationTaskHandlerInterface) {
-                $result[$i]['taskName'] = $handler->getConfiguration()->getTitle();
-            }
+            $result[$i] = $this->extendResponseItem($result[$i]);
         }
 
         return $this->handleView(
@@ -81,6 +81,33 @@ class TaskController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Extends response item with task-name and status.
+     *
+     * @param array $item
+     *
+     * @return array
+     */
+    private function extendResponseItem($item)
+    {
+        $handlerFactory = $this->get('task.handler.factory');
+        $handler = $handlerFactory->create($item['handlerClass']);
+
+        if ($handler instanceof AutomationTaskHandlerInterface) {
+            $item['taskName'] = $handler->getConfiguration()->getTitle();
+        }
+
+        $task = $this->get('task.repository.task')->findByUuid($item['taskId']);
+        $executions = $this->get('task.repository.task_execution')->findByTask($task);
+        if (0 < count($executions)) {
+            $item['status'] = $executions[0]->getStatus();
+        }
+
+        unset($item['taskId']);
+
+        return $item;
+    }
+
+    /**
      * Prepares list-builder.
      *
      * @param FieldDescriptorInterface[] $fieldDescriptors
@@ -94,6 +121,7 @@ class TaskController extends RestController implements ClassResourceInterface
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->addSelectField($fieldDescriptors['handlerClass']);
+        $listBuilder->addSelectField($fieldDescriptors['taskId']);
 
         if ($entityClass = $request->get('entity-class')) {
             $listBuilder->where($fieldDescriptors['entityClass'], $entityClass);
@@ -105,6 +133,12 @@ class TaskController extends RestController implements ClassResourceInterface
 
         if ($locale = $request->get('locale')) {
             $listBuilder->where($fieldDescriptors['locale'], $locale);
+        }
+
+        if (null !== ($schedule = $request->get('schedule'))
+            && in_array($schedule, array_keys(self::$scheduleComparators))
+        ) {
+            $listBuilder->where($fieldDescriptors['schedule'], new \DateTime(), self::$scheduleComparators[$schedule]);
         }
 
         return $listBuilder;

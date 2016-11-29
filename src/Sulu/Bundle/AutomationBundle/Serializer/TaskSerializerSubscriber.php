@@ -17,6 +17,7 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use Sulu\Bundle\AutomationBundle\TaskHandler\AutomationTaskHandlerInterface;
 use Sulu\Bundle\AutomationBundle\Tasks\Model\TaskInterface;
 use Task\Handler\TaskHandlerFactoryInterface;
+use Task\Storage\TaskExecutionRepositoryInterface;
 
 /**
  * Extend serialization of tasks.
@@ -29,11 +30,20 @@ class TaskSerializerSubscriber implements EventSubscriberInterface
     private $handlerFactory;
 
     /**
-     * @param TaskHandlerFactoryInterface $handlerFactory
+     * @var TaskExecutionRepositoryInterface
      */
-    public function __construct(TaskHandlerFactoryInterface $handlerFactory)
-    {
+    private $taskExecutionRepository;
+
+    /**
+     * @param TaskHandlerFactoryInterface $handlerFactory
+     * @param TaskExecutionRepositoryInterface $taskExecutionRepository
+     */
+    public function __construct(
+        TaskHandlerFactoryInterface $handlerFactory,
+        TaskExecutionRepositoryInterface $taskExecutionRepository
+    ) {
         $this->handlerFactory = $handlerFactory;
+        $this->taskExecutionRepository = $taskExecutionRepository;
     }
 
     /**
@@ -63,9 +73,13 @@ class TaskSerializerSubscriber implements EventSubscriberInterface
         }
 
         $handler = $this->handlerFactory->create($object->getHandlerClass());
-
         if ($handler instanceof AutomationTaskHandlerInterface) {
             $event->getVisitor()->addData('taskName', $handler->getConfiguration()->getTitle());
+        }
+
+        $executions = $this->taskExecutionRepository->findByTaskUuid($object->getTaskId());
+        if (0 < count($executions)) {
+            $event->getVisitor()->addData('status', $executions[0]->getStatus());
         }
     }
 }

@@ -2,20 +2,28 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_content.page_document.class">Sulu\Bundle\ContentBundle\Document\BasePageDocument</parameter>
+    </parameters>
+
     <services>
         <service id="sulu_content.automation.content_navigation_provider"
-                 class="Sulu\Bundle\ContentBundle\Admin\ContentAutomationContentNavigationProvider">
+                 class="Sulu\Bundle\AutomationBundle\Admin\AutomationContentNavigationProvider">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="string">%sulu_content.page_document.class%</argument>
+
             <tag name="sulu_admin.content_navigation" alias="content"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_content.aitomation.handle.publish"
+        <service id="sulu_content.automation.publish_handler"
                  class="Sulu\Bundle\ContentBundle\Automation\DocumentPublishHandler">
             <argument type="service" id="sulu_document_manager.document_manager"/>
 
             <tag name="task.handler"/>
         </service>
 
-        <service id="sulu_content.aitomation.handle.unpublish"
+        <service id="sulu_content.automation.unpublish_handler"
                  class="Sulu\Bundle\ContentBundle\Automation\DocumentUnpublishHandler">
             <argument type="service" id="sulu_document_manager.document_manager"/>
 
@@ -23,4 +31,3 @@
         </service>
     </services>
 </container>
-
