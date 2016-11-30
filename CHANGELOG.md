@@ -4,8 +4,9 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #3059 [ContentBundle]       Fixed deprecation in WebspaceCollection rendering
     * ENHANCEMENT #3058 [All]                 Fixed some config files for symfony3
-    * BUGFIX      #3043 [ContentBudle]        Fixed bind null values on managed-structure
+    * BUGFIX      #3043 [ContentBundle]       Fixed bind null values on managed-structure
     * FEATURE     #3037 [AutomationBundle]    Added automation-bundle
+    * BUGFIX      #3052 [ContentBundle]       Fixed loading tree (with uuid) without webspace
     * ENHANCEMENT #2856 [ContactBundle]       Removed not needed css
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
@@ -24,7 +25,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
-    * BUGFIX      #3019 [WesbiteBundle]       Fixed redirect for double slash
+    * BUGFIX      #3019 [WebsiteBundle]       Fixed redirect for double slash
     * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension 
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes

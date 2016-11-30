@@ -179,8 +179,12 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
         $path = $this->resolvePathByUuid($uuid);
+        if (empty($webspaceKey)) {
+            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($path);
+        }
+
+        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)

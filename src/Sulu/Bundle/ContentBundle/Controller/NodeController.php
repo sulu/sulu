@@ -159,7 +159,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
         $locale = $this->getRequestParameter($request, 'language', true);
-        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $webspaceKey = $this->getRequestParameter($request, 'webspace');
 
         $user = $this->getUser();
 
@@ -226,7 +226,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $webspaceKey, $locale, $user);
+            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
         } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
@@ -488,7 +488,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $webspaceKey, $locale, $user);
+            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
         } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
@@ -860,7 +860,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
      *
      * @param MappingInterface $mapping
      * @param array $contents
-     * @param string|null $webspaceKey
      * @param string $locale
      * @param UserInterface $user
      *
@@ -869,7 +868,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     private function getWebspaceNodes(
         MappingInterface $mapping,
         array $contents,
-        $webspaceKey,
         $locale,
         UserInterface $user
     ) {
@@ -888,7 +886,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $webspaces[$webspace->getKey()] = $webspace;
         }
 
-        return $this->getWebspaceNodesByPaths($paths, $webspaceKey, $locale, $mapping, $webspaces, $contents, $user);
+        return $this->getWebspaceNodesByPaths($paths, $locale, $mapping, $webspaces, $contents, $user);
     }
 
     /**
@@ -919,7 +917,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         return $this->getWebspaceNodesByPaths(
             $paths,
-            $webspaceKey,
             $locale,
             $mapping,
             $webspaces,
@@ -930,7 +927,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * @param string[] $paths
-     * @param string $webspaceKey
      * @param string $locale
      * @param MappingInterface $mapping
      * @param Webspace[] $webspaces
@@ -941,13 +937,17 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     private function getWebspaceNodesByPaths(
         array $paths,
-        $webspaceKey,
         $locale,
         MappingInterface $mapping,
         array $webspaces,
         array $contents,
         UserInterface $user
     ) {
+        $webspaceKey = null;
+        if ($firstContent = reset($contents)) {
+            $webspaceKey = $firstContent->getWebspaceKey();
+        }
+
         $webspaceContents = $this->get('sulu_content.content_repository')->findByPaths(
             $paths,
             $locale,
