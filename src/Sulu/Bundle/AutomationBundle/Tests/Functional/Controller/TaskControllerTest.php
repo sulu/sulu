@@ -90,7 +90,6 @@ class TaskControllerTest extends SuluTestCase
             $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'de'),
         ];
 
-
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/tasks?locale=de&fields=id,schedule,handlerClass,taskName');
         $this->assertHttpStatusCode(200, $client->getResponse());

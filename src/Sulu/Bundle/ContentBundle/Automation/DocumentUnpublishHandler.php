@@ -11,64 +11,27 @@
 
 namespace Sulu\Bundle\ContentBundle\Automation;
 
-use Sulu\Bundle\AutomationBundle\TaskHandler\AutomationTaskHandlerInterface;
-use Sulu\Bundle\AutomationBundle\TaskHandler\TaskHandlerConfiguration;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Provides handler for unpublishing documents.
  */
-class DocumentUnpublishHandler implements AutomationTaskHandlerInterface
+class DocumentUnpublishHandler extends BaseDocumentHandler
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
     /**
      * @param DocumentManagerInterface $documentManager
      */
     public function __construct(DocumentManagerInterface $documentManager)
     {
-        $this->documentManager = $documentManager;
+        parent::__construct('sulu_content.task_handler.unpublish', $documentManager);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle($workload)
+    protected function handleDocument(WorkflowStageBehavior $document, $locale)
     {
-        $document = $this->documentManager->find($workload['id'], $workload['locale']);
-        $this->documentManager->unpublish($document, $workload['locale']);
-        $this->documentManager->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptionsResolver(OptionsResolver $optionsResolver)
-    {
-        return $optionsResolver
-            ->setRequired(['id', 'locale'])
-            ->setAllowedTypes('id', 'string')
-            ->setAllowedTypes('locale', 'string');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($entityClass)
-    {
-        return is_subclass_of($entityClass, WorkflowStageBehavior::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfiguration()
-    {
-        return TaskHandlerConfiguration::create('sulu_content.task_handler.unpublish');
+        $this->documentManager->unpublish($document, $locale);
     }
 }
