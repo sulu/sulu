@@ -16,7 +16,7 @@
             </trans-unit>
             <trans-unit id="4">
                 <source>sulu_automation.task.name</source>
-                <target>Aufgaben-Name</target>
+                <target>Aufgabe</target>
             </trans-unit>
             <trans-unit id="5">
                 <source>sulu_automation.task.schedule</source>
@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="8">
                 <source>sulu_automation.task.choose</source>
-                <target>Aufgabe wählen ...</target>
+                <target>Bitte wählen ...</target>
             </trans-unit>
             <trans-unit id="9">
                 <source>sulu_automation.list.creator</source>

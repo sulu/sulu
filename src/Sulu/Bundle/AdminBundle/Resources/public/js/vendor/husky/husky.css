@@ -10740,25 +10740,7 @@ a.btn-black, a.btn-highlight {
 .husky-table.light .table tbody .row.even, .husky-table.light .table tbody .row.odd {
   background: transparent;
 }
-/* line 44, ../scss/modules/datagrid-table-view-light.scss */
-.husky-table.light .table .task-state {
-  width: 30px;
-  text-align: center;
-  margin-left: 10px;
-}
-/* line 49, ../scss/modules/datagrid-table-view-light.scss */
-.husky-table.light .table .task-state.fa-check-circle {
-  color: #5DC774;
-}
-/* line 52, ../scss/modules/datagrid-table-view-light.scss */
-.husky-table.light .table .task-state.fa-exclamation-triangle {
-  color: #E8CE33;
-}
-/* line 55, ../scss/modules/datagrid-table-view-light.scss */
-.husky-table.light .table .task-state.fa-ban {
-  color: #EA524E;
-}
-/* line 61, ../scss/modules/datagrid-table-view-light.scss */
+/* line 45, ../scss/modules/datagrid-table-view-light.scss */
 .husky-table.light .empty-list {
   background: transparent;
 }

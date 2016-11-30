@@ -31,7 +31,8 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
                 handlerClass: 'sulu_automation.task.name',
                 time: 'sulu_automation.task.schedule.time',
                 date: 'sulu_automation.task.schedule.date',
-                choose: 'sulu_automation.task.choose'
+                choose: 'sulu_automation.task.choose',
+                remove: 'public.delete'
             }
         },
 
@@ -42,6 +43,28 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
                 entityClass: this.options.entityClass
             }));
             this.$el.append(this.$container);
+
+            var buttons = [];
+            if (!!this.options.saveCallback) {
+                buttons.push({
+                    type: 'ok',
+                    align: 'right'
+                });
+            }
+
+            if (!!this.options.removeCallback) {
+                buttons.push({
+                    text: this.translations.remove,
+                    align: 'center',
+                    classes: 'just-text',
+                    callback: this.removeTask.bind(this)
+                });
+            }
+
+            buttons.push({
+                type: 'cancel',
+                align: 'left'
+            });
 
             this.sandbox.start(
                 [
@@ -56,16 +79,7 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
                             slides: [
                                 {
                                     title: this.translations.task,
-                                    buttons: [
-                                        {
-                                            type: 'ok',
-                                            align: 'right'
-                                        },
-                                        {
-                                            type: 'cancel',
-                                            align: 'left'
-                                        }
-                                    ],
+                                    buttons: buttons,
                                     data: this.$formContainer,
                                     okCallback: this.save.bind(this)
                                 }
@@ -102,6 +116,17 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
             }
         },
 
+        removeTask: function() {
+            this.sandbox.emit('husky.overlay.task-overlay.show-loader');
+            this.options.removeCallback().then(function() {
+                this.sandbox.stop();
+            }.bind(this)).fail(function() {
+                this.sandbox.emit('husky.overlay.task-overlay.hide-loader');
+            }.bind(this));
+
+            return false;
+        },
+
         save: function() {
             if (!this.sandbox.form.validate(this.$formContainer)) {
                 return false;
@@ -116,8 +141,6 @@ define(['services/suluautomation/task-manager', 'text!./form.html'], function(ma
             }.bind(this));
 
             return false;
-
-            this.sandbox.stop();
         },
 
         loadComponentData: function() {

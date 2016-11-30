@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AutomationBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\DeserializationContext;
+use Sulu\Bundle\AutomationBundle\Admin\AutomationAdmin;
 use Sulu\Bundle\AutomationBundle\Entity\Task;
 use Sulu\Bundle\AutomationBundle\Exception\TaskNotFoundException;
 use Sulu\Bundle\AutomationBundle\TaskHandler\AutomationTaskHandlerInterface;
@@ -23,13 +24,14 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides api for tasks.
  */
-class TaskController extends RestController implements ClassResourceInterface
+class TaskController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     private static $scheduleComparators = [
         'future' => ListBuilderInterface::WHERE_COMPARATOR_GREATER_THAN,
@@ -305,5 +307,13 @@ class TaskController extends RestController implements ClassResourceInterface
     private function getEntityManager()
     {
         return $this->get('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityContext()
+    {
+        return AutomationAdmin::TASK_SECURITY_CONTEXT;
     }
 }

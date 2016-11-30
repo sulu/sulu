@@ -10,7 +10,7 @@
 require.config({
     paths: {
         suluautomation: '../../suluautomation/js',
-        suluautomationcss: '../../suluautomation/js/css',
+        suluautomationcss: '../../suluautomation/css',
 
         'services/suluautomation/task-manager': '../../suluautomation/js/services/task-manager'
     }

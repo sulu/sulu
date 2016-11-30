@@ -9,15 +9,17 @@
 
 define([
     'underscore',
+    'config',
     'services/suluautomation/task-manager',
     'text!./skeleton.html',
     'text!/admin/api/tasks/fields'
-], function(_, manager, skeletonTemplate, fieldsResponse) {
+], function(_, config, manager, skeletonTemplate, fieldsResponse) {
 
     'use strict';
 
     var fields = JSON.parse(fieldsResponse),
-        historyFields = JSON.parse(fieldsResponse);
+        historyFields = JSON.parse(fieldsResponse),
+        securityContext = config.get('sulu_security.contexts')['sulu.automation.tasks'];
 
     for (var i = 0, length = historyFields.length; i < length; i++) {
         if (historyFields[i].name === 'status') {
@@ -82,65 +84,82 @@ define([
         },
 
         startTasksComponents: function() {
-            this.sandbox.start(
-                [
-                    {
-                        name: 'list-toolbar@suluadmin',
-                        options: {
-                            el: this.$el.find('#tasks .task-list-toolbar'),
-                            hasSearch: false,
-                            template: this.sandbox.sulu.buttons.get(
-                                {
-                                    add: {options: {callback: this.addTask.bind(this)}},
-                                    deleteSelected: {}
-                                }
-                            )
-                        }
-                    },
-                    {
-                        name: 'datagrid@husky',
-                        options: {
-                            el: this.$el.find('#tasks .task-list'),
-                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=asc&schedule=future',
-                            resultKey: 'tasks',
-                            instanceName: 'tasks',
-                            actionCallback: this.editTask.bind(this),
-                            matchings: fields
-                        }
-                    },
-                    {
-                        name: 'datagrid@husky',
-                        options: {
-                            el: this.$el.find('#task-history .task-list'),
-                            url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=desc&schedule=past',
-                            resultKey: 'tasks',
-                            instanceName: 'task-history',
-                            viewOptions: {
-                                table: {
-                                    selectItem: false,
-                                    cssClass: 'light'
-                                }
-                            },
-                            contentFilters: {
-                                status: function(content) {
-                                    var iconString = 'fa-question';
-                                    switch (content) {
-                                        case 'completed':
-                                            iconString = 'fa-check-circle';
-                                            break;
-                                        case 'failed':
-                                            iconString = 'fa-ban';
-                                            break;
-                                    }
+            var buttons = {};
+            if (!!securityContext['add']) {
+                buttons.add = {options: {callback: this.addTask.bind(this)}};
+            }
+            if (!!securityContext['delete']) {
+                buttons.deleteSelected = {};
+            }
 
-                                    return '<span class="' + iconString + ' task-state"/>';
-                                }
-                            },
-                            matchings: historyFields
-                        }
+            var components = [];
+            if (!!buttons.add || !!buttons.deleteSelected) {
+                components.push({
+                    name: 'list-toolbar@suluadmin',
+                    options: {
+                        el: this.$el.find('#tasks .task-list-toolbar'),
+                        hasSearch: false,
+                        template: this.sandbox.sulu.buttons.get(buttons)
                     }
-                ]
-            )
+                });
+            }
+
+            components.push({
+                name: 'datagrid@husky',
+                options: {
+                    el: this.$el.find('#tasks .task-list'),
+                    url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=asc&schedule=future',
+                    resultKey: 'tasks',
+                    instanceName: 'tasks',
+                    actionCallback: this.editTask.bind(this),
+                    viewOptions: {
+                        table: {
+                            actionIcon: securityContext['edit'] ? 'pencil' : 'eye'
+                        }
+                    },
+                    matchings: fields
+                }
+            });
+
+            components.push({
+                name: 'datagrid@husky',
+                options: {
+                    el: this.$el.find('#task-history .task-list'),
+                    url: manager.getUrl(this.options.entityClass, this.entityData[this.options.idKey]) + '&locale=' + this.options.locale + '&sortBy=schedule&sortOrder=desc&schedule=past',
+                    resultKey: 'tasks',
+                    instanceName: 'task-history',
+                    viewOptions: {
+                        table: {
+                            selectItem: false,
+                            cssClass: 'light'
+                        }
+                    },
+                    contentFilters: {
+                        status: function(content) {
+                            var iconString = 'fa-question';
+                            switch (content) {
+                                case 'planned':
+                                    iconString = 'fa-clock-o';
+                                    break;
+                                case 'started':
+                                    iconString = 'fa-play';
+                                    break;
+                                case 'completed':
+                                    iconString = 'fa-check-circle';
+                                    break;
+                                case 'failed':
+                                    iconString = 'fa-ban';
+                                    break;
+                            }
+
+                            return '<span class="' + iconString + ' task-state"/>';
+                        }
+                    },
+                    matchings: historyFields
+                }
+            });
+
+            this.sandbox.start(components);
         },
 
         editTask: function(id) {
@@ -154,7 +173,10 @@ define([
                         options: {
                             el: $container,
                             entityClass: this.options.entityClass,
-                            saveCallback: this.saveTask.bind(this),
+                            saveCallback: securityContext['edit'] ? this.saveTask.bind(this) : null,
+                            removeCallback: securityContext['delete'] ? function() {
+                                return this.deleteTask(id);
+                            }.bind(this) : null,
                             id: id
                         }
                     }
@@ -173,7 +195,7 @@ define([
                         options: {
                             el: $container,
                             entityClass: this.options.entityClass,
-                            saveCallback: this.saveTask.bind(this)
+                            saveCallback: securityContext['edit'] ? this.saveTask.bind(this) : null
                         }
                     }
                 ]
@@ -192,10 +214,16 @@ define([
         },
 
         deleteTasks: function(ids) {
-            manager.deleteItems(ids).then(function() {
+            return manager.deleteItems(ids).then(function() {
                 _.each(ids, function(id) {
                     this.sandbox.emit('husky.datagrid.tasks.record.remove', id);
                 }.bind(this));
+            }.bind(this));
+        },
+
+        deleteTask: function(id) {
+            return manager.deleteItem(id).then(function() {
+                this.sandbox.emit('husky.datagrid.tasks.record.remove', id);
             }.bind(this));
         },
 

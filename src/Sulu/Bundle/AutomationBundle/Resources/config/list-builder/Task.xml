@@ -23,7 +23,7 @@
     </orm:joins>
 
     <properties>
-        <property name="id" list:translation="public.id" display="no">
+        <property name="id" list:translation="public.id" display="no" list:sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
@@ -38,10 +38,10 @@
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
 
-        <property name="status" list:translation="public.status"/>
+        <property name="status" list:translation="public.status" list:sortable="false"/>
 
         <property name="taskName" list:translation="sulu_automation.task.name" list:type="translation"
-                  display="always"/>
+                  display="always" list:sortable="false"/>
 
         <property name="taskId" display="never">
             <orm:field-name>taskId</orm:field-name>
@@ -54,18 +54,18 @@
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
 
-        <property name="entityClass" display="never">
+        <property name="entityClass" display="never" list:sortable="false">
             <orm:field-name>entityClass</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
 
-        <property name="entityId" display="never">
+        <property name="entityId" display="never" list:sortable="false">
             <orm:field-name>entityId</orm:field-name>
             <orm:entity-name>%sulu.model.task.class%</orm:entity-name>
         </property>
 
         <concatenation-property name="creator" display="always" orm:glue=" "
-                                list:translation="sulu_automation.list.creator">
+                                list:translation="sulu_automation.list.creator" list:sortable="false">
             <orm:field>
                 <orm:field-name>firstName</orm:field-name>
                 <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
@@ -80,7 +80,8 @@
             </orm:field>
         </concatenation-property>
 
-        <concatenation-property name="changer" orm:glue=" " list:translation="sulu_automation.list.changer">
+        <concatenation-property name="changer" orm:glue=" " list:translation="sulu_automation.list.changer"
+                                list:sortable="false">
             <orm:field>
                 <orm:field-name>firstName</orm:field-name>
                 <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>

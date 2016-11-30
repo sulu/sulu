@@ -26,6 +26,10 @@ define(['underscore', 'services/husky/util'], function(_, Util) {
             return Util.save(url({id: data.id || null}), !!data.id ? 'PUT' : 'POST', data);
         },
 
+        deleteItem: function(id) {
+            return Util.save(url({id: id}), 'DELETE');
+        },
+
         deleteItems: function(ids) {
             return Util.save(url({id: null}) + '?ids=' + ids.join(','), 'DELETE');
         }

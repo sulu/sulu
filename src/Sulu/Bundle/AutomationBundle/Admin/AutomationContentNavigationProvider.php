@@ -53,7 +53,7 @@ class AutomationContentNavigationProvider implements ContentNavigationProviderIn
      */
     public function getNavigationItems(array $options = [])
     {
-        if ($this->securityChecker->hasPermission(AutomationAdmin::TASK_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+        if (!$this->securityChecker->hasPermission(AutomationAdmin::TASK_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             return [];
         }
 

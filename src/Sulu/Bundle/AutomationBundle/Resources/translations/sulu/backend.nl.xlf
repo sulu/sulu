@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="8">
                 <source>sulu_automation.task.choose</source>
-                <target>Taak kiezen...</target>
+                <target>Maak je keuze ...</target>
             </trans-unit>
             <trans-unit id="9">
                 <source>sulu_automation.list.creator</source>
