@@ -86,6 +86,9 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
                         'search' => 'now',
                         'searchFields' => 'title',
                         'page' => 1,
+                    ],
+                    [],
+                    [
                         '_format' => 'csv',
                     ]
                 ),
