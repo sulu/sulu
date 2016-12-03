@@ -4,6 +4,8 @@ CHANGELOG for Sulu
 * dev-develop
     * FEATURE     #3069 [PreviewBundle]       Added cache configuration for preview & websocket context
     * ENHANCEMENT #3071 [All]                 Updated willdurand/hateoas-bundle
+    * ENHANCEMENT #3072 [SnippetBundle]       Fixed deprecations for symfony 3.0
+    * ENHANCEMENT #3072 [AdminBundle]         Fixed deprecations for symfony 3.0
     * FEATURE     #3066 [AutomationBundle]    Added notification-badge to automation-tab
     * ENHANCEMENT #3059 [ContentBundle]       Fixed deprecation in WebspaceCollection rendering
     * ENHANCEMENT #3058 [All]                 Fixed some config files for symfony3
