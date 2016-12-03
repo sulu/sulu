@@ -11,7 +11,10 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
-use ReflectionMethod;
+use Sulu\Component\Rest\Exception\MissingParameterException;
+use Sulu\Component\Rest\Exception\ParameterDataTypeException;
+use Sulu\Component\Rest\RequestParametersTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,17 +28,9 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $this->requestParametersTrait = $this->getObjectForTrait('Sulu\Component\Rest\RequestParametersTrait');
     }
 
-    private function getRequestMock(array $parametersValueMap)
-    {
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
-        $request->expects($this->any())->method('get')->will($this->returnValueMap($parametersValueMap));
-
-        return $request;
-    }
-
     private function getGetRequestParameterReflection()
     {
-        $getRequestParameterReflection = new ReflectionMethod(
+        $getRequestParameterReflection = new \ReflectionMethod(
             get_class($this->requestParametersTrait),
             'getRequestParameter'
         );
@@ -47,7 +42,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     private function getGetBooleanRequestParameterReflection()
     {
-        $getBooleanRequestParameterReflection = new ReflectionMethod(
+        $getBooleanRequestParameterReflection = new \ReflectionMethod(
             get_class($this->requestParametersTrait),
             'getBooleanRequestParameter'
         );
@@ -59,99 +54,118 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestParameter()
     {
-        $request = $this->getRequestMock(
-            [
-                ['test', null, false, 'data'],
-                ['none', 'default', false, 'default'],
-            ]
-        );
+        $request = $this->prophesize(Request::class);
+        $request->get('test', null)->willReturn('data');
+        $request->get('none', 'default')->willReturn('default');
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
 
         $this->assertEquals(
             'data',
-            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test')
+            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test')
         );
 
         $this->assertEquals(
             'data',
-            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true)
+            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true)
         );
 
         $this->assertEquals(
             'default',
-            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'none', false, 'default')
+            $getRequestParameterReflection->invoke(
+                $this->requestParametersTrait,
+                $request->reveal(),
+                'none',
+                false,
+                'default'
+            )
         );
     }
 
     public function testGetRequestParameterFail()
     {
-        $this->setExpectedException('Sulu\Component\Rest\Exception\MissingParameterException');
+        $this->setExpectedException(MissingParameterException::class);
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
-        $request = $this->getRequestMock([]);
+        $request = $this->prophesize(Request::class);
 
-        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
+        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true);
     }
 
     public function testGetBooleanRequestParameter()
     {
-        $request = $this->getRequestMock(
-            [
-                ['test1', null, false, 'true'],
-                ['test2', null, false, 'false'],
-                ['none', 'default', false, null],
-            ]
-        );
+        $request = $this->prophesize(Request::class);
+        $request->get('test1', null)->willReturn('true');
+        $request->get('test2', null)->willReturn('false');
+        $request->get('none', null)->willReturn(null);
+        $request->get('none', true)->willReturn(true);
 
         $getBooleanRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
 
         $this->assertTrue(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test1')
+            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test1')
         );
 
         $this->assertTrue(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test1', true)
+            $getBooleanRequestParameterReflection->invoke(
+                $this->requestParametersTrait,
+                $request->reveal(),
+                'test1',
+                true
+            )
         );
 
         $this->assertFalse(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test2')
+            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test2')
         );
 
         $this->assertFalse(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test2', true)
+            $getBooleanRequestParameterReflection->invoke(
+                $this->requestParametersTrait,
+                $request->reveal(),
+                'test2',
+                true
+            )
         );
 
         $this->assertTrue(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'none', false, true)
+            $getBooleanRequestParameterReflection->invoke(
+                $this->requestParametersTrait,
+                $request->reveal(),
+                'none',
+                false,
+                true
+            )
         );
 
         $this->assertNull(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'none', false)
+            $getBooleanRequestParameterReflection->invoke(
+                $this->requestParametersTrait,
+                $request->reveal(),
+                'none',
+                false
+            )
         );
     }
 
     public function testGetBooleanRequestParameterFail()
     {
-        $this->setExpectedException('Sulu\Component\Rest\Exception\MissingParameterException');
+        $this->setExpectedException(MissingParameterException::class);
 
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
-        $request = $this->getRequestMock([]);
+        $request = $this->prophesize(Request::class);
 
-        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
+        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true);
     }
 
     public function testGetBooleanRequestWrongParameter()
     {
-        $this->setExpectedException('Sulu\Component\Rest\Exception\ParameterDataTypeException');
+        $this->setExpectedException(ParameterDataTypeException::class);
 
         $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
-        $request = $this->getRequestMock(
-            [
-                ['test', null, false, 'asdf'],
-            ]
-        );
+        $request = $this->prophesize(Request::class);
+        $request->get('test', null)->willReturn('asdf');
 
-        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
+        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true);
     }
 }
