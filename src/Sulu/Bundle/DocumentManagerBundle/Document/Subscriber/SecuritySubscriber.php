@@ -1,0 +1,76 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\DocumentManagerBundle\Document\Subscriber;
+
+use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+/**
+ * Responsible for integrating the security part of Sulu to the DocumentManager.
+ */
+class SecuritySubscriber implements EventSubscriberInterface
+{
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage = null)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            Events::CONFIGURE_OPTIONS => 'setDefaultUser',
+        ];
+    }
+
+    /**
+     * Sets the default user from the session.
+     *
+     * @param ConfigureOptionsEvent $event
+     */
+    public function setDefaultUser(ConfigureOptionsEvent $event)
+    {
+        if (null === $this->tokenStorage) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token || $token instanceof AnonymousToken) {
+            return;
+        }
+
+        $user = $token->getUser();
+
+        if (!$user instanceof UserInterface) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'User must implement the Sulu UserInterface, got "%s"',
+                    is_object($user) ? get_class($user) : gettype($user)
+                )
+            );
+        }
+
+        $event->getOptions()->setDefault('user', $user->getId());
+    }
+}

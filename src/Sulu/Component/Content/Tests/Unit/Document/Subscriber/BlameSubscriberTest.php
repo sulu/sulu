@@ -22,10 +22,6 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,34 +46,9 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     private $accessor;
 
     /**
-     * @var UserInterface
-     */
-    private $user;
-
-    /**
-     * @var AnonymousToken
-     */
-    private $anonymousToken;
-
-    /**
-     * @var \stdClass
-     */
-    private $notUser;
-
-    /**
-     * @var TokenInterface
-     */
-    private $token;
-
-    /**
      * @var PropertyEncoder
      */
     private $propertyEncoder;
-
-    /**
-     * @var TokenStorage
-     */
-    private $tokenStorage;
 
     /**
      * @var BlameSubscriber
@@ -90,20 +61,11 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->accessor = $this->prophesize(DocumentAccessor::class);
-        $this->user = $this->prophesize(UserInterface::class);
-        $this->anonymousToken = $this->prophesize(AnonymousToken::class);
-        $this->notUser = new \stdClass();
-        $this->token = $this->prophesize(TokenInterface::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
-        $this->tokenStorage = $this->prophesize(TokenStorage::class);
 
-        $this->subscriber = new BlameSubscriber(
-            $this->propertyEncoder->reveal(),
-            $this->tokenStorage->reveal()
-        );
+        $this->subscriber = new BlameSubscriber($this->propertyEncoder->reveal());
 
         $this->persistEvent->getNode()->willReturn($this->node);
-        $this->persistEvent->getOptions()->willReturn([]);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);
         $this->persistEvent->getLocale()->willReturn('de');
 
@@ -121,48 +83,12 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function testPersistTokenIsNull()
-    {
-        $document = $this->prophesize(LocalizedBlameBehavior::class);
-        $this->persistEvent->getDocument()->willReturn($document->reveal());
-        $this->tokenStorage->getToken()->willReturn(null);
-        $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
-        $this->node->setProperty(Argument::cetera())->shouldNotBeCalled();
-
-        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
-    }
-
     public function testPersistLocaleIsNull()
     {
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $this->persistEvent->getLocale()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($document->reveal());
-        $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
-        $this->node->setProperty()->shouldNotBeCalled();
-
-        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
-    }
-
-    public function testPersistTokenIsAnonymous()
-    {
-        $document = $this->prophesize(LocalizedBlameBehavior::class);
-        $this->persistEvent->getDocument()->willReturn($document->reveal());
-        $this->tokenStorage->getToken()->willReturn($this->anonymousToken->reveal());
-        $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
-        $this->node->setProperty()->shouldNotBeCalled();
-
-        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testPersistUserNotSuluUser()
-    {
-        $document = $this->prophesize(LocalizedBlameBehavior::class);
-        $this->persistEvent->getDocument()->willReturn($document->reveal());
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->notUser);
+        $this->persistEvent->getOption('user')->willReturn(1);
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->node->setProperty()->shouldNotBeCalled();
 
@@ -175,10 +101,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->getCreator()->willReturn(null);
 
         $this->persistEvent->getDocument()->willReturn($document->reveal());
-
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
+        $this->persistEvent->getOption('user')->willReturn(2);
 
         $this->node->hasProperty('i18n:de-creator')->willReturn(false);
 
@@ -195,13 +118,10 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $document->getCreator()->willReturn(1);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
-
         $this->node->hasProperty('i18n:de-creator')->willReturn(true);
 
         $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(2);
         $this->accessor->set('changer', 2)->shouldBeCalled();
         $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
         $this->accessor->set('creator', Argument::any())->shouldNotBeCalled();
@@ -215,13 +135,10 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize(BlameBehavior::class);
         $document->getCreator()->willReturn(1);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
-
         $this->node->hasProperty('creator')->willReturn(true);
 
         $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(2);
         $this->accessor->set('changer', 2)->shouldBeCalled();
         $this->node->setProperty('changer', 2)->shouldBeCalled();
         $this->accessor->set('creator', Argument::any())->shouldNotBeCalled();
@@ -234,7 +151,6 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
-        $event->getOptions()->willReturn([]);
 
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $document->getCreator()->willReturn(null);
@@ -257,7 +173,6 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
-        $event->getOptions()->willReturn([]);
 
         $document = $this->prophesize(BlameBehavior::class);
         $document->getCreator()->willReturn(null);
@@ -280,7 +195,6 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
-        $event->getOptions()->willReturn([]);
 
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $document->getCreator()->willReturn(1);
@@ -305,8 +219,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getAccessor()->willReturn($this->accessor->reveal());
         $event->getNode()->willReturn($this->node->reveal());
         $event->getDocument()->willReturn(new \stdClass());
-
-        $this->tokenStorage->getToken()->shouldNotBeCalled();
+        $this->persistEvent->getOption('user')->willReturn(2);
 
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->node->setProperty(Argument::cetera())->shouldNotBeCalled();
@@ -317,16 +230,11 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getLocale()->willReturn('de');
-        $event->getOptions()->willReturn([]);
-
+        $event->getOption('user')->willReturn(2);
         $event->getNode()->willReturn($this->node->reveal());
 
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
-
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
 
         $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
         $this->subscriber->setChangerForRestore($event->reveal());
@@ -336,16 +244,12 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getLocale()->willReturn('de');
-        $event->getOptions()->willReturn([]);
+        $event->getOption('user')->willReturn(2);
 
         $event->getNode()->willReturn($this->node->reveal());
 
         $document = $this->prophesize(BlameBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
-
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
 
         $this->node->setProperty('changer', 2)->shouldBeCalled();
         $this->subscriber->setChangerForRestore($event->reveal());

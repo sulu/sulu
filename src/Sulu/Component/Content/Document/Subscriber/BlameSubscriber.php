@@ -15,17 +15,13 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * Manages user blame (log who creator the document and who updated it last).
@@ -40,18 +36,9 @@ class BlameSubscriber implements EventSubscriberInterface
      */
     private $propertyEncoder;
 
-    /**
-     * @var TokenStorage
-     */
-    private $tokenStorage;
-
-    /**
-     * @param TokenStorage $tokenStorage
-     */
-    public function __construct(PropertyEncoder $propertyEncoder, TokenStorage $tokenStorage = null)
+    public function __construct(PropertyEncoder $propertyEncoder)
     {
         $this->propertyEncoder = $propertyEncoder;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -60,24 +47,11 @@ class BlameSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::CONFIGURE_OPTIONS => 'configureOptions',
             Events::HYDRATE => 'setBlamesOnDocument',
             Events::PERSIST => 'setBlamesOnNodeForPersist',
             Events::PUBLISH => 'setBlamesOnNodeForPublish',
             Events::RESTORE => ['setChangerForRestore', -32],
         ];
-    }
-
-    /**
-     * @param ConfigureOptionsEvent $event
-     */
-    public function configureOptions(ConfigureOptionsEvent $event)
-    {
-        $event->getOptions()->setDefaults(
-            [
-                'user' => null,
-            ]
-        );
     }
 
     /**
@@ -129,18 +103,12 @@ class BlameSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $userId = $this->getUserId($event->getOptions());
-
-        if (null === $userId) {
-            return;
-        }
-
         $this->setBlamesOnNode(
             $document,
             $event->getNode(),
             $event->getLocale(),
             $event->getAccessor(),
-            $userId
+            $event->getOption('user')
         );
     }
 
@@ -172,8 +140,8 @@ class BlameSubscriber implements EventSubscriberInterface
      * @param LocalizedBlameBehavior $document
      * @param NodeInterface $node
      * @param string $locale string
-     * @param $options
      * @param DocumentAccessor $accessor
+     * @param int $userId
      */
     public function setBlamesOnNode(
         LocalizedBlameBehavior $document,
@@ -182,6 +150,10 @@ class BlameSubscriber implements EventSubscriberInterface
         DocumentAccessor $accessor,
         $userId
     ) {
+        if (!$document instanceof BlameBehavior && !$locale) {
+            return;
+        }
+
         $encoding = $this->getPropertyEncoding($document);
 
         $creatorPropertyName = $this->propertyEncoder->encode($encoding, static::CREATOR, $locale);
@@ -216,45 +188,8 @@ class BlameSubscriber implements EventSubscriberInterface
 
         $event->getNode()->setProperty(
             $this->propertyEncoder->encode($encoding, self::CHANGER, $event->getLocale()),
-            $this->getUserId($event->getOptions())
+            $event->getOption('user')
         );
-    }
-
-    /**
-     * Either returns the user id from the options array, or sets the id of the user of the current session.
-     *
-     * @param $options
-     *
-     * @return int
-     */
-    private function getUserId($options)
-    {
-        if (isset($options['user'])) {
-            return $options['user'];
-        }
-
-        if (null === $this->tokenStorage) {
-            return;
-        }
-
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token || $token instanceof AnonymousToken) {
-            return;
-        }
-
-        $user = $token->getUser();
-
-        if (!$user instanceof UserInterface) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'User must implement the Sulu UserInterface, got "%s"',
-                    is_object($user) ? get_class($user) : gettype($user)
-                )
-            );
-        }
-
-        return $user->getId();
     }
 
     /**

@@ -5,6 +5,12 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="sulu_document_manager.subscriber.security"
+                 class="Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber">
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
+        </service>
+
         <!-- Behavior Subscribers !-->
         <service id="sulu_document_manager.subscriber.behavior.auto_name"
                  class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AutoNameSubscriber">
@@ -24,7 +30,6 @@
         <service id="sulu_document_manager.suscriber.behavior.blame"
                  class="Sulu\Component\Content\Document\Subscriber\BlameSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder"/>
-            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
