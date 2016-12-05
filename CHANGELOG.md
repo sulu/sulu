@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #3059 [ContentBundle]       Fixed deprecation in WebspaceCollection rendering
+    * ENHANCEMENT #3058 [All]                 Fixed some config files for symfony3
     * BUGFIX      #3043 [ContentBudle]        Fixed bind null values on managed-structure
     * ENHANCEMENT #2856 [ContactBundle]       Removed not needed css
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
