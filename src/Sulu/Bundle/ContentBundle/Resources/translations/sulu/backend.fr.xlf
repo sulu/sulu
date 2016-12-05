@@ -799,6 +799,14 @@
                 <source>content.ckeditor.internal-link.remove-drop-down</source>
                 <target>Enleve</target>
             </trans-unit>
+            <trans-unit id="73" resname="sulu_content.task_handler.publish">
+                 <source>sulu_content.task_handler.publish</source>
+                 <target>Publier</target>
+             </trans-unit>
+            <trans-unit id="74" resname="sulu_content.task_handler.unpublish">
+                 <source>sulu_content.task_handler.unpublish</source>
+                 <target>Dépublier</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

@@ -9,15 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Scheduler;
+namespace Sulu\Bundle\AutomationBundle\Events;
 
 /**
- * Defines the interface for a scheduled task.
+ * Event args for task-remove event.
  */
-interface TaskInterface
+class TaskRemoveEvent extends TaskEvent
 {
-    /**
-     * Periodically called by the Scheduler.
-     */
-    public function execute();
+    use CancelTrait;
 }
