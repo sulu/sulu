@@ -72,9 +72,10 @@ class {{ cache_class }} extends {{ base_class }}
 {% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
 {% endfor %}
 
+{% import _self as macro %}
         // add navigation
         $navigation = new Navigation();
-{% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ _self.renderArray(context.metadata) }}));
+{% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ macro.renderArray(context.metadata) }}));
 {% endfor %}        $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('{{ webspace.resourceLocator.strategy }}');
 
@@ -183,10 +184,11 @@ class {{ cache_class }} extends {{ base_class }}
 }
 
 {% macro renderArray(array) %}
+    {% import _self as macro %}
     array(
     {% for key, value in array %}
         {% if is_array(value) %}
-            '{{ key }}' => {{ _self.renderArray(value) }},
+            '{{ key }}' => {{ macro.renderArray(value) }},
         {% else %}
             '{{ key }}' => '{{ value }}',
         {% endif %}
