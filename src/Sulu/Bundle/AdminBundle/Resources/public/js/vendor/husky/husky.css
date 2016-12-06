@@ -9117,11 +9117,44 @@ a.btn-black, a.btn-highlight {
   text-decoration: none;
   font-size: 14px;
   outline: 0;
-  /* Notification badge */
-  position: relative;
 }
 /* line 34, ../scss/modules/tabs.scss */
-.tabs-container ul li a[data-badge]:after {
+.tabs-container ul li.is-selected a {
+  color: #52B6CA;
+  font-weight: bold;
+}
+/* line 42, ../scss/modules/tabs.scss */
+.tabs-container .marker {
+  height: 2px;
+  background: #52B6CA;
+  position: absolute;
+  bottom: 0;
+  width: 0px;
+  left: 0px;
+}
+/* line 51, ../scss/modules/tabs.scss */
+.tabs-container .marker.animate {
+  -moz-transition: left 350ms ease, width 350ms ease;
+  -o-transition: left 350ms ease, width 350ms ease;
+  -webkit-transition: left 350ms ease, width 350ms ease;
+  transition: left 350ms ease, width 350ms ease;
+}
+/* line 61, ../scss/modules/tabs.scss */
+.tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
+  color: #999;
+  cursor: default;
+}
+/* line 65, ../scss/modules/tabs.scss */
+.tabs-container.deactivated ul li.is-selected a {
+  color: #52B6CA;
+}
+
+/* line 5, ../scss/modules/notification-badge.scss */
+a {
+  position: relative;
+}
+/* line 8, ../scss/modules/notification-badge.scss */
+a[data-badge]:after {
   content: attr(data-badge);
   position: absolute;
   top: -10px;
@@ -9134,36 +9167,6 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 18px;
   border-radius: 50%;
-}
-/* line 51, ../scss/modules/tabs.scss */
-.tabs-container ul li.is-selected a {
-  color: #52B6CA;
-  font-weight: bold;
-}
-/* line 59, ../scss/modules/tabs.scss */
-.tabs-container .marker {
-  height: 2px;
-  background: #52B6CA;
-  position: absolute;
-  bottom: 0;
-  width: 0px;
-  left: 0px;
-}
-/* line 68, ../scss/modules/tabs.scss */
-.tabs-container .marker.animate {
-  -moz-transition: left 350ms ease, width 350ms ease;
-  -o-transition: left 350ms ease, width 350ms ease;
-  -webkit-transition: left 350ms ease, width 350ms ease;
-  transition: left 350ms ease, width 350ms ease;
-}
-/* line 78, ../scss/modules/tabs.scss */
-.tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
-  color: #999;
-  cursor: default;
-}
-/* line 82, ../scss/modules/tabs.scss */
-.tabs-container.deactivated ul li.is-selected a {
-  color: #52B6CA;
 }
 
 /*styles related to the whole container*/
@@ -12824,7 +12827,7 @@ label.husky-toggler-label ~ .input-description {
   color: #EA524E;
 }
 
-/* line 60, ../scss/husky.scss */
+/* line 61, ../scss/husky.scss */
 [class^="fa-"] {
   text-decoration: none;
 }
