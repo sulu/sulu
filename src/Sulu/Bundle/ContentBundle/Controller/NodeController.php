@@ -298,7 +298,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
-        $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         try {
             if ($uuid !== null && $uuid !== '') {
@@ -307,8 +306,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $webspace,
                     $language,
                     $excludeGhosts,
-                    $excludeShadows,
-                    $appendWebspaceNode
+                    $excludeShadows
                 );
             } elseif ($webspace !== null) {
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
