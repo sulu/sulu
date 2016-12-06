@@ -1,5 +1,13 @@
 # Upgrade
 
+## dev-develop
+
+### Deprecations
+
+Following classes were removed because of deprecations:
+
+* Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlVoter
+
 ## 1.4.2
 
 ### Webspace keys

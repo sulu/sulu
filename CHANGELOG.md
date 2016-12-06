@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3043 [ContentBundle]       Fixed bind null values on managed-structure
     * FEATURE     #3037 [AutomationBundle]    Added automation-bundle
     * BUGFIX      #3052 [ContentBundle]       Fixed loading tree (with uuid) without webspace
+    * ENHANCEMENT #3067 [ContentBundle]       Removed symfony-acl-voter
     * ENHANCEMENT #2856 [ContactBundle]       Removed not needed css
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
