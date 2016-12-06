@@ -584,9 +584,12 @@ define([
                     'language=' + this.options.language,
                     'fields=title,order,published',
                     'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
-                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false'),
-                     (this.showWebspaceNode ? 'webspace-nodes=single' : '')
+                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
                 ];
+
+           if(!!this.showWebspaceNode){
+               urlParts.push('webspace-nodes=single');
+           }
 
             if (!!selected) {
                 url += '/' + selected;
