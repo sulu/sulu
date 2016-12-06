@@ -36809,6 +36809,16 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
         },
 
         /**
+         * used to update the notification badge of a single tab.
+         * @event husky.tabs.update-notification
+         * @param {String} id
+         * @param {Number} notificationBadge
+         */
+        UPDATE_NOTIFICATION = function() {
+            return this.createEventName('update-notification');
+        },
+
+        /**
          * used to update the tab-component.
          * @event husky.tabs.initialized
          * @param {Number} visibleTabs object
@@ -36915,6 +36925,15 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
             setMarker.call(this);
         },
 
+        updateNotification = function(id, notificationNumber) {
+            var $item = this.$find('li[data-id="' + id + '"] a');
+            if (!!notificationNumber) {
+                return $item.attr('data-badge', notificationNumber);
+            }
+
+            $item.removeAttr('data-badge');
+        },
+
         bindDOMEvents = function() {
             if (!!this.options.preSelectEvent.enabled) {
                 this.sandbox.dom.on(this.$el, 'click', preSelectEvent.bind(this), 'li');
@@ -36935,6 +36954,7 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
             this.sandbox.on(ITEM_HIDE.call(this), hideItem.bind(this));
             this.sandbox.on(ITEM_CLICKED.call(this), selectItem.bind(this));
             this.sandbox.on(UPDATE.call(this), update.bind(this));
+            this.sandbox.on(UPDATE_NOTIFICATION.call(this), updateNotification.bind(this));
         };
 
     return {
@@ -37028,9 +37048,14 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
             var visibleTabs = 0;
             this.sandbox.util.foreach(this.data, function(item, index) {
                 this.items[item.id] = item;
-                $item = this.sandbox.dom.createElement(
-                    '<li data-id="' + item.id + '"><a href="#">' + this.sandbox.translate(item.name) + '</a></li>'
-                );
+                $item = this.sandbox.dom.createElement([
+                    '<li data-id="' + item.id + '">',
+                    '    <a href="#" ', (item.notificationBadge ? 'data-badge="' + item.notificationBadge : ''), '">',
+                    this.sandbox.translate(item.name),
+                    '    </a>',
+                    '</li>'
+                ].join(''));
+
                 this.sandbox.dom.append($list, $item);
 
                 if ((!!item.disabled && item.disabled.toString() === 'true')

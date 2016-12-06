@@ -877,6 +877,10 @@ define([
                     navigationUrlParams.push('webspace=' + this.options.webspace);
                 }
 
+                if (!!this.options.language) {
+                    navigationUrlParams.push('locale=' + this.options.language);
+                }
+
                 if (!!navigationUrlParams.length) {
                     navigationUrl += '?' + navigationUrlParams.join('&');
                 }

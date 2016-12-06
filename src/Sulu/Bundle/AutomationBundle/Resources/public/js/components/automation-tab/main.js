@@ -34,7 +34,8 @@ define([
             options: {
                 entityClass: null,
                 locale: null,
-                idKey: 'id'
+                idKey: 'id',
+                notificationBadge: 0
             },
 
             templates: {
@@ -62,6 +63,7 @@ define([
 
         initialize: function() {
             this.entityData = this.options.data();
+            this.notificationBadge = this.options.notificationBadge;
 
             this.$el.append(this.templates.skeleton({translations: this.translations}));
 
@@ -216,14 +218,17 @@ define([
         deleteTasks: function(ids) {
             return manager.deleteItems(ids).then(function() {
                 _.each(ids, function(id) {
+                    --this.notificationBadge;
                     this.sandbox.emit('husky.datagrid.tasks.record.remove', id);
                 }.bind(this));
+                this.updateNotification(this.notificationBadge);
             }.bind(this));
         },
 
         deleteTask: function(id) {
             return manager.deleteItem(id).then(function() {
                 this.sandbox.emit('husky.datagrid.tasks.record.remove', id);
+                this.updateNotification(--this.notificationBadge);
             }.bind(this));
         },
 
@@ -244,7 +249,15 @@ define([
                     this.translations.successMessage,
                     this.translations.successLabel
                 );
+
+                if (!data.id) {
+                    this.updateNotification(++this.notificationBadge);
+                }
             }.bind(this));
+        },
+
+        updateNotification: function(notificationBadge) {
+            this.sandbox.emit('husky.tabs.header.update-notification', 'tab-automation', notificationBadge);
         }
     };
 });

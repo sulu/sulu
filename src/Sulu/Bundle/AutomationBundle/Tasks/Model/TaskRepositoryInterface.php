@@ -49,6 +49,16 @@ interface TaskRepositoryInterface
     public function findById($id);
 
     /**
+     * Count tasks which will be called in the future in given entity.
+     *
+     * @param string $entityClass
+     * @param string $entityId
+     *
+     * @return int
+     */
+    public function countFutureTasks($entityClass, $entityId, $locale = null);
+
+    /**
      * Revert given task-entity.
      *
      * @param $task
