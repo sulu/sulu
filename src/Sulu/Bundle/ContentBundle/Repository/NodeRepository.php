@@ -542,42 +542,15 @@ class NodeRepository implements NodeRepositoryInterface
         $webspaceKey,
         $languageCode,
         $excludeGhosts = false,
-        $excludeShadows = false,
-        $appendWebspaceNode = false
+        $excludeShadows = false
     ) {
         $nodes = $this->loadNodeAndAncestors($uuid, $webspaceKey, $languageCode, $excludeGhosts, $excludeShadows, true);
 
-        if ($appendWebspaceNode) {
-            $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
-            $result = [
-                '_embedded' => [
-                    'nodes' => [
-                        [
-                            'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
-                            'path' => '/',
-                            'title' => $webspace->getName(),
-                            'publishedState' => true,
-                            'hasSub' => true,
-                            '_embedded' => [
-                                'nodes' => $nodes,
-                            ],
-                            '_links' => [
-                                'children' => [
-                                    'href' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey . '&language=' .
-                                        $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-        } else {
-            $result = [
-                '_embedded' => [
-                    'nodes' => $nodes,
-                ],
-            ];
-        }
+        $result = [
+            '_embedded' => [
+                'nodes' => $nodes,
+            ],
+        ];
 
         if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
             $result['_permissions'] = $this->accessControlManager->getUserPermissions(
@@ -592,8 +565,7 @@ class NodeRepository implements NodeRepositoryInterface
         $result['_links'] = [
             'self' => [
                 'href' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
-                    $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
-                    ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+                    $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
             ],
         ];
 
