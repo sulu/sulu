@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AutomationBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Bundle\AutomationBundle\Tasks\Model\TaskRepositoryInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -27,6 +28,11 @@ class AutomationContentNavigationProvider implements ContentNavigationProviderIn
     private $securityChecker;
 
     /**
+     * @var TaskRepositoryInterface
+     */
+    private $taskRepository;
+
+    /**
      * @var string
      */
     private $entityClass;
@@ -38,12 +44,18 @@ class AutomationContentNavigationProvider implements ContentNavigationProviderIn
 
     /**
      * @param SecurityCheckerInterface $securityChecker
+     * @param TaskRepositoryInterface $taskRepository
      * @param string $entityClass
      * @param int $position
      */
-    public function __construct(SecurityCheckerInterface $securityChecker, $entityClass, $position = 45)
-    {
+    public function __construct(
+        SecurityCheckerInterface $securityChecker,
+        TaskRepositoryInterface $taskRepository,
+        $entityClass,
+        $position = 45
+    ) {
         $this->securityChecker = $securityChecker;
+        $this->taskRepository = $taskRepository;
         $this->entityClass = $entityClass;
         $this->position = $position;
     }
@@ -62,8 +74,19 @@ class AutomationContentNavigationProvider implements ContentNavigationProviderIn
         $automation->setPosition($this->position);
         $automation->setAction('automation');
         $automation->setComponent('automation-tab@suluautomation');
-        $automation->setComponentOptions(['entityClass' => $this->entityClass]);
         $automation->setDisplay(['edit']);
+
+        $componentOptions = ['entityClass' => $this->entityClass];
+        if (array_key_exists('id', $options)) {
+            $locale = array_key_exists('locale', $options) ? $options['locale'] : null;
+            $componentOptions['notificationBadge'] = $this->taskRepository->countFutureTasks(
+                $this->entityClass,
+                $options['id'],
+                $locale
+            );
+            $automation->setNotificationBadge($componentOptions['notificationBadge']);
+        }
+        $automation->setComponentOptions($componentOptions);
 
         return [$automation];
     }
