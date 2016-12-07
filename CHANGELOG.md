@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #3084 [GeneratorBundle]     Removed generator-bundle
     * ENHANCEMENT #3080 [All]                 Removed getRequest calls
+    * ENHANCENEMT #3070 [All]                 Removed guzzle3 dependency
     * FEATURE     #3078 [MediaBundle]         Added sort-by title for media-dataprovider
     * FEATURE     #3069 [PreviewBundle]       Added cache configuration for preview & websocket context
     * ENHANCEMENT #3071 [All]                 Updated willdurand/hateoas-bundle
