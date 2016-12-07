@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use InvalidArgumentException;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -116,11 +117,14 @@ abstract class WebsiteController extends Controller
     }
 
     /**
-     * @return null|\Symfony\Component\HttpFoundation\Request
+     * Returns the current request from the request stack.
+     *
+     * @return null|Request
      *
      * @deprecated will be remove with 2.0
      */
-    protected function getRequest() {
+    protected function getRequest()
+    {
         return $this->get('request_stack')->getCurrentRequest();
     }
 }
