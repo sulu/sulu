@@ -19,7 +19,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PageDocumentType extends BasePageDocumentType
 {
@@ -63,7 +63,7 @@ class PageDocumentType extends BasePageDocumentType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $options)
+    public function configureOptions(OptionsResolver $options)
     {
         $metadata = $this->metadataFactory->getMetadataForAlias('page');
 
@@ -71,7 +71,7 @@ class PageDocumentType extends BasePageDocumentType
             'data_class' => $metadata->getClass(),
         ]);
 
-        parent::setDefaultOptions($options);
+        parent::configureOptions($options);
     }
 
     /**

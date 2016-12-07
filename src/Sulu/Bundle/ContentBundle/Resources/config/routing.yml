@@ -1,31 +1,31 @@
 sulu_content.content_form:
-    pattern: /template/form/{key}.html
+    path: /template/form/{key}.html
     defaults: { _controller: SuluContentBundle:Template:content }
 
 sulu_content.content_form.default:
-    pattern: /template/form.html
+    path: /template/form.html
     defaults: { _controller: SuluContentBundle:Template:content }
 
 sulu_content.template.get:
-    pattern: /template
+    path: /template
     defaults: { _controller: SuluContentBundle:Template:get }
 
 sulu_content.languages.get:
-    pattern: /languages
+    path: /languages
     defaults: { _controller: SuluContentBundle:Template:getLanguages }
 
 sulu_content.content_list:
-    pattern: /template/content/list.html
+    path: /template/content/list.html
     defaults: { _controller: SuluContentBundle:Template:list }
 
 sulu_content.content_column:
-    pattern: /template/content/column/{webspaceKey}/{languageCode}.html
+    path: /template/content/column/{webspaceKey}/{languageCode}.html
     defaults: { _controller: SuluContentBundle:Template:column }
 
 sulu_content.seo:
-    pattern: /template/content/seo.html
+    path: /template/content/seo.html
     defaults: { _controller: SuluContentBundle:Template:seo }
 
 sulu_content.template.settings:
-    pattern: /template/content/settings.html
+    path: /template/content/settings.html
     defaults: { _controller: SuluContentBundle:Template:settings }

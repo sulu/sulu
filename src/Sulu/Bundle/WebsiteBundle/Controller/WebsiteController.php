@@ -112,4 +112,11 @@ abstract class WebsiteController extends Controller
             throw $e;
         }
     }
+
+    /**
+     * @return null|\Symfony\Component\HttpFoundation\Request
+     */
+    protected function getRequest() {
+        return $this->get('request_stack')->getCurrentRequest();
+    }
 }

@@ -14,6 +14,8 @@ namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType;
+use Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -108,8 +110,8 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 'sulu_document_manager',
                 [
                     'mapping' => [
-                        'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page'],
-                        'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home'],
+                        'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page', 'form_type' => PageDocumentType::class],
+                        'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home', 'form_type' => HomeDocumentType::class],
                         'route' => ['class' => RouteDocument::class, 'phpcr_type' => 'sulu:path'],
                     ],
                 ]

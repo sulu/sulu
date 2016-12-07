@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection;
 
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Form\SnippetType;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -70,7 +71,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                 'sulu_document_manager',
                 [
                     'mapping' => [
-                        'snippet' => ['class' => SnippetDocument::class, 'phpcr_type' => 'sulu:snippet'],
+                        'snippet' => ['class' => SnippetDocument::class, 'phpcr_type' => 'sulu:snippet', 'form_type' => SnippetType::class],
                     ],
                 ]
             );

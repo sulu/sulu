@@ -599,11 +599,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ]
         );
 
-        $type = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getAlias();
+        $formType = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getFormType();
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
-        $this->persistDocument($request, $type, $document, $language);
+        $this->persistDocument($request, $formType, $document, $language);
         $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
@@ -634,8 +634,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->checkActionParameterSecurity($action, $language);
 
         $document = $this->getDocumentManager()->create($type);
+        $formType = $this->getMetadataFactory()->getMetadataForAlias($type)->getFormType();
 
-        $this->persistDocument($request, $type, $document, $language);
+        $this->persistDocument($request, $formType, $document, $language);
         $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
@@ -968,14 +969,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Persists the document using the given information.
      *
      * @param Request $request
-     * @param $type
+     * @param $formType
      * @param $document
      * @param $language
      *
      * @throws InvalidFormException
      * @throws MissingParameterException
      */
-    private function persistDocument(Request $request, $type, $document, $language)
+    private function persistDocument(Request $request, $formType, $document, $language)
     {
         $data = $request->request->all();
 
@@ -984,7 +985,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         $form = $this->createForm(
-            $type,
+            $formType,
             $document,
             [
                 // disable csrf protection, since we can't produce a token, because the form is cached on the client
