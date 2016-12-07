@@ -58,7 +58,7 @@
         </service>
 
         <service id="sulu_snippet.form.snippet" class="%sulu_snippet.form.snippet.class%">
-            <tag name="form.type" alias="snippet" />
+            <tag name="form.type"/>
         </service>
 
         <service id="sulu_snippet.document.snippet_initializer" class="%sulu_snippet.document.snippet_initializer.class%">

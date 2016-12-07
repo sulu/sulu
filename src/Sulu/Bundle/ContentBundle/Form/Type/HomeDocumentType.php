@@ -26,12 +26,4 @@ class HomeDocumentType extends BasePageDocumentType
 
         parent::configureOptions($options);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'home';
-    }
 }

@@ -75,14 +75,6 @@ class PageDocumentType extends BasePageDocumentType
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'page';
-    }
-
-    /**
      * Set the document parent to be the webspace content path
      * when the document has no parent.
      *

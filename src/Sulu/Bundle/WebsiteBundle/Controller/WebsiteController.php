@@ -31,6 +31,8 @@ abstract class WebsiteController extends Controller
      * @param bool $partial Defines if only the content block of the template should be rendered
      *
      * @return Response
+     *
+     * @deprecated will be remove with 2.0
      */
     protected function renderStructure(
         StructureInterface $structure,
@@ -115,6 +117,8 @@ abstract class WebsiteController extends Controller
 
     /**
      * @return null|\Symfony\Component\HttpFoundation\Request
+     *
+     * @deprecated will be remove with 2.0
      */
     protected function getRequest() {
         return $this->get('request_stack')->getCurrentRequest();

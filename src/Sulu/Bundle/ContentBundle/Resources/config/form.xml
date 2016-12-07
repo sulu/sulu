@@ -8,7 +8,7 @@
         <service id="dtl_content.form.factory.document_type" class="Sulu\Component\Content\Form\Type\DocumentObjectType">
             <argument type="service" id="sulu_document_manager.document_manager" />
 
-            <tag name="form.type" alias="document_object" />
+            <tag name="form.type" />
         </service>
 
         <!-- Form structure types -->
@@ -17,11 +17,11 @@
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
 
-            <tag name="form.type" alias="page" />
+            <tag name="form.type" />
         </service>
 
         <service id="dtl_content.form.type.home" class="Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType">
-            <tag name="form.type" alias="home" />
+            <tag name="form.type" />
         </service>
 
     </services>
