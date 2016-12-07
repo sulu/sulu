@@ -14,6 +14,7 @@
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
         <service id="sulu_preview.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu_preview</argument>
             <argument type="collection">
@@ -25,11 +26,9 @@
         </service>
 
         <!-- preview -->
-        <service id="sulu_preview.preview.data_cache" class="Doctrine\Common\Cache\FilesystemCache">
-            <argument type="string">%sulu.cache_dir%/preview/data</argument>
-        </service>
         <service id="sulu_preview.preview.kernel_factory"
                  class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
+
         <service id="sulu_preview.preview.renderer" class="Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer">
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
             <argument type="service" id="request_stack"/>
@@ -41,9 +40,10 @@
             </argument>
             <argument type="string">%kernel.environment%</argument>
         </service>
+
         <service id="sulu_preview.preview" class="Sulu\Bundle\PreviewBundle\Preview\Preview">
             <argument type="collection"/>
-            <argument type="service" id="sulu_preview.preview.data_cache"/>
+            <argument type="service" id="sulu_preview.preview.cache"/>
             <argument type="service" id="sulu_preview.preview.renderer"/>
         </service>
 

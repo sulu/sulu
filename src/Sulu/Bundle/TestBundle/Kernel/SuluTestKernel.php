@@ -27,7 +27,9 @@ class SuluTestKernel extends SuluKernel
     {
         $bundles = [
             // Dependencies
+            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
@@ -45,7 +47,6 @@ class SuluTestKernel extends SuluKernel
 
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
-            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
