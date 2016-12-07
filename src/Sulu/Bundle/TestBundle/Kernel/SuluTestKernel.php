@@ -28,6 +28,7 @@ class SuluTestKernel extends SuluKernel
         $bundles = [
             // Dependencies
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
