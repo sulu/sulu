@@ -22,7 +22,7 @@
         "doctrine/doctrine-cache-bundle": "~1.0",
         "friendsofsymfony/http-cache": "1.3.*",
         "friendsofsymfony/rest-bundle": "~1.4",
-        "guzzle/guzzle": "3.*",
+        "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1",
         "massive/search-bundle": "0.16.*",
         "sulu/document-manager": "dev-develop",
