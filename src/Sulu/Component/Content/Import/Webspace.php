@@ -89,7 +89,6 @@ class Webspace implements WebspaceInterface
      */
     private $exceptionStore = [];
 
-
     /**
      * @var array
      */
@@ -194,12 +193,10 @@ class Webspace implements WebspaceInterface
 
             $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
 
-
             $progress->advance();
         }
 
         $progress->finish();
-
 
         $return = new \stdClass();
         $return->count = $importedCounter;

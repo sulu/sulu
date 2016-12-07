@@ -281,7 +281,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * Serializes the user just with the id, as it is enough.
      *
-     * @link http://php.net/manual/en/serializable.serialize.php
+     * @see http://php.net/manual/en/serializable.serialize.php
      *
      * @return string The string representation of the object or null
      */
@@ -297,7 +297,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * Constructs the object.
      *
-     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @see http://php.net/manual/en/serializable.unserialize.php
      *
      * @param string $serialized The string representation of the object
      */

@@ -18,7 +18,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if the named tag does not exist.
      *
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetTagNotExist()
     {
@@ -72,7 +72,7 @@ abstract class ItemMetadataCase extends \PHPUnit_Framework_TestCase
     /**
      * It throws an exception if the parameter does not exist.
      *
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Unknown parameter "param5", known parameters: "param1"
      */
     public function testGetParametersInvalid()

@@ -44,7 +44,7 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
      * It should throw an exception if reverse transform is attempted with something
      * that is not a UUID.
      *
-     * @expectedException Symfony\Component\Form\Exception\TransformationFailedException
+     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
      * @expectedExceptionMessage Given UUID is not a UUID
      */
     public function testReverseTransformNotUuid()
@@ -53,7 +53,7 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Form\Exception\TransformationFailedException
+     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
      * @expectedExceptionMessage Could not find document
      */
     public function testReverseTransformNotFound()

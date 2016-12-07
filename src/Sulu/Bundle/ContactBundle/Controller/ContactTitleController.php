@@ -167,7 +167,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
     {
         try {
             $delete = function ($id) {
-
                 /* @var ContactTitle $title */
                 $title = $this->getDoctrine()
                     ->getRepository(self::$entityName)
