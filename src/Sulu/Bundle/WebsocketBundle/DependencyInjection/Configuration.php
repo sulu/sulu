@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsocketBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -58,7 +59,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @param string $name
      *
-     * @return \Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return NodeDefinition
      */
     private function addBasicProviderNode($name)
     {
@@ -71,7 +72,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Build file_system node configuration definition.
      *
-     * @return \Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return NodeDefinition
      */
     private function addFileSystemNode()
     {
@@ -92,7 +93,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Build redis node configuration definition.
      *
-     * @return \Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return NodeDefinition
      */
     private function addRedisNode()
     {
