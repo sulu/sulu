@@ -138,7 +138,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException
      */
     public function testLoadWithMissingDimension()
     {

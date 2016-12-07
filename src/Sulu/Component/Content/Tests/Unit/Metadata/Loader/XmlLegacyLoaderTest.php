@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
-use InvalidArgumentException;
 use Prophecy\Argument;
 use Sulu\Component\Content\Metadata\Loader\XmlLegacyLoader;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
@@ -319,7 +318,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testReadTypesInvalidPath()
     {
@@ -940,7 +939,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'priority' => 5,
                                     'attributes' => [],
                                 ],
-
                             ],
                             'params' => [],
                             'meta' => [],

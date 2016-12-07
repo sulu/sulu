@@ -138,7 +138,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
      */
     public function testGetNotExistingFormat()
     {
@@ -176,7 +176,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
      */
     public function testGetAllNotExistingFormat()
     {
@@ -215,7 +215,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
      */
     public function testSaveNotExisting()
     {

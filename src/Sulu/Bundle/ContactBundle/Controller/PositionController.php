@@ -165,7 +165,6 @@ class PositionController extends RestController implements ClassResourceInterfac
     {
         try {
             $delete = function ($id) {
-
                 /* @var Position $position */
                 $position = $this->getDoctrine()
                     ->getRepository(self::$entityName)

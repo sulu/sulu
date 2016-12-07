@@ -1876,7 +1876,6 @@ class AccountControllerTest extends SuluTestCase
      */
     public function testGetDeletInfoByIdWithSuperAccount()
     {
-
         // changing test data: adding child accounts
         for ($i = 0; $i < 5; ++$i) {
             $childAccount = new Account();

@@ -161,7 +161,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if the token is not a Sulu User.
      *
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testPersistUserNotSuluUser()
     {
