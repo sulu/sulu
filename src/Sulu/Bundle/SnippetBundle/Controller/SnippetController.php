@@ -25,6 +25,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -100,6 +101,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private $listRestHelper;
 
+    /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -111,7 +117,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         DocumentManager $documentManager,
         FormFactory $formFactory,
         RequestHashChecker $requestHashChecker,
-        ListRestHelper $listRestHelper
+        ListRestHelper $listRestHelper,
+        MetadataFactoryInterface $metadataFactory
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -124,6 +131,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->formFactory = $formFactory;
         $this->requestHashChecker = $requestHashChecker;
         $this->listRestHelper = $listRestHelper;
+        $this->metadataFactory = $metadataFactory;
     }
 
     /**
@@ -487,8 +495,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data = $request->request->all();
         $data['workflowStage'] = $request->get('state', WorkflowStage::PUBLISHED);
 
-        $formType = $this->get('sulu_document_manager.metadata_factory.base')
-            ->getMetadataForAlias('snippet')->getFormType();
+        $formType = $this->metadataFactory->getMetadataForAlias('snippet')->getFormType();
 
         $form = $this->formFactory->create($formType, $document, [
             'csrf_protection' => false,

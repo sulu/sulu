@@ -123,7 +123,7 @@ abstract class WebsiteController extends Controller
      *
      * @deprecated will be remove with 2.0
      */
-    protected function getRequest()
+    public function getRequest()
     {
         return $this->get('request_stack')->getCurrentRequest();
     }
