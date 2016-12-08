@@ -17,21 +17,22 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class BasePageDocumentType extends AbstractStructureBehaviorType
 {
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $options)
+    public function configureOptions(OptionsResolver $options)
     {
-        parent::setDefaultOptions($options);
         $options->setRequired(
             [
                 'webspace_key',
             ]
         );
+
+        parent::configureOptions($options);
     }
 
     /**
@@ -47,7 +48,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
             'navigationContexts',
             CollectionType::class,
             [
-                'type' => TextType::class,
+                'entry_type' => TextType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
             ]

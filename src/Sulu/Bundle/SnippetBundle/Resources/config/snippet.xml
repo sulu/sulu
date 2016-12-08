@@ -20,17 +20,18 @@
         </service>
 
         <service id="sulu_snippet.controller.snippet" class="%sulu_snippet.controller.snippet.class%">
-            <argument type="service" id="fos_rest.view_handler" />
-            <argument type="service" id="sulu.content.mapper" />
-            <argument type="service" id="sulu.content.structure_manager" />
-            <argument type="service" id="sulu_snippet.repository" />
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_snippet.repository"/>
             <argument type="service" id="security.token_storage" on-invalid="ignore"/>
-            <argument type="service" id="router" />
-            <argument type="service" id="sulu_snippet.default_snippet.manager" />
-            <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="form.factory" />
+            <argument type="service" id="router"/>
+            <argument type="service" id="sulu_snippet.default_snippet.manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="form.factory"/>
             <argument type="service" id="sulu_hash.request_hash_checker"/>
             <argument type="service" id="sulu_core.list_rest_helper"/>
+            <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -58,7 +59,7 @@
         </service>
 
         <service id="sulu_snippet.form.snippet" class="%sulu_snippet.form.snippet.class%">
-            <tag name="form.type" alias="snippet" />
+            <tag name="form.type"/>
         </service>
 
         <service id="sulu_snippet.document.snippet_initializer" class="%sulu_snippet.document.snippet_initializer.class%">

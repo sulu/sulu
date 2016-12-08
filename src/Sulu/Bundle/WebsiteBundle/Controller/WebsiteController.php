@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use InvalidArgumentException;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -31,6 +32,8 @@ abstract class WebsiteController extends Controller
      * @param bool $partial Defines if only the content block of the template should be rendered
      *
      * @return Response
+     *
+     * @deprecated will be remove with 2.0
      */
     protected function renderStructure(
         StructureInterface $structure,
@@ -111,5 +114,17 @@ abstract class WebsiteController extends Controller
 
             throw $e;
         }
+    }
+
+    /**
+     * Returns the current request from the request stack.
+     *
+     * @return null|Request
+     *
+     * @deprecated will be remove with 2.0
+     */
+    public function getRequest()
+    {
+        return $this->get('request_stack')->getCurrentRequest();
     }
 }
