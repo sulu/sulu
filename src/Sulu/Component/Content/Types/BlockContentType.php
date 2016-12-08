@@ -411,4 +411,27 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $property->setValue($value);
         $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $data = $this->prepareData(
+            $property,
+            function (ContentTypeInterface $contentType, $property) {
+                return $contentType->getReferencedUuids($property);
+            },
+            false
+        );
+
+        $referencedUuids = [];
+        array_walk_recursive($data, function ($val) use (&$referencedUuids) {
+            if (!in_array($val, $referencedUuids)) {
+                $referencedUuids[] = $val;
+            }
+        });
+
+        return $referencedUuids;
+    }
 }
