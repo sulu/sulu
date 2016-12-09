@@ -113,14 +113,20 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->leftJoin('fileVersion.tags', 'tag')
             ->leftJoin('fileVersion.categories', 'categories')
             ->leftJoin('categories.translations', 'categoryTranslations')
-            ->leftJoin('fileVersion.meta', 'fileVersionMeta')
+            ->leftJoin(
+                'fileVersion.meta',
+                'fileVersionMeta',
+                Join::WITH,
+                'fileVersionMeta.locale = :locale'
+            )
             ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
             ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
             ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
             ->leftJoin($alias . '.creator', 'creator')
             ->leftJoin('creator.contact', 'creatorContact')
             ->leftJoin($alias . '.changer', 'changer')
-            ->leftJoin('changer.contact', 'changerContact');
+            ->leftJoin('changer.contact', 'changerContact')
+            ->setParameter('locale', $locale);
     }
 
     /**
@@ -193,6 +199,21 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         }
 
         return ['collectionId' => $datasource];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function appendSortByJoins(QueryBuilder $queryBuilder, $alias, $locale)
+    {
+        $queryBuilder
+            ->leftJoin(
+                'fileVersion.meta',
+                'fileVersionMeta',
+                Join::WITH,
+                'fileVersionMeta.locale = :locale'
+            )
+            ->setParameter('locale', $locale);
     }
 
     /**
