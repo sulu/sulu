@@ -92,6 +92,21 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function findUsersById(array $ids)
+    {
+        $query = $this->createQueryBuilder('user')
+            ->leftJoin('user.contact', 'contact')
+            ->addSelect('contact')
+            ->where('user.id IN (:userIds)')
+            ->setParameter('userIds', $ids)
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    /**
      * Searches for a user with a specific contact id.
      *
      * @param $id
