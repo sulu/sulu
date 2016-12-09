@@ -31,7 +31,7 @@
         "stof/doctrine-extensions-bundle": "1.1.*",
         "symfony-cmf/routing-bundle": "1.2.*",
         "symfony/symfony": "~2.8.7, !=2.8.10",
-        "willdurand/hateoas-bundle": "0.3.*",
+        "willdurand/hateoas-bundle": "^1.0",
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
         "pulse00/ffmpeg-bundle": "^0.6",
