@@ -9489,108 +9489,139 @@ a[data-badge]:after {
   content: "";
 }
 /* line 321, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.no-link {
+  cursor: default;
+}
+/* line 325, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.info {
+  background-color: #F2D212;
+  height: auto;
+  margin: 5px 0 -5px 0;
+  line-height: 20px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-size: 10px;
+  color: #000;
+}
+/* line 334, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.info *:first-child {
+  margin-top: 0;
+}
+/* line 337, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.info *:last-child {
+  margin-bottom: 0;
+}
+/* line 341, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.info p.smaller {
+  line-height: 15px;
+}
+/* line 346, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li.info:hover {
+  color: #000;
+}
+/* line 351, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover, .husky-toolbar .toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 325, ../scss/modules/toolbar.scss */
+/* line 355, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.disabled:hover a, .husky-toolbar .toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999;
 }
-/* line 331, ../scss/modules/toolbar.scss */
-.husky-toolbar .toolbar-dropdown-menu li:active {
+/* line 361, ../scss/modules/toolbar.scss */
+.husky-toolbar .toolbar-dropdown-menu li:not(.no-link):active {
   background-color: #66bed0;
 }
-/* line 335, ../scss/modules/toolbar.scss */
+/* line 365, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #ddd;
 }
-/* line 342, ../scss/modules/toolbar.scss */
+/* line 372, ../scss/modules/toolbar.scss */
 .husky-toolbar .toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
 }
 
-/* line 449, ../scss/modules/toolbar.scss */
+/* line 479, ../scss/modules/toolbar.scss */
 .husky-toolbar.big {
   height: 50px;
   width: auto;
 }
-/* line 358, ../scss/modules/toolbar.scss */
+/* line 388, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group {
   height: 50px;
   float: none;
   display: inline-block;
   vertical-align: top;
 }
-/* line 363, ../scss/modules/toolbar.scss */
+/* line 393, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:first-child {
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
 }
-/* line 367, ../scss/modules/toolbar.scss */
+/* line 397, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .group .toolbar-item:last-child {
   border-radius: 0;
 }
-/* line 372, ../scss/modules/toolbar.scss */
+/* line 402, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item {
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0 20px;
   border-radius: 0;
 }
-/* line 377, ../scss/modules/toolbar.scss */
+/* line 407, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon, .husky-toolbar.big .toolbar-item .title {
   color: #fff;
   line-height: 50px;
 }
-/* line 381, ../scss/modules/toolbar.scss */
+/* line 411, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon {
   font-size: 20px;
 }
-/* line 384, ../scss/modules/toolbar.scss */
+/* line 414, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .icon + .title {
   margin-top: -6px;
 }
-/* line 387, ../scss/modules/toolbar.scss */
+/* line 417, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle::after {
   border-top-color: #fff;
 }
-/* line 390, ../scss/modules/toolbar.scss */
+/* line 420, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item .dropdown-toggle {
   padding-left: 20px;
   padding-right: 20px;
   margin-right: -20px;
 }
-/* line 395, ../scss/modules/toolbar.scss */
+/* line 425, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-/* line 399, ../scss/modules/toolbar.scss */
+/* line 429, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.is-selected, .husky-toolbar.big .toolbar-item.is-selected:first-child, .husky-toolbar.big .toolbar-item.is-expanded, .husky-toolbar.big .toolbar-item.is-expanded:first-child, .husky-toolbar.big .toolbar-item:hover, .husky-toolbar.big .toolbar-item:hover:first-child {
   border-color: transparent;
 }
-/* line 404, ../scss/modules/toolbar.scss */
+/* line 434, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:hover {
   background: transparent;
 }
-/* line 407, ../scss/modules/toolbar.scss */
+/* line 437, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled, .husky-toolbar.big .toolbar-item.disabled:first-child, .husky-toolbar.big .toolbar-item.disabled:hover, .husky-toolbar.big .toolbar-item.disabled:hover:first-child {
   border-color: rgba(255, 255, 255, 0.2);
 }
-/* line 410, ../scss/modules/toolbar.scss */
+/* line 440, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .icon, .husky-toolbar.big .toolbar-item.disabled .title, .husky-toolbar.big .toolbar-item.disabled:hover .icon, .husky-toolbar.big .toolbar-item.disabled:hover .title {
   color: rgba(255, 255, 255, 0.2);
 }
-/* line 413, ../scss/modules/toolbar.scss */
+/* line 443, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.disabled .dropdown-toggle::after, .husky-toolbar.big .toolbar-item.disabled:hover .dropdown-toggle::after {
   border-top-color: rgba(255, 255, 255, 0.2);
 }
-/* line 418, ../scss/modules/toolbar.scss */
+/* line 448, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white {
   background-color: #fff;
   height: 30px;
@@ -9600,41 +9631,41 @@ a[data-badge]:after {
   margin-top: 10px;
   margin-right: 10px;
 }
-/* line 426, ../scss/modules/toolbar.scss */
+/* line 456, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .title {
   text-align: left;
   color: #000;
   line-height: 30px;
 }
-/* line 431, ../scss/modules/toolbar.scss */
+/* line 461, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white .dropdown-toggle::after {
   border-top-color: #000;
 }
-/* line 434, ../scss/modules/toolbar.scss */
+/* line 464, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-item.highlight-white:last-child, .husky-toolbar.big .toolbar-item.highlight-white:first-child {
   border-radius: 3px;
 }
-/* line 440, ../scss/modules/toolbar.scss */
+/* line 470, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .toolbar-search {
   padding-top: 10px;
 }
-/* line 444, ../scss/modules/toolbar.scss */
+/* line 474, ../scss/modules/toolbar.scss */
 .husky-toolbar.big .item-loader {
   margin-top: 15px;
 }
 
-/* line 453, ../scss/modules/toolbar.scss */
+/* line 483, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive {
   overflow-x: auto;
   overflow-y: hidden;
 }
-/* line 457, ../scss/modules/toolbar.scss */
+/* line 487, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive.overflown {
   -moz-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   -webkit-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
 }
-/* line 459, ../scss/modules/toolbar.scss */
+/* line 489, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive.overflown .toolbar-dropdown-menu {
   margin-top: 0;
 }
@@ -10758,15 +10789,15 @@ a[data-badge]:after {
   background: transparent;
   font-weight: bold;
 }
-/* line 35, ../scss/modules/datagrid-table-view-light.scss */
+/* line 36, ../scss/modules/datagrid-table-view-light.scss */
 .husky-table.light .table tbody tr.selected {
   border-left: none;
 }
-/* line 39, ../scss/modules/datagrid-table-view-light.scss */
-.husky-table.light .table tbody .row.even, .husky-table.light .table tbody .row.odd {
+/* line 40, ../scss/modules/datagrid-table-view-light.scss */
+.husky-table.light .table tbody tr:nth-child(2n), .husky-table.light .table tbody tr:nth-child(2n+1) {
   background: transparent;
 }
-/* line 45, ../scss/modules/datagrid-table-view-light.scss */
+/* line 48, ../scss/modules/datagrid-table-view-light.scss */
 .husky-table.light .empty-list {
   background: transparent;
 }

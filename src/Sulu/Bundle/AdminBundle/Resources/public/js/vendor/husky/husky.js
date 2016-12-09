@@ -37141,6 +37141,7 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
  * @param {Boolean} [options.buttons.hidden] if true button gets hidden form the beginning on
  *
  * @param {Array} [options.buttons.dropdownItems]
+ * @param {Deferred|Object} [options.buttons.dropdownItems.initialize] callback will be called before rendering.
  * @param {String} [options.buttons.dropdownItems.title]
  * @param {String} [options.buttons.dropdownItems.icon] false will remove icon
  * @param {Function} [options.buttons.dropdownItems.callback]
@@ -37941,8 +37942,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param parent
          */
         createDropdownMenu = function(listItem, parent) {
-            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
-                $item;
+            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />');
 
             if (!!parent.dropdownOptions && !!parent.dropdownOptions.maxHeight) {
                 $list.css('maxHeight', parent.dropdownOptions.maxHeight);
@@ -37950,7 +37950,6 @@ define('__component__$toolbar@husky',[],function() {
 
             this.sandbox.dom.append(listItem, $list);
             this.sandbox.util.foreach(parent.dropdownItems, function(dropdownItem) {
-                dropdownItem.title = this.sandbox.translate(dropdownItem.title);
                 if (dropdownItem.divider) {
                     // prevent divider when not enough items
                     if (this.items[parent.id].dropdownItems.length <= 2) {
@@ -37961,27 +37960,55 @@ define('__component__$toolbar@husky',[],function() {
                 }
 
                 dropdownItem.parentId = parent.id;
+
                 // check id for uniqueness
                 checkItemId.call(this, dropdownItem);
-                $item = this.sandbox.dom.createElement(
-                    '<li data-id="' + dropdownItem.id + '"><a href="#">' + dropdownItem.title + '</a></li>'
+                var $item = this.sandbox.dom.createElement(
+                    '<li data-id="' + dropdownItem.id + '"></li>'
                 );
-                dropdownItem.$el = $item;
-                this.items[dropdownItem.id] = dropdownItem;
-
-                if (dropdownItem.disabled === true) {
-                    this.sandbox.dom.addClass($item, 'disabled');
-                }
-                if (dropdownItem.marked === true) {
-                    uniqueMarkItem.call(this, dropdownItem.id);
-                }
-                if (!!dropdownItem.styleClass) {
-                    $item.addClass(dropdownItem.styleClass);
-                }
                 this.sandbox.dom.append($list, $item);
+
+                if (!dropdownItem.initialize || typeof dropdownItem.initialize !== 'function') {
+                    return createDropdownItem.call(this, $list, $item, dropdownItem);
+                }
+
+                var result = dropdownItem.initialize(dropdownItem, $item, this.sandbox);
+                if (!result.then) {
+                    return createDropdownItem.call(this, $list, $item, result);
+                }
+
+                result.then(function(dropdownItem) {
+                    createDropdownItem.call(this, $list, $item, dropdownItem);
+                }.bind(this));
             }.bind(this));
 
             updateDropdownArrow.call(this, $list);
+        },
+
+        createDropdownItem = function($list, $item, dropdownItem) {
+            dropdownItem.title = this.sandbox.translate(dropdownItem.title);
+            if (typeof dropdownItem.link !== 'undefined' && false === dropdownItem.link) {
+                $item.addClass('no-link');
+                $item.html(dropdownItem.title);
+            } else {
+                $item.append('<a href="#">' + dropdownItem.title + '</a>');
+            }
+
+            dropdownItem.$el = $item;
+            this.items[dropdownItem.id] = dropdownItem;
+
+            if (dropdownItem.hidden === true) {
+                this.sandbox.dom.addClass($item, 'hidden');
+            }
+            if (dropdownItem.disabled === true) {
+                this.sandbox.dom.addClass($item, 'disabled');
+            }
+            if (dropdownItem.marked === true) {
+                uniqueMarkItem.call(this, dropdownItem.id);
+            }
+            if (!!dropdownItem.styleClass) {
+                $item.addClass(dropdownItem.styleClass);
+            }
         },
 
         countVisibleItemsInDropdown = function($list) {

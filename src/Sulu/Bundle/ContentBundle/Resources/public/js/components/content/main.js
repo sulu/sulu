@@ -8,6 +8,7 @@
  */
 
 define([
+    'config',
     'services/sulupreview/preview',
     'sulucontent/model/content',
     'sulucontent/services/content-manager',
@@ -16,7 +17,7 @@ define([
     'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/user-manager',
     'sulusecurity/services/security-checker'
-], function(Preview, Content, ContentManager, UserSettings, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
+], function(config, Preview, Content, ContentManager, UserSettings, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
 
     'use strict';
 
@@ -73,7 +74,7 @@ define([
             return data.url === '/';
         },
 
-        hasDraft = function (data) {
+        hasDraft = function(data) {
             return !data.id || !!data.publishedState || !data.published;
         },
 
@@ -217,23 +218,23 @@ define([
                             && -1 === _(data.enabledShadowLanguages).values().indexOf(item.id)
                         ) {
                             OpenGhost.openGhost.call(this, data).then(function(copy, src) {
-                                    if (!!copy) {
-                                        CopyLocale.copyLocale.call(
-                                            this,
-                                            data.id,
-                                            src,
-                                            [item.id],
-                                            function() {
-                                                this.load(data, this.options.webspace, item.id, true);
-                                            }.bind(this)
-                                        );
-                                    } else {
-                                        // new page will be created
-                                        this.load({id: data.id}, this.options.webspace, item.id, true);
-                                    }
-                                }.bind(this)).fail(function() {
-                                    // the open-ghost page got canceled, so reset the language changer
-                                    this.sandbox.emit('sulu.header.change-language', this.options.language);
+                                if (!!copy) {
+                                    CopyLocale.copyLocale.call(
+                                        this,
+                                        data.id,
+                                        src,
+                                        [item.id],
+                                        function() {
+                                            this.load(data, this.options.webspace, item.id, true);
+                                        }.bind(this)
+                                    );
+                                } else {
+                                    // new page will be created
+                                    this.load({id: data.id}, this.options.webspace, item.id, true);
+                                }
+                            }.bind(this)).fail(function() {
+                                // the open-ghost page got canceled, so reset the language changer
+                                this.sandbox.emit('sulu.header.change-language', this.options.language);
                             }.bind(this));
                         } else {
                             this.load(data, this.options.webspace, item.id, true);
@@ -382,10 +383,10 @@ define([
         getResourceLocator: function(parts, template, callback) {
             var parentUuid = (!!this.options.parent) ? this.options.parent : this.data.parentUuid,
                 url = '/admin/api/nodes/resourcelocators/generates?' +
-                (!!parentUuid ? 'parent=' + parentUuid + '&' : '') +
-                '&webspace=' + this.options.webspace +
-                '&language=' + this.options.language +
-                '&template=' + template;
+                    (!!parentUuid ? 'parent=' + parentUuid + '&' : '') +
+                    '&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&template=' + template;
 
             this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
@@ -438,8 +439,8 @@ define([
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {
-                    position: position
-                })
+                position: position
+            })
                 .then(function(data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
@@ -757,9 +758,9 @@ define([
                         '/' + this.options.language + '/edit:' + this.data.id + '/settings'
                     );
                 }
-                
+
                 // set current page as last selected one
-                UserSettings.setLastSelectedPage(this.options.webspace , this.options.id);
+                UserSettings.setLastSelectedPage(this.options.webspace, this.options.id);
             }
 
             this.setHeaderBar(true);
@@ -895,6 +896,19 @@ define([
                         saveDropdown.publish = {};
                     }
 
+                    if (!!config.has('sulu_automation.enabled')) {
+                        saveDropdown.automationInfo = {
+                            options: {
+                                entityId: this.options.id,
+                                entityClass: 'Sulu\\Bundle\\ContentBundle\\Document\\BasePageDocument',
+                                handlerClass: [
+                                    'Sulu\\Bundle\\ContentBundle\\Automation\\DocumentPublishHandler',
+                                    'Sulu\\Bundle\\ContentBundle\\Automation\\DocumentUnpublishHandler'
+                                ]
+                            }
+                        };
+                    }
+
                     buttons.save = {
                         options: {
                             icon: 'floppy-o',
@@ -1018,10 +1032,10 @@ define([
 
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
                     ContentManager.unpublish(this.data.id, this.options.language)
-                        .always(function () {
+                        .always(function() {
                             this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit');
                         }.bind(this))
-                        .then(function (response) {
+                        .then(function(response) {
                             this.sandbox.emit(
                                 'sulu.labels.success.show',
                                 'labels.success.content-unpublish-desc',
@@ -1029,7 +1043,7 @@ define([
                             );
                             this.sandbox.emit('sulu.content.contents.saved', response.id, response);
                         }.bind(this))
-                        .fail(function () {
+                        .fail(function() {
                             this.sandbox.emit(
                                 'sulu.labels.error.show',
                                 'labels.error.content-unpublish-desc',
@@ -1038,7 +1052,7 @@ define([
                         }.bind(this));
                 }.bind(this),
                 title: translationKeys.unpublishConfirmTitle,
-                description: !!hasDraft(this.data)?
+                description: !!hasDraft(this.data) ?
                     translationKeys.unpublishConfirmTextNoDraft :
                     translationKeys.unpublishConfirmTextWithDraft
             });
@@ -1121,7 +1135,7 @@ define([
                     this.sandbox.emit('husky.label.header.loading');
 
                     ContentManager.removeDraft(this.data.id, this.options.language)
-                        .then(function (response) {
+                        .then(function(response) {
                             this.sandbox.emit(
                                 'sulu.router.navigate',
                                 this.sandbox.mvc.history.fragment,
@@ -1130,7 +1144,7 @@ define([
                             );
                             this.sandbox.emit('sulu.content.contents.saved', response.id, response);
                         }.bind(this))
-                        .fail(function () {
+                        .fail(function() {
                             this.sandbox.emit('husky.label.header.reset');
                             this.sandbox.emit(
                                 'sulu.labels.error.show',
