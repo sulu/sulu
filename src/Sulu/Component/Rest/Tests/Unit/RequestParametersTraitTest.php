@@ -54,27 +54,25 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestParameter()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('test', null)->willReturn('data');
-        $request->get('none', 'default')->willReturn('default');
+        $request = new Request(['test' => 'data']);
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
 
         $this->assertEquals(
             'data',
-            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test')
+            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test')
         );
 
         $this->assertEquals(
             'data',
-            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true)
+            $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true)
         );
 
         $this->assertEquals(
             'default',
             $getRequestParameterReflection->invoke(
                 $this->requestParametersTrait,
-                $request->reveal(),
+                $request,
                 'none',
                 false,
                 'default'
@@ -87,42 +85,38 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(MissingParameterException::class);
 
         $getRequestParameterReflection = $this->getGetRequestParameterReflection();
-        $request = $this->prophesize(Request::class);
+        $request = new Request();
 
-        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true);
+        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
     }
 
     public function testGetBooleanRequestParameter()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('test1', null)->willReturn('true');
-        $request->get('test2', null)->willReturn('false');
-        $request->get('none', null)->willReturn(null);
-        $request->get('none', true)->willReturn(true);
+        $request = new Request(['test1' => 'true', 'test2' => 'false']);
 
         $getBooleanRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
 
         $this->assertTrue(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test1')
+            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test1')
         );
 
         $this->assertTrue(
             $getBooleanRequestParameterReflection->invoke(
                 $this->requestParametersTrait,
-                $request->reveal(),
+                $request,
                 'test1',
                 true
             )
         );
 
         $this->assertFalse(
-            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test2')
+            $getBooleanRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test2')
         );
 
         $this->assertFalse(
             $getBooleanRequestParameterReflection->invoke(
                 $this->requestParametersTrait,
-                $request->reveal(),
+                $request,
                 'test2',
                 true
             )
@@ -131,7 +125,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             $getBooleanRequestParameterReflection->invoke(
                 $this->requestParametersTrait,
-                $request->reveal(),
+                $request,
                 'none',
                 false,
                 true
@@ -141,7 +135,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(
             $getBooleanRequestParameterReflection->invoke(
                 $this->requestParametersTrait,
-                $request->reveal(),
+                $request,
                 'none',
                 false
             )
