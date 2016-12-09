@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Document\Subscriber;
 
-use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -52,6 +51,7 @@ class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
         $user->getId()->willReturn(2);
         $token->getUser()->willReturn($user->reveal());
 
+        $optionsResolver->setDefault('user', null)->shouldBeCalled();
         $optionsResolver->setDefault('user', 2)->shouldBeCalled();
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
@@ -66,7 +66,7 @@ class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->tokenStorage->getToken()->willReturn(null);
 
-        $optionsResolver->setDefault('user', Argument::any())->shouldNotBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled();
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
@@ -81,7 +81,7 @@ class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
         $anonymousToken = $this->prophesize(AnonymousToken::class);
         $this->tokenStorage->getToken()->willReturn($anonymousToken->reveal());
 
-        $optionsResolver->setDefault('user', Argument::any())->shouldNotBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled();
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
@@ -94,7 +94,7 @@ class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
 
         $optionsResolver = $this->prophesize(OptionsResolver::class);
         $event->getOptions()->willReturn($optionsResolver->reveal());
-        $optionsResolver->setDefault('user', Argument::any())->shouldNotBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled();
 
         $token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage->getToken()->willReturn($token->reveal());

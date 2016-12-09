@@ -23,6 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
+    const USER_OPTION = 'user';
     /**
      * @var TokenStorageInterface
      */
@@ -50,6 +51,10 @@ class SecuritySubscriber implements EventSubscriberInterface
      */
     public function setDefaultUser(ConfigureOptionsEvent $event)
     {
+        $optionsResolver = $event->getOptions();
+
+        $optionsResolver->setDefault(static::USER_OPTION, null);
+
         if (null === $this->tokenStorage) {
             return;
         }
@@ -71,6 +76,6 @@ class SecuritySubscriber implements EventSubscriberInterface
             );
         }
 
-        $event->getOptions()->setDefault('user', $user->getId());
+        $optionsResolver->setDefault(static::USER_OPTION, $user->getId());
     }
 }

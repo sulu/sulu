@@ -259,6 +259,39 @@ define([
                     }
                 ]);
 
+                this.sandbox.start([
+                    {
+                        name: 'datagrid@husky',
+                        options: {
+                            el: '#versions',
+                            instanceName: 'versions',
+                            url: ['/admin/api/nodes/', this.options.id, '/versions?language=', this.options.language].join(''),
+                            resultKey: 'versions',
+                            actionCallback: this.restoreVersion.bind(this),
+                            viewOptions: {
+                                table: {
+                                    actionIcon: 'history',
+                                    actionColumn: 'authored',
+                                    selectItem: false
+                                }
+                            },
+                            matchings: [
+                                {
+                                    name: 'authored',
+                                    attribute: 'authored',
+                                    content: this.sandbox.translate('sulu-document-manager.version.authored'),
+                                    type: 'datetime'
+                                },
+                                {
+                                    name: 'author',
+                                    attribute: 'author',
+                                    content: this.sandbox.translate('sulu-document-manager.version.author')
+                                }
+                            ]
+                        }
+                    }
+                ]);
+
                 this.updateVisibilityForShadowCheckbox(true);
 
                 this.updateChangelog(data);
@@ -409,6 +442,37 @@ define([
                     this.sandbox.emit('sulu.content.contents.error', xhr.status, data);
                 }.bind(this)
             );
+        },
+
+        restoreVersion: function(versionId, version) {
+            this.sandbox.sulu.showConfirmationDialog({
+                callback: function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.overlay.alert.show-loader');
+                    contentManager.restoreVersion(this.options.id, versionId, version.locale)
+                        .always(function() {
+                            this.sandbox.emit('husky.overlay.alert.hide-loader');
+                        }.bind(this))
+                        .then(function() {
+                            this.sandbox.emit('husky.overlay.alert.close');
+                            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + this.options.id + '/content', true, true);
+                        }.bind(this))
+                        .fail(function() {
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'sulu.content.restore-error-description',
+                                'sulu.content.restore-error-title'
+                            );
+                        }.bind(this));
+
+                    return false;
+                }.bind(this),
+                title: this.sandbox.translate('sulu-document-manager.restore-confirmation-title'),
+                description: this.sandbox.translate('sulu-document-manager.restore-confirmation-description')
+            });
         },
 
         validate: function(data) {

@@ -45,6 +45,7 @@
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection"/>
         <property name="suluOrder" type="integer" serialized-name="order" groups="defaultPage,smallPage"/>
         <property name="permissions" exclude="true"/>
+        <property name="versions" type="array"/>
 
         <virtual-property method="getResourceSegment" name="url" serialized-name="url" groups="defaultPage,smallPage"/>
     </class>

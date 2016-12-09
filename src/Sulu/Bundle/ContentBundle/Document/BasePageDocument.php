@@ -237,6 +237,8 @@ class BasePageDocument implements
      */
     protected $permissions;
 
+    protected $versions = [];
+
     public function __construct()
     {
         $this->workflowStage = WorkflowStage::TEST;
@@ -580,5 +582,21 @@ class BasePageDocument implements
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getVersions()
+    {
+        return $this->versions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setVersions($versions)
+    {
+        $this->versions = $versions;
     }
 }
