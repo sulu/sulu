@@ -55,6 +55,10 @@ class MediaDataProvider extends BaseDataProvider
                     'selectedUrl' => '/admin/api/collections/{datasource}?tree=true&sortBy=title&locale={locale}&include-root=true',
                     'resultKey' => 'collections',
                 ]
+            )->enableSorting(
+                [
+                    ['column' => 'fileVersionMeta.title', 'title' => 'public.title'],
+                ]
             )
             ->getConfiguration();
 
