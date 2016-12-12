@@ -496,7 +496,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data['workflowStage'] = $request->get('state', WorkflowStage::PUBLISHED);
 
         $formType = $this->metadataFactory->getMetadataForAlias('snippet')->getFormType();
-
         $form = $this->formFactory->create($formType, $document, [
             'csrf_protection' => false,
         ]);

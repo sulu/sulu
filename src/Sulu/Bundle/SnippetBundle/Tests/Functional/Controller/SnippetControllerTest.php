@@ -16,6 +16,7 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class SnippetControllerTest extends SuluTestCase
@@ -277,7 +278,7 @@ class SnippetControllerTest extends SuluTestCase
 
         try {
             $this->documentManager->find($result['id'], 'de');
-        } catch (\DocumentNotFoundException $e) {
+        } catch (DocumentNotFoundException $e) {
             $this->fail('Document was not persisted');
         }
     }

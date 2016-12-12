@@ -97,7 +97,7 @@ EOT
         $overwrite = $input->getOption('overwrite');
         $dryRun = $input->getOption('dry-run');
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
+        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->queryManager = $this->session->getWorkspace()->getQueryManager();
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
