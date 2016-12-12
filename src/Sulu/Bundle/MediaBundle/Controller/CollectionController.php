@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
@@ -65,16 +64,6 @@ class CollectionController extends RestController implements ClassResourceInterf
         $fieldDescriptors = array_values($this->getCollectionManager()->getFieldDescriptors());
 
         return $this->handleView($this->view($fieldDescriptors, 200));
-    }
-
-    /**
-     * persists a setting.
-     *
-     * @Put("collection/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
     }
 
     /**

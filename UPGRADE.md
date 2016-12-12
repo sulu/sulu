@@ -4,9 +4,13 @@
 
 ### Deprecations
 
-Following classes were removed because of deprecations:
+Following classes and methods were removed because of deprecations:
 
 * Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlVoter
+* Sulu\Component\Rest\RestController::responsePersistSettings
+* Sulu\Component\Rest\RestController::responseList
+* Sulu\Component\Rest\RestController::createHalResponse
+* Sulu\Component\Rest\RestController::getHalLinks
 
 ## 1.4.2
 
