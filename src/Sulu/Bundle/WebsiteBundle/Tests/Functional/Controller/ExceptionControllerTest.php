@@ -16,6 +16,7 @@ use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,6 +26,11 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
      * @var ExceptionController
      */
     private $exceptionController;
+
+    /**
+     * @var BaseExceptionController
+     */
+    private $innerExceptionController;
 
     /**
      * @var \Twig_Environment
@@ -55,11 +61,10 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         $this->parameterResolver = $this->prophesize(ParameterResolverInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
 
+        $this->innerExceptionController = new BaseExceptionController($this->twig->reveal(), false);
         $this->exceptionController = new ExceptionController(
-            $this->twig->reveal(),
-            false,
-            $this->parameterResolver->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->innerExceptionController, $this->requestAnalyzer->reveal(),
+            $this->parameterResolver->reveal(), $this->twig->reveal(), false
         );
     }
 
@@ -91,7 +96,7 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         $this->twig->render(Argument::containingString($expectedExceptionFormat), Argument::any())->shouldBeCalled();
         $this->loader->exists(Argument::any())->willReturn($templateAvailable);
 
-        if ($expectedExceptionFormat === 'html') {
+        if ($retrievedFormat === 'html') {
             $this->parameterResolver->resolve(Argument::cetera())->shouldBeCalled()->willReturn([]);
         } else {
             $this->parameterResolver->resolve(Argument::cetera())->shouldNotBeCalled();
