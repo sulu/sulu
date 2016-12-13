@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #3085 [DocumentManager]       Fixed document-manager constraint
     * HOTFIX      #3065 [ContentBundle]         Fixed double '&' in column-navigation url
 
 * 1.4.2 (2016-11-24)
