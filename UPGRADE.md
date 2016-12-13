@@ -12,6 +12,9 @@ Following classes and methods were removed because of deprecations:
 * Sulu\Component\Rest\RestController::createHalResponse
 * Sulu\Component\Rest\RestController::getHalLinks
 
+Additionally the GeneratorBundle was removed because it was not maintained since a while.
+You have to remove the Bundle from you Kernels.
+
 ## 1.4.2
 
 ### Webspace keys
