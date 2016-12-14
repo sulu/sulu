@@ -74,7 +74,6 @@ class SuluTestKernel extends SuluKernel
 
         if ($this->getContext() === self::CONTEXT_WEBSITE) {
             // smyfony-cmf
-            $bundles[] = new \Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle();
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
         }
 

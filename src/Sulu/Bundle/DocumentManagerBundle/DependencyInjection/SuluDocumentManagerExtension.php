@@ -62,7 +62,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         if ($container->hasExtension('doctrine_phpcr')) {
             $doctrinePhpcrConfig = [
-                'odm' => [],
                 'session' => [
                     'sessions' => $config['sessions'],
                 ],
