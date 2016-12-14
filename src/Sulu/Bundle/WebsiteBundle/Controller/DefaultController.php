@@ -81,4 +81,15 @@ class DefaultController extends WebsiteController
             $request->query->all()
         );
     }
+
+    public function structureNotFoundAction(StructureInterface $structure, $preview = false, $partial = false)
+    {
+        $structureFactory = $this->get('sulu_content.structure.factory');
+        $metadata = $structure->getStructure();
+
+        throw new \InvalidArgumentException(sprintf(
+            'Structure not found: "%s"',
+            $metadata->getExceptionMessage()
+        ));
+    }
 }
