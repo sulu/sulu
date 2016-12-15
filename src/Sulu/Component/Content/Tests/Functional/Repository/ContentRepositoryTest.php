@@ -471,6 +471,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertNotNull($result->getId());
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-1', $result->getPath());
+        $this->assertEquals('simple', $result->getTemplate());
         $this->assertEquals('test-1', $result['title']);
     }
 

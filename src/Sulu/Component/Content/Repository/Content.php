@@ -15,8 +15,11 @@ use Hateoas\Configuration\Annotation\Embedded;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
 use Jackalope\Query\Row;
+use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Exception\FeatureNotImplementedException;
 
@@ -80,6 +83,16 @@ class Content implements \ArrayAccess
     private $hasChildren;
 
     /**
+     * @var string
+     */
+    private $template;
+
+    /**
+     * @var boolean
+     */
+    private $brokenTemplate;
+
+    /**
      * @var Content[]
      */
     private $children = [];
@@ -131,20 +144,22 @@ class Content implements \ArrayAccess
         $workflowStage,
         $nodeType,
         $hasChildren,
+        $template,
         array $data,
         array $permissions,
         StructureType $localizationType = null
     ) {
+        $this->locale = $locale;
+        $this->webspaceKey = $webspaceKey;
         $this->id = $id;
         $this->path = $path;
         $this->workflowStage = $workflowStage;
         $this->nodeType = $nodeType;
         $this->hasChildren = $hasChildren;
+        $this->template = $template;
         $this->data = $data;
         $this->permissions = $permissions;
         $this->localizationType = $localizationType;
-        $this->locale = $locale;
-        $this->webspaceKey = $webspaceKey;
     }
 
     /**
@@ -211,6 +226,48 @@ class Content implements \ArrayAccess
     public function getNodeType()
     {
         return $this->nodeType;
+    }
+
+    /**
+     * Returns template.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("template")
+     */
+    public function getTemplate()
+    {
+        if ($this->brokenTemplate) {
+            return;
+        }
+
+        return $this->template;
+    }
+
+    /**
+     * Returns original-template.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("originalTemplate")
+     */
+    public function getOriginalTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * Set broken-template flag.
+     *
+     * @return $this
+     */
+    public function setBrokenTemplate()
+    {
+        $this->brokenTemplate = true;
+
+        return $this;
     }
 
     /**

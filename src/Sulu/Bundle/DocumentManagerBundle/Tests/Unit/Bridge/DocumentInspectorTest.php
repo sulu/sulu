@@ -18,6 +18,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Metadata;
@@ -155,6 +156,23 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->structureMetadataFactory->getStructureMetadata('page', 'foo')->willReturn($structure);
         $result = $this->documentInspector->getStructureMetadata($document->reveal());
         $this->assertSame($structure, $result);
+    }
+
+    /**
+     * It should return null for a document with a not existing structure.
+     */
+    public function testGetStructureNotExisting()
+    {
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->getStructureType()->willReturn('foo');
+
+        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))
+            ->willReturn($this->metadata->reveal());
+        $this->metadata->getAlias()->willReturn('page');
+        $this->structureMetadataFactory->getStructureMetadata('page', 'foo')
+            ->willThrow(new StructureTypeNotFoundException());
+        $result = $this->documentInspector->getStructureMetadata($document->reveal());
+        $this->assertNull($result);
     }
 
     /**
