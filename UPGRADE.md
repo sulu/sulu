@@ -1,5 +1,17 @@
 # Upgrade
 
+## dev-master
+
+### Format cache
+
+To generate the corrent file extension the `FormatManager::purge` interface
+has changed.
+
+```diff
+-    public function purge($idMedia, $fileName, $options)
++    public function purge($idMedia, $fileName, $mimeType, $options)
+```
+
 ## 1.4.2
 
 ### Security Context

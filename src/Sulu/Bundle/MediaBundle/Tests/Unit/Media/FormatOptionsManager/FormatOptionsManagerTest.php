@@ -138,7 +138,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
      */
     public function testGetNotExistingFormat()
     {
@@ -176,7 +176,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
      */
     public function testGetAllNotExistingFormat()
     {
@@ -206,7 +206,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->em->persist(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
-        $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldHaveBeenCalled();
+        $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldHaveBeenCalled();
 
         $this->assertEquals(10, $formatOptions->getCropX());
         $this->assertEquals(11, $formatOptions->getCropY());
@@ -215,7 +215,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
+     * @expectedException \Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException
      */
     public function testSaveNotExisting()
     {
@@ -233,7 +233,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->em->persist(Argument::type(FormatOptions::class))->shouldNotHaveBeenCalled();
-        $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
+        $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 
     public function testDelete()
@@ -243,7 +243,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatOptionsManager->delete(42, '100x100');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
-        $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldHaveBeenCalled();
+        $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldHaveBeenCalled();
     }
 
     public function testDeleteNotExisting()
@@ -253,6 +253,6 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatOptionsManager->delete(42, '50x50');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldNotHaveBeenCalled();
-        $this->formatManager->purge(42, Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
+        $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 }

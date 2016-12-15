@@ -15,7 +15,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Routing\Route;
 
 class LocalFormatCache implements FormatCacheInterface
 {
@@ -46,9 +45,6 @@ class LocalFormatCache implements FormatCacheInterface
 
     public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
     {
-        /*
-         * @var Route
-         */
         $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;

@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\NodeManager;
@@ -54,7 +55,7 @@ class SearchIntegrationTest extends SuluTestCase
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();
-        $tagManager = $this->getMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
+        $tagManager = $this->prophesize(TagManagerInterface::class);
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
 
         $this->mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
