@@ -2,6 +2,13 @@
 
 ## 1.4.2
 
+### Security Context
+
+The length of the security context was rather short (only 60 character). The
+length has been increased to 255 characters, to also allow longer webspace
+names. Execute the `doctrine:schema:update --force` command to update the
+database schema.
+
 ### Webspace keys
 
 Webspace keys are only allowed to have lower case letters, numbers and `-` or

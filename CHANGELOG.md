@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3091 [SecurityBundle]        Increased length of context field
     * HOTFIX      #3087 [AdminBundle]           Fixed search with umlauts in text editor
     * ENHANCEMENT #3085 [DocumentManager]       Fixed document-manager constraint
     * HOTFIX      #3065 [ContentBundle]         Fixed double '&' in column-navigation url
