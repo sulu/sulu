@@ -15,7 +15,6 @@ use Hateoas\Configuration\Annotation\Embedded;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
 use Jackalope\Query\Row;
-use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
@@ -88,7 +87,7 @@ class Content implements \ArrayAccess
     private $template;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $brokenTemplate;
 

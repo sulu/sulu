@@ -8,10 +8,12 @@
  */
 
 define([
+    'underscore',
     'config',
     'sulucontent/components/open-ghost-overlay/main',
-    'sulusecurity/services/security-checker'
-], function(Config, OpenGhost, SecurityChecker) {
+    'sulusecurity/services/security-checker',
+    'sulucontent/services/user-settings'
+], function(_, Config, OpenGhost, SecurityChecker, UserSettings) {
 
     'use strict';
 
@@ -45,16 +47,21 @@ define([
 
         ACTION_ICON_VIEW = 'fa-eye',
 
+        ACTION_ICON_INFO = 'fa-info',
+
         getActionIcon = function(data) {
             var actionIcon = '';
-
             if (!!data._permissions.edit) {
-                actionIcon = ACTION_ICON_EDIT;
+                actionIcon = !!data.template ? ACTION_ICON_EDIT : ACTION_ICON_INFO;
             } else if (!!data._permissions.view) {
-                actionIcon = ACTION_ICON_VIEW;
+                actionIcon = !!data.template ? ACTION_ICON_VIEW : ACTION_ICON_INFO;
             }
 
             return actionIcon;
+        },
+
+        isBroken = function(data) {
+            return !data.template;
         },
 
         templates = {
@@ -70,9 +77,16 @@ define([
                     '<div id="child-table"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
-            }
-        },
+            },
 
+            brokenTemplateMessage: _.template([
+                '<p><%= translations.message %></p>',
+                '<p>',
+                '    <%= translations.templateName %>: <%= item.originalTemplate %>',
+                '    <%= translations.uuid %>: <%= item.id %>',
+                '</p>'
+            ].join(''))
+        },
 
         /**
          * Enabler for selected items
@@ -209,9 +223,13 @@ define([
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.action', function(item) {
-                if (getActionIcon.call(this, item) === '') {
+                var actionIcon = getActionIcon.call(this, item);
+                if (actionIcon === '') {
                     // if no action icon is rendered the data should not be loaded
                     return;
+                } else if (actionIcon === ACTION_ICON_INFO) {
+                    // if the info icon is rendered we will show broken info.
+                    return this.showBrokenInfo(item);
                 }
                 
                 if (!item.type || item.type.name !== 'ghost') {
@@ -499,6 +517,7 @@ define([
                         url: this.getUrl(this.getLastSelected()),
                         fallbackUrl: this.getUrl(),
                         actionIcon: getActionIcon.bind(this),
+                        isBrokenCallback: isBroken,
                         showActionButtonOnGhost: true,
                         actionButtonOnGhostText: this.sandbox.translate('sulu-content.create'),
                         addButton: addButtonEnabler.bind(this),
@@ -617,5 +636,41 @@ define([
                 this.startColumnNavigation();
             }.bind(this));
         },
+
+        showBrokenInfo: function(item) {
+            var translations = {
+                title: this.sandbox.translate('sulu_content.broken-template.title'),
+                message: this.sandbox.translate('sulu_content.broken-template.message'),
+                templateName: this.sandbox.translate('sulu_content.broken-template.message.template-name'),
+                uuid: this.sandbox.translate('sulu_content.broken-template.message.uuid')
+            };
+
+            var $element = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $element,
+                        type: 'alert',
+                        slides: [
+                            {
+                                title: translations.title,
+                                message: templates.brokenTemplateMessage({translations: translations, item: item}),
+                                contentSpacing: false,
+                                type: 'alert',
+                                buttons: [
+                                    {
+                                        type: 'ok',
+                                        align: 'center'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]);
+        }
     };
 });

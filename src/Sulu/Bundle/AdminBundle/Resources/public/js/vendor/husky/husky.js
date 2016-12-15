@@ -41661,11 +41661,8 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Boolean} [options.showStatus] hide or display status of elements
  * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
  * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
-<<<<<<< 76cfc9f9d9eb8f8abf34f388ef807f5629319370
  * @params {Boolean} [options.singleMarkable] If true just one item is markable
-=======
  * @params {Boolean} [options.actionOnGhostPage] If true action Button on ghost page will be shown
->>>>>>> Added actionOnGhostPage option in column navigation
  * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
  * @params {Array} [options.disableIds] an array of uuids which will be disabled
  * @params {Array} [options.disabledChildren] an array of uuids which will be disabled
@@ -41716,6 +41713,9 @@ define('__component__$column-navigation@husky',[],function() {
             singleMarkable: false,
             orderable: true,
             showActionIcon: true,
+            isBrokenCallback: function(item) {
+                return false;
+            },
             orderConfirmTitle: 'column-navigation.order-title',
             orderConfirmMessage: 'column-navigation.order-message',
             tooltipTranslations: {
@@ -42386,6 +42386,10 @@ define('__component__$column-navigation@husky',[],function() {
             this.renderLeftInfo($item, data);
             this.renderItemText($item, data);
             this.renderRightInfo($item, data, disabled);
+
+            if (this.options.isBrokenCallback(data)) {
+                $item.addClass('broken');
+            }
 
             return $item;
         },
