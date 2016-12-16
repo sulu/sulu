@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
     * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider
     * ENHANCEMENT #3084 [GeneratorBundle]     Removed generator-bundle
     * ENHANCEMENT #3080 [All]                 Removed getRequest calls
