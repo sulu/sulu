@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,45 +39,5 @@ class DefaultController extends WebsiteController
         );
 
         return $response;
-    }
-
-    /**
-     * Creates a redirect for configured webspaces.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @deprecated since 1.2 use SuluWebsiteBundle:Redirect:redirectWebspace instead
-     */
-    public function redirectWebspaceAction(Request $request)
-    {
-        @trigger_error('SuluWebsiteBundle:Default:redirectWebspace is deprecated since version 1.2. Use the "SuluWebsiteBundle:Redirect:redirectWebspace" action instead.', E_USER_DEPRECATED);
-
-        return $this->forward(
-            'SuluWebsiteBundle:Redirect:redirectWebspace',
-            $request->attributes->all(),
-            $request->query->all()
-        );
-    }
-
-    /**
-     * Creates a redirect for *.html to * (without html).
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @deprecated since 1.2 use SuluWebsiteBundle:Redirect:redirect instead
-     */
-    public function redirectAction(Request $request)
-    {
-        @trigger_error('SuluWebsiteBundle:Default:redirect is deprecated since version 1.2. Use the "SuluWebsiteBundle:Redirect:redirect" action instead.', E_USER_DEPRECATED);
-
-        return $this->forward(
-            'SuluWebsiteBundle:Redirect:redirect',
-            $request->attributes->all(),
-            $request->query->all()
-        );
     }
 }

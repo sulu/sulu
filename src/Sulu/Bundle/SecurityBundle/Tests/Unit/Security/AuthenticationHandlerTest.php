@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Security;
 
 class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -60,7 +60,7 @@ class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
         $router = $this->prophesize(RouterInterface::class);
         $session = $this->prophesize(Session::class);
         $session->get('_security.admin.target_path')->willReturn('/admin/#target/path');
-        $session->set(SecurityContextInterface::AUTHENTICATION_ERROR, $this->exception->reveal())->willReturn(null);
+        $session->set(Security::AUTHENTICATION_ERROR, $this->exception->reveal())->willReturn(null);
         $router->generate('sulu_admin')->willReturn('/admin');
         $router->generate('sulu_admin.login')->willReturn('/admin/login');
 
@@ -71,7 +71,10 @@ class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->request->isXmlHttpRequest()->willReturn(false);
 
-        $response = $this->authenticationHandler->onAuthenticationSuccess($this->request->reveal(), $this->token->reveal());
+        $response = $this->authenticationHandler->onAuthenticationSuccess(
+            $this->request->reveal(),
+            $this->token->reveal()
+        );
 
         $this->assertTrue($response instanceof RedirectResponse);
         $this->assertEquals(302, $response->getStatusCode());
@@ -81,7 +84,10 @@ class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 
-        $response = $this->authenticationHandler->onAuthenticationSuccess($this->request->reveal(), $this->token->reveal());
+        $response = $this->authenticationHandler->onAuthenticationSuccess(
+            $this->request->reveal(),
+            $this->token->reveal()
+        );
 
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(200, $response->getStatusCode());
@@ -94,7 +100,10 @@ class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->request->isXmlHttpRequest()->willReturn(false);
 
-        $response = $this->authenticationHandler->onAuthenticationFailure($this->request->reveal(), $this->exception->reveal());
+        $response = $this->authenticationHandler->onAuthenticationFailure(
+            $this->request->reveal(),
+            $this->exception->reveal()
+        );
 
         $this->assertTrue($response instanceof RedirectResponse);
         $this->assertEquals(302, $response->getStatusCode());
@@ -104,7 +113,10 @@ class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 
-        $response = $this->authenticationHandler->onAuthenticationFailure($this->request->reveal(), $this->exception->reveal());
+        $response = $this->authenticationHandler->onAuthenticationFailure(
+            $this->request->reveal(),
+            $this->exception->reveal()
+        );
 
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(401, $response->getStatusCode());
