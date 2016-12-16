@@ -30,7 +30,7 @@ trait DataProviderRepositoryTrait
             ->orderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
 
-        if (array_key_exists('sortBy', $filters)) {
+        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
         }
@@ -65,13 +65,12 @@ trait DataProviderRepositoryTrait
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
 
-        if (array_key_exists('sortBy', $filters)) {
+        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
         }
 
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
-
         if (isset($filters['dataSource'])) {
             $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?: false);
             $parameter = array_merge(
