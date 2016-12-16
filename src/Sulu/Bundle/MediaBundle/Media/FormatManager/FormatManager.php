@@ -72,7 +72,7 @@ class FormatManager implements FormatManagerInterface
     private $supportedMimeTypes;
 
     /**
-     * @param MediaRepository $mediaRepository
+     * @param MediaRepositoryInterface $mediaRepository
      * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
      * @param string $saveImage
@@ -177,9 +177,9 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function purge($idMedia, $fileName, $options)
+    public function purge($idMedia, $fileName, $mimeType, $options)
     {
-        return $this->formatCache->purge($idMedia, $fileName, $options);
+        return $this->formatCache->purge($idMedia, $this->replaceExtension($fileName, $mimeType), $options);
     }
 
     /**

@@ -248,6 +248,11 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
      */
     private function purgeMedia($mediaId, FileVersion $fileVersion)
     {
-        $this->formatManager->purge($mediaId, $fileVersion->getName(), $fileVersion->getStorageOptions());
+        $this->formatManager->purge(
+            $mediaId,
+            $fileVersion->getName(),
+            $fileVersion->getMimeType(),
+            $fileVersion->getStorageOptions()
+        );
     }
 }
