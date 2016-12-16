@@ -98,6 +98,29 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $result->getReferencedUuids());
     }
 
+    public function testNullSortBy()
+    {
+        $contacts = [
+            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
+            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
+            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+        ];
+
+        $dataItems = [];
+        foreach ($contacts as $contact) {
+            $dataItems[] = $this->createDataItem($contact);
+        }
+
+        $serializer = $this->prophesize(SerializerInterface::class);
+        $provider = new ContactDataProvider(
+            $this->getRepository(['sortBy' => null], 1, null, null, $contacts),
+            $serializer->reveal()
+        );
+
+        $result = $provider->resolveDataItems(['sortBy' => null], [], ['webspace' => 'sulu_io', 'locale' => 'en']);
+        $this->assertEquals($dataItems, $result->getItems());
+    }
+
     public function resourceItemsDataProvider()
     {
         $contacts = [
