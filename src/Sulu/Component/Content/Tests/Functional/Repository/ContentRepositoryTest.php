@@ -270,6 +270,30 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
+    public function testFindByParentWithDraftInternalLink()
+    {
+        $link = $this->createPage('test-1', 'de');
+        $this->createInternalLinkPage('test-2', 'de', $link, false);
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title', 'published'])->getMapping()
+        );
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
+        $this->assertEmpty($result[1]['published']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
     public function testFindByParentWithInternalLinkNotFollow()
     {
         $link = $this->createPage('test-1', 'de');
@@ -1046,7 +1070,7 @@ class ContentRepositoryTest extends SuluTestCase
         return $document;
     }
 
-    private function createInternalLinkPage($title, $locale, PageDocument $link)
+    private function createInternalLinkPage($title, $locale, PageDocument $link, $publish = true)
     {
         $data['title'] = $title;
         $data['url'] = '/' . $title;
@@ -1069,7 +1093,11 @@ class ContentRepositoryTest extends SuluTestCase
                 'auto_create' => true,
             ]
         );
-        $this->documentManager->publish($document, $locale);
+
+        if ($publish) {
+            $this->documentManager->publish($document, $locale);
+        }
+
         $this->documentManager->flush();
 
         return $document;
