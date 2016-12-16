@@ -18,10 +18,6 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
  */
 class HtmlMarkupParser implements MarkupParserInterface
 {
-    const ATTRIBUTE_REGEX = '/(?<name>\b[\w-]+\b)\s*=\s*"(?<value>[^"]*)"/';
-    const CONTENT_REGEX = '/(?:>(?<content>[^<]*)<)/';
-    const TAG_REGEX = '/(?<tag><%s:(?<name>[a-z]+)[^\/>]*(?:\/>|>[^<]*<\/%s:[^\/>]*>))/';
-
     /**
      * @var TagRegistryInterface
      */
@@ -33,12 +29,22 @@ class HtmlMarkupParser implements MarkupParserInterface
     private $namespace;
 
     /**
+     * @var TagExtractorInterface
+     */
+    private $tagExtractor;
+
+    /**
      * @param TagRegistryInterface $tagRegistry
+     * @param TagExtractorInterface $tagExtractor
      * @param string $namespace
      */
-    public function __construct(TagRegistryInterface $tagRegistry, $namespace = 'sulu')
-    {
+    public function __construct(
+        TagRegistryInterface $tagRegistry,
+        TagExtractorInterface $tagExtractor,
+        $namespace = 'sulu'
+    ) {
         $this->tagRegistry = $tagRegistry;
+        $this->tagExtractor = $tagExtractor;
         $this->namespace = $namespace;
     }
 
@@ -47,12 +53,11 @@ class HtmlMarkupParser implements MarkupParserInterface
      */
     public function parse($content, $locale)
     {
-        $sortedTags = $this->getTags($content);
-
-        if (0 === count($sortedTags)) {
+        if (0 === $this->tagExtractor->count($content, $this->namespace)) {
             return $content;
         }
 
+        $sortedTags = $this->tagExtractor->extract($content, $this->namespace);
         foreach ($sortedTags as $name => $tags) {
             $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags, $locale);
 
@@ -61,7 +66,7 @@ class HtmlMarkupParser implements MarkupParserInterface
             }
         }
 
-        return $content;
+        return $this->parse($content, $locale);
     }
 
     /**
@@ -69,8 +74,7 @@ class HtmlMarkupParser implements MarkupParserInterface
      */
     public function validate($content, $locale)
     {
-        $sortedTags = $this->getTags($content);
-
+        $sortedTags = $this->tagExtractor->extract($content, $this->namespace);
         if (0 === count($sortedTags)) {
             return [];
         }
@@ -84,63 +88,5 @@ class HtmlMarkupParser implements MarkupParserInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Returns found tags and their attributes.
-     *
-     * @param string $content
-     *
-     * @return array
-     */
-    private function getTags($content)
-    {
-        if (!preg_match_all(sprintf(self::TAG_REGEX, $this->namespace, $this->namespace), $content, $matches)) {
-            return [];
-        }
-
-        $sortedTags = [];
-        for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
-            $tag = $matches['tag'][$i];
-            $name = $matches['name'][$i];
-            if (!array_key_exists($name, $sortedTags)) {
-                $sortedTags[$name] = [];
-            }
-
-            $sortedTags[$name][$tag] = $this->getAttributes($tag);
-        }
-
-        return $sortedTags;
-    }
-
-    /**
-     * Returns attributes of given html-tag.
-     *
-     * @param string $tag
-     *
-     * @return array
-     */
-    private function getAttributes($tag)
-    {
-        if (!preg_match_all(self::ATTRIBUTE_REGEX, $tag, $matches)) {
-            return [];
-        }
-
-        $attributes = [];
-        for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
-            $value = $matches['value'][$i];
-
-            if ($value === 'true' || $value === 'false') {
-                $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-            }
-
-            $attributes[$matches['name'][$i]] = $value;
-        }
-
-        if (preg_match(self::CONTENT_REGEX, $tag, $matches)) {
-            $attributes['content'] = $matches['content'];
-        }
-
-        return $attributes;
     }
 }

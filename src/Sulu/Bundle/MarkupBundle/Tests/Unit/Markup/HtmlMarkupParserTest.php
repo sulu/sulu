@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
+use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
@@ -56,7 +57,7 @@ class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
         $this->tagRegistry->getTag('media', 'html')->willReturn($this->mediaTag->reveal());
         $this->tagRegistry->getTag(Argument::any())->willThrow(new TagNotFoundException('test', 'html'));
 
-        $this->parser = new HtmlMarkupParser($this->tagRegistry->reveal());
+        $this->parser = new HtmlMarkupParser($this->tagRegistry->reveal(), new HtmlTagExtractor());
     }
 
     public function testParse()
@@ -191,6 +192,37 @@ EOT;
         $response = $this->parser->parse($content, 'de');
 
         $this->assertContains('<a href="/test" title="test">link content</a>', $response);
+    }
+
+    public function testParseNested()
+    {
+        $this->linkTag->parseAll(
+            [
+                '<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'test',
+                    'content' => '<sulu:media id="1"/>',
+                ],
+            ],
+            'de'
+        )->willReturn(
+            ['<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>' => '<a href="/test" title="test"><sulu:media id="1"/></a>']
+        );
+
+        $this->mediaTag->parseAll(['<sulu:media id="1"/>' => ['id' => 1]], 'de')
+            ->willReturn(['<sulu:media id="1"/>' => '<img src="test.jpg"/>']);
+
+        $content = <<<'EOT'
+<html>
+    <body>
+        <sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>
+    </body>
+</html>
+EOT;
+
+        $response = $this->parser->parse($content, 'de');
+
+        $this->assertContains('<a href="/test" title="test"><img src="test.jpg"/></a>', $response);
     }
 
     public function testValidate()
