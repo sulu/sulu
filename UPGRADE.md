@@ -4,7 +4,7 @@
 
 ### Format cache
 
-To generate the corrent file extension the `FormatManager::purge` interface
+To generate the correct file extension the `FormatManager::purge` interface
 has changed.
 
 ```diff
