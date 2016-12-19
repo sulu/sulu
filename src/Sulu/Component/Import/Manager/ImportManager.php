@@ -18,7 +18,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Import\Exception\ContentTypeImportMissingException;
 
 /**
- * Import content by given xliff file from ContentExportManager.
+ * Import content by given xliff file.
  */
 class ImportManager implements ImportManagerInterface
 {

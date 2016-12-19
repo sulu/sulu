@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Command;
 
 use Sulu\Component\Content\Import\WebspaceInterface;
+use Sulu\Component\Snippet\Import\SnippetImport;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,7 +67,7 @@ class SnippetImportCommand extends ContainerAwareCommand
 
         $output->writeln('<info>Continue!</info>');
 
-        /** @var WebspaceInterface $webspaceImporter */
+        /** @var SnippetImport $webspaceImporter */
         $webspaceImporter = $this->getContainer()->get('sulu_snippet.import.snippet');
 
         $import = $webspaceImporter->import(

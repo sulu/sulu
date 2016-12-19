@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Export;
+namespace Sulu\Component\Snippet\Export;
 
 /**
  * Interface for Snippet export.
  */
-interface SnippetInterface {
+interface SnippetExportInterface {
     /**
      * Export all data from snippet by given locale.
      *

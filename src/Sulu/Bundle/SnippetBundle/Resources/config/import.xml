@@ -8,15 +8,10 @@
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <argument type="service" id="sulu_snippet.import.manager" />
+            <argument type="service" id="sulu_content.import.manager" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <argument type="service" id="logger" />
             <argument type="service" id="sulu_snippet.import.webspace.xliff12" />
-        </service>
-
-        <!-- TODO: move to import component -->
-        <service id="sulu_snippet.import.manager" class="Sulu\Component\Import\Manager\ImportManager">
-            <argument type="service" id="sulu.content.type_manager" />
         </service>
 
         <service id="sulu_snippet.import.webspace.xliff12" class="Sulu\Component\Import\Format\Xliff12">

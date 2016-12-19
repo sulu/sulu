@@ -18,10 +18,10 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Export\ContentExportManagerInterface;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
-use Sulu\Component\Content\Import\ContentImportManagerInterface;
+use Sulu\Component\Import\Manager\ImportManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 
 /**
@@ -61,14 +61,14 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     protected $structureManager;
 
     /**
-     * @var ContentExportManagerInterface
+     * @var ExportManagerInterface
      */
-    protected $contentExportManager;
+    protected $exportManager;
 
     /**
-     * @var ContentImportManager
+     * @var ImportManager
      */
-    protected $contentImportManager;
+    protected $importManager;
 
     /**
      * @var string
@@ -88,21 +88,21 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     /**
      * @param StructureManagerInterface $structureManager
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param ContentExportManagerInterface $contentExportManager
-     * @param ContentImportManagerInterface $contentImportManager
+     * @param ExportManagerInterface $exportManager
+     * @param ImportManagerInterface $importManager
      * @param Factory $factory
      */
     public function __construct(
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
-        ContentExportManagerInterface $contentExportManager,
-        ContentImportManagerInterface $contentImportManager,
+        ExportManagerInterface $exportManager,
+        ImportManagerInterface $importManager,
         Factory $factory
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
-        $this->contentExportManager = $contentExportManager;
-        $this->contentImportManager = $contentImportManager;
+        $this->exportManager = $exportManager;
+        $this->importManager = $importManager;
         $this->factory = $factory;
     }
 
@@ -265,8 +265,8 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
             if ($container->__isset($property->getName())) {
                 $property->setValue($container->__get($property->getName()));
                 $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-                if ($this->contentExportManager->hasExport($property->getContentTypeName(), $format)) {
-                    $options = $this->contentExportManager->getOptions($property->getContentTypeName(), $format);
+                if ($this->exportManager->hasExport($property->getContentTypeName(), $format)) {
+                    $options = $this->exportManager->getOptions($property->getContentTypeName(), $format);
 
                     $data[$property->getName()] = [
                         'name' => $property->getName(),
@@ -306,7 +306,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
             if (isset($data[$property->getName()])
-                && $this->contentImportManager->hasImport($property->getContentTypeName(), $format)
+                && $this->importManager->hasImport($property->getContentTypeName(), $format)
             ) {
                 /** @var ContentTypeExportInterface $contentType */
                 $contentType->importData(

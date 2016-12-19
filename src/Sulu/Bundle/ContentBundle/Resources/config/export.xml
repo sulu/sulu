@@ -6,18 +6,15 @@
         <parameter key="sulu_content.export.webspace.formats" type="collection">
             <parameter key="1.2.xliff">SuluContentBundle:Export:Webspace/1.2.xliff.twig</parameter>
         </parameter>
-        <parameter key="sulu_content.export.snippet.formats" type="collection">
-            <parameter key="1.2.xliff">SuluContentBundle:Export:Snippet/1.2.xliff.twig</parameter>
-        </parameter>
     </parameters>
 
     <services>
-        <service id="sulu_content.export.manager" class="Sulu\Component\Content\Export\ContentExportManager">
+        <service id="sulu_content.export.manager" class="Sulu\Component\Export\Manager\ExportManager">
             <argument type="service" id="sulu.content.type_manager" />
         </service>
 
         <!-- Webspace export -->
-        <service id="sulu_content.export.webspace" class="Sulu\Component\Content\Export\Webspace">
+        <service id="sulu_content.export.webspace" class="Sulu\Component\Content\Export\WebspaceExport">
             <argument type="service" id="templating" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
@@ -27,11 +24,7 @@
             <argument>%sulu_content.export.webspace.formats%</argument>
         </service>
 
-        <service id="sulu_content.import.manager" class="Sulu\Component\Content\Import\ContentImportManager">
-            <argument type="service" id="sulu.content.type_manager" />
-        </service>
-
-        <service id="sulu_content.import.webspace" class="Sulu\Component\Content\Import\Webspace">
+        <service id="sulu_content.import.webspace" class="Sulu\Component\Content\Import\WebspaceImport">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
@@ -44,23 +37,13 @@
             <argument type="service" id="sulu_content.import.webspace.xliff12" />
         </service>
 
-        <service id="sulu_content.import.webspace.xliff12" class="Sulu\Component\Content\Import\Format\Xliff12">
+        <service id="sulu_content.import.webspace.xliff12" class="Sulu\Component\Import\Format\Xliff12">
             <tag name="sulu.content.import.service" format="1.2.xliff" />
         </service>
 
         <service id="sulu_content.export_twig_extension" class="Sulu\Bundle\ContentBundle\Twig\ExportTwigExtension">
             <tag name="twig.extension"/>
             <argument type="service" id="sulu_content.export.manager"/>
-        </service>
-
-        <!-- Snippet Export -->
-        <service id="sulu_content.export.snippet" class="Sulu\Component\Content\Export\Snippet">
-            <argument type="service" id="templating" />
-            <argument type="service" id="sulu_snippet.repository" />
-            <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="sulu_content.export.manager" />
-            <argument>%sulu_content.export.snippet.formats%</argument>
         </service>
     </services>
 </container>

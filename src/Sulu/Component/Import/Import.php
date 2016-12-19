@@ -42,7 +42,7 @@ class Import {
     /**
      * {@inheritdoc}
      */
-    protected function add($service, $format)
+    public function add($service, $format)
     {
         $this->formatFilePaths[$format] = $service;
     }
