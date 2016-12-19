@@ -17,6 +17,7 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -219,7 +220,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $document = $this->documentManager->create('page');
 
         $options = ['csrf_protection' => false, 'webspace_key' => 'sulu_io'];
-        $form = $this->formFactory->create('page', $document, $options);
+        $form = $this->formFactory->create(PageDocumentType::class, $document, $options);
 
         $clearMissing = false;
         $form->submit($data, $clearMissing);

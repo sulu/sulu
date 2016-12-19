@@ -376,7 +376,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     public function findByCriteriaEmailAndPhone($where, $email = null, $phone = null)
     {
-
         // Create basic query
         $qb = $this->createQueryBuilder('contact')
             ->leftJoin('contact.accountContacts', 'accountContacts')

@@ -191,7 +191,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-creator'));
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
 
-
         /** @var NodeInterface $content */
         $content = $this->liveSession->getNode('/cmf/sulu_io/routes/en/test')->getPropertyValue('sulu:content');
 

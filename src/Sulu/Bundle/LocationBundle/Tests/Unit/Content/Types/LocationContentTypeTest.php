@@ -136,6 +136,8 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
             ->method('getDefaultProviderName')
             ->will($this->returnValue('leaflet'));
 
+        // will be set to locale of computer
+        \Locale::setDefault('en');
         $params = $this->locationContent->getDefaultParams();
 
         $this->assertEquals($expected['mapProviders'], $params['mapProviders']);

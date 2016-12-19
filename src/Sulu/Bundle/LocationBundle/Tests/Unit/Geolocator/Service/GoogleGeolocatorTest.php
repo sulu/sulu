@@ -11,32 +11,16 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\Response;
-use Guzzle\Log\ArrayLogAdapter;
-use Guzzle\Plugin\Log\LogPlugin;
-use Guzzle\Plugin\Mock\MockPlugin;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 
 class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
 {
-    protected $geolocator;
-    protected $mockPlugin;
-    protected $client;
-
-    public function setUp()
-    {
-        $this->client = new Client();
-        $this->mockPlugin = new MockPlugin();
-        $this->client->addSubscriber($this->mockPlugin);
-
-        $this->logAdapter = new ArrayLogAdapter();
-        $this->loggingPlugin = new LogPlugin($this->logAdapter);
-        $this->client->addSubscriber($this->loggingPlugin);
-
-        $this->geolocator = new GoogleGeolocator($this->client, '');
-    }
-
     public function provideLocate()
     {
         return [
@@ -78,9 +62,12 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
     {
         $fixtureName = __DIR__ . '/google-responses/' . md5($query) . '.json';
         $fixture = file_get_contents($fixtureName);
-        $this->mockPlugin->addResponse(new Response(200, null, $fixture));
+        $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
 
-        $results = $this->geolocator->locate($query);
+        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $geolocator = new GoogleGeolocator($client, '');
+
+        $results = $geolocator->locate($query);
         $this->assertCount($expectedCount, $results);
 
         if (0 == count($results)) {
@@ -96,12 +83,20 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testApiKey()
     {
-        $this->mockPlugin->addResponse(new Response(200, null, '{"status": "OK","results":[]}'));
-        $geolocator = new GoogleGeolocator($this->client, 'foobar');
+        $mockHandler = new MockHandler([new Response(200, [], '{"status": "OK","results":[]}')]);
+        $stack = HandlerStack::create($mockHandler);
+        $stack->push(
+            Middleware::mapRequest(
+                function (Request $request) {
+                    $this->assertContains('key=foobar', $request->getUri()->getQuery());
+
+                    return $request;
+                }
+            )
+        );
+
+        $client = new Client(['handler' => $stack]);
+        $geolocator = new GoogleGeolocator($client, 'foobar');
         $geolocator->locate('foobar');
-        $logs = $this->logAdapter->getLogs();
-        $this->assertCount(1, $logs);
-        $log = current($logs);
-        $this->assertContains('key=foobar', $log['message']);
     }
 }

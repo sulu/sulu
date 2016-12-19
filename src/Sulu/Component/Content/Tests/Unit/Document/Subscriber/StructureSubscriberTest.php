@@ -203,7 +203,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should throw an exception if the property is required but the value is null.
      *
-     * @expectedException Sulu\Component\Content\Exception\MandatoryPropertyException
+     * @expectedException \Sulu\Component\Content\Exception\MandatoryPropertyException
      */
     public function testThrowExceptionPropertyRequired()
     {

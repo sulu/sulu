@@ -1,0 +1,5 @@
+services:
+    sulu_automaion.test_handler:
+        class: Sulu\Bundle\AutomationBundle\Tests\Handler\TestHandler
+        tags:
+            - { name: task.handler }

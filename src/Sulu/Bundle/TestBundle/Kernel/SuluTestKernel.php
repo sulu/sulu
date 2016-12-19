@@ -15,13 +15,21 @@ use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
+/**
+ * Represents a kernel for sulu-application tests.
+ */
 class SuluTestKernel extends SuluKernel
 {
+    /**
+     * {@inheritdoc}
+     */
     public function registerBundles()
     {
         $bundles = [
             // Dependencies
+            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
@@ -34,9 +42,11 @@ class SuluTestKernel extends SuluKernel
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
 
+            // php-task
+            new \Task\TaskBundle\TaskBundle(),
+
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
-            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
@@ -59,11 +69,11 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
+            new \Sulu\Bundle\AutomationBundle\SuluAutomationBundle(),
         ];
 
         if ($this->getContext() === self::CONTEXT_WEBSITE) {
             // smyfony-cmf
-            $bundles[] = new \Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle();
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
         }
 
@@ -76,6 +86,9 @@ class SuluTestKernel extends SuluKernel
         return $bundles;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
@@ -88,6 +101,9 @@ class SuluTestKernel extends SuluKernel
         });
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCacheDir()
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;

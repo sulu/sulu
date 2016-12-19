@@ -11,14 +11,16 @@
 
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Collects all the content navigations from all bundles using a specific alias.
  */
-class ContentNavigationRegistry extends ContainerAware implements ContentNavigationRegistryInterface
+class ContentNavigationRegistry implements ContentNavigationRegistryInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var array
      */

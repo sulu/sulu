@@ -53,7 +53,6 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
         $property = $this->prophesize(Property::class);
         $property->getValue()->willReturn(null);
 
-
         $categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $categoryManager->findByIds(Argument::any())->shouldNotBeCalled();
 

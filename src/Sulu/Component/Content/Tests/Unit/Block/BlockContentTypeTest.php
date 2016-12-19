@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property;
@@ -71,6 +72,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
             ['text_area', new TextArea('not in use')],
+            ['internal_link', new SingleInternalLink('not in use')],
             ['block', $this->blockContentType],
         ];
 
@@ -113,11 +115,35 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));
+
         $this->subBlockProperty->addType($subType1);
         $type1->addChild($this->subBlockProperty);
 
         $type2 = new BlockPropertyType('type2', '');
         $type2->addChild(new Property('name', '', 'text_line', false, true));
+
+        $this->blockProperty->addType($type2);
+    }
+
+    protected function prepareMultipleBlockWithLinksProperty()
+    {
+        $this->blockProperty = new BlockProperty('block1', '', 'type1', false, true, 10, 1);
+        $type1 = new BlockPropertyType('type1', '');
+        $type1->addChild(new Property('title', '', 'text_line', false, true));
+        $type1->addChild(new Property('article', '', 'text_area'));
+        $this->blockProperty->addType($type1);
+
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true);
+        $subType1 = new BlockPropertyType('subType1', '');
+        $subType1->addChild(new Property('title', '', 'text_line', false, true));
+        $subType1->addChild(new Property('article', '', 'text_area', false, true));
+        $subType1->addChild(new Property('link', '', 'internal_link', false, true));
+        $this->subBlockProperty->addType($subType1);
+        $type1->addChild($this->subBlockProperty);
+
+        $type2 = new BlockPropertyType('type2', '');
+        $type2->addChild(new Property('name', '', 'text_line', false, true));
+        $type2->addChild(new Property('link', '', 'internal_link', false, true));
 
         $this->blockProperty->addType($type2);
     }
@@ -553,5 +579,45 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
+    }
+
+    public function testGetReferencedUuids()
+    {
+        $this->prepareMultipleBlockWithLinksProperty();
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    'type' => 'subType1',
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1',
+                    'link' => 'UUID-1',
+                ],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'link' => 'UUID-1',
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-3',
+                'link' => 'UUID-2',
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-4',
+                'link' => 'UUID-3',
+            ],
+        ];
+        $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getReferencedUuids($this->blockProperty);
+        $this->assertEquals(['UUID-1', 'UUID-2', 'UUID-3'], $result, true);
     }
 }

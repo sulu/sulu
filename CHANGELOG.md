@@ -2,10 +2,28 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #3043 [ContentBudle]        Fixed bind null values on managed-structure
+    * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
+    * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider
+    * ENHANCEMENT #3084 [GeneratorBundle]     Removed generator-bundle
+    * ENHANCEMENT #3080 [All]                 Removed getRequest calls
+    * ENHANCENEMT #3070 [All]                 Removed guzzle3 dependency
+    * FEATURE     #3078 [MediaBundle]         Added sort-by title for media-dataprovider
+    * FEATURE     #3069 [PreviewBundle]       Added cache configuration for preview & websocket context
+    * ENHANCEMENT #3071 [All]                 Updated willdurand/hateoas-bundle
+    * ENHANCEMENT #3072 [SnippetBundle]       Fixed deprecations for symfony 3.0
+    * ENHANCEMENT #3072 [AdminBundle]         Fixed deprecations for symfony 3.0
+    * FEATURE     #3066 [AutomationBundle]    Added notification-badge to automation-tab
+    * ENHANCEMENT #3059 [ContentBundle]       Fixed deprecation in WebspaceCollection rendering
+    * ENHANCEMENT #3058 [All]                 Fixed some config files for symfony3
+    * BUGFIX      #3043 [ContentBundle]       Fixed bind null values on managed-structure
+    * FEATURE     #3037 [AutomationBundle]    Added automation-bundle
+    * BUGFIX      #3052 [ContentBundle]       Fixed loading tree (with uuid) without webspace
+    * ENHANCEMENT #3067 [ContentBundle]       Removed symfony-acl-voter
+    * ENHANCEMENT #3068 [CoreBundle]          Removed phpcr-odm
     * ENHANCEMENT #2856 [ContactBundle]       Removed not needed css
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
+    * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
 
 * 1.4.2 (2016-11-24)
     * HOTFIX      #3032 [ContentBundle]         Fixed publishing for shadow page targeting drafts
@@ -21,7 +39,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
-    * BUGFIX      #3019 [WesbiteBundle]       Fixed redirect for double slash
+    * BUGFIX      #3019 [WebsiteBundle]       Fixed redirect for double slash
     * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension 
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes

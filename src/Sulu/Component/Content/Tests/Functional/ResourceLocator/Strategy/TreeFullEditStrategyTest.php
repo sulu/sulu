@@ -48,7 +48,6 @@ class TreeFullEditStrategyTest extends SuluTestCase
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
 
-
         $this->initPhpcr();
     }
 

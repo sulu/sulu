@@ -188,7 +188,6 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                 'translation' => 'Tag',
                 'instance' => DoctrineCaseFieldDescriptor::class,
                 'disabled' => true,
-
             ],
         ];
 

@@ -72,7 +72,6 @@ class AccountRecoverCommand extends ContainerAwareCommand
 
         // fix depths if -depth is defined
         if ($fixDepth) {
-
             // fix nodes without parents
             $numberParentLess = $this->findNodesWithoutParents();
             if ($numberParentLess > 0) {

@@ -36,8 +36,8 @@
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>SuluResourceBundle:Filter</argument>
         </service>
-        <service id="sulu_resource.conditionGroup_repository" class="%sulu_resource.conditionGroup_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+        <service id="sulu_resource.conditionGroup_repository" class="%sulu_resource.conditionGroup_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>SuluResourceBundle:ConditionGroup</argument>
         </service>
         <service id="sulu_resource.condition_repository" class="%sulu_resource.condition_repository.class%">
@@ -57,8 +57,8 @@
         </service>
 
         <!-- Operators -->
-        <service id="sulu_resource.operator_repository" class="%sulu_resource.operator_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+        <service id="sulu_resource.operator_repository" class="%sulu_resource.operator_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>SuluResourceBundle:Operator</argument>
         </service>
         <service id="sulu_resource.operator_manager" class="%sulu_resource.operator_manager.class%">

@@ -33,48 +33,14 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
             [
                 new Request(
                     [
-                        'fields' => 'field1,field2,field3',
-                        'sortBy' => 'id',
-                        'sortOrder' => 'desc',
-                        'search' => 'test',
-                        'searchFields' => 'title',
-                        'limit' => 10,
-                        'page' => 3,
-                    ]
-                ),
-            ],
-            [
-                new Request(
-                    [
-                        'fields' => 'one,two,three',
-                        'sortBy' => 'three',
-                        'sortOrder' => 'asc',
-                        'search' => 'now',
-                        'searchFields' => 'title',
-                        'limit' => 20,
-                        'page' => 1,
-                    ]
-                ),
-            ],
-            [
-                new Request(
-                    [
                         'fields' => 'one,two,three',
                         'search' => 'now',
                         'searchFields' => 'title',
                         'limit' => 20,
                         'page' => 1,
-                    ]
-                ),
-            ],
-            [
-                new Request(
+                    ],
+                    [],
                     [
-                        'fields' => 'one,two,three',
-                        'search' => 'now',
-                        'searchFields' => 'title',
-                        'limit' => 20,
-                        'page' => 1,
                         '_format' => 'csv',
                     ]
                 ),
@@ -86,6 +52,9 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
                         'search' => 'now',
                         'searchFields' => 'title',
                         'page' => 1,
+                    ],
+                    [],
+                    [
                         '_format' => 'csv',
                     ]
                 ),

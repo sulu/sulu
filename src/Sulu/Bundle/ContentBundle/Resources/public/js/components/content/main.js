@@ -877,6 +877,10 @@ define([
                     navigationUrlParams.push('webspace=' + this.options.webspace);
                 }
 
+                if (!!this.options.language) {
+                    navigationUrlParams.push('locale=' + this.options.language);
+                }
+
                 if (!!navigationUrlParams.length) {
                     navigationUrl += '?' + navigationUrlParams.join('&');
                 }
@@ -976,6 +980,7 @@ define([
                     tabs: {
                         url: navigationUrl,
                         options: {
+                            locale: this.options.language,
                             data: function() {
                                 return this.sandbox.util.deepCopy(this.content.toJSON());
                             }.bind(this)

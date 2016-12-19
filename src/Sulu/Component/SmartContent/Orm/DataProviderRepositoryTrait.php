@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\SmartContent\Orm;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -30,6 +29,11 @@ trait DataProviderRepositoryTrait
             ->where($alias . '.id IN (:ids)')
             ->orderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
+
+        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
+            $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
+            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
+        }
 
         $query = $queryBuilder->getQuery();
         $ids = $this->findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options);
@@ -60,8 +64,13 @@ trait DataProviderRepositoryTrait
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
-        $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
 
+        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
+            $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
+            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
+        }
+
+        $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
         if (isset($filters['dataSource'])) {
             $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?: false);
             $parameter = array_merge(
@@ -314,5 +323,38 @@ trait DataProviderRepositoryTrait
     {
         // empty implementation can be overwritten by repository
         return [];
+    }
+
+    /**
+     * Extension point to append order.
+     *
+     * @param array $sortBy
+     * @param string $sortMethod
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     * @param string $locale
+     *
+     * @return array parameters for query
+     */
+    protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
+    {
+        foreach ($sortBy as $column) {
+            if (!in_array(explode('.', $column)[0], $queryBuilder->getAllAliases())) {
+                $this->appendSortByJoins($queryBuilder, $alias, $locale);
+            }
+
+            $queryBuilder->orderBy($column, $sortMethod);
+        }
+    }
+
+    /**
+     * Append joins to query builder for "findByFilters" function specially for sort-by.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     * @param string $locale
+     */
+    protected function appendSortByJoins(QueryBuilder $queryBuilder, $alias, $locale)
+    {
     }
 }
