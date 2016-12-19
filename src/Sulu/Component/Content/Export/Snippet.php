@@ -24,7 +24,7 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 /**
  * Export Snippet by given locale to xliff file.
  */
-class Snippet
+class Snippet implements SnippetInterface
 {
     /**
      * @var EngineInterface
@@ -131,13 +131,13 @@ class Snippet
     protected function getTemplate($format)
     {
         if (!isset($this->formatFilePaths[$format])) {
-            throw new \Exception(sprintf('No format "%s" configured for webspace export', $format));
+            throw new \Exception(sprintf('No format "%s" configured for Snippet export', $format));
         }
 
         $templatePath = $this->formatFilePaths[$format];
 
         if (!$this->templating->exists($templatePath)) {
-            throw new \Exception(sprintf('No template file "%s" found for webspace export', $format));
+            throw new \Exception(sprintf('No template file "%s" found for Snippet export', $format));
         }
 
         return $templatePath;
@@ -322,6 +322,11 @@ class Snippet
         return $property;
     }
 
+    /**
+     * Returns all Snippets.
+     *
+     * @return SnippetBridge[]
+     */
     protected function getSnippets()
     {
         $this->output->writeln('<info>Loading Data…</info>');
