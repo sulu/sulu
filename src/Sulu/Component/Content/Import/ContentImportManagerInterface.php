@@ -16,7 +16,6 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Defines the methods for the ContentImportManager.
- * @deprecated
  */
 interface ContentImportManagerInterface
 {

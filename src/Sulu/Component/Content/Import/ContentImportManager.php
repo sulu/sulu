@@ -19,8 +19,6 @@ use Sulu\Component\Content\Import\Exception\ContentTypeImportMissingException;
 
 /**
  * Import content by given xliff file from ContentExportManager.
- * TODO: Remove and use extend from Sulu/Components/Import/Manager/ImportManager
- * @deprecated
  */
 class ContentImportManager implements ContentImportManagerInterface
 {
