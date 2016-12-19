@@ -55,7 +55,7 @@ class SnippetImportCommand extends ContainerAwareCommand
             '',
         ]);
 
-        /*$helper = $this->getHelper('question');
+        $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('<question>Continue with this options? Be careful! (y/n)</question> ', false);
 
         if (!$helper->ask($input, $output, $question)) {
@@ -64,7 +64,7 @@ class SnippetImportCommand extends ContainerAwareCommand
             return;
         }
 
-        $output->writeln('<info>Continue!</info>');*/
+        $output->writeln('<info>Continue!</info>');
 
         /** @var WebspaceInterface $webspaceImporter */
         $webspaceImporter = $this->getContainer()->get('sulu_snippet.import.snippet');
