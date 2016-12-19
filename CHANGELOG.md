@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3099 [ContentBundle]         Display draft internal link in test mode
     * HOTFIX      #3091 [SecurityBundle]        Increased length of context field
     * HOTFIX      #3090 [MediaBundle]           Fixed extension when purging media
     * HOTFIX      #3087 [AdminBundle]           Fixed search with umlauts in text editor
