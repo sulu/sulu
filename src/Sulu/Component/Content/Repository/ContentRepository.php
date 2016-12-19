@@ -637,12 +637,16 @@ class ContentRepository implements ContentRepositoryInterface
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
             $row->getValue('nodeType'),
-            $this->resolveHasChildren($row),
+            $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale, $shadowBase),
             $data,
             $this->resolvePermissions($row, $user),
             $type
         );
         $content->setRow($row);
+
+        if (!$content->getTemplate() || !$this->structureManager->getStructure($content->getTemplate())) {
+            $content->setBrokenTemplate();
+        }
 
         if ($mapping->resolveUrl()) {
             $url = $this->resolveUrl($row, $locale);
@@ -717,18 +721,24 @@ class ContentRepository implements ContentRepositoryInterface
             $data[$property] = $this->resolveProperty($row, $property, $locale);
         }
 
-        return new Content(
+        $content = new Content(
             $locale,
             $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
             $row->getValue('nodeType'),
-            $this->resolveHasChildren($row),
+            $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale),
             $data,
             $this->resolvePermissions($row, $user),
             $type
         );
+
+        if (!$content->getTemplate() || !$this->structureManager->getStructure($content->getTemplate())) {
+            $content->setBrokenTemplate();
+        }
+
+        return $content;
     }
 
     /**
@@ -776,7 +786,6 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         $template = $this->resolveProperty($row, 'template', $locale);
-
         if (empty($template)) {
             return;
         }

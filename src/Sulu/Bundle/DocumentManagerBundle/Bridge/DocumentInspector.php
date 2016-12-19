@@ -18,6 +18,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
@@ -111,10 +112,14 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getStructureMetadata(StructureBehavior $document)
     {
-        return $this->structureFactory->getStructureMetadata(
-            $this->getMetadata($document)->getAlias(),
-            $document->getStructureType()
-        );
+        try {
+            return $this->structureFactory->getStructureMetadata(
+                $this->getMetadata($document)->getAlias(),
+                $document->getStructureType()
+            );
+        } catch (StructureTypeNotFoundException $exception) {
+            return;
+        }
     }
 
     /**

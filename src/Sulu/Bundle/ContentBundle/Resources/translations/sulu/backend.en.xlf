@@ -807,6 +807,22 @@
                  <source>sulu_content.task_handler.unpublish</source>
                  <target>Unpublish</target>
              </trans-unit>
+            <trans-unit id="75" resname="sulu_content.broken-template.title">
+                 <source>"sulu_content.broken-template.title</source>
+                 <target>Page-Template is broken</target>
+             </trans-unit>
+            <trans-unit id="76" resname="sulu_content.broken-template.message">
+                 <source>"sulu_content.broken-template.message</source>
+                 <target>Please contact system your administrator.</target>
+             </trans-unit>
+            <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
+                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <target>Template name</target>
+             </trans-unit>
+            <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
+                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <target>UUID</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

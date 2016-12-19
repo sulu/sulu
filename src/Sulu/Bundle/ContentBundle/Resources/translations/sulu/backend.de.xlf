@@ -807,6 +807,22 @@
                  <source>sulu_content.task_handler.unpublish</source>
                  <target>Veröffentlichung zurücknehmen</target>
              </trans-unit>
+            <trans-unit id="75" resname="sulu_content.broken-template.title">
+                 <source>"sulu_content.broken-template.title</source>
+                 <target>Seiten-Template ist beschädigt</target>
+             </trans-unit>
+            <trans-unit id="76" resname="sulu_content.broken-template.message">
+                 <source>"sulu_content.broken-template.message</source>
+                 <target>Bitte kontaktieren Sie ihren System-Administrator.</target>
+             </trans-unit>
+            <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
+                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <target>Template Name</target>
+             </trans-unit>
+            <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
+                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <target>UUID</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

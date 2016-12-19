@@ -191,6 +191,47 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $defaults['partial']);
     }
 
+    public function testGetCollectionForRequestWithMissingStructure()
+    {
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $this->requestAnalyzer->getPortal()->willReturn($portal);
+
+        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+        $this->requestAnalyzer->getResourceLocator()->willReturn('');
+        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $document->getRedirectType()->willReturn(RedirectType::NONE);
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
+
+        $metadata = new Metadata();
+        $metadata->setAlias('page');
+        $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
+        $this->documentInspector->getStructureMetadata($document->reveal())->willReturn(null);
+
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/']);
+
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $this->assertCount(0, $routes);
+    }
+
     public function testGetCollectionForRequestWithPartialFlag()
     {
         $localization = new Localization();

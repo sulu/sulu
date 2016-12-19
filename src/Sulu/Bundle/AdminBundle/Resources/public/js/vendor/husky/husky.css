@@ -9997,27 +9997,32 @@ a[data-badge]:after {
   color: #ccc;
 }
 /* line 238, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column-item.broken .item-text {
+  text-decoration: line-through;
+  color: #ccc;
+}
+/* line 245, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .orderer {
   display: block;
   float: left;
   width: 40px;
   padding: 0 10px 0 0;
 }
-/* line 243, ../scss/modules/column-navigation.scss */
+/* line 250, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .orderer .form-element, .column-navigation-wrapper .column-navigation .orderer .husky-input {
   height: 20px;
   padding-left: 3px;
   padding-right: 3px;
 }
-/* line 250, ../scss/modules/column-navigation.scss */
+/* line 257, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .fa-external-link {
   margin-top: 1px;
 }
-/* line 255, ../scss/modules/column-navigation.scss */
+/* line 262, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options {
   width: 251px;
 }
-/* line 258, ../scss/modules/column-navigation.scss */
+/* line 265, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .add {
   display: inline-block;
   width: 50%;
@@ -10026,7 +10031,7 @@ a[data-badge]:after {
   color: #fff;
   font-size: 16px;
 }
-/* line 267, ../scss/modules/column-navigation.scss */
+/* line 274, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .ok {
   display: block;
   width: 100%;
@@ -10035,7 +10040,7 @@ a[data-badge]:after {
   color: #fff;
   font-size: 16px;
 }
-/* line 276, ../scss/modules/column-navigation.scss */
+/* line 283, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .settings {
   display: inline-block;
   width: 50%;
@@ -10043,11 +10048,11 @@ a[data-badge]:after {
   padding: 5px 0;
   font-size: 16px;
 }
-/* line 284, ../scss/modules/column-navigation.scss */
+/* line 291, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .first {
   border-bottom-left-radius: 3px;
 }
-/* line 288, ../scss/modules/column-navigation.scss */
+/* line 295, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .last {
   border-bottom-right-radius: 3px;
 }
@@ -10648,17 +10653,18 @@ a[data-badge]:after {
 }
 /* line 218, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .child-wrapper .toggle-icon {
+  display: inline-block;
   margin-right: 10px;
 }
-/* line 221, ../scss/modules/datagrid-table-view.scss */
+/* line 222, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .child-wrapper .custom-checkbox {
   margin-right: 10px;
 }
-/* line 226, ../scss/modules/datagrid-table-view.scss */
+/* line 227, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .row:hover .grid-icon {
   opacity: 1;
 }
-/* line 231, ../scss/modules/datagrid-table-view.scss */
+/* line 232, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-icon {
   width: 30px;
   height: 20px;
@@ -10677,20 +10683,20 @@ a[data-badge]:after {
   -webkit-transition-delay: 200ms;
   transition: opacity 100ms ease-in 200ms;
 }
-/* line 244, ../scss/modules/datagrid-table-view.scss */
+/* line 245, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-icon.right {
   float: right;
 }
-/* line 248, ../scss/modules/datagrid-table-view.scss */
+/* line 249, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-icon.no-hover {
   opacity: 1 !important;
 }
-/* line 252, ../scss/modules/datagrid-table-view.scss */
+/* line 253, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-icon.simple {
   background: transparent;
   color: #000;
 }
-/* line 258, ../scss/modules/datagrid-table-view.scss */
+/* line 259, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-image {
   position: relative;
   width: 50px;
@@ -10698,31 +10704,31 @@ a[data-badge]:after {
   text-align: center;
   line-height: 50px;
 }
-/* line 265, ../scss/modules/datagrid-table-view.scss */
+/* line 266, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-image img {
   position: absolute;
   top: 0;
   left: 0;
 }
-/* line 271, ../scss/modules/datagrid-table-view.scss */
+/* line 272, ../scss/modules/datagrid-table-view.scss */
 .husky-table .table tbody .grid-image [class^=fa-] {
   color: #ccc;
   font-size: 1.6em;
 }
-/* line 279, ../scss/modules/datagrid-table-view.scss */
+/* line 280, ../scss/modules/datagrid-table-view.scss */
 .husky-table .empty-list {
   text-align: center;
   color: #ccc;
   padding: 20px 0;
   background: #fff;
 }
-/* line 285, ../scss/modules/datagrid-table-view.scss */
+/* line 286, ../scss/modules/datagrid-table-view.scss */
 .husky-table .empty-list .icon {
   display: block;
   font-size: 50px;
   padding-bottom: 5px;
 }
-/* line 290, ../scss/modules/datagrid-table-view.scss */
+/* line 291, ../scss/modules/datagrid-table-view.scss */
 .husky-table .empty-list span {
   display: block;
 }
