@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Import\Format;
+namespace Sulu\Component\Content\Import;
 
 /**
  * Defines the methods for the import services.
  */
-interface FormatImportInterface
+interface WebspaceFormatImportInterface
 {
     /**
      * Will parse the given file and return a documents array.
