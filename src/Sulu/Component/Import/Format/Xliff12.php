@@ -9,15 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Import\Format;
+namespace Sulu\Component\Import\Format;
 
-use Sulu\Component\Content\Import\WebspaceFormatImportInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * Import an xliff 1.2 file.
  */
-class Xliff12 implements WebspaceFormatImportInterface
+class Xliff12 implements FormatImportInterface
 {
     /**
      * {@inheritdoc}

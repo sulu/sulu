@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Import;
+namespace Sulu\Component\Import\Manager;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -19,10 +19,8 @@ use Sulu\Component\Content\Import\Exception\ContentTypeImportMissingException;
 
 /**
  * Import content by given xliff file from ContentExportManager.
- * TODO: Remove and use extend from Sulu/Components/Import/Manager/ImportManager
- * @deprecated
  */
-class ContentImportManager implements ContentImportManagerInterface
+class ImportManager implements ImportManagerInterface
 {
     /**
      * @var ContentTypeManagerInterface

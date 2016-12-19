@@ -32,6 +32,7 @@ use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Import Content by given xliff file from Export.
+ * TODO: extend from Sulu/Components/Import/Import
  */
 class Webspace implements WebspaceInterface
 {
