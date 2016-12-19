@@ -11,7 +11,8 @@
 
 namespace Functional\Controller;
 
-use Sulu\Bundle\AutomationBundle\Tests\Handler\TestHandler;
+use Sulu\Bundle\AutomationBundle\Tests\Handler\FirstHandler;
+use Sulu\Bundle\AutomationBundle\Tests\Handler\SecondHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
@@ -85,9 +86,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithLocales()
     {
         $postData = [
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'de'),
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'en'),
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1, 'de'),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 1, 'de'),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 1, 'en'),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 1, 'de'),
         ];
 
         $client = $this->createAuthenticatedClient();
@@ -117,9 +118,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithEntity()
     {
         $postData = [
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1),
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 2),
-            $this->testPost(TestHandler::class, '+1 day', 'OtherClass', 1),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 1),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 2),
+            $this->testPost(FirstHandler::class, '+1 day', 'OtherClass', 1),
         ];
 
         $client = $this->createAuthenticatedClient();
@@ -137,9 +138,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithFutureSchedule()
     {
         $postData = [
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 1),
-            $this->testPost(TestHandler::class, '-1 day', 'ThisClass', 2),
-            $this->testPost(TestHandler::class, '+1 day', 'OtherClass', 1),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 1),
+            $this->testPost(FirstHandler::class, '-1 day', 'ThisClass', 2),
+            $this->testPost(FirstHandler::class, '+1 day', 'OtherClass', 1),
         ];
 
         $client = $this->createAuthenticatedClient();
@@ -169,9 +170,9 @@ class TaskControllerTest extends SuluTestCase
     public function testCGetWithPastSchedule()
     {
         $postData = [
-            $this->testPost(TestHandler::class, '-1 day', 'ThisClass', 1),
-            $this->testPost(TestHandler::class, '+1 day', 'ThisClass', 2),
-            $this->testPost(TestHandler::class, '-1 day', 'OtherClass', 1),
+            $this->testPost(FirstHandler::class, '-1 day', 'ThisClass', 1),
+            $this->testPost(FirstHandler::class, '+1 day', 'ThisClass', 2),
+            $this->testPost(FirstHandler::class, '-1 day', 'OtherClass', 1),
         ];
 
         $client = $this->createAuthenticatedClient();
@@ -191,6 +192,68 @@ class TaskControllerTest extends SuluTestCase
                     'schedule' => $items[$i]['schedule'],
                     'handlerClass' => $items[$i]['handlerClass'],
                     'taskName' => $items[$i]['taskName'],
+                    'status' => $items[$i]['status'],
+                ],
+                $embedded
+            );
+        }
+    }
+
+    public function testCGetWithHandlerClass()
+    {
+        $postData = [
+            $this->testPost(FirstHandler::class),
+            $this->testPost(SecondHandler::class),
+            $this->testPost(FirstHandler::class),
+        ];
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/tasks?fields=id,schedule,handlerClass,taskName&handler-class=' . FirstHandler::class
+        );
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(2, $responseData['total']);
+        $this->assertCount(2, $responseData['_embedded']['tasks']);
+
+        $items = [$postData[0], $postData[2]];
+        $embedded = $responseData['_embedded']['tasks'];
+        for ($i = 0, $length = count($items); $i < $length; ++$i) {
+            $this->assertContains(
+                [
+                    'id' => $items[$i]['id'],
+                    'schedule' => $items[$i]['schedule'],
+                    'handlerClass' => $items[$i]['handlerClass'],
+                    'taskName' => $items[$i]['taskName'],
+                    'status' => $items[$i]['status'],
+                ],
+                $embedded
+            );
+        }
+
+        $client->request(
+            'GET',
+            '/api/tasks?fields=id,schedule,handlerClass,taskName&handler-class='
+            . FirstHandler::class
+            . ','
+            . SecondHandler::class
+        );
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(3, $responseData['total']);
+        $this->assertCount(3, $responseData['_embedded']['tasks']);
+
+        $embedded = $responseData['_embedded']['tasks'];
+        for ($i = 0, $length = count($postData); $i < $length; ++$i) {
+            $this->assertContains(
+                [
+                    'id' => $postData[$i]['id'],
+                    'schedule' => $postData[$i]['schedule'],
+                    'handlerClass' => $postData[$i]['handlerClass'],
+                    'taskName' => $postData[$i]['taskName'],
                     'status' => $postData[$i]['status'],
                 ],
                 $embedded
@@ -199,7 +262,7 @@ class TaskControllerTest extends SuluTestCase
     }
 
     public function testPost(
-        $handlerClass = TestHandler::class,
+        $handlerClass = FirstHandler::class,
         $schedule = '+1 day',
         $entityClass = 'ThisClass',
         $entityId = 1,
@@ -232,7 +295,7 @@ class TaskControllerTest extends SuluTestCase
         return $responseData;
     }
 
-    public function testPut($handlerClass = TestHandler::class, $schedule = '+2 day')
+    public function testPut($handlerClass = FirstHandler::class, $schedule = '+2 day')
     {
         $postData = $this->testPost();
 
@@ -252,7 +315,7 @@ class TaskControllerTest extends SuluTestCase
         $this->assertEquals($postData['id'], $responseData['id']);
         $this->assertEquals($handlerClass, $responseData['handlerClass']);
         $this->assertEquals($scheduleDate, $responseData['schedule']);
-        $this->assertEquals(TestHandler::TITLE, $responseData['taskName']);
+        $this->assertEquals(FirstHandler::TITLE, $responseData['taskName']);
     }
 
     public function testGet()

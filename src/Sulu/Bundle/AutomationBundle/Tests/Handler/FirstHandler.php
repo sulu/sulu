@@ -18,9 +18,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Represents a test-handler.
  */
-class TestHandler implements AutomationTaskHandlerInterface
+class FirstHandler implements AutomationTaskHandlerInterface
 {
-    const TITLE = 'sulu_automation.test_handler';
+    const TITLE = 'sulu_automation.first_handler';
 
     /**
      * {@inheritdoc}

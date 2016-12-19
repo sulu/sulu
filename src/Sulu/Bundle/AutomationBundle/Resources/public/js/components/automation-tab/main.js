@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -82,6 +82,14 @@ define([
 
             this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.tasks.items.get-selected', this.deleteTasksDialog.bind(this));
+            }.bind(this));
+
+            this.sandbox.once('husky.datagrid.task-history.loaded', function(data) {
+                if (0 === data.total) {
+                    return;
+                }
+
+                this.$el.find('#task-history-container').removeClass('hidden');
             }.bind(this));
         },
 
@@ -220,6 +228,7 @@ define([
                 _.each(ids, function(id) {
                     --this.notificationBadge;
                     this.sandbox.emit('husky.datagrid.tasks.record.remove', id);
+                    this.sandbox.emit('sulu.automation.task.remove', id);
                 }.bind(this));
                 this.updateNotification(this.notificationBadge);
             }.bind(this));
@@ -238,12 +247,15 @@ define([
             data.entityId = this.entityData[this.options.idKey];
 
             return manager.save(data).then(function(response) {
-                var event = 'husky.datagrid.tasks.record.add';
+                var datagridEvent = 'husky.datagrid.tasks.record.add',
+                    automationEvent = 'sulu.automation.task.create';
                 if (!!data.id) {
-                    event = 'husky.datagrid.tasks.records.change';
+                    datagridEvent = 'husky.datagrid.tasks.records.change';
+                    automationEvent = 'sulu.automation.task.update';
                 }
 
-                this.sandbox.emit(event, response);
+                this.sandbox.emit(datagridEvent, response);
+                this.sandbox.emit(automationEvent, response.id);
                 this.sandbox.emit(
                     'sulu.labels.success.show',
                     this.translations.successMessage,
