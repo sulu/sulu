@@ -13,10 +13,11 @@ namespace Sulu\Bundle\SnippetBundle\Command;
 
 use Jackalope\Query\QueryManager;
 use Jackalope\Session;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,6 +55,11 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
      * @var QueryManager
      */
     private $queryManager;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
 
     /**
      * @var OutputInterface
@@ -102,10 +108,12 @@ EOT
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $this->output = $output;
 
         $this->copyDocuments($srcLocale, $destLocale, $overwrite);
+        $this->documentManager->flush();
 
         if (false === $dryRun) {
             $this->output->writeln('<info>Saving ...</info>');
@@ -118,14 +126,12 @@ EOT
 
     private function copyDocuments($srcLocale, $destLocale, $overwrite)
     {
-        $documents = $this->snippetRepository->getSnippets($srcLocale);
-
-        foreach ($documents as $document) {
+        foreach ($this->snippetRepository->getSnippets($srcLocale) as $document) {
             $this->copyDocument($srcLocale, $destLocale, $document, $overwrite);
         }
     }
 
-    private function copyDocument($srcLocale, $destLocale, StructureBehavior $document, $overwrite = false)
+    private function copyDocument($srcLocale, $destLocale, SnippetDocument $document, $overwrite = false)
     {
         if (!$overwrite) {
             $destStructure = $this->contentMapper->load($document->getUuid(), null, $destLocale, true);
@@ -148,6 +154,8 @@ EOT
             $destLocale,
             Structure::TYPE_SNIPPET
         );
+        $destDocument = $this->documentManager->find($document->getUuid(), $destLocale);
+        $this->documentManager->publish($destDocument, $destLocale);
 
         $this->output->writeln('<info>Processing: </info>' . $document->getNodeName());
     }
