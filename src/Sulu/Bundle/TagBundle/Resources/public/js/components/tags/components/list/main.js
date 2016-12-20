@@ -126,6 +126,7 @@ define(function() {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     resultKey: 'tags',
+                    storageName: 'tags',
                     searchFields: ['name'],
                     instanceName: constants.datagridInstanceName,
                     viewOptions: {

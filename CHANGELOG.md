@@ -17,6 +17,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
     * ENHANCEMENT #3110 [WebsiteBundle]       Fixed deprecation of flatten-exception by decorating twig-exception-controller
     * BUGFIX      #3109 [SnippetBundle]       Added publish snippet after copy locale
+    * FEATURE     #3107 [All]                 Added storage-name to list components
     * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
     * ENHANCEMENT #3097 [All]                 Updated dependencies
     * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider

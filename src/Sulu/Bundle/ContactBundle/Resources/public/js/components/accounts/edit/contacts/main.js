@@ -304,6 +304,7 @@ define([
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/accounts/' + this.data.id + '/contacts?flat=true',
                     searchInstanceName: 'contacts',
+                    storageName: 'account-' + this.data.id + '-contacts',
                     resultKey: 'contacts',
                     actionCallback: actionCallback.bind(this),
                     searchFields: ['fullName'],

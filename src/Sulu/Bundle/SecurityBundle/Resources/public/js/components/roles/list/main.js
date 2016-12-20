@@ -115,6 +115,7 @@ define([
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
                     searchInstanceName: 'roles',
+                    storageName: 'roles',
                     searchFields: ['id', 'name', 'system'],
                     resultKey: 'roles',
                     instanceName: constants.datagridInstanceName,

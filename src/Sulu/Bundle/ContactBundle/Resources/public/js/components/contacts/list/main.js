@@ -157,6 +157,7 @@ define([
                 searchInstanceName: 'contacts',
                 searchFields: ['fullName', 'mainEmail'],
                 resultKey: 'contacts',
+                storageName: 'contacts',
                 instanceName: constants.datagridInstanceName,
                 actionCallback: actionCallback.bind(this),
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'datagrid/decorators/card-view',

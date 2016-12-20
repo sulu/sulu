@@ -316,6 +316,7 @@ define([
                 {
                     el: this.$find(constants.datagridSelector),
                     instanceName: this.options.instanceName,
+                    storageName: this.options.instanceName,
                     url: this.templates.mediaUrl({
                         collection: this.data.id,
                         locale: this.options.locale,
