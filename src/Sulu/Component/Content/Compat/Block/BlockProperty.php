@@ -294,6 +294,16 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return true;
     }
 
+    public function getIsMultiple()
+    {
+        if (is_null($this->getMinOccurs()) || is_null($this->getMaxOccurs())) {
+            // in contrast to properties blocks are multiple by default
+            return true;
+        }
+
+        return parent::getIsMultiple();
+    }
+
     public function __clone()
     {
         $clone = new self(

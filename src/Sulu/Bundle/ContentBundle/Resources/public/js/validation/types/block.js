@@ -205,7 +205,10 @@ define([
         };
 
     return function($el, options, form) {
-        var defaults = {},
+        var defaults = {
+                min: 0,
+                max: null
+            },
 
             subType = {
                 initializeSub: function() {
