@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.4.3
 
 ### Multiple properties in template
 

@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.4.3 (2016-12-21)
     * HOTFIX      #3108 [ContentBundle]         Fixed support for multiple properties with minOccurs of 1
     * HOTFIX      #3099 [ContentBundle]         Display draft internal link in test mode
     * HOTFIX      #3091 [SecurityBundle]        Increased length of context field
