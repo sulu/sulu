@@ -21,19 +21,32 @@ class HtmlTagExtractor implements TagExtractorInterface
     const TAG_REGEX = '/(?<tag><%1$s:(?<name>[a-z]+)(?<attributes>(?:(?!>|\/>).)*)(?:\/>|>(?<content>(?:(?!<\/%1$s:\2>).)*)<\/%1$s:\2>))/';
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function count($html, $namespace)
+    private $namespace;
+
+    /**
+     * @param string $namespace
+     */
+    public function __construct($namespace)
     {
-        return preg_match_all(sprintf(self::COUNT_REGEX, $namespace), $html, $matches);
+        $this->namespace = $namespace;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract($html, $namespace)
+    public function count($html)
     {
-        if (!preg_match_all(sprintf(self::TAG_REGEX, $namespace), $html, $matches)) {
+        return preg_match_all(sprintf(self::COUNT_REGEX, $this->namespace), $html, $matches);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function extract($html)
+    {
+        if (!preg_match_all(sprintf(self::TAG_REGEX, $this->namespace), $html, $matches)) {
             return [];
         }
 

@@ -43,8 +43,8 @@ class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
     {
         $html = '<html><body>' . $tag . '</body></html>';
 
-        $extractor = new HtmlTagExtractor();
-        $result = $extractor->extract($html, 'sulu');
+        $extractor = new HtmlTagExtractor('sulu');
+        $result = $extractor->extract($html);
 
         $this->assertCount(1, $result);
         $this->assertEquals($result[$tagName][$tag], $attributes);
@@ -78,8 +78,8 @@ class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExtractAll($html, array $counts)
     {
-        $extractor = new HtmlTagExtractor();
-        $result = $extractor->extract($html, 'sulu');
+        $extractor = new HtmlTagExtractor('sulu');
+        $result = $extractor->extract($html);
 
         $this->assertCount(count($counts), $result);
 
@@ -93,9 +93,9 @@ class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCount($html, array $counts, $count)
     {
-        $extractor = new HtmlTagExtractor();
+        $extractor = new HtmlTagExtractor('sulu');
 
-        $result = $extractor->count($html, 'sulu');
+        $result = $extractor->count($html);
         $this->assertEquals($count, $result);
     }
 }

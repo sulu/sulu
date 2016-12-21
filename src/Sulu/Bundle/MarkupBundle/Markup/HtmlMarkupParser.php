@@ -24,11 +24,6 @@ class HtmlMarkupParser implements MarkupParserInterface
     private $tagRegistry;
 
     /**
-     * @var string
-     */
-    private $namespace;
-
-    /**
      * @var TagExtractorInterface
      */
     private $tagExtractor;
@@ -36,16 +31,11 @@ class HtmlMarkupParser implements MarkupParserInterface
     /**
      * @param TagRegistryInterface $tagRegistry
      * @param TagExtractorInterface $tagExtractor
-     * @param string $namespace
      */
-    public function __construct(
-        TagRegistryInterface $tagRegistry,
-        TagExtractorInterface $tagExtractor,
-        $namespace = 'sulu'
-    ) {
+    public function __construct(TagRegistryInterface $tagRegistry, TagExtractorInterface $tagExtractor)
+    {
         $this->tagRegistry = $tagRegistry;
         $this->tagExtractor = $tagExtractor;
-        $this->namespace = $namespace;
     }
 
     /**
@@ -53,11 +43,11 @@ class HtmlMarkupParser implements MarkupParserInterface
      */
     public function parse($content, $locale)
     {
-        if (0 === $this->tagExtractor->count($content, $this->namespace)) {
+        if (0 === $this->tagExtractor->count($content)) {
             return $content;
         }
 
-        $sortedTags = $this->tagExtractor->extract($content, $this->namespace);
+        $sortedTags = $this->tagExtractor->extract($content);
         foreach ($sortedTags as $name => $tags) {
             $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags, $locale);
 
@@ -74,7 +64,7 @@ class HtmlMarkupParser implements MarkupParserInterface
      */
     public function validate($content, $locale)
     {
-        $sortedTags = $this->tagExtractor->extract($content, $this->namespace);
+        $sortedTags = $this->tagExtractor->extract($content);
         if (0 === count($sortedTags)) {
             return [];
         }

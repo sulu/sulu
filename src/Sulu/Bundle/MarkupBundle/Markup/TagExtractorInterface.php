@@ -17,20 +17,20 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
 interface TagExtractorInterface
 {
     /**
+     * Count tags occurrences.
+     *
      * @param string $html
-     * @param string $namespace
      *
      * @return int
      */
-    public function count($html, $namespace);
+    public function count($html);
 
     /**
      * Returns found tags and their attributes.
      *
      * @param string $html
-     * @param string $namespace
      *
      * @return array
      */
-    public function extract($html, $namespace);
+    public function extract($html);
 }

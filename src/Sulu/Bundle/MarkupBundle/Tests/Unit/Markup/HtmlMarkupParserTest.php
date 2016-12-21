@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use Prophecy\Argument;
+use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
@@ -57,7 +58,10 @@ class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
         $this->tagRegistry->getTag('media', 'html')->willReturn($this->mediaTag->reveal());
         $this->tagRegistry->getTag(Argument::any())->willThrow(new TagNotFoundException('test', 'html'));
 
-        $this->parser = new HtmlMarkupParser($this->tagRegistry->reveal(), new HtmlTagExtractor());
+        $this->parser = new HtmlMarkupParser(
+            $this->tagRegistry->reveal(),
+            new DelegatingTagExtractor([new HtmlTagExtractor('sulu')])
+        );
     }
 
     public function testParse()
