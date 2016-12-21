@@ -820,12 +820,24 @@
                  <target>Please contact system your administrator.</target>
              </trans-unit>
             <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
-                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <source>sulu_content.broken-template.message.template-name</source>
                  <target>Template name</target>
              </trans-unit>
             <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
-                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <source>sulu_content.broken-template.message.template-name</source>
                  <target>UUID</target>
+             </trans-unit>
+            <trans-unit id="79" resname="sulu.content.form.settings.author">
+                 <source>sulu.content.form.settings.author</source>
+                 <target>Author</target>
+             </trans-unit>
+            <trans-unit id="80" resname="sulu.content.form.settings.authored">
+                 <source>sulu.content.form.settings.authored</source>
+                 <target>Date</target>
+             </trans-unit>
+            <trans-unit id="81" resname="sulu.content.form.settings.authors">
+                 <source>sulu.content.form.settings.authors</source>
+                 <target>Authors</target>
              </trans-unit>
         </body>
     </file>

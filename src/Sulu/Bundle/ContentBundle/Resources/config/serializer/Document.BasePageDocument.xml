@@ -23,6 +23,12 @@
         <property name="creator" type="integer" groups="defaultPage,preview"/>
         <property name="changer" type="integer" groups="defaultPage,preview"/>
         <property name="created" type="DateTime" groups="defaultPage,preview"/>
+        <property name="authored" groups="defaultPage,preview">
+            <type><![CDATA[DateTime<'Y-m-d'>]]></type>
+        </property>
+        <property name="authors" groups="defaultPage,preview">
+            <type><![CDATA[array<integer>]]></type>
+        </property>
         <property name="published" type="DateTime" groups="defaultPage,smallPage,preview"/>
         <property name="changed" type="DateTime" groups="defaultPage,preview"/>
         <property name="resourceSegment" exclude="true"/>

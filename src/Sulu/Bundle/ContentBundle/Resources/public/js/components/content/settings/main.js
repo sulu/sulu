@@ -8,11 +8,13 @@
  */
 
 define([
+'underscore',
+    'jquery',
     'config',
     'sulusecurity/components/users/models/user',
     'services/husky/url-validator',
     'sulucontent/services/content-manager'
-], function(Config, User, urlValidator, contentManager) {
+], function(_, $, Config, User, urlValidator, contentManager) {
 
     'use strict';
 
@@ -282,10 +284,11 @@ define([
                 this.buildAllNavContexts(this.sandbox.dom.data('#nav-contexts', 'auraData'));
 
                 this.bindDomEvents();
-                this.setData(this.data);
+                this.setData(this.data).then(function() {
+                    this.sandbox.start(this.$el, {reset: true});
+                }.bind(this));
                 this.listenForChange();
                 this.startComponents();
-                this.sandbox.start(this.$el, {reset: true});
 
                 this.sandbox.start([
                     {
@@ -454,6 +457,26 @@ define([
                 this.sandbox.dom.attr('#shadow_on_checkbox', 'checked', true);
                 this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             }
+
+            var def = $.Deferred();
+
+            // set author form data
+            this.sandbox.form.create('#settings-author-container').initialized.then(function() {
+                // the 'c' prefix is needed for the contact-selection
+                // which uses this to determine the type of id
+                // c for contact and a for account
+                data.authors = _.map(
+                    data.authors,
+                    function(author) {
+                        return 'c' + author;
+                    }
+                );
+                this.sandbox.form.setData('#settings-author-container', data).then(function() {
+                    def.resolve();
+                });
+            }.bind(this));
+
+            return def.promise();
         },
 
         listenForChange: function() {
@@ -473,11 +496,10 @@ define([
         submit: function(action) {
             this.sandbox.logger.log('save Model');
 
-            var data = {
-                    id: this.data.id
-                },
+            var data = this.sandbox.form.getData('#settings-author-container'),
                 baseLanguages = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues');
 
+            data.id = this.data.id;
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
             data.shadowOn = isShadow.call(this);
@@ -506,6 +528,14 @@ define([
 
                 return;
             }
+
+            // remove 'c' prefix from authors
+            data.authors = _.map(
+                data.authors,
+                function(author) {
+                    return author.substring(1);
+                }
+            );
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 

@@ -508,6 +508,8 @@ class NodeControllerTest extends SuluTestCase
                 'title' => 'Testtitle DE',
                 'template' => 'default',
                 'url' => '/test-de',
+                'authored' => '2016-12-21',
+                'authors' => [1, 2, 3],
             ]
         );
         $client->request(
@@ -517,6 +519,8 @@ class NodeControllerTest extends SuluTestCase
                 'title' => 'Testtitle EN',
                 'template' => 'default',
                 'url' => '/test-en',
+                'authored' => '2016-12-21',
+                'authors' => [1, 2, 3],
             ]
         );
 
@@ -529,6 +533,9 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response['changer']);
         $this->assertEquals($this->getTestUserId(), $response['creator']);
 
+        $this->assertEquals('2016-12-21', $response['authored']);
+        $this->assertEquals([1, 2, 3], $response['authors']);
+
         $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en');
         $response = json_decode($client->getResponse()->getContent(), true);
 
@@ -537,6 +544,9 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(false, $response['publishedState']);
         $this->assertEquals($this->getTestUserId(), $response['changer']);
         $this->assertEquals($this->getTestUserId(), $response['creator']);
+
+        $this->assertEquals('2016-12-21', $response['authored']);
+        $this->assertEquals([1, 2, 3], $response['authors']);
 
         $this->assertFalse(
             $this->liveSession->getNode('/cmf/sulu_io/contents/testtitle-en')->hasProperty('i18n:en-changed')
