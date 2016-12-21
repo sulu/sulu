@@ -86,7 +86,7 @@ class SnippetImport extends Import
     }
 
     /**
-     * Import Snippet by given XLIFF-File
+     * Import Snippet by given XLIFF-File.
      *
      * @param $locale
      * @param $filePath
@@ -127,7 +127,6 @@ class SnippetImport extends Import
 
             $progress->advance();
         }
-
 
         $progress->finish();
 
