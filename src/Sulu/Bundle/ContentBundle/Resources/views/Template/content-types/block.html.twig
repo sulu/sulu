@@ -16,8 +16,8 @@
              data-form="true"
              data-type="block"
              data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.getTitle(userLocale) }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
-             data-type-min="{{ property.minOccurs }}"
-             data-type-max="{{ property.maxOccurs }}"
+             {% if property.minOccurs is not null %}data-type-min="{{ property.minOccurs }}"{% endif %}
+             {% if property.maxoccurs is not null %}data-type-max="{{ property.maxOccurs }}"{% endif %}
              data-type-default="{{ property.defaultTypeName }}"
              data-mapper-property="{{ property.name }}"
              data-mapper-full-class="full"

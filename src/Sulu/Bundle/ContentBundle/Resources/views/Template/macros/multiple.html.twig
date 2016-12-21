@@ -3,8 +3,8 @@
         <div class="sortable grid-row multiple-property"
              id="{{ id|raw }}"
              data-type="collection"
-             data-type-min="{{ property.minOccurs }}"
-             data-type-max="{{ property.maxOccurs }}"
+             {% if property.minOccurs is not null %}data-type-min="{{ property.minOccurs }}"{% endif %}
+             {% if property.maxOccurs is not null %}data-type-max="{{ property.maxOccurs }}"{% endif %}
              data-mapper-property='[{"data": "{{ property.name }}", "tpl": "{{ id|raw }}-tpl"}]'
              data-mapper-full-class="full"
              data-mapper-empty-class="empty">

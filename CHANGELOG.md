@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3108 [ContentBundle]         Fixed support for multiple properties with minOccurs of 1
     * HOTFIX      #3099 [ContentBundle]         Display draft internal link in test mode
     * HOTFIX      #3091 [SecurityBundle]        Increased length of context field
     * HOTFIX      #3090 [MediaBundle]           Fixed extension when purging media

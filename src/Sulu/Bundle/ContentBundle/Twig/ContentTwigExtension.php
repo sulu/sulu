@@ -126,7 +126,14 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function needsAddButtonFunction(PropertyInterface $property)
     {
-        return $property->getMaxOccurs() > $property->getMinOccurs();
+        $minOccurs = $property->getMinOccurs();
+        $maxOccurs = $property->getMaxOccurs();
+
+        if (is_null($maxOccurs) && $minOccurs >= 1) {
+            return true;
+        }
+
+        return $maxOccurs > $minOccurs;
     }
 
     /**
@@ -138,7 +145,7 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function isMultipleTest($property)
     {
-        return $property->getMinOccurs() > 1;
+        return $property->getIsMultiple();
     }
 
     /**
