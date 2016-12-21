@@ -83,6 +83,8 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         'webspaceName',
         'structureType',
         'originalLocale',
+        'url',
+        'resourceSegment',
     ];
 
     /**
@@ -331,8 +333,11 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                             $format,
                             $data
                         );
+
+                        $document->setResourceSegment($value);
                     }
                 }
+
             }
 
             // import property data
