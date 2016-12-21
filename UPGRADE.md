@@ -11,6 +11,8 @@ Following classes and methods were removed because of deprecations:
 * Sulu\Component\Rest\RestController::responseList
 * Sulu\Component\Rest\RestController::createHalResponse
 * Sulu\Component\Rest\RestController::getHalLinks
+* Sulu\Bundle\WebsiteBundle\DefaultController::redirectAction
+* Sulu\Bundle\WebsiteBundle\DefaultController::redirectWebspaceAction
 
 Additionally the GeneratorBundle was removed because it was not maintained since a while.
 You have to remove the Bundle from you Kernels.

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -33,19 +34,15 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
 
     private function getRequestMock($requestUrl, $portalUrl, $redirectUrl = null, $prefix = '')
     {
-        $request = $this->getMockBuilder(Request::class)->getMock();
-        $request->expects($this->any())->method('get')->will(
-            $this->returnValueMap(
-                [
-                    ['url', null, false, $portalUrl],
-                    ['redirect', null, false, $redirectUrl],
-                    ['_sulu', null, false, new RequestAttributes(['resourceLocatorPrefix' => $prefix])],
-                ]
-            )
+        $request = $this->prophesize(Request::class);
+        $request->get('url', Argument::cetera())->willReturn($portalUrl);
+        $request->get('redirect', Argument::cetera())->willReturn($redirectUrl);
+        $request->get('_sulu', Argument::cetera())->willReturn(
+            new RequestAttributes(['resourceLocatorPrefix' => $prefix])
         );
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($requestUrl));
+        $request->getUri()->willReturn($requestUrl);
 
-        return $request;
+        return $request->reveal();
     }
 
     public function provideRedirectAction()
