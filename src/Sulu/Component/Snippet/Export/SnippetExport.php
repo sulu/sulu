@@ -19,7 +19,6 @@ use Symfony\Component\Console\Output\NullOutput;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Templating\EngineInterface;
-use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
 
 /**
@@ -38,12 +37,12 @@ class SnippetExport extends Export implements SnippetExportInterface
     protected $exportManager;
 
     /**
-     * @var String
+     * @var string
      */
     protected $exportLocale;
 
     /**
-     * @var String
+     * @var string
      */
     protected $format;
 

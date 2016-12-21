@@ -11,14 +11,13 @@
 
 namespace Sulu\Bundle\SnippetBundle\Command;
 
-use Sulu\Component\Content\Export\SnippetInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * Export snippet translation by given language
+ * Export snippet translation by given language.
  */
 class SnippetExportCommand extends ContainerAwareCommand
 {

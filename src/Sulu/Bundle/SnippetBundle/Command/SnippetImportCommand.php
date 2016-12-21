@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Command;
 
-use Sulu\Component\Content\Import\WebspaceInterface;
 use Sulu\Component\Snippet\Import\SnippetImport;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

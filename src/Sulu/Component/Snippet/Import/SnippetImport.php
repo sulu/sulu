@@ -27,8 +27,6 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 /**
  * Import Snippets by given xliff-file.
- *
- * @package Sulu\Component\Snippet\Import
  */
 class SnippetImport extends Import
 {
@@ -217,7 +215,7 @@ class SnippetImport extends Import
      * @param SnippetDocument $document
      * @param string $locale
      * @param string $format
-     * @param Array $data
+     * @param array $data
      */
     protected function setDocumentData($document, $locale, $format, $data)
     {

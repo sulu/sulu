@@ -15,17 +15,14 @@ use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\Export\Export;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Templating\EngineInterface;
-use Sulu\Component\Export\Manager\ExportManagerInterface;
 
 /**
  * Export Content by given locale to xliff file.

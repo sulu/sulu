@@ -14,7 +14,8 @@ namespace Sulu\Component\Snippet\Export;
 /**
  * Interface for Snippet export.
  */
-interface SnippetExportInterface {
+interface SnippetExportInterface
+{
     /**
      * Export all data from snippet by given locale.
      *

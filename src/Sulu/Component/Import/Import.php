@@ -20,8 +20,6 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 /**
  * Base class for document-language import.
- *
- * @package Sulu\Component\Import
  */
 class Import
 {
