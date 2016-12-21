@@ -42,7 +42,7 @@ define([], function() {
             // register position update callback
             if (options.positionUpdateCallback) {
                 google.maps.event.addListener(this.marker, 'position_changed', function () {
-                        options.positionUpdateCallback(this.marker.position.B, this.marker.position.k);
+                        options.positionUpdateCallback(this.marker.position.lng(), this.marker.position.lat());
                 }.bind(this));
             }
 
