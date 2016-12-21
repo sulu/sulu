@@ -49,7 +49,7 @@ define([
             var ckeditorConfig = Config.get('sulu_content.texteditor_toolbar');
 
             sandbox.sulu.buttons.push(ContentButtons.getButtons());
-            
+
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
             Config.set('sulusearch.page.options', {

@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +16,7 @@ require.config({
     }
 });
 
-define(['css!suluautomationcss/main'], function() {
+define(['config', 'suluautomation/extensions/sulu-buttons', 'css!suluautomationcss/main'], function(config, buttons) {
     return {
 
         name: "SuluAutomationBundle",
@@ -25,7 +25,11 @@ define(['css!suluautomationcss/main'], function() {
 
             'use strict';
 
+            config.set('sulu_automation.enabled', true);
+
             app.components.addSource('suluautomation', '/bundles/suluautomation/js/components');
+
+            app.sandbox.sulu.buttons.dropdownItems.push(buttons.getDropdownItems());
         }
     };
 });

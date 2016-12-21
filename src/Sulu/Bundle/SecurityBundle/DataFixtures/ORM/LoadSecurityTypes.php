@@ -15,10 +15,16 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class LoadSecurityTypes extends ContainerAware implements FixtureInterface, OrderedFixtureInterface
+/**
+ * Load security-types from xml to database.
+ */
+class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * {@inheritdoc}
      */

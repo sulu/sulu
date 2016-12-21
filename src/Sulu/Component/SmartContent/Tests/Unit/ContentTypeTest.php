@@ -334,7 +334,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
         $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->with($this->equalTo('p'))
             ->willReturn(1);
 
         $viewData = $this->smartContent->getViewData($property);
@@ -386,7 +386,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->with($this->equalTo('p'))
             ->willReturn(1);
 
         $property->expects($this->exactly(1))->method('getValue')
@@ -493,7 +493,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->with($this->equalTo('p'))
             ->willReturn($page);
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
@@ -587,7 +587,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->request->expects($this->at(0))->method('get')
-            ->with($this->equalTo('p'), $this->equalTo(1), $this->equalTo(false))
+            ->with($this->equalTo('p'))
             ->willReturn($page);
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];

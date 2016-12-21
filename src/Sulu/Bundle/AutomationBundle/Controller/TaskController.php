@@ -137,6 +137,13 @@ class TaskController extends RestController implements ClassResourceInterface, S
             $listBuilder->where($fieldDescriptors['locale'], $locale);
         }
 
+        if ($handlerClasses = $request->get('handler-class')) {
+            $handlerClassList = explode(',', $handlerClasses);
+            if (0 < count($handlerClassList)) {
+                $listBuilder->in($fieldDescriptors['handlerClass'], $handlerClassList);
+            }
+        }
+
         if (null !== ($schedule = $request->get('schedule'))
             && in_array($schedule, array_keys(self::$scheduleComparators))
         ) {

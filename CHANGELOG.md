@@ -3,7 +3,9 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
+    * ENHANCEMENT #3097 [All]                 Updated dependencies
     * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider
+    * BUGFIX      #3092 [ContentBundle]       Fixed api if structure-type was removed or is not valid
     * ENHANCEMENT #3084 [GeneratorBundle]     Removed generator-bundle
     * ENHANCEMENT #3080 [All]                 Removed getRequest calls
     * ENHANCENEMT #3070 [All]                 Removed guzzle3 dependency

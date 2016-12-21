@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Compat;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -53,7 +54,13 @@ class StructureManager implements StructureManagerInterface
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        return $this->wrapStructure($type, $this->structureFactory->getStructureMetadata($type, $key));
+        try {
+            $metadata = $this->structureFactory->getStructureMetadata($type, $key);
+        } catch (StructureTypeNotFoundException $exception) {
+            return;
+        }
+
+        return $this->wrapStructure($type, $metadata);
     }
 
     /**

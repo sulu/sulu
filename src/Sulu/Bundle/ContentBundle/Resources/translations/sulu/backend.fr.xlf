@@ -807,6 +807,22 @@
                  <source>sulu_content.task_handler.unpublish</source>
                  <target>Dépublier</target>
              </trans-unit>
+            <trans-unit id="75" resname="sulu_content.broken-template.title">
+                 <source>"sulu_content.broken-template.title</source>
+                 <target>De pagina-template is beschadigd</target>
+             </trans-unit>
+            <trans-unit id="76" resname="sulu_content.broken-template.message">
+                 <source>"sulu_content.broken-template.message</source>
+                 <target>Neem contact op met de systeembeheerder.</target>
+             </trans-unit>
+            <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
+                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <target>Templatenaam</target>
+             </trans-unit>
+            <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
+                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <target>UUID</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

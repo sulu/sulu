@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\AutomationBundle\TaskHandler\AutomationTaskHandlerInterface;
 use Sulu\Bundle\AutomationBundle\Tasks\Model\TaskInterface;
 use Sulu\Bundle\AutomationBundle\Tasks\Scheduler\TaskScheduler;
-use Sulu\Bundle\AutomationBundle\Tests\Handler\TestHandler;
+use Sulu\Bundle\AutomationBundle\Tests\Handler\FirstHandler;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Task\Builder\TaskBuilderInterface;
 use Task\Execution\TaskExecutionInterface;
@@ -121,8 +121,8 @@ class TaskSchedulerTest extends \PHPUnit_Framework_TestCase
     {
         $handler = $this->prophesize(AutomationTaskHandlerInterface::class);
 
-        $task->getHandlerClass()->willReturn(TestHandler::class);
-        $this->taskHandlerFactory->create(TestHandler::class)->willReturn($handler->reveal());
+        $task->getHandlerClass()->willReturn(FirstHandler::class);
+        $this->taskHandlerFactory->create(FirstHandler::class)->willReturn($handler->reveal());
 
         $task->getEntityClass()->willReturn($entityClass);
         $task->getEntityId()->willReturn($entityId);
@@ -137,7 +137,7 @@ class TaskSchedulerTest extends \PHPUnit_Framework_TestCase
         $date = new \DateTime($schedule);
 
         $taskBuilder = $this->prophesize(TaskBuilderInterface::class);
-        $this->taskScheduler->createTask(TestHandler::class, Argument::any())->willReturn($taskBuilder->reveal());
+        $this->taskScheduler->createTask(FirstHandler::class, Argument::any())->willReturn($taskBuilder->reveal());
 
         $task->getSchedule()->willReturn($date);
         $taskBuilder->executeAt($date)->shouldBeCalled()->willReturn($taskBuilder->reveal());

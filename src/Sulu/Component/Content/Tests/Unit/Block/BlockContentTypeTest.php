@@ -11,12 +11,15 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
+use Jackalope\Node;
 use PHPCR\NodeInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\BlockContentType;
@@ -59,15 +62,8 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->contentTypeManager = $this->getMock(
-            'Sulu\Component\Content\ContentTypeManager',
-            ['get'],
-            [],
-            '',
-            false
-        );
-
-        $this->blockContentType = new BlockContentType($this->contentTypeManager, 'not in use', 'i18n:');
+        $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
+        $this->blockContentType = new BlockContentType($this->contentTypeManager->reveal(), 'not in use', 'i18n:');
 
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
@@ -76,10 +72,10 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             ['block', $this->blockContentType],
         ];
 
-        $this->contentTypeManager
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap($this->contentTypeValueMap));
+        $this->contentTypeManager->get('text_line')->willReturn(new TextLine('not in use'));
+        $this->contentTypeManager->get('text_area')->willReturn(new TextArea('not in use'));
+        $this->contentTypeManager->get('internal_link')->willReturn(new SingleInternalLink('not in use'));
+        $this->contentTypeManager->get('block')->willReturn($this->blockContentType);
     }
 
     protected function prepareSingleBlockProperty()
@@ -152,7 +148,6 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareSingleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['getPropertyValue', 'hasProperty'], [], '', false);
         $data = [
             [
                 'type' => 'type1',
@@ -169,26 +164,24 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         ];
 
         $valueMap = [
-            ['i18n:de-block1-length', null, 1],
-            ['i18n:de-block1-type#0', null, $data[0]['type']],
-            ['i18n:de-block1-title#0', null, $data[0]['title']],
-            ['i18n:de-block1-article#0', null, $data[0]['article']],
-            ['i18n:de-block1-sub-block#0-length', null, 1],
-            ['i18n:de-block1-sub-block#0-type#0', null, $data[0]['sub-block'][0]['type']],
-            ['i18n:de-block1-sub-block#0-title#0', null, $data[0]['sub-block'][0]['title']],
-            ['i18n:de-block1-sub-block#0-article#0', null, $data[0]['sub-block'][0]['article']],
+            'i18n:de-block1-length' => 1,
+            'i18n:de-block1-type#0' => $data[0]['type'],
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
         ];
-        $this->node
-            ->expects($this->any())
-            ->method('getPropertyValue')
-            ->will($this->returnValueMap($valueMap));
-        $this->node
-            ->expects($this->any())
-            ->method('hasProperty')
-            ->will($this->returnValue(true));
+
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
 
         $this->blockContentType->read(
-            $this->node,
+            $this->node->reveal(),
             new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
             'default',
             'de',
@@ -203,19 +196,14 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareSingleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['setProperty'], [], '', false);
         $result = [];
-        $this->node
-            ->expects($this->any())
-            ->method('setProperty')
-            ->will(
-                $this->returnCallback(
-                    function () use (&$result) {
-                        $args = func_get_args();
-                        $result[$args[0]] = $args[1];
-                    }
-                )
-            );
+        $this->node = $this->prophesize(Node::class);
+        $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
+        $this->node->setProperty(Argument::cetera())->will(
+            function ($arguments) use (&$result) {
+                $result[$arguments[0]] = $arguments[1];
+            }
+        );
 
         $data = [
             [
@@ -234,7 +222,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->blockProperty->setValue($data);
 
         $this->blockContentType->write(
-            $this->node,
+            $this->node->reveal(),
             new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
             1,
             'default',
@@ -265,7 +253,6 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['getPropertyValue', 'hasProperty'], [], '', false);
         $data = [
             [
                 'type' => 'type1',
@@ -297,34 +284,31 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         ];
 
         $valueMap = [
-            ['i18n:de-block1-length', null, 2],
-            ['i18n:de-block1-type#0', null, 'type1'],
-            ['i18n:de-block1-title#0', null, $data[0]['title']],
-            ['i18n:de-block1-article#0', null, $data[0]['article']],
-            ['i18n:de-block1-sub-block#0-length', null, 1],
-            ['i18n:de-block1-sub-block#0-type#0', null, 'subType1'],
-            ['i18n:de-block1-sub-block#0-title#0', null, $data[0]['sub-block'][0]['title']],
-            ['i18n:de-block1-sub-block#0-article#0', null, $data[0]['sub-block'][0]['article']],
-            ['i18n:de-block1-type#1', null, 'type1'],
-            ['i18n:de-block1-title#1', null, $data[1]['title']],
-            ['i18n:de-block1-article#1', null, $data[1]['article']],
-            ['i18n:de-block1-sub-block#1-length', null, 1],
-            ['i18n:de-block1-sub-block#1-type#0', null, 'subType1'],
-            ['i18n:de-block1-sub-block#1-title#0', null, $data[1]['sub-block'][0]['title']],
-            ['i18n:de-block1-sub-block#1-article#0', null, $data[1]['sub-block'][0]['article']],
+            'i18n:de-block1-length' => 2,
+            'i18n:de-block1-type#0' => 'type1',
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => 'subType1',
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-type#1' => 'type1',
+            'i18n:de-block1-title#1' => $data[1]['title'],
+            'i18n:de-block1-article#1' => $data[1]['article'],
+            'i18n:de-block1-sub-block#1-length' => 1,
+            'i18n:de-block1-sub-block#1-type#0' => 'subType1',
+            'i18n:de-block1-sub-block#1-title#0' => $data[1]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#1-article#0' => $data[1]['sub-block'][0]['article'],
         ];
 
-        $this->node
-            ->expects($this->any())
-            ->method('getPropertyValue')
-            ->will($this->returnValueMap($valueMap));
-        $this->node
-            ->expects($this->any())
-            ->method('hasProperty')
-            ->will($this->returnValue(true));
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
 
         $this->blockContentType->read(
-            $this->node,
+            $this->node->reveal(),
             new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
             'default',
             'de',
@@ -339,19 +323,14 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['setProperty'], [], '', false);
         $result = [];
-        $this->node
-            ->expects($this->any())
-            ->method('setProperty')
-            ->will(
-                $this->returnCallback(
-                    function () use (&$result) {
-                        $args = func_get_args();
-                        $result[$args[0]] = $args[1];
-                    }
-                )
-            );
+        $this->node = $this->prophesize(Node::class);
+        $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
+        $this->node->setProperty(Argument::cetera())->will(
+            function ($arguments) use (&$result) {
+                $result[$arguments[0]] = $arguments[1];
+            }
+        );
 
         $data = [
             [
@@ -385,7 +364,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->blockProperty->setValue($data);
 
         $this->blockContentType->write(
-            $this->node,
+            $this->node->reveal(),
             new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
             1,
             'default',
@@ -423,7 +402,6 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['getPropertyValue', 'hasProperty'], [], '', false);
         $data = [
             [
                 'type' => 'type1',
@@ -447,29 +425,26 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         ];
 
         $valueMap = [
-            ['i18n:de-block1-length', null, 2],
-            ['i18n:de-block1-type#0', null, $data[0]['type']],
-            ['i18n:de-block1-title#0', null, $data[0]['title']],
-            ['i18n:de-block1-article#0', null, $data[0]['article']],
-            ['i18n:de-block1-sub-block#0-length', null, 1],
-            ['i18n:de-block1-sub-block#0-type#0', null, $data[0]['sub-block'][0]['type']],
-            ['i18n:de-block1-sub-block#0-title#0', null, $data[0]['sub-block'][0]['title']],
-            ['i18n:de-block1-sub-block#0-article#0', null, $data[0]['sub-block'][0]['article']],
-            ['i18n:de-block1-type#1', null, $data[1]['type']],
-            ['i18n:de-block1-name#1', null, $data[1]['name']],
+            'i18n:de-block1-length' => 2,
+            'i18n:de-block1-type#0' => $data[0]['type'],
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-type#1' => $data[1]['type'],
+            'i18n:de-block1-name#1' => $data[1]['name'],
         ];
 
-        $this->node
-            ->expects($this->any())
-            ->method('getPropertyValue')
-            ->will($this->returnValueMap($valueMap));
-        $this->node
-            ->expects($this->any())
-            ->method('hasProperty')
-            ->will($this->returnValue(true));
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
 
         $this->blockContentType->read(
-            $this->node,
+            $this->node->reveal(),
             new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
             'default',
             'de',
@@ -484,19 +459,14 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareMultipleBlockProperty();
 
-        $this->node = $this->getMock('\Jackalope\Node', ['setProperty'], [], '', false);
         $result = [];
-        $this->node
-            ->expects($this->any())
-            ->method('setProperty')
-            ->will(
-                $this->returnCallback(
-                    function () use (&$result) {
-                        $args = func_get_args();
-                        $result[$args[0]] = $args[1];
-                    }
-                )
-            );
+        $this->node = $this->prophesize(Node::class);
+        $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
+        $this->node->setProperty(Argument::cetera())->will(
+            function ($arguments) use (&$result) {
+                $result[$arguments[0]] = $arguments[1];
+            }
+        );
 
         $data = [
             [
@@ -522,7 +492,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->blockProperty->setValue($data);
 
         $this->blockContentType->write(
-            $this->node,
+            $this->node->reveal(),
             new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
             1,
             'default',

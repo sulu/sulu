@@ -46,6 +46,18 @@
                 <source>sulu_automation.task-history</source>
                 <target>Vergangene Aufgaben</target>
             </trans-unit>
+            <trans-unit id="12">
+                <source>sulu_automation.info.scheduled</source>
+                <target>Geplant</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>sulu_automation.info.set-by</source>
+                <target>Erstellt durch</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>sulu_automation.info.goto</source>
+                <target><![CDATA[Wechsle zu <b>Automatisierung</b><br/> um die Einstellungen zu ändern]]></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
