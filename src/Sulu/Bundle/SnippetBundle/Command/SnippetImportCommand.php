@@ -81,7 +81,7 @@ class SnippetImportCommand extends ContainerAwareCommand
             $output->writeln(sprintf('<info>Imported %s/%s</info>', $import->successes, $import->count));
         }
 
-        $this->printExceptions($output, $import);
+        $this->printExceptions($import, $output);
 
         return $import->fails;
     }
@@ -89,10 +89,10 @@ class SnippetImportCommand extends ContainerAwareCommand
     /**
      * Print the completion message after import is done.
      *
-     * @param OutputInterface $output
      * @param stdClass $import
+     * @param OutputInterface $output
      */
-    protected function printExceptions($output, $import)
+    protected function printExceptions($import, $output = null)
     {
         /** @var $logger LoggerInterface */
         $logger = $this->getContainer()->get('logger');

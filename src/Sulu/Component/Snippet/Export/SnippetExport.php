@@ -68,8 +68,7 @@ class SnippetExport extends Export implements SnippetExportInterface
         DocumentInspector $documentInspector,
         ExportManagerInterface $exportManager,
         $formatFilePaths
-    )
-    {
+    ) {
         $this->templating = $templating;
         $this->snippetManager = $snippetManager;
         $this->documentManager = $documentManager;
@@ -85,8 +84,7 @@ class SnippetExport extends Export implements SnippetExportInterface
         $locale,
         $output = null,
         $format = '1.2.xliff'
-    )
-    {
+    ) {
         if (!$locale) {
             throw new \Exception(sprintf('Invalid parameters for export "%s"', $locale));
         }
@@ -105,6 +103,11 @@ class SnippetExport extends Export implements SnippetExportInterface
         );
     }
 
+    /**
+     * Returns all data that we need to create a xliff-File.
+     *
+     * @return array
+     */
     protected function getExportData()
     {
         $snippets = $this->getSnippets();

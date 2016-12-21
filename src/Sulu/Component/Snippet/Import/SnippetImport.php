@@ -25,6 +25,11 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
+/**
+ * Import Snippets by given xliff-file.
+ *
+ * @package Sulu\Component\Snippet\Import
+ */
 class SnippetImport extends Import
 {
     /**

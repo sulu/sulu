@@ -35,7 +35,6 @@ use Sulu\Component\Import\Format\FormatImportInterface;
 
 /**
  * Import Content by given xliff file from Export.
- * TODO: extend from Sulu/Components/Import/Import
  */
 class WebspaceImport extends Import implements WebspaceImportInterface
 {

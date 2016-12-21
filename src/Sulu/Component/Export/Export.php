@@ -13,6 +13,11 @@ namespace Sulu\Component\Export;
 
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 
+/**
+ * Base export for sulu documents.
+ *
+ * @package Sulu\Component\Export
+ */
 class Export
 {
     /**

@@ -18,7 +18,13 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Import\Manager\ImportManager;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 
-class Import {
+/**
+ * Base class for document-language import.
+ *
+ * @package Sulu\Component\Import
+ */
+class Import
+{
     /**
      * @var WebspaceFormatImportInterface[]
      */
