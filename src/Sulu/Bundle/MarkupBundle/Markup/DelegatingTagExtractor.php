@@ -49,7 +49,7 @@ class DelegatingTagExtractor implements TagExtractorInterface
     {
         $result = [];
         foreach ($this->pool as $tagExtractor) {
-            $result = array_merge_recursive($result, $tagExtractor->extract($html));
+            $result = array_merge($result, $tagExtractor->extract($html));
         }
 
         return $result;

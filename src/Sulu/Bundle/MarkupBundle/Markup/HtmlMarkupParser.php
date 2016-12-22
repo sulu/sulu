@@ -47,15 +47,12 @@ class HtmlMarkupParser implements MarkupParserInterface
             return $content;
         }
 
-        $sortedTags = $this->tagExtractor->extract($content);
-        foreach ($sortedTags as $namespace => $tagNames) {
-            foreach ($tagNames as $name => $tags) {
-                $tags = $this->tagRegistry->getTag($name, 'html', $namespace)->parseAll($tags, $locale);
+        $tagMatchGroups = $this->tagExtractor->extract($content);
+        foreach ($tagMatchGroups as $tagMatchGroup) {
+            $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), 'html', $tagMatchGroup->getNamespace())
+                ->parseAll($tagMatchGroup->getTags(), $locale);
 
-                foreach ($tags as $tag => $newTag) {
-                    $content = str_replace($tag, $newTag, $content);
-                }
-            }
+            $content = str_replace(array_keys($tags), array_values($tags), $content);
         }
 
         return $this->parse($content, $locale);
@@ -71,14 +68,12 @@ class HtmlMarkupParser implements MarkupParserInterface
         }
 
         $result = [];
-        $sortedTags = $this->tagExtractor->extract($content);
-        foreach ($sortedTags as $namespace => $tagNames) {
-            foreach ($tagNames as $name => $tags) {
-                $result = array_merge(
-                    $result,
-                    $this->tagRegistry->getTag($name, 'html', $namespace)->validateAll($tags, $locale)
-                );
-            }
+        $tagMatchGroups = $this->tagExtractor->extract($content);
+        foreach ($tagMatchGroups as $tagMatchGroup) {
+            $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), 'html', $tagMatchGroup->getNamespace())
+                ->validateAll($tagMatchGroup->getTags(), $locale);
+
+            $result = array_merge($result, $tags);
         }
 
         return $result;

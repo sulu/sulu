@@ -38,7 +38,7 @@ class TagRegistry implements TagRegistryInterface
             || !array_key_exists($namespace, $this->tags[$type])
             || !array_key_exists($name, $this->tags[$type][$namespace])
         ) {
-            throw new TagNotFoundException($name, $type);
+            throw new TagNotFoundException($namespace, $name, $type);
         }
 
         return $this->tags[$type][$namespace][$name];

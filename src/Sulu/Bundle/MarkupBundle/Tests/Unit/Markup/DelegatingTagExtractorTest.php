@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\TagExtractorInterface;
+use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 
 class DelegatingTagExtractorTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,14 +53,18 @@ class DelegatingTagExtractorTest extends \PHPUnit_Framework_TestCase
 
         $extractors[0]->extract($this->html)->willReturn(
             [
-                'link' => ['<sulu:link/>' => ['content' => '']],
-                'media' => ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]],
+                new TagMatchGroup('sulu', 'link', ['<sulu:link/>' => ['content' => '']]),
+                new TagMatchGroup('sulu', 'media', ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]]),
             ]
         )->shouldBeCalledTimes(1);
         $extractors[1]->extract($this->html)->willReturn(
             [
-                'link' => ['<test:link href="123-123-123/>' => ['content' => '', 'href' => '123-123-123']],
-                'test' => ['<test:test/>' => ['content' => '']],
+                new TagMatchGroup(
+                    'test',
+                    'link',
+                    ['<test:link href="123-123-123/>' => ['content' => '', 'href' => '123-123-123']]
+                ),
+                new TagMatchGroup('test', 'test', ['<test:test/>' => ['content' => '']]),
             ]
         )->shouldBeCalledTimes(1);
 
@@ -74,12 +79,14 @@ class DelegatingTagExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'link' => [
-                    '<sulu:link/>' => ['content' => ''],
-                    '<test:link href="123-123-123/>' => ['content' => '', 'href' => '123-123-123'],
-                ],
-                'media' => ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]],
-                'test' => ['<test:test/>' => ['content' => '']],
+                new TagMatchGroup('sulu', 'link', ['<sulu:link/>' => ['content' => '']]),
+                new TagMatchGroup('sulu', 'media', ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]]),
+                new TagMatchGroup(
+                    'test',
+                    'link',
+                    ['<test:link href="123-123-123/>' => ['content' => '', 'href' => '123-123-123']]
+                ),
+                new TagMatchGroup('test', 'test', ['<test:test/>' => ['content' => '']]),
             ],
             $extractor->extract($this->html)
         );

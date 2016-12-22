@@ -50,20 +50,21 @@ class HtmlTagExtractor implements TagExtractorInterface
             return [];
         }
 
+        /** @var TagMatchGroup[] $sortedTags */
         $sortedTags = [];
         for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
             $tag = $matches['tag'][$i];
             $name = $matches['name'][$i];
             $content = $matches['content'][$i];
             if (!array_key_exists($name, $sortedTags)) {
-                $sortedTags[$name] = [];
+                $sortedTags[$name] = new TagMatchGroup($this->namespace, $name);
             }
 
             $attributes = $this->getAttributes($matches['attributes'][$i]);
-            $sortedTags[$name][$tag] = array_filter(array_merge($attributes, ['content' => $content]));
+            $sortedTags[$name]->addTag($tag, array_filter(array_merge($attributes, ['content' => $content])));
         }
 
-        return [$this->namespace => $sortedTags];
+        return array_values($sortedTags);
     }
 
     /**

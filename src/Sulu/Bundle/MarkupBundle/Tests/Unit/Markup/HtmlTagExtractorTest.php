@@ -47,7 +47,8 @@ class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
         $result = $extractor->extract($html);
 
         $this->assertCount(1, $result);
-        $this->assertEquals($result['sulu'][$tagName][$tag], $attributes);
+        $this->assertEquals($result[0]->getTagName(), $tagName);
+        $this->assertEquals($result[0]->getTags()[$tag], $attributes);
     }
 
     public function provideMultipleTags()
@@ -81,10 +82,9 @@ class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
         $extractor = new HtmlTagExtractor('sulu');
         $result = $extractor->extract($html);
 
-        $this->assertCount(count($counts), $result['sulu']);
-
-        foreach ($counts as $key => $value) {
-            $this->assertCount($value, $result['sulu'][$key]);
+        $this->assertCount(count($counts), $result);
+        foreach ($result as $tagMatchGroup) {
+            $this->assertCount($counts[$tagMatchGroup->getTagName()], $tagMatchGroup->getTags());
         }
     }
 

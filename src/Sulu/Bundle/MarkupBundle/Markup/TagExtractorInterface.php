@@ -30,7 +30,7 @@ interface TagExtractorInterface
      *
      * @param string $html
      *
-     * @return array
+     * @return TagMatchGroup[]
      */
     public function extract($html);
 }
