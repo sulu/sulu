@@ -13,8 +13,10 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\AuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
-use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -22,35 +24,99 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class AuthorSubscriber implements EventSubscriberInterface
 {
+    const AUTHORED_PROPERTY_NAME = 'authored';
+    const AUTHORS_PROPERTY_NAME = 'authors';
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
+     * @param PropertyEncoder $propertyEncoder
+     */
+    public function __construct(PropertyEncoder $propertyEncoder)
+    {
+        $this->propertyEncoder = $propertyEncoder;
+    }
+
     /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
-            Events::METADATA_LOAD => 'handleMetadataLoad',
+            Events::HYDRATE => 'setAuthorOnDocument',
+            Events::PERSIST => 'setAuthorOnNode',
+            Events::PUBLISH => 'setAuthorOnNode',
         ];
     }
 
     /**
-     * Adds the authors and authored to the metadata for persisting.
+     * Set authors/authored to document on-hydrate.
      *
-     * @param MetadataLoadEvent $event
+     * @param HydrateEvent $event
      */
-    public function handleMetadataLoad(MetadataLoadEvent $event)
+    public function setAuthorOnDocument(HydrateEvent $event)
     {
-        $metadata = $event->getMetadata();
-
-        if (!$metadata->getReflectionClass()->isSubclassOf(AuthorBehavior::class)) {
+        $document = $event->getDocument();
+        if (!$document instanceof AuthorBehavior) {
             return;
         }
 
         $encoding = 'system';
-        if ($metadata->getReflectionClass()->isSubclassOf(LocalizedAuthorBehavior::class)) {
+        if ($document instanceof LocalizedAuthorBehavior) {
+            if (!$event->getLocale()) {
+                return;
+            }
+
             $encoding = 'system_localized';
         }
 
-        $metadata->addFieldMapping('authors', ['encoding' => $encoding, 'property' => 'authors']);
-        $metadata->addFieldMapping('authored', ['encoding' => $encoding, 'property' => 'authored']);
+        $node = $event->getNode();
+        $document->setAuthored(
+            $node->getPropertyValueWithDefault(
+                $this->propertyEncoder->encode($encoding, self::AUTHORED_PROPERTY_NAME, $event->getLocale()),
+                null
+            )
+        );
+        $document->setAuthors(
+            $node->getPropertyValueWithDefault(
+                $this->propertyEncoder->encode($encoding, self::AUTHORS_PROPERTY_NAME, $event->getLocale()),
+                []
+            )
+        );
+    }
+
+    /**
+     * Set authors/authored to document on-persist.
+     *
+     * @param AbstractMappingEvent $event
+     */
+    public function setAuthorOnNode(AbstractMappingEvent $event)
+    {
+        $document = $event->getDocument();
+        if (!$document instanceof AuthorBehavior) {
+            return;
+        }
+
+        $encoding = 'system';
+        if ($document instanceof LocalizedAuthorBehavior) {
+            if (!$event->getLocale()) {
+                return;
+            }
+
+            $encoding = 'system_localized';
+        }
+
+        $node = $event->getNode();
+        $node->setProperty(
+            $this->propertyEncoder->encode($encoding, self::AUTHORED_PROPERTY_NAME, $event->getLocale()),
+            $document->getAuthored()
+        );
+        $node->setProperty(
+            $this->propertyEncoder->encode($encoding, self::AUTHORS_PROPERTY_NAME, $event->getLocale()),
+            $document->getAuthors()
+        );
     }
 }
