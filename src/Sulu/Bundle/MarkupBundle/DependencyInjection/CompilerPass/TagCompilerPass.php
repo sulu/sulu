@@ -22,6 +22,7 @@ class TagCompilerPass implements CompilerPassInterface
 {
     const SERVICE_ID = 'sulu_markup.tag.registry';
     const TAG_NAME = 'sulu_markup.tag';
+    const NAMESPACE_ATTRIBUTE = 'namespace';
     const TAG_ATTRIBUTE = 'tag';
     const TYPE_ATTRIBUTE = 'type';
 
@@ -38,13 +39,15 @@ class TagCompilerPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {
             foreach ($tags as $attributes) {
                 $type = $attributes[self::TYPE_ATTRIBUTE];
-                $alias = $attributes[self::TAG_ATTRIBUTE];
+                $namespace = array_key_exists(self::NAMESPACE_ATTRIBUTE, $attributes)
+                    ? $attributes[self::NAMESPACE_ATTRIBUTE] : 'sulu';
+                $tag = $attributes[self::TAG_ATTRIBUTE];
 
                 if (!array_key_exists($type, $references)) {
                     $references[$type] = [];
                 }
 
-                $references[$type][$alias] = new Reference($id);
+                $references[$type][$namespace][$tag] = new Reference($id);
             }
         }
 
