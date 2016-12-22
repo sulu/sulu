@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
     * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
     * ENHANCEMENT #3097 [All]                 Updated dependencies
     * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider
