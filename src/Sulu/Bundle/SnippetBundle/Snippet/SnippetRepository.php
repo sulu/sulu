@@ -119,7 +119,7 @@ class SnippetRepository
      *
      * @throws \InvalidArgumentException
      *
-     * @return SnippetBridge[]
+     * @return SnippetDocument[]
      */
     public function getSnippets(
         $locale,
