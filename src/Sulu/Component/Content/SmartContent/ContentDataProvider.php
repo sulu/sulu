@@ -122,6 +122,7 @@ class ContentDataProvider implements DataProviderInterface
                     ['column' => 'published', 'title' => 'smart-content.published'],
                     ['column' => 'created', 'title' => 'smart-content.created'],
                     ['column' => 'changed', 'title' => 'smart-content.changed'],
+                    ['column' => 'authored', 'title' => 'smart-content.authored'],
                 ]
             )
             ->setDeepLink('content/contents/{webspace}/{locale}/edit:{id}/details')

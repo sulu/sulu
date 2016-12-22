@@ -27,6 +27,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\AuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -745,6 +746,11 @@ class ContentMapper implements ContentMapperInterface
             'template' => $structureType,
             'parent' => $this->inspector->getParent($document)->getUuid(),
         ];
+
+        if ($document instanceof AuthorBehavior) {
+            $documentData['authors'] = $document->getAuthors();
+            $documentData['authored'] = $document->getAuthored();
+        }
 
         if ($document instanceof OrderBehavior) {
             $documentData['order'] = $document->getSuluOrder();
