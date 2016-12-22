@@ -27,6 +27,15 @@ CHANGELOG for Sulu
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
 
+* 1.4.3 (2016-12-21)
+    * HOTFIX      #3108 [ContentBundle]         Fixed support for multiple properties with minOccurs of 1
+    * HOTFIX      #3099 [ContentBundle]         Display draft internal link in test mode
+    * HOTFIX      #3091 [SecurityBundle]        Increased length of context field
+    * HOTFIX      #3090 [MediaBundle]           Fixed extension when purging media
+    * HOTFIX      #3087 [AdminBundle]           Fixed search with umlauts in text editor
+    * ENHANCEMENT #3085 [DocumentManager]       Fixed document-manager constraint
+    * HOTFIX      #3065 [ContentBundle]         Fixed double '&' in column-navigation url
+
 * 1.4.2 (2016-11-24)
     * HOTFIX      #3032 [ContentBundle]         Fixed publishing for shadow page targeting drafts
     * BUGFIX      #3035 [DocumentManagerBundle] Fixed bug for save if route already exists empty

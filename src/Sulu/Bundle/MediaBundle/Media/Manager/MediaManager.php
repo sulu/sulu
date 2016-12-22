@@ -395,6 +395,7 @@ class MediaManager implements MediaManagerInterface
             $this->formatManager->purge(
                 $mediaEntity->getId(),
                 $currentFileVersion->getName(),
+                $currentFileVersion->getMimeType(),
                 $currentFileVersion->getStorageOptions()
             );
         } else {
@@ -414,6 +415,7 @@ class MediaManager implements MediaManagerInterface
                 $this->formatManager->purge(
                     $mediaEntity->getId(),
                     $currentFileVersion->getName(),
+                    $currentFileVersion->getMimeType(),
                     $currentFileVersion->getStorageOptions()
                 );
             }
@@ -683,6 +685,7 @@ class MediaManager implements MediaManagerInterface
                 $this->formatManager->purge(
                     $mediaEntity->getId(),
                     $fileVersion->getName(),
+                    $fileVersion->getMimeType(),
                     $fileVersion->getStorageOptions()
                 );
 

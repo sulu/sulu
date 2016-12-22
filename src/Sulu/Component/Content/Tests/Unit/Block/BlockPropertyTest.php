@@ -40,4 +40,27 @@ class BlockPropertyTest extends \PHPUnit_Framework_TestCase
 
         $blockProperty->setValue($data);
     }
+
+    public function provideIsMultiple()
+    {
+        return [
+            [null, null, true],
+            [null, 5, true],
+            [null, 1, true],
+            [3, null, true],
+            [3, 5, true],
+            [3, 3, true],
+            [1, 1, false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideIsMultiple
+     */
+    public function testGetIsMultiple()
+    {
+        $blockProperty = new BlockProperty('block', [], 'test', false, false, null, null);
+
+        $this->assertEquals(true, $blockProperty->getIsMultiple());
+    }
 }

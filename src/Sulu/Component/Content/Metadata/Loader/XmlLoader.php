@@ -134,8 +134,8 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = $data['minOccurs'] !== null ? intval($data['minOccurs']) : 1;
-        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : 999;
+        $property->minOccurs = $data['minOccurs'] !== null ? intval($data['minOccurs']) : null;
+        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : null;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }

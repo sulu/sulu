@@ -78,11 +78,12 @@ interface FormatManagerInterface
      *
      * @param int $idMedia
      * @param string $fileName
-     * @param array $options
+     * @param string $mimeType
+     * @param string $options
      *
      * @return bool
      */
-    public function purge($idMedia, $fileName, $options);
+    public function purge($idMedia, $fileName, $mimeType, $options);
 
     /**
      * Clears the format cache.

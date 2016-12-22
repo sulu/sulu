@@ -35,7 +35,7 @@ interface FormatCacheInterface
      *
      * @param int $id
      * @param string $fileName
-     * @param array $options
+     * @param string $options
      *
      * @return bool
      */
