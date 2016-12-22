@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
     * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
     * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
     * ENHANCEMENT #3097 [All]                 Updated dependencies

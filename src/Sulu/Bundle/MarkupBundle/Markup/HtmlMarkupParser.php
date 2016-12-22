@@ -48,11 +48,13 @@ class HtmlMarkupParser implements MarkupParserInterface
         }
 
         $sortedTags = $this->tagExtractor->extract($content);
-        foreach ($sortedTags as $name => $tags) {
-            $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags, $locale);
+        foreach ($sortedTags as $namespace => $tagNames) {
+            foreach ($tagNames as $name => $tags) {
+                $tags = $this->tagRegistry->getTag($name, 'html', $namespace)->parseAll($tags, $locale);
 
-            foreach ($tags as $tag => $newTag) {
-                $content = str_replace($tag, $newTag, $content);
+                foreach ($tags as $tag => $newTag) {
+                    $content = str_replace($tag, $newTag, $content);
+                }
             }
         }
 
@@ -64,17 +66,19 @@ class HtmlMarkupParser implements MarkupParserInterface
      */
     public function validate($content, $locale)
     {
-        $sortedTags = $this->tagExtractor->extract($content);
-        if (0 === count($sortedTags)) {
+        if (0 === $this->tagExtractor->count($content)) {
             return [];
         }
 
         $result = [];
-        foreach ($sortedTags as $name => $tags) {
-            $result = array_merge(
-                $result,
-                $this->tagRegistry->getTag($name, 'html')->validateAll($tags, $locale)
-            );
+        $sortedTags = $this->tagExtractor->extract($content);
+        foreach ($sortedTags as $namespace => $tagNames) {
+            foreach ($tagNames as $name => $tags) {
+                $result = array_merge(
+                    $result,
+                    $this->tagRegistry->getTag($name, 'html', $namespace)->validateAll($tags, $locale)
+                );
+            }
         }
 
         return $result;

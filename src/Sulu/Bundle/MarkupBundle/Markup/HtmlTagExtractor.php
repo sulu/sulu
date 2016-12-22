@@ -63,7 +63,7 @@ class HtmlTagExtractor implements TagExtractorInterface
             $sortedTags[$name][$tag] = array_filter(array_merge($attributes, ['content' => $content]));
         }
 
-        return $sortedTags;
+        return [$this->namespace => $sortedTags];
     }
 
     /**

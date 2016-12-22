@@ -54,8 +54,8 @@ class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
         $this->linkTag = $this->prophesize(TagInterface::class);
         $this->mediaTag = $this->prophesize(TagInterface::class);
         $this->tagRegistry = $this->prophesize(TagRegistryInterface::class);
-        $this->tagRegistry->getTag('link', 'html')->willReturn($this->linkTag->reveal());
-        $this->tagRegistry->getTag('media', 'html')->willReturn($this->mediaTag->reveal());
+        $this->tagRegistry->getTag('link', 'html', 'sulu')->willReturn($this->linkTag->reveal());
+        $this->tagRegistry->getTag('media', 'html', 'sulu')->willReturn($this->mediaTag->reveal());
         $this->tagRegistry->getTag(Argument::any())->willThrow(new TagNotFoundException('test', 'html'));
 
         $this->parser = new HtmlMarkupParser(
