@@ -12,9 +12,16 @@ define(['config', 'jquery'], function(Config, $) {
     'use strict';
 
     var featherEditor;
+    var featherUrl;
 
     if (!!Config.get('sulu-media').adobeCreativeKey) {
-        require(['//feather.aviary.com/imaging/v3/editor.js'], function() {
+        if (location.protocol === 'https:') {
+            featherUrl = 'https://dme0ih8comzn4.cloudfront.net/imaging/v3/editor.js';
+        } else {
+            featherUrl = '//feather.aviary.com/imaging/v3/editor.js';
+        }
+            
+        require([featherUrl], function() {
             featherEditor = new Aviary.Feather({
                 apiKey: Config.get('sulu-media').adobeCreativeKey,
                 theme: 'minimum',
