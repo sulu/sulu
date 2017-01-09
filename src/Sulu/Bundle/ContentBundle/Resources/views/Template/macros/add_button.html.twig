@@ -2,5 +2,7 @@
     <div id="mapper-add-{{ property.name }}" class="addButton" data-mapper-add="{{ property.name }}">
         <span class="control-label">Add {{ property.name }}</span>
     </div>
-    <span class="desc">(<span id="current-counter-{{ property.name }}">{{ property.minOccurs }}</span> out of <span>{{ property.maxOccurs }}</span>)</span>
+    {% if property.maxOccurs is not null %}
+    <span class="desc">(<span id="current-counter-{{ property.name }}">{{ property.minOccurs|default(1) }}</span> out of <span>{{ property.maxOccurs }}</span>)</span>
+    {% endif %}
 </div>

@@ -363,14 +363,17 @@ define([], function() {
             var form = $('#' + this.constants.formId);
             if (long) {
                 this.sandbox.dom.find('.longitude', form).val(long);
+                this.formData.long = long;
             }
 
             if (lat) {
                 this.sandbox.dom.find('.latitude', form).val(lat);
+                this.formData.lat = lat;
             }
 
             if (zoom) {
                 this.sandbox.dom.find('.zoom', form).val(zoom);
+                this.formData.zoom = zoom;
             }
         },
 

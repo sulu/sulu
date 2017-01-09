@@ -21,10 +21,11 @@ interface TagRegistryInterface
      *
      * @param string $name
      * @param string $type
+     * @param string $namespace
      *
      * @return TagInterface
      *
      * @throws TagNotFoundException
      */
-    public function getTag($name, $type);
+    public function getTag($name, $type, $namespace = 'sulu');
 }

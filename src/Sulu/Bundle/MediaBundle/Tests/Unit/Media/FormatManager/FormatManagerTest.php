@@ -270,4 +270,18 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             $formats['50x50']
         );
     }
+
+    public function testPurge()
+    {
+        $this->formatCache->purge(1, 'test.jpg', null)->shouldBeCalled();
+
+        $this->formatManager->purge(1, 'test.jpg', 'image/jpeg', null);
+    }
+
+    public function testPurgeUppercaseExtension()
+    {
+        $this->formatCache->purge(1, 'test.jpg', null)->shouldBeCalled();
+
+        $this->formatManager->purge(1, 'test.JPG', 'image/jpeg', null);
+    }
 }

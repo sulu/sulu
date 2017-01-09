@@ -20,7 +20,7 @@ class TagRegistryTest extends \PHPUnit_Framework_TestCase
     public function testGetTag()
     {
         $tag = $this->prophesize(TagInterface::class)->reveal();
-        $registry = new TagRegistry(['html' => ['test' => $tag]]);
+        $registry = new TagRegistry(['html' => ['sulu' => ['test' => $tag]]]);
 
         $this->assertEquals($tag, $registry->getTag('test', 'html'));
     }
@@ -37,7 +37,8 @@ class TagRegistryTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(TagNotFoundException::class);
 
-        $registry = new TagRegistry(['test' => $this->prophesize(TagInterface::class)->reveal()]);
+        $tag = $this->prophesize(TagInterface::class)->reveal();
+        $registry = new TagRegistry(['html' => ['sulu' => ['test' => $tag]]]);
         $registry->getTag('test-2', 'xml');
     }
 

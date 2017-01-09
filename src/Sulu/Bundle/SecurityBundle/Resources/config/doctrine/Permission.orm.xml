@@ -7,7 +7,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="context" type="string" column="context" length="60"/>
+        <field name="context" type="string" column="context" length="255"/>
         <field name="module" type="string" column="module" nullable="true" length="60"/>
         <field name="permissions" type="smallint" column="permissions"/>
 

@@ -46,6 +46,7 @@ class ContentRepository implements ContentRepositoryInterface
         'creator',
         'changed',
         'changer',
+        'published',
         'shadowOn',
         'shadowBase',
     ];

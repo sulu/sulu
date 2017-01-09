@@ -23,7 +23,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
@@ -216,6 +215,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
+        $fileVersion->getMimeType()->willReturn('image/png');
         $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
 
         $media = $this->prophesize(Media::class);
@@ -226,6 +226,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatManager->purge(
             1,
             'test',
+            'image/png',
             json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
         )->shouldBeCalled();
 
@@ -330,7 +331,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->setFocusPointX(1)->shouldBeCalled();
         $fileVersion->setFocusPointY(2)->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldBeCalled();
-        $this->formatManager->purge(1, 'test', [])->shouldBeCalled();
+        $this->formatManager->purge(1, 'test', 'image/jpeg', [])->shouldBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }

@@ -2,6 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
+    * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
+    * ENHANCEMENT #3110 [WebsiteBundle]       Fixed deprecation of flatten-exception by decorating twig-exception-controller
+    * BUGFIX      #3109 [SnippetBundle]       Added publish snippet after copy locale
     * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
     * ENHANCEMENT #3097 [All]                 Updated dependencies
     * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider
@@ -26,6 +30,15 @@ CHANGELOG for Sulu
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
+
+* 1.4.3 (2016-12-21)
+    * HOTFIX      #3108 [ContentBundle]         Fixed support for multiple properties with minOccurs of 1
+    * HOTFIX      #3099 [ContentBundle]         Display draft internal link in test mode
+    * HOTFIX      #3091 [SecurityBundle]        Increased length of context field
+    * HOTFIX      #3090 [MediaBundle]           Fixed extension when purging media
+    * HOTFIX      #3087 [AdminBundle]           Fixed search with umlauts in text editor
+    * ENHANCEMENT #3085 [DocumentManager]       Fixed document-manager constraint
+    * HOTFIX      #3065 [ContentBundle]         Fixed double '&' in column-navigation url
 
 * 1.4.2 (2016-11-24)
     * HOTFIX      #3032 [ContentBundle]         Fixed publishing for shadow page targeting drafts

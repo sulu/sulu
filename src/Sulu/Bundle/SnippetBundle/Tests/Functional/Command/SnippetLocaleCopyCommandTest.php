@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Command;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -62,6 +63,7 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
                 'auto_create' => true,
             ]
         );
+        $this->documentManager->publish($snippet, 'en');
         $this->documentManager->flush();
 
         $this->tester->execute(
@@ -77,6 +79,18 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
 
         $resultEN = $this->documentManager->find($snippet->getUuid(), 'en');
         $resultDE = $this->documentManager->find($snippet->getUuid(), 'de');
+
+        $this->assertEquals('Hallo', $resultDE->getTitle());
+        $this->assertEquals('Hallo', $resultEN->getTitle());
+
+        $this->assertEquals('This is a perfect description.', $resultDE->getStructure()->getProperty('description')->getValue());
+        $this->assertEquals('This is a perfect description.', $resultEN->getStructure()->getProperty('description')->getValue());
+
+        $container = $this->getKernel(['context' => SuluKernel::CONTEXT_WEBSITE])->getContainer();
+        $documentManager = $container->get('sulu_document_manager.document_manager');
+
+        $resultEN = $documentManager->find($snippet->getUuid(), 'en');
+        $resultDE = $documentManager->find($snippet->getUuid(), 'de');
 
         $this->assertEquals('Hallo', $resultDE->getTitle());
         $this->assertEquals('Hallo', $resultEN->getTitle());
