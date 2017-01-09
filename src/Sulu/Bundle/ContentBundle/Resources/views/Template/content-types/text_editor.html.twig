@@ -17,7 +17,7 @@
                 {%  elseif value is same as(false) %}
                     {% set value = 'false' %}
                 {% endif %}
-        data-aura-{{ key|replace('_', '-') }}="{{ value }}"
+        data-aura-{{ key|replace({'_': '-'}) }}="{{ value }}"
             {% endif %}
         {% endfor %}
         data-mapper-property="{{ property.name }}"
