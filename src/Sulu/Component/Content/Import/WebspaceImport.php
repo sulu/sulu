@@ -334,7 +334,6 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                         $document->setResourceSegment($value);
                     }
                 }
-
             }
 
             // import property data
