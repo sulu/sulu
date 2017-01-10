@@ -8,6 +8,7 @@ CHANGELOG for Sulu
 
     * ENHANCEMENT #3147 [All]                 Updated minimum "phpspec/prophecy" version
     * ENHANCEMENT #3142 [CoreBundle]          Added a script handler to delete the composer.lock file from gitignore
+    * FEATURE     #3042 [ContentBundle]       Added versioning functionality
     * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
     * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
     * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
