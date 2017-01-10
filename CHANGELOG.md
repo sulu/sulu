@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.3
+    * HOTFIX      #3128 [All]                 Bumped twig version to ^1.11
+
 * 1.3.5 (2016-11-24)
     * HOTFIX      #3033 [SnippetBundle]       Handle references to deleted snippets in snippet selection
     * HOTFIX      #3032 [ContentBundle]       Fixed publishing for shadow page targeting drafts

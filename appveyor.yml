@@ -29,7 +29,7 @@ cache:
 install:
   # install SSL and php
   - cinst -y OpenSSL.Light
-  - cinst -y php
+  - cinst -y php --version 7.0.9 --allow-empty-checksums
 
   # configure PHP and enable extensions.
   - cd c:\tools\php
