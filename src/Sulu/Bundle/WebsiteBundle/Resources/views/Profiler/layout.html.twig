@@ -1,8 +1,7 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
-{% import _self as self %}
-
 {% block toolbar %}
+    {% import _self as self %}
     {% set icon %}
     <img width="28" height="28" alt="Sulu" src="data:image/png;base64,{{ self.logo_small }}" />
     {% endset %}
@@ -36,6 +35,7 @@
 {% endblock %}
 
 {% block menu %}
+{% import _self as self %}
 <span class="label">
     <span class="icon"><img height="40" width="40" src="data:imagebbng;base64,{{ self.logo }}" alt="Sulu"></span>
     <strong>Sulu</strong>
@@ -43,6 +43,7 @@
 {% endblock %}
 
 {% block panel %}
+    {% import _self as self %}
     <h2>Webspace</h2>
     <table>
         <tbody>
@@ -100,7 +101,6 @@
             {{ self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
         </tbody>
     </table>
-
 {% endblock %}
 
 {% macro table_row(field, value) %}
