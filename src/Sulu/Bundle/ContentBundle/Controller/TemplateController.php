@@ -238,6 +238,7 @@ class TemplateController extends Controller
                 'webspaceKey' => $webspaceKey,
                 'navContexts' => $navContexts,
                 'languages' => $languages,
+                'versioning' => $this->getParameter('sulu_document_manager.versioning.enabled'),
             ]
         );
     }

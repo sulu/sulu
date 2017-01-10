@@ -8,11 +8,11 @@
  */
 
 define([
-    'app-config',
+    'config',
     'sulusecurity/components/users/models/user',
     'services/husky/url-validator',
     'sulucontent/services/content-manager'
-], function(AppConfig, User, urlValidator, contentManager) {
+], function(Config, User, urlValidator, contentManager) {
 
     'use strict';
 
@@ -259,38 +259,40 @@ define([
                     }
                 ]);
 
-                this.sandbox.start([
-                    {
-                        name: 'datagrid@husky',
-                        options: {
-                            el: '#versions',
-                            instanceName: 'versions',
-                            url: ['/admin/api/nodes/', this.options.id, '/versions?language=', this.options.language].join(''),
-                            resultKey: 'versions',
-                            actionCallback: this.restoreVersion.bind(this),
-                            viewOptions: {
-                                table: {
-                                    actionIcon: 'history',
-                                    actionColumn: 'authored',
-                                    selectItem: false
-                                }
-                            },
-                            matchings: [
-                                {
-                                    name: 'authored',
-                                    attribute: 'authored',
-                                    content: this.sandbox.translate('sulu-document-manager.version.authored'),
-                                    type: 'datetime'
+                if (Config.get('sulu-content')['versioning']['enabled']) {
+                    this.sandbox.start([
+                        {
+                            name: 'datagrid@husky',
+                            options: {
+                                el: '#versions',
+                                instanceName: 'versions',
+                                url: ['/admin/api/nodes/', this.options.id, '/versions?language=', this.options.language].join(''),
+                                resultKey: 'versions',
+                                actionCallback: this.restoreVersion.bind(this),
+                                viewOptions: {
+                                    table: {
+                                        actionIcon: 'history',
+                                        actionColumn: 'authored',
+                                        selectItem: false
+                                    }
                                 },
-                                {
-                                    name: 'author',
-                                    attribute: 'author',
-                                    content: this.sandbox.translate('sulu-document-manager.version.author')
-                                }
-                            ]
+                                matchings: [
+                                    {
+                                        name: 'authored',
+                                        attribute: 'authored',
+                                        content: this.sandbox.translate('sulu-document-manager.version.authored'),
+                                        type: 'datetime'
+                                    },
+                                    {
+                                        name: 'author',
+                                        attribute: 'author',
+                                        content: this.sandbox.translate('sulu-document-manager.version.author')
+                                    }
+                                ]
+                            }
                         }
-                    }
-                ]);
+                    ]);
+                }
 
                 this.updateVisibilityForShadowCheckbox(true);
 

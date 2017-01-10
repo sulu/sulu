@@ -96,13 +96,6 @@
             <argument>/%sulu.content.node_names.base%</argument>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
-
-        <service id="sulu_document_manager.suscriber.behavior.version"
-                 class="Sulu\Component\DocumentManager\Subscriber\Behavior\VersionSubscriber">
-            <argument type="service" id="sulu_document_manager.default_session"/>
-            <argument type="service" id="sulu_document_manager.property_encoder"/>
-            <tag name="sulu_document_manager.event_subscriber" />
-        </service>
     </services>
 </container>
 

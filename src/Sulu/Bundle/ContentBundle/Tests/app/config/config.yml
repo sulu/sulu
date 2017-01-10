@@ -1,0 +1,3 @@
+sulu_document_manager:
+    versioning:
+        enabled: true

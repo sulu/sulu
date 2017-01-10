@@ -18,6 +18,10 @@ class AppKernel extends SuluTestKernel
     {
         parent::registerContainerConfiguration($loader);
 
+        if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'jackrabbit') {
+            $loader->load(__DIR__ . '/config/config.yml');
+        }
+
         if (class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
             $loader->load(__DIR__ . '/config/search.yml');
         }

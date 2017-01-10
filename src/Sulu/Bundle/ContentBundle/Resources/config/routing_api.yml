@@ -11,11 +11,6 @@ sulu_content.node.seo:
     parent: sulu_content.node
     resource: Sulu\Bundle\ContentBundle\Controller\SeoController
 
-sulu_content.node.versions:
-    type: rest
-    parent: sulu_content.node
-    resource: Sulu\Bundle\ContentBundle\Controller\VersionController
-
 sulu_content.webspace.localization:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\WebspaceLocalizationController
@@ -31,3 +26,7 @@ sulu_content.webspace:
 sulu_content.teaser:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\TeaserController
+
+sulu_content.node.versioning:
+    type: version_rest
+    resource: "@SuluContentBundle/Resources/config/routing_versioning_api.yml"

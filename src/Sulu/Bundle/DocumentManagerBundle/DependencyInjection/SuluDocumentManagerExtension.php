@@ -124,6 +124,11 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $loader->load('serializer.xml');
         $loader->load('command.xml');
         $loader->load('data_fixtures.xml');
+        $loader->load('routing.xml');
+
+        if ($config['versioning']['enabled']) {
+            $loader->load('versioning.xml');
+        }
     }
 
     private function configureDocumentManager($config, ContainerBuilder $container)
@@ -141,6 +146,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
+        $container->setParameter('sulu_document_manager.versioning.enabled', $config['versioning']['enabled']);
 
         $defaultSessionId = $this->getSessionServiceId($config['default_session']);
         $container->setAlias(

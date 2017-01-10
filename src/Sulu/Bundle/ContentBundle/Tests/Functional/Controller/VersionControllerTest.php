@@ -17,6 +17,10 @@ class VersionControllerTest extends SuluTestCase
 {
     public function setUp()
     {
+        if (!$this->getContainer()->getParameter('sulu_document_manager.versioning.enabled')) {
+            $this->markTestSkipped('Versioning is not enabled');
+        }
+
         $this->initPhpcr();
     }
 
