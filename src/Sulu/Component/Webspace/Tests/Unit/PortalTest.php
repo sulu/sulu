@@ -11,7 +11,11 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Url;
 
 class PortalTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,13 +24,28 @@ class PortalTest extends \PHPUnit_Framework_TestCase
      */
     private $portal;
 
+    /**
+     * @var Environment
+     */
+    private $environment;
+
+    /**
+     * @var Localization
+     */
+    private $localization;
+
+    /**
+     * @var Url
+     */
+    private $url;
+
     public function setUp()
     {
         parent::setUp();
         $this->portal = new Portal();
-        $this->environment = $this->prophesize('Sulu\Component\Webspace\Environment');
-        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
-        $this->url = $this->prophesize('Sulu\Component\Webspace\Url');
+        $this->environment = $this->prophesize(Environment::class);
+        $this->localization = $this->prophesize(Localization::class);
+        $this->url = $this->prophesize(Url::class);
     }
 
     public function testGetEnvironment()
@@ -39,14 +58,14 @@ class PortalTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNotExistringEnvironment()
     {
-        $this->setExpectedException('Sulu\Component\Webspace\Exception\EnvironmentNotFoundException');
+        $this->setExpectedException(EnvironmentNotFoundException::class);
 
         $this->portal->getEnvironment('dev');
     }
 
     public function testGetEnvironmentFromEmptyPortal()
     {
-        $this->setExpectedException('Sulu\Component\Webspace\Exception\EnvironmentNotFoundException');
+        $this->setExpectedException(EnvironmentNotFoundException::class);
         $this->portal->getEnvironment('dev');
     }
 
