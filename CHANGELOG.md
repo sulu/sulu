@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3134 [MediaBundle]           Fixed default focus point to center
     * HOTFIX      #3130 [ContentBundle]         Fixed moving of blocks without maxOccurs
     * HOTFIX      #3131 [WebsiteBundle]         Fixed sulu_content_path for language-specific domains
 
