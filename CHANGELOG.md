@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * HOTFIX      #3134 [MediaBundle]           Fixed default focus point to center
     * HOTFIX      #3130 [ContentBundle]         Fixed moving of blocks without maxOccurs
     * HOTFIX      #3131 [WebsiteBundle]         Fixed sulu_content_path for language-specific domains
+    * HOTFIX      #3127 [ContentBundle]         Fixed copy-locale for homepage
 
 * 1.4.3 (2016-12-21)
     * HOTFIX      #3108 [ContentBundle]         Fixed support for multiple properties with minOccurs of 1
