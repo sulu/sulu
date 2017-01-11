@@ -72,7 +72,9 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
 
         $url = null;
         $host = $this->requestAnalyzer->getAttribute('host');
-        if (!$domain && $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment)) {
+        if (!$domain
+            && $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment, $locale)
+        ) {
             $domain = $host;
         }
 
@@ -84,6 +86,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
             $domain,
             $scheme
         );
+
         if (!$withoutDomain && !$url) {
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $route,

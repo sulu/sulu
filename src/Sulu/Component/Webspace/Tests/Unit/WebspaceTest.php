@@ -57,10 +57,10 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
         $this->webspace = new Webspace();
 
-        $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
-        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
-        $this->security = $this->prophesize('Sulu\Component\Webspace\Security');
-        $this->segment = $this->prophesize('Sulu\Component\Webspace\Segment');
+        $this->portal = $this->prophesize(Portal::class);
+        $this->localization = $this->prophesize(Localization::class);
+        $this->security = $this->prophesize(Security::class);
+        $this->segment = $this->prophesize(Segment::class);
     }
 
     public function testToArray()
@@ -183,6 +183,35 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
         $this->assertTrue($this->webspace->hasDomain('1.sulu.lo', 'prod'));
+    }
+
+    public function testHasDomainWithLocalization()
+    {
+        $environment = $this->prophesize(Environment::class);
+        $url = new Url('sulu.lo', 'prod');
+        $url->setLanguage('de');
+        $environment->getUrls()->willReturn([$url]);
+        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
+        $this->webspace->addPortal($this->portal->reveal());
+
+        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod', 'de'));
+        $this->assertFalse($this->webspace->hasDomain('sulu.lo', 'prod', 'en'));
+    }
+
+    public function testHasDomainWithLocalizationWithCountry()
+    {
+        $environment = $this->prophesize(Environment::class);
+        $url = new Url('sulu.lo', 'prod');
+        $url->setLanguage('de');
+        $url->setCountry('at');
+        $environment->getUrls()->willReturn([$url]);
+        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
+        $this->webspace->addPortal($this->portal->reveal());
+
+        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod', 'de_at'));
+        $this->assertFalse($this->webspace->hasDomain('sulu.lo', 'prod', 'de'));
     }
 
     public function testAddTemplate()
