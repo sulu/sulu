@@ -162,7 +162,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     {
         $path = $document->getResourceSegment();
         $webspaceKey = $this->documentInspector->getWebspace($document);
-        $languageCode = $this->documentInspector->getLocale($document);
+        $languageCode = $this->documentInspector->getOriginalLocale($document);
 
         try {
             $treeValue = $this->loadByContent($document);
@@ -208,7 +208,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
         }
 
         $webspaceKey = $this->documentInspector->getWebspace($document);
-        $languageCode = $this->documentInspector->getLocale($document);
+        $languageCode = $this->documentInspector->getOriginalLocale($document);
 
         $node = $this->documentInspector->getNode($document);
         $node->getSession()->save();
@@ -259,7 +259,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
         return $this->mapper->loadByContent(
             $this->documentInspector->getNode($document),
             $this->documentInspector->getWebspace($document),
-            $this->documentInspector->getLocale($document),
+            $this->documentInspector->getOriginalLocale($document),
             null
         );
     }
