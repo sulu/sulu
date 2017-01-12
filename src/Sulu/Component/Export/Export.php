@@ -36,12 +36,7 @@ class Export
     /**
      * @var null
      */
-    protected $format = null;
-
-    /**
-     * @var null
-     */
-    protected $exportLocale = null;
+    protected $exportLocale = 'en';
 
     /**
      * Creates and returns a property-array.

@@ -37,19 +37,19 @@ class SnippetExport extends Export implements SnippetExportInterface
     protected $exportManager;
 
     /**
-     * @var string
-     */
-    protected $exportLocale;
-
-    /**
-     * @var string
-     */
-    protected $format;
-
-    /**
      * @var string[]
      */
     protected $formatFilePaths;
+
+    /**
+     * @var Output
+     */
+    protected $output;
+
+    /**
+     * @var null
+     */
+    protected $format = '1.2.xliff';
 
     /**
      * Snippet constructor.
@@ -74,6 +74,7 @@ class SnippetExport extends Export implements SnippetExportInterface
         $this->documentInspector = $documentInspector;
         $this->exportManager = $exportManager;
         $this->formatFilePaths = $formatFilePaths;
+        $this->output = new NullOutput();
     }
 
     /**
@@ -107,7 +108,7 @@ class SnippetExport extends Export implements SnippetExportInterface
      *
      * @return array
      */
-    protected function getExportData()
+    public function getExportData()
     {
         $snippets = $this->getSnippets();
         $snippetsData = [];

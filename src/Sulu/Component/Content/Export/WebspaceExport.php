@@ -55,6 +55,11 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     protected $formatFilePaths;
 
     /**
+     * @var Output
+     */
+    protected $output;
+
+    /**
      * @param EngineInterface $templating
      * @param DocumentManager $documentManager
      * @param DocumentInspector $documentInspector
@@ -79,6 +84,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $this->extensionManager = $extensionManager;
         $this->exportManager = $exportManager;
         $this->formatFilePaths = $formatFilePaths;
+        $this->output = new NullOutput();
     }
 
     /**

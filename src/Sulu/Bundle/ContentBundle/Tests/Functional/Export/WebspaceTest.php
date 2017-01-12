@@ -61,7 +61,7 @@ class WebspaceTest extends SuluTestCase
     public function test12Xliff()
     {
         $documents = $this->prepareData();
-        $exportData = $this->webspaceExporter->getExportData('sulu_io', 'en', null, '1.2.xliff');
+        $exportData = $this->webspaceExporter->getExportData('sulu_io');
 
         $expectedResult = [
             'webspaceKey' => 'sulu_io',
@@ -257,18 +257,13 @@ class WebspaceTest extends SuluTestCase
                     strpos($name, 'seo') === false
                     && strpos($name, 'excerpt') === false
                 ) {
-                    if ($name == 'block') {
+                    if ($name === 'block') {
                         $blockChildren = [];
                         foreach ($property as $block) {
                             $blockPropertyData = [];
                             foreach ($block as $blockName => $blockProperty) {
                                 list($type, $options) = $this->getTypeOptionsByName($blockName, $name);
-                                $blockPropertyData[$blockName] = $this->createItemArray(
-                                    $blockName,
-                                    $type,
-                                    $options,
-                                    $blockProperty
-                                );
+                                $blockPropertyData[$blockName] = $blockProperty;
                             }
                             $blockChildren[] = $blockPropertyData;
                         }
@@ -437,7 +432,7 @@ class WebspaceTest extends SuluTestCase
         }
 
         if ($children !== null) {
-            $data['children'] = $children;
+            $data['value'] = $children;
         }
 
         return $data;
