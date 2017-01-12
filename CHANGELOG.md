@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id
     * ENHANCEMENT #3147 [All]                 Updated minimum "phpspec/prophecy" version
     * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
     * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser

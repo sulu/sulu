@@ -108,6 +108,12 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->entityName = $entityName;
         $this->eventDispatcher = $eventDispatcher;
         $this->permissions = $permissions;
+        $this->idField = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            $this->entityName,
+            'public.id'
+        );
     }
 
     /**
@@ -115,7 +121,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->entityName . '.id)');
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
 
         $result = $subQueryBuilder->getQuery()->getScalarResult();
         $numResults = count($result);
@@ -156,7 +162,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         // Add all select fields
         foreach ($this->selectFields as $field) {
-            $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
+            $this->queryBuilder->addSelect($this->getSelectAs($field));
         }
         // group by
         $this->assignGroupBy($this->queryBuilder);
@@ -164,10 +170,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->assignSortFields($this->queryBuilder);
 
         // use ids previously selected ids for query
-        $select = $this->entityName . '.id';
-        if (null !== $this->idField) {
-            $select = $this->idField->getSelect();
-        }
+        $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')
             ->setParameter('ids', $ids);
 
@@ -184,10 +187,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $select = null;
-        if (null !== $this->idField) {
-            $select = $this->idField->getSelect();
-        }
+        $select = $this->getSelectAs($this->idField);
 
         $subQueryBuilder = $this->createSubQueryBuilder($select);
         if ($this->limit != null) {
@@ -195,18 +195,22 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         foreach ($this->sortFields as $index => $sortField) {
-            $subQueryBuilder->addSelect($sortField->getSelect() . ' AS ' . $sortField->getName());
+            if ($sortField->getName() !== $this->idField->getName()) {
+                $subQueryBuilder->addSelect($this->getSelectAs($sortField));
+            }
         }
 
         $this->assignSortFields($subQueryBuilder);
         $ids = $subQueryBuilder->getQuery()->getArrayResult();
+
         // if no results are found - return
         if (count($ids) < 1) {
             return [];
         }
+
         $ids = array_map(
             function ($array) {
-                return $array['id'];
+                return $array[$this->idField->getName()];
             },
             $ids
         );
@@ -223,13 +227,13 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         // if no sort has been assigned add order by id ASC as default
         if (count($this->sortFields) === 0) {
-            $queryBuilder->addOrderBy($this->entityName . '.id', 'ASC');
+            $queryBuilder->addOrderBy($this->idField->getSelect(), 'ASC');
         }
 
         foreach ($this->sortFields as $index => $sortField) {
-            $statement = $sortField->getSelect() . ' AS ' . $sortField->getName();
+            $statement = $this->getSelectAs($sortField);
             if (!$this->hasSelectStatement($queryBuilder, $statement)) {
-                $queryBuilder->addSelect($sortField->getSelect() . ' AS HIDDEN ' . $sortField->getName());
+                $queryBuilder->addSelect($this->getSelectAs($sortField, true));
             }
 
             $queryBuilder->addOrderBy($sortField->getName(), $this->sortOrders[$index]);
@@ -312,7 +316,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function createSubQueryBuilder($select = null)
     {
         if (!$select) {
-            $select = $this->entityName . '.id';
+            $select = $this->getSelectAs($this->idField);
         }
 
         // get all filter-fields
@@ -604,5 +608,24 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         throw new InvalidExpressionArgumentException('or', 'expressions');
+    }
+
+    /**
+     * Get select as from doctrine field descriptor.
+     *
+     * @param DoctrineFieldDescriptorInterface $field
+     * @param bool $hidden
+     *
+     * @return string
+     */
+    private function getSelectAs(DoctrineFieldDescriptorInterface $field, $hidden = false)
+    {
+        $select = $field->getSelect() . ' AS ';
+
+        if ($hidden) {
+            $select .= 'HIDDEN ';
+        }
+
+        return $select . $field->getName();
     }
 }
