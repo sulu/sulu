@@ -47,11 +47,6 @@ class SnippetExport extends Export implements SnippetExportInterface
     protected $output;
 
     /**
-     * @var null
-     */
-    protected $format = '1.2.xliff';
-
-    /**
      * Snippet constructor.
      *
      * @param EngineInterface $templating

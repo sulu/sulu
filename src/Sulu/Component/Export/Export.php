@@ -39,6 +39,11 @@ class Export
     protected $exportLocale = 'en';
 
     /**
+     * @var null
+     */
+    protected $format = '1.2.xliff';
+
+    /**
      * Creates and returns a property-array.
      *
      * @param PropertyMetadata $property
