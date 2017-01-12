@@ -14,7 +14,7 @@ define(['config', 'jquery'], function(Config, $) {
     var featherEditor;
 
     if (!!Config.get('sulu-media').adobeCreativeKey) {
-        require(['//feather.aviary.com/imaging/v3/editor.js'], function() {
+        require(['https://dme0ih8comzn4.cloudfront.net/imaging/v3/editor.js'], function() {
             featherEditor = new Aviary.Feather({
                 apiKey: Config.get('sulu-media').adobeCreativeKey,
                 theme: 'minimum',
