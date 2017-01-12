@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor
     * HOTFIX      #3139 [MediaBundle]           Fixed scaling issues on crop overlay in page form
     * HOTFIX      #3138 [MediaBundle]           Fixed cropping with only one given side
     * HOTFIX      #3134 [MediaBundle]           Fixed default focus point to center
