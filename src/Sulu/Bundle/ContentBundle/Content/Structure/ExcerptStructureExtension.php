@@ -18,11 +18,11 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
-use Sulu\Component\Import\Manager\ImportManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
+use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 /**
  * extends structure with seo content.

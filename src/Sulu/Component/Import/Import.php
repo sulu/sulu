@@ -11,10 +11,10 @@
 
 namespace Sulu\Component\Import;
 
-use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
 use Sulu\Component\Import\Manager\ImportManager;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 

@@ -11,20 +11,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Export;
 
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Export\WebspaceInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * Tests for the Webspace Export class.
@@ -114,19 +105,19 @@ class SnippetTest extends SuluTestCase
                     'name' => 'title',
                     'type' => 'text_line',
                     'options' => [
-                        'translate' => true
+                        'translate' => true,
                     ],
-                    'value' => $snippet->getTitle()
+                    'value' => $snippet->getTitle(),
                 ],
                 'description' => [
                     'name' => 'description',
                     'type' => 'text_editor',
                     'options' => [
-                        'translate' => true
+                        'translate' => true,
                     ],
-                    'value' => $snippet->getStructure()->getProperty('description')->getValue()
-                ]
-            ]
+                    'value' => $snippet->getStructure()->getProperty('description')->getValue(),
+                ],
+            ],
         ];
     }
 

@@ -12,14 +12,14 @@
 namespace Sulu\Component\Snippet\Export;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
+use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\Export\Export;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
-use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Templating\EngineInterface;
-use Sulu\Component\Export\Manager\ExportManagerInterface;
 
 /**
  * Export Snippet by given locale to xliff file.

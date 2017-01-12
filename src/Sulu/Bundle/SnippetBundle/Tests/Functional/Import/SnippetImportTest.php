@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Import;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Tests for the Snippet Import class.

@@ -13,17 +13,17 @@ namespace Sulu\Component\Snippet\Import;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Component\Import\Import;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\Import\Format\FormatImportInterface;
+use Sulu\Component\Import\Import;
+use Sulu\Component\Import\Manager\ImportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\Import\Manager\ImportManagerInterface;
-use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
-use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 /**
  * Import Snippets by given xliff-file.
