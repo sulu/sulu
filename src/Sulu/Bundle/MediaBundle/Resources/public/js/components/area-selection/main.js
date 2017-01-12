@@ -196,14 +196,6 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * Places the selection within the frame. Gets called after the frame has been rendered and the image been loaded.
          */
         placeSelection: function() {
-            if (!this.areaGuidingWidth) {
-                this.areaGuidingWidth = this.originalWidth;
-            }
-
-            if (!this.areaGuidingHeight) {
-                this.areaGuidingHeight = this.originalHeight;
-            }
-
             this.physicalAreaGuidingWidth = this.areaGuidingWidth * this.$frame.width() / this.originalWidth;
             this.physicalAreaGuidingHeight = this.areaGuidingHeight * this.$frame.height() / this.originalHeight;
 
