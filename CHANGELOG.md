@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.3.7
+    * HOTFIX      #3136 [ContentBundle]       Fixed resource locator issue while moving pages
+
 * 1.3.6 (2017-01-10)
     * HOTFIX      #3128 [All]                 Bumped twig version to ^1.11
 
