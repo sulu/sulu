@@ -11,7 +11,7 @@
  * @class SmartContent/Categories
  * @constructor
  */
-define(['services/husky/util'], function(util) {
+define(['services/husky/util', 'services/sulucontent/user-settings-manager'], function(util, UserSettingsManager) {
 
     'use strict';
 
@@ -20,7 +20,8 @@ define(['services/husky/util'], function(util) {
                 instanceName: 'categories',
                 preselectedOperator: 'or',
                 preselectedCategories: [],
-                root: null
+                root: null,
+                webspace: null
             },
             translations: {
                 operatorLabel: 'smart-content.categories.operator-label',
@@ -138,7 +139,7 @@ define(['services/husky/util'], function(util) {
                             url: [
                                 '/admin/api/categories',
                                 (!!this.options.root ? ('/' + this.options.root) + '/children' : ''),
-                                '?locale=' + this.sandbox.sulu.getDefaultContentLocale(),
+                                '?locale=' + UserSettingsManager.getContentLocale(this.options.webspace),
                                 '&flat=true&sortBy=depth&sortOrder=asc'
                             ].join(''),
                             resultKey: 'categories',

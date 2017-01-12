@@ -998,7 +998,8 @@ define(['services/husky/util'], function(util) {
                             instanceName: this.options.instanceName,
                             preselectedOperator: this.overlayData.categoryOperator,
                             preselectedCategories: this.overlayData.categories,
-                            root: this.options.categoryRoot
+                            root: this.options.categoryRoot,
+                            webspace: this.options.webspace
                         }
                     }
                 ]
