@@ -327,8 +327,8 @@ define(['underscore', 'jquery', 'text!./frame.html'], function(_, $, frameTempla
          * @param $image The img dom element
          */
         setImageSize: function($image) {
-            this.originalHeight = $image.height();
-            this.originalWidth = $image.width();
+            this.originalHeight = $image[0].naturalHeight;
+            this.originalWidth = $image[0].naturalWidth;
 
             if ($image.height() / $image.width() > this.$el.height() / this.$el.width()) {
                 $image.height(Math.min($image.height(), this.$el.height()));

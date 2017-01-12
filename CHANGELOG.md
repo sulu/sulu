@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3139 [MediaBundle]           Fixed scaling issues on crop overlay in page form
     * HOTFIX      #3138 [MediaBundle]           Fixed cropping with only one given side
     * HOTFIX      #3134 [MediaBundle]           Fixed default focus point to center
     * HOTFIX      #3130 [ContentBundle]         Fixed moving of blocks without maxOccurs
