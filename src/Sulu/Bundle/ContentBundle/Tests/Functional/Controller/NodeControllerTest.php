@@ -191,7 +191,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-creator'));
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
 
-
         /** @var NodeInterface $content */
         $content = $this->liveSession->getNode('/cmf/sulu_io/routes/en/test')->getPropertyValue('sulu:content');
 
@@ -1406,6 +1405,20 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('/test2/test3/test5', $response['path']);
         $this->assertEquals('/test2/test3/testing5', $response['url']);
 
+        $node = $this->session->getNode('/cmf/sulu_io/contents/test2/test3/test5');
+        $this->assertEquals(
+            $node->getPropertyValue('i18n:de-url', PropertyType::STRING),
+            '/test2/test3/testing5'
+        );
+        $this->assertEquals(
+            $node->getPropertyValue('i18n:en-url', PropertyType::STRING),
+            '/test2/test3/testing5'
+        );
+        $this->assertEquals(
+            $node->getPropertyValue('i18n:fr-url', PropertyType::STRING),
+            '/test2/test3/testing5'
+        );
+
         $englishRouteNode = $this->session->getNode('/cmf/sulu_io/routes/en/test2/test3/testing5');
         $this->assertEquals(
             $englishRouteNode->getPropertyValue('sulu:content', PropertyType::REFERENCE),
@@ -1416,13 +1429,18 @@ class NodeControllerTest extends SuluTestCase
             $germanRouteNode->getPropertyValue('sulu:content', PropertyType::REFERENCE),
             $data[4]['id']
         );
+        $frenchRouteNode = $this->session->getNode('/cmf/sulu_io/routes/de/test2/test3/testing5');
+        $this->assertEquals(
+            $frenchRouteNode->getPropertyValue('sulu:content', PropertyType::REFERENCE),
+            $data[4]['id']
+        );
 
         $rootNode = $this->session->getRootNode();
         $this->assertTrue($rootNode->hasNode('cmf/sulu_io/routes/de/test2/test3/testing5'));
         $this->assertTrue($rootNode->hasNode('cmf/sulu_io/routes/en/test2/test3/testing5'));
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/de_at/test2/test3/testing5'));
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/en_us/test2/test3/testing5'));
-        $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/fr/test2/test3/testing5'));
+        $this->assertTrue($rootNode->hasNode('cmf/sulu_io/routes/fr/test2/test3/testing5'));
     }
 
     public function testMoveNonExistingSource()

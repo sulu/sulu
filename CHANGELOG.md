@@ -134,10 +134,14 @@ CHANGELOG for Sulu
     * FEATURE     #2768 [ContentBundle]       Implemented teaser-edit for content-type
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
-    * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 
+    * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
+
+* 1.3.7 (2017-01-12)
+    * HOTFIX      #3136 [ContentBundle]       Fixed resource locator issue while moving pages
+    * HOTFIX      #3137 [ContentBundle]       Fixed locale for categories in smart content overlay
 
 * 1.3.6 (2017-01-10)
     * HOTFIX      #3128 [All]                 Bumped twig version to ^1.11
