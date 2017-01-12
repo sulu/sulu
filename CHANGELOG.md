@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
     * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
     * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
     * ENHANCEMENT #3110 [WebsiteBundle]       Fixed deprecation of flatten-exception by decorating twig-exception-controller

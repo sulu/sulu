@@ -2,6 +2,33 @@
 
 ## dev-develop
 
+### Twig 2
+
+If you upgrade twig to version 2 please read follow
+[this instructions](http://twig.sensiolabs.org/doc/1.x/deprecated.html).
+
+The most important change is ``_self`` for calling macros. You have to import it before using.
+
+__Before:__
+```twig
+{ _self.macro_name() }}
+```
+
+__After:__
+```twig
+{% import _self as self %}
+{ self.macro_name() }}
+```
+
+If you dont want to use twig2 please add following line to your ``composer.json``:
+
+```json
+"require": {
+    ...
+    "twig/twig": "^1.11"
+}
+```
+
 ### Deprecations
 
 Following classes and methods were removed because of deprecations:
