@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Functional\Mapper;
 
 use Jackalope\Session;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -1503,6 +1504,23 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/test-en/childtest', $result->getPropertyValue('url'));
     }
 
+    public function testCopyLanguageHomepage()
+    {
+        $document = $this->documentManager->find($this->getHomeUuid(), 'de');
+        $document->setTitle('test deutsch');
+        $this->documentManager->persist($document, 'de');
+
+        $this->documentManager->flush();
+        $this->documentManager->clear();
+
+        $this->mapper->copyLanguage($document->getUuid(), 1, 'sulu_io', 'de', ['en']);
+
+        $indexDe = $this->mapper->loadStartPage('sulu_io', 'de');
+        $indexEn = $this->mapper->loadStartPage('sulu_io', 'en');
+
+        $this->assertEquals($indexDe->getPropertyValue('title'), $indexEn->getPropertyValue('title'));
+    }
+
     public function testNodeAndAncestorsExcludedGhosts()
     {
         $data = $this->prepareBigTreeTestData();
@@ -2610,7 +2628,7 @@ class ContentMapperTest extends SuluTestCase
         $persistOptions = [];
         if ($parentUuid) {
             $document->setParent($this->documentManager->find($parentUuid, $locale));
-        } elseif (!$document->getParent()) {
+        } elseif ($document instanceof HomeDocument || !$document->getParent()) {
             $persistOptions['parent_path'] = '/cmf/' . $webspaceKey . '/contents';
         }
 

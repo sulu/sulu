@@ -26,6 +26,11 @@ class Focus implements FocusInterface
     const FOCUS_LEFT = 0;
 
     /**
+     * 1 is the x value if the focus point is set on the center column.
+     */
+    const FOCUS_CENTER = 1;
+
+    /**
      * 2 is the x value if the focus point is set on the most right column.
      */
     const FOCUS_RIGHT = 2;
@@ -34,6 +39,11 @@ class Focus implements FocusInterface
      * 0 is the y value if the focus point is set on the most top row.
      */
     const FOCUS_TOP = 0;
+
+    /**
+     * 1 is the y value if the focus point is set on the middle row.
+     */
+    const FOCUS_MIDDLE = 1;
 
     /**
      * 2 is the y value if the focus point is set on the most bottom row.
@@ -45,6 +55,8 @@ class Focus implements FocusInterface
      */
     public function focus(ImageInterface $image, $x, $y, $width, $height)
     {
+        $x = ($x !== null) ? $x : static::FOCUS_CENTER;
+        $y = ($y !== null) ? $y : static::FOCUS_MIDDLE;
         $imageSize = $image->getSize();
 
         $currentRatio = $imageSize->getWidth() / $imageSize->getHeight();
@@ -63,11 +75,12 @@ class Focus implements FocusInterface
                 case static::FOCUS_LEFT:
                     $cropX = 0;
                     break;
+                case static::FOCUS_CENTER:
+                    $cropX = ($imageSize->getWidth() - $width) / 2;
+                    break;
                 case static::FOCUS_RIGHT:
                     $cropX = $imageSize->getWidth() - $width;
                     break;
-                default:
-                    $cropX = ($imageSize->getWidth() - $width) / 2;
             }
         } else {
             $width = $imageSize->getWidth();
@@ -79,11 +92,12 @@ class Focus implements FocusInterface
                 case static::FOCUS_TOP:
                     $cropY = 0;
                     break;
+                case static::FOCUS_MIDDLE:
+                    $cropY = ($imageSize->getHeight() - $height) / 2;
+                    break;
                 case static::FOCUS_BOTTOM:
                     $cropY = $imageSize->getHeight() - $height;
                     break;
-                default:
-                    $cropY = ($imageSize->getHeight() - $height) / 2;
             }
         }
 

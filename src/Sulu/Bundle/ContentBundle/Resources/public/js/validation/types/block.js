@@ -514,7 +514,7 @@ define([
                 },
 
                 setSortable: function() {
-                    if (this.getMaxOccurs() > 1) {
+                    if (this.getMaxOccurs() === null || this.getMaxOccurs() > 1) {
                         this.$el.addClass('sortable');
                     }
 

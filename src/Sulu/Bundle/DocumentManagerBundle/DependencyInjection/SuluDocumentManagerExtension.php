@@ -153,6 +153,12 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             $container->getParameter('sulu.context') === SuluKernel::CONTEXT_ADMIN
             || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
         );
+
+        $container->setParameter(
+            'sulu_document_manager.show_drafts',
+            $container->getParameter('sulu.context') === SuluKernel::CONTEXT_ADMIN
+            || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
+        );
     }
 
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)

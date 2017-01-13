@@ -421,17 +421,24 @@ class Webspace implements ArrayableInterface
      *
      * @param string $domain
      * @param string $environment
+     * @param string $locale
      *
      * @return bool
      *
      * @throws Exception\EnvironmentNotFoundException
      */
-    public function hasDomain($domain, $environment)
+    public function hasDomain($domain, $environment, $locale = null)
     {
+        $localizationParts = explode('_', $locale);
+        $language = $localizationParts[0];
+        $country = isset($localizationParts[1]) ? $localizationParts[1] : null;
+
         foreach ($this->getPortals() as $portal) {
             foreach ($portal->getEnvironment($environment)->getUrls() as $url) {
                 $host = parse_url('//' . $url->getUrl())['host'];
-                if ($host === $domain || $host === '{host}') {
+                if (($locale === null || $url->isValidLocale($language, $country))
+                    && ($host === $domain || $host === '{host}')
+                ) {
                     return true;
                 }
             }

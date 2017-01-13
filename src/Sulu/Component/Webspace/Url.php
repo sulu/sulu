@@ -236,6 +236,20 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Checks if this URL handles the locale for the given language and country.
+     *
+     * @param string $language
+     * @param string $country
+     *
+     * @return bool
+     */
+    public function isValidLocale($language, $country)
+    {
+        return (empty($this->getLanguage()) || $this->getLanguage() === $language)
+            && (empty($this->getCountry()) || $this->getCountry() === $country);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
