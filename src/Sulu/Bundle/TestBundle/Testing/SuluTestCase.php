@@ -153,17 +153,7 @@ abstract class SuluTestCase extends KernelTestCase
      */
     private function initializeSession(SessionInterface $session, $workspace)
     {
-        $initializerDump = null;
-        switch ($workspace) {
-            case 'live':
-                $initializerDump = __DIR__ . '/../Resources/app/cache/initial_live.xml';
-                break;
-            case 'default':
-                $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
-                break;
-            default:
-                throw new \Exception('No valid workspace given');
-        }
+        $initializerDump = $this->getInitializerDumpFilePath($workspace);
 
         if ($session->nodeExists('/cmf')) {
             NodeHelper::purgeWorkspace($session);
@@ -173,20 +163,7 @@ abstract class SuluTestCase extends KernelTestCase
         if (true === self::$workspaceInitialized[$workspace]) {
             $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
             $session->save();
-
-            return;
         }
-
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($initializerDump))) {
-            $filesystem->mkdir(dirname($initializerDump));
-        }
-
-        $this->getInitializer()->initialize();
-        $handle = fopen($initializerDump, 'w');
-        $session->exportSystemView('/cmf', $handle, false, false);
-        fclose($handle);
-        self::$workspaceInitialized[$workspace] = true;
     }
 
     /**
@@ -203,13 +180,64 @@ abstract class SuluTestCase extends KernelTestCase
         $liveSession = $this->getPhpcrLiveSession();
 
         $this->initializeSession($session, 'default');
-        if ($session->getWorkspace()->getName() !== $liveSession->getWorkspace()->getName()) {
-            $this->initializeSession($liveSession, 'live');
-        }
+        $this->initializeSession($liveSession, 'live');
 
         if (!$this->importer) {
             $this->importer = new PHPCRImporter($session, $liveSession);
         }
+
+        $this->getInitializer()->initialize();
+
+        if (false === self::$workspaceInitialized['live']) {
+            $this->dumpPhpcr($liveSession, 'live');
+        }
+        if (false === self::$workspaceInitialized['default']) {
+            $this->dumpPhpcr($session, 'default');
+        }
+    }
+
+    /**
+     * @param SessionInterface $session
+     * @param string $workspace
+     */
+    protected function dumpPhpcr(SessionInterface $session, $workspace)
+    {
+        $initializerDump = $this->getInitializerDumpFilePath($workspace);
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists(dirname($initializerDump))) {
+            $filesystem->mkdir(dirname($initializerDump));
+        }
+
+        $handle = fopen($initializerDump, 'w');
+        $session->exportSystemView('/cmf', $handle, false, false);
+        fclose($handle);
+        self::$workspaceInitialized[$workspace] = true;
+    }
+
+    /**
+     * @param string $workspace
+     *
+     * @return null|string
+     *
+     * @throws \Exception
+     */
+    protected function getInitializerDumpFilePath($workspace)
+    {
+        $initializerDump = null;
+
+        switch ($workspace) {
+            case 'live':
+                $initializerDump = __DIR__ . '/../Resources/app/cache/initial_live.xml';
+                break;
+            case 'default':
+                $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
+                break;
+            default:
+                throw new \Exception('No valid workspace given');
+        }
+
+        return $initializerDump;
     }
 
     /**
