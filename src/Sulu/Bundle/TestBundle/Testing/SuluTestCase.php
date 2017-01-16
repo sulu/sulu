@@ -19,6 +19,7 @@ use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,7 +30,10 @@ use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
  */
 abstract class SuluTestCase extends KernelTestCase
 {
-    private static $workspaceInitialized = false;
+    private static $workspaceInitialized = [
+        'default' => false,
+        'live' => false,
+    ];
 
     /**
      * @var PHPCRImporter
@@ -54,8 +58,8 @@ abstract class SuluTestCase extends KernelTestCase
         parent::setUp();
 
         $this->importer = new PHPCRImporter(
-            $this->getContainer()->get('sulu_document_manager.default_session'),
-            $this->getContainer()->get('sulu_document_manager.live_session')
+            $this->getPhpcrDefaultSession(),
+            $this->getPhpcrLiveSession()
         );
     }
 
@@ -140,6 +144,52 @@ abstract class SuluTestCase extends KernelTestCase
     }
 
     /**
+     * Initialize / reset Sulu PHPCR environment for given session.
+     *
+     * @param SessionInterface $session
+     * @param string $workspace
+     *
+     * @throws \Exception
+     */
+    private function initializeSession(SessionInterface $session, $workspace)
+    {
+        $initializerDump = null;
+        switch ($workspace) {
+            case 'live':
+                $initializerDump = __DIR__ . '/../Resources/app/cache/initial_live.xml';
+                break;
+            case 'default':
+                $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
+                break;
+            default:
+                throw new \Exception('No valid workspace given');
+        }
+
+        if ($session->nodeExists('/cmf')) {
+            NodeHelper::purgeWorkspace($session);
+            $session->save();
+        }
+
+        if (true === self::$workspaceInitialized[$workspace]) {
+            $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+            $session->save();
+
+            return;
+        }
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists(dirname($initializerDump))) {
+            $filesystem->mkdir(dirname($initializerDump));
+        }
+
+        $this->getInitializer()->initialize();
+        $handle = fopen($initializerDump, 'w');
+        $session->exportSystemView('/cmf', $handle, false, false);
+        fclose($handle);
+        self::$workspaceInitialized[$workspace] = true;
+    }
+
+    /**
      * Initialize / reset the Sulu PHPCR environment.
      *
      * NOTE: We could use the document initializer here rather than manually creating
@@ -149,50 +199,17 @@ abstract class SuluTestCase extends KernelTestCase
      */
     protected function initPhpcr()
     {
-        /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('sulu_document_manager.default_session');
-        $liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
+        $session = $this->getPhpcrDefaultSession();
+        $liveSession = $this->getPhpcrLiveSession();
 
-        if ($session->nodeExists('/cmf')) {
-            NodeHelper::purgeWorkspace($session);
-            $session->save();
-        }
-
-        if ($liveSession->nodeExists('/cmf')) {
-            NodeHelper::purgeWorkspace($liveSession);
-            $liveSession->save();
+        $this->initializeSession($session, 'default');
+        if ($session->getWorkspace()->getName() !== $liveSession->getWorkspace()->getName()) {
+            $this->initializeSession($liveSession, 'live');
         }
 
         if (!$this->importer) {
             $this->importer = new PHPCRImporter($session, $liveSession);
         }
-
-        // initialize the content repository.  in order to speed things up, for
-        // each process, we dump the initial state to an XML file and restore
-        // it thereafter.
-        $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
-        $initializerDumpLive = __DIR__ . '/../Resources/app/cache/initial_live.xml';
-        if (true === self::$workspaceInitialized) {
-            $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
-            $session->save();
-
-            $liveSession->importXml('/', $initializerDumpLive, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
-            $liveSession->save();
-
-            return;
-        }
-
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($initializerDump))) {
-            $filesystem->mkdir(dirname($initializerDump));
-        }
-        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
-        $handle = fopen($initializerDump, 'w');
-        $liveHandle = fopen($initializerDumpLive, 'w');
-        $session->exportSystemView('/cmf', $handle, false, false);
-        $liveSession->exportSystemView('/cmf', $liveHandle, false, false);
-        fclose($handle);
-        self::$workspaceInitialized = true;
     }
 
     /**
@@ -232,7 +249,6 @@ abstract class SuluTestCase extends KernelTestCase
      */
     protected function purgeDatabase()
     {
-        /** @var EntityManager $manager */
         $manager = $this->getEntityManager();
         $connection = $manager->getConnection();
 
@@ -251,8 +267,35 @@ abstract class SuluTestCase extends KernelTestCase
         }
     }
 
+    /**
+     * @return EntityManager
+     */
     protected function getEntityManager()
     {
         return $this->getContainer()->get('doctrine')->getManager();
+    }
+
+    /**
+     * @return Initializer
+     */
+    protected function getInitializer()
+    {
+        return $this->getContainer()->get('sulu_document_manager.initializer');
+    }
+
+    /**
+     * @return SessionInterface
+     */
+    protected function getPhpcrDefaultSession()
+    {
+        return $this->getContainer()->get('doctrine_phpcr.session');
+    }
+
+    /**
+     * @return SessionInterface
+     */
+    protected function getPhpcrLiveSession()
+    {
+        return $this->getContainer()->get('doctrine_phpcr.live_session');
     }
 }
