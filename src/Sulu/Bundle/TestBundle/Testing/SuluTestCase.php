@@ -224,7 +224,7 @@ abstract class SuluTestCase extends KernelTestCase
                 $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
                 break;
             default:
-                throw new \Exception('No valid workspace given');
+                throw new \InvalidArgumentException(sprintf('Workspace "%s" is not a valid option', $workspace));
         }
 
         return $initializerDump;
