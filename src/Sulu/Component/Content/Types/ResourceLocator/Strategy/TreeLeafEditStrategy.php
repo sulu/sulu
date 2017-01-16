@@ -70,7 +70,7 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLo
         }
 
         $webspaceKey = $this->documentInspector->getWebspace($document);
-        $languageCode = $this->documentInspector->getLocale($document);
+        $languageCode = $this->documentInspector->getOriginalLocale($document);
 
         $node = $this->documentInspector->getNode($document);
         $node->getSession()->save();
