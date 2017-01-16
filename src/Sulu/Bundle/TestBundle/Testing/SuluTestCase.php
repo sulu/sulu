@@ -30,10 +30,7 @@ use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
  */
 abstract class SuluTestCase extends KernelTestCase
 {
-    private static $workspaceInitialized = [
-        'default' => false,
-        'live' => false,
-    ];
+    private static $workspaceInitialized = false;
 
     /**
      * @var PHPCRImporter
@@ -179,6 +176,7 @@ abstract class SuluTestCase extends KernelTestCase
             $this->getInitializer()->initialize(null, true);
             $this->dumpPhpcr($session, 'default');
             $this->dumpPhpcr($liveSession, 'live');
+            self::$workspaceInitialized = true;
 
             return;
         }
