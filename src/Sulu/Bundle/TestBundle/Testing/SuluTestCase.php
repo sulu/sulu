@@ -148,10 +148,8 @@ abstract class SuluTestCase extends KernelTestCase
      *
      * @param SessionInterface $session
      * @param string $workspace
-     *
-     * @throws \Exception
      */
-    private function initializeSession(SessionInterface $session, $workspace)
+    private function importSession(SessionInterface $session, $workspace)
     {
         $initializerDump = $this->getInitializerDumpFilePath($workspace);
 
@@ -160,10 +158,8 @@ abstract class SuluTestCase extends KernelTestCase
             $session->save();
         }
 
-        if (true === self::$workspaceInitialized[$workspace]) {
-            $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
-            $session->save();
-        }
+        $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $session->save();
     }
 
     /**
@@ -179,20 +175,17 @@ abstract class SuluTestCase extends KernelTestCase
         $session = $this->getPhpcrDefaultSession();
         $liveSession = $this->getPhpcrLiveSession();
 
-        $this->initializeSession($session, 'default');
-        $this->initializeSession($liveSession, 'live');
-
-        if (!$this->importer) {
-            $this->importer = new PHPCRImporter($session, $liveSession);
-        }
-
-        $this->getInitializer()->initialize();
-
-        if (false === self::$workspaceInitialized['live']) {
-            $this->dumpPhpcr($liveSession, 'live');
-        }
-        if (false === self::$workspaceInitialized['default']) {
+        if (!self::$workspaceInitialized) {
+            $this->getInitializer()->initialize(null, true);
             $this->dumpPhpcr($session, 'default');
+            $this->dumpPhpcr($liveSession, 'live');
+
+            return;
+        }
+
+        $this->importSession($session, 'default');
+        if ($session->getWorkspace()->getName() !== $liveSession->getWorkspace()->getName()) {
+            $this->importSession($liveSession, 'live');
         }
     }
 
@@ -212,7 +205,6 @@ abstract class SuluTestCase extends KernelTestCase
         $handle = fopen($initializerDump, 'w');
         $session->exportSystemView('/cmf', $handle, false, false);
         fclose($handle);
-        self::$workspaceInitialized[$workspace] = true;
     }
 
     /**
