@@ -60,8 +60,7 @@
         "symfony/monolog-bundle": "~2.8 || ~3.0",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
-        "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "phpdocumentor/reflection-docblock": "~3.1"
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "replace": {
         "sulu/media-bundle": "self.version",

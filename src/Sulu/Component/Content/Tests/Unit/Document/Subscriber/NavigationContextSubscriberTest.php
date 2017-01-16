@@ -44,7 +44,7 @@ class NavigationContextSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->document = $this->prophesize(NavigationContextBehavior::class);
         $this->metadata = $this->prophesize(Metadata::class);
         $this->event = $this->prophesize(MetadataLoadEvent::class);
-        $this->subscriber = new NavigationContextSubscriber($this->encoder->reveal());
+        $this->subscriber = new NavigationContextSubscriber();
 
         $this->event->getMetadata()->willReturn($this->metadata);
     }
