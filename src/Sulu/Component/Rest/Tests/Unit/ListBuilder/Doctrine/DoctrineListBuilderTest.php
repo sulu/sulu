@@ -137,7 +137,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testIdSelect()
     {
-        $this->queryBuilder->select(self::$entityName . '.id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->select(self::$entityName . '.id AS id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
 
         $this->doctrineListBuilder->execute();
     }
@@ -796,11 +796,37 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $idField = $this->prophesize(DoctrineFieldDescriptorInterface::class);
         $idField->getSelect()->willReturn('example.id');
+        $idField->getName()->willReturn('id');
 
         $this->doctrineListBuilder->setIdField($idField->reveal());
 
-        $this->queryBuilder->select('example.id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->select('example.id AS id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->where('example.id IN (:ids)')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testIdFieldChanged()
+    {
+        $idField = $this->prophesize(DoctrineFieldDescriptorInterface::class);
+        $idField->getSelect()->willReturn('example.uuid');
+        $idField->getName()->willReturn('other');
+
+        $this->doctrineListBuilder->setIdField($idField->reveal());
+        $this->query->getArrayResult()->willReturn([
+            [
+                'other' => 1,
+            ],
+            [
+                'other' => 2,
+            ],
+            [
+                'other' => 3,
+            ],
+        ]);
+
+        $this->queryBuilder->select('example.uuid AS other')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->where('example.uuid IN (:ids)')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
 
         $this->doctrineListBuilder->execute();
     }
@@ -808,7 +834,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     public function testNoIdField()
     {
         $this->queryBuilder
-            ->select('SuluCoreBundle:Example.id')
+            ->select('SuluCoreBundle:Example.id AS id')
             ->shouldBeCalled()
             ->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder

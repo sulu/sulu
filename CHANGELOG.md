@@ -2,7 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id
+
     * ENHANCEMENT #3146 [TestBundle]          SuluTestCase: Adopted initPhpcr to work for all kernels
+
     * ENHANCEMENT #3147 [All]                 Updated minimum "phpspec/prophecy" version
     * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
     * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
@@ -66,13 +69,8 @@ CHANGELOG for Sulu
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
-<<<<<<< HEAD
     * BUGFIX      #3019 [WebsiteBundle]       Fixed redirect for double slash
     * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension 
-=======
-    * BUGFIX      #3019 [WesbiteBundle]       Fixed redirect for double slash
-    * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension
->>>>>>> origin/master
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes
     * BUGFIX      #3014 [PreviewBundle]       Use the correct PHPCR session for the preview
