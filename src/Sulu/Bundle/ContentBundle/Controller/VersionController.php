@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
@@ -23,6 +24,7 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerI
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Handles the versions of pages.
@@ -98,9 +100,11 @@ class VersionController extends FOSRestController implements
      * @param string $uuid
      * @param int $version
      *
+     * @Post("/nodes/{uuid}/versions/{version}")
+     *
      * @return Response
      */
-    public function postAction(Request $request, $uuid, $version)
+    public function postTriggerAction(Request $request, $uuid, $version)
     {
         $action = $this->getRequestParameter($request, 'action', true);
         $language = $this->getLocale($request);
@@ -140,6 +144,10 @@ class VersionController extends FOSRestController implements
     {
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
         $webspace = $requestAnalyzer->getWebspace();
+
+        if (!$webspace) {
+            throw new MissingMandatoryParametersException('The webspace parameter is missing!');
+        }
 
         if ($webspace) {
             return 'sulu.webspaces.' . $webspace->getKey();

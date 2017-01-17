@@ -266,7 +266,12 @@ define([
                             options: {
                                 el: '#versions',
                                 instanceName: 'versions',
-                                url: ['/admin/api/nodes/', this.options.id, '/versions?language=', this.options.language].join(''),
+                                url: [
+                                    '/admin/api/nodes/',
+                                    this.options.id,
+                                    '/versions?language=', this.options.language,
+                                    '&webspace=', this.options.webspace
+                                ].join(''),
                                 resultKey: 'versions',
                                 actionCallback: this.restoreVersion.bind(this),
                                 viewOptions: {
@@ -454,7 +459,7 @@ define([
                     }
 
                     this.sandbox.emit('husky.overlay.alert.show-loader');
-                    contentManager.restoreVersion(this.options.id, versionId, version.locale)
+                    contentManager.restoreVersion(this.options.id, versionId, version.locale, this.options.webspace)
                         .always(function() {
                             this.sandbox.emit('husky.overlay.alert.hide-loader');
                         }.bind(this))
