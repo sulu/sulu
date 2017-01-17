@@ -444,6 +444,7 @@ define([
                 },
                 function(response) {
                     this.sandbox.emit('sulu.content.contents.saved', response.id, response, action);
+                    this.sandbox.emit('husky.datagrid.versions.update');
                 }.bind(this),
                 function(xhr) {
                     this.sandbox.emit('sulu.content.contents.error', xhr.status, data);

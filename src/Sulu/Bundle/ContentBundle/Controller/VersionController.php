@@ -86,7 +86,11 @@ class VersionController extends FOSRestController implements
             $versionData,
             'versions',
             'get_node_versions',
-            ['uuid' => $uuid],
+            [
+                'uuid' => $uuid,
+                'language' => $locale,
+                'webspace' => $request->get('webspace'),
+            ],
             $listRestHelper->getPage(),
             $limit,
             $total
