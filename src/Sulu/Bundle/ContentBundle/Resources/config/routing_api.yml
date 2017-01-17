@@ -28,5 +28,5 @@ sulu_content.teaser:
     resource: Sulu\Bundle\ContentBundle\Controller\TeaserController
 
 sulu_content.node.versioning:
-    type: version_rest
+    type: versioning_rest
     resource: "@SuluContentBundle/Resources/config/routing_versioning_api.yml"

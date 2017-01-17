@@ -460,7 +460,20 @@ define([
                         }.bind(this))
                         .then(function() {
                             this.sandbox.emit('husky.overlay.alert.close');
-                            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + this.options.id + '/content', true, true);
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                [
+                                    'content/contents/',
+                                    this.options.webspace,
+                                    '/',
+                                    this.options.language,
+                                    '/edit:',
+                                    this.options.id,
+                                    '/content'
+                                ].join(''),
+                                true,
+                                true
+                            );
                         }.bind(this))
                         .fail(function() {
                             this.sandbox.emit(

@@ -49,6 +49,6 @@ class VersionRouteLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return $type === 'version_rest';
+        return $type === 'versioning_rest';
     }
 }
