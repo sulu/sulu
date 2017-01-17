@@ -132,9 +132,19 @@
                     <span class="name">...</span> (<span class="date">...</span>)
                 </div>
             </div>
+            {% if not versioning %}
+            <div class="grid-row">
+                <div class="grid-col-3">
+                    <%=translate('sulu.content.form.settings.changelog.created')%>
+                </div>
+                <div class="grid-col-9" id="created">
+                    <span class="name">...</span> (<span class="date">...</span>)
+                </div>
+            </div>
+            {% endif %}
         </div>
 
-        {% if (versioning) %}
+        {% if versioning %}
         <div id="versions">
 
         </div>

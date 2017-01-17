@@ -48,6 +48,24 @@ define([
 
         isShadow = function() {
             return this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
+        },
+
+        setCreationChangelog = function(fullName, time) {
+            this.sandbox.dom.text('#created .name', fullName);
+            if (!!time) {
+                this.sandbox.dom.text('#created .date', this.sandbox.date.format(time, true));
+            }
+        },
+
+        setChangeChangelog = function(fullName, time) {
+            this.sandbox.dom.text('#changed .name', fullName);
+            if (!!time) {
+                this.sandbox.dom.text('#changed .date', this.sandbox.date.format(time, true));
+            }
+        },
+
+        showChangelogContainer = function() {
+            this.sandbox.dom.show('#changelog-container');
         };
 
     return {
@@ -314,30 +332,54 @@ define([
         },
 
         updateChangelog: function(data) {
-            var setChanger = function(fullName) {
-                    this.sandbox.dom.text('#changed .name', fullName);
-                    changerDef.resolve();
-                },
-                changer, changerDef = this.sandbox.data.deferred();
+            var creator,
+                changer,
+                creatorDef = this.sandbox.data.deferred(),
+                changerDef = this.sandbox.data.deferred();
 
-            changer = new User({id: data.changer});
+            if (data.creator === data.changer) {
+                creator = new User({id: data.creator});
 
-            changer.fetch({
-                global: false,
+                creator.fetch({
+                    global: false,
+                    success: function(model) {
+                        creatorDef.resolve(model.get('fullName'), data.created);
+                        changerDef.resolve(model.get('fullName'), data.changed);
+                    },
+                    error: function() {
+                        creatorDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        changerDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                    }.bind(this)
+                });
+            } else {
+                creator = new User({id: data.creator});
+                changer = new User({id: data.changer});
 
-                success: function(model) {
-                    setChanger.call(this, model.get('fullName'));
-                }.bind(this),
+                creator.fetch({
+                    global: false,
+                    success: function(model) {
+                        creatorDef.resolve(model.get('fullName'), data.created);
+                    },
+                    error: function() {
+                        creatorDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                    }.bind(this)
+                });
 
-                error: function() {
-                    setChanger.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
-                }.bind(this)
-            });
+                changer.fetch({
+                    global: false,
+                    success: function(model) {
+                        changerDef.resolve(model.get('fullName'), data.changed);
+                    },
+                    error: function() {
+                        changerDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                    }.bind(this)
+                })
+            }
 
-            this.sandbox.dom.text('#changed .date', this.sandbox.date.format(data.changed, true));
-
-            changerDef.then(function() {
-                this.sandbox.dom.show('#changelog-container');
+            this.sandbox.data.when(creatorDef, changerDef).then(function(creation, change) {
+                setCreationChangelog.call(this, creation[0], creation[1]);
+                setChangeChangelog.call(this, change[0], change[1]);
+                showChangelogContainer.call(this);
             }.bind(this));
         },
 
