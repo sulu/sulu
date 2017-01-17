@@ -181,6 +181,10 @@ abstract class SuluTestCase extends KernelTestCase
             return;
         }
 
+        if (!$this->importer) {
+            $this->importer = new PHPCRImporter($session, $liveSession);
+        }
+
         $this->importSession($session, 'default');
         if ($session->getWorkspace()->getName() !== $liveSession->getWorkspace()->getName()) {
             $this->importSession($liveSession, 'live');
