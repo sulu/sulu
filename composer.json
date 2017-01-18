@@ -27,7 +27,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1",
         "massive/search-bundle": "0.16.*",
-        "sulu/document-manager": "dev-feature/versioning",
+        "sulu/document-manager": "dev-develop",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "gedmo/doctrine-extensions": "~2.4",
@@ -100,11 +100,5 @@
         "psr-0": {
             "Sulu\\": "tests/"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:danrot/sulu-document-manager.git"
-        }
-    ]
+    }
 }
