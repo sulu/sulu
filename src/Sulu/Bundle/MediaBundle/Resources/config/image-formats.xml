@@ -21,7 +21,7 @@
         </meta>
         <scale x="400" y="400" mode="inset"/>
     </format>
-    <format key="260x" internal="true">
+    <format key="sulu-260x" internal="true">
         <meta>
             <title lang="en">Masonry preview (Sulu)</title>
             <title lang="de">Masonry Vorschau (Sulu)</title>
