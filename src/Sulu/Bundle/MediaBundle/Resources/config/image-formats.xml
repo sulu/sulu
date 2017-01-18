@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
 
-    <format key="400x400" internal="true">
+    <format key="sulu-400x400" internal="true">
         <meta>
             <title lang="en">Contact avatar (Sulu)</title>
             <title lang="de">Kontaktavatar (Sulu)</title>
