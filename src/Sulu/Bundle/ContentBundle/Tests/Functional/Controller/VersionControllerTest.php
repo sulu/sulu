@@ -43,7 +43,10 @@ class VersionControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes/' . $document->getUuid() . '/versions/1_0?action=restore&language=de');
+        $client->request(
+            'POST',
+            '/api/nodes/' . $document->getUuid() . '/versions/1_0?action=restore&language=de&webspace=sulu_io'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -69,7 +72,10 @@ class VersionControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/nodes/' . $document->getUuid() . '/versions?language=de');
+        $client->request(
+            'GET',
+            '/api/nodes/' . $document->getUuid() . '/versions?language=de&webspace=sulu_io'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
