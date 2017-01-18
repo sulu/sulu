@@ -30,7 +30,7 @@
         </meta>
         <scale x="260"/>
     </format>
-    <format key="170x170" internal="true">
+    <format key="sulu-170x170" internal="true">
         <meta>
             <title lang="en">Search (Sulu)</title>
             <title lang="de">Suche (Sulu)</title>
