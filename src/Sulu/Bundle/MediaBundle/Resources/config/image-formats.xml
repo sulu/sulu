@@ -12,7 +12,7 @@
         </meta>
         <scale x="400" y="400"/>
     </format>
-    <format key="400x400-inset" internal="true">
+    <format key="sulu-400x400-inset" internal="true">
         <meta>
             <title lang="en">Organization logo (Sulu)</title>
             <title lang="de">Organisationslogo (Sulu)</title>
