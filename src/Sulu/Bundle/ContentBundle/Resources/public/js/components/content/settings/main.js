@@ -51,17 +51,49 @@ define([
         },
 
         setCreationChangelog = function(fullName, time) {
-            this.sandbox.dom.text('#created .name', fullName);
-            if (!!time) {
-                this.sandbox.dom.text('#created .date', this.sandbox.date.format(time, true));
+            var creationText, formattedTime = this.sandbox.date.format(time, true);
+
+            if (!!fullName) {
+                creationText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.created'),
+                    {
+                        creator: fullName,
+                        created: formattedTime
+                    }
+                );
+            } else {
+                creationText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.created-only'),
+                    {
+                        created: formattedTime
+                    }
+                )
             }
+
+            this.sandbox.dom.text('#created', creationText);
         },
 
         setChangeChangelog = function(fullName, time) {
-            this.sandbox.dom.text('#changed .name', fullName);
-            if (!!time) {
-                this.sandbox.dom.text('#changed .date', this.sandbox.date.format(time, true));
+            var changedText, formattedTime = this.sandbox.date.format(time, true);
+
+            if (!!fullName) {
+                changedText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.changed'),
+                    {
+                        changer: fullName,
+                        changed: formattedTime
+                    }
+                );
+            } else {
+                changedText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.changed-only'),
+                    {
+                        changed: formattedTime
+                    }
+                )
             }
+
+            this.sandbox.dom.text('#changed', changedText);
         },
 
         showChangelogContainer = function() {
@@ -347,8 +379,8 @@ define([
                         changerDef.resolve(model.get('fullName'), data.changed);
                     },
                     error: function() {
-                        creatorDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
-                        changerDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        creatorDef.resolve(null, data.created);
+                        changerDef.resolve(null, data.changed);
                     }.bind(this)
                 });
             } else {
@@ -361,7 +393,7 @@ define([
                         creatorDef.resolve(model.get('fullName'), data.created);
                     },
                     error: function() {
-                        creatorDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        creatorDef.resolve(null, data.created);
                     }.bind(this)
                 });
 
@@ -371,7 +403,7 @@ define([
                         changerDef.resolve(model.get('fullName'), data.changed);
                     },
                     error: function() {
-                        changerDef.resolve(this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        changerDef.resolve(null, data.changed);
                     }.bind(this)
                 })
             }

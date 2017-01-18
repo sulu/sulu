@@ -445,15 +445,19 @@
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.changed">
                 <source>sulu.content.form.settings.changelog.changed</source>
-                <target>Dernière modification:</target>
+                <target>Dernier changement par %(changer)s le %(changed)s</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.created">
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.changed-only">
+                <source>sulu.content.form.settings.changelog.changed-only</source>
+                <target>Dernier changement le %(changed)s</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.created">
                 <source>sulu.content.form.settings.changelog.created</source>
-                <target>Crée par:</target>
+                <target>Créé par %(creator)s le %(created)s</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.user-not-found">
-                <source>sulu.content.form.settings.changelog.user-not-found</source>
-                <target>Utilisateur introuvable</target>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf034" resname="sulu.content.form.settings.changelog.created-only">
+                <source>sulu.content.form.settings.changelog.created-only</source>
+                <target>Créé le %(created)s</target>
             </trans-unit>
             <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
                 <source>column-navigation.ghost</source>
