@@ -79,7 +79,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
             $this->formatManager->reveal(),
             [
                 '50x50' => [],
-                '100x100' => [],
+                'sulu-100x100' => [],
             ]
         );
 
@@ -110,7 +110,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatOptions[0]->setCropWidth(7);
 
         $this->formatOptions[] = new FormatOptions();
-        $this->formatOptions[1]->setFormatKey('100x100');
+        $this->formatOptions[1]->setFormatKey('sulu-100x100');
         $this->formatOptions[1]->setCropX(11);
         $this->formatOptions[1]->setCropY(13);
         $this->formatOptions[1]->setCropHeight(17);
@@ -169,10 +169,10 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, $formatOptions['50x50']['cropHeight']);
         $this->assertEquals(7, $formatOptions['50x50']['cropWidth']);
 
-        $this->assertEquals(11, $formatOptions['100x100']['cropX']);
-        $this->assertEquals(13, $formatOptions['100x100']['cropY']);
-        $this->assertEquals(17, $formatOptions['100x100']['cropHeight']);
-        $this->assertEquals(19, $formatOptions['100x100']['cropWidth']);
+        $this->assertEquals(11, $formatOptions['sulu-100x100']['cropX']);
+        $this->assertEquals(13, $formatOptions['sulu-100x100']['cropY']);
+        $this->assertEquals(17, $formatOptions['sulu-100x100']['cropHeight']);
+        $this->assertEquals(19, $formatOptions['sulu-100x100']['cropWidth']);
     }
 
     /**
@@ -196,7 +196,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
 
         $formatOptions = $this->formatOptionsManager->save(
             42,
-            '100x100',
+            'sulu-100x100',
             [
                 'cropX' => 10,
                 'cropY' => 11,
@@ -240,7 +240,7 @@ class FormatOptionsManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
 
-        $this->formatOptionsManager->delete(42, '100x100');
+        $this->formatOptionsManager->delete(42, 'sulu-100x100');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldHaveBeenCalled();

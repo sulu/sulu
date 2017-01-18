@@ -407,8 +407,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('logo', $response);
         $this->assertEquals($this->logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
     public function testGetByIdNotExisting()
@@ -684,8 +684,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('logo', $response);
         $this->assertEquals($this->logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -717,8 +717,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('logo', $response);
         $this->assertEquals($this->logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
     public function testPostWithCategory()
@@ -1200,8 +1200,8 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
         $this->assertObjectHasAttribute('logo', $response->_embedded->accounts[0]);
-        $this->assertObjectHasAttribute('100x100', $response->_embedded->accounts[0]->logo);
-        $this->assertTrue(is_string($response->_embedded->accounts[0]->logo->{'100x100'}));
+        $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->accounts[0]->logo);
+        $this->assertTrue(is_string($response->_embedded->accounts[0]->logo->{'sulu-100x100'}));
     }
 
     public function testGetListSearch()
@@ -1380,8 +1380,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('logo', $response);
         $this->assertEquals($this->logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
             $this->assertEquals(2, count($response->addresses));
@@ -1481,8 +1481,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('logo', $response);
         $this->assertEquals($this->logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
-        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
             $this->assertEquals(2, count($response->addresses));

@@ -39,7 +39,7 @@
         </meta>
         <scale x="170" y="170"/>
     </format>
-    <format key="100x100" internal="true">
+    <format key="sulu-100x100" internal="true">
         <meta>
             <title lang="en">Contact card (Sulu)</title>
             <title lang="de">Personenkarte (Sulu)</title>
