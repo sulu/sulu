@@ -283,7 +283,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     ) {
         $queryString = $this->getDocumentsQueryString($webspaceKey, $uuid, $nodes, $ignoredNodes);
 
-        $query = $this->documentManager->createQuery($queryString);
+        $query = $this->documentManager->createQuery($queryString, $this->exportLocale);
 
         return $query->execute();
     }

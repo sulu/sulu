@@ -28,7 +28,7 @@ class SnippetImportCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:snippet:import')
             ->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
-            ->addArgument('locale', InputOption::VALUE_REQUIRED)
+            ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->setDescription('Import Snippets');
     }
