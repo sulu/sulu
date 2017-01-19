@@ -57,13 +57,13 @@ class ContentPathTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->suluWebspace = $this->prophesize(Webspace::class);
         $this->suluWebspace->getKey()->willReturn('sulu_io');
-        $this->suluWebspace->hasDomain('www.sulu.io', $this->environment)->willReturn(true);
-        $this->suluWebspace->hasDomain('www.test.io', $this->environment)->willReturn(false);
+        $this->suluWebspace->hasDomain('www.sulu.io', $this->environment, 'de')->willReturn(true);
+        $this->suluWebspace->hasDomain('www.test.io', $this->environment, 'de')->willReturn(false);
 
         $this->testWebspace = $this->prophesize(Webspace::class);
         $this->testWebspace->getKey()->willReturn('test_io');
-        $this->testWebspace->hasDomain('www.test.io', $this->environment)->willReturn(true);
-        $this->testWebspace->hasDomain('www.sulu.io', $this->environment)->willReturn(false);
+        $this->testWebspace->hasDomain('www.test.io', $this->environment, 'de')->willReturn(true);
+        $this->testWebspace->hasDomain('www.sulu.io', $this->environment, 'de')->willReturn(false);
 
         $this->requestAnalyzer->getAttribute('scheme')->willReturn('http');
         $this->requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
@@ -92,6 +92,21 @@ class ContentPathTwigExtensionTest extends \PHPUnit_Framework_TestCase
         )->willReturn('www.sulu.io/de/test')->shouldBeCalledTimes(1);
 
         $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test'));
+    }
+
+    public function testGetContentPathWithLocaleForDifferentDomain()
+    {
+        $this->requestAnalyzer->getAttribute('host')->willReturn('en.sulu.io');
+        $this->webspaceManager->findUrlByResourceLocator(
+            '/test',
+            $this->environment,
+            'de',
+            'sulu_io',
+            null,
+            'http'
+        )->willReturn('de.sulu.io/test');
+        $this->suluWebspace->hasDomain('en.sulu.io', 'prod', 'de')->willReturn(false);
+        $this->assertEquals('de.sulu.io/test', $this->extension->getContentPath('/test', null, 'de'));
     }
 
     public function testGetContentPathWithWebspaceKey()
@@ -132,7 +147,7 @@ class ContentPathTwigExtensionTest extends \PHPUnit_Framework_TestCase
     public function testGetContentPathWithWebspaceKeyHostNotWebspace()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.xy.io');
-        $this->testWebspace->hasDomain('www.xy.io', $this->environment)->willReturn(false);
+        $this->testWebspace->hasDomain('www.xy.io', $this->environment, 'de')->willReturn(false);
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
             $this->environment,

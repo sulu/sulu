@@ -55,13 +55,13 @@
         "matthiasnoback/symfony-config-test": "^1.1",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
         "phpunit/phpunit": "^4.8.31",
+        "phpspec/prophecy": "^1.4",
         "symfony/phpunit-bridge": "~2.8.7, !=2.8.10",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony/monolog-bundle": "~2.8 || ~3.0",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
-        "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "phpdocumentor/reflection-docblock": "~3.1"
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "replace": {
         "sulu/media-bundle": "self.version",

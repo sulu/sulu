@@ -15,20 +15,35 @@ use Sulu\Component\Webspace\Url;
 
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Url
-     */
-    private $url;
-
-    public function setUp()
+    public function provideIsValidLocale()
     {
-        parent::setUp();
+        return [
+            ['de', 'at', 'de', 'at', true],
+            ['de', '', 'de', null, true],
+            ['de', null, 'de', null, true],
+            [null, null, 'en', 'gb', true],
+            ['en', null, 'de', null, false],
+            ['en', 'us', 'en', 'gb', false],
+            ['de', 'at', 'de', null, false],
+        ];
+    }
 
-        $this->url = new Url();
+    /**
+     * @dataProvider provideIsValidLocale
+     */
+    public function testIsValidLocale($urlLanguage, $urlCountry, $testLanguage, $testCountry, $result)
+    {
+        $url = new Url();
+        $url->setLanguage($urlLanguage);
+        $url->setCountry($urlCountry);
+
+        $this->assertEquals($result, $url->isValidLocale($testLanguage, $testCountry));
     }
 
     public function testToArray()
     {
+        $url = new Url();
+
         $expected = [
             'language' => 'ello',
             'country' => 'as',
@@ -40,14 +55,14 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             'environment' => null,
         ];
 
-        $this->url->setUrl($expected['url']);
-        $this->url->setLanguage($expected['language']);
-        $this->url->setCountry($expected['country']);
-        $this->url->setSegment($expected['segment']);
-        $this->url->setRedirect($expected['redirect']);
-        $this->url->setMain($expected['main']);
-        $this->url->setAnalyticsKey($expected['analyticsKey']);
+        $url->setUrl($expected['url']);
+        $url->setLanguage($expected['language']);
+        $url->setCountry($expected['country']);
+        $url->setSegment($expected['segment']);
+        $url->setRedirect($expected['redirect']);
+        $url->setMain($expected['main']);
+        $url->setAnalyticsKey($expected['analyticsKey']);
 
-        $this->assertEquals($expected, $this->url->toArray());
+        $this->assertEquals($expected, $url->toArray());
     }
 }

@@ -211,7 +211,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($document)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
         $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
         $this->cleaner->validate('path/to/doc')->willReturn(true);
@@ -232,7 +232,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($document)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
         $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc');
 
@@ -252,7 +252,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($document)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
         $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
         $this->cleaner->validate('path/to/doc')->willReturn(false);
@@ -273,7 +273,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($document)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('document-uuid-uuid');
 
         $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
@@ -308,7 +308,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($childDocument)->willReturn($childNode);
         $this->documentInspector->getWebspace($childDocument)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($childDocument)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($childDocument)->willReturn($languageCode);
         $this->documentInspector->getUuid($childDocument)->willReturn('published-child-uuid-uuid');
 
         $document = $this->prophesize(PageDocument::class);
@@ -321,7 +321,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($document)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
 
         $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
@@ -386,7 +386,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($childDocument)->willReturn($childNode);
         $this->documentInspector->getWebspace($childDocument)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($childDocument)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($childDocument)->willReturn($languageCode);
         $this->documentInspector->getUuid($childDocument)->willReturn('published-child-uuid-uuid');
 
         $document = $this->prophesize(PageDocument::class);
@@ -399,7 +399,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
-        $this->documentInspector->getLocale($document)->willReturn($languageCode);
+        $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
 
         $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
@@ -444,7 +444,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn('sulu_io');
-        $this->documentInspector->getLocale($document)->willReturn('en');
+        $this->documentInspector->getOriginalLocale($document)->willReturn('en');
 
         $this->mapper->loadByContent($node, 'sulu_io', 'en', null)->willReturn('path/to/document');
 

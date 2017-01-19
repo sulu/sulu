@@ -63,14 +63,14 @@
                     <sv:value>e37fde9c-af7c-4132-b398-de8eef135d71</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-title" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:en-created" sv:type="Date">
                     <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-keywords" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-article" sv:type="String">
                     <sv:value>Test</sv:value>
@@ -91,7 +91,7 @@
                     <sv:value>/test1</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-noFollow" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-title" sv:type="String">
                     <sv:value>test1</sv:value>
@@ -100,7 +100,7 @@
                     <sv:value>437</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-noIndex" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-published" sv:type="Date">
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
@@ -109,7 +109,7 @@
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-hideInSitemap" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-state" sv:type="Long">
                     <sv:value>2</sv:value>
@@ -118,28 +118,28 @@
                     <sv:value>1</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-canonicalUrl" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-changer" sv:type="Long">
                     <sv:value>437</sv:value>
                 </sv:property>
-                <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:en-seo-description" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:en-template" sv:type="String">
                     <sv:value>default</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-title" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:de-created" sv:type="Date">
                     <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-keywords" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-article" sv:type="String">
                     <sv:value>Test</sv:value>
@@ -157,7 +157,7 @@
                     <sv:value>/test1</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-noFollow" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-title" sv:type="String">
                     <sv:value>test1</sv:value>
@@ -166,7 +166,7 @@
                     <sv:value>437</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-noIndex" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-published" sv:type="Date">
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
@@ -175,7 +175,7 @@
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-hideInSitemap" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-state" sv:type="Long">
                     <sv:value>2</sv:value>
@@ -184,16 +184,16 @@
                     <sv:value>1</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-canonicalUrl" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-changer" sv:type="Long">
                     <sv:value>437</sv:value>
                 </sv:property>
-                <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:de-seo-description" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:de-template" sv:type="String">
                     <sv:value>default</sv:value>
                 </sv:property>
@@ -209,14 +209,14 @@
                     <sv:value>585ccd35-a98e-4e41-a62c-e502ca905496</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-title" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:en-created" sv:type="Date">
                     <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-keywords" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-article" sv:type="String">
                     <sv:value>Test</sv:value>
@@ -237,7 +237,7 @@
                     <sv:value>/test2</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-noFollow" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-title" sv:type="String">
                     <sv:value>test2</sv:value>
@@ -246,7 +246,7 @@
                     <sv:value>437</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-noIndex" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-published" sv:type="Date">
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
@@ -255,7 +255,7 @@
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-hideInSitemap" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-state" sv:type="Long">
                     <sv:value>2</sv:value>
@@ -264,28 +264,28 @@
                     <sv:value>2</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:en-seo-canonicalUrl" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:en-changer" sv:type="Long">
                     <sv:value>437</sv:value>
                 </sv:property>
-                <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:en-seo-description" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:en-template" sv:type="String">
                     <sv:value>default</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-title" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:de-created" sv:type="Date">
                     <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-keywords" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-article" sv:type="String">
                     <sv:value>Test</sv:value>
@@ -303,7 +303,7 @@
                     <sv:value>/test2</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-noFollow" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-title" sv:type="String">
                     <sv:value>test2</sv:value>
@@ -312,7 +312,7 @@
                     <sv:value>437</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-noIndex" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-published" sv:type="Date">
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
@@ -321,7 +321,7 @@
                     <sv:value>2016-02-23T13:14:04.000+00:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-hideInSitemap" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-state" sv:type="Long">
                     <sv:value>2</sv:value>
@@ -330,18 +330,88 @@
                     <sv:value>2</sv:value>
                 </sv:property>
                 <sv:property sv:name="i18n:de-seo-canonicalUrl" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:property sv:name="i18n:de-changer" sv:type="Long">
                     <sv:value>437</sv:value>
                 </sv:property>
-                <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:de-seo-description" sv:type="String">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
-                <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"></sv:property>
+                <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"/>
                 <sv:property sv:name="i18n:de-template" sv:type="String">
                     <sv:value>default</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-title" sv:type="String">
+                    <sv:value>test2</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-article" sv:type="String">
+                    <sv:value>Test</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-url" sv:type="String">
+                    <sv:value>/test2</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-title" sv:type="String">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-description" sv:type="String">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-keywords" sv:type="String">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-noFollow" sv:type="Boolean">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-noIndex" sv:type="Boolean">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-hideInSitemap" sv:type="Boolean">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-seo-canonicalUrl" sv:type="String">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-excerpt-categories" sv:type="String"
+                        sv:multiple="true"/>
+                <sv:property sv:name="i18n:fr-excerpt-description" sv:type="String">
+                    <sv:value/>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-excerpt-icon" sv:type="String">
+                    <sv:value>[]</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-excerpt-images" sv:type="String">
+                    <sv:value>[]</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-excerpt-tags" sv:type="Long" sv:multiple="true">
+                    <sv:value>1</sv:value>
+                    <sv:value>2</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-nodeType" sv:type="Long">
+                    <sv:value>1</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-state" sv:type="Long">
+                    <sv:value>2</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-template" sv:type="String">
+                    <sv:value>default</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-navContexts" sv:type="String" sv:multiple="true"/>
+                <sv:property sv:name="i18n:fr-creator" sv:type="Long">
+                    <sv:value>437</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-changer" sv:type="Long">
+                    <sv:value>437</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-created" sv:type="Date">
+                    <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-changed" sv:type="Date">
+                    <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
+                </sv:property>
+                <sv:property sv:name="i18n:fr-published" sv:type="Date">
+                    <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                 </sv:property>
                 <sv:node sv:name="test3">
                     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -354,14 +424,14 @@
                         <sv:value>5778b19f-460a-47fc-93da-9a6126e5c384</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-title" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-created" sv:type="Date">
                         <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-keywords" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-article" sv:type="String">
                         <sv:value>Test</sv:value>
@@ -382,7 +452,7 @@
                         <sv:value>/test2/test3</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-noFollow" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-title" sv:type="String">
                         <sv:value>test3</sv:value>
@@ -391,7 +461,7 @@
                         <sv:value>437</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-noIndex" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-published" sv:type="Date">
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
@@ -400,7 +470,7 @@
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-hideInSitemap" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-state" sv:type="Long">
                         <sv:value>2</sv:value>
@@ -410,28 +480,28 @@
                         <sv:value>2</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-canonicalUrl" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-changer" sv:type="Long">
                         <sv:value>437</sv:value>
                     </sv:property>
-                    <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-seo-description" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-template" sv:type="String">
                         <sv:value>default</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-title" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:de-created" sv:type="Date">
                         <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-keywords" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-article" sv:type="String">
                         <sv:value>Test</sv:value>
@@ -449,7 +519,7 @@
                         <sv:value>/test2/test3</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-noFollow" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-title" sv:type="String">
                         <sv:value>test3</sv:value>
@@ -458,7 +528,7 @@
                         <sv:value>437</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-noIndex" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-published" sv:type="Date">
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
@@ -467,7 +537,7 @@
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-hideInSitemap" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-state" sv:type="Long">
                         <sv:value>2</sv:value>
@@ -477,18 +547,88 @@
                         <sv:value>2</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-canonicalUrl" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-changer" sv:type="Long">
                         <sv:value>437</sv:value>
                     </sv:property>
-                    <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-seo-description" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-template" sv:type="String">
                         <sv:value>default</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-title" sv:type="String">
+                        <sv:value>test3</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-article" sv:type="String">
+                        <sv:value>Test</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-url" sv:type="String">
+                        <sv:value>/test2/test3</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-title" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-description" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-keywords" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-noFollow" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-noIndex" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-hideInSitemap" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-canonicalUrl" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-categories" sv:type="String"
+                            sv:multiple="true"/>
+                    <sv:property sv:name="i18n:fr-excerpt-description" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-icon" sv:type="String">
+                        <sv:value>[]</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-images" sv:type="String">
+                        <sv:value>[]</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-tags" sv:type="Long" sv:multiple="true">
+                        <sv:value>1</sv:value>
+                        <sv:value>2</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-nodeType" sv:type="Long">
+                        <sv:value>1</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-state" sv:type="Long">
+                        <sv:value>2</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-template" sv:type="String">
+                        <sv:value>default</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-navContexts" sv:type="String" sv:multiple="true"/>
+                    <sv:property sv:name="i18n:fr-creator" sv:type="Long">
+                        <sv:value>437</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-changer" sv:type="Long">
+                        <sv:value>437</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-created" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-changed" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-published" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                     </sv:property>
                 </sv:node>
                 <sv:node sv:name="test4">
@@ -502,14 +642,14 @@
                         <sv:value>3caed1fb-dde2-480d-8a1d-c4db1f10b24e</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-title" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-created" sv:type="Date">
                         <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-keywords" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-article" sv:type="String">
                         <sv:value>Test</sv:value>
@@ -530,7 +670,7 @@
                         <sv:value>/test2/test4</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-noFollow" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-title" sv:type="String">
                         <sv:value>test4</sv:value>
@@ -539,7 +679,7 @@
                         <sv:value>437</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-noIndex" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-published" sv:type="Date">
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
@@ -548,7 +688,7 @@
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-hideInSitemap" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-state" sv:type="Long">
                         <sv:value>2</sv:value>
@@ -557,28 +697,28 @@
                         <sv:value>1</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:en-seo-canonicalUrl" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:en-changer" sv:type="Long">
                         <sv:value>437</sv:value>
                     </sv:property>
-                    <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-seo-description" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:en-template" sv:type="String">
                         <sv:value>default</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-title" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:de-created" sv:type="Date">
                         <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-keywords" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-article" sv:type="String">
                         <sv:value>Test</sv:value>
@@ -596,7 +736,7 @@
                         <sv:value>/test2/test4</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-noFollow" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-title" sv:type="String">
                         <sv:value>test4</sv:value>
@@ -605,7 +745,7 @@
                         <sv:value>437</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-noIndex" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-published" sv:type="Date">
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
@@ -614,7 +754,7 @@
                         <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-hideInSitemap" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-state" sv:type="Long">
                         <sv:value>2</sv:value>
@@ -623,18 +763,88 @@
                         <sv:value>1</sv:value>
                     </sv:property>
                     <sv:property sv:name="i18n:de-seo-canonicalUrl" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:property sv:name="i18n:de-changer" sv:type="Long">
                         <sv:value>437</sv:value>
                     </sv:property>
-                    <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:de-seo-description" sv:type="String">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
-                    <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"></sv:property>
+                    <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"/>
                     <sv:property sv:name="i18n:de-template" sv:type="String">
                         <sv:value>default</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-title" sv:type="String">
+                        <sv:value>test4</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-article" sv:type="String">
+                        <sv:value>Test</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-url" sv:type="String">
+                        <sv:value>/test2/test4</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-title" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-description" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-keywords" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-noFollow" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-noIndex" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-hideInSitemap" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-seo-canonicalUrl" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-categories" sv:type="String"
+                            sv:multiple="true"/>
+                    <sv:property sv:name="i18n:fr-excerpt-description" sv:type="String">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-icon" sv:type="String">
+                        <sv:value>[]</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-images" sv:type="String">
+                        <sv:value>[]</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-excerpt-tags" sv:type="Long" sv:multiple="true">
+                        <sv:value>1</sv:value>
+                        <sv:value>2</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-nodeType" sv:type="Long">
+                        <sv:value>1</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-state" sv:type="Long">
+                        <sv:value>2</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-template" sv:type="String">
+                        <sv:value>default</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-navContexts" sv:type="String" sv:multiple="true"/>
+                    <sv:property sv:name="i18n:fr-creator" sv:type="Long">
+                        <sv:value>437</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-changer" sv:type="Long">
+                        <sv:value>437</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-created" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-changed" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="i18n:fr-published" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                     </sv:property>
                     <sv:node sv:name="test5">
                         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -647,15 +857,14 @@
                             <sv:value>84c2465c-f997-4c5b-9e9d-fb9b72232f0b</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:en-seo-title" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
-                        <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String"
-                                     sv:multiple="true"></sv:property>
+                        <sv:property sv:name="i18n:en-excerpt-categories" sv:type="String" sv:multiple="true"/>
                         <sv:property sv:name="i18n:en-created" sv:type="Date">
                             <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:en-seo-keywords" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:en-article" sv:type="String">
                             <sv:value>Test</sv:value>
@@ -676,7 +885,7 @@
                             <sv:value>/test2/test4/testing5</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:en-seo-noFollow" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:en-title" sv:type="String">
                             <sv:value>test5</sv:value>
@@ -685,7 +894,7 @@
                             <sv:value>437</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:en-seo-noIndex" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:en-published" sv:type="Date">
                             <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
@@ -694,7 +903,7 @@
                             <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:en-seo-hideInSitemap" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:en-state" sv:type="Long">
                             <sv:value>2</sv:value>
@@ -704,29 +913,28 @@
                             <sv:value>2</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:en-seo-canonicalUrl" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:en-changer" sv:type="Long">
                             <sv:value>437</sv:value>
                         </sv:property>
-                        <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                        <sv:property sv:name="i18n:en-navContexts" sv:type="String" sv:multiple="true"/>
                         <sv:property sv:name="i18n:en-seo-description" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
-                        <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"></sv:property>
+                        <sv:property sv:name="i18n:en-tags" sv:type="String" sv:multiple="true"/>
                         <sv:property sv:name="i18n:en-template" sv:type="String">
                             <sv:value>default</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:de-seo-title" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
-                        <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String"
-                                     sv:multiple="true"></sv:property>
+                        <sv:property sv:name="i18n:de-excerpt-categories" sv:type="String" sv:multiple="true"/>
                         <sv:property sv:name="i18n:de-created" sv:type="Date">
                             <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:de-seo-keywords" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:de-article" sv:type="String">
                             <sv:value>Test</sv:value>
@@ -744,7 +952,7 @@
                             <sv:value>/test2/test4/testing5</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:de-seo-noFollow" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:de-title" sv:type="String">
                             <sv:value>test5</sv:value>
@@ -753,7 +961,7 @@
                             <sv:value>437</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:de-seo-noIndex" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:de-published" sv:type="Date">
                             <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
@@ -762,7 +970,7 @@
                             <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:de-seo-hideInSitemap" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:de-state" sv:type="Long">
                             <sv:value>2</sv:value>
@@ -772,18 +980,94 @@
                             <sv:value>2</sv:value>
                         </sv:property>
                         <sv:property sv:name="i18n:de-seo-canonicalUrl" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:property sv:name="i18n:de-changer" sv:type="Long">
                             <sv:value>437</sv:value>
                         </sv:property>
-                        <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"></sv:property>
+                        <sv:property sv:name="i18n:de-navContexts" sv:type="String" sv:multiple="true"/>
                         <sv:property sv:name="i18n:de-seo-description" sv:type="String">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
-                        <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"></sv:property>
+                        <sv:property sv:name="i18n:de-tags" sv:type="String" sv:multiple="true"/>
                         <sv:property sv:name="i18n:de-template" sv:type="String">
                             <sv:value>default</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-title" sv:type="String">
+                            <sv:value>test5</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-article" sv:type="String">
+                            <sv:value>Test</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-url" sv:type="String">
+                            <sv:value>/test2/test4/testing5</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-title" sv:type="String">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-description" sv:type="String">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-keywords" sv:type="String">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-noFollow" sv:type="Boolean">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-noIndex" sv:type="Boolean">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-hideInSitemap" sv:type="Boolean">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-seo-canonicalUrl" sv:type="String">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-excerpt-categories" sv:type="String"
+                                sv:multiple="true"/>
+                        <sv:property sv:name="i18n:fr-excerpt-description" sv:type="String">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-excerpt-icon" sv:type="String">
+                            <sv:value>[]</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-excerpt-images" sv:type="String">
+                            <sv:value>[]</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-excerpt-tags" sv:type="Long" sv:multiple="true">
+                            <sv:value>1</sv:value>
+                            <sv:value>2</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-nodeType" sv:type="Long">
+                            <sv:value>1</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-state" sv:type="Long">
+                            <sv:value>2</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-template" sv:type="String">
+                            <sv:value>default</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-navContexts" sv:type="String" sv:multiple="true"/>
+                        <sv:property sv:name="i18n:fr-creator" sv:type="Long">
+                            <sv:value>437</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-changer" sv:type="Long">
+                            <sv:value>437</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-created" sv:type="Date">
+                            <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-changed" sv:type="Date">
+                            <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-published" sv:type="Date">
+                            <sv:value>2016-02-23T13:14:05.000+00:00</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-shadow-on" sv:type="Boolean">
+                            <sv:value>1</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="i18n:fr-shadow-base" sv:type="String">
+                            <sv:value>en</sv:value>
                         </sv:property>
                     </sv:node>
                 </sv:node>
@@ -807,7 +1091,7 @@
                     <sv:value>9bc3b44c-65ab-4bb5-92ed-58a80499c7dc</sv:value>
                 </sv:property>
                 <sv:property sv:name="sulu:history" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:node sv:name="test1">
                     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -826,7 +1110,7 @@
                         <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="sulu:history" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                 </sv:node>
                 <sv:node sv:name="test2">
@@ -846,7 +1130,7 @@
                         <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="sulu:history" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:node sv:name="test3">
                         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -865,7 +1149,7 @@
                             <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="sulu:history" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                     </sv:node>
                     <sv:node sv:name="test4">
@@ -885,7 +1169,7 @@
                             <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="sulu:history" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:node sv:name="testing5">
                             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -904,7 +1188,7 @@
                                 <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                             </sv:property>
                             <sv:property sv:name="sulu:history" sv:type="Boolean">
-                                <sv:value></sv:value>
+                                <sv:value/>
                             </sv:property>
                         </sv:node>
                     </sv:node>
@@ -924,7 +1208,7 @@
                     <sv:value>9bc3b44c-65ab-4bb5-92ed-58a80499c7dc</sv:value>
                 </sv:property>
                 <sv:property sv:name="sulu:history" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
             </sv:node>
             <sv:node sv:name="en">
@@ -941,7 +1225,7 @@
                     <sv:value>9bc3b44c-65ab-4bb5-92ed-58a80499c7dc</sv:value>
                 </sv:property>
                 <sv:property sv:name="sulu:history" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
                 <sv:node sv:name="test1">
                     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -960,7 +1244,7 @@
                         <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="sulu:history" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                 </sv:node>
                 <sv:node sv:name="test2">
@@ -980,7 +1264,7 @@
                         <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="sulu:history" sv:type="Boolean">
-                        <sv:value></sv:value>
+                        <sv:value/>
                     </sv:property>
                     <sv:node sv:name="test3">
                         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -999,7 +1283,7 @@
                             <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="sulu:history" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                     </sv:node>
                     <sv:node sv:name="test4">
@@ -1019,7 +1303,7 @@
                             <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                         </sv:property>
                         <sv:property sv:name="sulu:history" sv:type="Boolean">
-                            <sv:value></sv:value>
+                            <sv:value/>
                         </sv:property>
                         <sv:node sv:name="testing5">
                             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1038,7 +1322,7 @@
                                 <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
                             </sv:property>
                             <sv:property sv:name="sulu:history" sv:type="Boolean">
-                                <sv:value></sv:value>
+                                <sv:value/>
                             </sv:property>
                         </sv:node>
                     </sv:node>
@@ -1058,7 +1342,7 @@
                     <sv:value>9bc3b44c-65ab-4bb5-92ed-58a80499c7dc</sv:value>
                 </sv:property>
                 <sv:property sv:name="sulu:history" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
             </sv:node>
             <sv:node sv:name="fr">
@@ -1075,8 +1359,88 @@
                     <sv:value>9bc3b44c-65ab-4bb5-92ed-58a80499c7dc</sv:value>
                 </sv:property>
                 <sv:property sv:name="sulu:history" sv:type="Boolean">
-                    <sv:value></sv:value>
+                    <sv:value/>
                 </sv:property>
+                <sv:node sv:name="test2">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+                        <sv:value>sulu:path</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="jcr:uuid" sv:type="String">
+                        <sv:value>3df60006-acd2-4e72-99a4-3540a679a4ad</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="sulu:content" sv:type="Reference">
+                        <sv:value>585ccd35-a98e-4e41-a62c-e502ca905496</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="sulu:created" sv:type="Date">
+                        <sv:value>2016-02-23T13:14:02.000+00:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="sulu:history" sv:type="Boolean">
+                        <sv:value/>
+                    </sv:property>
+                    <sv:node sv:name="test3">
+                        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                            <sv:value>nt:unstructured</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+                            <sv:value>sulu:path</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="jcr:uuid" sv:type="String">
+                            <sv:value>32626cce-2d25-4d7e-8005-e87d62a0e143</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="sulu:content" sv:type="Reference">
+                            <sv:value>5778b19f-460a-47fc-93da-9a6126e5c384</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="sulu:created" sv:type="Date">
+                            <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="sulu:history" sv:type="Boolean">
+                            <sv:value/>
+                        </sv:property>
+                    </sv:node>
+                    <sv:node sv:name="test4">
+                        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                            <sv:value>nt:unstructured</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+                            <sv:value>sulu:path</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="jcr:uuid" sv:type="String">
+                            <sv:value>857c7798-3d94-4cab-8b7c-2c5312f7538b</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="sulu:content" sv:type="Reference">
+                            <sv:value>3caed1fb-dde2-480d-8a1d-c4db1f10b24e</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="sulu:created" sv:type="Date">
+                            <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                        </sv:property>
+                        <sv:property sv:name="sulu:history" sv:type="Boolean">
+                            <sv:value/>
+                        </sv:property>
+                        <sv:node sv:name="testing5">
+                            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                                <sv:value>nt:unstructured</sv:value>
+                            </sv:property>
+                            <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+                                <sv:value>sulu:path</sv:value>
+                            </sv:property>
+                            <sv:property sv:name="jcr:uuid" sv:type="String">
+                                <sv:value>d029adb2-a622-4d54-87cb-412df38ccf3d</sv:value>
+                            </sv:property>
+                            <sv:property sv:name="sulu:content" sv:type="Reference">
+                                <sv:value>84c2465c-f997-4c5b-9e9d-fb9b72232f0b</sv:value>
+                            </sv:property>
+                            <sv:property sv:name="sulu:created" sv:type="Date">
+                                <sv:value>2016-02-23T13:14:03.000+00:00</sv:value>
+                            </sv:property>
+                            <sv:property sv:name="sulu:history" sv:type="Boolean">
+                                <sv:value/>
+                            </sv:property>
+                        </sv:node>
+                    </sv:node>
+                </sv:node>
             </sv:node>
         </sv:node>
     </sv:node>

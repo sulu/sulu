@@ -2,6 +2,12 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id
+
+    * ENHANCEMENT #3146 [TestBundle]          SuluTestCase: Adopted initPhpcr to work for all kernels
+
+    * ENHANCEMENT #3147 [All]                 Updated minimum "phpspec/prophecy" version
+    * ENHANCEMENT #3142 [CoreBundle]          Added a script handler to delete the composer.lock file from gitignore
     * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
     * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
     * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
@@ -31,6 +37,15 @@ CHANGELOG for Sulu
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
+
+* 1.4.4 (2016-01-12)
+    * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor
+    * HOTFIX      #3139 [MediaBundle]           Fixed scaling issues on crop overlay in page form
+    * HOTFIX      #3138 [MediaBundle]           Fixed cropping with only one given side
+    * HOTFIX      #3134 [MediaBundle]           Fixed default focus point to center
+    * HOTFIX      #3130 [ContentBundle]         Fixed moving of blocks without maxOccurs
+    * HOTFIX      #3131 [WebsiteBundle]         Fixed sulu_content_path for language-specific domains
+    * HOTFIX      #3127 [ContentBundle]         Fixed copy-locale for homepage
 
 * 1.4.3 (2016-12-21)
     * HOTFIX      #3108 [ContentBundle]         Fixed support for multiple properties with minOccurs of 1
@@ -73,9 +88,9 @@ CHANGELOG for Sulu
     * BUGFIX      #2861 [ContentBundle]       Removed bug with displaced multifield remove icon
     * BUGFIX      #2929 [MediaBundle]         Return system collection media only with granted permissions
     * FEATURE     #3002 [MediaBundle]         Added config for choosing formats which can be cropped in media selection
-    * FEATURE     #2999 [MediaBundle]         Added correct mime type to image after editing with aviary 
+    * FEATURE     #2999 [MediaBundle]         Added correct mime type to image after editing with aviary
     * BUGFIX      #2998 [MediaBundle]         Videos can now be uploaded without ffmpeg
-    * FEATURE     #2994 [HTTPCacheBundle]     Added cachelifetime types and introduced cron-expressions to calculate cachelifetime 
+    * FEATURE     #2994 [HTTPCacheBundle]     Added cachelifetime types and introduced cron-expressions to calculate cachelifetime
     * FEATURE     #3000 [MediaBundle]         Added paste media transformation
     * BUGFIX      #2992 [ContentBundle]       Fixed page-link-provider without request
     * BUGFIX      #2991 [MediaBundle]         Reintroduced media deep-link
@@ -101,7 +116,7 @@ CHANGELOG for Sulu
     * FEATURE     #2951 [MediaBundle]         Added adobe creative sdk to edit uploaded images
     * FEATURE     #2947 [MediaBundle]         Redesign of media selection overlay
     * BUGFIX      #2949 [MediaBundle]         Renamed toolbar entries in media section to avoid deleting collections by accident
-    * BUGFIX      #2936 [MediaBundle]         Fixed cutted media format toolbar dropdown 
+    * BUGFIX      #2936 [MediaBundle]         Fixed cutted media format toolbar dropdown
     * BUGFIX      #2946 [MediaBundle]         Included collections in object count in media section
     * BUGFIX      #2855 [ContentBundle]       Button when hovering ghost page added
     * BUGFIX      #2889 [ContentBundle]       Added confirmation message when publishing a page
@@ -156,13 +171,21 @@ CHANGELOG for Sulu
     * FEATURE     #2768 [ContentBundle]       Implemented teaser-edit for content-type
     * FEATURE     #2765 [MediaBundle]         Implemented new masonry-design for media
     * ENHANCEMENT #2743 [CoreBundle]          Remove symfony deprecations and don't allow them anymore
-    * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab 
+    * BUGFIX      #2810 [ContentBundle]       Add missing translation of Content navigation tab
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
 
-* 1.3.5
+* 1.3.7 (2017-01-12)
+    * HOTFIX      #3136 [ContentBundle]       Fixed resource locator issue while moving pages
+    * HOTFIX      #3137 [ContentBundle]       Fixed locale for categories in smart content overlay
+
+* 1.3.6 (2017-01-10)
+    * HOTFIX      #3128 [All]                 Bumped twig version to ^1.11
+
+* 1.3.5 (2016-11-24)
     * HOTFIX      #3033 [SnippetBundle]       Handle references to deleted snippets in snippet selection
+    * HOTFIX      #3032 [ContentBundle]       Fixed publishing for shadow page targeting drafts
 
 * 1.3.4 (2016-11-14)
     * HOTFIX      #3025 [ContentBundle]       Fixed null value for text-editor

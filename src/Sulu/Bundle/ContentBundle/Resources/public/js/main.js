@@ -12,6 +12,7 @@ require.config({
         sulucontent: '../../sulucontent/js',
         sulucontentcss: '../../sulucontent/css',
 
+        'services/sulucontent/user-settings-manager': '../../sulucontent/js/services/user-settings-manager',
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
@@ -28,12 +29,13 @@ require.config({
 
 define([
     'config',
+    'services/sulucontent/user-settings-manager',
     'extensions/sulu-buttons-contentbundle',
     'extensions/seo-tab',
     'extensions/excerpt-tab',
     'sulucontent/ckeditor/internal-link',
     'css!sulucontentcss/main'
-], function(Config, ContentButtons, SeoTab, ExcerptTab, InternalLinkPlugin) {
+], function(Config, UserSettingsManager, ContentButtons, SeoTab, ExcerptTab, InternalLinkPlugin) {
     return {
 
         name: "Sulu Content Bundle",
@@ -76,45 +78,11 @@ define([
                 }
             );
 
-            /**
-             * Returns the the language of the content which is displayed at the beginning.
-             * It first look for the last chosen language for this webspace. If no such
-             * language exists, the function looks for the last chosen language over all
-             * webspaces and if that language is possible in with the given webspace. If
-             * not language can be found, the default language is returned.
-             *
-             * @param {String} webspace The webspace key
-             * @returns {string} The locale of the content
-             */
-            function getContentLanguage(webspace) {
-                // webspace language
-                var language = sandbox.sulu.getUserSetting(webspace + '.contentLanguage');
-                if (!!language) {
-                    return language;
-                }
-
-                // last visited language over all webspaces
-                language = sandbox.sulu.getUserSetting('contentLanguage');
-                if (!!language && !!Config.get('sulu-content').locales[webspace][language]) {
-                    return language;
-                }
-
-                if (!Config.get('sulu-content').locales[webspace]
-                    || Object.keys(Config.get('sulu-content').locales[webspace]).length === 0) {
-                    app.logger.error('Webspace "' + webspace + '" has no defined locale');
-                }
-
-                // the default locale of a webspace is always on the first position
-                language = Object.keys(Config.get('sulu-content').locales[webspace])[0];
-
-                return Config.get('sulu-content').locales[webspace][language].localization;
-            }
-
             // redirects to list with specific language
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace',
                 callback: function(webspace) {
-                    var language = getContentLanguage(webspace);
+                    var language = UserSettingsManager.getContentLocale(webspace);
                     sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language);
                 }
             });
@@ -147,7 +115,7 @@ define([
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/edit::id/:content',
                 callback: function(webspace, id, content) {
-                    var language = getContentLanguage(webspace);
+                    var language = UserSettingsManager.getContentLocale(webspace);
                     sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language + '/edit:' + id + '/' + content);
                 }
             });

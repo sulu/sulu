@@ -67,7 +67,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         $path = $document->getResourceSegment();
 
         $webspaceKey = $this->documentInspector->getWebspace($document);
-        $locale = $this->documentInspector->getLocale($document);
+        $locale = $this->documentInspector->getOriginalLocale($document);
         $segmentKey = null;
         $webspaceRouteRootPath = $this->getWebspaceRouteNodeBasePath($webspaceKey, $locale, $segmentKey);
 

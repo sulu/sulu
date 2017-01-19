@@ -153,7 +153,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
     {
         $path = $document->getResourceSegment();
         $webspaceKey = $this->documentInspector->getWebspace($document);
-        $languageCode = $this->documentInspector->getLocale($document);
+        $languageCode = $this->documentInspector->getOriginalLocale($document);
 
         try {
             $treeValue = $this->loadByContent($document);
@@ -196,7 +196,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         return $this->mapper->loadByContent(
             $this->documentInspector->getNode($document),
             $this->documentInspector->getWebspace($document),
-            $this->documentInspector->getLocale($document),
+            $this->documentInspector->getOriginalLocale($document),
             null
         );
     }

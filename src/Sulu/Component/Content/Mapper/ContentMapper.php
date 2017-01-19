@@ -44,6 +44,7 @@ use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -472,9 +473,14 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $document = $this->documentManager->find($uuid, $srcLocale);
-        $parentDocument = $this->inspector->getParent($document);
         if ($document instanceof ResourceSegmentBehavior) {
             $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
+        }
+
+        $parentUuid = null;
+        if ($document instanceof ParentBehavior) {
+            $parentDocument = $this->inspector->getParent($document);
+            $parentUuid = $this->inspector->getUuid($parentDocument);
         }
 
         foreach ($destLocales as $destLocale) {
@@ -483,13 +489,14 @@ class ContentMapper implements ContentMapperInterface
                 $destLocale
             );
             $destDocument->setLocale($destLocale);
+            $destDocument->setTitle($document->getTitle());
             $destDocument->getStructure()->bind($document->getStructure()->toArray());
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
                 $resourceLocator = $resourceLocatorStrategy->generate(
                     $destDocument->getTitle(),
-                    $this->inspector->getUuid($parentDocument),
+                    $parentUuid,
                     $webspaceKey,
                     $destLocale
                 );
