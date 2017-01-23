@@ -23,16 +23,17 @@
         "doctrine/doctrine-cache-bundle": "~1.1",
         "friendsofsymfony/http-cache": "~1.4",
         "jms/serializer-bundle": "^1.1",
-        "friendsofsymfony/rest-bundle": "~1.5",
+        "friendsofsymfony/rest-bundle": "^1.6",
         "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1",
         "massive/search-bundle": "0.16.*",
         "sulu/document-manager": "0.9.*",
-        "sensio/framework-extra-bundle": "3.0.*",
+        "sensio/framework-extra-bundle": "^3.0",
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "gedmo/doctrine-extensions": "~2.4",
-        "symfony-cmf/routing-bundle": "1.2.*",
-        "symfony/symfony": "~2.8.7, !=2.8.10",
+        "symfony-cmf/routing-bundle": "^1.2 || ^2.0",
+        "symfony/symfony": "^2.8.7 || ^3.0",
+        "symfony/security-acl": "^2.8.7 || ^3.0",
         "willdurand/hateoas-bundle": "^1.1",
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "^1.0.4",
@@ -48,18 +49,25 @@
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0",
         "jackalope/jackalope-doctrine-dbal": "^1.2.5",
-        "guzzle/plugin-mock": "3.9.*",
         "massive/build-bundle": "~0.3.0",
         "matthiasnoback/symfony-config-test": "^1.1",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
         "phpunit/phpunit": "^4.8.31",
         "phpspec/prophecy": "^1.4",
-        "symfony/phpunit-bridge": "~2.8.7, !=2.8.10",
+        "symfony/phpunit-bridge": "^2.8.7 || ^3.0",
         "sensio/framework-extra-bundle": "~3.0",
-        "symfony/monolog-bundle": "~2.8 || ~3.0",
+        "symfony/monolog-bundle": "^2.8.7 || ^3.0",
+        "twig/twig": "~1.11",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
-        "doctrine/doctrine-fixtures-bundle": "~2.2"
+        "doctrine/doctrine-fixtures-bundle": "~2.3",
+        "phpdocumentor/reflection-docblock": "~3.1"
+    },
+    "conflicts": {
+        "symfony/symfony": "2.8.10",
+        "symfony/phpunit-bridge": "2.8.10",
+        "symfony/security-acl": "2.8.10",
+        "symfony/monolog-bundle": "2.8.10"
     },
     "replace": {
         "sulu/media-bundle": "self.version",
@@ -83,7 +91,7 @@
         "symfony/monolog-bundle": "~2.8 || ~3.0",
         "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
-        "massive/build-bundle": "0.2.*"
+        "massive/build-bundle": "^0.3"
     },
     "autoload": {
         "psr-0": {

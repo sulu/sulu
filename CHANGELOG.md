@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #3154 [All]                 Upgrade symfony to ^3.0
+
 * 1.5.0 (2017-03-06)
     * BUGFIX      #3242 [ContentBundle]       Fixed set default author to creator contact-id
 
