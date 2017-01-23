@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Import;
 /**
  * Interface for Webspace import.
  */
-interface WebspaceInterface
+interface WebspaceImportInterface
 {
     /**
      * Add import format like XLIFF1.2.

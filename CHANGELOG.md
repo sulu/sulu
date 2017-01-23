@@ -37,6 +37,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3034 [LocationBundle]      Load external map data over https
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
+    * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
 
 * 1.4.4 (2016-01-12)
     * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor

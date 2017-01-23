@@ -18,22 +18,23 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
+use Sulu\Component\Import\Format\FormatImportInterface;
+use Sulu\Component\Import\Import;
+use Sulu\Component\Import\Manager\ImportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Import Content by given xliff file from Export.
  */
-class Webspace implements WebspaceInterface
+class WebspaceImport extends Import implements WebspaceImportInterface
 {
     /**
      * @var DocumentManager
@@ -61,16 +62,6 @@ class Webspace implements WebspaceInterface
     protected $extensionManager;
 
     /**
-     * @var WebspaceFormatImportInterface[]
-     */
-    protected $formatFilePaths = [];
-
-    /**
-     * @var ContentImportManagerInterface
-     */
-    protected $contentImportManager;
-
-    /**
      * @var ResourceLocatorStrategyInterface
      */
     protected $rlpStrategy;
@@ -81,15 +72,6 @@ class Webspace implements WebspaceInterface
     protected $logger;
 
     /**
-    * @var LegacyPropertyFactory
-    */
-    protected $legacyPropertyFactory;
-    /**
-     * @var array
-     */
-    private $exceptionStore = [];
-
-    /**
      * @var array
      */
     protected static $excludedSettings = [
@@ -98,15 +80,9 @@ class Webspace implements WebspaceInterface
         'webspaceName',
         'structureType',
         'originalLocale',
+        'url',
+        'resourceSegment',
     ];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add($service, $format)
-    {
-        $this->formatFilePaths[$format] = $service;
-    }
 
     /**
      * @param DocumentManager $documentManager
@@ -116,9 +92,9 @@ class Webspace implements WebspaceInterface
      * @param ResourceLocatorStrategyInterface $rlpStrategy
      * @param StructureManagerInterface $structureManager
      * @param ExtensionManagerInterface $extensionManager
-     * @param ContentImportManagerInterface $contentImportManager
+     * @param ImportManagerInterface $importManager
      * @param LoggerInterface $logger
-     * @param WebspaceFormatImportInterface $xliff12
+     * @param FormatImportInterface $xliff12
      */
     public function __construct(
         DocumentManager $documentManager,
@@ -128,9 +104,9 @@ class Webspace implements WebspaceInterface
         ResourceLocatorStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
-        ContentImportManagerInterface $contentImportManager,
+        ImportManagerInterface $importManager,
         LoggerInterface $logger,
-        WebspaceFormatImportInterface $xliff12
+        FormatImportInterface $xliff12
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -139,7 +115,7 @@ class Webspace implements WebspaceInterface
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
         $this->extensionManager = $extensionManager;
-        $this->contentImportManager = $contentImportManager;
+        $this->importManager = $importManager;
         $this->logger = $logger;
         $this->add($xliff12, '1.2.xliff');
     }
@@ -354,6 +330,8 @@ class Webspace implements WebspaceInterface
                             $format,
                             $data
                         );
+
+                        $document->setResourceSegment($value);
                     }
                 }
             }
@@ -483,53 +461,6 @@ class Webspace implements WebspaceInterface
     }
 
     /**
-     * Prepare document-property and import them.
-     *
-     * @param PropertyInterface $property
-     * @param NodeInterface $node
-     * @param string $value
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $format
-     */
-    protected function importProperty(
-        PropertyInterface $property,
-        NodeInterface $node,
-        StructureInterface $structure,
-        $value,
-        $webspaceKey,
-        $locale,
-        $format
-    ) {
-        $contentType = $property->getContentTypeName();
-
-        if (!$this->contentImportManager->hasImport($contentType, $format)) {
-            return;
-        }
-
-        $translateProperty = $this->legacyPropertyFactory->createTranslatedProperty($property, $locale, $structure);
-        $this->contentImportManager->import($contentType, $node, $translateProperty, $value, null, $webspaceKey, $locale);
-    }
-
-    /**
-     * Returns the correct parser like XLIFF1.2.
-     *
-     * @param $format
-     *
-     * @return WebspaceFormatImportInterface
-     *
-     * @throws WebspaceFormatImporterNotFoundException
-     */
-    protected function getParser($format)
-    {
-        if (!isset($this->formatFilePaths[$format])) {
-            throw new WebspaceFormatImporterNotFoundException($format);
-        }
-
-        return $this->formatFilePaths[$format];
-    }
-
-    /**
      * Generates a url by given strategy and property.
      *
      * @param PropertyInterface[] $properties
@@ -556,25 +487,5 @@ class Webspace implements WebspaceInterface
         $title = trim(implode(' ', $rlpParts));
 
         return $this->rlpStrategy->generate($title, $parentUuid, $webspaceKey, $locale);
-    }
-
-    /**
-     * Add a specific import exception/warning to the exception store.
-     * This messages will print after the import is done.
-     *
-     * @param string $msg
-     * @param string $type
-     */
-    protected function addException($msg = null, $type = 'info')
-    {
-        if (null === $msg) {
-            return;
-        }
-
-        if (!isset($this->exceptionStore[$type])) {
-            $this->exceptionStore[$type] = [];
-        }
-
-        $this->exceptionStore[$type][] = $msg;
     }
 }

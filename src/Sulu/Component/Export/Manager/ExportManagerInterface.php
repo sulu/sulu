@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Export;
+namespace Sulu\Component\Export\Manager;
 
 /**
  * Interface for Content Export Manager.
  */
-interface ContentExportManagerInterface
+interface ExportManagerInterface
 {
     /**
      * Add ContentType and the format.

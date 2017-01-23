@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Import\Exception;
+namespace Sulu\Component\Import\Exception;
 
 /**
  * Is thrown when an import format was not found.
  */
-class WebspaceFormatImporterNotFoundException extends \Exception
+class FormatImporterNotFoundException extends \Exception
 {
     /**
      * {@inheritdoc}

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Export;
+namespace Sulu\Component\Export\Manager;
 
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -17,7 +17,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 /**
  * Content Export Manager to export languages from Webspace.
  */
-class ContentExportManager implements ContentExportManagerInterface
+class ExportManager implements ExportManagerInterface
 {
     /**
      * @var array

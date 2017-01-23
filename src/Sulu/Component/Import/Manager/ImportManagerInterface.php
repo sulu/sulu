@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Import;
+namespace Sulu\Component\Import\Manager;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -17,7 +17,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 /**
  * Defines the methods for the ContentImportManager.
  */
-interface ContentImportManagerInterface
+interface ImportManagerInterface
 {
     /**
      * Import property of a document.

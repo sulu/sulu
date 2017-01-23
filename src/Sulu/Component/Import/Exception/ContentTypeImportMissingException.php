@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Import\Exception;
+namespace Sulu\Component\Import\Exception;
 
 /**
  * Will be thrown when the Content Type can't be exported.

@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Twig;
 
-use Sulu\Component\Content\Export\ContentExportManagerInterface;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
 
 /**
  * Twig extensions for the Webspace export.
@@ -19,9 +19,9 @@ use Sulu\Component\Content\Export\ContentExportManagerInterface;
 class ExportTwigExtension extends \Twig_Extension
 {
     /**
-     * @var ContentExportManagerInterface
+     * @var ExportManagerInterface
      */
-    private $contentExportManager;
+    private $exportManager;
 
     /**
      * @var int
@@ -29,11 +29,11 @@ class ExportTwigExtension extends \Twig_Extension
     private $counter = 0;
 
     /**
-     * @param ContentExportManagerInterface $contentExportManager
+     * @param ExportManagerInterface $exportManager
      */
-    public function __construct(ContentExportManagerInterface $contentExportManager)
+    public function __construct(ExportManagerInterface $exportManager)
     {
-        $this->contentExportManager = $contentExportManager;
+        $this->exportManager = $exportManager;
     }
 
     /**
