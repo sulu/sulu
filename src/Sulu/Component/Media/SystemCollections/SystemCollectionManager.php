@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Cache\CacheInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -134,6 +135,10 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     private function getUserId()
     {
         if (!$this->tokenProvider || ($token = $this->tokenProvider->getToken()) === null) {
+            return;
+        }
+
+        if (!$token->getUser() instanceof UserInterface) {
             return;
         }
 
