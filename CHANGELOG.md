@@ -1,8 +1,11 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3150 [HTTPCacheBundle]       Fixed invalidate cache for https
+
 * 1.4.5 (2016-01-16)
-    * BUGFIX      #3043 [ContentBudle]        Fixed bind null values on managed-structure
+    * BUGFIX      #3043 [ContentBudle]          Fixed bind null values on managed-structure
 
 * 1.4.4 (2016-01-12)
     * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor
