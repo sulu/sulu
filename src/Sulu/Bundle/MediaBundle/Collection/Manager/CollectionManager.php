@@ -704,7 +704,10 @@ class CollectionManager implements CollectionManagerInterface
     protected function getCurrentUser()
     {
         if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
-            return $this->tokenStorage ? $token->getUser() : null;
+            $user = $token->getUser();
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
         }
 
         return;

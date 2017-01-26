@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.3
+
+    * HOTFIX      #3155 [MediaBundle]         Fixed system collection creation for .anon user
+
 * 1.3.7 (2017-01-12)
     * HOTFIX      #3136 [ContentBundle]       Fixed resource locator issue while moving pages
     * HOTFIX      #3137 [ContentBundle]       Fixed locale for categories in smart content overlay
