@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
     * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id
 
     * ENHANCEMENT #3146 [TestBundle]          SuluTestCase: Adopted initPhpcr to work for all kernels

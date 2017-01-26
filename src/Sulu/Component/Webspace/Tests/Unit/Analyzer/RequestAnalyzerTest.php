@@ -124,6 +124,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('www.sulu.io');
         $request->getScheme()->willReturn('https');
+        $request->getRequestUri()->willReturn('/');
 
         $attributesBag = $this->prophesize(ParameterBag::class);
         $attributesBag->get('_sulu')->willReturn(null);
