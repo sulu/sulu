@@ -1,8 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.3
-
+* 1.3.8 (2017-01-30)
     * HOTFIX      #3155 [MediaBundle]         Fixed system collection creation for .anon user
 
 * 1.3.7 (2017-01-12)
