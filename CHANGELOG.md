@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #XXXX [SnippetBundle]         Fixed error when snippet template has a category field.
     * HOTFIX      #3162 [MediaBundle]           Fixed type filtering in media-selection
     * HOTFIX      #3150 [HTTPCacheBundle]       Fixed invalidate cache for https
 
