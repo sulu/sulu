@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3162 [MediaBundle]           Fixed type filtering in media-selection
     * HOTFIX      #3150 [HTTPCacheBundle]       Fixed invalidate cache for https
 
 * 1.4.5 (2016-01-16)

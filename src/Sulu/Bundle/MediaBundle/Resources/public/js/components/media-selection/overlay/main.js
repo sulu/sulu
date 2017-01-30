@@ -363,6 +363,7 @@ define([
                     locale: this.options.locale,
                     instanceName: this.options.instanceName,
                     assetActions: ['fa-check-circle-o'],
+                    assetTypes: this.options.types.split(','),
                     assetSelectOnClick: true,
                     assetSingleSelect: !!this.options.singleSelect,
                     assetPreselected: _.map(this.items, function (item) {
