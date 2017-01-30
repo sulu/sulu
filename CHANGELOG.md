@@ -6,10 +6,10 @@ CHANGELOG for Sulu
     * HOTFIX      #3162 [MediaBundle]           Fixed type filtering in media-selection
     * HOTFIX      #3150 [HTTPCacheBundle]       Fixed invalidate cache for https
 
-* 1.4.5 (2016-01-16)
+* 1.4.5 (2017-01-16)
     * BUGFIX      #3043 [ContentBudle]          Fixed bind null values on managed-structure
 
-* 1.4.4 (2016-01-12)
+* 1.4.4 (2017-01-12)
     * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor
     * HOTFIX      #3139 [MediaBundle]           Fixed scaling issues on crop overlay in page form
     * HOTFIX      #3138 [MediaBundle]           Fixed cropping with only one given side
