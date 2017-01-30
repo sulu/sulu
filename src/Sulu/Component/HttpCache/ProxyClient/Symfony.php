@@ -156,7 +156,8 @@ class Symfony implements ProxyClientInterface, PurgeInterface
             );
         }
 
-        Promise\settle($promises);
+        $combinedPromise = Promise\settle($promises);
+        $combinedPromise->wait();
     }
 
     /**
