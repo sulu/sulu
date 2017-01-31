@@ -11,12 +11,15 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
+use Sulu\Bundle\DocumentManagerBundle\Session\Session;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 class SuluDocumentManagerExtension extends Extension implements PrependExtensionInterface
 {
@@ -121,6 +124,11 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $loader->load('serializer.xml');
         $loader->load('command.xml');
         $loader->load('data_fixtures.xml');
+        $loader->load('routing.xml');
+
+        if ($config['versioning']['enabled']) {
+            $loader->load('versioning.xml');
+        }
     }
 
     private function configureDocumentManager($config, ContainerBuilder $container)
@@ -138,15 +146,27 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
+        $container->setParameter('sulu_document_manager.versioning.enabled', $config['versioning']['enabled']);
 
+        $defaultSessionId = $this->getSessionServiceId($config['default_session']);
         $container->setAlias(
             'sulu_document_manager.default_session',
-            $this->getSessionServiceId($config['default_session'])
+            $defaultSessionId
         );
+
+        $defaultSessionDefinition = new Definition(Session::class, [new Reference('sulu_document_manager.decorated_default_session.inner')]);
+        $defaultSessionDefinition->setDecoratedService($defaultSessionId);
+        $container->setDefinition('sulu_document_manager.decorated_default_session', $defaultSessionDefinition);
+
+        $liveSessionId = $this->getSessionServiceId($config['live_session']);
         $container->setAlias(
             'sulu_document_manager.live_session',
-            $this->getSessionServiceId($config['live_session'])
+            $liveSessionId
         );
+
+        $liveSessionDefinition = new Definition(Session::class, [new Reference('sulu_document_manager.decorated_live_session.inner')]);
+        $liveSessionDefinition->setDecoratedService($liveSessionId);
+        $container->setDefinition('sulu_document_manager.decorated_live_session', $liveSessionDefinition);
 
         $container->setParameter(
             'sulu_document_manager.show_drafts',

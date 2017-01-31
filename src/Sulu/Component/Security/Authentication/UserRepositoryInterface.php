@@ -29,6 +29,15 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function findUserById($id);
 
     /**
+     * Returns the users with the given ids.
+     *
+     * @param array $ids The ids of the user to load
+     *
+     * @return UserInterface[]
+     */
+    public function findUsersById(array $ids);
+
+    /**
      * @param int $id
      *
      * @return UserInterface

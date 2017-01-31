@@ -85,6 +85,25 @@ define(['jquery'], function ($) {
             );
 
             return deferred.promise();
+        },
+
+        restoreVersion: function(id, version, locale, webspace) {
+            var deferred = $.Deferred();
+            $.ajax(
+                [baseUrl, '/', id, '/versions/', version, '?action=restore&language=', locale, '&webspace=', webspace].join(''),
+                {
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(response) {
+                        deferred.resolve(response);
+                    },
+                    error: function(xhr) {
+                        deferred.reject(xhr);
+                    }
+                }
+            );
+
+            return deferred;
         }
     }
 });

@@ -12,16 +12,16 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use stdClass;
+use Prophecy\Argument;
+use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
 use Sulu\Component\Content\Document\Subscriber\BlameSubscriber;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RestoreEvent;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,11 +36,6 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     private $hydrateEvent;
 
     /**
-     * @var stdClass
-     */
-    private $notImplementing;
-
-    /**
      * @var NodeInterface
      */
     private $node;
@@ -51,34 +46,9 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     private $accessor;
 
     /**
-     * @var UserInterface
+     * @var PropertyEncoder
      */
-    private $user;
-
-    /**
-     * @var AnonymousToken
-     */
-    private $anonymousToken;
-
-    /**
-     * @var stdClass
-     */
-    private $notUser;
-
-    /**
-     * @var TokenInterface
-     */
-    private $token;
-
-    /**
-     * @var TokenStorage
-     */
-    private $tokenStorage;
-
-    /**
-     * @var LocalizedBlameTestDocument
-     */
-    private $document;
+    private $propertyEncoder;
 
     /**
      * @var BlameSubscriber
@@ -89,148 +59,209 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
-        $this->notImplementing = new \stdClass();
         $this->node = $this->prophesize(NodeInterface::class);
         $this->accessor = $this->prophesize(DocumentAccessor::class);
-        $this->user = $this->prophesize(UserInterface::class);
-        $this->anonymousToken = $this->prophesize(AnonymousToken::class);
-        $this->notUser = new \stdClass();
-        $this->token = $this->prophesize(TokenInterface::class);
-        $this->tokenStorage = $this->prophesize(TokenStorage::class);
-        $this->document = new LocalizedBlameTestDocument();
+        $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
 
-        $this->subscriber = new BlameSubscriber(
-            $this->tokenStorage->reveal()
-        );
+        $this->subscriber = new BlameSubscriber($this->propertyEncoder->reveal());
 
         $this->persistEvent->getNode()->willReturn($this->node);
-        $this->persistEvent->getOptions()->willReturn([]);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);
+        $this->persistEvent->getLocale()->willReturn('de');
+
+        $this->propertyEncoder->encode('system_localized', 'creator', 'de')->willReturn('i18n:de-creator');
+        $this->propertyEncoder->encode('system_localized', 'changer', 'de')->willReturn('i18n:de-changer');
+        $this->propertyEncoder->encode('system', 'creator', 'de')->willReturn('creator');
+        $this->propertyEncoder->encode('system', 'changer', 'de')->willReturn('changer');
     }
 
-    /**
-     * It should return early if no token storage is provided.
-     */
-    public function testNoTokenStorage()
-    {
-    }
-
-    /**
-     * It should return early if the document is not implementing the behavior.
-     */
     public function testPersistNotImplementing()
     {
-        $this->persistEvent->getDocument()->willReturn($this->notImplementing);
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->persistEvent->getDocument()->willReturn(new \stdClass());
+        $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
+        $this->node->setProperty(Argument::cetera())->shouldNotBeCalled();
+        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    /**
-     * It should return early if the token is null.
-     */
-    public function testPersistTokenIsNull()
-    {
-        $this->persistEvent->getDocument()->willReturn($this->document);
-        $this->tokenStorage->getToken()->willReturn(null);
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    /**
-     * It should return early if the locale is null.
-     */
     public function testPersistLocaleIsNull()
     {
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
         $this->persistEvent->getLocale()->willReturn(null);
-        $this->persistEvent->getDocument()->willReturn($this->document);
+        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(1);
+        $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->node->setProperty()->shouldNotBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    /**
-     * It should return early if the token is AnonymousToken.
-     */
-    public function testPersistTokenIsAnonymous()
-    {
-        $this->persistEvent->getDocument()->willReturn($this->document);
-        $this->tokenStorage->getToken()->willReturn($this->anonymousToken->reveal());
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    /**
-     * It should throw an exception if the token is not a Sulu User.
-     *
-     * @expectedException \InvalidArgumentException
-     */
-    public function testPersistUserNotSuluUser()
-    {
-        $this->persistEvent->getDocument()->willReturn($this->document);
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->notUser);
-
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    /**
-     * It should assign "creator" if there is creator is actually null.
-     */
     public function testPersistCreatorWhenNull()
     {
-        $locale = 'fr';
-        $document = new LocalizedBlameTestDocument();
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
+        $document->getCreator()->willReturn(null);
 
-        $this->persistEvent->getLocale()->willReturn($locale);
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(2);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
+        $this->node->hasProperty('i18n:de-creator')->willReturn(false);
 
         $this->accessor->set('creator', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-creator', Argument::any())->shouldBeCalled();
         $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    /**
-     * It should always assign "changer".
-     */
     public function testPersistChanger()
     {
-        $locale = 'fr';
-        $document = new LocalizedBlameTestDocument($this->user->reveal());
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
+        $document->getCreator()->willReturn(1);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
-        $this->user->getId()->willReturn(2);
+        $this->node->hasProperty('i18n:de-creator')->willReturn(true);
 
-        $this->persistEvent->getLocale()->willReturn($locale);
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(2);
         $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
+        $this->accessor->set('creator', Argument::any())->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-creator', Argument::any())->shouldNotBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-}
-
-class LocalizedBlameTestDocument implements LocalizedBlameBehavior
-{
-    private $creator;
-    private $changer;
-
-    public function __construct(UserInterface $creator = null, UserInterface $changer = null)
-    {
-        $this->creator = $creator;
-        $this->changer = $changer;
+        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function getCreator()
+    public function testPersistChangerWithoutLocalization()
     {
-        return $this->creator;
+        $document = $this->prophesize(BlameBehavior::class);
+        $document->getCreator()->willReturn(1);
+
+        $this->node->hasProperty('creator')->willReturn(true);
+
+        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(2);
+        $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('changer', 2)->shouldBeCalled();
+        $this->accessor->set('creator', Argument::any())->shouldNotBeCalled();
+        $this->node->setProperty('creator', Argument::any())->shouldNotBeCalled();
+
+        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function getChanger()
+    public function testPublish()
     {
-        return $this->changer;
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getLocale()->willReturn('de');
+
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
+        $document->getCreator()->willReturn(null);
+        $document->getChanger()->willReturn(2);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->node->hasProperty('i18n:de-creator')->willReturn(false);
+        $event->getNode()->willReturn($this->node->reveal());
+
+        $event->getAccessor()->willReturn($this->accessor->reveal());
+
+        $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
+        $this->accessor->set('creator', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-creator', Argument::any())->shouldBeCalled();
+        $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
+    }
+
+    public function testPublishWithoutLocalization()
+    {
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getLocale()->willReturn('de');
+
+        $document = $this->prophesize(BlameBehavior::class);
+        $document->getCreator()->willReturn(null);
+        $document->getChanger()->willReturn(2);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->node->hasProperty('creator')->willReturn(false);
+        $event->getNode()->willReturn($this->node->reveal());
+
+        $event->getAccessor()->willReturn($this->accessor->reveal());
+
+        $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('changer', 2)->shouldBeCalled();
+        $this->accessor->set('creator', 2)->shouldBeCalled();
+        $this->node->setProperty('creator', Argument::any())->shouldBeCalled();
+        $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
+    }
+
+    public function testPublishOnlyChanger()
+    {
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getLocale()->willReturn('de');
+
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
+        $document->getCreator()->willReturn(1);
+        $document->getChanger()->willReturn(2);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->node->hasProperty('i18n:de-creator')->willReturn(true);
+        $event->getNode()->willReturn($this->node->reveal());
+
+        $event->getAccessor()->willReturn($this->accessor->reveal());
+
+        $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
+        $this->accessor->set('creator', 2)->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-creator', Argument::any())->shouldNotBeCalled();
+        $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
+    }
+
+    public function testPublishNonBlameBehavior()
+    {
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getAccessor()->willReturn($this->accessor->reveal());
+        $event->getNode()->willReturn($this->node->reveal());
+        $event->getDocument()->willReturn(new \stdClass());
+        $this->persistEvent->getOption('user')->willReturn(2);
+
+        $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
+        $this->node->setProperty(Argument::cetera())->shouldNotBeCalled();
+        $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
+    }
+
+    public function testRestore()
+    {
+        $event = $this->prophesize(RestoreEvent::class);
+        $event->getLocale()->willReturn('de');
+        $event->getOption('user')->willReturn(2);
+        $event->getNode()->willReturn($this->node->reveal());
+
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
+        $this->subscriber->setChangerForRestore($event->reveal());
+    }
+
+    public function testRestoreWithoutLocale()
+    {
+        $event = $this->prophesize(RestoreEvent::class);
+        $event->getLocale()->willReturn('de');
+        $event->getOption('user')->willReturn(2);
+
+        $event->getNode()->willReturn($this->node->reveal());
+
+        $document = $this->prophesize(BlameBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->node->setProperty('changer', 2)->shouldBeCalled();
+        $this->subscriber->setChangerForRestore($event->reveal());
+    }
+
+    public function testRestoreNonBlameSubscriber()
+    {
+        $event = $this->prophesize(RestoreEvent::class);
+        $event->getDocument()->willReturn(new \stdClass());
+        $event->getNode()->willReturn($this->node->reveal());
+
+        $this->node->setProperty(Argument::cetera())->shouldNotBeCalled();
+        $this->subscriber->setChangerForRestore($event->reveal());
     }
 }

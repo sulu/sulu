@@ -22,6 +22,7 @@ use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -72,6 +73,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             Events::PUBLISH => 'setWorkflowStageToPublished',
             Events::UNPUBLISH => 'setWorkflowStageToTestAndResetPublishedDate',
             Events::COPY => 'setWorkflowStageToTestForCopy',
+            Events::RESTORE => ['setWorkflowStageToTestForRestore', -32],
         ];
     }
 
@@ -173,6 +175,20 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     public function setWorkflowStageToTestForCopy(CopyEvent $event)
     {
         $this->setNodeWorkflowStageToTestForCopy($event->getCopiedNode());
+    }
+
+    /**
+     * Sets the workflowstage for the restored node to test.
+     *
+     * @param RestoreEvent $event
+     */
+    public function setWorkflowStageToTestForRestore(RestoreEvent $event)
+    {
+        if (!$this->supports($event)) {
+            return;
+        }
+
+        $this->setWorkflowStageOnNode($event->getNode(), $event->getLocale(), WorkflowStage::TEST, false);
     }
 
     /**
