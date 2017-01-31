@@ -15,6 +15,7 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapAlternateLink;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapUrl;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 
@@ -53,7 +54,10 @@ class PagesSitemapProvider implements SitemapProviderInterface
 
         $result = [];
         foreach ($pages as $contentPage) {
-            if (!$contentPage->getUrl() || true === $contentPage['seo-hideInSitemap']) {
+            if (!$contentPage->getUrl()
+                || true === $contentPage['seo-hideInSitemap']
+                || $contentPage->getNodeType() !== RedirectType::NONE
+            ) {
                 continue;
             }
 
