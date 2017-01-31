@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #3170 [ContentBundle]         Fixed copy page in column navigation
     * BUGFIX      #3168 [WebsiteBundle]         Fixed hide internal/external link in sitemap
+    * HOTFIX      #3170 [ContentBundle]         Fixed deleting of the smart content data source
     * BUGFIX      #3167 [SnippetBundle]         Fixed error when snippet template has a category field.
     * HOTFIX      #3162 [MediaBundle]           Fixed type filtering in media-selection
     * HOTFIX      #3150 [HTTPCacheBundle]       Fixed invalidate cache for https
