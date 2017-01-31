@@ -10,8 +10,9 @@
 define([
     'config',
     'sulucontent/components/open-ghost-overlay/main',
-    'sulusecurity/services/security-checker'
-], function(Config, OpenGhost, SecurityChecker) {
+    'sulusecurity/services/security-checker',
+    'sulucontent/services/user-settings'
+], function(Config, OpenGhost, SecurityChecker, UserSettings) {
 
     'use strict';
 
@@ -213,7 +214,7 @@ define([
                     // if no action icon is rendered the data should not be loaded
                     return;
                 }
-                
+
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
                 } else {
