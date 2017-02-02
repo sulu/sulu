@@ -33,6 +33,10 @@ If you dont want to use twig2 please add following line to your ``composer.json`
 The uniqueness of media formats is now checked, and an exception is thrown in
 case duplicated format keys exist.
 
+In addition to that the existing formats have been prefixed with `sulu-`,
+so that they are less likely to conflict. If you have relied on these formats,
+which you shouldn't have, then you have to create them now in your own theme
+
 ### Deprecations
 
 Following classes and methods were removed because of deprecations:
