@@ -75,7 +75,8 @@ define([], function() {
                 {
                     el: this.$columnNavigationElement,
                     instanceName: this.options.instanceNamePrefix + this.options.instanceName,
-                    url: this.getUrl(),
+                    url: this.getUrl(this.selected),
+                    fallbackUrl: this.getUrl(),
                     actionOnGhost: this.options.actionOnGhost,
                     resultKey: this.options.resultKey,
                     selected: this.selected,
@@ -94,9 +95,9 @@ define([], function() {
          *
          * @returns {String}
          */
-        getUrl: function() {
-            if (!!this.selected) {
-                return this.prepareUrl(this.options.selectedUrl);
+        getUrl: function(selected) {
+            if (!!selected) {
+                return this.prepareUrl(this.options.selectedUrl, selected);
             }
 
             return this.prepareUrl(this.options.rootUrl);
@@ -106,13 +107,14 @@ define([], function() {
          * Prepare url for column-navigation.
          *
          * @param {String} url
+         * @param {String} selected
          *
          * @returns {String}
          */
-        prepareUrl: function(url) {
+        prepareUrl: function(url, selected) {
             url = url.replace('{locale}', this.options.locale);
             url = url.replace('{webspace}', this.options.webspace);
-            url = url.replace('{datasource}', this.selected);
+            url = url.replace('/{datasource}', '/' + selected || '');
 
             return url;
         },
@@ -155,7 +157,7 @@ define([], function() {
 
             this.sandbox.emit(
                 'husky.column-navigation.smart-content-' + this.options.instanceName + '.set-options',
-                {selected: selected, url: this.getUrl()}
+                {selected: selected, url: this.getUrl(selected)}
             );
         },
 

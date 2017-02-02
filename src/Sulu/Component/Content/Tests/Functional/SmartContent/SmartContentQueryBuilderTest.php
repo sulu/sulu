@@ -25,7 +25,6 @@ use Sulu\Component\Content\SmartContent\QueryBuilder as SmartContentQueryBuilder
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * @group functional
@@ -52,11 +51,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
      * @var ExtensionManagerInterface
      */
     private $extensionManager;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
 
     /**
      * @var SessionManagerInterface
@@ -93,7 +87,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
-        $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->contentQuery = $this->getContainer()->get('sulu.content.query_executor');
 
@@ -184,7 +177,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -274,7 +266,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -309,7 +300,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -385,7 +375,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -432,7 +421,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -523,7 +511,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -624,7 +611,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -759,7 +745,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -813,7 +798,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -861,7 +845,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -893,7 +876,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -916,7 +898,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );
@@ -1098,7 +1079,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->extensionManager,
-            $this->webspaceManager,
             $this->sessionManager,
             $this->languageNamespace
         );

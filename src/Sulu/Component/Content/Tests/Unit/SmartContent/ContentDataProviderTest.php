@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Tests\Unit\SmartContent;
 
+use PHPCR\ItemNotFoundException;
+use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
@@ -105,6 +107,17 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         return $mock->reveal();
     }
 
+    private function getSession($throw = false)
+    {
+        $mock = $this->prophesize(SessionInterface::class);
+
+        if ($throw) {
+            $mock->getNodeByIdentifier(Argument::any())->willThrow(ItemNotFoundException::class);
+        }
+
+        return $mock->reveal();
+    }
+
     public function testGetConfiguration()
     {
         $provider = new ContentDataProvider(
@@ -112,6 +125,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
             $this->getProxyFactory(),
+            $this->getSession(),
             false
         );
 
@@ -127,6 +141,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
             $this->getProxyFactory(),
+            $this->getSession(),
             false
         );
 
@@ -146,6 +161,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(),
             $this->getDocumentManager(),
             $this->getProxyFactory(),
+            $this->getSession(),
             false
         );
 
@@ -176,6 +192,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 2, []),
             $this->getDocumentManager(),
             $this->getProxyFactory(),
+            $this->getSession(),
             true
         );
 
@@ -214,6 +231,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
             $this->getProxyFactory(),
+            $this->getSession(),
             true
         );
 
@@ -255,6 +273,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
             $this->getProxyFactory(),
+            $this->getSession(),
             false
         );
 
@@ -296,6 +315,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(2, 1, $data),
             $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
             $this->getProxyFactory(),
+            $this->getSession(),
             true
         );
 
@@ -342,6 +362,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                 ['123-123-123' => $data[0], '123-123-456' => $data[1], '123-123-789' => $data[2]]
             ),
             $this->getProxyFactory(),
+            $this->getSession(),
             true
         );
 
@@ -364,6 +385,28 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['123-123-123', '123-123-456', '123-123-789'], $result->getReferencedUuids());
     }
 
+    public function testResolveDataItemsWithDeletedDataSource()
+    {
+        $provider = new ContentDataProvider(
+            $this->getContentQueryBuilder(),
+            $this->getContentQueryExecutor(),
+            $this->getDocumentManager(),
+            $this->getProxyFactory(),
+            $this->getSession(true),
+            true
+        );
+
+        $result = $provider->resolveDataItems(
+            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            10
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+        $this->assertCount(0, $result->getItems());
+    }
+
     public function testResolveDatasource()
     {
         $data = ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
@@ -375,6 +418,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->getContentQueryExecutor(0, 1, [$data]),
             $this->getDocumentManager([$data['uuid'] => $data]),
             $this->getProxyFactory(),
+            $this->getSession(),
             false
         );
 
