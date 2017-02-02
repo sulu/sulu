@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.3
+    * HOTFIX      #3173 [ContentBundle]         Fixed generating of resource locator with missing parents
+
 * 1.3.8 (2017-01-30)
     * BUGFIX      #3167 [SnippetBundle]       Fixed error when snippet template has a category field.
     * HOTFIX      #3155 [MediaBundle]         Fixed system collection creation for .anon user
