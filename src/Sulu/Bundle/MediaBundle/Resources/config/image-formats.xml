@@ -57,7 +57,7 @@
         </meta>
         <scale x="100" y="100" mode="inset"/>
     </format>
-    <format key="50x50" internal="true">
+    <format key="sulu-50x50" internal="true">
         <meta>
             <title lang="en">Small thumbnail (Sulu)</title>
             <title lang="de">Kleines Thumbnail (Sulu)</title>

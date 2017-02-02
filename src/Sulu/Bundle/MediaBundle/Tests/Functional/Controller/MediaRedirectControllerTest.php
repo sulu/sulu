@@ -321,10 +321,10 @@ class MediaRedirectControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=50x50');
+        $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=sulu-50x50');
 
         $this->assertRegExp(
-            '/\/uploads\/media\/50x50\/\d{2}\/' . $media->getId() . '-photo.jpg\?v=1-0/',
+            '/\/uploads\/media\/sulu-50x50\/\d{2}\/' . $media->getId() . '-photo.jpg\?v=1-0/',
             $client->getResponse()->headers->get('location')
         );
     }

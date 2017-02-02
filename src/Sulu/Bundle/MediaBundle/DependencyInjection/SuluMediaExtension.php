@@ -133,7 +133,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // collections
         $container->setParameter('sulu_media.collection.type.default', ['id' => 1]);
 
-        $container->setParameter('sulu_media.collection.previews.format', '50x50');
+        $container->setParameter('sulu_media.collection.previews.format', 'sulu-50x50');
 
         // media
         $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);
