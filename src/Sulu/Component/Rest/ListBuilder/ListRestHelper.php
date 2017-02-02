@@ -22,6 +22,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ListRestHelper implements ListRestHelperInterface
 {
+    const PARAMETER_FIELDS = 'fields';
+    const PARAMETER_PAGE = 'page';
+    const PARAMETER_SEARCH = 'search';
+    const PARAMETER_SEARCH_FIELDS = 'searchFields';
+    const PARAMETER_SORT_BY = 'sortBy';
+    const PARAMETER_SORT_ORDER = 'sortOrder';
+
     /**
      * The current request object.
      *
@@ -57,7 +64,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSortColumn()
     {
-        return $this->getRequest()->get('sortBy', null);
+        return $this->getRequest()->get(self::PARAMETER_SORT_BY, null);
     }
 
     /**
@@ -67,7 +74,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSortOrder()
     {
-        return $this->getRequest()->get('sortOrder', 'asc');
+        return $this->getRequest()->get(self::PARAMETER_SORT_ORDER, 'asc');
     }
 
     /**
@@ -93,7 +100,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getOffset()
     {
-        $page = $this->getRequest()->get('page', 1);
+        $page = $this->getRequest()->get(self::PARAMETER_PAGE, 1);
         $limit = $this->getLimit();
 
         return ($limit != null) ? $limit * ($page - 1) : null;
@@ -106,7 +113,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getPage()
     {
-        return $this->getRequest()->get('page', 1);
+        return $this->getRequest()->get(self::PARAMETER_PAGE, 1);
     }
 
     /**
@@ -117,7 +124,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getFields()
     {
-        $fields = $this->getRequest()->get('fields');
+        $fields = $this->getRequest()->get(self::PARAMETER_FIELDS);
 
         return ($fields != null) ? explode(',', $fields) : null;
     }
@@ -129,7 +136,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSearchPattern()
     {
-        return $this->getRequest()->get('search');
+        return $this->getRequest()->get(self::PARAMETER_SEARCH);
     }
 
     /**
@@ -139,8 +146,46 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSearchFields()
     {
-        $searchFields = $this->getRequest()->get('searchFields');
+        $searchFields = $this->getRequest()->get(self::PARAMETER_SEARCH_FIELDS);
 
         return ($searchFields != null) ? explode(',', $searchFields) : [];
+    }
+
+    /**
+     * Returns an array of available filters.
+     *
+     * @return string[]
+     */
+    public function getFilters()
+    {
+        $filters = [];
+
+        $parameters = $this->getRequest()->query->all();
+
+        foreach ($parameters as $name => $value) {
+            // ignore empty values and none filter parameters
+            if ($value && !in_array($name, $this->getNoneFilterParameters())) {
+                $filters[$name] = $value;
+            }
+        }
+
+        return $filters;
+    }
+
+    /**
+     * Returns an array of none available filter parameters.
+     *
+     * @return array
+     */
+    protected function getNoneFilterParameters()
+    {
+        return [
+            self::PARAMETER_FIELDS,
+            self::PARAMETER_PAGE,
+            self::PARAMETER_SEARCH,
+            self::PARAMETER_SEARCH_FIELDS,
+            self::PARAMETER_SORT_BY,
+            self::PARAMETER_SORT_ORDER,
+        ];
     }
 }

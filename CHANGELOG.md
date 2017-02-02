@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #3176 [All]                 Added filters to resthelper
     * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
     * BUGFIX      #3149 [ContentBundle]       Fixed cache clearing on publishing
     * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id

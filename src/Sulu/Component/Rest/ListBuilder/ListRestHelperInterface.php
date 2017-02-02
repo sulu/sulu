@@ -73,4 +73,11 @@ interface ListRestHelperInterface
      * @return array|null
      */
     public function getSearchFields();
+
+    /**
+     * Returns an array of available filters.
+     *
+     * @return string[]
+     */
+    public function getFilters();
 }

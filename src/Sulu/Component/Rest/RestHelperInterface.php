@@ -46,4 +46,12 @@ interface RestHelperInterface
         callable $update = null,
         callable $delete = null
     );
+
+    /**
+     * Add filters to list builder with values from the request.
+     *
+     * @param ListBuilderInterface $listBuilder
+     * @param array $fieldDescriptors
+     */
+    public function addFilters(ListBuilderInterface $listBuilder, array $fieldDescriptors);
 }

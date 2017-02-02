@@ -38,9 +38,13 @@ class RestHelper implements RestHelperInterface
      */
     public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors)
     {
+        // add pagination
         $listBuilder->limit($this->listRestHelper->getLimit())->setCurrentPage($this->listRestHelper->getPage());
+
+        // add field descriptors
         $listBuilder->setFieldDescriptors($fieldDescriptors);
 
+        // add select fields
         $fields = $this->listRestHelper->getFields();
         if ($fields != null) {
             foreach ($fields as $field) {
@@ -54,6 +58,7 @@ class RestHelper implements RestHelperInterface
             $listBuilder->setSelectFields($fieldDescriptors);
         }
 
+        // add search
         $searchFields = $this->listRestHelper->getSearchFields();
         if ($searchFields != null) {
             foreach ($searchFields as $searchField) {
@@ -63,9 +68,22 @@ class RestHelper implements RestHelperInterface
             $listBuilder->search($this->listRestHelper->getSearchPattern());
         }
 
+        // add sort
         $sortBy = $this->listRestHelper->getSortColumn();
         if ($sortBy != null) {
             $listBuilder->sort($fieldDescriptors[$sortBy], $this->listRestHelper->getSortOrder());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addFilters(ListBuilderInterface $listBuilder, array $fieldDescriptors)
+    {
+        foreach ($this->listRestHelper->getFilters() as $filterKey => $filterValue) {
+            if (isset($fieldDescriptors[$filterKey])) {
+                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
+            }
         }
     }
 }
