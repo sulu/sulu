@@ -459,6 +459,14 @@
                 <source>sulu.content.form.settings.changelog.created-only</source>
                 <target>Created by %(created)s</target>
             </trans-unit>
+            <trans-unit id="abbaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.authored">
+                <source>sulu.content.form.settings.changelog.authored</source>
+                <target>Authored by %(author)s at %(authored)s</target>
+            </trans-unit>
+            <trans-unit id="abcaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.authored-only">
+                <source>sulu.content.form.settings.changelog.authored-only</source>
+                <target>Authored at %(authored)s</target>
+            </trans-unit>
             <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
                 <source>column-navigation.ghost</source>
                 <target>Ghost page</target>
@@ -829,15 +837,11 @@
              </trans-unit>
             <trans-unit id="79" resname="sulu.content.form.settings.author">
                  <source>sulu.content.form.settings.author</source>
-                 <target>Author</target>
+                 <target>Authored by</target>
              </trans-unit>
             <trans-unit id="80" resname="sulu.content.form.settings.authored">
                  <source>sulu.content.form.settings.authored</source>
-                 <target>Date</target>
-             </trans-unit>
-            <trans-unit id="81" resname="sulu.content.form.settings.authors">
-                 <source>sulu.content.form.settings.authors</source>
-                 <target>Authors</target>
+                 <target>Authored Date</target>
              </trans-unit>
         </body>
     </file>

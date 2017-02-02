@@ -833,11 +833,7 @@
              </trans-unit>
             <trans-unit id="80" resname="sulu.content.form.settings.authored">
                  <source>sulu.content.form.settings.authored</source>
-                 <target>Datum</target>
-             </trans-unit>
-            <trans-unit id="81" resname="sulu.content.form.settings.authors">
-                 <source>sulu.content.form.settings.authors</source>
-                 <target>Auteurs</target>
+                 <target>Auteur Datum</target>
              </trans-unit>
         </body>
     </file>

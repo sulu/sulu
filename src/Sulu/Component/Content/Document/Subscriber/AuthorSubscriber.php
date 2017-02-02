@@ -20,12 +20,12 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Handles authors and authored.
+ * Handles author and authored.
  */
 class AuthorSubscriber implements EventSubscriberInterface
 {
     const AUTHORED_PROPERTY_NAME = 'authored';
-    const AUTHORS_PROPERTY_NAME = 'authors';
+    const AUTHOR_PROPERTY_NAME = 'author';
 
     /**
      * @var PropertyEncoder
@@ -53,7 +53,7 @@ class AuthorSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Set authors/authored to document on-hydrate.
+     * Set author/authored to document on-hydrate.
      *
      * @param HydrateEvent $event
      */
@@ -80,16 +80,16 @@ class AuthorSubscriber implements EventSubscriberInterface
                 null
             )
         );
-        $document->setAuthors(
+        $document->setAuthor(
             $node->getPropertyValueWithDefault(
-                $this->propertyEncoder->encode($encoding, self::AUTHORS_PROPERTY_NAME, $event->getLocale()),
-                []
+                $this->propertyEncoder->encode($encoding, self::AUTHOR_PROPERTY_NAME, $event->getLocale()),
+                null
             )
         );
     }
 
     /**
-     * Set authors/authored to document on-persist.
+     * Set author/authored to document on-persist.
      *
      * @param AbstractMappingEvent $event
      */
@@ -115,8 +115,8 @@ class AuthorSubscriber implements EventSubscriberInterface
             $document->getAuthored()
         );
         $node->setProperty(
-            $this->propertyEncoder->encode($encoding, self::AUTHORS_PROPERTY_NAME, $event->getLocale()),
-            $document->getAuthors()
+            $this->propertyEncoder->encode($encoding, self::AUTHOR_PROPERTY_NAME, $event->getLocale()),
+            $document->getAuthor()
         );
     }
 }

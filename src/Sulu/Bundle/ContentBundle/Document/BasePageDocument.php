@@ -56,7 +56,9 @@ class BasePageDocument implements
     WebspaceBehavior,
     SecurityBehavior,
     LocalizedAuditableBehavior,
-    LocalizedTitleBehavior, VersionBehavior, LocalizedAuthorBehavior
+    LocalizedTitleBehavior,
+    VersionBehavior,
+    LocalizedAuthorBehavior
 {
     /**
      * The name of this node.
@@ -255,9 +257,9 @@ class BasePageDocument implements
     /**
      * Id of author.
      *
-     * @var int[]
+     * @var int
      */
-    protected $authors = [];
+    protected $author;
 
     public function __construct()
     {
@@ -643,17 +645,17 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
-    public function getAuthors()
+    public function getAuthor()
     {
-        return $this->authors;
+        return $this->author;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setAuthors(array $authors)
+    public function setAuthor($author)
     {
-        $this->authors = $authors;
+        $this->author = $author;
 
         return $this;
     }

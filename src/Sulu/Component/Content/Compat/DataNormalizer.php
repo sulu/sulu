@@ -70,7 +70,7 @@ class DataNormalizer
             'parent' => self::getAndUnsetValue($data, 'parent'),
             'workflowStage' => self::getAndUnsetValue($data, 'workflowStage'),
             'authored' => self::getAndUnsetValue($data, 'authored'),
-            'authors' => self::getAndUnsetValue($data, 'authors'),
+            'author' => self::getAndUnsetValue($data, 'author'),
             'structure' => $data,
         ];
 

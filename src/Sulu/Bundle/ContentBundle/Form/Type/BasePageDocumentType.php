@@ -65,7 +65,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
             DateType::class,
             ['widget' => 'single_text', 'model_timezone' => 'UTC', 'view_timezone' => 'UTC']
         );
-        $builder->add('authors', TextType::class);
+        $builder->add('author', TextType::class);
         $builder->setAttribute('webspace_key', $options['webspace_key']);
     }
 }

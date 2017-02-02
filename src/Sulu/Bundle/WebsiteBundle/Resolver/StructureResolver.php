@@ -75,7 +75,7 @@ class StructureResolver implements StructureResolverInterface
             $document = $structure->getDocument();
             if ($document instanceof AuthorBehavior) {
                 $data['authored'] = $document->getAuthored();
-                $data['authors'] = $document->getAuthors();
+                $data['author'] = $document->getAuthor();
             }
         }
 

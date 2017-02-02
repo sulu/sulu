@@ -88,7 +88,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize()->willImplement(AuthorBehavior::class);
         $structure->getDocument()->willReturn($document->reveal());
         $document->getAuthored()->willReturn($authored);
-        $document->getAuthors()->willReturn([1, 2, 3]);
+        $document->getAuthor()->willReturn(1);
 
         $expected = [
             'extension' => [
@@ -111,7 +111,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
             'path' => 'test-path',
             'shadowBaseLocale' => 'en',
             'authored' => $authored,
-            'authors' => [1, 2, 3],
+            'author' => 1,
         ];
 
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));

@@ -451,6 +451,14 @@
                 <source>sulu.content.form.settings.changelog.changed-only</source>
                 <target>Letzte Änderung am %(changed)s</target>
             </trans-unit>
+            <trans-unit id="abbaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.authored">
+                <source>sulu.content.form.settings.changelog.authored</source>
+                <target>Verfasst von %(author)s am %(authored)s</target>
+            </trans-unit>
+            <trans-unit id="abcaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.authored-only">
+                <source>sulu.content.form.settings.changelog.authored-only</source>
+                <target>Verfasst am %(authored)s</target>
+            </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.created">
                 <source>sulu.content.form.settings.changelog.created</source>
                 <target>Erstellt von %(creator)s am %(created)s</target>
@@ -829,15 +837,11 @@
              </trans-unit>
             <trans-unit id="79" resname="sulu.content.form.settings.author">
                  <source>sulu.content.form.settings.author</source>
-                 <target>Autor</target>
+                 <target>Verfasser</target>
              </trans-unit>
             <trans-unit id="80" resname="sulu.content.form.settings.authored">
                  <source>sulu.content.form.settings.authored</source>
-                 <target>Datum</target>
-             </trans-unit>
-            <trans-unit id="81" resname="sulu.content.form.settings.authors">
-                 <source>sulu.content.form.settings.authors</source>
-                 <target>Autoren</target>
+                 <target>Verfasst am</target>
              </trans-unit>
         </body>
     </file>

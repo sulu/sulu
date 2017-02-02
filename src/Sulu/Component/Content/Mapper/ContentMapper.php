@@ -748,7 +748,7 @@ class ContentMapper implements ContentMapperInterface
         ];
 
         if ($document instanceof AuthorBehavior) {
-            $documentData['authors'] = $document->getAuthors();
+            $documentData['author'] = $document->getAuthor();
             $documentData['authored'] = $document->getAuthored();
         }
 

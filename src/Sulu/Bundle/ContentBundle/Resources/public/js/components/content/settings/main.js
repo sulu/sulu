@@ -8,13 +8,14 @@
  */
 
 define([
-'underscore',
+    'underscore',
     'jquery',
     'config',
     'sulusecurity/components/users/models/user',
+    'sulucontact/models/contact',
     'services/husky/url-validator',
     'sulucontent/services/content-manager'
-], function(_, $, Config, User, urlValidator, contentManager) {
+], function(_, $, Config, User, Contact, urlValidator, contentManager) {
 
     'use strict';
 
@@ -47,6 +48,8 @@ define([
                 linkContainer: '#external-link-container .link'
             }
         },
+
+        authorFullname = null,
 
         isShadow = function() {
             return this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
@@ -96,6 +99,32 @@ define([
             }
 
             this.sandbox.dom.text('#changed', changedText);
+        },
+
+        setAuthorChangelog = function(fullName, time) {
+            var authoredText, formattedTime = this.sandbox.date.format(time);
+
+            fullName = fullName || authorFullname;
+
+            if (!!fullName) {
+                authorFullname = fullName;
+                authoredText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.authored'),
+                    {
+                        author: fullName,
+                        authored: formattedTime
+                    }
+                );
+            } else {
+                authoredText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.authored-only'),
+                    {
+                        authored: formattedTime
+                    }
+                )
+            }
+
+            this.sandbox.dom.text('#author', authoredText);
         },
 
         showChangelogContainer = function() {
@@ -232,6 +261,9 @@ define([
                 this.updateVisibilityForShadowCheckbox(false);
             }.bind(this));
 
+            this.sandbox.dom.on('#change-author', 'click', function() {
+                this.openAuthorSelection();
+            }.bind(this));
         },
 
         updateVisibilityForShadowCheckbox: function(isInitial) {
@@ -284,11 +316,10 @@ define([
                 this.buildAllNavContexts(this.sandbox.dom.data('#nav-contexts', 'auraData'));
 
                 this.bindDomEvents();
-                this.setData(this.data).then(function() {
-                    this.sandbox.start(this.$el, {reset: true});
-                }.bind(this));
+                this.setData(this.data);
                 this.listenForChange();
                 this.startComponents();
+                this.sandbox.start(this.$el, {reset: true});
 
                 this.sandbox.start([
                     {
@@ -369,8 +400,10 @@ define([
         updateChangelog: function(data) {
             var creator,
                 changer,
+                author,
                 creatorDef = this.sandbox.data.deferred(),
-                changerDef = this.sandbox.data.deferred();
+                changerDef = this.sandbox.data.deferred(),
+                authorDef = this.sandbox.data.deferred();
 
             if (data.creator === data.changer) {
                 creator = new User({id: data.creator});
@@ -411,9 +444,27 @@ define([
                 })
             }
 
-            this.sandbox.data.when(creatorDef, changerDef).then(function(creation, change) {
+            if (data.author) {
+                author = new Contact({id: data.author});
+                author.fetch({
+                    global: false,
+
+                    success: function(model) {
+                        authorDef.resolve(model.get('fullName'), data.authored);
+                    }.bind(this),
+
+                    error: function() {
+                        authorDef.resolve(null, data.authored);
+                    }.bind(this)
+                });
+            } else {
+                authorDef.resolve(null, data.authored);
+            }
+
+            this.sandbox.data.when(creatorDef, changerDef, authorDef).then(function(creation, change, author) {
                 setCreationChangelog.call(this, creation[0], creation[1]);
                 setChangeChangelog.call(this, change[0], change[1]);
+                setAuthorChangelog.call(this, author[0], author[1]);
                 showChangelogContainer.call(this);
             }.bind(this));
         },
@@ -457,26 +508,6 @@ define([
                 this.sandbox.dom.attr('#shadow_on_checkbox', 'checked', true);
                 this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             }
-
-            var def = $.Deferred();
-
-            // set author form data
-            this.sandbox.form.create('#settings-author-container').initialized.then(function() {
-                // the 'c' prefix is needed for the contact-selection
-                // which uses this to determine the type of id
-                // c for contact and a for account
-                data.authors = _.map(
-                    data.authors,
-                    function(author) {
-                        return 'c' + author;
-                    }
-                );
-                this.sandbox.form.setData('#settings-author-container', data).then(function() {
-                    def.resolve();
-                });
-            }.bind(this));
-
-            return def.promise();
         },
 
         listenForChange: function() {
@@ -496,7 +527,7 @@ define([
         submit: function(action) {
             this.sandbox.logger.log('save Model');
 
-            var data = this.sandbox.form.getData('#settings-author-container'),
+            var data = {},
                 baseLanguages = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues');
 
             data.id = this.data.id;
@@ -523,19 +554,14 @@ define([
                 data.shadowBaseLanguage = baseLanguages[0];
             }
 
+            data.author = this.data.author;
+            data.authored = this.data.authored;
+
             if (!this.validate(data)) {
                 this.sandbox.emit('sulu.labels.warning.show', 'form.validation-warning', 'labels.warning');
 
                 return;
             }
-
-            // remove 'c' prefix from authors
-            data.authors = _.map(
-                data.authors,
-                function(author) {
-                    return author.substring(1);
-                }
-            );
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
@@ -646,6 +672,65 @@ define([
             }
 
             return result;
+        },
+
+        openAuthorSelection: function() {
+            var $overlayContainer = $('<div/>'),
+                $componentContainer = $('<div/>');
+
+            this.$el.append($overlayContainer);
+
+            this.sandbox.start([{
+                name: 'overlay@husky',
+                options: {
+                    el: $overlayContainer,
+                    instanceName: 'contact-selection',
+                    openOnStart: true,
+                    removeOnClose: true,
+                    skin: 'medium',
+                    slides: [
+                        {
+                            title: this.sandbox.translate('sulu.content.form.settings.author'),
+                            okCallback: function() {
+                                this.sandbox.emit('sulu.content.contents.get-author');
+                            }.bind(this),
+                            data: $componentContainer
+                        }
+                    ]
+                }
+            }]);
+
+            this.sandbox.once('husky.overlay.contact-selection.initialized', function() {
+                this.sandbox.start([
+                    {
+                        name: 'content/settings/contact-selection@sulucontent',
+                        options: {
+                            el: $componentContainer,
+                            locale: this.options.locale,
+                            data: {author: this.data.author, authored: this.data.authored},
+                            selectCallback: function(data) {
+                                this.setAuthor(data);
+
+                                this.sandbox.emit('husky.overlay.contact-selection.close');
+                            }.bind(this)
+                        }
+                    }
+                ]);
+            }.bind(this));
+        },
+
+        setAuthor: function(data) {
+            this.data.authored = data.authored;
+
+            if (!data.authorItem) {
+                // TODO keep author name
+                setAuthorChangelog.call(this, null, new Date(data.authored));
+
+                return;
+            }
+
+            setAuthorChangelog.call(this, data.authorItem.firstName + ' ' + data.authorItem.lastName, new Date(data.authored));
+            this.data.author = data.author;
         }
     };
 });

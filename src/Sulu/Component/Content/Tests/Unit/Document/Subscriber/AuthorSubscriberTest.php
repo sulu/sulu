@@ -55,14 +55,14 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORED_PROPERTY_NAME, 'de')
             ->willReturn('sulu:authored');
-        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORS_PROPERTY_NAME, 'de')
-            ->willReturn('sulu:authors');
+        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
+            ->willReturn('sulu:author');
 
         $node->getPropertyValueWithDefault('sulu:authored', null)->willReturn('2017-01-01');
-        $node->getPropertyValueWithDefault('sulu:authors', [])->willReturn([1, 2, 3]);
+        $node->getPropertyValueWithDefault('sulu:author', null)->willReturn(1);
 
         $document->setAuthored('2017-01-01')->shouldBeCalled();
-        $document->setAuthors([1, 2, 3])->shouldBeCalled();
+        $document->setAuthor(1)->shouldBeCalled();
 
         $this->authorSubscriber->setAuthorOnDocument($event->reveal());
     }
@@ -79,14 +79,14 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->propertyEncoder->encode('system_localized', AuthorSubscriber::AUTHORED_PROPERTY_NAME, 'de')
             ->willReturn('i18n:authored');
-        $this->propertyEncoder->encode('system_localized', AuthorSubscriber::AUTHORS_PROPERTY_NAME, 'de')
-            ->willReturn('i18n:authors');
+        $this->propertyEncoder->encode('system_localized', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
+            ->willReturn('i18n:author');
 
         $node->getPropertyValueWithDefault('i18n:authored', null)->willReturn('2017-01-01');
-        $node->getPropertyValueWithDefault('i18n:authors', [])->willReturn([1, 2, 3]);
+        $node->getPropertyValueWithDefault('i18n:author', null)->willReturn(1);
 
         $document->setAuthored('2017-01-01')->shouldBeCalled();
-        $document->setAuthors([1, 2, 3])->shouldBeCalled();
+        $document->setAuthor(1)->shouldBeCalled();
 
         $this->authorSubscriber->setAuthorOnDocument($event->reveal());
     }
@@ -103,13 +103,13 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORED_PROPERTY_NAME, 'de')
             ->willReturn('sulu:authored');
-        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORS_PROPERTY_NAME, 'de')
-            ->willReturn('sulu:authors');
+        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
+            ->willReturn('sulu:author');
 
-        $document->getAuthors()->willReturn([1, 2, 3]);
+        $document->getAuthor()->willReturn([1, 2, 3]);
         $document->getAuthored()->willReturn('2017-01-01');
 
-        $node->setProperty('sulu:authors', [1, 2, 3])->shouldBeCalled();
+        $node->setProperty('sulu:author', [1, 2, 3])->shouldBeCalled();
         $node->setProperty('sulu:authored', '2017-01-01')->shouldBeCalled();
 
         $this->authorSubscriber->setAuthorOnNode($event->reveal());
@@ -127,13 +127,13 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORED_PROPERTY_NAME, 'de')
             ->willReturn('i18n:authored');
-        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORS_PROPERTY_NAME, 'de')
-            ->willReturn('i18n:authors');
+        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
+            ->willReturn('i18n:author');
 
-        $document->getAuthors()->willReturn([1, 2, 3]);
+        $document->getAuthor()->willReturn([1, 2, 3]);
         $document->getAuthored()->willReturn('2017-01-01');
 
-        $node->setProperty('i18n:authors', [1, 2, 3])->shouldBeCalled();
+        $node->setProperty('i18n:author', [1, 2, 3])->shouldBeCalled();
         $node->setProperty('i18n:authored', '2017-01-01')->shouldBeCalled();
 
         $this->authorSubscriber->setAuthorOnNode($event->reveal());

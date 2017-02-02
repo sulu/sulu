@@ -33,18 +33,18 @@ interface AuthorBehavior
     public function setAuthored($authored);
 
     /**
-     * Returns array of author contact ids.
+     * Returns id of author contact.
      *
-     * @return int[]
+     * @return int
      */
-    public function getAuthors();
+    public function getAuthor();
 
     /**
-     * Set array of author contact ids.
+     * Set id of author contact.
      *
-     * @param int[] $authors
+     * @param int $author
      *
      * @return $this
      */
-    public function setAuthors(array $authors);
+    public function setAuthor($author);
 }
