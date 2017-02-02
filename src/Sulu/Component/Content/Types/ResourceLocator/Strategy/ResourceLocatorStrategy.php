@@ -107,15 +107,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         // title should not have a slash
         $title = str_replace('/', '-', $title);
 
-        if ($parentUuid !== null) {
-            $parentDocument = $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false]);
-            // find uuid of published ancestor for generating parent-path-segment
-            $resolvedParentUuid = $this->documentInspector->getUuid($this->getPublishedAncestorOrSelf($parentDocument));
-            // using loadByContentUuid because loadByContent returns the wrong language for shadow-pages
-            $parentPath = $this->loadByContentUuid($resolvedParentUuid, $webspaceKey, $languageCode);
-        } else {
-            $parentPath = '/';
-        }
+        $parentPath = $this->getClosestResourceLocator($parentUuid, $webspaceKey, $languageCode);
 
         // get generated path from childClass
         $path = $this->resourceLocatorGenerator->generate($title, $parentPath);
@@ -130,20 +122,30 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
     }
 
     /**
-     * Returns the first ancestor-or-self of the given document which is published and therefore has an
-     * assigned resource locator. If all ancestor documents are unpublished, the root document is returned.
+     * Returns the closes resourcelocator possible. Skips pages without URLs as internal/external links or unpublished
+     * pages.
      *
-     * @param object $document
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
      *
-     * @return object
+     * @return null|string
      */
-    private function getPublishedAncestorOrSelf($document)
+    private function getClosestResourceLocator($uuid, $webspaceKey, $languageCode)
     {
-        while (!$document->getPublished() && $document instanceof ParentBehavior) {
-            $document = $document->getParent();
+        if (!$uuid) {
+            return null;
         }
 
-        return $document;
+        $document = $this->documentManager->find($uuid, $languageCode, ['load_ghost_content' => false]);
+
+        do {
+            try {
+                return $this->loadByContentUuid($this->documentInspector->getUuid($document), $webspaceKey, $languageCode);
+            } catch (ResourceLocatorNotFoundException $e) {
+                $document = $document->getParent();
+            }
+        } while ($document instanceof ParentBehavior);
     }
 
     /**

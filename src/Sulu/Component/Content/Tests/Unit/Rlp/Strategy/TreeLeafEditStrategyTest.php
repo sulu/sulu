@@ -146,37 +146,6 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('path/to/parent/new-page', $result);
     }
 
-    public function testGenerateUnpublishedParent()
-    {
-        $title = 'new-page';
-        $parentUuid = 'uuid-uuid-uuid-uuid';
-        $webspaceKey = 'sulu_io';
-        $languageCode = 'de';
-
-        $grandParent = $this->prophesize(PageDocument::class);
-        $grandParent->getPublished()->willReturn(true);
-        $grandParentUuid = 'grand-parent-uuid-uuid';
-
-        $parent = $this->prophesize(PageDocument::class);
-        $parent->getPublished()->willReturn(false);
-        $parent->getParent()->willReturn($grandParent->reveal());
-
-        $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false])->willReturn($parent);
-        $this->documentInspector->getUuid($grandParent)->willReturn($grandParentUuid);
-        $this->mapper->loadByContentUuid($grandParentUuid, $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/grandparent'
-        );
-        $this->cleaner->cleanup('path/to/grandparent/new-page', $languageCode)->willReturn(
-            'path/to/grandparent/new-page'
-        );
-        $this->mapper->getUniquePath('path/to/grandparent/new-page', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/grandparent/new-page-1'
-        );
-
-        $result = $this->treeStrategy->generate($title, $parentUuid, $webspaceKey, $languageCode);
-        $this->assertEquals('path/to/grandparent/new-page-1', $result);
-    }
-
     public function testGenerateWithoutParentUuid()
     {
         $title = 'new-page';
@@ -186,7 +155,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $parent = $this->prophesize(PageDocument::class);
         $parent->getPublished()->willReturn(true);
 
-        $this->cleaner->cleanup('//new-page', $languageCode)->willReturn('/new-page');
+        $this->cleaner->cleanup('/new-page', $languageCode)->willReturn('/new-page');
         $this->mapper->getUniquePath('/new-page', $webspaceKey, $languageCode, null)->willReturn(
             'path/to/parent/new-page'
         );
