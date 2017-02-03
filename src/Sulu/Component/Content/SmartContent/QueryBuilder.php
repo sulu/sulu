@@ -17,7 +17,6 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Query builder to load smart content.
@@ -60,11 +59,6 @@ class QueryBuilder extends ContentQueryBuilder
     private $excluded = [];
 
     /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
      * @var SessionManagerInterface
      */
     private $sessionManager;
@@ -72,13 +66,11 @@ class QueryBuilder extends ContentQueryBuilder
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
-        WebspaceManagerInterface $webspaceManager,
         SessionManagerInterface $sessionManager,
         $languageNamespace
     ) {
         parent::__construct($structureManager, $extensionManager, $languageNamespace);
 
-        $this->webspaceManager = $webspaceManager;
         $this->sessionManager = $sessionManager;
     }
 
@@ -260,11 +252,7 @@ class QueryBuilder extends ContentQueryBuilder
         $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ?
             'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
-        if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
-            $node = $this->sessionManager->getContentNode($dataSource);
-        } else {
-            $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
-        }
+        $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
 
         return $sqlFunction . '(page, \'' . $node->getPath() . '\')';
     }

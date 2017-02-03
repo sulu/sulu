@@ -68,6 +68,7 @@ define([
                 data: null,
                 dropzoneOverlayContainer: '.content-column',
                 assetActions: [],
+                assetTypes: null,
                 assetSelectOnClick: false,
                 assetSingleSelect: false,
                 assetShowActionIcon: true,
@@ -81,7 +82,7 @@ define([
             templates: {
                 skeleton: skeletonTemplate,
                 childrenUrl: '/admin/api/collections<% if (!!collection) { %>/<%= collection %><% } %>?locale=<%= locale %>&sortBy=title<% if (!!collection) { %>&depth=1<% } %>',
-                mediaUrl: '/admin/api/media?locale=<%= locale %><% if (!!collection) { %>&collection=<%= collection %><% } %>',
+                mediaUrl: '/admin/api/media?locale=<%= locale %><% if (!!types) { %>&types=<%= types %><%}%><% if (!!collection) { %>&collection=<%= collection %><% } %>',
                 uploadUrl: '/admin/api/media?collection=<%= id %>&locale=<%= locale %>'
             }
         },
@@ -317,7 +318,8 @@ define([
                     instanceName: this.options.instanceName,
                     url: this.templates.mediaUrl({
                         collection: this.data.id,
-                        locale: this.options.locale
+                        locale: this.options.locale,
+                        types: this.options.assetTypes.join(',')
                     }),
                     searchFields: ['name', 'title', 'description'],
                     selectedCounter: this.options.assetHasSelectedCounter,

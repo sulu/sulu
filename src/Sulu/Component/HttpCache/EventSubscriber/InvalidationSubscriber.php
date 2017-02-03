@@ -28,6 +28,7 @@ use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Listens on document-manager events and invalidates cached urls to prevent outdated
@@ -68,6 +69,11 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $webspaceManager;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var string
      */
     private $environment;
@@ -79,6 +85,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * @param DocumentInspector $documentInspector
      * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param WebspaceManagerInterface $webspaceManager
+     * @param RequestStack $requestStack
      * @param string $environment - kernel envionment, dev, prod, etc
      */
     public function __construct(
@@ -88,6 +95,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack,
         $environment
     ) {
         $this->pathHandler = $pathHandler;
@@ -96,6 +104,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->documentInspector = $documentInspector;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
         $this->environment = $environment;
     }
 
@@ -220,10 +229,9 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     private function getLocaleUrls(ResourceSegmentBehavior $document, $locale)
     {
-        $documentUuid = ($document instanceof UuidBehavior) ? $document->getUuid() : null;
+        $uuid = ($document instanceof UuidBehavior) ? $document->getUuid() : null;
         $webspace = ($document instanceof WebspaceBehavior) ? $document->getWebspaceName() : null;
-
-        if (!$locale || !$documentUuid || !$webspace) {
+        if (!$locale || !$uuid || !$webspace) {
             return [];
         }
 
@@ -232,12 +240,12 @@ class InvalidationSubscriber implements EventSubscriberInterface
         // get current resource-locator and history resource-locators
         $resourceLocators = [];
         try {
-            $resourceLocators[] = $resourceLocatorStrategy->loadByContentUuid($documentUuid, $webspace, $locale);
+            $resourceLocators[] = $resourceLocatorStrategy->loadByContentUuid($uuid, $webspace, $locale);
         } catch (ResourceLocatorNotFoundException $e) {
             // if no resource locator exists there is also no url to purge from the cache
         }
 
-        $historyResourceLocators = $resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $webspace, $locale);
+        $historyResourceLocators = $resourceLocatorStrategy->loadHistoryByContentUuid($uuid, $webspace, $locale);
         foreach ($historyResourceLocators as $historyResourceLocator) {
             $resourceLocators[] = $historyResourceLocator->getResourceLocator();
         }
@@ -245,17 +253,35 @@ class InvalidationSubscriber implements EventSubscriberInterface
         // get urls for resource-locators
         $urls = [];
         foreach ($resourceLocators as $resourceLocator) {
-            $urls = array_merge(
-                $urls,
-                $this->webspaceManager->findUrlsByResourceLocator(
-                    $resourceLocator,
-                    $this->environment,
-                    $locale,
-                    $webspace
-                )
-            );
+            $urls = array_merge($urls, $this->findUrlsByResourceLocator($resourceLocator, $locale, $webspace));
         }
 
         return $urls;
+    }
+
+    /**
+     * Returns array of resource-locators with "http" and "https".
+     *
+     * @param string $resourceLocator
+     * @param string $locale
+     * @param string $webspace
+     *
+     * @return string[]
+     */
+    private function findUrlsByResourceLocator($resourceLocator, $locale, $webspace)
+    {
+        $scheme = 'http';
+        if ($request = $this->requestStack->getCurrentRequest()) {
+            $scheme = $request->getScheme();
+        }
+
+        return $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocator,
+            $this->environment,
+            $locale,
+            $webspace,
+            null,
+            $scheme
+        );
     }
 }

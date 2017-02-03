@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
+use PHPCR\ItemNotFoundException;
+use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
@@ -56,6 +58,11 @@ class ContentDataProvider implements DataProviderInterface
     private $proxyFactory;
 
     /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * @var bool
      */
     private $showDrafts;
@@ -65,12 +72,14 @@ class ContentDataProvider implements DataProviderInterface
         ContentQueryExecutorInterface $contentQueryExecutor,
         DocumentManagerInterface $documentManager,
         LazyLoadingValueHolderFactory $proxyFactory,
+        SessionInterface $session,
         $showDrafts
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->documentManager = $documentManager;
         $this->proxyFactory = $proxyFactory;
+        $this->session = $session;
         $this->showDrafts = $showDrafts;
     }
 
@@ -241,11 +250,19 @@ class ContentDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        if (!array_key_exists('dataSource', $filters) ||
-            $filters['dataSource'] === '' ||
-            ($limit !== null && $limit < 1)
+        $emptyFilterResult = [[], false];
+
+        if (!array_key_exists('dataSource', $filters)
+            || $filters['dataSource'] === ''
+            || ($limit !== null && $limit < 1)
         ) {
-            return [[], false];
+            return $emptyFilterResult;
+        }
+
+        try {
+            $this->session->getNodeByIdentifier($filters['dataSource']);
+        } catch (ItemNotFoundException $e) {
+            return $emptyFilterResult;
         }
 
         $properties = array_key_exists('properties', $propertyParameter) ?

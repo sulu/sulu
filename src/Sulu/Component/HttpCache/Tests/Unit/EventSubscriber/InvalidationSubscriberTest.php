@@ -32,6 +32,8 @@ use Sulu\Component\HttpCache\EventSubscriber\InvalidationSubscriber;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -76,6 +78,11 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     private $webspaceManager;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var string
      */
     private $env = 'prod';
@@ -89,8 +96,10 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
         $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
 
-        $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
+        $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())
+            ->willReturn($this->resourceLocatorStrategy->reveal());
 
         $this->invalidationSubscriber = new InvalidationSubscriber(
             $this->pathHandler->reveal(),
@@ -99,12 +108,30 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->documentInspector->reveal(),
             $this->resourceLocatorStrategyPool->reveal(),
             $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
             $this->env
         );
     }
 
-    public function testInvalidateDocumentBeforePublishing()
+    public function provideRequest()
     {
+        return [
+            [null, 'http'],
+            [$this->prophesize(Request::class), 'http'],
+            [$this->prophesize(Request::class), 'https'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideRequest
+     */
+    public function testInvalidateDocumentBeforePublishing($request, $scheme)
+    {
+        if ($request) {
+            $request->getScheme()->willReturn($scheme);
+            $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        }
+
         $documentLocale = 'en';
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
         $documentWebspace = 'sulu_io';
@@ -136,23 +163,29 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge->setDocument($document)->shouldBeCalled();
         $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
-        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn($resourceLocator2);
+        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)
+            ->willReturn($resourceLocator2);
         $rli = $this->prophesize(ResourceLocatorInformation::class);
         $rli->getResourceLocator()->willReturn($resourceLocator1);
-        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn([$rli]);
+        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocale)
+            ->willReturn([$rli]);
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator1,
             $this->env,
             $documentLocale,
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$url1]);
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator2,
             $this->env,
             $documentLocale,
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$url2, $url3]);
 
         $this->pathHandler->invalidatePath($url1)->shouldBeCalled();
@@ -197,8 +230,16 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforeUnpublishing()
+    /**
+     * @dataProvider provideRequest
+     */
+    public function testInvalidateDocumentBeforeUnpublishing($request, $scheme)
     {
+        if ($request) {
+            $request->getScheme()->willReturn($scheme);
+            $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        }
+
         $documentLocale = 'en';
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
         $documentWebspace = 'sulu_io';
@@ -229,23 +270,29 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge->setDocument($document)->shouldBeCalled();
         $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
-        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn($resourceLocator2);
+        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)
+            ->willReturn($resourceLocator2);
         $rli = $this->prophesize(ResourceLocatorInformation::class);
         $rli->getResourceLocator()->willReturn($resourceLocator1);
-        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn([$rli]);
+        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocale)
+            ->willReturn([$rli]);
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator1,
             $this->env,
             $documentLocale,
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$url1]);
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator2,
             $this->env,
             $documentLocale,
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$url2]);
 
         $this->pathHandler->invalidatePath($url1)->shouldBeCalled();
@@ -289,8 +336,16 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforeRemoving()
+    /**
+     * @dataProvider provideRequest
+     */
+    public function testInvalidateDocumentBeforeRemoving($request, $scheme)
     {
+        if ($request) {
+            $request->getScheme()->willReturn($scheme);
+            $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        }
+
         $documentLocales = ['en', 'de'];
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
         $documentWebspace = 'sulu_io';
@@ -323,29 +378,36 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $structureBridge->setDocument($document)->shouldBeCalled();
         $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
 
-        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])->willReturn($resourceLocatorEn1);
+        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])
+            ->willReturn($resourceLocatorEn1);
         $rli = $this->prophesize(ResourceLocatorInformation::class);
         $rli->getResourceLocator()->willReturn($resourceLocatorEn2);
-        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])->willReturn([$rli]);
+        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])
+            ->willReturn([$rli]);
 
         // de resource-locator related
-        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[1])->willReturn($resourceLocatorDe1);
-        $rli = $this->prophesize(ResourceLocatorInformation::class);
-        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[1])->willReturn([]);
+        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[1])
+            ->willReturn($resourceLocatorDe1);
+        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[1])
+            ->willReturn([]);
 
         // en url related
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorEn1,
             $this->env,
             $documentLocales[0],
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$urlEn1]);
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorEn2,
             $this->env,
             $documentLocales[0],
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$urlEn2]);
 
         // de url related
@@ -353,7 +415,9 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
             $resourceLocatorDe1,
             $this->env,
             $documentLocales[1],
-            $documentWebspace
+            $documentWebspace,
+            null,
+            $scheme
         )->willReturn([$urlDe1]);
 
         $this->pathHandler->invalidatePath($urlEn1)->shouldBeCalled();
@@ -373,7 +437,8 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getPublishedLocales($document->reveal())->willReturn(['de']);
         $event->getDocument()->willReturn($document->reveal());
 
-        $this->resourceLocatorStrategy->loadByContentUuid(Argument::cetera())->willThrow(ResourceLocatorNotFoundException::class);
+        $this->resourceLocatorStrategy->loadByContentUuid(Argument::cetera())
+            ->willThrow(ResourceLocatorNotFoundException::class);
         $this->resourceLocatorStrategy->loadHistoryByContentUuid(Argument::cetera())->willReturn([]);
 
         $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());

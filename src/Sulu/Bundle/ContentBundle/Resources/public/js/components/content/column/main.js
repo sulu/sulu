@@ -231,7 +231,7 @@ define([
                     // if the info icon is rendered we will show broken info.
                     return this.showBrokenInfo(item);
                 }
-                
+
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
                 } else {

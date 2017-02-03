@@ -65,7 +65,7 @@
             {%- if defaultLocale == locale -%}
                 <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="x-default"/>
             {%- endif -%}
-            <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="{{ locale }}"/>
+            <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="{{ locale|replace('_', '-') }}"/>
         {%- endfor -%}
     {%- endif -%}
 {%- endblock -%}

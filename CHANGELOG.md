@@ -42,7 +42,20 @@ CHANGELOG for Sulu
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
     * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
 
-* 1.4.4 (2016-01-12)
+* 1.4.6 (2017-02-03)
+    * HOTFIX      #3177 [WebsiteBundle]         Fixed wrong hreflang tag
+    * HOTFIX      #3173 [ContentBundle]         Fixed generating of resource locator with missing parents
+    * HOTFIX      #3170 [ContentBundle]         Fixed copy page in column navigation
+    * BUGFIX      #3168 [WebsiteBundle]         Fixed hide internal/external link in sitemap
+    * HOTFIX      #3170 [ContentBundle]         Fixed deleting of the smart content data source
+    * BUGFIX      #3167 [SnippetBundle]         Fixed error when snippet template has a category field
+    * HOTFIX      #3162 [MediaBundle]           Fixed type filtering in media-selection
+    * HOTFIX      #3150 [HTTPCacheBundle]       Fixed invalidate cache for https
+
+* 1.4.5 (2017-01-16)
+    * BUGFIX      #3043 [ContentBudle]          Fixed bind null values on managed-structure
+
+* 1.4.4 (2017-01-12)
     * HOTFIX      #3140 [MediaBundle]           Use https variant of adobe creative image editor
     * HOTFIX      #3139 [MediaBundle]           Fixed scaling issues on crop overlay in page form
     * HOTFIX      #3138 [MediaBundle]           Fixed cropping with only one given side
@@ -179,6 +192,10 @@ CHANGELOG for Sulu
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
+
+* 1.3.8 (2017-01-30)
+    * BUGFIX      #3167 [SnippetBundle]       Fixed error when snippet template has a category field.
+    * HOTFIX      #3155 [MediaBundle]         Fixed system collection creation for .anon user
 
 * 1.3.7 (2017-01-12)
     * HOTFIX      #3136 [ContentBundle]       Fixed resource locator issue while moving pages
