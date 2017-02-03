@@ -68,7 +68,7 @@ define([
                 data: null,
                 dropzoneOverlayContainer: '.content-column',
                 assetActions: [],
-                assetTypes: null,
+                assetTypes: [],
                 assetSelectOnClick: false,
                 assetSingleSelect: false,
                 assetShowActionIcon: true,
