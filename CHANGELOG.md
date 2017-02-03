@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3177 [WebsiteBundle]         Fixed wrong hreflang tag
     * HOTFIX      #3173 [ContentBundle]         Fixed generating of resource locator with missing parents
     * HOTFIX      #3170 [ContentBundle]         Fixed copy page in column navigation
     * BUGFIX      #3168 [WebsiteBundle]         Fixed hide internal/external link in sitemap
