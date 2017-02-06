@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
     * FEATURE     #3164 [AdminBundle]         Extracted csv-export into extension
     * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
     * BUGFIX      #3149 [ContentBundle]       Fixed cache clearing on publishing
