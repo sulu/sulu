@@ -10435,6 +10435,23 @@ a[data-badge]:after {
   min-height: 150px;
 }
 /* line 19, ../scss/modules/datagrid.scss */
+.husky-datagrid .empty-list {
+  text-align: center;
+  color: #ccc;
+  padding: 20px 0;
+  background: #fff;
+}
+/* line 25, ../scss/modules/datagrid.scss */
+.husky-datagrid .empty-list .icon {
+  display: block;
+  font-size: 50px;
+  padding-bottom: 5px;
+}
+/* line 30, ../scss/modules/datagrid.scss */
+.husky-datagrid .empty-list span {
+  display: block;
+}
+/* line 35, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements {
   display: block;
   height: 40px;
@@ -10444,28 +10461,28 @@ a[data-badge]:after {
   transition: height 200ms;
   overflow: hidden;
 }
-/* line 24, ../scss/modules/datagrid.scss */
+/* line 40, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements.indent {
   padding-left: 60px;
 }
-/* line 27, ../scss/modules/datagrid.scss */
+/* line 43, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements.invisible {
   visibility: visible;
   height: 0px;
 }
-/* line 32, ../scss/modules/datagrid.scss */
+/* line 48, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements .show-selected {
   color: #000;
   cursor: pointer;
 }
-/* line 38, ../scss/modules/datagrid.scss */
+/* line 54, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader {
   overflow: hidden;
   height: 0px;
   transition: all 200ms;
   margin-top: 0px;
 }
-/* line 44, ../scss/modules/datagrid.scss */
+/* line 60, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader.show {
   height: 70px;
   margin-top: 10px;
@@ -10745,23 +10762,6 @@ a[data-badge]:after {
 .husky-table .table tbody .grid-image [class^=fa-] {
   color: #ccc;
   font-size: 1.6em;
-}
-/* line 280, ../scss/modules/datagrid-table-view.scss */
-.husky-table .empty-list {
-  text-align: center;
-  color: #ccc;
-  padding: 20px 0;
-  background: #fff;
-}
-/* line 286, ../scss/modules/datagrid-table-view.scss */
-.husky-table .empty-list .icon {
-  display: block;
-  font-size: 50px;
-  padding-bottom: 5px;
-}
-/* line 291, ../scss/modules/datagrid-table-view.scss */
-.husky-table .empty-list span {
-  display: block;
 }
 
 /* line 7, ../scss/modules/datagrid-table-view-light.scss */
