@@ -820,11 +820,11 @@
                  <target>Unpublish</target>
              </trans-unit>
             <trans-unit id="75" resname="sulu_content.broken-template.title">
-                 <source>"sulu_content.broken-template.title</source>
+                 <source>sulu_content.broken-template.title</source>
                  <target>Page-Template is broken</target>
              </trans-unit>
             <trans-unit id="76" resname="sulu_content.broken-template.message">
-                 <source>"sulu_content.broken-template.message</source>
+                 <source>sulu_content.broken-template.message</source>
                  <target>Please contact system your administrator.</target>
              </trans-unit>
             <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
