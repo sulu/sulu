@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
@@ -24,9 +24,20 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class NominatimGeolocator implements GeolocatorInterface
 {
+    /**
+     * @var ClientInterface
+     */
     protected $client;
+
+    /**
+     * @var string
+     */
     protected $baseUrl;
 
+    /**
+     * @param ClientInterface $client
+     * @param string $baseUrl
+     */
     public function __construct(ClientInterface $client, $baseUrl = '')
     {
         $this->client = $client;
@@ -38,26 +49,31 @@ class NominatimGeolocator implements GeolocatorInterface
      */
     public function locate($query)
     {
-        $request = $this->client->get($this->baseUrl, [], [
-            'query' => [
-                'q' => $query,
-                'format' => 'json',
-                'addressdetails' => 1,
-            ],
-        ]);
-
-        $this->client->send($request);
-        $response = $request->getResponse();
+        $response = $this->client->request(
+            'GET',
+            $this->baseUrl,
+            [
+                'query' => [
+                    'q' => $query,
+                    'format' => 'json',
+                    'addressdetails' => 1,
+                ],
+            ]
+        );
 
         if ($response->getStatusCode() != 200) {
-            throw new HttpException($response->getStatusCode(), sprintf(
-                'Server at "%s" returned HTTP "%s". Body: ', $client->getUrl(), $response->getStatusCode()
-            ));
+            throw new HttpException(
+                $response->getStatusCode(),
+                sprintf(
+                    'Server at "%s" returned HTTP "%s". Body: ',
+                    $this->baseUrl,
+                    $response->getStatusCode()
+                )
+            );
         }
 
-        $results = $request->getResponse()->json();
+        $results = json_decode($response->getBody(), true);
         $response = new GeolocatorResponse();
-
         foreach ($results as $result) {
             $location = new GeolocatorLocation();
 

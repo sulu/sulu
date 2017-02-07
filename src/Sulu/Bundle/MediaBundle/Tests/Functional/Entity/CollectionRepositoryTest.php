@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -15,7 +16,10 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
 class CollectionRepositoryTest extends SuluTestCase
 {
@@ -25,30 +29,35 @@ class CollectionRepositoryTest extends SuluTestCase
     private $em;
 
     /**
+     * @var MediaType
+     */
+    private $mediaType;
+
+    /**
      * @var array
      */
     private $collectionData = [
-        ['1', null],
-        ['2', 0],
-        ['3', 1],
-        ['4', 2],
-        ['5', 3],
-        ['6', 3],
-        ['7', 5],
-        ['8', 5],
-        ['9', 2],
-        ['10', 1],
-        ['11', 9],
-        ['12', 9],
-        ['13', 0],
-        ['14', 12],
-        ['15', 12],
-        ['16', null],
-        ['17', 15],
-        ['18', 15],
-        ['19', 17],
-        ['20', 17],
-        ['21', null],
+        ['1', null, false, 0],
+        ['2', 0, false, 0],
+        ['3', 1, false, 0],
+        ['4', 2, false, 4],
+        ['5', 3, false, 0],
+        ['6', 3, false, 0],
+        ['7', 5, false, 0],
+        ['8', 5, false, 0],
+        ['9', 2, false, 0],
+        ['10', 1, false, 0],
+        ['11', 9, false, 0],
+        ['12', 9, false, 0],
+        ['13', 0, false, 0],
+        ['14', 12, false, 0],
+        ['15', 12, false, 0],
+        ['16', null, true, 0],
+        ['17', 15, true, 0],
+        ['18', 15, true, 0],
+        ['19', 17, true, 0],
+        ['20', 17, true, 0],
+        ['21', null, false, 0],
     ];
 
     /**
@@ -56,30 +65,52 @@ class CollectionRepositoryTest extends SuluTestCase
      */
     private $collections;
 
+    /**
+     * @var CollectionRepository
+     */
+    private $collectionRepository;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
 
-        $collectionType = new CollectionType();
-        $collectionType->setName('Default Type');
-        $collectionType->setDescription('Default Collection Type');
-        $this->em->persist($collectionType);
+        $defaultCollectionType = new CollectionType();
+        $defaultCollectionType->setName('Default Type');
+        $defaultCollectionType->setDescription('Default Collection Type');
+        $defaultCollectionType->setKey('collection.default');
+        $this->em->persist($defaultCollectionType);
+
+        $systemCollectionType = new CollectionType();
+        $systemCollectionType->setName('Default Type');
+        $systemCollectionType->setDescription('Default Collection Type');
+        $systemCollectionType->setKey(SystemCollectionManagerInterface::COLLECTION_TYPE);
+        $this->em->persist($systemCollectionType);
+
+        $this->mediaType = new MediaType();
+        $this->mediaType->setName('image');
+        $this->mediaType->setDescription('This is an image');
+        $this->em->persist($this->mediaType);
 
         foreach ($this->collectionData as $collection) {
-            $this->collections[] = $this->createCollection($collection[0], $collection[1], $collectionType);
+            $this->collections[] = $this->createCollection(
+                $collection[0],
+                $collection[1],
+                $collection[2] ? $systemCollectionType : $defaultCollectionType,
+                $collection[3]
+            );
         }
         $this->em->flush();
 
         /** @var CollectionRepository $repository */
-        $repository = $this->getContainer()->get('sulu_media.collection_repository');
-        $repository->recover();
+        $this->collectionRepository = $this->getContainer()->get('sulu_media.collection_repository');
+        $this->collectionRepository->recover();
         $this->em->flush();
     }
 
-    private function createCollection($name, $parent = null, $collectionType)
+    private function createCollection($name, $parent, $collectionType, $numberMedia)
     {
         $collection = new Collection();
         $collectionMeta = new CollectionMeta();
@@ -94,10 +125,24 @@ class CollectionRepositoryTest extends SuluTestCase
             $this->collections[$parent]->addChildren($collection);
         }
 
+        $this->addMedia($collection, $numberMedia);
+
         $this->em->persist($collection);
         $this->em->persist($collectionMeta);
 
         return $collection;
+    }
+
+    private function addMedia(Collection $collection, $numberMedia)
+    {
+        for ($i = 0; $i < $numberMedia; ++$i) {
+            $media = new Media();
+            $media->setCollection($collection);
+            $media->setType($this->mediaType);
+            $collection->addMedia($media);
+
+            $this->em->persist($media);
+        }
     }
 
     public function provideTreeData()
@@ -124,11 +169,38 @@ class CollectionRepositoryTest extends SuluTestCase
             $expected[] = $this->collections[$item];
         }
 
-        /** @var CollectionRepository $repository */
-        $repository = $this->getContainer()->get('sulu_media.collection_repository');
-
-        $result = $repository->findTree($id, 'de');
+        $result = $this->collectionRepository->findTree($id, 'de');
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testFindCollectionSet()
+    {
+        $this->assertCount(21, $this->collectionRepository->findCollectionSet(5));
+    }
+
+    public function testFindCollectionSetWithoutSystemCollections()
+    {
+        $this->assertCount(16, $this->collectionRepository->findCollectionSet(5, ['systemCollections' => false]));
+    }
+
+    public function testCount()
+    {
+        $this->assertEquals(16, $this->collectionRepository->count(5, ['systemCollections' => false]));
+    }
+
+    public function testCountMedia()
+    {
+        $this->assertEquals(4, $this->collectionRepository->countMedia($this->collections[3]));
+    }
+
+    public function testCountMediaWithEmptyCollection()
+    {
+        $this->assertEquals(0, $this->collectionRepository->countMedia($this->collections[0]));
+    }
+
+    public function testCountWithoutFilters()
+    {
+        $this->assertEquals(21, $this->collectionRepository->count(5));
     }
 }

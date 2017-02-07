@@ -3,8 +3,8 @@
         <div class="sortable grid-row multiple-property"
              id="{{ id|raw }}"
              data-type="collection"
-             data-type-min="{{ property.minOccurs }}"
-             data-type-max="{{ property.maxOccurs }}"
+             {% if property.minOccurs is not null %}data-type-min="{{ property.minOccurs }}"{% endif %}
+             {% if property.maxOccurs is not null %}data-type-max="{{ property.maxOccurs }}"{% endif %}
              data-mapper-property='[{"data": "{{ property.name }}", "tpl": "{{ id|raw }}-tpl"}]'
              data-mapper-full-class="full"
              data-mapper-empty-class="empty">
@@ -17,11 +17,13 @@
                                 {{ property.getTitle(userLocale) }}
                             </label>
 
+                            <div class="input-description">{{ property.getInfoText(userLocale) }}</div>
+
                             <div data-mapper-remove="{{ property.name }}"
                                  class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
                         </div>
 
-                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                     </div>
                 </div>
             </script>

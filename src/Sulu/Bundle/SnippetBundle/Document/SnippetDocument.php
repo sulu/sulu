@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,13 +11,13 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
+use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
@@ -29,15 +29,15 @@ use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
  */
 class SnippetDocument implements
     NodeNameBehavior,
-    TimestampBehavior,
-    BlameBehavior,
+    LocalizedAuditableBehavior,
     AutoNameBehavior,
     AliasFilingBehavior,
     StructureTypeFilingBehavior,
     StructureBehavior,
     WorkflowStageBehavior,
     UuidBehavior,
-    PathBehavior
+    PathBehavior,
+    LocalizedTitleBehavior
 {
     private $created;
     private $changed;
@@ -51,6 +51,7 @@ class SnippetDocument implements
     private $structureType;
     private $structure;
     private $locale;
+    private $originalLocale;
     private $path;
     private $nodeName;
 
@@ -202,6 +203,22 @@ class SnippetDocument implements
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
     }
 
     /**

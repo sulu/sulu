@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -27,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -126,7 +128,7 @@ class CollectionManager implements CollectionManagerInterface
             $collectionEntity,
             $sortBy,
             $this->getCurrentUser(),
-            $this->permissions['view']
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         $breadcrumbEntities = null;
@@ -198,28 +200,36 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [])
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true)
     {
-        /** @var Paginator $collectionSet */
-        $collectionSet = $this->collectionRepository->findCollectionSet(
+        $filter = [
+            'offset' => $offset,
+            'limit' => $limit,
+            'search' => $search,
+            'locale' => $locale,
+            'systemCollections' => $systemCollections,
+        ];
+
+        /** @var CollectionEntity[] $entities */
+        $entities = $this->collectionRepository->findCollectionSet(
             $depth,
-            ['offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale],
+            $filter,
             null,
             $sortBy,
             $this->getCurrentUser(),
-            $this->permissions['view']
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         $collections = [];
-        /** @var CollectionEntity[] $entities */
-        $entities = iterator_to_array($collectionSet);
         foreach ($entities as $entity) {
             if ($entity->getParent() === null) {
                 $collections[] = $this->getApiEntity($entity, $locale, $entities);
             }
         }
 
-        $this->count = $collectionSet->count();
+        unset($filter['limit']);
+        unset($filter['offset']);
+        $this->count = $this->collectionRepository->count($depth, $filter);
 
         return $collections;
     }
@@ -630,6 +640,7 @@ class CollectionManager implements CollectionManagerInterface
             $fileVersion->getName(),
             $fileVersion->getStorageOptions(),
             $fileVersion->getVersion(),
+            $fileVersion->getSubVersion(),
             $fileVersion->getMimeType()
         );
 
@@ -647,12 +658,12 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * prepare an api entity.
+     * Prepare an api entity.
      *
-     * @param CollectionEntity   $entity
-     * @param string             $locale
-     * @param CollectionEntity[] $entities           nested set
-     * @param array              $breadcrumbEntities
+     * @param CollectionInterface $entity
+     * @param string $locale
+     * @param CollectionEntity[] $entities nested set
+     * @param array $breadcrumbEntities
      *
      * @return Collection
      */
@@ -683,6 +694,11 @@ class CollectionManager implements CollectionManagerInterface
             $apiEntity->setBreadcrumb($breadcrumbApiEntities);
         }
 
+        if ($entity && $entity->getId()) {
+            $apiEntity->setMediaCount($this->collectionRepository->countMedia($entity));
+            $apiEntity->setSubCollectionCount($this->collectionRepository->countSubCollections($entity));
+        }
+
         return $this->addPreview($apiEntity);
     }
 
@@ -694,7 +710,11 @@ class CollectionManager implements CollectionManagerInterface
     protected function getCurrentUser()
     {
         if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
-            return $this->tokenStorage ? $token->getUser() : null;
+            $user = $token->getUser();
+
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
         }
 
         return;

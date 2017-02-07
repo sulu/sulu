@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -12,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -28,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,8 +38,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends RestController
-    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -66,16 +67,6 @@ class CollectionController extends RestController
     }
 
     /**
-     * persists a setting.
-     *
-     * @Put("collection/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
-    }
-
-    /**
      * Shows a single collection with the given id.
      *
      * @param $id
@@ -86,7 +77,10 @@ class CollectionController extends RestController
     public function getAction($id, Request $request)
     {
         if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
-            $collections = $this->getCollectionManager()->getTreeById($id, $this->getLocale($request));
+            $collections = $this->getCollectionManager()->getTreeById(
+                $id,
+                $this->getRequestParameter($request, 'locale', true)
+            );
 
             if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
                 $collections = [
@@ -102,15 +96,15 @@ class CollectionController extends RestController
         }
 
         try {
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
 
             // filter children
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
-            $limit = $listRestHelper->getLimit();
-            $offset = $listRestHelper->getOffset();
+            $limit = $request->get('limit', null);
+            $offset = $this->getOffset($request, $limit);
             $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
@@ -124,7 +118,7 @@ class CollectionController extends RestController
             $view = $this->responseGetById(
                 $id,
                 function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
-                    return $collectionManager->getById(
+                    $collection = $collectionManager->getById(
                         $id,
                         $locale,
                         $depth,
@@ -132,12 +126,21 @@ class CollectionController extends RestController
                         $filter,
                         $sortBy !== null ? [$sortBy => $sortOrder] : []
                     );
+
+                    if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                        $this->get('sulu_security.security_checker')->checkPermission(
+                            'sulu.media.system_collections',
+                            PermissionTypes::VIEW
+                        );
+                    }
+
+                    return $collection;
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
             $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -155,11 +158,12 @@ class CollectionController extends RestController
         try {
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
+            $securityChecker = $this->get('sulu_security.security_checker');
 
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
-            $limit = $listRestHelper->getLimit();
-            $offset = $listRestHelper->getOffset();
+            $limit = $request->get('limit', null);
+            $offset = $this->getOffset($request, $limit);
             $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
@@ -167,10 +171,9 @@ class CollectionController extends RestController
 
             if ($flat) {
                 $collections = $collectionManager->get(
-                    $this->getLocale($request),
+                    $this->getRequestParameter($request, 'locale', true),
                     [
                         'depth' => $depth,
-                        'search' => $search,
                     ],
                     $limit,
                     $offset,
@@ -178,12 +181,13 @@ class CollectionController extends RestController
                 );
             } else {
                 $collections = $collectionManager->getTree(
-                    $this->getLocale($request),
+                    $this->getRequestParameter($request, 'locale', true),
                     $offset,
                     $limit,
                     $search,
                     $depth,
-                    $sortBy !== null ? [$sortBy => $sortOrder] : []
+                    $sortBy !== null ? [$sortBy => $sortOrder] : [],
+                    $securityChecker->hasPermission('sulu.media.system_collections', 'view')
                 );
             }
 
@@ -307,7 +311,8 @@ class CollectionController extends RestController
     protected function moveEntity($id, Request $request)
     {
         $destinationId = $this->getRequestParameter($request, 'destination');
-        $collection = $this->getCollectionManager()->move($id, $this->getLocale($request), $destinationId);
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $collection = $this->getCollectionManager()->move($id, $locale, $destinationId);
         $view = $this->view($collection);
 
         return $this->handleView($view);
@@ -324,7 +329,7 @@ class CollectionController extends RestController
             'style' => $request->get('style'),
             'type' => $request->get('type', $this->container->getParameter('sulu_media.collection.type.default')),
             'parent' => $request->get('parent'),
-            'locale' => $request->get('locale', $this->getLocale($request)),
+            'locale' => $this->getRequestParameter($request, 'locale', true),
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'changer' => $request->get('changer'),
@@ -355,14 +360,14 @@ class CollectionController extends RestController
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
-            $data['locale'] = $this->getLocale($request);
+            $data['locale'] = $this->getRequestParameter($request, 'locale', true);
             $collection = $collectionManager->save($data, $this->getUser()->getId());
 
             $view = $this->view($collection, 200);
-        } catch (CollectionNotFoundException $cnf) {
-            $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
+        } catch (CollectionNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -374,6 +379,19 @@ class CollectionController extends RestController
     protected function getCollectionManager()
     {
         return $this->get('sulu_media.collection_manager');
+    }
+
+    /**
+     * @param Request $request
+     * @param $limit
+     *
+     * @return int
+     */
+    private function getOffset(Request $request, $limit)
+    {
+        $page = $request->get('page', 1);
+
+        return ($limit !== null) ? $limit * ($page - 1) : 0;
     }
 
     /**

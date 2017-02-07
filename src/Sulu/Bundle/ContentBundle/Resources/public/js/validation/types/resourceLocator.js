@@ -9,15 +9,25 @@
  */
 
 define([
+    'config',
     'type/default'
-], function(Default) {
+], function(Config, Default) {
 
     'use strict';
 
     return function($el, options) {
         var defaults = {},
 
-            validator = /^(\/[a-zA-Z0-9-_]+)+$/,
+            fullValidator = /^(\/[a-z0-9][a-z0-9-_]*)+$/,
+            leafValidator = /^[a-z0-9][a-z0-9-_]*$/,
+
+            getInputType = function() {
+                if (!!this.options.inputType) {
+                    return this.options.inputType;
+                }
+
+                return Config.get('sulu_content.webspace_input_types')[this.options.webspaceKey];
+            },
 
             subType = {
                 setValue: function(value) {
@@ -40,7 +50,11 @@ define([
                     var val = this.getValue(),
                         part = App.dom.data($el, 'part');
 
-                    return part.length > 0 && val !== '/' && validator.exec(val);
+                    if (getInputType.call(this) === 'leaf' && !leafValidator.test(part)) {
+                        return false;
+                    }
+
+                    return part.length > 0 && val !== '/' && fullValidator.test(val);
                 }
             };
 

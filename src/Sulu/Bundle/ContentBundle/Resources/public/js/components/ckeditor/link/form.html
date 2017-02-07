@@ -1,0 +1,39 @@
+<form id="internal-link-form" class="grid">
+    <div class="grid-row">
+        <div class="form-group grid-col-6">
+            <label for="internal-link-alt-title"><%= translations.altTitle %></label>
+            <input type="text"
+                   id="internal-link-alt-title"
+                   name="altTitle"
+                   class="form-element"
+                   data-mapper-property="altTitle"/>
+        </div>
+
+        <div class="form-group grid-col-6">
+            <label for="internal-link-target"><%= translations.target %></label>
+            <select id="internal-link-target"
+                    name="target"
+                    class="form-element"
+                    data-mapper-property="target">
+                <option value="_self"><%= translations.targetSelf %></option>
+                <option value="_blank"><%= translations.targetBlank %></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="loader"></div>
+
+    <div class="form-group grid-row href-container" style="display: none;">
+        <label for="internal-link-href-button" class="required">
+            <%= translations.href %>
+        </label>
+
+        <div class="single-internal-link internal-link-href container form-element husky-validate" id="internal-link-input">
+            <a class="fa-link icon action choose" href="#" id="internal-link-href-button"></a>
+            <a class="fa-times-circle clear" href="#" id="internal-link-href-button-clear"
+               style="display: none;"></a>
+            <input type="text" class="form-element preview-update trigger-save-button" readonly="readonly"
+                   id="internal-link-href-value"/>
+        </div>
+    </div>
+</form>

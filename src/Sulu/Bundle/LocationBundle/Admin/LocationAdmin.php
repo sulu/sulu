@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,14 +21,6 @@ class LocationAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem($title);
         $this->setNavigation(new Navigation($rootNavigationItem));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommands()
-    {
-        return [];
     }
 
     public function getJsBundleName()

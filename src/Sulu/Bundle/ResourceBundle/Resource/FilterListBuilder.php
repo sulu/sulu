@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -191,6 +192,8 @@ class FilterListBuilder implements FilterListBuilderInterface
         switch ($type) {
             case DataTypes::UNDEFINED_TYPE:
             case DataTypes::STRING_TYPE:
+            case DataTypes::TAGS_TYPE:
+            case DataTypes::AUTO_COMPLETE_TYPE:
                 return $value;
             case DataTypes::NUMBER_TYPE:
                 if (is_numeric($value)) {

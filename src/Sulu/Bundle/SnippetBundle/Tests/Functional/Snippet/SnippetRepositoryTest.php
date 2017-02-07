@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
 use PHPCR\SessionInterface;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
-use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 class SnippetRepositoryTest extends BaseFunctionalTestCase
@@ -79,7 +79,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit, $search);
         $this->assertCount($expectedCount, $snippets);
         foreach ($snippets as $snippet) {
-            $this->assertInstanceOf(SnippetBridge::class, $snippet);
+            $this->assertInstanceOf(SnippetDocument::class, $snippet);
         }
     }
 
@@ -89,10 +89,9 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
             [
                 ['hotel1', 'hotel2', 'car1'], 'de', 3,
             ],
-            // Currently fails because a default template does not exist...
-            //array(
-            //    array('hotel1', 'hotel2', 'car1'), 'en', 3
-            //),
+            [
+                ['hotel1', 'hotel2', 'car1'], 'en', 3,
+            ],
             [
                 ['hotel1', '842e61c0-09ab-42a9-1111-111111111111', 'car1'], 'de', 2,
             ],
@@ -112,9 +111,10 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
             if (isset($this->{$snippetVarName})) {
                 $snippet = $this->{$snippetVarName};
                 $uuids[] = $snippet->getUuid();
-            } else {
-                $uuids[] = $snippetVarName; // test invalid things too
+                continue;
             }
+
+            $uuids[] = $snippetVarName; // test invalid things too
         }
 
         $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $languageCode);
@@ -127,12 +127,17 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $snippets = $this->snippetRepository->getSnippets('de', 'car');
         $this->assertNotNull($snippets);
         $this->assertCount(3, $snippets);
-        $first = current($snippets);
-        $this->assertEquals('A car', $first->getProperty('title')->getValue());
-        $second = next($snippets);
-        $this->assertEquals('B car', $second->getProperty('title')->getValue());
-        $third = next($snippets);
-        $this->assertEquals('C car', $third->getProperty('title')->getValue());
+
+        $first = $snippets->current();
+        $this->assertEquals('A car', $first->getTitle());
+
+        $snippets->next();
+        $second = $snippets->current();
+        $this->assertEquals('B car', $second->getTitle());
+
+        $snippets->next();
+        $third = $snippets->current();
+        $this->assertEquals('C car', $third->getTitle());
     }
 
     public function testGetReferences()

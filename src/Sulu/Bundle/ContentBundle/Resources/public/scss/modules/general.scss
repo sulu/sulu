@@ -1,5 +1,5 @@
 #language-selector {
-  width: 95px;
+    width: 95px;
 }
 
 #content-form {
@@ -8,6 +8,10 @@
     .highlight-section .content {
         padding-top: 20px;
         padding-bottom: 20px;
+    }
+
+    .validate-error {
+        color: $red;
     }
 }
 
@@ -32,8 +36,6 @@
     }
 }
 
-.internal-links-overlay,
-.single-internal-overlay,
 .node {
     .overlay-content {
         margin: 0px;

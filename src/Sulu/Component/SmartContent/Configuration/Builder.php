@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -110,6 +111,16 @@ class Builder implements BuilderInterface
                 $sorting
             )
         );
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDeepLink($deepLink)
+    {
+        $this->configuration->setDeepLink($deepLink);
 
         return $this;
     }

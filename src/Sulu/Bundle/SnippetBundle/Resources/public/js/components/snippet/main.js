@@ -22,23 +22,36 @@ define([
         translationKeys = {
             deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
             deleteConfirmText: 'snippet.delete-confirm-text',
+            deleteConfirmDefaultText: 'snippet.delete-confirm-default-text',
             deleteConfirmTitle: 'snippet.delete-confirm-title',
             deleteDoIt: 'snippet.delete-do-it',
             deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
         },
 
+        errorCodes = {
+            contentChanged: 1102
+        },
+
         templates = {
-            referentialIntegrityMessage: function(pageTitles) {
+            referentialIntegrityMessage: function(pageTitles, isDefault) {
                 var message = [];
 
-                message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
-                message.push('<ul>');
+                if (pageTitles.length > 0) {
+                    message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
 
-                this.sandbox.util.foreach(pageTitles, function(pageTitle) {
-                    message.push('<li>', pageTitle, '</li>');
-                });
+                    message.push('<ul>');
 
-                message.push('</ul>');
+                    this.sandbox.util.foreach(pageTitles, function(pageTitle) {
+                        message.push('<li>', pageTitle, '</li>');
+                    });
+
+                    message.push('</ul>');
+                }
+
+                if (!!isDefault) {
+                    message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmDefaultText), '</p>');
+                }
+
                 message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmText), '</p>');
 
                 return message.join('');
@@ -130,7 +143,7 @@ define([
                         el: $element,
                         openOnStart: true,
                         title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
-                        message: templates.referentialIntegrityMessage.call(this, pageTitles),
+                        message: templates.referentialIntegrityMessage.call(this, pageTitles, data.isDefault),
                         okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
                         type: 'alert',
                         closeCallback: function() {
@@ -150,6 +163,78 @@ define([
             ]);
         },
 
+        /**
+         * Asks if the content should be overriden, if the content has been changed on the server.
+         * @param {Object} data
+         */
+        handleErrorContentChanged: function (data, action) {
+            this.sandbox.emit(
+                'sulu.overlay.show-warning',
+                'snippet.changed-warning.title',
+                'snippet.changed-warning.description',
+                function () {
+                    this.sandbox.emit('sulu.snippets.snippet.save-error');
+                }.bind(this),
+                function () {
+                    this.saveSnippet(data, action, true);
+                }.bind(this),
+                {
+                    okDefaultText: 'snippet.changed-warning.ok-button'
+                }
+            );
+        },
+
+        /**
+         * Handles the error based on its error code.
+         * @param {number} errorCode
+         * @param {Object} data
+         * @param {String} action
+         */
+        handleError: function(errorCode, data, action) {
+            switch (errorCode) {
+                case errorCodes.contentChanged:
+                    this.handleErrorContentChanged(data, action);
+                    break;
+                default:
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.sandbox.emit('sulu.snippets.snippet.save-error');
+            }
+        },
+
+        afterSaveAction: function(action, data) {
+            if (action === 'back') {
+                this.sandbox.emit('sulu.snippets.snippet.list');
+            } else if (action === 'new') {
+                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
+            } else if (!this.data.id) {
+                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
+            }
+        },
+
+        saveSnippet: function(data, action, force) {
+            this.model.set(data);
+
+            this.model.fullSave(
+                this.options.language,
+                null,
+                {},
+                {
+                    // on success save contacts id
+                    success: function(response) {
+                        var data = response.toJSON();
+                        if (!!this.data.id) {
+                            this.sandbox.emit('sulu.snippets.snippet.saved', data);
+                        }
+                        this.afterSaveAction(action, data);
+                    }.bind(this),
+                    error: function(model, response) {
+                        this.handleError.call(this, response.responseJSON.code, data, action);
+                    }.bind(this)
+                },
+                force
+            );
+        },
+
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             if (!!this.template) {
@@ -159,28 +244,8 @@ define([
 
                 data.template = config.defaultType;
             }
-            this.model.set(data);
 
-            this.model.fullSave(this.template, this.options.language, null, {}, {
-                // on success save contacts id
-                success: function(response) {
-                    var data = response.toJSON();
-                    if (!!this.data.id) {
-                        this.sandbox.emit('sulu.snippets.snippet.saved', data);
-                    }
-                    if (action === 'back') {
-                        this.sandbox.emit('sulu.snippets.snippet.list');
-                    } else if (action === 'new') {
-                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
-                    } else if (!this.data.id) {
-                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
-                    }
-                }.bind(this),
-                error: function() {
-                    this.sandbox.emit('sulu.snippets.snippet.save-error');
-                    this.sandbox.logger.log('error while saving profile');
-                }.bind(this)
-            });
+            this.saveSnippet(data, action);
         },
 
         load: function(id, language, forceReload) {

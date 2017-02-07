@@ -1,5 +1,0 @@
-sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
-    prefix: /sulu_website
-sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"

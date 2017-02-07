@@ -5,9 +5,11 @@
      data-aura-skin="date"
      data-aura-instance-name="{{ id|raw }}"
      data-aura-input-id="{{ id|raw }}"
+     data-aura-datepicker-options="{{ sulu_parameter_to_key_value(params.display_options.value|default([]))|json_encode }}"
      data-type="husky-input"
      data-form="true"
      class="preview-change-update trigger-save-button"
+     {% if params.placeholder %}data-aura-placeholder="{{ params.placeholder.value }}"{% endif %}
      {% if property.mandatory %}data-validation-required="true"{% endif %}></div>
 
 <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>

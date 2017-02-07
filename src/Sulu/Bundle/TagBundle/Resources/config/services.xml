@@ -18,7 +18,8 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
-        <service id="sulu_tag.tag_repository" class="%sulu_tag.tag_repository.class%" factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+        <service id="sulu_tag.tag_repository" class="%sulu_tag.tag_repository.class%">
+            <factory method="getRepository" service="doctrine.orm.entity_manager"/>
             <argument>%sulu_tag.entity.tag%</argument>
         </service>
         <service id="sulu_tag.tag_manager" class="%sulu_tag.tag_manager.class%">
@@ -29,6 +30,7 @@
         </service>
         <service id="sulu_tag.content.type.tag_list" class="%sulu_tag.content.type.tag_list.class%">
             <tag name="sulu.content.type" alias="tag_list"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument>%sulu_tag.content.type.tag_list.template%</argument>
         </service>

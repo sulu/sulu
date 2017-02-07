@@ -7,20 +7,21 @@
         <!-- document field type -->
         <service id="dtl_content.form.factory.document_type" class="Sulu\Component\Content\Form\Type\DocumentObjectType">
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <tag name="form.type" alias="document_object" />
+
+            <tag name="form.type" />
         </service>
 
         <!-- Form structure types -->
         <service id="dtl_content.form.type.page" class="Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType">
             <argument type="service" id="sulu.phpcr.session" />
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <tag name="form.type" alias="page" />
+            <argument type="service" id="sulu_document_manager.metadata_factory" />
+
+            <tag name="form.type" />
         </service>
 
         <service id="dtl_content.form.type.home" class="Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType">
-            <argument type="service" id="sulu.phpcr.session" />
-            <argument type="service" id="sulu_document_manager.document_manager" />
-            <tag name="form.type" alias="home" />
+            <tag name="form.type" />
         </service>
 
     </services>

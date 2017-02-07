@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -74,4 +74,14 @@ interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
     public function breadcrumbFunction($uuid);
+
+    /**
+     * Returns a boolean value to check if navigation item is active.
+     *
+     * @param string $requestUrl
+     * @param string $itemUrl
+     *
+     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     */
+    public function navigationIsActiveFunction($requestUrl, $itemUrl);
 }

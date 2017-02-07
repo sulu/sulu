@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,6 +44,11 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         $container->prependExtensionConfig('massive_search', [
             'services' => [
                 'factory' => 'sulu_search.search.factory',
+            ],
+            'persistence' => [
+                'doctrine_orm' => [
+                    'enabled' => true,
+                ],
             ],
         ]);
     }

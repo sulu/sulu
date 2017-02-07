@@ -51,8 +51,9 @@ define(function() {
          * @param {Boolean} okButton
          * @param {undefined|String} instanceName
          * @param {undefined|function} okCallback
+         * @param {undefined|function} cancelCallback
          */
-        startOverlay = function(titleKey, template, okButton, instanceName, okCallback) {
+        startOverlay = function(titleKey, template, okButton, instanceName, okCallback, cancelCallback) {
             if (!instanceName) {
                 instanceName = 'node';
             }
@@ -61,7 +62,7 @@ define(function() {
                 buttons = [
                     {
                         type: 'cancel',
-                        align: 'right'
+                        align: 'left'
                     }
                 ];
             this.sandbox.dom.append(this.$el, $element);
@@ -69,7 +70,7 @@ define(function() {
             if (!!okButton) {
                 buttons.push({
                     type: 'ok',
-                    align: 'left',
+                    align: 'right',
                     text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
                 });
             }
@@ -84,13 +85,14 @@ define(function() {
                         el: $element,
                         container: this.$el,
                         instanceName: instanceName,
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate(titleKey),
                                 data: template,
                                 buttons: buttons,
-                                okCallback: okCallback
+                                okCallback: okCallback,
+                                cancelCallback: cancelCallback
                             }
                         ]
                     }
@@ -120,7 +122,10 @@ define(function() {
                     }
 
                     def.resolve(copy, src[0]);
-                }.bind(this)
+                }.bind(this),
+                function() {
+                    def.reject();
+                }
             );
 
             this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {

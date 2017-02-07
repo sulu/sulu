@@ -5,7 +5,20 @@
            xmlns="http://schemas.sulu.io/template/template"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-   <xs:element name="template" type="templateType"/>
+    <!--
+    Import XML namespace (used by xincludes)
+    -->
+    <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
+
+    <!--
+    Attribute group for attributes that are allowed for all elements
+    -->
+    <xs:attributeGroup name="defaultAttributes">
+        <xs:anyAttribute namespace='http://www.w3.org/XML/1998/namespace'/>
+    </xs:attributeGroup>
+
+    <xs:element name="template" type="templateType"/>
+    <xs:element name="properties" type="rootPropertiesType"/>
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
@@ -15,7 +28,7 @@
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="internal" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="cacheLifetimeType" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="meta">
@@ -23,9 +36,11 @@
                     <xs:choice maxOccurs="unbounded">
                         <xs:element type="langType" name="title"/>
                     </xs:choice>
+                    <xs:attributeGroup ref="defaultAttributes"/>
                 </xs:complexType>
             </xs:element>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="metaType">
@@ -34,12 +49,14 @@
             <xs:element type="langType" name="info_text"/>
             <xs:element type="langType" name="placeholder"/>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="langType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="lang" use="required" type="xs:string" />
+                <xs:attribute name="lang" use="required" type="xs:string"/>
+                <xs:attributeGroup ref="defaultAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -50,6 +67,7 @@
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="sectionType" name="section" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="sectionType">
@@ -61,6 +79,7 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="propertiesType">
@@ -68,6 +87,7 @@
             <xs:element type="propertyType" name="property"/>
             <xs:element type="blockType" name="block"/>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="propertyType" mixed="true">
@@ -86,6 +106,7 @@
         <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="blockType">
@@ -103,12 +124,14 @@
         <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="blockTypesType">
         <xs:sequence minOccurs="1" maxOccurs="1">
             <xs:element type="blockTypeType" name="type" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="blockTypeType">
@@ -118,6 +141,7 @@
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="tagType">
@@ -125,15 +149,40 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
                 <xs:attribute type="xs:int" name="priority" use="optional"/>
-                <xs:anyAttribute namespace="##any" processContents="lax" />
+                <xs:anyAttribute namespace="##any" processContents="lax"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:complexType name="cacheLifetimeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" default="seconds">
+                    <xs:simpleType>
+                        <xs:union memberTypes="cacheLifetimeTypeEnum cacheLifetimeTypeAnyString"/>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="cacheLifetimeTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="seconds"/>
+            <xs:enumeration value="expression"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="cacheLifetimeTypeAnyString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-zA-Z]*"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="paramsType">
         <xs:sequence>
             <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="paramType">
@@ -144,6 +193,7 @@
         <xs:attribute name="type" type="paramTypeType" default="string"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="value" type="xs:string" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:simpleType name="paramTypeType">
@@ -157,6 +207,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attributeGroup ref="defaultAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

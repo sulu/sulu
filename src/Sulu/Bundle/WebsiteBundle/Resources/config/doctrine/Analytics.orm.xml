@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity table="we_analytics"
+            repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository"
+            name="Sulu\Bundle\WebsiteBundle\Entity\Analytics">
+        <indexes>
+            <index columns="all_domains"/>
+            <index columns="webspace_key"/>
+        </indexes>
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="title" type="string" column="title" length="255"/>
+        <field name="webspaceKey" type="string" column="webspace_key" length="255"/>
+        <field name="allDomains" type="boolean" column="all_domains"/>
+        <field name="content" type="json_array" column="content"/>
+        <field name="type" type="string" column="type" length="60"/>
+
+        <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\Domain" field="domains">
+            <join-table name="we_analytics_domains">
+                <join-columns>
+                    <join-column name="analytics" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="domain" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

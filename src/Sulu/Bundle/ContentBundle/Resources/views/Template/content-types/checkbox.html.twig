@@ -1,3 +1,15 @@
+{% if params.type == 'toggler' %}
+<div class="grid-row small">
+    <div id="{{ id|raw }}"
+         class="preview-update trigger-save-button"
+         data-form="true"
+         data-aura-component="toggler@husky"
+         data-aura-instance-name="{{ property.name }}"
+         data-type="toggler"
+         data-type-instance-name="{{ property.name }}"
+         data-mapper-property="{{ property.name }}"></div>
+</div>
+{% else %}
 <div class="custom-checkbox">
     <input type="checkbox"
            id="{{ id|raw }}"
@@ -6,3 +18,4 @@
            class="preview-update trigger-save-button form-element"/>
     <span class="icon"></span>
 </div>
+{% endif %}

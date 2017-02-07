@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,6 +32,18 @@ class UtilTwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('sulu_util_multisort', 'Sulu\Component\Util\SortUtils::multisort'),
+            new \Twig_SimpleFilter('sulu_util_filter', 'Sulu\Component\Util\ArrayUtils::filter'),
+            new \Twig_SimpleFilter('sulu_util_domain_info', 'tld_extract'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions()
+    {
+        return [
+            new \Twig_SimpleFunction('sulu_util_domain_info', 'tld_extract'),
         ];
     }
 }

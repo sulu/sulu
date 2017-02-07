@@ -1,0 +1,6 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/webspace-settings.scss */
+.webspace-settings.analytics .domains {
+  overflow: auto;
+  max-height: 220px;
+}

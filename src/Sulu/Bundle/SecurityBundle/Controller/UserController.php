@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,6 +25,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -35,6 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     protected static $entityKey = 'users';
 
     /**
@@ -126,7 +129,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     {
         try {
             $this->checkArguments($request);
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $data = $request->request->all();
             $user = $this->getUserManager()->save($data, $locale);
             $view = $this->view($user, 200);
@@ -148,7 +151,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     /**
      * @Post("/users/{id}")
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -181,7 +184,7 @@ class UserController extends RestController implements ClassResourceInterface, S
      * Updates the given user with the given data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int                                       $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -189,7 +192,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     {
         try {
             $this->checkArguments($request);
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $user = $this->getUserManager()->save($request->request->all(), $locale, $id);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
@@ -211,14 +214,14 @@ class UserController extends RestController implements ClassResourceInterface, S
      * Partly updates a user entity for a given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int                                       $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function patchAction(Request $request, $id)
     {
         try {
-            $locale = $this->getLocale($request);
+            $locale = $this->getRequestParameter($request, 'locale');
             $user = $this->getUserManager()->save($request->request->all(), $locale, $id, true);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
@@ -251,11 +254,11 @@ class UserController extends RestController implements ClassResourceInterface, S
         return $this->handleView($view);
     }
 
-/**
- * Checks if all the arguments are given, and throws an exception if one is missing.
- *
- * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
- */
+    /**
+     * Checks if all the arguments are given, and throws an exception if one is missing.
+     *
+     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
+     */
 
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
@@ -363,5 +366,13 @@ class UserController extends RestController implements ClassResourceInterface, S
     private function getUserManager()
     {
         return $this->get('sulu_security.user_manager');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return;
     }
 }

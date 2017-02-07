@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+    <name>test CMF</name>
+    <key>test_io</key>
+
+    <localizations>
+        <localization language="en" default="true"/>
+    </localizations>
+
+    <theme>
+        <key>default</key>
+
+        <default-templates>
+            <default-template type="page">default</default-template>
+            <default-template type="homepage">overview</default-template>
+        </default-templates>
+    </theme>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <portals>
+        <portal>
+            <name>test CMF AT</name>
+            <key>testcmf_at</key>
+            <resource-locator>
+                <strategy>tree_leaf_edit</strategy>
+            </resource-locator>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url>test.lo/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url>test.lo/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="phpcr">
+                    <urls>
+                        <url>test.lo/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url>test.lo/{localization}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

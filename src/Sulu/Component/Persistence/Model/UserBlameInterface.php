@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,24 +11,25 @@
 
 namespace Sulu\Component\Persistence\Model;
 
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
- * Classes implementing this interface must ensure they keep track
- * of uses that create and update it.
+ * Classes implementing this interface must ensure they keep track of uses that create and update it.
  */
 interface UserBlameInterface
 {
     /**
-     * Return the ID of the user that created this object.
+     * Return the user that created this object.
      *
-     * @return \DateTime
+     * @return UserInterface
      */
     public function getCreator();
 
     /**
-     * Return the ID of the last user to change
+     * Return the user that change this object the last time.
      * this object.
      *
-     * @return \DateTime
+     * @return UserInterface
      */
     public function getChanger();
 }

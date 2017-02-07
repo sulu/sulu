@@ -192,7 +192,7 @@
             </trans-unit>
             <trans-unit id="883c0562a1ae3578239d1803dfe61292" resname="navigation.webspaces">
                 <source>navigation.webspaces</source>
-                <target>Globale Inhalte &amp; Webspaces</target>
+                <target>Webspaces</target>
             </trans-unit>
             <trans-unit id="eefab6371eb9c8bb5457d1f5e35014a2" resname="navigation.webspaces.pages">
                 <source>navigation.webspaces.pages</source>
@@ -298,9 +298,17 @@
                 <source>public.changed</source>
                 <target>Zuletzt geändert</target>
             </trans-unit>
+            <trans-unit id="da7c493010f2c3545706919e142d0749" resname="public.changer">
+                <source>public.changer</source>
+                <target>Zuletzt geändert von</target>
+            </trans-unit>
             <trans-unit id="892cc3ad5bdba41fcf1b98298a4aee6a" resname="public.created">
                 <source>public.created</source>
                 <target>Erstellt am</target>
+            </trans-unit>
+            <trans-unit id="892cc3ad5bdba41f2f1b98298a4aee6a" resname="public.creator">
+                <source>public.creator</source>
+                <target>Erstellt von</target>
             </trans-unit>
             <trans-unit id="4ea635d980999da6a15ef3782d251878" resname="public.title">
                 <source>public.title</source>
@@ -444,9 +452,7 @@
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a78146053c828d9" resname="sulu.overlay.delete-desc">
                 <source>sulu.overlay.delete-desc</source>
-                <target>Die Operation die Sie machen möchten löscht Daten und lässt sich nicht rückgängig machen. Bitte
-                    denken Sie genau darüber nach und akzeptieren Sie oder brechen Sie ab.
-                </target>
+                <target>Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?</target>
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a781460534528d9" resname="sulu.overlay.unsaved-changes-confirm">
                 <source>sulu.overlay.unsaved-changes-confirm</source>
@@ -692,21 +698,9 @@
                 <source>content-navigation.contents.excerpt</source>
                 <target>Auszug &amp; Kategorien</target>
             </trans-unit>
-            <trans-unit id="142cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.auto">
-                <source>sulu.preview.auto</source>
-                <target>Auto</target>
-            </trans-unit>
-            <trans-unit id="c42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.desktop">
-                <source>sulu.preview.desktop</source>
-                <target>Desktop</target>
-            </trans-unit>
-            <trans-unit id="f42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.tablet">
-                <source>sulu.preview.tablet</source>
-                <target>Tablet</target>
-            </trans-unit>
-            <trans-unit id="d42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.smartphone">
-                <source>sulu.preview.smartphone</source>
-                <target>Smartphone</target>
+            <trans-unit id="948826fa2261f741d03a40c20af27c1b" resname="content-navigation.contents.permissions">
+                <source>content-navigation.contents.permissions</source>
+                <target>Berechtigungen</target>
             </trans-unit>
             <trans-unit id="c964588d92c25e70ec2d7f9be4e28ebc" resname="select.edit-entries">
                 <source>select.edit-entries</source>
@@ -911,6 +905,82 @@
             <trans-unit id="b229c52dae1354cc4123c0b4820e23cdb" resname="public.show-all">
                 <source>public.show-all</source>
                 <target>Alle anzeigen</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23cdb" resname="public.type">
+                <source>public.type</source>
+                <target>Typ</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23cdb" resname="labels.success.save-desc">
+                <source>labels.success.save-desc</source>
+                <target>Erfolgreich gespeichert</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c11" resname="labels.success.delete-desc">
+                <source>labels.success.save-desc</source>
+                <target>Erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c12" resname="public.yes">
+                <source>public.yes</source>
+                <target>Ja</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c13" resname="public.no">
+                <source>public.no</source>
+                <target>Nein</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23110" resname="public.export">
+                <source>public.export</source>
+                <target>Exportieren</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23111" resname="csv_export.export-title">
+                <source>csv_export.export-title</source>
+                <target>Datenformat konfigurieren</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23112" resname="csv_export.delimiter">
+                <source>csv_export.delimiter</source>
+                <target>Trennzeichen</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23113" resname="csv_export.delimiter-info">
+                <source>csv_export.delimiter-info</source>
+                <target>Zeichen um Zellen zu trennen.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23114" resname="csv_export.enclosure">
+                <source>csv_export.enclosure</source>
+                <target>Umschließen</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23115" resname="csv_export.enclosure-info">
+                <source>csv_export.enclosure-info</source>
+                <target>Einträge mit mehreren Wörtern markieren.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23116" resname="csv_export.escape">
+                <source>csv_export.escape</source>
+                <target>Maskieren</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23117" resname="csv_export.escape-info">
+                <source>csv_export.escape-info</source>
+                <target>Zusatz bei Sonderzeichen.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23118" resname="csv_export.new-line">
+                <source>csv_export.new-line</source>
+                <target>Neue Zeile</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23119" resname="csv_export.new-line-info">
+                <source>csv_export.new-line-info</source>
+                <target>Zeichen für den Zeilenumbruch.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23133" resname="navigation.modules">
+                <source>navigation.modules</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23233" resname="public.version">
+                <source>public.version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4831a23233" resname="public.items">
+                <source>public.items</source>
+                <target>Objekte</target>
+            </trans-unit>
+            <trans-unit id="c337c52dae1354cc4123c0b4831a23233" resname="public.save-and-apply">
+                <source>public.save-and-apply</source>
+                <target>Speichern &amp; anwenden</target>
             </trans-unit>
         </body>
     </file>

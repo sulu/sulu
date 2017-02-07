@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,18 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 class SeoController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
-
-    /**
-     * returns language code from request.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    private function getLanguage(Request $request)
-    {
-        return $this->getRequestParameter($request, 'language', true);
-    }
 
     /**
      * returns webspace key from request.
@@ -68,7 +56,7 @@ class SeoController extends RestController implements ClassResourceInterface
      */
     public function getAction(Request $request, $uuid)
     {
-        $language = $this->getLanguage($request);
+        $language = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
 
         $view = $this->responseGetById(
@@ -100,7 +88,7 @@ class SeoController extends RestController implements ClassResourceInterface
      */
     public function postAction(Request $request, $uuid)
     {
-        $language = $this->getLanguage($request);
+        $language = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
         $data = $request->request->all();
 
@@ -116,5 +104,13 @@ class SeoController extends RestController implements ClassResourceInterface
         return $this->handleView(
             $this->view($result)
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return $this->getRequestParameter($request, 'language', true);
     }
 }

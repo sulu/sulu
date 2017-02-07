@@ -63,8 +63,8 @@ define([
 
             if (!!data.categories) {
                 contact.get('categories').reset();
-                Util.foreach(data.categories, function(id) {
-                    var category = Category.findOrCreate({id: id});
+                Util.foreach(data.categories, function(category) {
+                    category = Category.findOrCreate({id: category});
                     contact.get('categories').add(category);
                 }.bind(this));
             }
@@ -90,7 +90,7 @@ define([
         removeDocument = function(contactId, mediaId) {
             var promise = $.Deferred();
 
-            Util.ajax({
+            $.ajax({
                 url: '/admin/api/contacts/' + contactId + '/medias/' + mediaId,
                 type: 'DELETE',
 
@@ -280,7 +280,7 @@ define([
         },
 
         /**
-         * Remove medias from an contact
+         * Remove medias from a contact
          * @param mediaIds (Array) of medias to delete
          * @param contactId The contact to delete the medias from
          */
@@ -306,14 +306,14 @@ define([
         },
 
         /**
-         * Adds a media to an contact
+         * Adds a media to a contact
          * @param mediaId media to add
          * @param contactId The contact to add the media to
          */
         addDocument: function(contactId, mediaId) {
             var promise = $.Deferred();
 
-            Util.ajax({
+            $.ajax({
                 url: '/admin/api/contacts/' + contactId + '/medias',
                 data: {mediaId: mediaId},
                 type: 'POST',
@@ -322,6 +322,34 @@ define([
                     Mediator.emit('sulu.contacts.contact.document.added', contactId, mediaId);
                     Mediator.emit('sulu.labels.success.show', 'contact.contacts.document-added');
                     promise.resolve();
+                }.bind(this),
+                error: function() {
+                    promise.reject();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
+         * Sets medias to a contact. Currently associated medias get replaced.
+         * @param mediaIds medias to associate with the contact
+         * @param contactId The contact to set the medias to
+         */
+        setDocuments: function(contactId, mediaIds) {
+            var promise = $.Deferred();
+            var medias = _.map(mediaIds, function (mediaId) { return {id: mediaId} });
+
+            $.ajax({
+                url: '/admin/api/contacts/' + contactId,
+                contentType: 'application/json',
+                data: JSON.stringify({medias: medias}),
+                type: 'PATCH',
+
+                success: function(response) {
+                    Mediator.emit('sulu.contacts.contact.documents.saved', contactId, mediaIds);
+                    Mediator.emit('sulu.labels.success.show', 'contact.contacts.documents-saved');
+                    promise.resolve(response);
                 }.bind(this),
                 error: function() {
                     promise.reject();

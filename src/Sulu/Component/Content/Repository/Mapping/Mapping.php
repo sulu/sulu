@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -32,6 +33,21 @@ class Mapping implements MappingInterface
      * @var bool
      */
     private $hydrateGhost = true;
+
+    /**
+     * @var bool
+     */
+    private $resolveUrl = false;
+
+    /**
+     * @var bool
+     */
+    private $onlyPublished = false;
+
+    /**
+     * @var bool
+     */
+    private $resolveConcreteLocales;
 
     /**
      * @var Collection
@@ -89,6 +105,54 @@ class Mapping implements MappingInterface
     public function setHydrateGhost($hydrateGhost)
     {
         $this->hydrateGhost = $hydrateGhost;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveUrl()
+    {
+        return $this->resolveUrl;
+    }
+
+    /**
+     * @param bool $resolveUrl
+     */
+    public function setResolveUrl($resolveUrl)
+    {
+        $this->resolveUrl = $resolveUrl;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onlyPublished()
+    {
+        return $this->onlyPublished;
+    }
+
+    /**
+     * @param bool $onlyPublished
+     */
+    public function setOnlyPublished($onlyPublished)
+    {
+        $this->onlyPublished = $onlyPublished;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveConcreteLocales()
+    {
+        return $this->resolveConcreteLocales;
+    }
+
+    /**
+     * @param bool $resolveConcreteLocales
+     */
+    public function setResolveConcreteLocales($resolveConcreteLocales)
+    {
+        $this->resolveConcreteLocales = $resolveConcreteLocales;
     }
 
     /**

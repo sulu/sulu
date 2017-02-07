@@ -19,6 +19,7 @@ Feature: Category management
         And I am on "/admin/#settings/categories"
         And I click the edit icon
         And I expect a form to appear
+        And I expect the "sulu.tab.rendered" event
         And I expect to see "Name"
         And I expect to see "Key"
         When I fill in "change-name" with "New name"

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="Sulu\Bundle\RouteBundle\Entity\BaseRoute">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="path" type="string" length="255"/>
+        <field name="locale" type="string" length="8"/>
+        <field name="entityClass" type="string" length="255"/>
+        <field name="entityId" type="string" length="255"/>
+        <field name="history" type="boolean"/>
+
+        <one-to-many field="histories" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface"
+                     mapped-by="target">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+        <many-to-one field="target" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface"
+                     inversed-by="histories">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </many-to-one>
+
+    </mapped-superclass>
+</doctrine-mapping>

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -24,40 +23,39 @@ use Symfony\Component\Routing\RouteCollection;
 class PortalLoader extends Loader
 {
     /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var RouteCollection
-     */
-    private $collection;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
-    {
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function load($resource, $type = null)
     {
-        $this->collection = new RouteCollection();
+        $collection = new RouteCollection();
 
+        /** @var Route[] $importedRoutes */
         $importedRoutes = $this->import($resource, null);
 
+        $condition = sprintf(
+            'request.get("_sulu").getAttribute("portalInformation") !== null && request.get("_sulu").getAttribute("portalInformation").getType() === %s',
+            RequestAnalyzerInterface::MATCH_TYPE_FULL
+        );
+
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
-            $this->generatePortalRoutes($importedRoute, $importedRouteName);
+            $importedCondition = $importedRoute->getCondition();
+
+            $collection->add(
+                $importedRouteName,
+                new PortalRoute(
+                    '{prefix}' . $importedRoute->getPath(),
+                    $importedRoute->getDefaults(),
+                    array_merge(['prefix' => '.*', 'host' => '.+'], $importedRoute->getRequirements()),
+                    $importedRoute->getOptions(),
+                    (!empty($importedRoute->getHost()) ? $importedRoute->getHost() : '{host}'),
+                    $importedRoute->getSchemes(),
+                    $importedRoute->getMethods(),
+                    $condition . (!empty($importedCondition) ? ' and (' . $importedCondition . ')' : '')
+                )
+            );
         }
 
-        return $this->collection;
+        return $collection;
     }
 
     /**
@@ -66,20 +64,5 @@ class PortalLoader extends Loader
     public function supports($resource, $type = null)
     {
         return $type === 'portal';
-    }
-
-    /**
-     * @param $importedRoute
-     * @param $importedRouteName
-     */
-    private function generatePortalRoutes(Route $importedRoute, $importedRouteName)
-    {
-        foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
-            $route = clone $importedRoute;
-            $route->setHost($portalInformation->getHost());
-            $route->setPath($portalInformation->getPrefix() . $route->getPath());
-
-            $this->collection->add($portalInformation->getUrl() . '.' . $importedRouteName, $route);
-        }
     }
 }

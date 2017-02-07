@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,6 +16,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event class for the ContentEvents::NODE_ORDER event.
+ *
+ * @deprecated use events of DocumentManager instead
  */
 class ContentNodeOrderEvent extends Event
 {

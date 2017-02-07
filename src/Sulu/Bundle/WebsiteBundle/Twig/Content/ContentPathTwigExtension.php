@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -26,11 +25,6 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     private $requestAnalyzer;
 
     /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -41,12 +35,10 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     private $environment;
 
     public function __construct(
-        ContentMapperInterface $contentMapper,
         WebspaceManagerInterface $webspaceManager,
         $environment,
         RequestAnalyzerInterface $requestAnalyzer = null
     ) {
-        $this->contentMapper = $contentMapper;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -66,27 +58,47 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null)
+    public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
     {
-        if (
-            $webspaceKey !== null &&
-            $this->requestAnalyzer
-        ) {
-            $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
-                $url,
-                $this->environment,
-                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
-                $webspaceKey,
-                $domain
-            );
-            if (count($portalUrls) > 0) {
-                return rtrim($portalUrls[0], '/');
-            }
-        } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
-            return rtrim($this->requestAnalyzer->getResourceLocatorPrefix() . $url, '/');
+        // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
+        // done (this is important for external-links in navigations)
+        if (!$this->requestAnalyzer || strpos($route, '/') !== 0) {
+            return $route;
         }
 
-        return $url;
+        $scheme = $scheme ?: $this->requestAnalyzer->getAttribute('scheme');
+        $locale = $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspaceKey = $webspaceKey ?: $this->requestAnalyzer->getWebspace()->getKey();
+
+        $url = null;
+        $host = $this->requestAnalyzer->getAttribute('host');
+        if (!$domain
+            && $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment, $locale)
+        ) {
+            $domain = $host;
+        }
+
+        $url = $this->webspaceManager->findUrlByResourceLocator(
+            $route,
+            $this->environment,
+            $locale,
+            $webspaceKey,
+            $domain,
+            $scheme
+        );
+
+        if (!$withoutDomain && !$url) {
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $route,
+                $this->environment,
+                $locale,
+                $webspaceKey,
+                null,
+                $scheme
+            );
+        }
+
+        return $url ?: $route;
     }
 
     /**
@@ -94,15 +106,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
      */
     public function getContentRootPath($full = false)
     {
-        if ($this->requestAnalyzer !== null) {
-            if ($full) {
-                return $this->requestAnalyzer->getPortalUrl();
-            } else {
-                return $this->requestAnalyzer->getResourceLocatorPrefix();
-            }
-        } else {
-            return '/';
-        }
+        return $this->getContentPath('/');
     }
 
     /**

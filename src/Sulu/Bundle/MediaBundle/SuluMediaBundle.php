@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,18 +11,33 @@
 
 namespace Sulu\Bundle\MediaBundle;
 
-use Sulu\Bundle\MediaBundle\DependencyInjection\ImageCommandCompilerPass;
+use Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageFormatCompilerPass;
+use Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass;
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluMediaBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
+    /**
+     * {@inheritdoc}
+     */
     public function build(ContainerBuilder $container)
     {
-        parent::build($container);
+        $this->buildPersistence(
+            [
+                'Sulu\Bundle\MediaBundle\Entity\MediaInterface' => 'sulu.model.media.class',
+            ],
+            $container
+        );
 
+        $container->addCompilerPass(new FormatCacheClearerCompilerPass());
         $container->addCompilerPass(new ImageFormatCompilerPass());
-        $container->addCompilerPass(new ImageCommandCompilerPass());
+        $container->addCompilerPass(new ImageTransformationCompilerPass());
+
+        parent::build($container);
     }
 }

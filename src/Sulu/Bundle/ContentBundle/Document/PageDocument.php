@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,4 +18,28 @@ use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
  */
 class PageDocument extends BasePageDocument implements AutoNameBehavior
 {
+    /**
+     * @var object
+     */
+    private $parent;
+
+    /**
+     * Return the parent document for this document.
+     *
+     * @return object
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set the parent document for this document.
+     *
+     * @param object $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
 }

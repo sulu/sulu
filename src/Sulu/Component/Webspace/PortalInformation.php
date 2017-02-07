@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -73,15 +73,33 @@ class PortalInformation implements ArrayableInterface
      */
     private $redirect;
 
+    /**
+     * @var bool
+     */
+    private $main;
+
+    /**
+     * @var string
+     */
+    private $urlExpression;
+
+    /**
+     * @var int
+     */
+    private $priority;
+
     public function __construct(
         $type,
         Webspace $webspace = null,
         Portal $portal = null,
         Localization $localization = null,
-        $url,
+        $url = null,
         Segment $segment = null,
         $redirect = null,
-        $analyticsKey = null
+        $analyticsKey = null,
+        $main = false,
+        $urlExpression = null,
+        $priority = 0
     ) {
         $this->setType($type);
         $this->setWebspace($webspace);
@@ -91,6 +109,9 @@ class PortalInformation implements ArrayableInterface
         $this->setUrl($url);
         $this->setRedirect($redirect);
         $this->setAnalyticsKey($analyticsKey);
+        $this->setMain($main);
+        $this->setUrlExpression($urlExpression);
+        $this->setPriority($priority);
     }
 
     /**
@@ -114,6 +135,20 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Returns the localization for this PortalInformation.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        if (null === $this->localization) {
+            return;
+        }
+
+        return $this->localization->getLocalization();
+    }
+
+    /**
      * Sets the portal for this PortalInformation.
      *
      * @param \Sulu\Component\Webspace\Portal $portal
@@ -131,6 +166,18 @@ class PortalInformation implements ArrayableInterface
     public function getPortal()
     {
         return $this->portal;
+    }
+
+    /**
+     * Returns key of portal.
+     */
+    public function getPortalKey()
+    {
+        if (null === $this->portal) {
+            return;
+        }
+
+        return $this->portal->getKey();
     }
 
     /**
@@ -274,6 +321,58 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Returns key of webspace.
+     */
+    public function getWebspaceKey()
+    {
+        if (null === $this->webspace) {
+            return;
+        }
+
+        return $this->webspace->getKey();
+    }
+
+    /**
+     * Returns true if url is main.
+     *
+     * @return bool
+     */
+    public function isMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * Sets true if url is main.
+     *
+     * @param bool $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
+     * Returns expression for url.
+     *
+     * @return string
+     */
+    public function getUrlExpression()
+    {
+        return $this->urlExpression;
+    }
+
+    /**
+     * Sets expression for url.
+     *
+     * @param string $urlExpression
+     */
+    public function setUrlExpression($urlExpression)
+    {
+        $this->urlExpression = $urlExpression;
+    }
+
+    /**
      * Calculate the length of the host part of the URL.
      *
      * @return int
@@ -287,39 +386,60 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * @return int
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param int $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
     {
-        $res = [];
-        $res['type'] = $this->getType();
-        $res['webspace'] = $this->getWebspace()->getKey();
-        $res['url'] = $this->getUrl();
+        $result = [];
+        $result['type'] = $this->getType();
+        $result['webspace'] = $this->getWebspace()->getKey();
+        $result['url'] = $this->getUrl();
+        $result['main'] = $this->isMain();
+        $result['priority'] = $this->getPriority();
 
         $portal = $this->getPortal();
-
         if ($portal) {
-            $res['portal'] = $portal->getKey();
+            $result['portal'] = $portal->getKey();
         }
 
         $localization = $this->getLocalization();
-
         if ($localization) {
-            $res['localization'] = $localization->toArray();
+            $result['localization'] = $localization->toArray();
         }
 
-        $res['redirect'] = $this->getRedirect();
+        $result['redirect'] = $this->getRedirect();
 
         $segment = $this->getSegment();
         if ($segment) {
-            $res['segment'] = $segment->getKey();
+            $result['segment'] = $segment->getKey();
         }
 
         $analyticsKey = $this->getAnalyticsKey();
         if ($analyticsKey) {
-            $res['analyticsKey'] = $analyticsKey;
+            $result['analyticsKey'] = $analyticsKey;
         }
 
-        return $res;
+        $urlExpression = $this->getUrlExpression();
+        if ($urlExpression) {
+            $result['urlExpression'] = $urlExpression;
+        }
+
+        return $result;
     }
 }

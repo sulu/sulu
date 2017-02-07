@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,10 +16,15 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
@@ -49,11 +54,22 @@ class NodeRepositoryTest extends SuluTestCase
      */
     private $sessionManager;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
     protected function setUp()
     {
         $this->initPhpcr();
         $this->extensions = [new TestExtension('test1', 'test1')];
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->nodeRepository = $this->getContainer()->get('sulu_content.node_repository');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
@@ -72,17 +88,17 @@ class NodeRepositoryTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        return $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
+        return $this->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 
     public function testGet()
     {
-        $structure = $this->prepareGetTestData();
+        $document = $this->prepareGetTestData();
 
-        $result = $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
+        $result = $this->nodeRepository->getNode($document->getUuid(), 'sulu_io', 'en');
 
-        $this->assertEquals($structure->getProperty('title')->getValue(), $result['title']);
-        $this->assertEquals($structure->getProperty('url')->getValue(), $result['url']);
+        $this->assertEquals($document->getStructure()->getProperty('title')->getValue(), $result['title']);
+        $this->assertEquals($document->getStructure()->getProperty('url')->getValue(), $result['url']);
     }
 
     public function testDelete()
@@ -95,77 +111,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
     }
 
-    public function testSave()
-    {
-        $structure = $this->prepareGetTestData();
-
-        $this->nodeRepository->saveNode(
-            [
-                'title' => 'asdf',
-                'url' => '/foo',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1,
-            $structure->getUuid()
-        );
-
-        $result = $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
-
-        $this->assertEquals('asdf', $result['title']);
-        $this->assertEquals($structure->getProperty('url')->getValue(), $result['url']);
-    }
-
-    public function testSaveNewNode()
-    {
-        $structure = $this->prepareGetTestData();
-
-        $node = $this->nodeRepository->saveNode(
-            [
-                'title' => 'asdf',
-                'tags' => [
-                    'tag1',
-                    'tag2',
-                ],
-                'url' => '/news/test/asdf',
-                'article' => 'Test',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1,
-            null,
-            $structure->getUuid()
-        );
-
-        $result = $this->nodeRepository->getNode($node['id'], 'sulu_io', 'en');
-
-        $this->assertEquals('asdf', $result['title']);
-        $this->assertEquals('/news/test/asdf', $result['url']);
-
-        $node = $this->nodeRepository->saveNode(
-            [
-                'title' => 'asdf',
-                'tags' => [
-                    'tag1',
-                    'tag2',
-                ],
-                'url' => '/asdf',
-                'article' => 'Test',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1
-        );
-
-        $result = $this->nodeRepository->getNode($node['id'], 'sulu_io', 'en');
-
-        $this->assertEquals('asdf', $result['title']);
-        $this->assertEquals('/asdf', $result['url']);
-    }
-
     public function testGetWebspaceNode()
     {
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');
@@ -175,8 +120,6 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetWebspaceNodes()
     {
-        $this->createWebspaceRoot('test_io');
-
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][0]['title']);
@@ -192,45 +135,23 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[2];
         $this->assertEquals('Child 1', $structure->getTitle());
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false, false);
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
         $this->assertEquals(2, count($result['_embedded']['nodes']));
     }
 
     /**
-     * It should load the node tree tiers up until the tier containing the given UUID
-     * Without a webspte.
+     * It should load the node tree tiers up until the tier containing the given UUID.
      */
-    public function testGetNodesTreeWithoutWebspace()
+    public function testGetNodesTree()
     {
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false, false);
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
         $this->assertEquals(2, count($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
         $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
-    }
-
-    /**
-     * With a webspace.
-     */
-    public function testGetNodesTreeWithWebspace()
-    {
-        $structures = $this->prepareGetTreeTestData();
-        $structure = $structures[0];
-
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false, true);
-        $this->assertEquals(1, count($result['_embedded']['nodes']));
-        $webspace = $result['_embedded']['nodes'][0];
-        $this->assertEquals('Sulu CMF', $webspace['title']);
-        $this->assertEquals('/', $webspace['path']);
-        $this->assertTrue($webspace['hasSub']);
-
-        $this->assertEquals(2, count($webspace['_embedded']['nodes']));
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['path']);
-        $this->assertTrue($result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['hasSub']);
     }
 
     /**
@@ -241,7 +162,7 @@ class NodeRepositoryTest extends SuluTestCase
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false, false);
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false);
         $this->assertEquals(2, count($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
@@ -263,17 +184,17 @@ class NodeRepositoryTest extends SuluTestCase
         ];
 
         $structures = [];
-        $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $structures[] = $this->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
 
         $data['title'] = 'Other title';
         $data['url'] = '/other';
 
-        $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $structures[] = $this->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
 
         $data['title'] = 'Child 1';
         $data['url'] = '/other/child1';
 
-        $structures[] = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, null, $structures[0]->getUuid(), Structure::STATE_PUBLISHED);
+        $structures[] = $this->save($data, 'overview', 'sulu_io', 'en', 1, true, null, $structures[0]->getUuid(), Structure::STATE_PUBLISHED);
 
         return $structures;
     }
@@ -366,7 +287,7 @@ class NodeRepositoryTest extends SuluTestCase
         ];
 
         foreach ($data as &$element) {
-            $element = $this->mapper->save(
+            $element = $this->save(
                 $element,
                 'overview',
                 'sulu_io',
@@ -432,7 +353,7 @@ class NodeRepositoryTest extends SuluTestCase
         ];
 
         foreach ($data as &$element) {
-            $element = $this->mapper->save(
+            $element = $this->save(
                 $element,
                 'overview',
                 'sulu_io',
@@ -470,353 +391,6 @@ class NodeRepositoryTest extends SuluTestCase
     /**
      * @return StructureInterface[]
      */
-    private function prepareTestDataMoveCopy()
-    {
-        $data = [
-            [
-                'title' => 'Testtitle1',
-                'tags' => [
-                    'tag1',
-                    'tag2',
-                ],
-                'url' => '/news/test1',
-                'article' => 'Test',
-            ],
-            [
-                'title' => 'Testtitle2',
-                'tags' => [
-                    'tag1',
-                    'tag2',
-                ],
-                'url' => '/news/test2',
-                'article' => 'Test',
-            ],
-        ];
-
-        foreach ($data as &$element) {
-            $element = $this->mapper->save(
-                $element,
-                'overview',
-                'sulu_io',
-                'en',
-                1,
-                true,
-                null,
-                null,
-                StructureInterface::STATE_PUBLISHED
-            );
-        }
-
-        return $data;
-    }
-
-    public function testMove()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-
-        $rootNode = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
-        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
-
-        // check result
-        $this->assertEquals($structure, $result);
-
-        // check some properties
-        $this->assertEquals($data[0]->getUuid(), $result['id']);
-        $this->assertEquals('Testtitle1', $result['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
-        $this->assertEquals('/news/test2/test1', $result['url']);
-
-        // Changer / Creator are now implicit -- I wonder if we should add a way to pass options to persist
-        // $this->assertEquals(2, $result['changer']);
-
-        // check none existing source node
-        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
-
-        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('/news/test2/test1', $secondLayerNodes['_embedded']['nodes'][0]['url']);
-    }
-
-    public function testMoveNonExistingSource()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->moveNode('123-123', $data[1]->getUuid(), 'sulu_io', 'en', 2);
-    }
-
-    public function testMoveNonExistingDestination()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->moveNode($data[0]->getUuid(), '123-123', 'sulu_io', 'en', 2);
-    }
-
-    public function testMoveInternalLink()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-
-        $newData = [
-            'title' => 'Testtitle1',
-            'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        ];
-
-        $data[0] = $this->mapper->save(
-            $newData,
-            'internal-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[0]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $rootNode = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
-        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
-
-        // check result
-        $this->assertEquals($structure, $result);
-
-        // check some properties
-        $this->assertEquals($data[0]->getUuid(), $result['id']);
-        $this->assertEquals('Testtitle1', $result['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
-        $this->assertEquals($data[1]->getUuid(), $result['internal_link']);
-
-        // check none existing source node
-        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
-
-        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
-    }
-
-    public function testMoveExternalLink()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-
-        $newData = [
-            'title' => 'Testtitle1',
-            'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        ];
-
-        $data[0] = $this->mapper->save(
-            $newData,
-            'external-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[0]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $rootNode = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
-        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
-
-        // check result
-        $this->assertEquals($structure, $result);
-
-        // check some properties
-        $this->assertEquals($data[0]->getUuid(), $result['id']);
-        $this->assertEquals('Testtitle1', $result['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
-        $this->assertEquals('www.google.at', $result['external']);
-        // $this->assertEquals(2, $result['changer']);
-
-        // check none existing source node
-        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
-
-        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external']);
-    }
-
-    public function testCopy()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-
-        $rootNode = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
-        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
-
-        // check result
-        $this->assertNotEquals($structure, $result);
-
-        // check some properties
-        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
-        $this->assertEquals('Testtitle1', $result['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
-        // $this->assertEquals(2, $result['changer']);
-
-        // check none existing source node
-        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
-        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
-
-        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
-    }
-
-    public function testCopyNonExistingSource()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->copyNode('123-123', $data[1]->getUuid(), 'sulu_io', 'en', 2);
-    }
-
-    public function testCopyNonExistingDestination()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->copyNode($data[0]->getUuid(), '123-123', 'sulu_io', 'en', 2);
-    }
-
-    public function testCopyInternalLink()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-
-        $newData = [
-            'title' => 'Testtitle1',
-            'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        ];
-
-        $data[0] = $this->mapper->save(
-            $newData,
-            'internal-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[0]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $rootNode = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
-        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
-
-        // check result
-        $this->assertNotEquals($structure, $result);
-
-        // check some properties
-        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
-        $this->assertEquals('Testtitle1', $result['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
-        //$this->assertEquals(2, $result['changer']);
-
-        // check none existing source node
-        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals($data[1]->getUuid(), $firstLayerNodes['_embedded']['nodes'][0]['internal_link']);
-        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
-        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
-
-        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
-    }
-
-    public function testCopyExternalLink()
-    {
-        $data = $this->prepareTestDataMoveCopy();
-
-        $newData = [
-            'title' => 'Testtitle1',
-            'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        ];
-
-        $data[0] = $this->mapper->save(
-            $newData,
-            'external-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[0]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $rootNode = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $result = $this->nodeRepository->copyNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
-        $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
-
-        // check result
-        $this->assertNotEquals($structure, $result);
-
-        // check some properties
-        $this->assertNotEquals($data[0]->getUuid(), $result['id']);
-        $this->assertEquals('Testtitle1', $result['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $result['path']);
-        //$this->assertEquals(2, $result['changer']);
-
-        // check none existing source node
-        $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('www.google.at', $firstLayerNodes['_embedded']['nodes'][0]['external']);
-        $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
-        $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
-
-        $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
-        $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external']);
-    }
-
-    /**
-     * @return StructureInterface[]
-     */
     private function prepareOrderBeforeData()
     {
         $data = [
@@ -839,7 +413,7 @@ class NodeRepositoryTest extends SuluTestCase
         ];
 
         foreach ($data as &$element) {
-            $element = $this->mapper->save(
+            $element = $this->save(
                 $element,
                 'overview',
                 'sulu_io',
@@ -855,32 +429,6 @@ class NodeRepositoryTest extends SuluTestCase
         return $data;
     }
 
-    public function testOrderBefore()
-    {
-        $data = $this->prepareOrderBeforeData();
-
-        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test4', $result['title']);
-        $this->assertEquals('/test4', $result['path']);
-        $this->assertEquals('/news/test4', $result['url']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test3', $result['title']);
-        $this->assertEquals('/test3', $result['path']);
-        $this->assertEquals('/news/test3', $result['url']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, count($test['_embedded']['nodes']));
-        $nodes = $test['_embedded']['nodes'];
-
-        $this->assertEquals('Test3', $nodes[0]['title']);
-        $this->assertEquals('Test4', $nodes[1]['title']);
-        $this->assertEquals('Test1', $nodes[2]['title']);
-        $this->assertEquals('Test2', $nodes[3]['title']);
-    }
-
     public function testOrderAt()
     {
         $data = $this->prepareOrderBeforeData();
@@ -889,13 +437,11 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Test4', $result['title']);
         $this->assertEquals('/test4', $result['path']);
         $this->assertEquals('/news/test4', $result['url']);
-        //$this->assertEquals(2, $result['changer']);
 
         $result = $this->nodeRepository->orderAt($data[0]->getUuid(), 4, 'sulu_io', 'en', 2);
         $this->assertEquals('Test1', $result['title']);
         $this->assertEquals('/test1', $result['path']);
         $this->assertEquals('/news/test1', $result['url']);
-        //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
         $this->assertEquals(4, count($test['_embedded']['nodes']));
@@ -907,99 +453,13 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Test1', $nodes[3]['title']);
     }
 
-    public function testOrderBeforeNonExistingSource()
-    {
-        $data = $this->prepareOrderBeforeData();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->orderBefore('123-123-123', $data[0]->getUuid(), 'sulu_io', 'en', 2);
-    }
-
-    public function testOrderBeforeNonExistingDestination()
-    {
-        $data = $this->prepareOrderBeforeData();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->orderBefore($data[0]->getUuid(), '123-123-123', 'sulu_io', 'en', 2);
-    }
-
-    public function testOrderBeforeInExternalLink()
-    {
-        $data = $this->prepareOrderBeforeData();
-
-        $newData = [
-            'title' => 'Test4',
-            'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        ];
-
-        $data[3] = $this->mapper->save(
-            $newData,
-            'external-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[3]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $newData = [
-            'title' => 'Test3',
-            'internal_link' => $data[0]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        ];
-
-        $data[2] = $this->mapper->save(
-            $newData,
-            'internal-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[2]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test4', $result['title']);
-        $this->assertEquals('/test4', $result['path']);
-        $this->assertEquals('www.google.at', $result['external']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test3', $result['title']);
-        $this->assertEquals('/test3', $result['path']);
-        $this->assertEquals($data[0]->getUuid(), $result['internal_link']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, count($test['_embedded']['nodes']));
-        $nodes = $test['_embedded']['nodes'];
-
-        $this->assertEquals('Test3', $nodes[0]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-        $this->assertEquals('Test4', $nodes[1]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-        $this->assertEquals('Test1', $nodes[2]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-        $this->assertEquals('Test2', $nodes[3]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-    }
-
     public function testCopyLocale()
     {
-        $data = [
-            'en' => [
+        $document = $this->save(
+            [
                 'title' => 'Example',
                 'url' => '/example',
             ],
-        ];
-
-        $data['en'] = $this->mapper->save(
-            $data['en'],
             'overview',
             'sulu_io',
             'en',
@@ -1010,27 +470,23 @@ class NodeRepositoryTest extends SuluTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'sulu_io', 'en', 'de');
+        $this->nodeRepository->copyLocale($document->getUuid(), 1, 'sulu_io', 'en', 'de');
 
-        $result = $this->mapper->load($data['en']->getUuid(), 'sulu_io', 'de')->toArray();
-        $this->assertEquals($data['en']->getUuid(), $result['id']);
-        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
-        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $result = $this->mapper->load($document->getUuid(), 'sulu_io', 'de')->toArray();
+        $this->assertEquals($document->getUuid(), $result['id']);
+        $this->assertEquals('Example', $result['title']);
+        $this->assertEquals('/example', $result['url']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
     }
 
     public function testCopyMultipleLocales()
     {
-        $data = [
-            'en' => [
+        $document = $this->save(
+            [
                 'title' => 'Example',
                 'url' => '/example',
             ],
-        ];
-
-        $data['en'] = $this->mapper->save(
-            $data['en'],
             'overview',
             'sulu_io',
             'en',
@@ -1041,61 +497,98 @@ class NodeRepositoryTest extends SuluTestCase
             StructureInterface::STATE_PUBLISHED
         );
 
-        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'sulu_io', 'en', ['de', 'de_at']);
+        $this->nodeRepository->copyLocale($document->getUuid(), 1, 'sulu_io', 'en', ['de', 'de_at']);
 
-        $result = $this->mapper->load($data['en']->getUuid(), 'sulu_io', 'de')->toArray();
-        $this->assertEquals($data['en']->getUuid(), $result['id']);
-        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
-        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $result = $this->mapper->load($document->getUuid(), 'sulu_io', 'de')->toArray();
+        $this->assertEquals($document->getUuid(), $result['id']);
+        $this->assertEquals('Example', $result['title']);
+        $this->assertEquals('/example', $result['url']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
 
-        $result = $this->mapper->load($data['en']->getUuid(), 'sulu_io', 'de_at')->toArray();
-        $this->assertEquals($data['en']->getUuid(), $result['id']);
-        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
-        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $result = $this->mapper->load($document->getUuid(), 'sulu_io', 'de_at')->toArray();
+        $this->assertEquals($document->getUuid(), $result['id']);
+        $this->assertEquals('Example', $result['title']);
+        $this->assertEquals('/example', $result['url']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
     }
 
-    /**
-     * Create webspace root.
-     *
-     * @param string $key
-     */
-    private function createWebspaceRoot($key)
-    {
-        $session = $this->sessionManager->getSession();
-        $cmf = $session->getNode('/cmf');
+    private function save(
+        $data,
+        $structureType,
+        $webspaceKey,
+        $locale,
+        $userId,
+        $partialUpdate = true,
+        $uuid = null,
+        $parentUuid = null,
+        $state = null,
+        $isShadow = null,
+        $shadowBaseLanguage = null,
+        $documentAlias = Structure::TYPE_PAGE
+    ) {
+        try {
+            $document = $this->documentManager->find($uuid, $locale);
+        } catch (DocumentNotFoundException $e) {
+            $document = $this->documentManager->create($documentAlias);
+        }
+        $document->setTitle($data['title']);
+        $document->getStructure()->bind($data);
+        $document->setStructureType($structureType);
 
-        // we should use the doctrinephpcrbundle repository initializer to do this.
-        $webspace = $cmf->addNode($key);
-        $webspace->addMixin('mix:referenceable');
-
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->setProperty('i18n:en-title', 'Homepage');
-        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
-        $content->setProperty('i18n:en-published', new \DateTime());
-        $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:home');
-
-        $webspace->addNode('temp');
-
-        $session->save();
-        $nodes = $webspace->addNode('routes');
-        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
-            $localeNode = $nodes->addNode($locale);
-            $localeNode->setProperty('sulu:content', $content);
-            $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('sulu:path');
+        if ($document instanceof ShadowLocaleBehavior) {
+            $document->setShadowLocale($shadowBaseLanguage);
+            $document->setShadowLocaleEnabled($isShadow);
         }
 
-        $session->save();
+        if ($state === null) {
+            $state = WorkflowStage::TEST;
+        }
+        $document->setWorkflowStage($state);
+
+        if (isset($data['url']) && $document instanceof ResourceSegmentBehavior) {
+            $document->setResourceSegment($data['url']);
+        }
+
+        if (isset($data['navContexts'])) {
+            $document->setNavigationContexts($data['navContexts']);
+        }
+
+        if (isset($data['nodeType'])) {
+            $document->setRedirectType($data['nodeType']);
+        }
+
+        if (isset($data['internal_link'])) {
+            $document->setRedirectTarget($this->documentManager->find($data['internal_link'], $locale));
+        }
+
+        if (isset($data['external'])) {
+            $document->setRedirectExternal($data['external']);
+        }
+
+        if ($document instanceof ExtensionBehavior) {
+            if (isset($data['ext'])) {
+                $document->setExtensionsData($data['ext']);
+            } else {
+                $document->setExtensionsData([]);
+            }
+        }
+
+        $persistOptions = [];
+        if ($parentUuid) {
+            $document->setParent($this->documentManager->find($parentUuid, $locale));
+        } elseif (!$document->getParent()) {
+            $persistOptions['parent_path'] = '/cmf/' . $webspaceKey . '/contents';
+        }
+
+        $this->documentManager->persist($document, $locale, $persistOptions);
+        if ($state === WorkflowStage::PUBLISHED) {
+            $this->documentManager->publish($document, $locale);
+        }
+        $this->documentManager->flush();
+
+        return $document;
     }
 }
 

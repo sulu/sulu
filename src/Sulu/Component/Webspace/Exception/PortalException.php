@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,6 +10,8 @@
  */
 
 namespace Sulu\Component\Webspace\Exception;
+
+use Sulu\Component\Webspace\Portal;
 
 /**
  * General class for all webspace exceptions.

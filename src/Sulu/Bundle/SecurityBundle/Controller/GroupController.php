@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -136,7 +136,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             $group = new Group();
             $group->setName($name);
 
-            $this->setParent($group);
+            $this->setParent($group, $request);
 
             $roles = $request->get('roles');
             if (!empty($roles)) {
@@ -181,7 +181,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
                 $group->setName($name);
 
-                $this->setParent($group);
+                $this->setParent($group, $request);
 
                 if (!$this->processRoles($group, $request->get('roles', []))) {
                     throw new RestException('Could not update dependencies!');
@@ -303,12 +303,13 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
     /**
      * @param $group
+     * @param Request $request
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
-    public function setParent($group)
+    public function setParent($group, Request $request)
     {
-        $parentData = $this->getRequest()->get('parent');
+        $parentData = $request->get('parent');
         if ($parentData != null && isset($parentData['id'])) {
             $parent = $this->getDoctrine()
                 ->getRepository(static::$entityName)
@@ -317,7 +318,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             if (!$parent) {
                 throw new EntityNotFoundException(static::$entityName, $parentData['id']);
             }
-            $group->setParent($parent);
+            $group->setParent($parent, $request);
         }
     }
 

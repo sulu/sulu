@@ -1,5 +1,5 @@
 tag_list:
-    pattern: /template/tag/list.html
+    path: /template/tag/list.html
     defaults: { _controller: SuluTagBundle:Template:tagList }
 
 sulu_tag:

@@ -16,23 +16,20 @@ define([
     return new RelationalModel({
         urlRoot: '/admin/api/nodes',
 
-        stateSave: function(webspace, language, state, attributes, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + (!!state ? '&state=' + state : '')});
-
-            return this.save.call(this, attributes, options);
-        },
-
-        fullSave: function(template, webspace, language, parent, state, type, attributes, options) {
+        /**
+         * @deprecated Use ContentManager::save instead
+         */
+        fullSave: function(webspace, language, parent, type, attributes, options, force, action) {
             options = _.defaults(
                 (options || {}),
                 {
                     url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '')
                         + '?webspace=' + webspace
                         + '&language=' + language
-                        + '&template=' + template
                         + (!!type ? '&type=' + type : '')
                         + (!!parent ? '&parent=' + parent : '')
-                        + (!!state ? '&state=' + state : '')
+                        + (!!force ? '&force=' + force : '')
+                        + (!!action ? '&action=' + action : '')
                 });
 
             return this.save.call(this, attributes, options);

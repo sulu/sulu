@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +19,7 @@ interface ContentTypeManagerInterface
     /**
      * returns content type.
      *
-     * @param string $contentTypeName The name of the content to load.
+     * @param string $contentTypeName The name of the content to load
      *
      * @return ContentTypeInterface
      */

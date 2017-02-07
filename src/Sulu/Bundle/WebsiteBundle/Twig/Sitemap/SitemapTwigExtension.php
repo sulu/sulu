@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,19 +76,12 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         }
 
-        // FIXME which url or all urls?
-        $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
+        return $this->webspaceManager->findUrlByResourceLocator(
             $url,
             $this->environment,
             $locale,
             $webspaceKey
         );
-
-        if (count($portalUrls) === 0) {
-            return false;
-        }
-
-        return rtrim($portalUrls[0], '/');
     }
 
     /**

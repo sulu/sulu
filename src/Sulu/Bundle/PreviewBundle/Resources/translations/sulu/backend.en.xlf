@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="sulu.preview.auto">
+                <source>sulu.preview.auto</source>
+                <target>Auto</target>
+            </trans-unit>
+            <trans-unit id="2" resname="sulu.preview.desktop">
+                <source>sulu.preview.desktop</source>
+                <target>Desktop</target>
+            </trans-unit>
+            <trans-unit id="3" resname="sulu.preview.tablet">
+                <source>sulu.preview.tablet</source>
+                <target>Tablet</target>
+            </trans-unit>
+            <trans-unit id="4" resname="sulu.preview.smartphone">
+                <source>sulu.preview.smartphone</source>
+                <target>Smartphone</target>
+            </trans-unit>
+            <trans-unit id="5" resname="sulu.preview.start">
+                <source>sulu.preview.start</source>
+                <target>Start preview</target>
+            </trans-unit>
+            <trans-unit id="6" resname="sulu.preview.no-preview">
+                <source>sulu.preview.no-preview</source>
+                <target>Preview not available</target>
+            </trans-unit>
+            <trans-unit id="7" resname="sulu.preview.no-defaults-provider">
+                <source>sulu.preview.no-defaults-provider</source>
+                <target>No "RouteDefaultsProvider" found.</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu.preview.change-webspace">
+                <source>sulu.preview.change-webspace</source>
+                <target>Please change webspace.</target>
+            </trans-unit>
+            <trans-unit id="9" resname="sulu.preview.no-object-provider">
+                <source>sulu.preview.no-object-provider</source>
+                <target>No "ObjectProvider" found.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

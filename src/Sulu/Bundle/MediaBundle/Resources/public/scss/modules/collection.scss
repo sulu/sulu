@@ -2,6 +2,11 @@
     margin-top: 20px;
 }
 
+.children-container {
+    margin-top: -10px;
+    margin-bottom: 40px;
+}
+
 #collections-root.no-content {
     text-align: center;
     height: 210px;
@@ -29,89 +34,6 @@
     .husky-overlay-container {
         .husky-dropzone {
             display: block;
-        }
-    }
-}
-
-.masonry-container {
-    .empty-list {
-        background: none;
-    }
-
-    #masonry-grid {
-        margin-bottom: -20px;
-        position: relative;
-        text-align: center;
-
-        .masonry-item {
-            width: 190px;
-            background-color: $white;
-            border-radius: 3px;
-            overflow: hidden;
-            opacity: 1;
-            @include transition(opacity 100ms, top 100ms, left 100ms);
-
-            &.loading {
-                opacity: 0;
-            }
-
-            .masonry-head {
-                background-color: $grayLighterer;
-                width: 100%;
-
-                .head-icon {
-                    color: white;
-                    font-size: 70px;
-                    margin: 30px;
-                }
-
-                .head-image {
-                    vertical-align: middle;
-                }
-            }
-
-            .masonry-info {
-                width: 100%;
-                height: 45px;
-                margin-top: 10px;
-
-                span.description {
-                    font-size: 12px;
-                    color: $grayLight;
-                }
-            }
-
-            .masonry-footer {
-                width: 100%;
-                height: 15px;
-                margin-bottom: 10px;
-                padding: 0 10px;
-
-                .footer-checkbox {
-                    float: left;
-                }
-
-                .footer-download {
-                    position: relative;
-                    top: 2px;
-                    font-size: 17px;
-                    float: right;
-                    margin-left: 5px;
-                }
-
-                .footer-play-video {
-                    position: relative;
-                    top: 2px;
-                    font-size: 17px;
-                    float: right;
-                    cursor: pointer;
-                }
-            }
-
-            .action-navigator, .download-navigator {
-                cursor: pointer;
-                color: #000;
-            }
         }
     }
 }

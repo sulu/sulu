@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,29 +12,19 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized twig functions for sitemap.
  */
-class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
+class MemoizedSitemapTwigExtension extends \Twig_Extension
 {
-    /**
-     * @var SitemapTwigExtensionInterface
-     */
-    private $extension;
+    use MemoizeTwigExtensionTrait;
 
     /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
-
-    /**
-     * Constructor.
+     * @param SitemapTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param $lifeTime
      */
     public function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -49,29 +39,5 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->extension->getFunctions();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'sitemapUrlFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sitemapFunction($locale = null, $webspaceKey = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'sitemapFunction'], $this->lifeTime);
     }
 }

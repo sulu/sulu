@@ -49,15 +49,6 @@ define([
         },
 
         /**
-         * emitted after a category got changed
-         * @event sulu.category.categories.changed
-         * @param {Object} the changed category model
-         */
-        CATEGORY_CHANGED = function() {
-            return createEventName.call(this, 'changed');
-        },
-
-        /**
          * listens on and saves a category
          * @event sulu.category.categories.save
          * @param {Object} the data of the category to save
@@ -161,7 +152,6 @@ define([
             this.sandbox.on(CATEGORIES_DELETE.call(this), this.deleteCategories.bind(this));
         },
 
-
         /**
          * Saves data for an existing category
          * @param data {Object} object with the data to update
@@ -175,6 +165,7 @@ define([
                 success: function(result) {
                     this.sandbox.emit(CATEGORY_CHANGED.call(this), result.toJSON());
                     callback(result.toJSON(), true);
+                    this.sandbox.emit('sulu.header.saved', result.toJSON());
                 }.bind(this),
                 error: function(result, response) {
                     this.sandbox.logger.log('Error while saving category');
@@ -256,13 +247,9 @@ define([
             this.sandbox.sulu.saveUserSetting(CATEGORIES_LOCALE, this.locale);
 
             if (this.options.display === 'list') {
-                this.sandbox.emit('husky.datagrid.url.update', {locale: this.locale});
-                this.sandbox.emit('sulu.router.navigate', 'settings/categories/' + this.locale, false, false);
+                this.sandbox.emit('sulu.router.navigate', 'settings/categories/' + this.locale);
             } else {
-                this.fetchCategory(this.locale, function(category) {
-                    this.sandbox.emit('sulu.router.navigate', 'settings/categories/' + this.locale + '/edit:' + this.options.id + '/details', false, false);
-                    this.sandbox.emit(CATEGORY_CHANGED.call(this), category);
-                }.bind(this));
+                this.sandbox.emit('sulu.router.navigate', 'settings/categories/' + this.locale + '/edit:' + this.options.id + '/details');
             }
         },
 

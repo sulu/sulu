@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +12,7 @@
 namespace Sulu\Component\Contact\Model;
 
 use Doctrine\Common\Collections\Collection;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
 /**
@@ -498,18 +499,18 @@ interface ContactInterface
     /**
      * Add medias.
      *
-     * @param Media $media
+     * @param MediaInterface $media
      *
      * @return ContactInterface
      */
-    public function addMedia(Media $media);
+    public function addMedia(MediaInterface $media);
 
     /**
      * Remove media.
      *
-     * @param Media $media
+     * @param MediaInterface $media
      */
-    public function removeMedia(Media $media);
+    public function removeMedia(MediaInterface $media);
 
     /**
      * Get medias.
@@ -535,18 +536,18 @@ interface ContactInterface
     /**
      * Add category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return ContactInterface
      */
-    public function addCategory(Category $category);
+    public function addCategory(CategoryInterface $category);
 
     /**
      * Remove category.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      */
-    public function removeCategory(Category $category);
+    public function removeCategory(CategoryInterface $category);
 
     /**
      * Get categories.

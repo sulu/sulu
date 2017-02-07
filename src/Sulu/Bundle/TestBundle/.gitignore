@@ -10,3 +10,6 @@
 # IDEs
 .idea/*
 *.iml
+
+# Configuration
+/Resources/dist/parameters.yml

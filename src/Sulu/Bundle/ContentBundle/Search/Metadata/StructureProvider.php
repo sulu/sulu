@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,6 +24,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
@@ -39,6 +40,8 @@ use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 class StructureProvider implements ProviderInterface
 {
     const FIELD_STRUCTURE_TYPE = '_structure_type';
+    const FIELD_TEASER_DESCRIPTION = '_teaser_description';
+    const FIELD_TEASER_MEDIA = '_teaser_media';
 
     /**
      * @var Factory
@@ -132,7 +135,14 @@ class StructureProvider implements ProviderInterface
         }
 
         if ($indexName === 'page') {
-            $indexMeta->setIndexName(new Expression('"page_"~object.getWebspaceName()'));
+            $indexMeta->setIndexName(
+                new Expression(
+                    sprintf(
+                        '"page_"~object.getWebspaceName()~(object.getWorkflowStage() == %s ? "_published" : "")',
+                        WorkflowStage::PUBLISHED
+                    )
+                )
+            );
         } else {
             $indexMeta->setIndexName(new Value($indexName));
         }
@@ -228,6 +238,15 @@ class StructureProvider implements ProviderInterface
                     ),
                 ]
             );
+            $indexMeta->addFieldMapping(
+                'published',
+                [
+                    'type' => 'date',
+                    'field' => $this->factory->createMetadataExpression(
+                        'object.getPublished()'
+                    ),
+                ]
+            );
         }
 
         $indexMeta->addFieldMapping(
@@ -235,7 +254,7 @@ class StructureProvider implements ProviderInterface
             [
                 'type' => 'string',
                 'stored' => true,
-                'indexed' => false,
+                'indexed' => true,
                 'field' => $this->factory->createMetadataProperty('structureType'),
             ]
         );
@@ -286,6 +305,13 @@ class StructureProvider implements ProviderInterface
 
     private function mapProperty(PropertyMetadata $property, $metadata)
     {
+        if ($metadata instanceof IndexMetadata && $property->hasTag('sulu.teaser.description')) {
+            $this->mapTeaserDescription($property, $metadata);
+        }
+        if ($metadata instanceof IndexMetadata && $property->hasTag('sulu.teaser.media')) {
+            $this->mapTeaserMedia($property, $metadata);
+        }
+
         if (false === $property->hasTag('sulu.search.field')) {
             return;
         }
@@ -358,5 +384,31 @@ class StructureProvider implements ProviderInterface
         );
 
         return $field;
+    }
+
+    private function mapTeaserDescription(PropertyMetadata $property, IndexMetadata $metadata)
+    {
+        $metadata->addFieldMapping(
+            self::FIELD_TEASER_DESCRIPTION,
+            [
+                'type' => 'string',
+                'field' => $this->getContentField($property),
+                'aggregate' => true,
+                'indexed' => false,
+            ]
+        );
+    }
+
+    private function mapTeaserMedia(PropertyMetadata $property, IndexMetadata $metadata)
+    {
+        $metadata->addFieldMapping(
+            self::FIELD_TEASER_MEDIA,
+            [
+                'type' => 'json',
+                'field' => $this->getContentField($property),
+                'aggregate' => true,
+                'indexed' => false,
+            ]
+        );
     }
 }

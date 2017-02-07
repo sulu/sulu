@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,25 +11,17 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
-use Imagick;
-use Imagine\Image\ImageInterface;
-use Imagine\Imagick\Imagine;
-use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
-use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
-use Sulu\Bundle\MediaBundle\Media\Exception\OriginalFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
-use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
-use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -50,19 +42,9 @@ class FormatManager implements FormatManagerInterface
     private $formatCache;
 
     /**
-     * @var StorageInterface
-     */
-    private $originalStorage;
-
-    /**
      * @var ImageConverterInterface
      */
     private $converter;
-
-    /**
-     * @var string
-     */
-    private $ghostScriptPath;
 
     /**
      * @var bool
@@ -72,17 +54,7 @@ class FormatManager implements FormatManagerInterface
     /**
      * @var array
      */
-    private $previewMimeTypes = [];
-
-    /**
-     * @var array
-     */
     private $responseHeaders = [];
-
-    /**
-     * @var array
-     */
-    private $tempFiles = [];
 
     /**
      * @var Filesystem
@@ -95,180 +67,181 @@ class FormatManager implements FormatManagerInterface
     private $formats;
 
     /**
-     * @var VideoThumbnailServiceInterface
+     * @var array
      */
-    private $videoThumbnailService;
+    private $supportedMimeTypes;
 
     /**
-     * @param MediaRepository         $mediaRepository
-     * @param StorageInterface        $originalStorage
-     * @param FormatCacheInterface    $formatCache
+     * @param MediaRepositoryInterface $mediaRepository
+     * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
-     * @param VideoThumbnailServiceInterface $videoThumbnailService
-     * @param string                  $ghostScriptPath
-     * @param string                  $saveImage
-     * @param array                   $previewMimeTypes
-     * @param array                   $responseHeaders
-     * @param array                   $formats
+     * @param string $saveImage
+     * @param array $responseHeaders
+     * @param array $formats
+     * @param array $supportedMimeTypes
      */
     public function __construct(
-        MediaRepository $mediaRepository,
-        StorageInterface $originalStorage,
+        MediaRepositoryInterface $mediaRepository,
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
-        VideoThumbnailServiceInterface $videoThumbnailService,
-        $ghostScriptPath,
         $saveImage,
-        $previewMimeTypes,
         $responseHeaders,
-        $formats
+        $formats,
+        array $supportedMimeTypes
     ) {
         $this->mediaRepository = $mediaRepository;
-        $this->originalStorage = $originalStorage;
         $this->formatCache = $formatCache;
         $this->converter = $converter;
-        $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
-        $this->previewMimeTypes = $previewMimeTypes;
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;
-        $this->videoThumbnailService = $videoThumbnailService;
+        $this->supportedMimeTypes = $supportedMimeTypes;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function returnImage($id, $formatName)
+    public function returnImage($id, $formatKey)
     {
         $setExpireHeaders = false;
 
         try {
-            // load Media
-            $media = $this->mediaRepository->findMediaById($id);
+            $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey);
 
             if (!$media) {
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
 
-            // load Media Data
-            list($fileName, $version, $storageOptions, $mimeType) = $this->getMediaData($media);
+            $fileVersion = $this->getLatestFileVersion($media);
 
-            try {
-                // check if file has supported preview
-                if (!$this->checkPreviewSupported($mimeType)) {
-                    throw new InvalidMimeTypeForPreviewException($mimeType);
-                }
-
-                // get format options
-                $format = $this->getFormat($formatName);
-                $formatOptions = $format['options'];
-
-                // load Original
-                $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
-                $original = $this->createTmpFile($this->getFile($uri, $mimeType));
-
-                // prepare Media
-                $this->prepareMedia($mimeType, $original);
-
-                // convert Media to format
-                $image = $this->converter->convert($original, $format);
-
-                // remove profiles and comments
-                $image->strip();
-
-                // set Interlacing to plane for smaller image size
-                if (count($image->layers()) == 1) {
-                    $image->interlace(ImageInterface::INTERLACE_PLANE);
-                }
-
-                // set extension
-                $imageExtension = $this->getImageExtension($fileName);
-
-                // get image
-                $responseContent = $image->get(
-                    $imageExtension,
-                    $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
-                );
-
-                // HTTP Headers
-                $status = 200;
-                $setExpireHeaders = true;
-
-                // save image
-                if ($this->saveImage) {
-                    $this->formatCache->save(
-                        $this->createTmpFile($responseContent),
-                        $media->getId(),
-                        $this->replaceExtension($fileName, $imageExtension),
-                        $storageOptions,
-                        $formatName
-                    );
-                }
-            } catch (MediaException $e) {
-                // return when available a file extension icon
-                list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName), $e);
+            if (!$this->checkMimeTypeSupported($fileVersion->getMimeType())) {
+                throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType());
             }
-            $responseMimeType = 'image/' . $imageExtension;
+
+            // Convert Media to format.
+            $responseContent = $this->converter->convert($fileVersion, $formatKey);
+
+            // HTTP Headers
+            $status = 200;
+            $setExpireHeaders = true;
+
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($responseContent);
+
+            // Save image.
+            if ($this->saveImage) {
+                $this->formatCache->save(
+                    $responseContent,
+                    $media->getId(),
+                    $this->replaceExtension($fileVersion->getName(), $mimeType),
+                    $fileVersion->getStorageOptions(),
+                    $formatKey
+                );
+            }
         } catch (MediaException $e) {
-            $responseContent = $e->getCode() . ': ' . $e->getMessage();
+            $responseContent = null;
             $status = 404;
-            $responseMimeType = 'text/plain';
+            $mimeType = null;
         }
 
-        // clear temp files
-        $this->clearTempFiles();
+        // Set header.
+        $headers = $this->getResponseHeaders($mimeType, $setExpireHeaders);
 
-        // set header
-        $headers = $this->getResponseHeaders($responseMimeType, $setExpireHeaders);
-
-        // return image
+        // Return image.
         return new Response($responseContent, $status, $headers);
     }
 
     /**
-     * return the options for the given format.
-     *
-     * @param $format
-     *
-     * @return array
-     *
-     * @throws ImageProxyInvalidImageFormat
+     * {@inheritdoc}
      */
-    protected function getFormat($format)
+    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType)
     {
-        if (!isset($this->formats[$format])) {
-            throw new ImageProxyInvalidImageFormat('Format was not found');
+        $formats = [];
+        if ($this->checkMimeTypeSupported($mimeType)) {
+            foreach ($this->formats as $format) {
+                $formats[$format['key']] = $this->formatCache->getMediaUrl(
+                    $id,
+                    $this->replaceExtension($fileName, $mimeType),
+                    $storageOptions,
+                    $format['key'],
+                    $version,
+                    $subVersion
+                );
+            }
         }
 
-        return $this->formats[$format];
+        return $formats;
     }
 
     /**
-     * @param $format
-     * @param $fileExtension
-     * @param MediaException $e
-     *
-     * @return array
-     *
-     * @throws ImageProxyInvalidImageFormat
-     * @throws MediaException
+     * {@inheritdoc}
      */
-    protected function returnFileExtensionIcon($format, $fileExtension, $e)
+    public function purge($idMedia, $fileName, $mimeType, $options)
     {
-        $imageExtension = 'png';
+        return $this->formatCache->purge($idMedia, $this->replaceExtension($fileName, $mimeType), $options);
+    }
 
-        $placeholder = dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png';
+    /**
+     * {@inheritdoc}
+     */
+    public function getMediaProperties($url)
+    {
+        return $this->formatCache->analyzedMediaUrl($url);
+    }
 
-        if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png')) {
-            throw $e;
+    /**
+     * {@inheritdoc}
+     */
+    public function clearCache()
+    {
+        $this->formatCache->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = [])
+    {
+        if (!isset($this->formats[$formatKey])) {
+            throw new FormatNotFoundException($formatKey);
         }
 
-        $image = $this->converter->convert($placeholder, $this->getFormat($format));
+        $format = $this->formats[$formatKey];
+        $title = $format['key'];
 
-        $image = $image->get($imageExtension);
+        if (array_key_exists($locale, $format['meta']['title'])) {
+            $title = $format['meta']['title'][$locale];
+        } elseif (count($format['meta']['title']) > 0) {
+            $title = array_values($format['meta']['title'])[0];
+        }
 
-        return [$image, 200, $imageExtension];
+        $formatArray = [
+            'key' => $format['key'],
+            'title' => $title,
+            'scale' => $format['scale'],
+            'options' => (!empty($formatOptions)) ? $formatOptions : null,
+        ];
+
+        return $formatArray;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatDefinitions($locale = null, array $formatOptions = [])
+    {
+        $definitionsArray = [];
+
+        foreach ($this->formats as $format) {
+            $options = [];
+            if (array_key_exists($format['key'], $formatOptions)) {
+                $options = $formatOptions[$format['key']];
+            }
+            $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale, $options);
+        }
+
+        return $definitionsArray;
     }
 
     /**
@@ -309,275 +282,63 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param ImageInterface $image
-     * @param string         $imageExtension
-     * @param array          $formatOptions
-     *
-     * @return array
-     */
-    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
-    {
-        $options = [];
-        if (count($image->layers()) > 1 && $imageExtension == 'gif') {
-            $options['animated'] = true;
-        }
-
-        return array_merge($options, $formatOptions);
-    }
-
-    /**
-     * @param string $mimeType
-     * @param string $path
-     */
-    protected function prepareMedia($mimeType, $path)
-    {
-        switch ($mimeType) {
-            case 'application/pdf':
-                $this->convertPdfToImage($path);
-                break;
-            case 'image/vnd.adobe.photoshop':
-                $this->convertPsdToImage($path);
-                break;
-        }
-    }
-
-    /**
-     * @param string $path
-     *
-     * @throws GhostScriptNotFoundException
-     */
-    protected function convertPdfToImage($path)
-    {
-        $command = $this->ghostScriptPath .
-            ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' .
-            $path .
-            ' -dJPEGQ=100 -r300x300 -q ' .
-            $path .
-            ' -c quit';
-
-        exec($command);
-
-        $file = new SymfonyFile($path);
-
-        if ($file->getMimeType() == 'application/pdf') {
-            throw new GhostScriptNotFoundException(
-                'Ghostscript was not found at "' .
-                $this->ghostScriptPath .
-                '" or user has no Permission for "' .
-                $path .
-                '"'
-            );
-        }
-    }
-
-    /**
-     * @param $path
-     *
-     * @throws MediaException
-     */
-    protected function convertPsdToImage($path)
-    {
-        if (class_exists('Imagick')) {
-            $imagine = new Imagine();
-            $image = $imagine->open($path);
-            $image = $image->layers()[0];
-            file_put_contents($path, $image->get('png'));
-        } else {
-            throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
-        }
-    }
-
-    /**
      * @param string $filename
      * @param string $newExtension
      *
      * @return string
      */
-    protected function replaceExtension($filename, $newExtension)
+    protected function replaceExtension($filename, $mimeType)
     {
         $info = pathinfo($filename);
 
-        return $info['filename'] . '.' . $newExtension;
-    }
-
-    /**
-     * @param string $fileName
-     *
-     * @return string
-     */
-    protected function getImageExtension($fileName)
-    {
-        $extension = $this->getRealFileExtension($fileName);
-
-        switch ($extension) {
-            case 'png':
-            case 'gif':
-                // do nothing
-                break;
-            case 'svg':
+        switch ($mimeType) {
+            case 'image/png':
+            case 'image/svg+xml':
                 $extension = 'png';
+                break;
+            case 'image/gif':
+                $extension = 'gif';
                 break;
             default:
                 $extension = 'jpg';
-                break;
         }
 
-        return $extension;
+        return $info['filename'] . '.' . $extension;
     }
 
     /**
-     * @param $fileName
+     * @param MediaInterface $media
+     *
+     * @return FileVersion
+     *
+     * @throws ImageProxyMediaNotFoundException
      */
-    protected function getRealFileExtension($fileName)
+    private function getLatestFileVersion(MediaInterface $media)
     {
-        $pathInfo = pathinfo($fileName);
-        if (isset($pathInfo['extension'])) {
-            return $pathInfo['extension'];
-        }
-
-        return;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaProperties($url)
-    {
-        return $this->formatCache->analyzedMediaUrl($url);
-    }
-
-    /**
-     * get file from namespace.
-     *
-     * @param string $uri
-     * @param string $mimeType
-     *
-     * @return string
-     *
-     * @throws OriginalFileNotFoundException
-     */
-    protected function getFile($uri, $mimeType)
-    {
-        if (fnmatch('video/*', $mimeType)) {
-            $tempFile = tempnam(sys_get_temp_dir(), 'media_original') . '.jpg';
-            $this->videoThumbnailService->generate($uri, '00:00:02:01', $tempFile);
-            $uri = $tempFile;
-        }
-
-        $file = @file_get_contents($uri);
-
-        if (!$file) {
-            throw new OriginalFileNotFoundException($uri);
-        }
-
-        return $file;
-    }
-
-    /**
-     * create a local temp file for the original.
-     *
-     * @param $content
-     *
-     * @return string
-     */
-    protected function createTmpFile($content)
-    {
-        $tempFile = tempnam(sys_get_temp_dir(), 'media_original');
-        $handle = fopen($tempFile, 'w');
-        fwrite($handle, $content);
-        fclose($handle);
-
-        $this->tempFiles[] = $tempFile;
-
-        return $tempFile;
-    }
-
-    /**
-     * delete all created temp files.
-     *
-     * @return $this
-     */
-    protected function clearTempFiles()
-    {
-        $this->fileSystem->remove($this->tempFiles);
-
-        return $this;
-    }
-
-    /**
-     * @param Media $media
-     *
-     * @return array
-     *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException
-     */
-    protected function getMediaData($media)
-    {
-        $fileName = null;
-        $storageOptions = null;
-        $version = null;
-        $mimeType = null;
-
-        /** @var File $file */
         foreach ($media->getFiles() as $file) {
             $version = $file->getVersion();
-            /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
                 if ($fileVersion->getVersion() == $version) {
-                    $fileName = $fileVersion->getName();
-                    $storageOptions = $fileVersion->getStorageOptions();
-                    $mimeType = $fileVersion->getMimeType();
-                    break;
+                    return $fileVersion;
                 }
             }
             break;
         }
 
-        if (!$fileName) {
-            throw new ImageProxyMediaNotFoundException('Media file version was not found');
-        }
-
-        return [$fileName, $version, $storageOptions, $mimeType];
+        throw new ImageProxyMediaNotFoundException('Media file version was not found');
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
-    {
-        $formats = [];
-        if ($this->checkPreviewSupported($mimeType)) {
-            foreach ($this->formats as $format) {
-                $formats[$format['name']] = $this->formatCache->getMediaUrl(
-                    $id,
-                    $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
-                    $storageOptions,
-                    $format['name'],
-                    $version
-                );
-            }
-        }
-
-        return $formats;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function purge($idMedia, $fileName, $options)
-    {
-        return $this->formatCache->purge($idMedia, $fileName, $options);
-    }
-
-    /**
+     * Returns true if the given mime type is supported, otherwise false.
+     *
      * @param $mimeType
      *
      * @return bool
      */
-    private function checkPreviewSupported($mimeType)
+    private function checkMimeTypeSupported($mimeType)
     {
-        foreach ($this->previewMimeTypes as $type) {
-            if (fnmatch($type, $mimeType)) {
+        foreach ($this->supportedMimeTypes as $supportedMimeType) {
+            if (fnmatch($supportedMimeType, $mimeType)) {
                 return true;
             }
         }

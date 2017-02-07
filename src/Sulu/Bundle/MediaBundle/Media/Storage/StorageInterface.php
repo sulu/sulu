@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,9 +35,22 @@ interface StorageInterface
      * @param $version
      * @param $storageOption
      *
-     * @return mixed
+     * @return string
+     *
+     * @deprecated Deprecated since 1.4, will be removed in 2.0
      */
     public function load($fileName, $version, $storageOption);
+
+    /**
+     * Returns the content for the given file as a binary string.
+     *
+     * @param $fileName
+     * @param $version
+     * @param $storageOption
+     *
+     * @return string
+     */
+    public function loadAsString($fileName, $version, $storageOption);
 
     /**
      * Removes the file from storage.

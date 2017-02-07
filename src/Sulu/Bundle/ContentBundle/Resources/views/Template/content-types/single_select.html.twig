@@ -1,0 +1,16 @@
+{% for value in params.values.value %}
+    {% set elementId %}{{ id|raw }}_{{ loop.index }}{% endset %}
+    <label for="{{ elementId }}" class="choice">
+        <div class="custom-radio">
+            <input type="radio"
+                   id="{{ elementId }}"
+                   name="{{ id|raw }}"
+                   value="{{ value.name }}"
+                   data-property='{{ property|json_encode }}'
+                   data-mapper-property="{{ property.name }}"
+                   class="preview-update trigger-save-button form-element"/>
+            <span class="icon"></span>
+        </div>
+        {{ value.getTitle(userLocale) }}
+    </label>
+{% endfor %}

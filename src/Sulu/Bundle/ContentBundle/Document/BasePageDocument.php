@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
@@ -26,13 +27,12 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 
 /**
@@ -40,9 +40,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class BasePageDocument implements
     NodeNameBehavior,
-    TimestampBehavior,
-    BlameBehavior,
-    ParentBehavior,
     LocalizedStructureBehavior,
     ResourceSegmentBehavior,
     NavigationContextBehavior,
@@ -55,44 +52,56 @@ class BasePageDocument implements
     ExtensionBehavior,
     OrderBehavior,
     WebspaceBehavior,
-    SecurityBehavior
+    SecurityBehavior,
+    LocalizedAuditableBehavior,
+    LocalizedTitleBehavior,
+    VersionBehavior
 {
     /**
+     * The name of this node.
+     *
      * @var string
      */
     protected $nodeName;
 
     /**
+     * Datetime of create document.
+     *
      * @var \DateTime
      */
     protected $created;
 
     /**
+     * Changed date of page.
+     *
      * @var \DateTime
      */
     protected $changed;
 
     /**
-     * @var \DateTime
+     * User ID of creator.
+     *
+     * @var int
      */
     protected $creator;
 
     /**
+     * User ID of changer.
+     *
      * @var int
      */
     protected $changer;
 
     /**
-     * @var object
-     */
-    protected $parent;
-
-    /**
+     * Title of document.
+     *
      * @var string
      */
     protected $title;
 
     /**
+     * Segment.
+     *
      * @var string
      */
     protected $resourceSegment;
@@ -103,89 +112,132 @@ class BasePageDocument implements
     protected $navigationContexts = [];
 
     /**
+     * Type of redirection.
+     *
      * @var int
      */
     protected $redirectType;
 
     /**
+     * The target of redirection.
+     *
      * @var object
      */
     protected $redirectTarget;
 
     /**
+     * The External redirect.
+     *
      * @var string
      */
     protected $redirectExternal;
 
     /**
+     * Workflow Stage currently Test or Published.
+     *
      * @var int
      */
     protected $workflowStage;
 
     /**
+     * Is Document is published.
+     *
      * @var bool
      */
     protected $published;
 
     /**
+     * Shadow locale is enabled.
+     *
      * @var bool
      */
     protected $shadowLocaleEnabled = false;
 
     /**
+     * Shadow locale.
+     *
      * @var string
      */
     protected $shadowLocale;
 
     /**
+     * Universal Identifier.
+     *
      * @var string
      */
     protected $uuid;
 
     /**
+     * Document's type of structure ie default, complex...
+     *
      * @var string
      */
     protected $structureType;
 
     /**
+     * Structure.
+     *
      * @var StructureInterface
      */
     protected $structure;
 
     /**
+     * Document's locale.
+     *
      * @var string
      */
     protected $locale;
 
     /**
+     * Document's original locale.
+     *
+     * @var string
+     */
+    protected $originalLocale;
+
+    /**
+     * Document's children.
+     *
      * @var ChildrenCollection
      */
     protected $children;
 
     /**
+     * Path of Document.
+     *
      * @var string
      */
     protected $path;
 
     /**
+     * Document's extensions ie seo, ...
+     *
      * @var ExtensionContainer
      */
     protected $extensions;
 
     /**
+     * Document's webspace name.
+     *
      * @var string
      */
     protected $webspaceName;
 
     /**
+     * Document's order.
+     *
      * @var int
      */
     protected $suluOrder;
 
     /**
+     * List of permissions.
+     *
      * @var array
      */
     protected $permissions;
+
+    protected $versions = [];
 
     public function __construct()
     {
@@ -250,22 +302,6 @@ class BasePageDocument implements
     public function getChanger()
     {
         return $this->changer;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
     }
 
     /**
@@ -455,6 +491,22 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getChildren()
     {
         return $this->children;
@@ -511,6 +563,14 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
+    public function setSuluOrder($order)
+    {
+        $this->suluOrder = $order;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
@@ -522,5 +582,21 @@ class BasePageDocument implements
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getVersions()
+    {
+        return $this->versions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setVersions($versions)
+    {
+        $this->versions = $versions;
     }
 }

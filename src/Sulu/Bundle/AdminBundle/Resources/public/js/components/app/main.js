@@ -185,7 +185,7 @@ define(function() {
         },
 
         /**
-         * Cleans up and calls the callback of a route. If it recieves content
+         * Cleans up and calls the callback of a route. If it receives content
          * through the route-callback add it to the dom
          * @param route {Object} backbone route
          * @param routeArgs the arguments to pass to the route-callback
@@ -195,6 +195,7 @@ define(function() {
             this.beforeNavigateCleanup(route);
             var content = route.callback.apply(this, routeArgs);
             if (!!content) {
+                this.selectNavigationItem(this.sandbox.mvc.history.fragment);
                 content = this.sandbox.dom.createElement(content);
                 this.sandbox.dom.html('#content', content);
                 this.sandbox.start('#content', {reset: true});
@@ -222,8 +223,7 @@ define(function() {
                     eventArgs = this.sandbox.dom.data(event.currentTarget, 'eventArgs');
 
                 // if data-sulu-event attribute is set emit the attribute value as an event
-                if (!!dataSuluEvent &&
-                    typeof dataSuluEvent === 'string') {
+                if (!!dataSuluEvent && typeof dataSuluEvent === 'string') {
                     this.sandbox.emit(dataSuluEvent, eventArgs);
                 }
 
@@ -231,7 +231,7 @@ define(function() {
                 if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
-                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true);
+                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value});
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
         },
@@ -278,7 +278,7 @@ define(function() {
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
-                this.emitNavigationEvent(event, false);
+                this.emitNavigationEvent(event);
 
                 // update title
                 if (!!event.parentTitle) {
@@ -297,18 +297,12 @@ define(function() {
             }.bind(this));
 
             this.sandbox.on('husky.navigation.header.clicked', function() {
-                this.navigate('', true, false, false);
-            }.bind(this));
-
-            this.sandbox.on('husky.data-navigation.selected', function(item) {
-                if (!!item && !!item._links && !!item._links.admin) {
-                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
-                }
+                this.navigate('', true, false);
             }.bind(this));
 
             // content tabs event
             this.sandbox.on('husky.tabs.header.item.select', function(event) {
-                this.emitNavigationEvent(event, true);
+                this.emitNavigationEvent(event);
             }.bind(this));
 
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
@@ -446,12 +440,11 @@ define(function() {
          * @param locale {string} locale to change to
          */
         changeUserLocale: function(locale) {
-            //Todo: don't use hardcoded url
             this.sandbox.util.ajax({
                 type: 'PUT',
                 url: constants.changeLanguageUrl,
-                contentType: 'application/json', // payload format
-                dataType: 'json', // response format
+                contentType: 'application/json',
+                dataType: 'json',
                 data: JSON.stringify({
                     locale: locale
                 }),
@@ -467,7 +460,6 @@ define(function() {
         routeToUserForm: function() {
             //Todo: don't use hardcoded url
             this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.contact.id + '/details', true, false, false);
-            this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
         },
 
         /**
@@ -481,12 +473,8 @@ define(function() {
         /**
          * Emits the router.navigate event
          * @param event
-         * @param {boolean} updateNavigation If true the navigation will be updated with the passed route
          */
-        emitNavigationEvent: function(event, updateNavigation) {
-            if (updateNavigation === true) {
-                this.selectNavigationItem(event.action);
-            }
+        emitNavigationEvent: function(event) {
             if (!!event.action) {
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }

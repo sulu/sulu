@@ -1,0 +1,168 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:list="http://schemas.sulu.io/class/list"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <orm:joins name="type">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:MediaType</orm:entity-name>
+            <orm:field-name>%sulu.model.media.class%.type</orm:field-name>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="file">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:File</orm:entity-name>
+            <orm:field-name>%sulu.model.media.class%.files</orm:field-name>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="fileVersion" ref="file">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+            <orm:field-name>SuluMediaBundle:File.fileVersions</orm:field-name>
+            <orm:condition>SuluMediaBundle:FileVersion.version = SuluMediaBundle:File.version</orm:condition>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="fileVersionMeta" ref="fileVersion">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
+            <orm:field-name>SuluMediaBundle:FileVersion.meta</orm:field-name>
+            <orm:condition>SuluMediaBundle:FileVersionMeta.locale = ':locale'</orm:condition>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="defaultFileVersionMeta" ref="fileVersion">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:DefaultFileVersionMeta</orm:entity-name>
+            <orm:field-name>SuluMediaBundle:FileVersion.defaultMeta</orm:field-name>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="collection">
+        <orm:join>
+            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+            <orm:field-name>%sulu.model.media.class%.collection</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <properties>
+        <property name="id" list:translation="public.id" display="no" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
+        </property>
+
+        <property name="changed" list:translation="public.changed" display="no" list:type="datetime">
+            <orm:field-name>changed</orm:field-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
+        </property>
+
+        <property name="created" list:translation="public.created" display="no" list:type="datetime">
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
+        </property>
+
+        <identity-property name="collection" display="never">
+            <orm:field-name>collection</orm:field-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
+        </identity-property>
+
+        <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"
+                  list:sortable="false"/>
+        <property name="url" display="never"/>
+
+        <property name="type" list:translation="public.type" display="always">
+            <orm:field-name>name</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:MediaType</orm:entity-name>
+
+            <orm:joins ref="type"/>
+        </property>
+
+        <property name="version" list:translation="public.version">
+            <orm:field-name>version</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:File</orm:entity-name>
+
+            <orm:joins ref="file"/>
+        </property>
+
+        <property name="name" list:translation="public.name" display="always">
+            <orm:field-name>name</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
+        <property name="subVersion" display="none">
+            <orm:field-name>subVersion</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
+        <property name="size" list:translation="media.media.size" display="always" list:type="bytes">
+            <orm:field-name>size</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
+        <property name="mimeType" list:translation="media.media.mime-type" display="always">
+            <orm:field-name>mimeType</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
+        <property name="storageOptions" display="never">
+            <orm:field-name>storageOptions</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
+        <case-property name="locale" display="never">
+            <orm:field>
+                <orm:field-name>locale</orm:field-name>
+                <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
+
+                <orm:joins ref="fileVersionMeta"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>locale</orm:field-name>
+                <orm:entity-name>SuluMediaBundle:DefaultFileVersionMeta</orm:entity-name>
+
+                <orm:joins ref="defaultFileVersionMeta"/>
+            </orm:field>
+        </case-property>
+
+        <case-property name="title" list:translation="public.title" display="always" list:type="title">
+            <orm:field>
+                <orm:field-name>title</orm:field-name>
+                <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
+
+                <orm:joins ref="fileVersionMeta"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>title</orm:field-name>
+                <orm:entity-name>SuluMediaBundle:DefaultFileVersionMeta</orm:entity-name>
+
+                <orm:joins ref="defaultFileVersionMeta"/>
+            </orm:field>
+        </case-property>
+
+        <property name="description" list:translation="public.description">
+            <orm:field-name>description</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
+
+            <orm:joins ref="fileVersionMeta"/>
+        </property>
+
+        <property name="lft" display="never">
+            <orm:field-name>lft</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+
+            <orm:joins ref="collection"/>
+        </property>
+
+        <property name="rgt" display="never">
+            <orm:field-name>rgt</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
+
+            <orm:joins ref="collection"/>
+        </property>
+    </properties>
+</class>

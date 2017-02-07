@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses.
@@ -42,7 +43,7 @@ interface ListBuilderInterface
     /**
      * Sets all the field descriptors for the ListBuilder at once.
      *
-     * @param AbstractFieldDescriptor[] $fieldDescriptors
+     * @param FieldDescriptorInterface[] $fieldDescriptors
      *
      * @return mixed
      */
@@ -56,23 +57,27 @@ interface ListBuilderInterface
     /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      *
      * @return ListBuilderInterface
      */
-    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor);
+    public function addSelectField(FieldDescriptorInterface $fieldDescriptor);
 
     /**
      * @deprecated use addSelectField instead
+     *
+     * @param FieldDescriptorInterface $fieldDescriptor
+     *
+     * @return ListBuilderInterface
      */
-    public function addField(AbstractFieldDescriptor $fieldDescriptor);
+    public function addField(FieldDescriptorInterface $fieldDescriptor);
 
     /**
      * Gets a field descriptor used by the ListBuilder to retrieve and return the list.
      *
      * @param string $fieldName
      *
-     * @return AbstractFieldDescriptor
+     * @return FieldDescriptorInterface
      */
     public function getSelectField($fieldName);
 
@@ -93,11 +98,11 @@ interface ListBuilderInterface
     /**
      * Adds a field descriptor, which will be used for search.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      *
      * @return ListBuilderInterface
      */
-    public function addSearchField(AbstractFieldDescriptor $fieldDescriptor);
+    public function addSearchField(FieldDescriptorInterface $fieldDescriptor);
 
     /**
      * Sets the search value for the search fields.
@@ -111,12 +116,12 @@ interface ListBuilderInterface
     /**
      * Adds a field by which the table is sorted.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param string                  $order
+     * @param FieldDescriptorInterface $fieldDescriptor
+     * @param string $order
      *
      * @return ListBuilderInterface
      */
-    public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC);
+    public function sort(FieldDescriptorInterface $fieldDescriptor, $order = self::SORTORDER_ASC);
 
     /**
      * Defines how many items should be returned.
@@ -151,51 +156,66 @@ interface ListBuilderInterface
     public function getCurrentPage();
 
     /**
+     * Sets the permission check for the ListBuilder.
+     *
+     * @param UserInterface $user The user for which the permission must be granted
+     * @param int $permission A value from the PermissionTypes
+     *
+     * @return ListBuilderInterface
+     */
+    public function setPermissionCheck(UserInterface $user, $permission);
+
+    /**
      * Defines a constraint for the rows to return.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
+     * @param FieldDescriptorInterface $fieldDescriptor The FieldDescriptor which is checked
      * @param string $value The value the FieldDescriptor should have
      * @param string $comparator The comparator use to compare the values
      *
-     * @return mixed
+     * @return ListBuilderInterface
      */
     public function where(
-        AbstractFieldDescriptor $fieldDescriptor,
+        FieldDescriptorInterface $fieldDescriptor,
         $value,
         $comparator = self::WHERE_COMPARATOR_EQUAL
     );
 
     /**
      * @deprecated use where instead
+     *
+     * @param FieldDescriptorInterface $fieldDescriptor
+     * @param mixed $value
+     *
+     * @return ListBuilderInterface
      */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
+    public function whereNot(FieldDescriptorInterface $fieldDescriptor, $value);
 
     /**
      * Defines GROUP BY.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      *
-     * @return mixed
+     * @return ListBuilderInterface
      */
-    public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
+    public function addGroupBy(FieldDescriptorInterface $fieldDescriptor);
 
     /**
      * Defines an IN constraint.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      * @param array $values
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values);
+    public function in(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * Defines a between constraint.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      * @param $values
      *
      * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values);
+    public function between(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * The number of total elements for this list.
@@ -214,7 +234,7 @@ interface ListBuilderInterface
     /**
      * Sets an array of field descriptors.
      *
-     * @param AbstractFieldDescriptor[] $fieldDescriptors
+     * @param FieldDescriptorInterface[] $fieldDescriptors
      */
     public function setFieldDescriptors(array $fieldDescriptors);
 
@@ -223,7 +243,7 @@ interface ListBuilderInterface
      *
      * @param string $name
      *
-     * @return AbstractFieldDescriptor | null
+     * @return FieldDescriptorInterface|null
      */
     public function getFieldDescriptor($name);
 
@@ -237,33 +257,33 @@ interface ListBuilderInterface
     /**
      * Creates a between expression from the given values.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      * @param array $values
      *
      * @return mixed
      */
-    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+    public function createBetweenExpression(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * Creates an in expression from the given values.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      * @param array $values
      *
      * @return mixed
      */
-    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+    public function createInExpression(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * Creates an where expression from the given values.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      * @param $value
      * @param string $comparator
      *
      * @return mixed
      */
-    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
+    public function createWhereExpression(FieldDescriptorInterface $fieldDescriptor, $value, $comparator);
 
     /**
      * Creates an and expression with the given expressions.

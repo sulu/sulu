@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -23,16 +26,22 @@ class Group extends ApiEntity implements AuditableInterface
 {
     /**
      * @var int
+     *
+     * @Exclude
      */
     private $lft;
 
     /**
      * @var int
+     *
+     * @Exclude
      */
     private $rgt;
 
     /**
      * @var int
+     *
+     * @Exclude
      */
     private $depth;
 
@@ -57,12 +66,12 @@ class Group extends ApiEntity implements AuditableInterface
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $children;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $userGroups;
 
@@ -72,28 +81,29 @@ class Group extends ApiEntity implements AuditableInterface
     private $parent;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $roles;
 
     /**
      * @var UserInterface
+     *
+     * @Exclude
      */
     private $changer;
 
     /**
      * @var UserInterface
+     *
+     * @Exclude
      */
     private $creator;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -249,7 +259,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get children.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChildren()
     {
@@ -283,7 +293,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get userGroups.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUserGroups()
     {
@@ -341,7 +351,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get roles.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getRoles()
     {

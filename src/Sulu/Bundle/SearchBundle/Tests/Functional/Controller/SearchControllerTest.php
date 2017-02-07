@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SearchBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -40,6 +41,17 @@ class SearchControllerTest extends SuluTestCase
      */
     private $user;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->purgeDatabase();
+        $this->client = $this->createAuthenticatedClient();
+        $this->searchManager = $this->client->getContainer()->get('massive_search.search_manager');
+        $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->createUser();
+        $this->indexProducts();
+    }
+
     public function provideSearch()
     {
         return [
@@ -58,6 +70,7 @@ class SearchControllerTest extends SuluTestCase
                     ],
                     'totals' => [
                         'product' => 0,
+                        'contact' => 0,
                     ],
                     'total' => 0,
                 ],
@@ -99,6 +112,7 @@ class SearchControllerTest extends SuluTestCase
                     ],
                     'totals' => [
                         'product' => 1,
+                        'contact' => 0,
                     ],
                     'total' => 1,
                 ],
@@ -140,6 +154,7 @@ class SearchControllerTest extends SuluTestCase
                     ],
                     'totals' => [
                         'product' => 2,
+                        'contact' => 0,
                     ],
                     'total' => 2,
                 ],
@@ -160,7 +175,7 @@ class SearchControllerTest extends SuluTestCase
         $this->client->request('GET', '/search/query', $params);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         unset($result['_links']);
 
@@ -175,21 +190,11 @@ class SearchControllerTest extends SuluTestCase
         $this->client->request('GET', '/search/indexes');
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals('product', $result[0]['indexName']);
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->db('ORM')->purgeDatabase();
-        $this->client = $this->createAuthenticatedClient();
-        $this->searchManager = $this->client->getContainer()->get('massive_search.search_manager');
-        $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $this->createUser();
-        $this->indexProducts();
+        $this->assertEquals([], $result[0]['contexts']);
     }
 
     private function createUser()
@@ -199,6 +204,11 @@ class SearchControllerTest extends SuluTestCase
         $user->setPassword('mypassword');
         $user->setLocale('en');
         $user->setSalt('12345');
+        $contact = new Contact();
+        $contact->setFirstName('Daniel');
+        $contact->setLastName('Leech');
+        $user->setContact($contact);
+        $this->entityManager->persist($contact);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

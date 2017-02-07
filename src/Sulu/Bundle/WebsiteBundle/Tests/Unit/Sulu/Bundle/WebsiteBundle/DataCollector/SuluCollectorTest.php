@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,51 +12,72 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\DataCollector;
 
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SuluCollectorTest extends \PHPUnit_Framework_TestCase
 {
-    protected $requestAnalyzer;
+    /**
+     * @var Request
+     */
     protected $request;
+
+    /**
+     * @var Response
+     */
     protected $response;
+
+    /**
+     * @var SuluCollector
+     */
+    private $suluCollector;
 
     public function setUp()
     {
-        parent::setUp();
-        $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
         $this->request = new Request();
-        $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
-        $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
-        $this->webspace = $this->prophesize('Sulu\Component\Webspace\Webspace');
-        $this->segment = $this->prophesize('Sulu\Component\Webspace\Segment');
-        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
+        $this->response = $this->prophesize(Response::class);
 
-        $this->dataCollector = new SuluCollector($this->requestAnalyzer->reveal());
+        $this->suluCollector = new SuluCollector();
     }
 
     public function testCollectorNoComplexObjects()
     {
-        $this->dataCollector->collect($this->request, $this->response->reveal());
+        $this->suluCollector->collect($this->request, $this->response->reveal());
     }
 
     public function testCollector()
     {
-        $this->requestAnalyzer->getPortal()->willReturn($this->portal);
-        $this->requestAnalyzer->getWebspace()->willReturn($this->webspace);
-        $this->requestAnalyzer->getSegment()->willReturn($this->segment);
-        $this->requestAnalyzer->getMatchType()->willReturn('match');
-        $this->requestAnalyzer->getRedirect()->willReturn('red');
-        $this->requestAnalyzer->getPortalUrl()->willReturn('/foo');
+        $structure = $this->prophesize(PageBridge::class);
 
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn('de_de');
-        $this->requestAnalyzer->getResourceLocator()->willReturn('/asd');
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/asd/');
-        $this->request->attributes->set('_route_params', ['structure' => $this->structure->reveal()]);
+        $webspace = $this->prophesize(Webspace::class);
+        $portal = $this->prophesize(Portal::class);
+        $segment = $this->prophesize(Segment::class);
 
-        $this->dataCollector->collect($this->request, $this->response->reveal());
+        $this->request->attributes->set('_sulu', new RequestAttributes(
+            [
+                'webspace' => $webspace->reveal(),
+                'portal' => $portal->reveal(),
+                'segment' => $segment->reveal(),
+                'matchType' => 'match',
+                'redirect' => 'red',
+                'portalUrl' => '/foo',
+                'localization' => 'de_de',
+                'resourceLocator' => '/asd',
+                'resourceLocatorPrefix' => '/asd/',
+            ]
+        ));
 
-        $this->portal->toArray()->shouldHaveBeenCalled();
-        $this->webspace->toArray()->shouldHaveBeenCalled();
-        $this->segment->toArray()->shouldHaveBeenCalled();
+        $this->request->attributes->set('_route_params', ['structure' => $structure->reveal()]);
+
+        $webspace->toArray()->shouldBeCalled();
+        $portal->toArray()->shouldBeCalled();
+        $segment->toArray()->shouldBeCalled();
+
+        $this->suluCollector->collect($this->request, $this->response->reveal());
     }
 }

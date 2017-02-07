@@ -5,10 +5,14 @@
     <mapped-superclass name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users">
 
         <one-to-one field="contact" target-entity="Sulu\Component\Contact\Model\ContactInterface">
-            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
+            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
         </one-to-one>
 
-        <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user"/>
+        <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user">
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </one-to-many>
         <one-to-many field="userGroups" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserGroup" mapped-by="user"/>
         <one-to-many field="userSettings" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserSetting" mapped-by="user"/>
 

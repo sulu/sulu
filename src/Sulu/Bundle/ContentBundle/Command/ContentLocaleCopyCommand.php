@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -62,7 +62,7 @@ class ContentLocaleCopyCommand extends ContainerAwareCommand
         $this->setName('sulu:content:locale-copy');
         $this->setDescription('Copy content nodes from one locale to another');
         $this->setHelp(
-            <<<EOT
+            <<<'EOT'
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
 to <info>destLocale</info> on all nodes from a specific webspace.
 
@@ -93,7 +93,7 @@ EOT
         $overwrite = $input->getOption('overwrite');
         $dryRun = $input->getOption('dry-run');
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
+        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->queryManager = $this->session->getWorkspace()->getQueryManager();
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');

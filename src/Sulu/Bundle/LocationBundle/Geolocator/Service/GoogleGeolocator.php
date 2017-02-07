@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
@@ -26,11 +26,18 @@ class GoogleGeolocator implements GeolocatorInterface
 {
     const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
+    /**
+     * @var ClientInterface
+     */
     protected $client;
+
+    /**
+     * @var string
+     */
     protected $apiKey;
 
     /**
-     * @param Client $client Guzzle HTTP client
+     * @param ClientInterface $client Guzzle HTTP client
      * @param string $apiKey API key (can be empty string)
      */
     public function __construct(ClientInterface $client, $apiKey)
@@ -44,36 +51,35 @@ class GoogleGeolocator implements GeolocatorInterface
      */
     public function locate($query)
     {
-        $endpoint = self::ENDPOINT;
+        $response = $this->client->request(
+            'GET',
+            self::ENDPOINT,
+            [
+                'query' => [
+                    'key' => $this->apiKey,
+                    'address' => $query,
+                ],
+            ]
+        );
 
-        if ($this->apiKey) {
-            $endpoint .= '?key=' . $this->apiKey;
+        if ($response->getStatusCode() !== 200) {
+            throw new HttpException(
+                $response->getStatusCode(),
+                sprintf(
+                    'Server at "%s" returned HTTP "%s". Body: ',
+                    self::ENDPOINT,
+                    $response->getStatusCode()
+                )
+            );
         }
 
-        $request = $this->client->get($endpoint, [], [
-            'query' => [
-                'address' => $query,
-            ],
-        ]);
-
-        $this->client->send($request);
-        $response = $request->getResponse();
-
-        if ($response->getStatusCode() != 200) {
-            throw new HttpException($response->getStatusCode(), sprintf(
-                'Server at "%s" returned HTTP "%s". Body: ', $client->getUrl(), $response->getStatusCode()
-            ));
-        }
-
-        $googleResponse = $request->getResponse()->json();
+        $googleResponse = json_decode($response->getBody(), true);
         $response = new GeolocatorResponse();
-
         if ($googleResponse['status'] != 'OK') {
             return $response;
         }
 
         $results = $googleResponse['results'];
-
         foreach ($results as $result) {
             $location = new GeolocatorLocation();
 

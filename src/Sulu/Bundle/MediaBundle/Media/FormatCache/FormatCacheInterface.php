@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,22 +20,22 @@ interface FormatCacheInterface
     /**
      * Save image and return the url to the image.
      *
-     * @param string $tmpPath
-     * @param int    $id
+     * @param string $content
+     * @param int $id
      * @param string $fileName
-     * @param array  $options
+     * @param array $options
      * @param string $format
      *
      * @return bool
      */
-    public function save($tmpPath, $id, $fileName, $options, $format);
+    public function save($content, $id, $fileName, $options, $format);
 
     /**
      * Delete the image by the given parameters.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
-     * @param array  $options
+     * @param string $options
      *
      * @return bool
      */
@@ -44,15 +44,16 @@ interface FormatCacheInterface
     /**
      * Return the url to an specific format of an media.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
-     * @param array  $options
+     * @param array $options
      * @param string $format
-     * @param int    $version
+     * @param int $version
+     * @param int $subVersion
      *
      * @return string
      */
-    public function getMediaUrl($id, $fileName, $options, $format, $version);
+    public function getMediaUrl($id, $fileName, $options, $format, $version, $subVersion);
 
     /**
      * Return the id and the format of a media.
@@ -62,4 +63,9 @@ interface FormatCacheInterface
      * @return array ($id, $format)
      */
     public function analyzedMediaUrl($url);
+
+    /**
+     * Clears the format cache.
+     */
+    public function clear();
 }

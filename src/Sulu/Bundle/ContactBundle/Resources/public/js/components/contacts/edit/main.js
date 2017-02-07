@@ -16,6 +16,17 @@ define([
 
     return {
 
+        collaboration: function() {
+            if (!this.options.id) {
+                return;
+            }
+
+            return {
+                id: this.options.id,
+                type: 'contact'
+            };
+        },
+
         /**
          * Returns the header config for this main-view
          * if an existing contact is edited a delete-button and a toggler get added
@@ -34,6 +45,9 @@ define([
                             // this.data is set by sulu-content.js with data from loadComponentData()
                             return this.sandbox.util.extend(false, {}, this.data);
                         }.bind(this)
+                    },
+                    componentOptions: {
+                        values: this.data
                     }
                 },
                 toolbar: {
@@ -50,6 +64,12 @@ define([
                     parent: 'toggler',
                     options: {
                         title: 'public.locked',
+                        hidden: true
+                    }
+                };
+                config.toolbar.buttons.enable = {
+                    options: {
+                        title: 'user.enable',
                         hidden: true
                     }
                 };
@@ -160,6 +180,7 @@ define([
          */
         afterSave: function(action, savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+            this.sandbox.emit('sulu.header.saved', savedData);
             if (action === 'back') {
                 ContactRouter.toList();
             } else if (action === 'new') {

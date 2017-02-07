@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +19,14 @@ use Sulu\Component\Content\Compat\PropertyInterface;
  */
 interface ContentTypeInterface
 {
+    /**
+     * @deprecated All the ContentTypes should be of this type, so declaring it explicitly is not necessary
+     */
     const PRE_SAVE = 1;
+
+    /**
+     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore
+     */
     const POST_SAVE = 2;
 
     /**
@@ -62,25 +69,6 @@ interface ContentTypeInterface
      */
     public function hasValue(
         NodeInterface $node,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    );
-
-    /**
-     * Sets the value of the Sulu property with the given data.
-     *
-     * @param mixed             $data
-     * @param PropertyInterface $property
-     * @param $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return mixed
-     */
-    public function readForPreview(
-        $data,
         PropertyInterface $property,
         $webspaceKey,
         $languageCode,

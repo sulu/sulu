@@ -11,26 +11,6 @@
                 table: {}
             };
 
-            var editCollection = app.sandbox.sulu.buttons.getApiButton('edit');
-            editCollection.title = 'sulu.header.edit-collection';
-            editCollection.disabled = false;
-            editCollection.callback = function() {
-                app.sandbox.emit('sulu.toolbar.edit-collection');
-            };
-
-            var deleteCollection = app.sandbox.sulu.buttons.getApiButton('delete');
-            deleteCollection.title = 'sulu.header.delete-collection';
-            deleteCollection.callback = function() {
-                app.sandbox.emit('sulu.toolbar.delete-collection');
-            };
-
-            var moveCollection = app.sandbox.sulu.buttons.getApiButton('move');
-            moveCollection.title = 'sulu.collection.move';
-            moveCollection.icon = 'arrows';
-            moveCollection.callback = function() {
-                app.sandbox.emit('sulu.toolbar.move-collection');
-            };
-
             var permissionSettings = app.sandbox.sulu.buttons.getApiButton('permission');
             permissionSettings.title = 'security.roles.permissions';
             permissionSettings.icon = 'lock';
@@ -42,18 +22,6 @@
                 {
                     name: 'mediaDecoratorDropdown',
                     template: decoratorDropdown
-                },
-                {
-                    name: 'editCollection',
-                    template: editCollection
-                },
-                {
-                    name: 'deleteCollection',
-                    template: deleteCollection
-                },
-                {
-                    name: 'moveCollection',
-                    template: moveCollection
                 },
                 {
                     name: 'permissionSettings',
@@ -70,6 +38,33 @@
                         title: 'sulu.toolbar.masonry',
                         callback: function() {
                             app.sandbox.emit('sulu.toolbar.change.masonry');
+                        }
+                    }
+                },
+                {
+                    name: 'editCollection',
+                    template: {
+                        title: 'sulu.collection.edit',
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.edit-collection');
+                        }
+                    }
+                },
+                {
+                    name: 'moveCollection',
+                    template: {
+                        title: 'sulu.collection.move',
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.move-collection');
+                        }
+                    }
+                },
+                {
+                    name: 'deleteCollection',
+                    template: {
+                        title: 'sulu.collection.delete',
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.delete-collection');
                         }
                     }
                 }

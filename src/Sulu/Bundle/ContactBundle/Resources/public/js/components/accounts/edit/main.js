@@ -17,6 +17,17 @@ define([
 
     return {
 
+        collaboration: function() {
+            if (!this.options.id) {
+                return;
+            }
+            
+            return {
+                id: this.options.id,
+                type: 'contact'
+            };
+        },
+
         /**
          * Returns the header config for this main-view
          * if an existing contact is edited a delete-button is added
@@ -34,6 +45,9 @@ define([
                             // this.data is set by sulu-content.js with data from loadComponentData()
                             return this.sandbox.util.extend(false, {}, this.data);
                         }.bind(this)
+                    },
+                    componentOptions: {
+                        values: this.data
                     }
                 },
                 toolbar: {
@@ -119,7 +133,7 @@ define([
         saveTab: function() {
             var promise = $.Deferred();
             this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
-                if (!!updateData){
+                if (!!updateData) {
                     this.changeData(savedData)
                 }
                 promise.resolve(savedData);
@@ -156,6 +170,7 @@ define([
          */
         afterSave: function(action, savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+            this.sandbox.emit('sulu.header.saved', savedData);
             if (action === 'back') {
                 AccountRouter.toList();
             } else if (action === 'new') {

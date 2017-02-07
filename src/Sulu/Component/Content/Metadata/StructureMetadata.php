@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,7 +28,7 @@ class StructureMetadata extends ItemMetadata
     public $resource;
 
     /**
-     * @var string
+     * @var array
      */
     public $cacheLifetime;
 
@@ -68,11 +68,15 @@ class StructureMetadata extends ItemMetadata
     public function getProperty($name)
     {
         if (!isset($this->properties[$name])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
-                $name, $this->getName(), implode('", "', array_keys($this->properties)),
-                $this->resource
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
+                    $name,
+                    $this->getName(),
+                    implode('", "', array_keys($this->properties)),
+                    $this->resource
+                )
+            );
         }
 
         return $this->properties[$name];
@@ -81,7 +85,7 @@ class StructureMetadata extends ItemMetadata
     /**
      * Return all model properties.
      *
-     * The "model" set of properties does not include UI elements 
+     * The "model" set of properties does not include UI elements
      * such as sections.
      *
      * @return PropertyMetadata[]
@@ -132,17 +136,21 @@ class StructureMetadata extends ItemMetadata
      *
      * @param string $tagName
      *
-     * @return bool
+     * @return PropertyMetadata
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
         $properties = $this->getPropertiesByTagName($tagName);
 
         if (!$properties) {
-            throw new \InvalidArgumentException(sprintf(
-                'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
-                $tagName, $this->name, $this->resource
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
+                    $tagName,
+                    $this->name,
+                    $this->resource
+                )
+            );
         }
 
         return reset($properties);
@@ -158,7 +166,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function hasPropertyWithTagName($tagName)
     {
-        return (boolean) count($this->getPropertiesByTagName($tagName));
+        return (bool) count($this->getPropertiesByTagName($tagName));
     }
 
     /**
@@ -166,7 +174,7 @@ class StructureMetadata extends ItemMetadata
      *
      * @param string $tagName
      *
-     * @return bool
+     * @return PropertyMetadata[]
      */
     public function getPropertiesByTagName($tagName)
     {

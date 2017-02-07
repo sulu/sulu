@@ -7,7 +7,10 @@
      data-aura-types="{{ params.types.value }}"
      data-aura-display-options="{{ sulu_parameter_to_key_value(params.displayOptions.value)|json_encode }}"
      data-aura-default-display-option="{{ params.defaultDisplayOption.value }}"
+     data-aura-navigate-event="sulu.content.navigate"
      data-aura-component="media-selection@sulumedia"
      data-aura-instance-name="{{ id|raw }}"
-     data-aura-url="/admin/api/media">
+     data-aura-url="/admin/api/media"
+     data-aura-locale="{{ languageCode }}"
+     data-aura-formats='{{ params.formats.value|keys|json_encode }}'>
 </div>

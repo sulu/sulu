@@ -6,8 +6,10 @@
      data-type-instance-name="{{ id|raw }}"
      data-aura-component="internal-links@sulucontent"
      data-aura-instance-name="{{ id|raw }}"
-     data-aura-webspace="{{ webspaceKey }}"
-     data-aura-locale="{{ languageCode }}"
+     data-aura-disabled-ids='["{{ uuid|default('') }}"]'
      data-aura-url="/admin/api/nodes?language={{ languageCode }}{% if webspaceKey != '' %}&webspace={{ webspaceKey }}{% endif %}&flat=true"
-     data-aura-result-key="nodes">
+     data-aura-result-key="nodes"
+     data-aura-navigate-event="sulu.content.navigate"
+     data-aura-webspace="{{ webspaceKey }}"
+     data-aura-locale="{{ languageCode }}">
 </div>

@@ -1,19 +1,15 @@
-sulu_media.template.collection:
-    pattern: /template/media/collection.html
-    defaults: { _controller: SuluMediaBundle:Template:collection }
-
-sulu_media.template.collection.files:
-    pattern: /template/collection/files.html
-    defaults: { _controller: SuluMediaBundle:Template:collectionFiles }
-
 sulu_media.template.collection.settings:
-    pattern: /template/collection/settings.html
+    path: /template/collection/settings.html
     defaults: { _controller: SuluMediaBundle:Template:collectionSettings }
 
 sulu_media.template.collection.new:
-    pattern: /template/collection/new.html
+    path: /template/collection/new.html
     defaults: { _controller: SuluMediaBundle:Template:collectionNew }
 
 sulu_media.template.media.multiple_edit:
-    pattern: /template/media/multiple-edit.html
+    path: /template/media/multiple-edit.html
     defaults: { _controller: SuluMediaBundle:Template:multipleEdit }
+
+sulu_media.redirect:
+    path: /redirect/media/{id}
+    defaults: { _controller: SuluMediaBundle:MediaRedirect:redirect }

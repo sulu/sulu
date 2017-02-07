@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -16,7 +17,7 @@ use JMS\Serializer\SerializerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Bundle\CategoryBundle\Entity\Category as EntityCategory;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as EntityCategory;
 use Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
@@ -98,11 +99,7 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
         }
 
         $manager = $this->prophesize(CategoryManagerInterface::class);
-        if (null === $parent) {
-            $manager->find(null, null)->shouldBeCalled()->willReturn($categoryEntities);
-        } else {
-            $manager->findChildren($parent)->shouldBeCalled()->willReturn($categoryEntities);
-        }
+        $manager->findChildrenByParentKey($parent)->shouldBeCalled()->willReturn($categoryEntities);
         $manager->getApiObjects($categoryEntities, $locale)->shouldBeCalled()->willReturn($categoryApis);
 
         $serializer = $this->prophesize(SerializerInterface::class);

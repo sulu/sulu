@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -345,7 +345,7 @@ class Address
      *
      * @return Address
      */
-    public function setCountry(\Sulu\Bundle\ContactBundle\Entity\Country $country)
+    public function setCountry(\Sulu\Bundle\ContactBundle\Entity\Country $country = null)
     {
         $this->country = $country;
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,11 +38,13 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         //Setup first navigation
         $this->root1 = new NavigationItem('Root');
         $item1_1 = new NavigationItem('Portals', $this->root1);
-        new NavigationItem('DE', $item1_1);
-        new NavigationItem('AT', $item1_1);
-        new NavigationItem('COM', $item1_1);
+        $item1_1->setPosition(1);
+        (new NavigationItem('DE', $item1_1))->setPosition(1);
+        (new NavigationItem('AT', $item1_1))->setPosition(2);
+        (new NavigationItem('COM', $item1_1))->setPosition(3);
         $item1_2 = new NavigationItem('Settings', $this->root1);
-        new NavigationItem('Translate', $item1_2);
+        $item1_2->setPosition(2);
+        (new NavigationItem('Translate', $item1_2))->setPosition(1);
 
         $this->navigation1 = new Navigation($this->root1);
 

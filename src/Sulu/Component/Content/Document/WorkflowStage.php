@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,6 +18,13 @@ namespace Sulu\Component\Content\Document;
  */
 final class WorkflowStage
 {
+    /**
+     * An array containing all the available workflow stages.
+     *
+     * @var array
+     */
+    public static $stages = [self::TEST, self::PUBLISHED];
+
     /**
      * Document is published.
      */

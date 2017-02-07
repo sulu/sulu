@@ -57,10 +57,6 @@
   padding: 3px;
 }
 /* line 45, ../scss/modules/utility.scss */
-#contact-form .address-row, #account-form .address-row, #financials-form .address-row {
-  padding-top: 5px;
-}
-/* line 49, ../scss/modules/utility.scss */
 #contact-form .bank-account-row:hover .bank-account-remove,
 #contact-form .address-row:hover .address-remove, #account-form .bank-account-row:hover .bank-account-remove,
 #account-form .address-row:hover .address-remove, #financials-form .bank-account-row:hover .bank-account-remove,
@@ -68,7 +64,7 @@
   display: inline;
 }
 
-/* line 56, ../scss/modules/utility.scss */
+/* line 52, ../scss/modules/utility.scss */
 .dark-divider {
   height: 0;
   margin: 0 0 20px 0;
@@ -77,35 +73,35 @@
   border-bottom: 1px solid #ccc;
 }
 
-/* line 64, ../scss/modules/utility.scss */
+/* line 60, ../scss/modules/utility.scss */
 #contact-options-dropdown {
   display: block;
   cursor: pointer;
 }
 
-/* line 71, ../scss/modules/utility.scss */
+/* line 67, ../scss/modules/utility.scss */
 #contact-edit-form .comma-before:before {
   content: ',';
   margin-left: -4px;
   margin-right: 4px;
 }
-/* line 78, ../scss/modules/utility.scss */
+/* line 74, ../scss/modules/utility.scss */
 #contact-edit-form label {
-  line-height: 14px;
-  text-overflow: hidden;
+  line-height: 30px;
+  text-overflow: ellipsis;
 }
-/* line 81, ../scss/modules/utility.scss */
+/* line 77, ../scss/modules/utility.scss */
 #contact-edit-form label.hidden {
   display: none;
 }
 
-/* line 87, ../scss/modules/utility.scss */
+/* line 83, ../scss/modules/utility.scss */
 #categories .husky-datagrid .husky-table {
   overflow: auto;
   max-height: 350px;
 }
 
-/* line 92, ../scss/modules/utility.scss */
+/* line 88, ../scss/modules/utility.scss */
 .form-horizontal .form-group .checkbox-container-left {
   text-align: left;
   width: 35px;

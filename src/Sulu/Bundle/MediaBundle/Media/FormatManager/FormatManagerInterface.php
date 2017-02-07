@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +22,7 @@ interface FormatManagerInterface
     /**
      * Return the image by a given url.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $formatName
      *
      * @return Response
@@ -39,24 +39,54 @@ interface FormatManagerInterface
     public function getMediaProperties($url);
 
     /**
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
-     * @param array  $storageOptions
-     * @param int    $version
+     * @param array $storageOptions
+     * @param int $version
+     * @param int $subVersion
      * @param string $mimeType
      *
      * @return array
      */
-    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType);
+    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType);
+
+    /**
+     * Returns a definition of a format with a given key. The returned formats contain
+     * the passed format options merged into them.
+     *
+     * @param string $formatKey
+     * @param string $locale
+     * @param array $formatOptions
+     *
+     * @return array
+     */
+    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = []);
+
+    /**
+     * Returns all definitions of image formats. The returned formats contain the passed
+     * format-options merged into them.
+     *
+     * @param string $locale
+     * @param array $formatOptions
+     *
+     * @return array
+     */
+    public function getFormatDefinitions($locale = null, array $formatOptions = []);
 
     /**
      * Delete the image by the given parameters.
      *
-     * @param int    $idMedia
+     * @param int $idMedia
      * @param string $fileName
-     * @param array  $options
+     * @param string $mimeType
+     * @param string $options
      *
      * @return bool
      */
-    public function purge($idMedia, $fileName, $options);
+    public function purge($idMedia, $fileName, $mimeType, $options);
+
+    /**
+     * Clears the format cache.
+     */
+    public function clearCache();
 }

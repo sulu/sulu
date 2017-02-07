@@ -110,6 +110,7 @@ define(['services/husky/util'], function(util) {
             includeSubFoldersParameter: 'includeSubFolders',
             categoriesParameter: 'categories',
             categoryOperatorParameter: 'categoryOperator',
+            paramsParameter: 'params',
             tagsParameter: 'tags',
             tagOperatorParameter: 'tagOperator',
             sortByParameter: 'sortBy',
@@ -117,13 +118,18 @@ define(['services/husky/util'], function(util) {
             presentAsParameter: 'presentAs',
             limitResultParameter: 'limitResult',
             limitResultDisabled: false,
+            publishedStateKey: 'publishedState',
+            publishedKey: 'published',
             idKey: 'id',
             resultKey: 'items',
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             titleKey: 'title',
+            descriptionKey: 'url',
             imageKey: 'image',
             pathKey: 'path',
+            localeKey: 'locale',
+            webspaceKey: 'webspaceKey',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
@@ -131,7 +137,9 @@ define(['services/husky/util'], function(util) {
             title: 'Smart-Content',
             datasource: null,
             categoryRoot: null,
-            displayOptions: {}
+            displayOptions: {},
+            navigateEvent: 'sulu.router.navigate',
+            deepLink: ''
         },
 
         displayOptionsDefaults = {
@@ -197,10 +205,26 @@ define(['services/husky/util'], function(util) {
             contentItem: [
                 '<li data-id="<%= dataId %>">',
                 '    <span class="num"><%= num %></span>',
+                '    <span class="icons"><%= icons %></span>',
                 '<% if (!!image) { %>',
                 '    <span class="image"><img src="<%= image %>"/></span>',
                 '<% } %>',
                 '    <span class="value"><%= value %></span>',
+                '</li>'
+            ].join(''),
+            contentItemLink: [
+                '<li data-id="<%= dataId %>">',
+                '    <a href="#" data-id="<%= dataId %>" data-webspace="<%= webspace %>" data-locale="<%= locale %>" class="link">',
+                '        <span class="num"><%= num %></span>',
+                '        <span class="icons"><%= icons %></span>',
+                '<% if (!!image) { %>',
+                '        <span class="image"><img src="<%= image %>"/></span>',
+                '<% } %>',
+                '        <span class="value" title="<%= value %>"><%= (typeof cropper === "function") ? cropper(value, 42) : value %></span>',
+                '<% if (!!description) { %>',
+                '        <span class="description" title="<%= description %>"><%= (typeof cropper === "function") ? cropper(description, 55) : description %></span>',
+                '<% } %>',
+                '    </a>',
                 '</li>'
             ].join(''),
             categoryItem: [
@@ -208,83 +232,89 @@ define(['services/husky/util'], function(util) {
             ].join(''),
             overlayContent: {
                 main: [
-                    '<div class="smart-overlay-content">',
+                    '<div class="smart-overlay-content grid">',
                     '</div>'
                 ].join(''),
 
                 dataSource: [
-                    '<div class="item-half left">',
-                    '    <span class="desc"><%= dataSourceLabelStr %></span>',
-                    '    <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
-                    '    <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
-                    '</div>'
-                ].join(''),
-
-                categories: [
-                    '<div class="item">',
-                    '    <div class="categories-loader"></div>',
-                    '    <div class="categories-container" style="display: none;">',
-                    '        <span class="desc"><%= categoriesLabelStr %></span>',
-                    '        <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
-                    '        <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-6">',
+                    '        <span class="desc"><%= dataSourceLabelStr %></span>',
+                    '        <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
+                    '        <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '    </div>',
+                    '    <div class="grid-col-6">',
+                    '        <div class="check<%= disabled %>">',
+                    '            <label>',
+                    '                <div class="custom-checkbox">',
+                    '                    <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
+                    '                    <span class="icon"></span>',
+                    '                </div>',
+                    '                <span class="description"><%= includeSubStr %></span>',
+                    '            </label>',
+                    '        </div>',
                     '    </div>',
                     '</div>'
                 ].join(''),
 
-                subFolders: [
-                    '<div class="item-half">',
-                    '    <div class="check<%= disabled %>">',
-                    '        <label>',
-                    '            <div class="custom-checkbox">',
-                    '                <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
-                    '                <span class="icon"></span>',
-                    '            </div>',
-                    '            <span class="description"><%= includeSubStr %></span>',
-                    '        </label>',
+                categories: [
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-12">',
+                    '        <div class="categories-loader"></div>',
+                    '        <div class="categories" style="display: none;">',
+                    '            <span class="desc"><%= categoriesLabelStr %></span>',
+                    '            <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
+                    '            <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
+                    '        </div>',
                     '    </div>',
                     '</div>'
                 ].join(''),
 
                 tagList: [
-                    '<div class="item-half left tags<%= disabled %>">',
-                    '    <span class="desc"><%= filterByTagsStr %></span>',
-                    '    <div class="' + constants.tagListClass + '"></div>',
-                    '</div>'
-                ].join(''),
-
-                tagOperator: [
-                    '<div class="item-half<%= disabled %>">',
-                    '    <span class="desc">&nbsp;</span>',
-                    '    <div class="' + constants.tagOperatorClass + '"></div>',
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-6 tags<%= disabled %>">',
+                    '        <span class="desc"><%= filterByTagsStr %></span>',
+                    '        <div class="' + constants.tagListClass + '"></div>',
+                    '    </div>',
+                    '    <div class="grid-col-6 <%= disabled %>">',
+                    '        <span class="desc">&nbsp;</span>',
+                    '        <div class="' + constants.tagOperatorClass + '"></div>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 sortBy: [
-                    '<div class="item-half left">',
-                    '    <span class="desc"><%= sortByStr %></span>',
-                    '    <div class="' + constants.sortByDropdownClass + '"></div>',
-                    '</div>'
-                ].join(''),
-
-                sortMethod: [
-                    '<div class="item-half">',
-                    '    <span class="desc">&nbsp;</span>',
-                    '    <div class="' + constants.sortMethodDropdownClass + '"></div>',
+                    '<div class="grid-row">',
+                    '    <div class="grid-col-6">',
+                    '        <span class="desc"><%= sortByStr %></span>',
+                    '        <div class="' + constants.sortByDropdownClass + '"></div>',
+                    '    </div>',
+                    '    <div class="grid-col-6">',
+                    '        <span class="desc">&nbsp;</span>',
+                    '        <div class="' + constants.sortMethodDropdownClass + '"></div>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 presentAs: [
-                    '<div class="item-half left">',
+                    '<div class="grid-col-6">',
                     '    <span class="desc"><%= presentAsStr %></span>',
                     '    <div class="' + constants.presentAsDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 limitResult: [
-                    '<div class="item-half">',
+                    '<div class="grid-col-6">',
                     '    <span class="desc"><%= limitResultToStr %></span>',
                     '    <input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
+                ].join('')
+            },
+
+            icons: {
+                draft: '<span class="draft-icon" title="<%= title %>"/>',
+                published: [
+                    '<span class="published-icon" title="<%= title %>"/>'
                 ].join('')
             }
         },
@@ -398,6 +428,7 @@ define(['services/husky/util'], function(util) {
             this.startLoader();
             this.startOverlay();
             this.bindEvents();
+            this.bindDomEvents();
             this.setURI();
             this.loadContent();
 
@@ -460,7 +491,9 @@ define(['services/husky/util'], function(util) {
                 chooseCategoriesOk: 'smart-content.choose-categories.ok',
                 chooseCategoriesCancel: 'smart-content.choose-categories.cancel',
                 clearButton: 'smart-content.clear',
-                saveButton: 'smart-content.save'
+                applyButton: 'smart-content.apply',
+                unpublished: 'public.unpublished',
+                publishedWithDraft: 'public.published-with-draft'
             };
 
             this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
@@ -592,11 +625,21 @@ define(['services/husky/util'], function(util) {
                 var ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
 
                 this.sandbox.util.foreach(this.items, function(item, index) {
-                    this.sandbox.dom.append(ul, _.template(templates.contentItem)({
+                    var template = templates.contentItem;
+                    if (this.options.deepLink !== '') {
+                        template = templates.contentItemLink;
+                    }
+
+                    this.sandbox.dom.append(ul, _.template(template, {
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
+                        description: item[this.options.descriptionKey] || null,
                         image: item[this.options.imageKey] || null,
-                        num: (index + 1)
+                        webspace: this.options.webspace,
+                        locale: this.options.locale,
+                        num: (index + 1),
+                        icons: this.getItemIcons(item),
+                        cropper: this.sandbox.util.cropMiddle
                     }));
                 }.bind(this));
 
@@ -606,6 +649,34 @@ define(['services/husky/util'], function(util) {
                 this.$header.find('.no-content-message').html(this.sandbox.translate(this.translations.noContentFound));
                 this.$container.addClass(constants.noContentClass);
             }
+        },
+
+        /**
+         * Returns the icons of an item for given item data
+         *
+         * @param {Object} itemData The data of the item
+         * @returns {string} the html string of icons
+         */
+        getItemIcons: function(itemData) {
+            if (itemData[this.options.publishedStateKey] === undefined) {
+                return '';
+            }
+
+            var icons = '',
+                tooltip = this.sandbox.translate(this.translations.unpublished);
+            if (!itemData[this.options.publishedStateKey] && !!itemData[this.options.publishedKey]) {
+                tooltip = this.sandbox.translate(this.translations.publishedWithDraft);
+                icons += _.template(templates.icons.published, {
+                    title: tooltip
+                });
+            }
+            if (!itemData[this.options.publishedStateKey]) {
+                icons += _.template(templates.icons.draft, {
+                    title: tooltip
+                });
+            }
+
+            return icons;
         },
 
         /**
@@ -649,6 +720,26 @@ define(['services/husky/util'], function(util) {
                 this.setURI();
                 this.loadContent();
             }.bind(this));
+        },
+
+        /**
+         * Binds dom events
+         */
+        bindDomEvents: function() {
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    webspace = this.sandbox.dom.data(e.currentTarget, 'webspace'),
+                    locale = this.sandbox.dom.data(e.currentTarget, 'locale'),
+                    route = this.options.deepLink;
+
+                route = route.replace('{webspace}', webspace)
+                    .replace('{locale}', locale)
+                    .replace('{id}', id);
+
+                this.sandbox.emit(this.options.navigateEvent, route);
+
+                return false;
+            }.bind(this), 'a.link');
         },
 
         /**
@@ -711,7 +802,7 @@ define(['services/husky/util'], function(util) {
                             },
                             {
                                 type: 'ok',
-                                text: this.sandbox.translate(this.translations.saveButton),
+                                text: this.sandbox.translate(this.translations.applyButton),
                                 inactive: false,
                                 align: 'right'
                             }
@@ -728,6 +819,7 @@ define(['services/husky/util'], function(util) {
                     data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
                     cssClass: 'data-source-slide',
                     okInactive: true,
+                    contentSpacing: false,
                     buttons: [
                         {
                             type: 'cancel',
@@ -807,7 +899,7 @@ define(['services/husky/util'], function(util) {
                         removeOnClose: false,
                         container: this.$el,
                         instanceName: 'smart-content.' + this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: slides
                     }
                 }
@@ -912,7 +1004,8 @@ define(['services/husky/util'], function(util) {
                             instanceName: this.options.instanceName,
                             preselectedOperator: this.overlayData.categoryOperator,
                             preselectedCategories: this.overlayData.categories,
-                            root: this.options.categoryRoot
+                            root: this.options.categoryRoot,
+                            webspace: this.options.webspace
                         }
                     }
                 ]
@@ -927,7 +1020,7 @@ define(['services/husky/util'], function(util) {
             this.selectCategories(data);
 
             this.sandbox.stop(this.sandbox.dom.find('.categories-loader', this.$overlayContent));
-            this.sandbox.dom.find('.categories-container', this.$overlayContent).show();
+            this.sandbox.dom.find('.categories', this.$overlayContent).show();
         },
 
         /**
@@ -973,19 +1066,20 @@ define(['services/husky/util'], function(util) {
         },
 
         appendOverlayContent: function($container, data) {
+            var $subContainer;
+
             if (!!this.options.has.datasource) {
                 $container.append(_.template(templates.overlayContent.dataSource)({
                     dataSourceLabelStr: this.sandbox.translate(this.translations.dataSourceLabel),
                     dataSourceButtonStr: this.sandbox.translate(this.translations.dataSourceButton),
-                    dataSourceValStr: ''
-                }));
-                $container.append(_.template(templates.overlayContent.subFolders)({
+                    dataSourceValStr: '',
                     includeSubStr: this.sandbox.translate(this.translations.includeSubFolders),
                     includeSubCheckedStr: (data.includeSubFolders) ? ' checked' : '',
                     disabled: (this.overlayDisabled.subFolders) ? ' disabled' : ''
                 }));
                 $container.append('<div class="clear"></div>');
             }
+
             if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
                 $container.append(_.template(templates.overlayContent.categories)({
                     categoriesLabelStr: this.sandbox.translate(this.translations.categoryLabel),
@@ -993,37 +1087,43 @@ define(['services/husky/util'], function(util) {
                     categoriesButtonStr: this.sandbox.translate(this.translations.categoryButton)
                 }));
             }
+
             if (!!this.options.has.tags && !!this.options.displayOptions.tags) {
                 $container.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
-                $container.append(_.template(templates.overlayContent.tagOperator)({
-                    disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
-                }));
                 $container.append('<div class="clear"></div>');
             }
+
             if (!!this.options.has.sorting && !!this.options.displayOptions.sorting) {
                 $container.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
-                $container.append(_.template(templates.overlayContent.sortMethod)());
 
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.presentAs && !!this.options.displayOptions.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0
-            ) {
-                $container.append(_.template(templates.overlayContent.presentAs)({
+
+            $subContainer = $('<div class="grid-row"/>');
+
+            if (!!this.options.has.presentAs && !!this.options.displayOptions.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
+                $subContainer.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
+
             if (!!this.options.has.limit && !!this.options.displayOptions.limit) {
-                $container.append(_.template(templates.overlayContent.limitResult)({
+                $subContainer.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
                     limitResult: (data.limitResult > 0) ? data.limitResult : '',
                     disabled: (this.overlayDisabled.limitResult) ? ' disabled' : ''
                 }));
             }
+
+            if ($subContainer.find('> *').length > 0 ) {
+                $container.append($subContainer);
+            }
+
             $container.append('<div class="clear"></div>');
         },
 
@@ -1122,10 +1222,12 @@ define(['services/husky/util'], function(util) {
             data[this.options.categoriesParameter] = this.overlayData.categories || [];
             data[this.options.categoryOperatorParameter] = this.overlayData.categoryOperator ||
                 this.options.preSelectedCategoryOperator;
+            data[this.options.paramsParameter] = JSON.stringify(this.options.property.params);
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
-                this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
+                var domData = this.sandbox.dom.data(this.$el, this.options.elementDataName);
+                this.sandbox.emit(DATA_CHANGED.call(this), domData, this.$el);
                 this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
             } else {
@@ -1274,7 +1376,7 @@ define(['services/husky/util'], function(util) {
             this.$overlayContent.html('');
             this.appendOverlayContent(this.$overlayContent, this.overlayData);
             this.startOverlayComponents();
-            this.handleCategoriesInitialized({ids: [], operator: 'or', items:[]});
+            this.handleCategoriesInitialized({ids: [], operator: 'or', items: []});
             this.sandbox.emit(
                 'smart-content.datasource.' + this.options.instanceName + '.set-selected',
                 this.overlayData.dataSource

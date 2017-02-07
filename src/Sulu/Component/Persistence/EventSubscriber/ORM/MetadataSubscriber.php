@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -94,6 +94,10 @@ class MetadataSubscriber implements EventSubscriber
      */
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {
+        if (!class_exists($metadata->getName())) {
+            return;
+        }
+
         foreach (class_parents($metadata->getName()) as $parent) {
             $parentMetadata = new ClassMetadata(
                 $parent,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webspace xmlns="http://schemas.sulu.io/webspace/webspace"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>Dan CMF</name>
     <key>dan_io</key>
@@ -15,13 +15,12 @@
         <localization language="de" country="at" default="true"/>
     </localizations>
 
-    <theme>
-        <key>dan</key>
-        <default-templates>
-            <default-template type="page">default</default-template>
-            <default-template type="homepage">overview</default-template>
-        </default-templates>
-    </theme>
+    <theme>dan</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
 
     <navigation>
         <contexts>
@@ -40,16 +39,18 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>short</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>Dan CMF AT</name>
             <key>dancmf_at</key>
-            <resource-locator>
-                <strategy>short</strategy>
-            </resource-locator>
 
             <localizations>
-                <localization language="de" country="at"/>
+                <localization language="en" country="us"/>
+                <localization language="de" country="at" default="true"/>
             </localizations>
 
             <environments>

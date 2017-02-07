@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +18,7 @@ namespace Sulu\Component\Content\Document\Structure;
  * things even more whilst the Compat\\ namespace exists. In addition, this class may
  * not be long lived after we change the content mapping logic.
  */
-class PropertyValue
+class PropertyValue implements \ArrayAccess
 {
     private $value;
     private $name;
@@ -56,5 +56,49 @@ class PropertyValue
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetExists($offset)
+    {
+        return is_array($this->value) && isset($this->value[$offset]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetGet($offset)
+    {
+        if (!is_array($this->value)) {
+            return;
+        }
+
+        return $this->value[$offset];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (!is_array($this->value)) {
+            return;
+        }
+
+        $this->value[$offset] = array_merge($this->value[$offset], $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetUnset($offset)
+    {
+        if (!is_array($this->value)) {
+            return;
+        }
+
+        unset($this->value[$offset]);
     }
 }

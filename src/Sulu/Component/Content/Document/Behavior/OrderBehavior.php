@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,4 +23,11 @@ interface OrderBehavior
      * @return int
      */
     public function getSuluOrder();
+
+    /**
+     * Set the absolute order value of this document.
+     *
+     * @param int $order
+     */
+    public function setSuluOrder($order);
 }

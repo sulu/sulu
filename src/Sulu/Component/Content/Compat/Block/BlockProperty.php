@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -292,6 +292,16 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getIsBlock()
     {
         return true;
+    }
+
+    public function getIsMultiple()
+    {
+        if (is_null($this->getMinOccurs()) || is_null($this->getMaxOccurs())) {
+            // in contrast to properties blocks are multiple by default
+            return true;
+        }
+
+        return parent::getIsMultiple();
     }
 
     public function __clone()

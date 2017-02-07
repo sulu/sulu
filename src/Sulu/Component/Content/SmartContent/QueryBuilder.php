@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,10 +13,10 @@ namespace Sulu\Component\Content\SmartContent;
 
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Query builder to load smart content.
@@ -59,24 +59,18 @@ class QueryBuilder extends ContentQueryBuilder
     private $excluded = [];
 
     /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
      * @var SessionManagerInterface
      */
     private $sessionManager;
 
     public function __construct(
         StructureManagerInterface $structureManager,
-        WebspaceManagerInterface $webspaceManager,
+        ExtensionManagerInterface $extensionManager,
         SessionManagerInterface $sessionManager,
         $languageNamespace
     ) {
-        parent::__construct($structureManager, $languageNamespace);
+        parent::__construct($structureManager, $extensionManager, $languageNamespace);
 
-        $this->webspaceManager = $webspaceManager;
         $this->sessionManager = $sessionManager;
     }
 
@@ -196,7 +190,7 @@ class QueryBuilder extends ContentQueryBuilder
         $this->ids = isset($options['ids']) ? $options['ids'] : [];
         $this->config = isset($options['config']) ? $options['config'] : [];
         $this->excluded = isset($options['excluded']) ? $options['excluded'] : [];
-        $this->published = isset($options['published']) ? $options['published'] : true;
+        $this->published = isset($options['published']) ? $options['published'] : false;
     }
 
     /**
@@ -240,7 +234,7 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
-        $extension = $this->structureManager->getExtension('all', $extension);
+        $extension = $this->extensionManager->getExtension('all', $extension);
         $additionalFields[$locale][] = [
             'name' => $alias,
             'extension' => $extension,
@@ -258,11 +252,7 @@ class QueryBuilder extends ContentQueryBuilder
         $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ?
             'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
-        if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
-            $node = $this->sessionManager->getContentNode($dataSource);
-        } else {
-            $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
-        }
+        $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
 
         return $sqlFunction . '(page, \'' . $node->getPath() . '\')';
     }

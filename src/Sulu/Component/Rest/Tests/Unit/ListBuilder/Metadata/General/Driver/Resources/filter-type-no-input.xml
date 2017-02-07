@@ -1,0 +1,10 @@
+<class xmlns="http://schemas.sulu.io/class/general">
+    <properties>
+        <property name="tags">
+            <filter-type-parameters>
+                <parameter key="test1">%test-parameter%</parameter>
+                <parameter key="test2">test</parameter>
+            </filter-type-parameters>
+        </property>
+    </properties>
+</class>

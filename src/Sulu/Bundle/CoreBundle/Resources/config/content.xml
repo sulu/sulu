@@ -21,8 +21,7 @@
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
         <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
 
-        <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
-        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
+        <parameter key="sulu.content.resource_locator.mapper.phpcr.class">Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper</parameter>
 
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
 
@@ -47,13 +46,12 @@
             <argument type="service" id="form.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.property_encoder" />
-
             <argument type="service" id="sulu.content.structure_manager"/>
-
+            <argument type="service" id="sulu_content.extension.manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
 
@@ -65,7 +63,6 @@
         <!-- structure manager -->
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
             <argument type="service" id="sulu_content.structure.factory" />
-            <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <argument>%sulu.content.structure.type_map%</argument>
@@ -78,50 +75,86 @@
         <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="liip_theme.active_theme"/>
             <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
         </service>
 
         <!-- rlp mapper -->
-        <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
+        <service id="sulu.content.resource_locator.mapper.phpcr"
+                 class="%sulu.content.resource_locator.mapper.phpcr.class%" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
         </service>
 
         <!-- rlp strategies -->
-        <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
-            <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
+        <service id="sulu.content.resource_locator.strategy_pool"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPool">
+            <argument type="collection"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        </service>
+        <service id="sulu.content.resource_locator.strategy.tree_generator"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator"/>
+        <service id="sulu.content.resource_locator.strategy.tree_leaf_edit"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy">
+            <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy.tree_generator"/>
+
+            <tag name="sulu.resource_locator.strategy" alias="tree_leaf_edit"/>
         </service>
+        <service id="sulu.content.resource_locator.strategy.tree_full_edit"
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeFullEditStrategy">
+            <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy.tree_generator"/>
+
+            <tag name="sulu.resource_locator.strategy" alias="tree_full_edit"/>
+        </service>
+
+        <!-- deprecated -->
+        <service id="sulu.content.rlp.mapper.phpcr" alias="sulu.content.resource_locator.mapper.phpcr"/>
+        <service id="sulu.content.rlp.strategy.tree" alias="sulu.content.resource_locator.strategy.tree_leaf_edit"/>
 
         <!-- simple content types -->
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_line.template%</argument>
             <tag name="sulu.content.type" alias="text_line"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_area.template%</argument>
             <tag name="sulu.content.type" alias="text_area"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
             <argument>%sulu.content.type.text_editor.template%</argument>
+            <argument type="service" id="sulu_markup.parser"/>
             <tag name="sulu.content.type" alias="text_editor"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
+        </service>
+        <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
+            <argument>%sulu.content.type.resource_locator.template%</argument>
+            <tag name="sulu.content.type" alias="resource_locator"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <!-- complex content types -->
-        <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
-            <argument>%sulu.content.type.resource_locator.template%</argument>
-            <tag name="sulu.content.type" alias="resource_locator"/>
-        </service>
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.type.block.template%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu.content.type" alias="block"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <!-- content query -->
@@ -139,7 +172,7 @@
 
         <!-- sulu node helper -->
         <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%">
-            <argument type="service" id="doctrine_phpcr.default_session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>

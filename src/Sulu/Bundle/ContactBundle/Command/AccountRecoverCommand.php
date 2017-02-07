@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -72,7 +72,6 @@ class AccountRecoverCommand extends ContainerAwareCommand
 
         // fix depths if -depth is defined
         if ($fixDepth) {
-
             // fix nodes without parents
             $numberParentLess = $this->findNodesWithoutParents();
             if ($numberParentLess > 0) {

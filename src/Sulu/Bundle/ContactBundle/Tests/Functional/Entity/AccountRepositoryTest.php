@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -34,7 +35,7 @@ class AccountRepositoryTest extends SuluTestCase
     private $tags = [];
 
     /**
-     * @var Category[]
+     * @var CategoryInterface[]
      */
     private $categories = [];
 
@@ -74,7 +75,7 @@ class AccountRepositoryTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->initOrm();
     }
 
@@ -110,7 +111,7 @@ class AccountRepositoryTest extends SuluTestCase
 
     private function createCategory($key)
     {
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey($key);
         $category->setDefaultLocale('en');
 

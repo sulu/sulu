@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -53,7 +54,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->fileVersionMetaRepository = $this->em->getRepository('SuluMediaBundle:FileVersionMeta');
 
         $this->collectionType = new CollectionType();

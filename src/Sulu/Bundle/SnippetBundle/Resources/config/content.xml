@@ -3,17 +3,27 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="sulu_snippet.content.snippet.class">Sulu\Bundle\SnippetBundle\Content\SnippetContent</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu_snippet.content.snippet" class="%sulu_snippet.content.snippet.class%">
+        <service id="sulu_snippet.default_snippet.manager" class="Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager">
+            <argument type="service" id="sulu_core.webspace.settings_manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+        </service>
+
+        <service id="sulu_snippet.resolver" class="Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver">
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_website.resolver.structure" />
+        </service>
+
+        <service id="sulu_snippet.content.snippet" class="Sulu\Bundle\SnippetBundle\Content\SnippetContent">
+            <argument type="service" id="sulu_snippet.default_snippet.manager"/>
+            <argument type="service" id="sulu_snippet.resolver"/>
+            <argument>%sulu_snippet.content-type.default_enabled%</argument>
             <argument>%sulu_snippet.content-type.template%</argument>
 
             <tag name="sulu.content.type" alias="snippet"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
     </services>
 </container>

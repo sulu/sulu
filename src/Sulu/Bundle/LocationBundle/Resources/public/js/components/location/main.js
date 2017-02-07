@@ -363,14 +363,17 @@ define([], function() {
             var form = $('#' + this.constants.formId);
             if (long) {
                 this.sandbox.dom.find('.longitude', form).val(long);
+                this.formData.long = long;
             }
 
             if (lat) {
                 this.sandbox.dom.find('.latitude', form).val(lat);
+                this.formData.lat = lat;
             }
 
             if (zoom) {
                 this.sandbox.dom.find('.zoom', form).val(zoom);
+                this.formData.zoom = zoom;
             }
         },
 
@@ -463,7 +466,7 @@ define([], function() {
                 this.formData.zoom = this.sandbox.dom.find('.zoom', form).val();
                 this.updateLocation();
             }.bind(this));
-            
+
             this.sandbox.dom.find('.' + this.constants.mapProviderSelectClass).on('change', function (el) {
                 this.formData.mapProvider = $(el.currentTarget).val();
                 this.renderMap('overlay', {
@@ -492,7 +495,7 @@ define([], function() {
                         removeOnClose: false,
                         container: this.$el,
                         instanceName: 'location-content.' + this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.configureLocation),

@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": "^5.5 || ^7.0",
         "sulu/sulu": "dev-develop",
         "friendsofsymfony/rest-bundle": "~1.4",
         "sensio/framework-extra-bundle": "3.0.*",
@@ -22,7 +22,7 @@
         "symfony-cmf/testing": "~1.1",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "matthiasnoback/symfony-dependency-injection-test": "~0.7.1"
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7.3"
     },
     "autoload": {
         "psr-4": {

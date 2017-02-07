@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * This is an service helper for ListResources accessed
@@ -26,17 +27,17 @@ class ListRestHelper implements ListRestHelperInterface
      *
      * @var Request
      */
-    protected $request;
+    protected $requestStack;
 
     /**
-     * The constructor takes the request as an argument, which
+     * The constructor takes the request stack as an argument, which
      * is injected by the service container.
      *
-     * @param Request $request
+     * @param RequestStack $requestStack
      */
-    public function __construct(Request $request)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -46,7 +47,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     protected function getRequest()
     {
-        return $this->request;
+        return $this->requestStack->getCurrentRequest();
     }
 
     /**
@@ -76,7 +77,12 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getLimit()
     {
-        return $this->getRequest()->get('limit', 10);
+        $default = 10;
+        if ($this->getRequest()->getRequestFormat() === 'csv') {
+            $default = null;
+        }
+
+        return $this->getRequest()->get('limit', $default);
     }
 
     /**

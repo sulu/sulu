@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use WebDriver\Exception;
 
@@ -55,6 +57,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I click the back icon
+     */
+    public function iClickOnTheBackIcon()
+    {
+        $this->clickSelector('.fa-chevron-left');
+    }
+
+    /**
      * @Given I click the edit icon
      */
     public function iClickOnTheEditIcon()
@@ -76,6 +86,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheGearsIcon()
     {
         $this->clickSelector('.fa-gears');
+    }
+
+    /**
+     * @Given I click the link icon
+     */
+    public function iClickOnTheLinkIcon()
+    {
+        $this->clickSelector('.fa-link');
     }
 
     /**
@@ -125,7 +143,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
 var f = function () {
     var items = document.querySelectorAll("td span.cell-content");
 
@@ -150,7 +168,7 @@ EOT;
     public function iClickOnTheEditIconInTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
             var f = function () {
                 var items = document.querySelectorAll("td span.cell-content");
 
@@ -181,11 +199,11 @@ EOT;
     }
 
     /**
-     * @Given I click delete from the drop down
+     * @Given I click :button from the drop down
      */
-    public function iClickDelete()
+    public function iClick($button)
     {
-        $script = "$(\"li[data-id='delete']\")";
+        $script = "$(\"li[data-id='" . $button . "']\")";
 
         $this->waitForAuraEvents(
             [
@@ -227,7 +245,7 @@ EOT;
      */
     public function iSelectFromTheHusky($itemValue, $selectListClass)
     {
-        $script = <<<EOT
+        $script = <<<'EOT'
 var selector = '%s';
 var items = $("div." + selector + " .husky-select-list .item-value");
 if (items.length == 0) {
@@ -283,7 +301,7 @@ EOT;
      */
     public function iClickTheOverlayTab($title)
     {
-        $this->clickByTitle('.overlay-header .tabs-container ul li', $title);
+        $this->clickByTitle('.overlay-tabs .tabs-container ul li a', $title);
     }
 
     /**
@@ -300,6 +318,29 @@ EOT;
     public function iClickTheToolbarButton($itemTitle)
     {
         $this->clickByTitle('li.toolbar-item', $itemTitle);
+    }
+
+    /**
+     * @When I click the tab item :tabTitle
+     */
+    public function iClickTheTabItem($tabTitle)
+    {
+        $selector = '.tabs-container ul li';
+        $tabItems = $this->getSession()->getPage()->findAll('css', $selector);
+
+        /* @var NodeElement $tabItem */
+        foreach ($tabItems as $tabItem) {
+            $element = $tabItem->find('named', ['content', $tabTitle]);
+            if ($element && $element->isVisible()) {
+                // Click and wait for the ajax request.
+                $element->click();
+                $this->waitForAjax(self::MEDIUM_WAIT_TIME);
+
+                return;
+            }
+        }
+
+        throw new ElementNotFoundException($this->getSession(), null, 'css', $selector);
     }
 
     /**
@@ -370,15 +411,6 @@ EOT;
     }
 
     /**
-     * @Given I expect a data-navigation to appear
-     * @Given I wait for a data-navigation to appear
-     */
-    public function iWaitForADataNavigationToAppear()
-    {
-        $this->waitForSelectorAndAssert('.data-navigation-items');
-    }
-
-    /**
      * @Given I expect an overlay to appear
      * @Given I wait for an overlay to appear
      */
@@ -414,11 +446,120 @@ EOT;
     }
 
     /**
+     * @Then I expect the value of the property ":name" is ":value"
+     */
+    public function IExpectTheValue($name, $value)
+    {
+        $result = $this->getSession()->evaluateScript(
+            "$('#$name').data('element').getValue() === " . json_encode($value)
+        );
+
+        if (!$result) {
+            throw new \Exception(sprintf('Property "%s" doesnt contain the value "%s"', $name, json_encode($value)));
+        }
+    }
+
+    /**
+     * @Given I expect the toolbar item ":id" to be hidden
+     */
+    public function iExpectTheToolbarItemToBeHidden($id)
+    {
+        $script = "li[data-id='" . $id . "']";
+
+        $this->assertSelectorIsHidden($script);
+    }
+
+    /**
+     * @Given I wait until toolbar dropdown menu is visible and select item :item
+     *
+     * @param string $item
+     */
+    public function iWaitUntilToolbarDropdownMenuIsVisible($item)
+    {
+        $this->spin(function (RawMinkContext $context) use ($item) {
+            $page = $context->getSession()->getPage();
+            $element = $page->find('css', '.toolbar-dropdown-menu');
+
+            if (null === $element) {
+                throw new ElementNotFoundException($this->getSession(), null, 'css', '.toolbar-dropdown-menu');
+            }
+
+            if (!$element->isVisible()) {
+                return false;
+            }
+
+            $item = $element->find('css', 'li[data-id=' . $item . ']');
+
+            if (null === $item) {
+                throw new ElementNotFoundException($this->getSession(), null, 'css', 'li[data-id=' . $item . ']');
+            }
+
+            $item->click();
+
+            return true;
+        });
+    }
+
+    /**
+     * Select a value from husky select list.
+     *
+     * @Given I select :itemValue from the husky auto complete :selector
+     *
+     * @param string $itemValue
+     * @param string $selector Container element of the field
+     *
+     * @throws ElementNotFoundException
+     * @throws \Excpetion
+     */
+    public function iSelectFromTheHuskyAutoComplete($itemValue, $selector)
+    {
+        $containerElement = $this->getSession()->getPage()->find('css', $selector);
+
+        if (null === $containerElement) {
+            throw new ElementNotFoundException($this->getSession(), $selector);
+        }
+
+        $inputElement = $containerElement->find('css', 'input.tt-input');
+
+        if (null === $inputElement) {
+            throw new ElementNotFoundException($this->getSession(), $inputElement);
+        }
+
+        // Workaround for $element->setValue() because this function adds a TAB key at the end.
+        // See https://github.com/minkphp/MinkSelenium2Driver/issues/188 for more information.
+        $el = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', $inputElement->getXpath());
+        $el->postValue(['value' => [$itemValue]]);
+
+        // Wait until loading is finished.
+        $this->spin(function (RawMinkContext $context) use ($containerElement) {
+            // Search for all displayed suggestions.
+            $suggestionElementSelector = '.tt-suggestions .suggestion';
+            $suggestionElements = $containerElement->findAll('css', $suggestionElementSelector);
+
+            if (null === $suggestionElements) {
+                throw new ElementNotFoundException($this->getSession(), $suggestionElementSelector);
+            }
+
+            // Choose the first item in the list.
+            $suggestionElements[0]->click();
+
+            $loaderElementSelector = '.loader';
+            $loaderElement = $containerElement->find('css', $loaderElementSelector);
+
+            if ($loaderElement && $loaderElement->isVisible()) {
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    /**
      * Fill in the named husky field. Husky fields may not use standard HTML
      * inputs, so they need some special handling.
      *
-     * @param string $name           Name of field to fill in
-     * @param string $value          Value to fill in
+     * @param string $name Name of field to fill in
+     * @param string $value Value to fill in
      * @param string $parentSelector Optional parent selector
      */
     private function fillInHuskyField($name, $value, $parentSelector = '')
@@ -427,7 +568,7 @@ EOT;
                      'data-aura-instance-name',
                      'data-mapper-property',
                  ] as $propertyName) {
-            $script = <<<EOT
+            $script = <<<'EOT'
 var el = $('%s[%s="%s"]').data('element');
 
 if (el !== null) {

@@ -253,7 +253,8 @@ define([], function() {
                     buttons: this.options.template,
                     instanceName: this.options.instanceName,
                     showTitleAsTooltip: this.options.showTitleAsTooltip,
-                    showTitle: false
+                    showTitle: false,
+                    searchOptions: this.options.searchOptions || {}
                 };
 
             if (this.options.hasOwnProperty('hasSearch')) {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,21 +34,6 @@ class RouteProviderCompilerPass implements CompilerPassInterface
                     new Reference('sulu.content.mapper'),
                     new Reference('sulu_core.webspace.request_analyzer'),
                 ])
-            );
-
-            $setThemeListenerDefinition = new Definition('Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener', [
-                new Reference('sulu_core.webspace.request_analyzer'),
-                new Reference('liip_theme.active_theme'),
-            ]);
-
-            $setThemeListenerDefinition->addTag('kernel.event_listener', [
-                'event' => 'kernel.request',
-                'method' => 'onKernelRequest',
-            ]);
-
-            $container->setDefinition(
-                'sulu_website.event_listener.set_theme',
-                $setThemeListenerDefinition
             );
         }
     }

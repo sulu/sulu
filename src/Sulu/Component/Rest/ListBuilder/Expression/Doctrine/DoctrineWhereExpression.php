@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -63,11 +63,20 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
             return $this->field->getSelect() . ' ' . $this->convertNullComparator($this->getComparator());
         } elseif ($this->getComparator() === 'LIKE') {
             $queryBuilder->setParameter($paramName, '%' . $this->getValue() . '%');
+        } elseif (in_array($this->getComparator(), ['and', 'or']) && is_array($this->getValue())) {
+            $statement = [];
+            $value = $this->getValue();
+            for ($i = 0, $count = count($value); $i < $count; ++$i) {
+                $statement[] = sprintf('%s = :%s%s', $this->field->getWhere(), $paramName, $i);
+                $queryBuilder->setParameter($paramName . $i, $value[$i]);
+            }
+
+            return implode(' ' . $this->getComparator() . ' ', $statement);
         } else {
             $queryBuilder->setParameter($paramName, $this->getValue());
         }
 
-        return $this->field->getSelect() . ' ' . $this->getComparator() . ' :' . $paramName;
+        return $this->field->getWhere() . ' ' . $this->getComparator() . ' :' . $paramName;
     }
 
     /**

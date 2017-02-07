@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- provider -->
+        <service id="sulu_content.teaser.provider_pool"
+                 class="Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPool">
+            <argument type="collection"/>
+        </service>
+
+        <!-- content provider -->
+        <service id="sulu_content.teaser.provider.content"
+                 class="Sulu\Bundle\ContentBundle\Teaser\ContentTeaserProvider">
+            <argument type="service" id="massive_search.search_manager"/>
+
+            <tag name="sulu.teaser.provider" alias="content"/>
+        </service>
+
+        <!-- manager -->
+        <service id="sulu_content.teaser.manager" class="Sulu\Bundle\ContentBundle\Teaser\TeaserManager">
+            <argument type="service" id="sulu_content.teaser.provider_pool"/>
+        </service>
+
+        <!-- content-type -->
+        <service id="sulu_content.teaser.content_type" class="Sulu\Bundle\ContentBundle\Teaser\TeaserContentType">
+            <argument>%sulu.content.type.teaser_selection.template%</argument>
+            <argument type="service" id="sulu_content.teaser.provider_pool"/>
+            <argument type="service" id="sulu_content.teaser.manager"/>
+
+            <tag name="sulu.content.type" alias="teaser_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
+        <!-- serialization -->
+        <service id="sulu_content.teaser.serializer.event_subscriber"
+                 class="Sulu\Bundle\ContentBundle\EventListener\TeaserSerializeEventSubscriber">
+            <argument type="service" id="sulu_media.media_manager"/>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+    </services>
+</container>

@@ -67,8 +67,8 @@ define([
 
             if (!!data.categories) {
                 account.get('categories').reset();
-                Util.foreach(data.categories, function(categoryId) {
-                    var category = Category.findOrCreate({id: categoryId});
+                Util.foreach(data.categories, function(category) {
+                    category = Category.findOrCreate({id: category});
                     account.get('categories').add(category);
                 }.bind(this));
             }
@@ -94,7 +94,7 @@ define([
         removeDocument = function(accountId, mediaId) {
             var promise = $.Deferred();
 
-            Util.ajax({
+            $.ajax({
                 url: '/admin/api/accounts/' + accountId + '/medias/' + mediaId,
                 type: 'DELETE',
 
@@ -337,7 +337,7 @@ define([
         loadDeleteInfo: function(accountId) {
             var promise = $.Deferred();
 
-            Util.ajax({
+            $.ajax({
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -365,7 +365,7 @@ define([
         loadMultipleDeleteInfo: function(accountIds) {
             var promise = $.Deferred();
 
-            Util.ajax({
+            $.ajax({
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -420,7 +420,7 @@ define([
         addDocument: function(accountId, mediaId) {
             var promise = $.Deferred();
 
-            Util.ajax({
+            $.ajax({
                 url: '/admin/api/accounts/' + accountId + '/medias',
                 data: {mediaId: mediaId},
                 type: 'POST',
@@ -429,6 +429,34 @@ define([
                     Mediator.emit('sulu.contacts.account.document.added', accountId, mediaId);
                     Mediator.emit('sulu.labels.success.show', 'contact.accounts.document-added');
                     promise.resolve();
+                }.bind(this),
+                error: function() {
+                    promise.reject();
+                }.bind(this)
+            });
+
+            return promise;
+        },
+
+        /**
+         * Sets medias to an account. Currently associated medias get replaced.
+         * @param mediaIds medias to associate with the contact
+         * @param accountId The account to set the medias to
+         */
+        setDocuments: function(accountId, mediaIds) {
+            var promise = $.Deferred();
+            var medias = _.map(mediaIds, function (mediaId) { return {id: mediaId} });
+
+            $.ajax({
+                url: '/admin/api/accounts/' + accountId,
+                contentType: 'application/json',
+                data: JSON.stringify({medias: medias}),
+                type: 'PATCH',
+
+                success: function(response) {
+                    Mediator.emit('sulu.contacts.account.documents.saved', accountId, mediaIds);
+                    Mediator.emit('sulu.labels.success.show', 'contact.accounts.documents-saved');
+                    promise.resolve(response);
                 }.bind(this),
                 error: function() {
                     promise.reject();

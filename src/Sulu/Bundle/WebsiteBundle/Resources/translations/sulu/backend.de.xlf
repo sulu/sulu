@@ -30,6 +30,62 @@
                 <source>sulu.website.cache.remove.error.description</source>
                 <target>konnte nicht geleert werden</target>
             </trans-unit>
+            <trans-unit id="1" resname="website.webspace.settings.domains">
+                <source>website.webspace.settings.domains</source>
+                <target>Domains</target>
+            </trans-unit>
+            <trans-unit id="2" resname="website.webspace.settings.all-domains">
+                <source>website.webspace.settings.all-domains</source>
+                <target>Alle Domains</target>
+            </trans-unit>
+            <trans-unit id="3" resname="website.webspace.settings.edit.title">
+                <source>website.webspace.settings.edit.title</source>
+                <target>Analytics</target>
+            </trans-unit>
+            <trans-unit id="4" resname="website.webspace.settings.content">
+                <source>website.webspace.settings.content</source>
+                <target>Inhalt</target>
+            </trans-unit>
+            <trans-unit id="5" resname="website.webspace.settings.type.google">
+                <source>website.webspace.settings.type.google</source>
+                <target>Google Analytics</target>
+            </trans-unit>
+            <trans-unit id="6" resname="website.webspace.settings.type.piwik">
+                <source>website.webspace.settings.type.piwik</source>
+                <target>Piwik</target>
+            </trans-unit>
+            <trans-unit id="7" resname="website.webspace.settings.type.custom">
+                <source>website.webspace.settings.type.custom</source>
+                <target>Benutzerdefiniert</target>
+            </trans-unit>
+            <trans-unit id="8" resname="website.webspace.settings.edit.domain">
+                <source>website.webspace.settings.edit.domain</source>
+                <target>Domain</target>
+            </trans-unit>
+            <trans-unit id="9" resname="website.webspace.settings.edit.environment">
+                <source>website.webspace.settings.edit.environment</source>
+                <target>Environment</target>
+            </trans-unit>
+            <trans-unit id="10" resname="website.webspace.settings.key">
+                <source>website.webspace.settings.key</source>
+                <target>Key</target>
+            </trans-unit>
+            <trans-unit id="11" resname="website.webspace.settings.script">
+                <source>website.webspace.settings.script</source>
+                <target>Script</target>
+            </trans-unit>
+            <trans-unit id="12" resname="website.webspace.settings.url">
+                <source>website.webspace.settings.url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="13" resname="website.webspace.settings.site-id">
+                <source>website.webspace.settings.site-id</source>
+                <target>Site-ID</target>
+            </trans-unit>
+            <trans-unit id="14" resname="website.webspace.settings.type.google_tag_manager">
+                <source>website.webspace.settings.type.google_tag_manager</source>
+                <target>Google Tag Manager</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

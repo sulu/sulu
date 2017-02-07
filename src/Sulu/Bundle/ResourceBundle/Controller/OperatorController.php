@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +14,7 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ResourceBundle\Resource\OperatorManagerInterface;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,6 +24,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OperatorController extends RestController implements ClassResourceInterface
 {
+    use RequestParametersTrait;
+
     protected static $entityName = 'SuluResourceBundle:Operator';
 
     /**
@@ -31,8 +35,9 @@ class OperatorController extends RestController implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
+        $locale = $this->getRequestParameter($request, 'locale', true);
         $list = new CollectionRepresentation(
-            $this->getManager()->findAllByLocale($this->getLocale($request)),
+            $this->getManager()->findAllByLocale($locale),
             self::$entityKey
         );
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -29,6 +30,7 @@ class ContactDataProvider extends BaseDataProvider
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->setDeepLink('contacts/contacts/edit:{id}/details')
             ->getConfiguration();
     }
 
@@ -50,6 +52,6 @@ class ContactDataProvider extends BaseDataProvider
      */
     protected function getSerializationContext()
     {
-        return parent::getSerializationContext()->setGroups(['fullContact', 'partialAccount']);
+        return parent::getSerializationContext()->setGroups(['fullContact', 'partialAccount', 'partialCategory']);
     }
 }

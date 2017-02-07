@@ -8,10 +8,11 @@
  */
 
 define([
-    'app-config',
+    'config',
     'sulusecurity/components/users/models/user',
-    'services/husky/url-validator'
-], function(AppConfig, User, urlValidator) {
+    'services/husky/url-validator',
+    'sulucontent/services/content-manager'
+], function(Config, User, urlValidator, contentManager) {
 
     'use strict';
 
@@ -43,6 +44,60 @@ define([
                 titleContainer: '#external-link-container .title',
                 linkContainer: '#external-link-container .link'
             }
+        },
+
+        isShadow = function() {
+            return this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
+        },
+
+        setCreationChangelog = function(fullName, time) {
+            var creationText, formattedTime = this.sandbox.date.format(time, true);
+
+            if (!!fullName) {
+                creationText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.created'),
+                    {
+                        creator: fullName,
+                        created: formattedTime
+                    }
+                );
+            } else {
+                creationText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.created-only'),
+                    {
+                        created: formattedTime
+                    }
+                )
+            }
+
+            this.sandbox.dom.text('#created', creationText);
+        },
+
+        setChangeChangelog = function(fullName, time) {
+            var changedText, formattedTime = this.sandbox.date.format(time, true);
+
+            if (!!fullName) {
+                changedText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.changed'),
+                    {
+                        changer: fullName,
+                        changed: formattedTime
+                    }
+                );
+            } else {
+                changedText = this.sandbox.util.sprintf(
+                    this.sandbox.translate('sulu.content.form.settings.changelog.changed-only'),
+                    {
+                        changed: formattedTime
+                    }
+                )
+            }
+
+            this.sandbox.dom.text('#changed', changedText);
+        },
+
+        showChangelogContainer = function() {
+            this.sandbox.dom.show('#changelog-container');
         };
 
     return {
@@ -149,6 +204,10 @@ define([
                 this.sandbox.emit('sulu.content.changed');
                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
             }.bind(this));
+
+            this.sandbox.on('sulu.header.state.changed', function(state) {
+                this.state = state;
+            }.bind(this));
         },
 
         bindDomEvents: function() {
@@ -168,28 +227,36 @@ define([
             }.bind(this), '.content-type');
 
             this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
-                this.updateTabVisibilityForShadowCheckbox(false);
+                this.updateVisibilityForShadowCheckbox(false);
             }.bind(this));
 
         },
 
-        updateTabVisibilityForShadowCheckbox: function(isInitial) {
-            var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
-                action = checkboxEl.checked ? 'hide' : 'show',
-                tabAction;
+        updateVisibilityForShadowCheckbox: function(isInitial) {
+            var shadow = isShadow.call(this),
+                tabAction,
+                $shadowDescription = this.sandbox.dom.find('#shadow-container .input-description');
 
             if (false === isInitial) {
                 tabAction = 'hide';
             }
 
-            if (tabAction    === 'hide') {
+            if (tabAction === 'hide') {
                 this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             } else {
                 this.sandbox.emit('husky.toolbar.header.item.enable', 'state', false);
             }
 
+            if (!!shadow) {
+                this.sandbox.emit('sulu.content.contents.show-save-items', 'shadow');
+                $shadowDescription.show();
+            } else {
+                this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
+                $shadowDescription.hide();
+            }
+
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
-                if (action === 'hide') {
+                if (!!shadow) {
                     this.sandbox.dom.find('#' + formGroupId).hide();
                 } else {
                     this.sandbox.dom.find('#' + formGroupId).show();
@@ -220,11 +287,71 @@ define([
                 this.startComponents();
                 this.sandbox.start(this.$el, {reset: true});
 
-                this.updateTabVisibilityForShadowCheckbox(true);
+                this.sandbox.start([
+                    {
+                        name: 'single-internal-link@sulucontent',
+                        options: {
+                            el: '#internal-link',
+                            instanceName: 'internal-link',
+                            resultKey: 'nodes',
+                            url: [
+                                '/admin/api/nodes{/uuid}?depth=1&webspace=', this.options.webspace,
+                                '&language=', this.options.language,
+                                '&webspace-node=true'
+                            ].join(''),
+                            columnNavigationUrl: [
+                                '/admin/api/nodes?{id=uuid&}tree=true&webspace=', this.options.webspace,
+                                '&language=', this.options.language,
+                                '&webspace-node=true'
+                            ].join(''),
+                            disabledIds: [this.data.id]
+                        }
+                    }
+                ]);
+
+                if (Config.get('sulu-content')['versioning']['enabled']) {
+                    this.sandbox.start([
+                        {
+                            name: 'datagrid@husky',
+                            options: {
+                                el: '#versions',
+                                instanceName: 'versions',
+                                url: [
+                                    '/admin/api/nodes/',
+                                    this.options.id,
+                                    '/versions?language=', this.options.language,
+                                    '&webspace=', this.options.webspace
+                                ].join(''),
+                                resultKey: 'versions',
+                                actionCallback: this.restoreVersion.bind(this),
+                                viewOptions: {
+                                    table: {
+                                        actionIcon: 'history',
+                                        actionColumn: 'authored',
+                                        selectItem: false
+                                    }
+                                },
+                                matchings: [
+                                    {
+                                        name: 'authored',
+                                        attribute: 'authored',
+                                        content: this.sandbox.translate('sulu-document-manager.version.authored'),
+                                        type: 'datetime'
+                                    },
+                                    {
+                                        name: 'author',
+                                        attribute: 'author',
+                                        content: this.sandbox.translate('sulu-document-manager.version.author')
+                                    }
+                                ]
+                            }
+                        }
+                    ]);
+                }
+
+                this.updateVisibilityForShadowCheckbox(true);
 
                 this.updateChangelog(data);
-
-                this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
         },
 
@@ -237,31 +364,23 @@ define([
         },
 
         updateChangelog: function(data) {
-            var setCreator = function(fullName) {
-                    this.sandbox.dom.text('#created .name', fullName);
-                    creatorDef.resolve();
-                },
-                setChanger = function(fullName) {
-                    this.sandbox.dom.text('#changed .name', fullName);
-                    changerDef.resolve();
-                },
-                creator, creatorDef = this.sandbox.data.deferred(),
-                changer, changerDef = this.sandbox.data.deferred();
+            var creator,
+                changer,
+                creatorDef = this.sandbox.data.deferred(),
+                changerDef = this.sandbox.data.deferred();
 
             if (data.creator === data.changer) {
                 creator = new User({id: data.creator});
 
                 creator.fetch({
                     global: false,
-
                     success: function(model) {
-                        setChanger.call(this, model.get('fullName'));
-                        setCreator.call(this, model.get('fullName'));
-                    }.bind(this),
-
+                        creatorDef.resolve(model.get('fullName'), data.created);
+                        changerDef.resolve(model.get('fullName'), data.changed);
+                    },
                     error: function() {
-                        setChanger.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
-                        setCreator.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        creatorDef.resolve(null, data.created);
+                        changerDef.resolve(null, data.changed);
                     }.bind(this)
                 });
             } else {
@@ -270,34 +389,29 @@ define([
 
                 creator.fetch({
                     global: false,
-
                     success: function(model) {
-                        setCreator.call(this, model.get('fullName'));
-                    }.bind(this),
-
+                        creatorDef.resolve(model.get('fullName'), data.created);
+                    },
                     error: function() {
-                        setCreator.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        creatorDef.resolve(null, data.created);
                     }.bind(this)
                 });
 
                 changer.fetch({
                     global: false,
-
                     success: function(model) {
-                        setChanger.call(this, model.get('fullName'));
-                    }.bind(this),
-
+                        changerDef.resolve(model.get('fullName'), data.changed);
+                    },
                     error: function() {
-                        setChanger.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        changerDef.resolve(null, data.changed);
                     }.bind(this)
-                });
+                })
             }
 
-            this.sandbox.dom.text('#created .date', this.sandbox.date.format(data.created, true));
-            this.sandbox.dom.text('#changed .date', this.sandbox.date.format(data.changed, true));
-
-            this.sandbox.data.when([creatorDef, changerDef]).then(function() {
-                this.sandbox.dom.show('#changelog-container');
+            this.sandbox.data.when(creatorDef, changerDef).then(function(creation, change) {
+                setCreationChangelog.call(this, creation[0], creation[1]);
+                setChangeChangelog.call(this, change[0], change[1]);
+                showChangelogContainer.call(this);
             }.bind(this));
         },
 
@@ -359,12 +473,19 @@ define([
         submit: function(action) {
             this.sandbox.logger.log('save Model');
 
-            var data = {},
+            var data = {
+                    id: this.data.id
+                },
                 baseLanguages = this.sandbox.dom.data('#shadow_base_language_select', 'selectionValues');
 
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
-            data.shadowOn = this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
+            data.shadowOn = isShadow.call(this);
+            data.shadowBaseLanguage = null;
+
+            if (!!this.state) {
+                data.state = this.state;
+            }
 
             if (data.nodeType === TYPE_INTERNAL) {
                 data.title = this.sandbox.dom.val('#internal-title');
@@ -376,7 +497,7 @@ define([
                 data.urlParts = urlData;
             }
 
-            if (!!baseLanguages && baseLanguages.length > 0) {
+            if (!!data.shadowOn && !!baseLanguages && baseLanguages.length > 0) {
                 data.shadowBaseLanguage = baseLanguages[0];
             }
 
@@ -386,12 +507,67 @@ define([
                 return;
             }
 
-            this.data = this.sandbox.util.extend(true, {}, this.data, data);
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
-            // nav contexts not extend
-            this.data.navContexts = data.navContexts;
+            contentManager.save(
+                data,
+                this.options.language,
+                this.options.webspace,
+                {
+                    action: action
+                },
+                function(response) {
+                    this.sandbox.emit('sulu.content.contents.saved', response.id, response, action);
+                    this.sandbox.emit('husky.datagrid.versions.update');
+                }.bind(this),
+                function(xhr) {
+                    this.sandbox.emit('sulu.content.contents.error', xhr.status, data);
+                }.bind(this)
+            );
+        },
 
-            this.sandbox.emit('sulu.content.contents.save', this.data, action);
+        restoreVersion: function(versionId, version) {
+            this.sandbox.sulu.showConfirmationDialog({
+                callback: function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.overlay.alert.show-loader');
+                    contentManager.restoreVersion(this.options.id, versionId, version.locale, this.options.webspace)
+                        .always(function() {
+                            this.sandbox.emit('husky.overlay.alert.hide-loader');
+                        }.bind(this))
+                        .then(function() {
+                            this.sandbox.emit('husky.overlay.alert.close');
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                [
+                                    'content/contents/',
+                                    this.options.webspace,
+                                    '/',
+                                    this.options.language,
+                                    '/edit:',
+                                    this.options.id,
+                                    '/content'
+                                ].join(''),
+                                true,
+                                true
+                            );
+                        }.bind(this))
+                        .fail(function() {
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'sulu.content.restore-error-description',
+                                'sulu.content.restore-error-title'
+                            );
+                        }.bind(this));
+
+                    return false;
+                }.bind(this),
+                title: this.sandbox.translate('sulu-document-manager.restore-confirmation-title'),
+                description: this.sandbox.translate('sulu-document-manager.restore-confirmation-description')
+            });
         },
 
         validate: function(data) {

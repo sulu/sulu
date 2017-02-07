@@ -10,7 +10,7 @@
 define([
     'services/husky/util',
     'services/husky/mediator',
-    'sulumedia/models/collection',
+    'sulumedia/models/collection'
 ], function(
         Util,
         Mediator,
@@ -78,26 +78,23 @@ define([
          * @param collectionId
          * @returns promise
          */
-        loadOrNew: function(collectionId, locale) {
-            var promise = $.Deferred(),
-                collection;
-            if (!collectionId) {
-                collection = new Collection();
-                Mediator.emit('sulu.medias.collection.created');
-                promise.resolve(collection.toJSON());
-            } else {
-                collection = Collection.findOrCreate({id: collectionId});
-                collection.fetch({
-                    data: (!!locale) ? {locale: locale} : null,
-                    success: function(response) {
-                        Mediator.emit('sulu.medias.collection.loaded', collectionId);
-                        promise.resolve(response.toJSON());
-                    }.bind(this),
-                    error: function() {
-                        promise.reject();
-                    }.bind(this)
-                });
-            }
+        load: function(collectionId, locale) {
+            var promise = $.Deferred(), collection;
+
+            collection = Collection.findOrCreate({id: collectionId});
+            collection.fetch({
+                data: {
+                    locale: locale,
+                    breadcrumb: true
+                },
+                success: function(response) {
+                    Mediator.emit('sulu.medias.collection.loaded', collectionId);
+                    promise.resolve(response.toJSON());
+                }.bind(this),
+                error: function() {
+                    promise.reject();
+                }.bind(this)
+            });
 
             return promise;
         },
@@ -156,10 +153,10 @@ define([
          * @param parentCollectionId
          * @returns {*}
          */
-        move: function(collectionId, parentCollectionId) {
+        move: function(collectionId, parentCollectionId, locale) {
             var promise = $.Deferred();
 
-            var url = '/admin/api/collections/' + collectionId + '?action=move';
+            var url = '/admin/api/collections/' + collectionId + '?action=move&locale=' + locale;
             url = (!!parentCollectionId) ? url + '&destination=' + parentCollectionId : url;
 
             Util.save(url, 'POST')

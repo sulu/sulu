@@ -42,10 +42,6 @@
     padding: 3px;
   }
 
-  .address-row {
-    padding-top: 5px;
-
-  }
   .bank-account-row:hover .bank-account-remove,
   .address-row:hover .address-remove {
     display: inline;
@@ -76,8 +72,8 @@
   }
 
   label {
-    line-height: 14px;
-    text-overflow: hidden;
+    line-height: 30px;
+    text-overflow: ellipsis;
     &.hidden {
       display: none;
     }

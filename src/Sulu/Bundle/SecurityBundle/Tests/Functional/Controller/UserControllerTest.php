@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,7 +76,7 @@ class UserControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         $emailType = new EmailType();
@@ -244,7 +244,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('1120', $response->message);
     }
 
@@ -362,7 +362,7 @@ class UserControllerTest extends SuluTestCase
         );
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertContains('username', $response->message);
     }
 
@@ -393,7 +393,7 @@ class UserControllerTest extends SuluTestCase
         );
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertContains('email', strtolower($response->message));
         $this->assertEquals(1004, $response->code);
     }
@@ -427,7 +427,7 @@ class UserControllerTest extends SuluTestCase
         );
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('hikari', $response->username);
         $this->assertEquals('contact.unique@test.com', $response->email);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -440,11 +440,11 @@ class UserControllerTest extends SuluTestCase
 
         $client->request('DELETE', '/api/users/' . $this->user1->getId());
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request('GET', '/api/users/' . $this->user1->getId());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testDeleteNotExisting()
@@ -453,7 +453,7 @@ class UserControllerTest extends SuluTestCase
 
         $client->request('DELETE', '/api/users/11235');
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testPut()
@@ -564,7 +564,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -601,7 +601,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -680,7 +680,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -714,7 +714,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertContains('password', $response->message);
     }
 
@@ -729,7 +729,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($this->user1->getId(), $response->_embedded->users[0]->id);
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
@@ -750,7 +750,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users?contactId=1234'
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
     }
 
     public function testGetUserAndRolesWithoutParam()
@@ -946,7 +946,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1002, $response->code);
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     public function testPutWithoutPassword()

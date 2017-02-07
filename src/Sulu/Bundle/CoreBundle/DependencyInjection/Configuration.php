@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
         $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();
-        $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getWebspaceConfiguration($children);
         $this->getFieldsConfiguration($children);
@@ -59,15 +58,15 @@ class Configuration implements ConfigurationInterface
     {
         $rootNode
             ->arrayNode('locales')
-                ->isRequired()
                 ->useAttributeAsKey('locale')
                 ->prototype('scalar')->end()
+                ->defaultValue(['de' => 'Deutsch', 'en' => 'English', 'fr' => 'Français', 'nl' => 'Nederlands'])
             ->end()
             ->arrayNode('translations')
-                ->isRequired()
                 ->prototype('scalar')->end()
+                ->defaultValue(['de', 'en', 'fr', 'nl'])
             ->end()
-            ->scalarNode('fallback_locale')->end();
+            ->scalarNode('fallback_locale')->defaultValue('en')->end();
     }
 
     /**
@@ -80,41 +79,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('config_dir')
                     ->defaultValue('%kernel.root_dir%/Resources/webspaces')
                 ->end()
-                ->arrayNode('request_analyzer')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('priority')
-                            ->defaultValue(300)
-                        ->end()
-                    ->end()
-                ->end()
             ->end()
         ->end();
-    }
-
-    /**
-     * @param NodeBuilder $rootNode
-     */
-    private function getPhpcrConfiguration(NodeBuilder $rootNode)
-    {
-        $rootNode->arrayNode('phpcr')
-            ->addDefaultsIfNotSet()
-            ->children()
-                ->scalarNode('workspace')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('username')
-                    ->defaultNull()
-                ->end()
-                ->scalarNode('password')
-                    ->defaultNull()
-                ->end()
-                ->arrayNode('backend')
-                    ->useAttributeAsKey('name')
-                    ->prototype('variable')
-                ->end()
-            ->end();
     }
 
     /**
@@ -251,10 +217,8 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('type_map')
-                            ->isRequired()
                             ->useAttributeAsKey('name')
-                            ->prototype('scalar')
-                            ->end()
+                            ->prototype('scalar')->end()
                         ->end()
                     ->end()
                 ->end()

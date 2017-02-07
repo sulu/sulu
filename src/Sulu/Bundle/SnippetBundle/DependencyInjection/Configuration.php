@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('template')
                                     ->defaultValue('SuluSnippetBundle:Template:content-types/snippet.html.twig')
                                 ->end()
+                                ->booleanNode('default_enabled')->defaultValue(true)->end()
                             ->end()
                         ->end()
                     ->end()

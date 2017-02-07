@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,12 +15,13 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
  */
-class TagList extends ComplexContentType
+class TagList extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for saving the tags in the database.
@@ -54,31 +55,12 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * Sets the given array as values on the property.
-     *
-     * @param array             $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $property->setValue($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $tags = $this->tagManager->resolveTagIds($node->getPropertyValueWithDefault($property->getName(), []));
-        $this->setData($tags, $property);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property);
+        $property->setValue($tags);
     }
 
     /**
@@ -120,5 +102,52 @@ class TagList extends ComplexContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (false === is_array($propertyValue)) {
+            return '';
+        }
+
+        foreach ($propertyValue as &$propertyValueItem) {
+            if (is_string($propertyValueItem)) {
+                $tag = $this->tagManager->findByName($propertyValueItem);
+                if ($tag) {
+                    $propertyValueItem = $tag->getId();
+                }
+            }
+        }
+
+        if (!empty($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $tagNames = [];
+        $tagIds = json_decode($value);
+        if (!empty($tagIds)) {
+            $tagNames = $this->tagManager->resolveTagIds($tagIds);
+        }
+
+        $property->setValue($tagNames);
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

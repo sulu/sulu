@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -55,7 +55,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('addressType')->defaultValue('1')->end()
                         ->scalarNode('urlType')->defaultValue('1')->end()
                         ->scalarNode('faxType')->defaultValue('1')->end()
-                        ->scalarNode('country')->defaultValue('15')->end()
+                        ->scalarNode('country')->defaultValue('AT')->end()
                     ->end()
                 ->end()
                 ->arrayNode('form')
@@ -85,6 +85,10 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('translation')->end()
                         ->end()
                     ->end()
+                    ->defaultValue([
+                        'male' => ['id' => 0, 'name' => 'male', 'translation' => 'contact.contacts.formOfAddress.male'],
+                        'female' => ['id' => 1, 'name' => 'female', 'translation' => 'contact.contacts.formOfAddress.female'],
+                    ])
                 ->end()
             ->end();
 

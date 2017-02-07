@@ -1,0 +1,50 @@
+sulu\:link {
+    text-decoration: underline;
+    color: #428bca;
+}
+
+sulu\:link[sulu\:validation-state~="unpublished"]:before {
+    color: #E8CE33;
+    content: "•";
+    display: inline-block;
+    margin-right: 3px;
+    font-size: 20px;
+    line-height: 13px;
+    vertical-align: text-bottom;
+}
+
+sulu\:link[sulu\:validation-state~="unpublished"]:empty:before {
+    content: "";
+}
+
+sulu\:link[sulu\:validation-state~="removed"] {
+    color: #EA524E;
+    text-decoration: line-through;
+}
+
+sulu\:link[sulu\:validation-state~="unpublished"]:after,
+sulu\:link[sulu\:validation-state~="removed"]:after {
+    display: none;
+    position: absolute;
+    background-color: #21272E;
+    border-radius: 2px;
+    color: #ffffff;
+    padding: 5px;
+    white-space: pre-wrap;
+    margin-left: 5px;
+    font-size: 11px;
+    line-height: 11px;
+}
+
+sulu\:link[sulu\:validation-state~="unpublished"]:hover:after,
+sulu\:link[sulu\:validation-state~="removed"]:hover:after {
+    display: inline-block;
+}
+
+sulu\:link[sulu\:validation-state~="unpublished"]:after {
+    content: '<%= translations.unpublished %>';
+}
+
+sulu\:link[sulu\:validation-state~="removed"]:after {
+    content: '<%= translations.removed %>';
+}

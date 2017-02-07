@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,10 +13,11 @@ namespace Sulu\Bundle\SnippetBundle\Command;
 
 use Jackalope\Query\QueryManager;
 use Jackalope\Session;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,6 +57,11 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
     private $queryManager;
 
     /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
      * @var OutputInterface
      */
     private $output;
@@ -68,7 +74,7 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
         $this->setName('sulu:snippet:locale-copy');
         $this->setDescription('Copy snippet nodes from one locale to another');
         $this->setHelp(
-            <<<EOT
+            <<<'EOT'
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
 to <info>destLocale</info> on all snippet nodes from a specific type.
 
@@ -97,15 +103,17 @@ EOT
         $overwrite = $input->getOption('overwrite');
         $dryRun = $input->getOption('dry-run');
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
+        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->queryManager = $this->session->getWorkspace()->getQueryManager();
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $this->output = $output;
 
-        $this->copyNodes($srcLocale, $destLocale, $overwrite);
+        $this->copyDocuments($srcLocale, $destLocale, $overwrite);
+        $this->documentManager->flush();
 
         if (false === $dryRun) {
             $this->output->writeln('<info>Saving ...</info>');
@@ -116,24 +124,22 @@ EOT
         }
     }
 
-    private function copyNodes($srcLocale, $destLocale, $overwrite)
+    private function copyDocuments($srcLocale, $destLocale, $overwrite)
     {
-        $nodes = $this->snippetRepository->getSnippets($srcLocale);
-
-        foreach ($nodes as $node) {
-            $this->copyNode($srcLocale, $destLocale, $node, $overwrite);
+        foreach ($this->snippetRepository->getSnippets($srcLocale) as $document) {
+            $this->copyDocument($srcLocale, $destLocale, $document, $overwrite);
         }
     }
 
-    private function copyNode($srcLocale, $destLocale, StructureInterface $structure, $overwrite = false)
+    private function copyDocument($srcLocale, $destLocale, SnippetDocument $document, $overwrite = false)
     {
         if (!$overwrite) {
-            $destStructure = $this->contentMapper->load($structure->getUuid(), null, $destLocale, true);
+            $destStructure = $this->contentMapper->load($document->getUuid(), null, $destLocale, true);
 
             if (!($destStructure->getType() && $destStructure->getType()->getName() === 'ghost')) {
                 $this->output->writeln(
                     '<info>Processing aborted: </info>' .
-                    $structure->getNodeName() . ' <comment>(use overwrite option to force)</comment>'
+                    $document->getNodeName() . ' <comment>(use overwrite option to force)</comment>'
                 );
 
                 return;
@@ -141,14 +147,16 @@ EOT
         }
 
         $this->contentMapper->copyLanguage(
-            $structure->getUuid(),
-            $structure->getChanger(),
+            $document->getUuid(),
+            $document->getChanger(),
             null,
             $srcLocale,
             $destLocale,
             Structure::TYPE_SNIPPET
         );
+        $destDocument = $this->documentManager->find($document->getUuid(), $destLocale);
+        $this->documentManager->publish($destDocument, $destLocale);
 
-        $this->output->writeln('<info>Processing: </info>' . $structure->getNodeName());
+        $this->output->writeln('<info>Processing: </info>' . $document->getNodeName());
     }
 }

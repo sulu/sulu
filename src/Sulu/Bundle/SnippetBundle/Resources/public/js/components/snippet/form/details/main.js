@@ -133,7 +133,8 @@ define(['app-config'], function(AppConfig) {
                 defaults = {
                     translate: this.sandbox.translate,
                     content: data,
-                    options: this.options
+                    options: this.options,
+                    categoryLocale: this.options.language
                 },
                 context = this.sandbox.util.extend({}, defaults),
                 tpl = this.sandbox.util.template(template, context);

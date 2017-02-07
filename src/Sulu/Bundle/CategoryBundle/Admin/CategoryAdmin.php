@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdmin extends Admin
@@ -28,13 +29,16 @@ class CategoryAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
+        $section = new NavigationItem('navigation.modules');
+        $section->setPosition(20);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('cog');
 
-        if ($this->securityChecker->hasPermission('sulu.settings.categories', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.settings.categories', PermissionTypes::VIEW)) {
             $categories = new NavigationItem('navigation.settings.categories', $settings);
+            $categories->setPosition(20);
             $categories->setAction('settings/categories');
         }
 
@@ -44,14 +48,6 @@ class CategoryAdmin extends Admin
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommands()
-    {
-        return [];
     }
 
     /**
@@ -70,7 +66,12 @@ class CategoryAdmin extends Admin
         return [
             'Sulu' => [
                 'Settings' => [
-                    'sulu.settings.categories',
+                    'sulu.settings.categories' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
                 ],
             ],
         ];

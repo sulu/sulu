@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,10 +14,11 @@ namespace Sulu\Bundle\CategoryBundle\Api;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
+use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
 class Category extends ApiEntityWrapper
@@ -89,6 +90,66 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the description of the Category dependent on the locale.
+     *
+     * @VirtualProperty
+     * @SerializedName("description")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return;
+        }
+
+        return $translation->getDescription();
+    }
+
+    /**
+     * Returns the medias of the Category dependent on the locale.
+     *
+     * @VirtualProperty
+     * @SerializedName("medias")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getMediasRawData()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return ['ids' => []];
+        }
+
+        $ids = [];
+        foreach ($translation->getMedias() as $media) {
+            $ids[] = $media->getId();
+        }
+
+        return ['ids' => $ids];
+    }
+
+    /**
+     * Returns the medias of the Category dependent on the locale.
+     *
+     * @return Media[]
+     */
+    public function getMedias()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return [];
+        }
+
+        $medias = [];
+        foreach ($translation->getMedias() as $media) {
+            $medias[] = new Media($media, $this->locale);
+        }
+
+        return $medias;
+    }
+
+    /**
      * Returns the locale of the Category dependent on the existing translations and default locale.
      *
      * @VirtualProperty
@@ -143,6 +204,7 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("creator")
+     * @Groups({"fullCategory"})
      *
      * @return string
      */
@@ -162,6 +224,7 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("changer")
+     * @Groups({"fullCategory"})
      *
      * @return string
      */
@@ -194,7 +257,7 @@ class Category extends ApiEntityWrapper
      * Returns the created date for the category.
      *
      * @VirtualProperty
-     * @SerializedName("created")
+     * @SerializedName("changed")
      * @Groups({"fullCategory"})
      *
      * @return string
@@ -226,51 +289,52 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes a name as string and sets it to the entity.
+     * Sets a translation to the entity.
+     * If no other translation was assigned before, the translation is added as default.
      *
-     * @param string $name
-     *
-     * @return Category
+     * @param CategoryTranslationInterface $translation
      */
-    public function setName($name)
+    public function setTranslation(CategoryTranslationInterface $translation)
     {
-        $translation = $this->getTranslation(false);
-        if ($translation === null) {
-            $translation = $this->createTranslation();
+        $translationEntity = $this->getTranslationByLocale($translation->getLocale());
+
+        if (!$translationEntity) {
+            $translationEntity = $translation;
+            $this->entity->addTranslation($translationEntity);
         }
 
-        $translation->setTranslation($name);
+        $translationEntity->setCategory($this->entity);
+        $translationEntity->setTranslation($translation->getTranslation());
+        $translationEntity->setLocale($translation->getLocale());
 
-        return $this;
+        if ($this->getId() === null && $this->getDefaultLocale() === null) {
+            // new entity and new translation
+            // save first locale as default
+            $this->entity->setDefaultLocale($translationEntity->getLocale());
+        }
     }
 
     /**
      * Takes meta as array and sets it to the entity.
      *
-     * @param array $meta
+     * @param CategoryMetaInterface[] $metaEntities
      *
      * @return Category
      */
-    public function setMeta($meta)
+    public function setMeta($metaEntities)
     {
-        $meta = (is_array($meta)) ? $meta : [];
         $currentMeta = $this->entity->getMeta();
-        foreach ($meta as $singleMeta) {
-            $metaEntity = null;
-            if (isset($singleMeta['id'])) {
-                $metaEntity = $this->getSingleMetaById($currentMeta, $singleMeta['id']);
-            }
+        foreach ($metaEntities as $singleMeta) {
+            $metaEntity = $this->getSingleMetaById($currentMeta, $singleMeta->getId());
             if (!$metaEntity) {
-                $metaEntity = new CategoryMeta();
-                $metaEntity->setCategory($this->entity);
+                $metaEntity = $singleMeta;
                 $this->entity->addMeta($metaEntity);
             }
 
-            $metaEntity->setKey($singleMeta['key']);
-            $metaEntity->setValue($singleMeta['value']);
-            if (array_key_exists('locale', $singleMeta)) {
-                $metaEntity->setLocale($singleMeta['locale']);
-            }
+            $metaEntity->setCategory($this->entity);
+            $metaEntity->setKey($singleMeta->getKey());
+            $metaEntity->setValue($singleMeta->getValue());
+            $metaEntity->setLocale($singleMeta->getLocale());
         }
 
         return $this;
@@ -286,6 +350,26 @@ class Category extends ApiEntityWrapper
         $parent = $this->getEntity()->getParent();
         if ($parent) {
             return new self($parent, $this->locale);
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a the id of the parent category, if one exists.
+     * This method is used to serialize the parent-id.
+     *
+     * @VirtualProperty
+     * @SerializedName("parent")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return null|Category
+     */
+    public function getParentId()
+    {
+        $parent = $this->getEntity()->getParent();
+        if ($parent) {
+            return $parent->getId();
         }
 
         return;
@@ -346,15 +430,13 @@ class Category extends ApiEntityWrapper
      */
     private function getSingleMetaById($meta, $id)
     {
-        $return = null;
-        foreach ($meta as $singleMeta) {
-            if ($singleMeta->getId() === $id) {
-                $return = $singleMeta;
-                break;
+        if ($id !== null) {
+            foreach ($meta as $singleMeta) {
+                if ($singleMeta->getId() === $id) {
+                    return $singleMeta;
+                }
             }
         }
-
-        return $return;
     }
 
     /**
@@ -382,7 +464,7 @@ class Category extends ApiEntityWrapper
      *
      * @param $withDefault
      *
-     * @return CategoryTranslation
+     * @return CategoryTranslationInterface
      */
     private function getTranslation($withDefault = false)
     {
@@ -400,38 +482,16 @@ class Category extends ApiEntityWrapper
      *
      * @param string $locale
      *
-     * @return CategoryTranslation
+     * @return CategoryTranslationInterface
      */
     private function getTranslationByLocale($locale)
     {
-        foreach ($this->entity->getTranslations() as $translation) {
-            if ($translation->getLocale() == $locale) {
-                return $translation;
+        if ($locale !== null) {
+            foreach ($this->entity->getTranslations() as $translation) {
+                if ($translation->getLocale() == $locale) {
+                    return $translation;
+                }
             }
         }
-
-        return;
-    }
-
-    /**
-     * Creates a new Translation for category.
-     *
-     * @return CategoryTranslation
-     */
-    private function createTranslation()
-    {
-        $translation = new CategoryTranslation();
-        $translation->setLocale($this->locale);
-        $translation->setCategory($this->entity);
-
-        $this->entity->addTranslation($translation);
-
-        if ($this->getId() === null && $this->getDefaultLocale() === null) {
-            // new entity and new translation
-            // save first locale as default
-            $this->entity->setDefaultLocale($this->locale);
-        }
-
-        return $translation;
     }
 }

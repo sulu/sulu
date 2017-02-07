@@ -32,6 +32,8 @@ define([], function() {
         NUMBER_TYPE = 2,
         DATETIME_TYPE = 3,
         BOOLEAN_TYPE = 4,
+        TAGS_TYPE = 5,
+        AUTO_COMPLETE_TYPE = 6,
 
         defaults = {
             operatorsUrl: null,
@@ -47,13 +49,15 @@ define([], function() {
         },
 
         typeMappings = {
-            'string': STRING_TYPE,
-            'number': NUMBER_TYPE,
-            'integer': NUMBER_TYPE,
-            'float': NUMBER_TYPE,
-            'boolean': BOOLEAN_TYPE,
-            'date': DATETIME_TYPE,
-            'datetime': DATETIME_TYPE
+            string: STRING_TYPE,
+            number: NUMBER_TYPE,
+            integer: NUMBER_TYPE,
+            float: NUMBER_TYPE,
+            boolean: BOOLEAN_TYPE,
+            date: DATETIME_TYPE,
+            datetime: DATETIME_TYPE,
+            tags: TAGS_TYPE,
+            'auto-complete': AUTO_COMPLETE_TYPE
         },
 
         templates = {
@@ -63,10 +67,10 @@ define([], function() {
             button: function(id, text) {
                 return [
                     '<div class="grid-row">',
-                    '   <div class="grid-col-3">',
-                    '       <div id="', id, '" class="btn action">',
+                    '   <div class="grid-col-6">',
+                    '       <div id="', id, '" class="btn action fit">',
                     '           <span class="fa-plus-circle"></span>',
-                    '           <span class="text">',text,'</span>',
+                    '           <span class="text">', text, '</span>',
                     '       </div>',
                     '   </div>',
                     '</div>'
@@ -183,7 +187,8 @@ define([], function() {
                 $operatorSelect,
                 operator,
                 $valueComponent,
-                id = !!conditionGroup ? conditionGroup.id : 'new';
+                id = !!conditionGroup ? conditionGroup.id : 'new',
+                field;
 
             $row = this.sandbox.dom.createElement(templates.row(constants.conditionRowClass, id));
             $deleteButton = this.sandbox.dom.createElement(templates.removeButton(constants.removeButtonClass));
@@ -196,15 +201,26 @@ define([], function() {
                 $fieldSelect = createFieldSelect.call(this, condition.field, true, true);
             }
 
+            field = this.fields[condition.field] || this.usedFields[condition.field] || {};
+
             operator = getOperatorByOperandAndType.call(this, condition.operator, condition.type);
             $operatorSelect = createOperatorSelect.call(this, operator, filteredOperators, false, true);
-            $valueComponent = createValueInput.call(this, conditionGroup, operator, 'grid-col-4', true);
+            $valueComponent = createValueInput.call(
+                this,
+                conditionGroup,
+                operator,
+                'grid-col-4',
+                true,
+                field['filter-type-parameters'] || {}
+            );
 
             this.sandbox.dom.append($row, $deleteButton);
             this.sandbox.dom.append($row, $fieldSelect);
             this.sandbox.dom.append($row, $operatorSelect);
             this.sandbox.dom.append($row, $valueComponent);
             this.sandbox.dom.append(this.$container, $row);
+
+            $row.data('field', field);
         },
 
         /**
@@ -313,9 +329,9 @@ define([], function() {
                     translatedText = this.sandbox.translate(this.usedFields[value]['translation']);
                     $options.push('<option value="' + this.usedFields[value]['name'] + '" selected>' + translatedText + '</option>');
                 }
-
-                this.sandbox.dom.append($select, $options.join(''));
             }
+
+            this.sandbox.dom.append($select, $options.join(''));
         },
 
         /**
@@ -357,8 +373,9 @@ define([], function() {
          * @param operator
          * @param gridColClass css class used for the wrapper of the input - should be a grid-col class
          * @param wrap
+         * @param parameters
          */
-        createValueInput = function(conditionGroup, operator, gridColClass, wrap) {
+        createValueInput = function(conditionGroup, operator, gridColClass, wrap, parameters) {
             var $input = null,
                 $wrapper,
                 condition, id;
@@ -368,11 +385,11 @@ define([], function() {
                     this.sandbox.logger.error('Multiple conditions not yet supported!');
                 } else {
                     condition = conditionGroup.conditions[0];
-                    $input = createInputForType.call(this, operator, condition.value);
+                    $input = createInputForType.call(this, operator, condition.value, parameters || {});
                     id = condition.id;
                 }
             } else if (!conditionGroup && !!operator) {
-                $input = createInputForType.call(this, operator, '');
+                $input = createInputForType.call(this, operator, '', parameters || {});
             } else {
                 $input = createSimpleInput.call(this, '', constants.valueInputClass);
             }
@@ -434,8 +451,9 @@ define([], function() {
          * Decides which input should be displayed for the given condition
          * @param operator
          * @param value
+         * @param parameters
          */
-        createInputForType = function(operator, value) {
+        createInputForType = function(operator, value, parameters) {
             switch (operator.inputType) {
                 case 'date':
                 case 'datepicker':
@@ -449,9 +467,56 @@ define([], function() {
                 case 'simple':
                     return createSimpleInput.call(this, value, constants.valueInputClass);
                 default:
-                    this.sandbox.logger.error('Input type "' + type + '" is not supported!');
-                    break;
+                    return createGenericInput.call(this, value, constants.valueInputClass, operator, parameters);
             }
+        },
+
+        /**
+         * Decides which input should be displayed for the given condition
+         */
+        getInputValue = function(operator, $row) {
+            switch (operator.inputType || '') {
+                case 'date':
+                case 'datepicker':
+                    return this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass + ' input', $row));
+                case '':
+                case 'select':
+                case 'boolean':
+                case 'radio':
+                case 'checkbox':
+                case 'simple':
+                    return this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass, $row));
+                default:
+                    return $('.' + constants.valueInputClass, $row).data('value');
+            }
+        },
+
+        /**
+         * Start a component for given operator.
+         *
+         * @param value
+         * @param cssClass
+         * @param operator
+         * @param parameters
+         *
+         * @returns {*|jQuery|HTMLElement}
+         */
+        createGenericInput = function(value, cssClass, operator, parameters) {
+            var $el = $('<div class="' + cssClass + '"/>');
+
+            this.sandbox.start([
+                {
+                    name: 'condition-selection/' + operator.inputType + '@suluresource',
+                    options: {
+                        el: $el,
+                        operator: operator,
+                        value: value,
+                        parameters: parameters
+                    }
+                }
+            ]);
+
+            return $el;
         },
 
         /**
@@ -631,7 +696,7 @@ define([], function() {
             this.sandbox.dom.on(this.$container, 'change', function() {
                 // FIXME Datepicker triggers multiple change events?
                 updateDataAttribute.call(this);
-            }.bind(this), 'select, input');
+            }.bind(this), 'select, input, div, .pickdate');
 
             // update operator data
             this.sandbox.dom.on(this.$container, 'change', function(event) {
@@ -714,7 +779,8 @@ define([], function() {
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 operator = getOperatorById.call(this, operatorId),
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
-                $valueInputParent = this.sandbox.dom.parent($valueInput);
+                $valueInputParent = this.sandbox.dom.parent($valueInput),
+                field = $row.data('field');
 
             // remove field from validation
             if (!!this.options.validationSelector) {
@@ -723,7 +789,7 @@ define([], function() {
 
             this.sandbox.stop($valueInput);
             this.sandbox.dom.remove($valueInput);
-            $valueInput = createValueInput.call(this, null, operator, null, false);
+            $valueInput = createValueInput.call(this, null, operator, null, false, field['filter-type-parameters']);
             this.sandbox.dom.append($valueInputParent, $valueInput);
         },
 
@@ -734,12 +800,14 @@ define([], function() {
         fieldChangedEventHandler = function(event) {
             var fieldName = event.target.value,
                 field = this.fields[fieldName],
-                filteredOperators = filterOperatorsByType.call(this, field.type),
+                filteredOperators = filterOperatorsByType.call(this, field['filter-type']),
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row)[0],
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
                 $operatorSelectParent = this.sandbox.dom.parent($operatorSelect),
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
+
+            $row.data('field', field);
 
             // remove fields from validation
             if (!!this.options.validationSelector) {
@@ -819,11 +887,7 @@ define([], function() {
             conditionId = this.sandbox.dom.data(this.sandbox.dom.find('.' + constants.valueInputClass, $row), 'id');
             operator = getOperatorById.call(this, operatorId);
 
-            if (!!operator && operator.inputType === 'datepicker') {
-                value = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass + ' input', $row));
-            } else {
-                value = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass, $row));
-            }
+            value = getInputValue.call(this, operator || {}, $row);
 
             condition = {
                 type: type,
@@ -869,7 +933,7 @@ define([], function() {
             var result = {};
 
             fields.forEach(function(field) {
-                if (isSupportedType(field.type)) {
+                if (isSupportedType(field['filter-type'])) {
                     result[field.name] = field;
                 }
             }.bind(this));

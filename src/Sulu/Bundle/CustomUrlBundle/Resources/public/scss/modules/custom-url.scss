@@ -1,0 +1,22 @@
+.custom-url-input {
+    display: table;
+
+    .domain-part {
+        display: table-cell;
+        color: $grayLight;
+        width: 1px;
+        white-space: nowrap;
+    }
+
+    .input-part {
+        display: table-cell;
+        width: 10000px;
+    }
+}
+
+.target-input {
+    div.husky-validate-error {
+        border-color: $red;
+        border-width: 2px;
+    }
+}

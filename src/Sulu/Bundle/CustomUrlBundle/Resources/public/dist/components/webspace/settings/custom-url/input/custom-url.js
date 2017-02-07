@@ -1,0 +1,1 @@
+define(["type/default","form/util"],function(a){"use strict";return function(b,c){var d={},e={setValue:function(a){this.$el.data("custom-url-data",a),this.$el.trigger("data-changed")},getValue:function(){return this.$el.data("custom-url-data")},needsValidation:function(){return!1},validate:function(){return!0}};return new a(b,d,c,"custom-url",e)}});

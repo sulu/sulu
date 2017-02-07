@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -13,8 +14,11 @@ namespace Sulu\Component\Content\Repository;
 use Hateoas\Configuration\Annotation\Embedded;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
+use Jackalope\Query\Row;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Exception\FeatureNotImplementedException;
 
@@ -78,6 +82,16 @@ class Content implements \ArrayAccess
     private $hasChildren;
 
     /**
+     * @var string
+     */
+    private $template;
+
+    /**
+     * @var bool
+     */
+    private $brokenTemplate;
+
+    /**
      * @var Content[]
      */
     private $children = [];
@@ -97,6 +111,30 @@ class Content implements \ArrayAccess
      */
     private $localizationType;
 
+    /**
+     * @var string
+     *
+     * @Expose
+     */
+    private $url;
+
+    /**
+     * @var string[]
+     */
+    private $urls;
+
+    /**
+     * @var string[]
+     *
+     * @Expose
+     */
+    private $concreteLanguages;
+
+    /**
+     * @var Row
+     */
+    private $row;
+
     public function __construct(
         $locale,
         $webspaceKey,
@@ -105,20 +143,22 @@ class Content implements \ArrayAccess
         $workflowStage,
         $nodeType,
         $hasChildren,
+        $template,
         array $data,
         array $permissions,
         StructureType $localizationType = null
     ) {
+        $this->locale = $locale;
+        $this->webspaceKey = $webspaceKey;
         $this->id = $id;
         $this->path = $path;
         $this->workflowStage = $workflowStage;
         $this->nodeType = $nodeType;
         $this->hasChildren = $hasChildren;
+        $this->template = $template;
         $this->data = $data;
         $this->permissions = $permissions;
         $this->localizationType = $localizationType;
-        $this->locale = $locale;
-        $this->webspaceKey = $webspaceKey;
     }
 
     /**
@@ -146,6 +186,23 @@ class Content implements \ArrayAccess
     }
 
     /**
+     * Returns value for given property or given default.
+     *
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getPropertyWithDefault($name, $default = null)
+    {
+        if (!array_key_exists($name, $this->data)) {
+            return $default;
+        }
+
+        return $this->data[$name];
+    }
+
+    /**
      * @param string $propertyName
      * @param mixed $value
      */
@@ -168,6 +225,48 @@ class Content implements \ArrayAccess
     public function getNodeType()
     {
         return $this->nodeType;
+    }
+
+    /**
+     * Returns template.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("template")
+     */
+    public function getTemplate()
+    {
+        if ($this->brokenTemplate) {
+            return;
+        }
+
+        return $this->template;
+    }
+
+    /**
+     * Returns original-template.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("originalTemplate")
+     */
+    public function getOriginalTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * Set broken-template flag.
+     *
+     * @return $this
+     */
+    public function setBrokenTemplate()
+    {
+        $this->brokenTemplate = true;
+
+        return $this;
     }
 
     /**
@@ -226,9 +325,76 @@ class Content implements \ArrayAccess
         return $this->children;
     }
 
+    /**
+     * @return Row
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
+
+    /**
+     * @param Row $row
+     */
+    public function setRow(Row $row)
+    {
+        $this->row = $row;
+    }
+
+    /**
+     * @return string[]
+     */
     public function getMapping()
     {
         return implode(',', array_keys($this->data));
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getUrls()
+    {
+        return $this->urls;
+    }
+
+    /**
+     * @param \string[] $urls
+     */
+    public function setUrls(array $urls)
+    {
+        $this->urls = $urls;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getConcreteLanguages()
+    {
+        return $this->concreteLanguages;
+    }
+
+    /**
+     * @param \string[] $concreteLanguages
+     */
+    public function setConcreteLanguages($concreteLanguages)
+    {
+        $this->concreteLanguages = $concreteLanguages;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +32,7 @@ interface WorkflowStageBehavior
     public function setWorkflowStage($workflowStage);
 
     /**
-     * Get the published date or return NULL if the 
+     * Get the published date or return NULL if the
      * document has not yet been published.
      *
      * @return null|\DateTime

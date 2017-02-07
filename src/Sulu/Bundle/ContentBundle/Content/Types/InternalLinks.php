@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -25,7 +26,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * content type for internal links selection.
  */
-class InternalLinks extends ComplexContentType
+class InternalLinks extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var ContentQueryExecutorInterface
@@ -46,16 +47,23 @@ class InternalLinks extends ComplexContentType
      */
     private $template;
 
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,
-        $template
+        $template,
+        $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->logger = $logger;
         $this->template = $template;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -80,24 +88,9 @@ class InternalLinks extends ComplexContentType
         if ($node->hasProperty($property->getName())) {
             $data = $node->getProperty($property->getName())->getString();
         }
-        $this->setData($data, $property);
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
-        $this->setData($data, $property);
+        $refs = isset($data) ? $data : [];
+        $property->setValue($refs);
     }
 
     /**
@@ -106,21 +99,8 @@ class InternalLinks extends ComplexContentType
     public function getReferencedUuids(PropertyInterface $property)
     {
         $data = $property->getValue();
-        $uuids = isset($data) ? $data : [];
 
-        return $uuids;
-    }
-
-    /**
-     * set data to property.
-     *
-     * @param string[]          $data     ids of images
-     * @param PropertyInterface $property
-     */
-    private function setData($data, PropertyInterface $property)
-    {
-        $refs = isset($data) ? $data : [];
-        $property->setValue($refs);
+        return isset($data) ? $data : [];
     }
 
     /**
@@ -201,9 +181,38 @@ class InternalLinks extends ComplexContentType
             array_merge($this->getDefaultParams(), $property->getParams()),
             $this->logger,
             $property->getStructure()->getWebspaceKey(),
-            $property->getStructure()->getLanguageCode()
+            $property->getStructure()->getLanguageCode(),
+            $this->showDrafts
         );
 
         return $container->getData();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (!is_array($propertyValue) || empty($propertyValue)) {
+            return '';
+        }
+
+        return json_encode($propertyValue);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($value));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

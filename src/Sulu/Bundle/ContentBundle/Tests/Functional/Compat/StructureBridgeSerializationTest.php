@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Compat;
 
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -59,9 +61,11 @@ class StructureBridgeSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(StructureBridge::class, $managedPage);
 
-        $result = $this->serializer->serialize($managedPage, 'json');
-
-        return $result;
+        return $this->serializer->serialize(
+            $managedPage,
+            'json',
+            SerializationContext::create()->setGroups('preview')
+        );
     }
 
     /**
@@ -69,10 +73,19 @@ class StructureBridgeSerializationTest extends SuluTestCase
      */
     public function testDeserialize($data)
     {
-        $result = $this->serializer->deserialize($data, PageBridge::class, 'json');
+        $result = $this->serializer->deserialize(
+            $data,
+            PageBridge::class,
+            'json',
+            DeserializationContext::create()->setGroups('preview')
+        );
 
         $this->assertInstanceOf(StructureBridge::class, $result);
         $this->assertEquals('internallinks', $result->getKey());
+        $this->assertEquals(1, $result->getChanger());
+        $this->assertEquals(1, $result->getCreator());
+        $this->assertInstanceOf(\DateTime::class, $result->getChanged());
+        $this->assertInstanceOf(\DateTime::class, $result->getCreated());
 
         $property = $result->getProperty('internalLinks');
         $this->assertInstanceOf(Property::class, $property);
@@ -89,14 +102,17 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $page->setResourceSegment('/hello');
         $page->setParent($this->contentDocument);
         $page->setStructureType('internallinks');
-        $page->getStructure()->bind([
-            'title' => 'World',
-            'internalLinks' => [
-                $this->contentDocument->getUuid(),
+        $page->getStructure()->bind(
+            [
+                'title' => 'World',
+                'internalLinks' => [
+                    $this->contentDocument->getUuid(),
+                ],
             ],
-        ], true);
+            true
+        );
 
-        $this->documentManager->persist($page, 'fr');
+        $this->documentManager->persist($page, 'fr', ['user' => 1]);
         $this->documentManager->flush();
 
         return $page;

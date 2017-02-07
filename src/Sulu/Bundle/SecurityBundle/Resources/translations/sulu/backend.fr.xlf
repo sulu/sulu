@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="security.user.error.notUnique">
+                <source>security.user.error.notUnique</source>
+                <target>Ce nom d'utilisateur est déjà utilisé!</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="security.user.error.missingPassword">
+                <source>security.user.error.missingPassword</source>
+                <target>Pour ajouter un nouvel utilisateur, vous devez définir un mot de passe!</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac183350142c0b4720e29a5f" resname="security.user.activate">
+                <source>security.user.activate</source>
+                <target>Activez l'utilisateur</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac183350142c0b4720e29a6f" resname="security.roles.error.non-unique">
+                <source>security.roles.error.non-unique</source>
+                <target>Nom de rôle doit être unique</target>
+            </trans-unit>
+            <trans-unit id="a59af511cc183350142c0b4720e29a6f" resname="security.user.error.notUniqueEmail">
+                <source>security.user.error.notUniqueEmail</source>
+                <target>Cette adresse email est déjà utilisée!</target>
+            </trans-unit>
+            <trans-unit id="a59af511cc183350142c0b4720e29a5d" resname="labels.success.permission-save-desc">
+                <source>labels.success.permission-save-desc</source>
+                <target>Permission sauvegardés avec succès!</target>
+            </trans-unit>
+            <trans-unit id="5637f41956c2f7c9c1fbf0728db058cc" resname="security.roles.title">
+                <source>security.roles.title</source>
+                <target>Les rôles des utilisateurs</target>
+            </trans-unit>
+            <trans-unit id="5e201470bf51b79a16ef61543d22b1df" resname="security.roles">
+                <source>security.roles</source>
+                <target>Rôle</target>
+            </trans-unit>
+            <trans-unit id="ae201470bf51b79a16ef61543d22b1df" resname="security.roles.name">
+                <source>security.roles.name</source>
+                <target>Titre de Rôle</target>
+            </trans-unit>
+            <trans-unit id="37a1d19f7da5a16c77f7d87b2609ec53" resname="security.roles.system">
+                <source>security.roles.system</source>
+                <target>Système</target>
+            </trans-unit>
+            <trans-unit id="ad4157632cc1c2a49777905f21888c34" resname="security.roles.godMode">
+                <source>security.roles.godMode</source>
+                <target>God Mode</target>
+            </trans-unit>
+            <trans-unit id="28cf83ef8f64bc60c4d3f4f12a6de93c" resname="security.roles.godModeDescription">
+                <source>security.roles.godModeDescription</source>
+                <target>Voilà le mode de dieu</target>
+            </trans-unit>
+            <trans-unit id="7bfc288be43d60933cc73693762f7bbf" resname="security.roles.section">
+                <source>security.roles.section</source>
+                <target>Section</target>
+            </trans-unit>
+            <trans-unit id="01692babbb244c70554f6be226a8b8d4" resname="security.roles.permissions">
+                <source>security.roles.permissions</source>
+                <target>Permissions</target>
+            </trans-unit>
+            <trans-unit id="aa9d596361fe589c984464479c6198cb" resname="security.roles.all">
+                <source>security.roles.all</source>
+                <target>Activer tous</target>
+            </trans-unit>
+            <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff0" resname="security.roles.none">
+                <source>security.roles.none</source>
+                <target>Déactiver tous</target>
+            </trans-unit>
+            <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff1" resname="security.roles.security-type">
+                <source>security.roles.security-type</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="564c871c3fda868b7f35e81724359618" resname="security.permission.title">
+                <source>security.permission.title</source>
+                <target>Username and Password</target>
+            </trans-unit>
+            <trans-unit id="d1dc8a9e6998e85b5dbd655d00c40567" resname="security.permission.username">
+                <source>security.permission.username</source>
+                <target>Nom d'utilisateur</target>
+            </trans-unit>
+            <trans-unit id="1c6ee1fe132b430a6577ba498fb8cf6f" resname="security.permission.password">
+                <source>security.permission.password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="2d8a20af61e1b0e697a5d14721fcb4c9" resname="security.permission.passwordRepeat">
+                <source>security.permission.passwordRepeat</source>
+                <target>Répéter le mot de passe</target>
+            </trans-unit>
+            <trans-unit id="bd6071cc375280e4ef2f080de41d62f0" resname="security.permission.email">
+                <source>security.permission.email</source>
+                <target>User-Email</target>
+            </trans-unit>
+            <trans-unit id="335eed3524bda024ac06455fc22da0e1" resname="security.permission.titlePermissions">
+                <source>security.permission.titlePermissions</source>
+                <target>Permissions</target>
+            </trans-unit>
+            <trans-unit id="291bcdd38b7826cf6a0e3db88bdd0c2b" resname="security.permission.role.title">
+                <source>security.permission.role.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="263162515a9c2bff928e4bedf2cf6e84" resname="security.permission.role.language">
+                <source>security.permission.role.language</source>
+                <target>Langue</target>
+            </trans-unit>
+            <trans-unit id="eeada25e40399fda100459d5fc309eec" resname="security.permission.role.permissions">
+                <source>security.permission.role.permissions</source>
+                <target>Permissions</target>
+            </trans-unit>
+            <trans-unit id="b0c24aad50f7c816c2e229ec47f754bc" resname="security.permission.role.chooseLanguage">
+                <source>security.permission.role.chooseLanguage</source>
+                <target>Choisissez la langue</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236b" resname="security.permission.role.allLanguages">
+                <source>security.permission.role.allLanguages</source>
+                <target>tous sélectionnés</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c721c" resname="security.reset.mail-subject">
+                <source>security.reset.mail-subject</source>
+                <target>Réinitialiser votre mot de passe Sulu</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721c" resname="security.reset.mail-message">
+                <source>security.reset.mail-message</source>
+                <target>Pour réinitialiser votre mot de passe s'il vous plaît cliquez sur Sulu sur le lien suivant ou copiez / collez-le dans votre navigateur:</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
+                <source>security.warning</source>
+                <target>Pour voir les changements des paramètres de sécurité ,  il faut recharger  le système.</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
+                <source>sulu-security.role.removed</source>
+                <target>Rôle enregistré avec succès</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
+                <source>sulu-security.role.saved</source>
+                <target>Rôle supprimée avec succès</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236l" resname="security.permissions.view">
+                <source>security.permissions.view</source>
+                <target>Regarder</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236z" resname="security.permissions.add">
+                <source>security.permissions.add</source>
+                <target>Ajouter</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236c" resname="security.permissions.edit">
+                <source>security.permissions.edit</source>
+                <target>Éditer</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236q" resname="security.permissions.delete">
+                <source>security.permissions.delete</source>
+                <target>Effacer</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236t" resname="security.permissions.security">
+                <source>security.permissions.security</source>
+                <target>Sécurité</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236x" resname="security.permissions.live">
+                <source>security.permissions.live</source>
+                <target>En direct</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

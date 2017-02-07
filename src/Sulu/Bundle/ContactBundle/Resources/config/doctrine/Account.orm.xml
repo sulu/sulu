@@ -6,6 +6,10 @@
 
     <entity name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts"
             repository-class="Sulu\Bundle\ContactBundle\Entity\AccountRepository">
+        <indexes>
+            <index columns="name"/>
+        </indexes>
+
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>
         </field>
@@ -31,13 +35,13 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
-        <many-to-one field="logo" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+        <many-to-one field="logo" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-columns>
                 <join-column name="logo" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
 
-        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface">
             <join-table name="co_account_categories">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
@@ -51,7 +55,7 @@
             </order-by>
         </many-to-many>
 
-        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-table name="co_account_medias">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,24 +11,36 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 
 /**
- * The abstract class for the different types of DoctrineFieldDescriptors.
+ * Extends field-descriptor with database information.
  */
-abstract class AbstractDoctrineFieldDescriptor extends AbstractFieldDescriptor
+abstract class AbstractDoctrineFieldDescriptor extends FieldDescriptor implements DoctrineFieldDescriptorInterface
 {
     /**
-     * Returns the select statement for this field without the alias.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     abstract public function getSelect();
 
     /**
-     * Returns all the joins required for this field.
-     *
-     * @return DoctrineJoinDescriptor[]
+     * {@inheritdoc}
+     */
+    public function getSearch()
+    {
+        return sprintf('%s LIKE :search', $this->getSelect());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWhere()
+    {
+        return $this->getSelect();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     abstract public function getJoins();
 }

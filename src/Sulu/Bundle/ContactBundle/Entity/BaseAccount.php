@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,8 +13,10 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class BaseAccount extends ApiEntity implements AuditableInterface, AccountInterface
 {
@@ -39,13 +41,13 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $changed;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      * @Exclude
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      * @Exclude
      */
     private $creator;
@@ -101,12 +103,12 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $mainUrl;
 
     /**
-     * @var \Sulu\Component\Contact\Model\ContactInterface
+     * @var ContactInterface
      */
     private $mainContact;
 
     /**
-     * @var Media
+     * @var MediaInterface
      */
     protected $logo;
 

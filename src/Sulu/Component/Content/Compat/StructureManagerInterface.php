@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
@@ -39,39 +39,12 @@ interface StructureManagerInterface extends ContainerAwareInterface
     public function getStructures($type = Structure::TYPE_PAGE);
 
     /**
-     * add dynamically an extension to structures.
+     * Wrap the given Structure with a legacy (bridge) structure.
      *
-     * @param StructureExtensionInterface $extension
-     * @param string                      $template  default is all templates
+     * @param string $type
+     * @param StructureMetadata $structure
+     *
+     * @return StructureInterface
      */
-    public function addExtension(ExtensionInterface $extension, $template = 'all');
-
-    /**
-     * Returns extensions for structure.
-     *
-     * @param string $key
-     *
-     * @return StructureExtensionInterface[]
-     */
-    public function getExtensions($key);
-
-    /**
-     * Indicates that the structure has a extension.
-     *
-     * @param string $key
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasExtension($key, $name);
-
-    /**
-     * Returns a extension.
-     *
-     * @param string $key
-     * @param string $name
-     *
-     * @return StructureExtensionInterface
-     */
-    public function getExtension($key, $name);
+    public function wrapStructure($type, StructureMetadata $structure);
 }

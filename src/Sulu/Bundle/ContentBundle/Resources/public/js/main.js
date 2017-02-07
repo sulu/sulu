@@ -12,21 +12,30 @@ require.config({
         sulucontent: '../../sulucontent/js',
         sulucontentcss: '../../sulucontent/css',
 
+        'services/sulucontent/user-settings-manager': '../../sulucontent/js/services/user-settings-manager',
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
-        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
+        "type/toggler": '../../sulucontent/js/validation/types/toggler',
+        "type/teaser-selection": '../../sulucontent/js/validation/types/teaserSelection',
+        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons',
+        "extensions/seo-tab": '../../sulucontent/js/extensions/seo-tab',
+        "extensions/excerpt-tab": '../../sulucontent/js/extensions/excerpt-tab'
     }
 });
 
 define([
     'config',
+    'services/sulucontent/user-settings-manager',
     'extensions/sulu-buttons-contentbundle',
+    'extensions/seo-tab',
+    'extensions/excerpt-tab',
+    'sulucontent/ckeditor/internal-link',
     'css!sulucontentcss/main'
-], function(Config, ContentButtons) {
+], function(Config, UserSettingsManager, ContentButtons, SeoTab, ExcerptTab, InternalLinkPlugin) {
     return {
 
         name: "Sulu Content Bundle",
@@ -35,16 +44,20 @@ define([
 
             'use strict';
 
+            SeoTab.initialize(app);
+            ExcerptTab.initialize(app);
+
             var sandbox = app.sandbox;
+            var ckeditorConfig = Config.get('sulu_content.texteditor_toolbar');
+
             sandbox.sulu.buttons.push(ContentButtons.getButtons());
-            sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
 
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
             Config.set('sulusearch.page.options', {
                 image: false
             });
-            
+
             sandbox.urlManager.setUrl(
                 'page',
                 function(data) {
@@ -58,22 +71,18 @@ define([
                         locale: data.locale
                     };
                 },
-                function (key) {
+                function(key) {
                     if (key.indexOf('page_') === 0) {
                         return 'page';
                     }
                 }
             );
 
-            function getContentLanguage() {
-                return sandbox.sulu.getUserSetting('contentLanguage') || Object.keys(Config.get('sulu-content').locales)[0];
-            }
-
             // redirects to list with specific language
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace',
                 callback: function(webspace) {
-                    var language = getContentLanguage();
+                    var language = UserSettingsManager.getContentLocale(webspace);
                     sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language);
                 }
             });
@@ -106,7 +115,7 @@ define([
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/edit::id/:content',
                 callback: function(webspace, id, content) {
-                    var language = getContentLanguage();
+                    var language = UserSettingsManager.getContentLocale(webspace);
                     sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language + '/edit:' + id + '/' + content);
                 }
             });
@@ -118,6 +127,25 @@ define([
                     return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>';
                 }
             });
+
+            // show webspace settings
+            sandbox.mvc.routes.push({
+                route: 'content/webspace/settings::id/:content',
+                callback: function(id) {
+                    return '<div data-aura-component="webspace/settings@sulucontent" data-aura-id="' + id + '" data-aura-webspace="' + id + '" />';
+                }
+            });
+
+            // ckeditor
+            sandbox.ckeditor.addPlugin(
+                'internalLink',
+                new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
+            );
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-down');
+
+            if (!!ckeditorConfig && !!ckeditorConfig.userToolbar) {
+                sandbox.ckeditor.setToolbar(ckeditorConfig.userToolbar);
+            }
         }
     };
 });

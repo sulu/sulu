@@ -5,6 +5,10 @@
 
     <mapped-superclass name="Sulu\Bundle\ContactBundle\Entity\Contact" table="co_contacts"
             repository-class="Sulu\Bundle\ContactBundle\Entity\ContactRepository">
+        <indexes>
+            <index columns="firstName"/>
+            <index columns="lastName"/>
+        </indexes>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -29,11 +33,13 @@
 
         <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale" mapped-by="contact"/>
 
-        <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="contact"/>
+        <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="contact">
+            <cascade><cascade-persist/></cascade>
+        </one-to-many>
 
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact"/>
 
-        <many-to-one field="avatar" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+        <many-to-one field="avatar" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-columns>
                 <join-column name="avatar" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
@@ -45,7 +51,7 @@
             </join-columns>
         </many-to-one>
 
-        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-table name="co_contact_medias">
                 <join-columns>
                     <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
@@ -59,7 +65,7 @@
             </order-by>
         </many-to-many>
 
-        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface">
             <join-table name="co_contact_categories">
                 <join-columns>
                     <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>

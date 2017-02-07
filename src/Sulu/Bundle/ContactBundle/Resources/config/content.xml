@@ -17,6 +17,7 @@
             <argument type="service" id="sulu_contact.util.index_comparator" />
 
             <tag name="sulu.content.type" alias="contact"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
         </service>
     </services>
 </container>

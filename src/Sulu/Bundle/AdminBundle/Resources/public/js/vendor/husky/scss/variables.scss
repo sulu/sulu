@@ -92,7 +92,8 @@ $borderRadiusSmall: 2px;
 // -------------------------
 $borderColor: $grayLighterer;
 $inputBorderFocusColor: $grayLighterer;
-$labelColor: $grayLighter;
+$labelColor: $grayLight;
+$labelChoiceColor: $black;
 
 
 $inputHeight: 30px;
@@ -109,5 +110,7 @@ $navigationHoverColor: #191D22;
 
 // Overlay
 // -------------------------
-$overlayContainerWidth: 580px;
-$overlayContainerWidthExtraWide: 700px;
+$overlayContainerWidthSmall: 440px;
+$overlayContainerWidthMedium: 580px;
+$overlayContainerWidthLarge: 860px;
+$overlayContainerWidthExtraLarge: 1360px;

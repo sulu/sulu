@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,8 +43,10 @@ class UserBuilder extends SuluBuilder
         $password = 'admin';
         $roleName = 'User';
         $system = 'Sulu';
+        $locale = 'de';
         $doctrine = $this->container->get('doctrine')->getManager();
         $userRep = $this->container->get('sulu.repository.user');
+        $userLocales = $this->container->getParameter('sulu_core.locales');
 
         $existing = $userRep->findOneByUsername($user);
 
@@ -69,6 +71,11 @@ class UserBuilder extends SuluBuilder
             sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
         );
 
+        // locale choosen doesn't exist, fallback
+        if (!in_array($locale, $userLocales)) {
+            $locale = array_shift($userLocales);
+        }
+
         $this->execCommand(
             'Creating user: ' . $user,
             'sulu:security:user:create',
@@ -77,7 +84,7 @@ class UserBuilder extends SuluBuilder
                 'firstName' => 'Adam',
                 'lastName' => 'Ministrator',
                 'email' => 'admin@example.com',
-                'locale' => 'de',
+                'locale' => $locale,
                 'role' => $roleName,
                 'password' => $password,
             ]

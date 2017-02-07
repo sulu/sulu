@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,19 +26,31 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CleanupHistoryCommand extends ContainerAwareCommand
 {
     /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @var SessionManagerInterface
      */
     private $sessionManager;
 
     /**
-     * @var OutputInterface
+     * @var SessionInterface
      */
-    private $output;
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
+    public function __construct(
+        SessionManagerInterface $sessionManager,
+        SessionInterface $defaultSession,
+        SessionInterface $liveSession
+    ) {
+        $this->sessionManager = $sessionManager;
+        $this->defaultSession = $defaultSession;
+        $this->liveSession = $liveSession;
+
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -48,7 +60,7 @@ class CleanupHistoryCommand extends ContainerAwareCommand
         $this->setName('sulu:content:cleanup-history');
         $this->setDescription('Cleanup resource-locator history');
         $this->setHelp(
-            <<<EOT
+            <<<'EOT'
 The <info>%command.name%</info> command cleanup the history of the resource-locator of a <info>locale</info>.
 
     %command.full_name% sulu_io de --dry-run
@@ -74,30 +86,44 @@ EOT
         $basePath = $input->getOption('base-path');
         $dryRun = $input->getOption('dry-run');
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
-        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->output = $output;
-
         $path = $this->sessionManager->getRoutePath($webspaceKey, $locale);
         $relativePath = ($basePath !== null ? '/' . ltrim($basePath, '/') : '/');
         $fullPath = rtrim($path . $relativePath, '/');
 
-        if (!$this->session->nodeExists($fullPath)) {
-            $this->output->write('<error>Resource-Locator "' . $relativePath . '" not found</error>');
+        $this->cleanSession($output, $this->defaultSession, $fullPath, $dryRun);
+        $this->cleanSession($output, $this->liveSession, $fullPath, $dryRun);
+
+        if (false === $dryRun) {
+            $this->defaultSession->save();
+            $this->liveSession->save();
+            $output->writeln('<info>Save complete</info>');
+        } else {
+            $output->writeln('<info>Dry run complete</info>');
+        }
+    }
+
+    private function cleanSession(OutputInterface $output, SessionInterface $session, $path, $dryRun)
+    {
+        $sessionName = $session->getWorkspace()->getName();
+        $output->writeln(sprintf('<info>Session</info> %s', $sessionName));
+
+        if (!$session->nodeExists($path)) {
+            $output->write(
+                sprintf(
+                    '<error>Resource-Locator "%s" not found in session "%s"</error>',
+                    $path,
+                    $sessionName
+                )
+            );
 
             return;
         }
 
-        $node = $this->session->getNode($fullPath);
-        $this->cleanup($node, $path, $dryRun);
+        $node = $session->getNode($path);
 
-        if (false === $dryRun) {
-            $this->output->writeln('<info>Saving ...</info>');
-            $this->session->save();
-            $this->output->writeln('<info>Done</info>');
-        } else {
-            $this->output->writeln('<info>Dry run complete</info>');
-        }
+        $this->cleanup($output, $node, $path, $dryRun);
+
+        $output->writeln('');
     }
 
     /**
@@ -107,16 +133,16 @@ EOT
      * @param string        $rootPath
      * @param bool          $dryRun
      */
-    private function cleanup(NodeInterface $node, $rootPath, $dryRun)
+    private function cleanup(OutputInterface $output, NodeInterface $node, $rootPath, $dryRun)
     {
         foreach ($node->getNodes() as $childNode) {
-            $this->cleanup($childNode, $rootPath, $dryRun);
+            $this->cleanup($output, $childNode, $rootPath, $dryRun);
         }
 
         $path = ltrim(str_replace($rootPath, '', $node->getPath()), '/');
 
         if (!$node->getPropertyValueWithDefault('sulu:history', false)) {
-            $this->output->writeln(
+            $output->writeln(
                 '<info>Processing aborted: </info>/' .
                 $path . ' <comment>(no history url)</comment>'
             );
@@ -127,6 +153,6 @@ EOT
         if ($dryRun === false) {
             $node->remove();
         }
-        $this->output->writeln('<info>Processing: </info>/' . $path);
+        $output->writeln('<info>Processing: </info>/' . $path);
     }
 }

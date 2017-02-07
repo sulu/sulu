@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +29,7 @@ class ExportCommand extends ContainerAwareCommand
             ->setDescription('Export all catalogues with a locale')
             ->addArgument(
                 'locale',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'The locale of the catalogue to export'
             )
             ->addArgument(
@@ -37,12 +37,6 @@ class ExportCommand extends ContainerAwareCommand
                 InputArgument::OPTIONAL,
                 'The format of the export',
                 'json'
-            )
-            ->addOption(
-                'package',
-                'p',
-                InputOption::VALUE_OPTIONAL,
-                'The id of the package of which the translations should be exported. If not given all packages will be exported'
             )
             ->addOption(
                 'backend',
@@ -55,12 +49,6 @@ class ExportCommand extends ContainerAwareCommand
                 'f',
                 InputOption::VALUE_NONE,
                 'Defines if only the frontend translations should be exported'
-            )
-            ->addOption(
-                'location',
-                'l',
-                InputOption::VALUE_OPTIONAL,
-                'Sets the name of the location that should be exported'
             )
             ->addOption(
                 'path',
@@ -76,50 +64,95 @@ class ExportCommand extends ContainerAwareCommand
                 'sets the filename of the exported file',
                 'sulu'
             );
+
+        $this->setDescription(
+            <<< 'EOD'
+Loads translation messages as defined by the parameters
+from the bundles and writes them to a file, which also can be configured
+via the parameters. If a locale got specified, only the translation
+corresponding to that locale get exported. Otherwise the translation
+files get exported for all locales defined in the system
+EOD
+        );
     }
 
+    /**
+     * Loads translation messages as defined by the parameters from the bundles
+     * and writes them to a file, which also can be configured via the parameters.
+     * If a locale got specified, only the translation corresponding to that locale
+     * get exported. Otherwise the translation files get exported for all locales
+     * defined in the system.
+     *
+     * @param InputInterface $input The input of the command
+     * @param OutputInterface $output The output of the command
+     *
+     * @return int 0 iff everything went fine
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $locale = $input->getArgument('locale');
-        $format = $input->getArgument('format');
+        $locales = null;
+        if ($locale) {
+            $locales = [$locale];
+        } else {
+            $locales = $this->getContainer()->getParameter('sulu_core.translations');
+        }
+        foreach ($locales as $l) {
+            $this->exportForLocale($input, $output, $l);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Executes the command for a given locale.
+     *
+     * @param InputInterface $input The input of the command
+     * @param OutputInterface $output The output of the command
+     * @param $locale string The locale
+     */
+    private function exportForLocale(InputInterface $input, OutputInterface $output, $locale)
+    {
+        $formatInput = $input->getArgument('format');
         $backend = $input->getOption('backend');
         $frontend = $input->getOption('frontend');
-        $location = $input->getOption('location');
         $path = $input->getOption('path');
         $filename = $input->getOption('filename');
-        $packageId = $input->getOption('package');
 
-        $export = $this->getContainer()->get('sulu_translate.export');
-
+        $export = new Export($this->getContainer()->get('translator.default'), $output);
         $export->setLocale($locale);
-
-        // Parse format
-        switch ($format) {
-            case 'xliff':
-            case 'xlf':
-                $export->setFormat(Export::XLIFF);
-                break;
-            default:
-                $export->setFormat(Export::JSON);
-        }
+        $export->setPath($path);
         $export->setFilename($filename);
+        $export->setFormat($this->getFormatFromInput($formatInput));
         if ($backend) {
-            $export->setBackend($backend);
+            $export->setBackend(true);
         }
         if ($frontend) {
-            $export->setFrontend($frontend);
+            $export->setFrontend(true);
         }
-        if ($location) {
-            $export->setLocation($location);
-        }
-        if ($path) {
-            $export->setPath($path);
-        }
-        if ($packageId) {
-            $export->setPackageId($packageId);
-        }
-        $export->execute();
 
-        $output->writeln('Successfully exported translations to file!');
+        $export->execute();
+    }
+
+    /**
+     * Converts the users input to the integer description of the
+     * format the export class expects.
+     *
+     * @param $input string The users input to the command
+     *
+     * @return int The export format code
+     */
+    private function getFormatFromInput($input)
+    {
+        switch ($input) {
+            case 'xliff':
+            case 'xlf':
+                return Export::XLIFF;
+                break;
+            default:
+                return Export::JSON;
+        }
+
+        throw new \InvalidArgumentException('Unknown format: ' . $input);
     }
 }

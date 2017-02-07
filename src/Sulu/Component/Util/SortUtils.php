@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +16,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 /**
  * Sorting utilities.
  */
-class SortUtils
+final class SortUtils
 {
     /**
      * Cannot instantiate this class.
@@ -53,7 +53,7 @@ class SortUtils
      *
      * The path is any path accepted by the property access component:
      *
-     * @link http://symfony.com/doc/current/components/property_access/introduction.html
+     * @see http://symfony.com/doc/current/components/property_access/introduction.html
      *
      * @param array        $values
      * @param string|array $path      Path or paths on which to sort on

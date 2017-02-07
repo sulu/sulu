@@ -1,3 +1,8 @@
 sulu_category.categories:
     type: rest
     resource: Sulu\Bundle\CategoryBundle\Controller\CategoryController
+
+sulu_category.keywords:
+    type: rest
+    parent: sulu_category.categories
+    resource: Sulu\Bundle\CategoryBundle\Controller\KeywordController

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,7 +34,7 @@ class LocalizationManager implements LocalizationManagerInterface
 
         foreach ($this->localizationProviders as $localizationProvider) {
             foreach ($localizationProvider->getAllLocalizations() as $localization) {
-                $localizations[$localization->getLocalization()] = $localization;
+                $localizations[$localization->getLocale()] = $localization;
             }
         }
 

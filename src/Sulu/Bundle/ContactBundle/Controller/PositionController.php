@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -165,7 +165,6 @@ class PositionController extends RestController implements ClassResourceInterfac
     {
         try {
             $delete = function ($id) {
-
                 /* @var Position $position */
                 $position = $this->getDoctrine()
                     ->getRepository(self::$entityName)

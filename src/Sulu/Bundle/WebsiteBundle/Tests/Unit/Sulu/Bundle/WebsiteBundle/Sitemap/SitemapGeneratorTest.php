@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,33 +12,31 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
 class SitemapGeneratorTest extends SuluTestCase
 {
-    /**
-     * @var StructureInterface[]
-     */
-    private $dataEn;
-
-    /**
-     * @var StructureInterface[]
-     */
-    private $dataEnUs;
-
     /**
      * @var Webspace
      */
@@ -49,20 +47,67 @@ class SitemapGeneratorTest extends SuluTestCase
      */
     private $sitemapGenerator;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
+
+    /**
+     * @var string
+     */
+    private $languageNamespace;
+
+    /**
+     * @var NodeInterface
+     */
+    private $contents;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
     protected function setUp()
     {
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
-        $this->dataEn = $this->prepareTestData();
-        $this->dataEnUs = $this->prepareTestData('en_us');
+        $this->prepareTestData('en');
+        $this->prepareTestData('en_us');
 
-        $this->contents = $this->session->getNode('/cmf/sulu_io/contents');
+        $this->contents = $this->session->getNode('/cmf/test_io/contents');
 
         $this->contents->setProperty('i18n:en-state', Structure::STATE_PUBLISHED);
         $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
@@ -76,7 +121,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->sitemapGenerator = new SitemapGenerator(
             $contentQuery,
             $this->webspaceManager,
-            new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace)
+            new SitemapContentQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace)
         );
     }
 
@@ -87,7 +132,7 @@ class SitemapGeneratorTest extends SuluTestCase
         }
 
         $this->webspace = new Webspace();
-        $this->webspace->setKey('sulu_io');
+        $this->webspace->setKey('test_io');
 
         $local1 = new Localization();
         $local1->setLanguage('en');
@@ -99,10 +144,8 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->webspace->setLocalizations([$local1, $local2]);
         $this->webspace->setName('Default');
 
-        $theme = new Theme();
-        $theme->setKey('test');
-        $theme->addDefaultTemplate('page', 'default');
-        $this->webspace->setTheme($theme);
+        $this->webspace->addDefaultTemplate('page', 'default');
+        $this->webspace->setTheme('test');
 
         $this->webspace->setNavigation(
             new Navigation(
@@ -135,189 +178,125 @@ class SitemapGeneratorTest extends SuluTestCase
      *
      * @return StructureInterface[]
      */
-    private function prepareTestData($locale = 'en')
+    private function prepareTestData($locale)
     {
-        $data = [
-            'news' => [
-                'title' => 'News ' . $locale,
-                'url' => '/news',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['footer'],
-            ],
-            'products' => [
-                'title' => 'Products ' . $locale,
-                'url' => '/products',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['main'],
-            ],
-            'news/news-1' => [
-                'title' => 'News-1 ' . $locale,
-                'url' => '/news/news-1',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['main', 'footer'],
-            ],
-            'news/news-2' => [
-                'title' => 'News-2 ' . $locale,
-                'url' => '/news/news-2',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['main'],
-            ],
-            'products/products-1' => [
-                'title' => 'Products-1 ' . $locale,
-                'external' => '123-123-123',
-                'url' => '/products/product-1',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => ['main', 'footer'],
-            ],
-            'products/products-2' => [
-                'title' => 'Products-2 ' . $locale,
-                'url' => '/products/product-2',
-                'external' => 'http://www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-                'navContexts' => ['main'],
-            ],
-            'products/products-3' => [
-                'title' => 'Products-3 ' . $locale,
-                'url' => '/products/product-3',
-                'external' => 'http://www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => ['main'],
-            ],
-        ];
+        // TODO set published state?
+        /** @var PageDocument $newsDocument */
+        $newsDocument = $this->documentManager->create('page');
+        $newsDocument->setStructureType('overview');
+        $newsDocument->setTitle('News ' . $locale);
+        $newsDocument->setResourceSegment('/news');
+        $newsDocument->setNavigationContexts(['footer']);
+        $newsDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($newsDocument, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($newsDocument, $locale);
+        $this->documentManager->flush();
 
-        $data['news'] = $this->mapper->save(
-            $data['news'],
-            'overview',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['news/news-1'] = $this->mapper->save(
-            $data['news/news-1'],
-            'simple',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['news/news-2'] = $this->mapper->save(
-            $data['news/news-2'],
-            'simple',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
+        /** @var PageDocument $productDocument */
+        $productDocument = $this->documentManager->create('page');
+        $productDocument->setStructureType('overview');
+        $productDocument->setTitle('Products ' . $locale);
+        $productDocument->setResourceSegment('/products');
+        $productDocument->setNavigationContexts(['main']);
+        $productDocument->setWorkflowStage(WorkflowStage::TEST);
+        $this->documentManager->persist($productDocument, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->flush();
 
-        $data['products'] = $this->mapper->save(
-            $data['products'],
-            'overview',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            null,
-            StructureInterface::STATE_TEST
-        );
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle('News-1 ' . $locale);
+        $document->setResourceSegment('/news/news-1');
+        $document->setNavigationContexts(['main', 'footer']);
+        $document->setParent($newsDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
+        $this->documentManager->flush();
 
-        $data['products/products-1']['internal_link'] = $data['products']->getUuid();
-        $data['products/products-1'] = $this->mapper->save(
-            $data['products/products-1'],
-            'overview',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['products/products-2'] = $this->mapper->save(
-            $data['products/products-2'],
-            'overview',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['products/products-3']['internal_link'] = $data['news']->getUuid();
-        $data['products/products-3'] = $this->mapper->save(
-            $data['products/products-3'],
-            'overview',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle('News-2 ' . $locale);
+        $document->setResourceSegment('/news/news-2');
+        $document->setNavigationContexts(['main']);
+        $document->setParent($newsDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
+        $this->documentManager->flush();
 
-        return $data;
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setTitle('Products-1 ' . $locale);
+        $document->setResourceSegment('/products/product-1');
+        $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setRedirectTarget($productDocument);
+        $document->setNavigationContexts(['main', 'footer']);
+        $document->setParent($productDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
+        $this->documentManager->flush();
+
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setTitle('Products-2 ' . $locale);
+        $document->setResourceSegment('/products/product-w');
+        $document->setRedirectType(RedirectType::EXTERNAL);
+        $document->setRedirectExternal('http://www.asdf.at');
+        $document->setNavigationContexts(['main']);
+        $document->setParent($productDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
+        $this->documentManager->flush();
+
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setRedirectTarget('overview');
+        $document->setTitle('Products-3 ' . $locale);
+        $document->setResourceSegment('/products/product-3');
+        $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setRedirectTarget($newsDocument);
+        $document->setNavigationContexts(['main']);
+        $document->setParent($productDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
+        $this->documentManager->flush();
     }
 
     public function testGenerateAllFlat()
     {
-        $result = $this->sitemapGenerator->generateAllLocals('sulu_io', true)->getSitemap();
+        $result = $this->sitemapGenerator->generateAllLocals('test_io', true)->getSitemap();
 
-        $this->assertEquals(11, count($result));
-        $this->assertEquals('Homepage', $result[0]['title']);
-        $this->assertEquals('News en', $result[1]['title']);
-        $this->assertEquals('News-1 en', $result[2]['title']);
-        $this->assertEquals('News-2 en', $result[3]['title']);
-        $this->assertEquals('Products-2 en', $result[4]['title']);
-        $this->assertEquals('Products-3 en', $result[5]['title']);
-        $this->assertEquals('News en_us', $result[6]['title']);
-        $this->assertEquals('News-1 en_us', $result[7]['title']);
-        $this->assertEquals('News-2 en_us', $result[8]['title']);
+        $result = array_map(
+            function ($item) {
+                return [$item['title'], $item['url'], $item['nodeType']];
+            },
+            $result
+        );
+
+        $this->assertCount(12, $result);
+        $this->assertContains(['Homepage', '/', 1], $result);
+        $this->assertContains(['News en', '/news', 1], $result);
+        $this->assertContains(['News-1 en', '/news/news-1', 1], $result);
+        $this->assertContains(['News-2 en', '/news/news-2', 1], $result);
+        $this->assertContains(['Products-2 en', 'http://www.asdf.at', 4], $result);
+        $this->assertContains(['Products-3 en', '/news', 2], $result);
+        $this->assertContains(['News en_us', '/news', 1], $result);
+        $this->assertContains(['News-1 en_us', '/news/news-1', 1], $result);
+        $this->assertContains(['News-2 en_us', '/news/news-2', 1], $result);
         // Products-1 en/en_us is a internal link to the unpublished page products (not in result)
-        $this->assertEquals('Products-2 en_us', $result[9]['title']);
-        $this->assertEquals('Products-3 en_us', $result[10]['title']);
-
-        $this->assertEquals('/news', $result[1]['url']);
-        $this->assertEquals('/news/news-1', $result[2]['url']);
-        $this->assertEquals('/news/news-2', $result[3]['url']);
-        $this->assertEquals('http://www.asdf.at', $result[4]['url']);
-        $this->assertEquals('/news', $result[5]['url']);
-        $this->assertEquals('/news', $result[6]['url']);
-        $this->assertEquals('/news/news-1', $result[7]['url']);
-        $this->assertEquals('/news/news-2', $result[8]['url']);
-        $this->assertEquals('http://www.asdf.at', $result[9]['url']);
-        $this->assertEquals('/news', $result[10]['url']);
-
-        $this->assertEquals('/', $result[0]['url']);
-        $this->assertEquals(1, $result[0]['nodeType']);
-        $this->assertEquals(1, $result[1]['nodeType']);
-        $this->assertEquals(1, $result[2]['nodeType']);
-        $this->assertEquals(1, $result[3]['nodeType']);
-        $this->assertEquals(4, $result[4]['nodeType']);
-        $this->assertEquals(2, $result[5]['nodeType']);
-        $this->assertEquals(1, $result[6]['nodeType']);
-        $this->assertEquals(1, $result[7]['nodeType']);
-        $this->assertEquals(1, $result[8]['nodeType']);
-        $this->assertEquals(4, $result[9]['nodeType']);
-        $this->assertEquals(2, $result[10]['nodeType']);
+        $this->assertContains(['Products-2 en_us', 'http://www.asdf.at', 4], $result);
+        $this->assertContains(['Products-3 en_us', '/news', 2], $result);
     }
 
     public function testGenerateFlat()
     {
-        $result = $this->sitemapGenerator->generate('sulu_io', 'en', true)->getSitemap();
+        $result = $this->sitemapGenerator->generate('test_io', 'en', true)->getSitemap();
 
-        $this->assertEquals(6, count($result));
+        $this->assertCount(6, $result);
         $this->assertEquals('Homepage', $result[0]['title']);
         $this->assertEquals('News en', $result[1]['title']);
         $this->assertEquals('News-1 en', $result[2]['title']);
@@ -342,7 +321,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateTree()
     {
-        $result = $this->sitemapGenerator->generate('sulu_io', 'en')->getSitemap();
+        $result = $this->sitemapGenerator->generate('test_io', 'en')->getSitemap();
 
         $root = $result;
         $this->assertEquals('Homepage', $root['title']);
@@ -351,7 +330,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
         $layer1 = array_values($root['children']);
 
-        $this->assertEquals(3, count($layer1));
+        $this->assertCount(3, $layer1);
 
         $this->assertEquals('News en', $layer1[0]['title']);
         $this->assertEquals('/news', $layer1[0]['url']);

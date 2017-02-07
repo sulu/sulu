@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,9 +37,19 @@ class CollectionMeta
     private $id;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     * @var CollectionInterface
      */
     private $collection;
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set title.
@@ -114,23 +124,13 @@ class CollectionMeta
     }
 
     /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set collection.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection
+     * @param CollectionInterface $collection
      *
      * @return CollectionMeta
      */
-    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection)
+    public function setCollection(CollectionInterface $collection)
     {
         $this->collection = $collection;
 
@@ -140,7 +140,7 @@ class CollectionMeta
     /**
      * Get collection.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     * @return CollectionInterface
      */
     public function getCollection()
     {

@@ -11,7 +11,7 @@
 
     <services>
         <!-- Controller -->
-        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%" scope="request">
+        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%">
             <argument type="service" id="massive_search.search_manager"/>
             <argument type="service" id="massive_search.metadata.provider.chain"/>
             <argument type="service" id="sulu_security.security_checker"/>
@@ -19,6 +19,14 @@
             <argument type="service" id="sulu_core.list_rest_helper"/>
             <argument type="service" id="sulu_search.index_configuration_provider"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_search.controller.website_search" class="Sulu\Bundle\SearchBundle\Controller\WebsiteSearchController">
+            <argument type="service" id="massive_search.search_manager"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.parameter"/>
+            <argument type="service" id="templating"/>
+            <tag name="sulu.context" context="website"/>
         </service>
 
         <service id="sulu_search.index_configuration_provider" class="Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProvider">

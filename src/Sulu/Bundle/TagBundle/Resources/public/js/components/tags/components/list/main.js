@@ -91,7 +91,15 @@ define(function() {
             toolbar: {
                 buttons: {
                     add: {},
-                    deleteSelected: {}
+                    deleteSelected: {},
+                    export: {
+                        options: {
+                            urlParameter: {
+                                flat: true
+                            },
+                            url: '/admin/api/tags.csv'
+                        }
+                    }
                 }
             }
         },
@@ -118,6 +126,7 @@ define(function() {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     resultKey: 'tags',
+                    storageName: 'tags',
                     searchFields: ['name'],
                     instanceName: constants.datagridInstanceName,
                     viewOptions: {

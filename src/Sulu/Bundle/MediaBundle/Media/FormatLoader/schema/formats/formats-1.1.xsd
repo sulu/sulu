@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/media/formats" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://schemas.sulu.io/media/formats" xmlns:mf="http://schemas.sulu.io/media/formats"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xs:complexType name="formatsType">
+        <xs:sequence>
+            <xs:element name="format" type="formatType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="formatType">
+        <xs:sequence>
+            <xs:element name="meta" type="metaType" minOccurs="0">
+                <xs:unique name="langUnique">
+                    <xs:selector xpath="mf:title"/>
+                    <xs:field xpath="@lang"/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="scale" type="scaleType"/>
+            <xs:element name="transformations" type="transformationsType" minOccurs="0"/>
+            <xs:element type="optionsType" name="options" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:string" use="required"/>
+        <xs:attribute name="internal" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="optionsType">
+        <xs:sequence>
+            <xs:element type="parameterType" name="option" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="metaType">
+        <xs:sequence>
+            <xs:element name="title" type="titleType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="scaleType">
+        <xs:attribute name="x" type="xs:positiveInteger"/>
+        <xs:attribute name="y" type="xs:positiveInteger"/>
+        <xs:attribute name="mode" type="modeType"/>
+        <xs:attribute name="retina" type="xs:boolean"/>
+        <xs:attribute name="forceRatio" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="transformationsType">
+        <xs:sequence>
+            <xs:element name="transformation" type="transformationType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="titleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="lang" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="modeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="inset"/>
+            <xs:enumeration value="outbound"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="transformationType">
+        <xs:sequence>
+            <xs:element name="effect" type="xs:string"/>
+            <xs:element name="parameters" type="parametersType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="parametersType">
+        <xs:sequence>
+            <xs:element name="parameter" type="parameterType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="parameterType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:element name="formats" type="formatsType">
+        <xs:key name="formatKey">
+            <xs:selector xpath="mf:format"/>
+            <xs:field xpath="@key"/>
+        </xs:key>
+    </xs:element>
+</xs:schema>

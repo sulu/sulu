@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +13,6 @@ namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\NodeManager;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -32,27 +31,19 @@ class DocumentExecutor
     private $documentManager;
 
     /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
      * @var Initializer
      */
     private $initializer;
 
     /**
      * @param DocumentManager $documentManager
-     * @param NodeManager     $nodeManager
      * @param Initializer     $initializer
      */
     public function __construct(
         DocumentManager $documentManager,
-        NodeManager $nodeManager,
         Initializer $initializer
     ) {
         $this->documentManager = $documentManager;
-        $this->nodeManager = $nodeManager;
         $this->initializer = $initializer;
     }
 
@@ -68,15 +59,9 @@ class DocumentExecutor
     {
         $output = $output ?: new NullOutput();
 
-        if (true === $purge) {
-            $output->writeln('<comment>Purging workspace</comment>');
-            $this->nodeManager->purgeWorkspace();
-            $this->nodeManager->save();
-        }
-
         if (true === $initialize) {
             $output->writeln('<comment>Initializing repository</comment>');
-            $this->initializer->initialize($output);
+            $this->initializer->initialize($output, $purge);
         }
 
         $output->writeln('<comment>Loading fixtures</comment>');

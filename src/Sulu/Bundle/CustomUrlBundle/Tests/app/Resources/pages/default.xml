@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>default</key>
+
+    <view>ClientWebsiteBundle:templates:default</view>
+    <controller>SuluWebsiteBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <meta>
+        <title lang="de">Standard</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="de">Titel</title>
+            </meta>
+
+            <tag name="sulu.search.field" type="string" role="title" />
+
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <meta>
+                <title lang="de">Adresse</title>
+            </meta>
+
+            <indexField />
+
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <property name="default" type="text_area">
+            <meta>
+                <title lang="de">Images</title>
+            </meta>
+        </property>
+    </properties>
+</template>

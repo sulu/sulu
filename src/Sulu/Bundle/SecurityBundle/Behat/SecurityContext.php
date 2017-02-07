@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,6 +15,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
@@ -22,21 +23,23 @@ use Sulu\Bundle\TestBundle\Behat\BaseContext;
  */
 class SecurityContext extends BaseContext implements SnippetAcceptingContext
 {
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'admin';
+
     /**
      * @Given the user :username exists with password :password
      */
     public function theUserExistsWithPassword($username, $password)
     {
-        $this->getOrCreateRole('User', 'Sulu');
-        $this->execCommand('sulu:security:user:create', [
-            'username' => $username,
-            'firstName' => 'Adam',
-            'lastName' => 'Ministrator',
-            'email' => 'admin@example.com',
-            'locale' => 'en',
-            'password' => $password,
-            'role' => 'User',
-        ]);
+        $this->createUser($username, $password, 'en', false);
+    }
+
+    /**
+     * @Given the user :username exists with password :password and locale :locale
+     */
+    public function theUserExistsWithPasswordAndLocale($username, $password, $locale)
+    {
+        $this->createUser($username, $password, $locale, true);
     }
 
     /**
@@ -105,26 +108,70 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given the not enabled user :username exists with password :password
+     */
+    public function theNotEnabledUserExistsWithPassword($username, $password)
+    {
+        $this->getOrCreateRole('User', 'Sulu');
+        $this->execCommand('sulu:security:user:create', [
+            'username' => $username,
+            'firstName' => 'Adam',
+            'lastName' => 'Ministrator',
+            'email' => $username . '@example.com',
+            'locale' => 'en',
+            'password' => $password,
+            'role' => 'User',
+        ]);
+
+        $user = $this->getEntityManager()
+            ->getRepository('SuluSecurityBundle:User')->findOneBy([
+                'username' => $username,
+            ]);
+        $user->setEnabled(false);
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @Given I am logged in as an administrator
      */
     public function iAmLoggedInAsAnAdministrator()
     {
-        $this->theUserExistsWithPassword('admin', 'admin');
-        $this->visitPath('/admin');
-        $page = $this->getSession()->getPage();
-        $this->waitForSelector('#username');
-        $this->fillSelector('#username', 'admin');
-        $this->fillSelector('#password', 'admin');
-        $loginButton = $page->findById('login-button');
+        $this->logInAsAdministrator();
+    }
 
-        if (!$loginButton) {
-            throw new \InvalidArgumentException(
-                'Could not find submit button on login page'
+    /**
+     * @Given I am logged in as an administrator with locale :locale
+     *
+     * @param string $locale
+     */
+    public function iAmLoggedInAsAnAdministratorWithLocale($locale)
+    {
+        $this->logInAsAdministrator($locale);
+    }
+
+    /**
+     * @Given I am logged in as an administrator with default locale
+     */
+    public function iAmLoggedInAsAnAdministratorWithDefaultLocale()
+    {
+        $locale = $this->getContainer()->getParameter('locale');
+        $this->logInAsAdministrator($locale);
+    }
+
+    /**
+     * @Given I am editing the permission of a user with username :username
+     */
+    public function iAmEditingThePermissionsOfAUser($username)
+    {
+        /** @var User $user */
+        $user = $this->getEntityManager()
+            ->getRepository('SuluSecurityBundle:User')->findOneBy(
+                ['username' => $username]
             );
-        }
 
-        $loginButton->click();
-        $this->getSession()->wait(5000, "document.querySelector('.navigation')");
+        $this->visitPath('/admin/#contacts/contacts/edit:' . $user->getContact()->getId() . '/permissions');
+        $this->getSession()->wait(5000, '$("#permissions-grid").length');
     }
 
     private function getOrCreateRole($name, $system)
@@ -137,31 +184,79 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
             return $role;
         }
 
-        $role = new Role();
-        $role->setName($name);
-        $role->setSystem($system);
-        $pool = $this->getContainer()->get('sulu_admin.admin_pool');
-        $securityContexts = $pool->getSecurityContexts();
-
-        $securityContextsFlat = [];
-        array_walk_recursive(
-            $securityContexts['Sulu'],
-            function ($value) use (&$securityContextsFlat) {
-                $securityContextsFlat[] = $value;
-            }
+        $this->execCommand(
+            'sulu:security:role:create',
+            [
+                'name' => $name,
+                'system' => 'Sulu',
+            ]
         );
 
-        foreach ($securityContextsFlat as $securityContext) {
-            $permission = new Permission();
-            $permission->setRole($role);
-            $permission->setContext($securityContext);
-            $permission->setPermissions(120);
-            $role->addPermission($permission);
+        return $role;
+    }
+
+    /**
+     * Creates user with given credentials.
+     *
+     * @param string $username
+     * @param string $password
+     * @param string $locale
+     * @param bool $checkIfUserExists
+     *
+     * @throws \Exception
+     */
+    private function createUser($username, $password, $locale, $checkIfUserExists)
+    {
+        if ($checkIfUserExists) {
+            $user = $this->getEntityManager()
+                ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+                ->findOneByUsername($username);
+
+            if ($user) {
+                // User exists already, we don't need to create it again.
+                return;
+            }
         }
 
-        $this->getEntityManager()->persist($role);
-        $this->getEntityManager()->flush();
+        $this->getOrCreateRole('User', 'Sulu');
+        $this->execCommand('sulu:security:user:create', [
+            'username' => $username,
+            'firstName' => 'Adam',
+            'lastName' => 'Ministrator',
+            'email' => $username . '@example.com',
+            'locale' => $locale,
+            'password' => $password,
+            'role' => 'User',
+        ]);
+    }
 
-        return $role;
+    /**
+     * Login as administrator with given locale.
+     *
+     * @param string $locale
+     */
+    private function logInAsAdministrator($locale = null)
+    {
+        if ($locale) {
+            $this->theUserExistsWithPasswordAndLocale(self::ADMIN_USERNAME, self::ADMIN_PASSWORD, $locale);
+        } else {
+            $this->theUserExistsWithPassword(self::ADMIN_USERNAME, self::ADMIN_PASSWORD);
+        }
+
+        $this->visitPath('/admin');
+        $page = $this->getSession()->getPage();
+        $this->waitForSelector('#username');
+        $this->fillSelector('#username', self::ADMIN_USERNAME);
+        $this->fillSelector('#password', self::ADMIN_PASSWORD);
+        $loginButton = $page->findById('login-button');
+
+        if (!$loginButton) {
+            throw new \InvalidArgumentException(
+                'Could not find submit button on login page'
+            );
+        }
+
+        $loginButton->click();
+        $this->getSession()->wait(5000, "document.querySelector('.navigation')");
     }
 }

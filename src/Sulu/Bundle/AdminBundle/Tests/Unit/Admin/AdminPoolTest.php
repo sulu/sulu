@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,75 +42,45 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->adminPool = new AdminPool();
-        $this->admin1 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\AdminBundle\Admin\Admin',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getCommands', 'getSecurityContexts']
-        );
-        $this->admin2 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\AdminBundle\Admin\Admin',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getCommands', 'getSecurityContexts']
-        );
-        $this->command = $this->getMock('Command');
-        $this->admin1->expects($this->any())
-            ->method('getCommands')
-            ->will($this->returnValue([new $this->command()]));
-        $this->admin2->expects($this->any())
-            ->method('getCommands')
-            ->will($this->returnValue([new $this->command()]));
-        $this->admin1->expects($this->any())
-            ->method('getSecurityContexts')
-            ->will(
-                $this->returnValue(
-                    [
-                        'Sulu' => [
-                            'Assets' => [
-                                'assets.videos',
-                                'assets.pictures',
-                                'assets.documents',
-                            ],
-                        ],
-                    ]
-                )
-            );
-        $this->admin2->expects($this->any())
-            ->method('getSecurityContexts')
-            ->will(
-                $this->returnValue(
-                    [
-                        'Sulu' => [
-                            'Portal' => [
-                                'portals.com',
-                                'portals.de',
-                            ],
-                        ],
-                    ]
-                )
-            );
+        $this->admin1 = $this->prophesize(Admin::class);
+        $this->admin2 = $this->prophesize(Admin::class);
+
+        $this->admin1->getSecurityContexts()->willReturn([
+            'Sulu' => [
+                'Assets' => [
+                    'assets.videos',
+                    'assets.pictures',
+                    'assets.documents',
+                ],
+            ],
+        ]);
+
+        $this->admin2->getSecurityContexts()->willReturn([
+            'Sulu' => [
+                'Portal' => [
+                    'portals.com',
+                    'portals.de',
+                ],
+            ],
+        ]);
+
         $rootItem1 = new NavigationItem('Root');
         $rootItem1->addChild(new NavigationItem('Child1'));
-        $this->admin1->setNavigation(new Navigation($rootItem1));
+        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem1));
+
         $rootItem2 = new NavigationItem('Root');
         $rootItem2->addChild(new NavigationItem('Child2'));
-        $this->admin2->setNavigation(new Navigation($rootItem2));
-        $this->adminPool->addAdmin($this->admin1);
-        $this->adminPool->addAdmin($this->admin2);
+        $this->admin2->getNavigation()->willReturn(new Navigation($rootItem2));
+
+        $this->adminPool->addAdmin($this->admin1->reveal());
+        $this->adminPool->addAdmin($this->admin2->reveal());
     }
 
     public function testAdmins()
     {
         $this->assertEquals(2, count($this->adminPool->getAdmins()));
-        $this->assertSame($this->admin1, $this->adminPool->getAdmins()[0]);
-        $this->assertSame($this->admin2, $this->adminPool->getAdmins()[1]);
+        $this->assertSame($this->admin1->reveal(), $this->adminPool->getAdmins()[0]);
+        $this->assertSame($this->admin2->reveal(), $this->adminPool->getAdmins()[1]);
     }
 
     public function testMergeNavigations()
@@ -118,11 +88,6 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $navigation = $this->adminPool->getNavigation();
         $this->assertEquals('Child1', $navigation->getRoot()->getChildren()[0]->getName());
         $this->assertEquals('Child2', $navigation->getRoot()->getChildren()[1]->getName());
-    }
-
-    public function testCommands()
-    {
-        $this->assertEquals($this->command, $this->adminPool->getCommands()[0]);
     }
 
     public function testSecurityContexts()

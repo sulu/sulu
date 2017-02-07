@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,14 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
-use PHPUnit_Framework_TestCase;
+use PHPCR\NodeInterface;
+use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
-interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
-{
-}
-
-class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
+class MediaSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType
@@ -32,10 +30,10 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->mediaManager = $this->getMock('\Sulu\Bundle\MeediaBundle\Media\Manager\MediaManagerInterface');
+        $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
 
-        $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
-            $this->mediaManager, 'SuluMediaBundle:Template:image-selection.html.twig'
+        $this->mediaSelection = new MediaSelectionContentType(
+            $this->mediaManager->reveal(), 'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
 
@@ -47,7 +45,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     public function testWrite()
     {
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -57,7 +55,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -102,7 +100,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     public function testWriteWithPassedContainer()
     {
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -112,7 +110,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -160,7 +158,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -170,7 +168,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -205,67 +203,6 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
-    }
-
-    public function testReadPreview()
-    {
-        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
-        $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
-
-        $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
-
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
-
-        $this->mediaSelection->readForPreview(
-            [
-                'config' => ['conf1' => 1, 'conf2' => 2],
-                'displayOption' => 'right',
-                'ids' => [1, 2, 3, 4],
-            ],
-            $property,
-            'test',
-            'en',
-            's'
-        );
     }
 
     public function testReadWithType()
@@ -273,7 +210,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -283,7 +220,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -306,7 +243,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will(
+            $this->returnValue(null)
+        );
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -317,67 +256,6 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
-    }
-
-    public function testReadPreviewWithType()
-    {
-        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
-
-        $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
-
-        $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
-
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                    'types' => 'document',
-                ]
-            )
-        );
-
-        $this->mediaSelection->readForPreview(
-            [
-                'config' => ['conf1' => 1, 'conf2' => 2],
-                'displayOption' => 'right',
-                'ids' => [1, 2, 3, 4],
-            ],
-            $property,
-            'test',
-            'en',
-            's'
-        );
     }
 
     public function testReadWithMultipleTypes()
@@ -385,7 +263,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -395,7 +273,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -418,7 +296,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will(
+            $this->returnValue(null)
+        );
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -429,66 +309,5 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
-    }
-
-    public function testReadPreviewMultipleTypes()
-    {
-        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
-
-        $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
-
-        $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
-
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                    'types' => 'document,image',
-                ]
-            )
-        );
-
-        $this->mediaSelection->readForPreview(
-            [
-                'config' => ['conf1' => 1, 'conf2' => 2],
-                'displayOption' => 'right',
-                'ids' => [1, 2, 3, 4],
-            ],
-            $property,
-            'test',
-            'en',
-            's'
-        );
     }
 }

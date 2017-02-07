@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,7 +21,6 @@ interface ResourceLocatorRepositoryInterface
      *
      * @param string[]    $parts        parts of title
      * @param null|string $parentUuid   uuid of parent node (can be null)
-     * @param null|string $uuid         uuid of node (can be null)
      * @param string      $webspaceKey
      * @param string      $languageCode
      * @param string      $templateKey
@@ -29,7 +28,7 @@ interface ResourceLocatorRepositoryInterface
      *
      * @return string
      */
-    public function generate($parts, $parentUuid, $uuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null);
+    public function generate($parts, $parentUuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null);
 
     /**
      * @param string $uuid
@@ -51,17 +50,4 @@ interface ResourceLocatorRepositoryInterface
      * @return mixed
      */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
-     * restores given resource locator.
-     *
-     * @param string      $path
-     * @param int         $userId
-     * @param string      $webspaceKey
-     * @param string      $languageCode
-     * @param null|string $segmentKey
-     *
-     * @return mixed
-     */
-    public function restore($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

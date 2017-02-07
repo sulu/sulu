@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,6 +26,7 @@ class SnippetContentNavigationProvider implements ContentNavigationProviderInter
     {
         $details = new ContentNavigationItem('content-navigation.snippets.details');
         $details->setAction('details');
+        $details->setPosition(10);
         $details->setComponent('snippet/form/details@sulusnippet');
 
         return [$details];

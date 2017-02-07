@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -24,7 +25,7 @@ interface ContentRepositoryInterface
      * @param string $uuid
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content
@@ -37,7 +38,7 @@ interface ContentRepositoryInterface
      * @param string $uuid
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -55,7 +56,7 @@ interface ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -67,7 +68,7 @@ interface ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -81,11 +82,11 @@ interface ContentRepositoryInterface
     );
 
     /**
-     * Find content array which given UUIDs.
+     * Find content array which given paths.
      *
      * @param string[] $paths
      * @param string $locale
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -96,4 +97,45 @@ interface ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     );
+
+    /**
+     * Find content array which given UUIDs.
+     *
+     * @param string[] $uuids
+     * @param string $locale
+     * @param MappingInterface $mapping Includes array of property names
+     * @param UserInterface $user
+     *
+     * @return Content[]
+     */
+    public function findByUuids(
+        array $uuids,
+        $locale,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    );
+
+    /**
+     * Find all pages and returns an array of content.
+     *
+     * @param string $locale
+     * @param string $webspaceKey
+     * @param MappingInterface $mapping
+     * @param UserInterface|null $user
+     *
+     * @return Content[]
+     */
+    public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
+
+    /**
+     * Find all pages and returns an array of content.
+     *
+     * @param string $locale
+     * @param string $portalKey
+     * @param MappingInterface $mapping
+     * @param UserInterface|null $user
+     *
+     * @return Content[]
+     */
+    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null);
 }

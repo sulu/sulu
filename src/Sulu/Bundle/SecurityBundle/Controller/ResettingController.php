@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class ResettingController.
@@ -34,19 +35,8 @@ class ResettingController extends Controller
     protected static $emailSubjectKey = 'security.reset.mail-subject';
     protected static $emailMessageKey = 'security.reset.mail-message';
     protected static $translationDomain = 'backend';
+    protected static $resetRouteId = 'sulu_admin.reset';
     const MAX_NUMBER_EMAILS = 3;
-
-    /**
-     * Returns the sender's email address.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    protected function getSenderAddress(Request $request)
-    {
-        return 'no-reply@' . $request->getHost();
-    }
 
     /**
      * The interval in which the token is valid.
@@ -128,6 +118,62 @@ class ResettingController extends Controller
     }
 
     /**
+     * Returns the sender's email address.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    protected function getSenderAddress(Request $request)
+    {
+        return 'no-reply@' . $request->getHost();
+    }
+
+    /**
+     * @return Translator
+     */
+    protected function getTranslator()
+    {
+        return $this->get('translator');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSubject()
+    {
+        return $this->getTranslator()->trans(
+            static::$emailSubjectKey,
+            [],
+            static::$translationDomain
+        );
+    }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return string
+     */
+    protected function getMessage($user)
+    {
+        $message = $this->getTranslator()->trans(
+            static::$emailMessageKey,
+            [],
+            static::$translationDomain
+        );
+
+        $message .= PHP_EOL;
+
+        $message .= $this->generateUrl(
+            static::$resetRouteId,
+            ['token' => $user->getPasswordResetToken()],
+            true
+        );
+
+        return $message;
+    }
+
+    /**
      * Returns the users email or as a fallback the installation-email-adress.
      *
      * @param UserInterface $user
@@ -202,7 +248,7 @@ class ResettingController extends Controller
     private function loginUser(UserInterface $user, $request)
     {
         $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
-        $this->get('security.context')->setToken($token); //now the user is logged in
+        $this->get('security.token_storage')->setToken($token); //now the user is logged in
 
         //now dispatch the login event
         $event = new InteractiveLoginEvent($request, $token);
@@ -243,17 +289,15 @@ class ResettingController extends Controller
             throw new TokenEmailsLimitReachedException(self::MAX_NUMBER_EMAILS, $user);
         }
         $mailer = $this->get('mailer');
-        $translator = $this->get('translator');
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(static::$emailSubjectKey, [], static::$translationDomain)
+                $this->getSubject()
             )
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(static::$emailMessageKey, [], static::$translationDomain) . PHP_EOL .
-                $this->generateUrl('sulu_admin.reset', ['token' => $user->getPasswordResetToken()], true)
+                $this->getMessage($user)
             );
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);

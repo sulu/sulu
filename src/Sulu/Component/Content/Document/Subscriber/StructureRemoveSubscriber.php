@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,11 +13,13 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -28,17 +30,42 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
-    private $inspector;
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
+     * @var SessionInterface
+     */
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
+    /**
+     * @var MetadataFactoryInterface
+     */
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
-        DocumentInspector $inspector,
+        DocumentManagerInterface $documentManager,
+        DocumentInspector $documentInspector,
+        SessionInterface $defaultSession,
+        SessionInterface $liveSession,
         MetadataFactoryInterface $metadataFactory
     ) {
         $this->documentManager = $documentManager;
-        $this->inspector = $inspector;
+        $this->documentInspector = $documentInspector;
+        $this->defaultSession = $defaultSession;
+        $this->liveSession = $liveSession;
         $this->metadataFactory = $metadataFactory;
     }
 
@@ -57,38 +84,45 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     public function removeDocument($document)
     {
-        // TODO: This is not a good indicator. There should be a RoutableBehavior here.
-        if (!$document instanceof StructureBehavior) {
-            return;
-        }
-
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
                 $this->removeDocument($child);
             }
         }
 
-        $this->removeReferences($document);
-        $this->recursivelyRemoveRoutes($document);
+        if ($document instanceof StructureBehavior) {
+            $this->removeReferences($document);
+            $this->removeRoute($document);
+        }
     }
 
-    private function recursivelyRemoveRoutes($document)
+    /**
+     * Removes related route of given document.
+     *
+     * @param StructureBehavior $document
+     */
+    private function removeRoute(StructureBehavior $document)
     {
-        $referrers = $this->inspector->getReferrers($document);
-
-        foreach ($referrers as $document) {
-            if ($document instanceof RouteDocument) {
-                $this->recursivelyRemoveRoutes($document);
-                $this->documentManager->remove($document);
-                continue;
+        foreach ($this->documentInspector->getReferrers($document) as $referrer) {
+            if ($referrer instanceof RouteBehavior) {
+                $this->documentManager->remove($referrer);
             }
         }
     }
 
     private function removeReferences($document)
     {
-        $node = $this->inspector->getNode($document);
+        $node = $this->documentInspector->getNode($document);
 
+        $this->removeReferencesForNode($this->defaultSession->getNode($node->getPath()));
+        $this->removeReferencesForNode($this->liveSession->getNode($node->getPath()));
+    }
+
+    /**
+     * @param $node
+     */
+    private function removeReferencesForNode(NodeInterface $node)
+    {
         $references = $node->getReferences();
 
         foreach ($references as $reference) {
@@ -107,7 +141,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      * Remove the given property, or the value which references the node (when
      * multi-valued).
      *
-     * @param NodeInterface     $node
+     * @param NodeInterface $node
      * @param PropertyInterface $property
      */
     private function dereferenceProperty(NodeInterface $node, PropertyInterface $property)

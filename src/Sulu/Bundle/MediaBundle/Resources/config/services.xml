@@ -4,29 +4,29 @@
         <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\MediaAdmin</parameter>
         <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\MediaManager</parameter>
         <parameter key="sulu_media.admin.content_navigation_provider.class">Sulu\Bundle\MediaBundle\Admin\MediaContentNavigationProvider</parameter>
-        <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator</parameter>
         <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager</parameter>
+        <parameter key="sulu_media.format_cache_clearer.class">Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearer</parameter>
         <parameter key="sulu_media.format_cache.class">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
         <parameter key="sulu_media.image.converter.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
-        <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\CommandManager</parameter>
-        <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
-        <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
-        <parameter key="sulu_media.image.command.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CropCommand</parameter>
+        <parameter key="sulu_media.image.scaler.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\Scaler</parameter>
+        <parameter key="sulu_media.image.cropper.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\Cropper</parameter>
+        <parameter key="sulu_media.image.transformation_pool.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPool</parameter>
+        <parameter key="sulu_media.image.transformation.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\CropTransformation</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
+        <parameter key="sulu_media.format_options_manager.class">Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
-        <parameter key="sulu_media.media_entity">SuluMediaBundle:Media</parameter>
+        <parameter key="sulu_media.format_options_entity">SuluMediaBundle:FormatOptions</parameter>
         <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
-
     </parameters>
 
     <services>
@@ -41,22 +41,13 @@
             <tag name="sulu_admin.content_navigation" alias="media"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_media.media_repository"
-                 class="%sulu_media.media_repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
-            <argument>%sulu_media.media_entity%</argument>
-        </service>
-        <service id="sulu_media.collection_repository"
-                 class="%sulu_media.collection_repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
         </service>
         <service id="sulu_media.file_version_meta_repository"
-                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
         <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
@@ -67,33 +58,61 @@
             <argument type="service" id="logger"/>
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
+
+        <service id="sulu_media.format_cache_clearer" class="%sulu_media.format_cache_clearer.class%" />
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
             <argument>%sulu_media.format_cache.media_proxy_path%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
             <argument>%sulu_media.image.formats%</argument>
+            <tag name="sulu_media.format_cache" alias="local" />
         </service>
+
+        <!-- Imagine Adapters -->
+        <service id="sulu_media.adapter" alias="sulu_media.adapter.gd"/>
+        <service id="sulu_media.adapter.gd" class="Imagine\Gd\Imagine" public="false"/>
+        <service id="sulu_media.adapter.imagick" class="Imagine\Imagick\Imagine" public="false"/>
+        <service id="sulu_media.adapter.gmagick" class="Imagine\Gmagick\Imagine" public="false"/>
+
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
-            <argument type="service" id="sulu_media.image.command_manager" />
+            <argument type="service" id="sulu_media.adapter"/>
+            <argument type="service" id="sulu_media.storage" />
+            <argument type="service" id="sulu_media.image.media_extractor"/>
+            <argument type="service" id="sulu_media.image.transformation_pool" />
+            <argument type="service" id="sulu_media.image.focus" />
+            <argument type="service" id="sulu_media.image.scaler" />
+            <argument type="service" id="sulu_media.image.cropper" />
+            <argument>%sulu_media.image.formats%</argument>
         </service>
 
-        <service id="sulu_media.image.command_manager" class="%sulu_media.image.command_manager.class%" />
+        <service id="sulu_media.image.media_extractor" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor">
+            <argument type="service" id="sulu_media.adapter"/>
+            <argument type="service" id="sulu_media.video_thumbnail_generator"/>
+            <argument>%sulu_media.ghost_script.path%</argument>
+        </service>
 
-        <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%">
-            <tag name="sulu_media.image.command" alias="resize" />
+        <service id="sulu_media.image.focus" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus"/>
+        <service id="sulu_media.image.scaler" class="%sulu_media.image.scaler.class%" />
+        <service id="sulu_media.image.cropper" class="%sulu_media.image.cropper.class%" />
+
+        <service id="sulu_media.image.transformation_pool" class="%sulu_media.image.transformation_pool.class%" />
+
+        <service id="sulu_media.image.transformation.crop" class="%sulu_media.image.transformation.crop.class%">
+            <tag name="sulu_media.image.transformation" alias="crop" />
         </service>
-        <service id="sulu_media.image.command.scale" class="%sulu_media.image.command.scale.class%">
-            <tag name="sulu_media.image.command" alias="scale" />
-        </service>
-        <service id="sulu_media.image.command.crop" class="%sulu_media.image.command.crop.class%">
-            <tag name="sulu_media.image.command" alias="crop" />
+
+        <service id="sulu_media.image.transformation.paste" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation">
+            <argument type="service" id="file_locator"/>
+
+            <tag name="sulu_media.image.transformation" alias="paste" />
         </service>
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
-            <argument type="service" id="sulu_media.media_repository" />
+            <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.user" />
+            <argument type="service" id="sulu.repository.category"/>
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.file_validator" />
@@ -115,28 +134,39 @@
             <argument>%sulu_media.media.blocked_file_types%</argument>
         </service>
 
+        <service id="sulu_media.format_options_repository" class="Doctrine\ORM\EntityRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+            <argument>%sulu_media.format_options_entity%</argument>
+        </service>
+
+        <service id="sulu_media.format_options_manager" class="%sulu_media.format_options_manager.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_media.format_options_repository" />
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.format_manager" />
+            <argument>%sulu_media.image.formats%</argument>
+        </service>
+
         <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%">
-            <argument type="service" id="sulu_media.media_repository" />
-            <argument type="service" id="sulu_media.storage" />
+            <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
-            <argument type="service" id="sulu_media.video_thumbnail_generator"/>
-            <argument type="string">%sulu_media.ghost_script.path%</argument>
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
-            <argument type="string">%sulu_media.format_manager.mime_types%</argument>
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
             <argument>%sulu_media.image.formats%</argument>
+            <argument>%sulu_media.format_manager.mime_types%</argument>
         </service>
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="string">%sulu_media.media_selection.template%</argument>
             <tag name="sulu.content.type" alias="media_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%">
             <argument type="service" id="sulu_media.collection_repository" />
-            <argument type="service" id="sulu_media.media_repository" />
+            <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="doctrine.orm.entity_manager" />
@@ -179,6 +209,8 @@
                     )
                 </argument>
                 <argument key="maxFilesize" type="string">%sulu_media.upload.max_filesize%</argument>
+                <argument key="adobeCreativeKey" type="string">%sulu_media.adobe_creative_key%</argument>
+                <argument key="formats" type="string">%sulu_media.image.formats%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
@@ -192,7 +224,7 @@
         <service id="sulu_media.smart_content.data_provider.media.repository" class="Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="string">%sulu_media.media_entity%</argument>
+            <argument type="string">%sulu.model.media.class%</argument>
             <argument type="string">%sulu_media.collection_entity%</argument>
         </service>
 
@@ -220,6 +252,15 @@
 
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
+        </service>
+
+        <!-- markup -->
+        <service id="sulu_media.markup" class="Sulu\Bundle\MediaBundle\Markup\MediaTag">
+            <argument type="service" id="sulu.repository.media" />
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="sulu_markup.tag" tag="media" type="html"/>
         </service>
     </services>
 </container>

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontent/components/content/preview/main'], function(Preview) {
+define(['app-config', 'config', 'services/sulupreview/preview'], function(AppConfig, Config, Preview) {
 
     'use strict';
 
@@ -30,16 +30,14 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
         template: '',
 
+        whenResourceLocatorIsLoaded: $.Deferred(),
+
         // content change detection
         saved: true,
         animateTemplateDropdown: false,
 
         initialize: function() {
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
-
-            this.preview = new Preview();
-
-            this.dfdListenForResourceLocator = $.Deferred();
             this.load();
         },
 
@@ -52,37 +50,72 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
             // content save
             this.sandbox.on('sulu.toolbar.save', function(action) {
-                this.submit(action);
+                if(action == 'publish') {
+                    app.sandbox.sulu.showConfirmationDialog({
+                        callback: function(wasConfirmed) {
+                            if (wasConfirmed) {
+                                this.submit(action);
+                            }
+                        }.bind(this),
+                        title: 'sulu.overlay.publish',
+                        description: 'sulu.overlay.publish-desc'
+                    });
+                } else {
+                    this.submit(action);
+                }
+            }, this);
+
+            // navigate away
+            this.sandbox.on('sulu.content.navigate', this.navigate, this);
+
+            this.sandbox.on('sulu.header.saved', function(data) {
+                this.data = data;
+                this.initializeResourceLocator();
             }, this);
         },
 
-        bindDomEvents: function() {
-            this.startListening = false;
-            this.getDomElementsForTagName('sulu.rlp', function(property) {
-                var element = property.$el.data('element');
-                if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
-                    this.startListening = true;
-                }
-            }.bind(this));
+        /**
+         * Initializes the rlp-inputs as well as the rlp-part inputs.
+         * When there is already an url for the page, the rlp-inputs and the rlp-part inputs
+         * are just like any other inputs and the corresponding promise is resolved right away.
+         */
+        initializeResourceLocator: function() {
+            if (!this.data.url) {
+                // when a rlp-part gets changed other parts (e.g. submitting) has to wait
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'change.resourcelocator', function() {
+                    if (!this.whenResourceLocatorIsLoaded || this.whenResourceLocatorIsLoaded.state() === 'resolved') {
+                        this.whenResourceLocatorIsLoaded = $.Deferred();
+                    }
+                }.bind(this));
 
-            if (this.startListening) {
-                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout.resourcelocator', this.loadResourceLocator.bind(this));
+
+                // initialize all rlp-inputs as not edited by the user
+                this.getDomElementsForTagName('sulu.rlp', function(property) {
+                    property.$el.data('user-edited', false);
+                    // manually edited rlp-inputs get marked as such
+                    this.sandbox.dom.on(property.$el, 'change', function() {
+                        property.$el.data('user-edited', property.$el.data('element').getValue().length > 1);
+                    }.bind(this));
+                }.bind(this));
+
             } else {
-                this.dfdListenForResourceLocator.resolve();
+                // saving a ghost page does not reinitialize the component, therefore we need to remove these handlers
+                this.sandbox.dom.off(this.getDomElementsForTagName('sulu.rlp.part'), '.resourcelocator');
+                this.whenResourceLocatorIsLoaded.resolve();
             }
         },
 
         load: function() {
             // get content data
-            this.sandbox.emit('sulu.content.contents.get-data', function(data) {
-                this.render(data);
-            }.bind(this));
+            this.sandbox.emit('sulu.content.contents.get-data', this.render.bind(this));
         },
 
-        render: function(data) {
+        render: function(data, preview) {
             this.bindCustomEvents();
             this.listenForChange();
 
+            this.preview = preview;
             this.data = data;
 
             if (!!this.data.template) {
@@ -90,6 +123,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             } else {
                 this.checkRenderTemplate();
             }
+
+            this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
         },
 
         checkRenderTemplate: function(item) {
@@ -160,22 +195,31 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         renderFormTemplate: function(template) {
-            var data = this.initData(),
-                defaults = {
+            var defaults = {
                     translate: this.sandbox.translate,
-                    content: data,
+                    content: this.data,
                     options: this.options
                 },
-                context = this.sandbox.util.extend({}, defaults),
+                context = this.sandbox.util.extend({}, defaults, {
+                    categoryLocale: this.options.language
+                }),
                 tpl = this.sandbox.util.template(template, context);
 
             this.sandbox.dom.html(this.formId, tpl);
-            this.setStateDropdown(data);
+            this.setStateDropdown(this.data);
 
             this.propertyConfiguration = {};
-            this.createForm(data).then(function() {
-                this.bindDomEvents();
+            this.createForm(this.data).then(function() {
+                this.initializeResourceLocator();
                 this.changeTemplateDropdownHandler();
+
+                if (!!this.preview) {
+                    this.preview.bindDomEvents(this.$el);
+                }
+
+                if (!!Config.has('sulu-collaboration')) {
+                    this.startCollaborationComponent();
+                }
             }.bind(this));
         },
 
@@ -187,19 +231,21 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 this.createConfiguration(this.formId);
 
                 this.setFormData(data).then(function() {
-                    this.sandbox.start(this.$el, {reset: true});
+                    this.sandbox.start(this.$el, {reset: true}).then(function(){
+                        this.initSortableBlock();
+                        this.bindFormEvents();
 
-                    this.initSortableBlock();
-                    this.bindFormEvents();
-
-                    // FIXME getData errors because type is not loaded ... after change template
-                    // need a fix in validation
-                    setTimeout(function() {
                         var data = this.sandbox.form.getData(this.formId);
-                        this.sandbox.emit('sulu.preview.initialize', data, true);
-                    }.bind(this), 10);
 
-                    dfd.resolve();
+                        this.sandbox.emit('sulu.content.initialized', data);
+                        dfd.resolve();
+
+                        if (!this.preview) {
+                            return;
+                        }
+
+                        this.preview.updateContext({template: this.template}, data);
+                    }.bind(this));
                 }.bind(this));
             }.bind(this));
 
@@ -269,7 +315,9 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     var changes = this.sandbox.form.getData(this.formId),
                         propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
 
-                    this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+                    if (!!this.preview) {
+                        this.preview.updateProperty(propertyName, changes[propertyName]);
+                    }
                     this.sandbox.emit('sulu.content.changed');
                 }.bind(this));
             }
@@ -280,7 +328,10 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 // TODO removed elements remove from config
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
-                this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+
+                if (!!this.preview) {
+                    this.preview.updateProperty(propertyName, changes[propertyName]);
+                }
                 this.setHeaderBar(false);
             }.bind(this));
 
@@ -297,10 +348,16 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 // update changes
                 try {
                     changes = this.sandbox.form.getData(this.formId);
-                    this.sandbox.emit('sulu.preview.update-property', propertyName, changes[propertyName]);
+
+                    if (!!this.preview) {
+                        this.preview.updateProperty(propertyName, changes[propertyName]);
+                    }
                 } catch (ex) {
                     // ignore exceptions
                 }
+
+                // enable save button
+                this.setHeaderBar(false);
 
                 // reinit sorting
                 this.initSortableBlock();
@@ -356,12 +413,15 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }
             url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
+            if (!!this.data.id) {
+                url += '&uuid=' + this.data.id;
+            }
+
             return url;
         },
 
         setHeaderBar: function(saved) {
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
-
             this.saved = saved;
         },
 
@@ -369,59 +429,69 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.sandbox.emit('sulu.content.contents.set-state', data);
         },
 
-        initData: function() {
-            return this.data;
+        /**
+         * Iterates over all rlp-parts and asks the server for a resource locator
+         * constructed out of all non empty rlp-parts. After retrieving the resource-locator
+         * it is set into the rlp inputs.
+         */
+        loadResourceLocator: function() {
+            var parts = this.getNonEmptyRlpParts();
+            this.sandbox.emit('sulu.content.contents.get-rl', parts, this.setResourceLocator.bind(this));
         },
 
-        setResourceLocator: function() {
-            if (this.dfdListenForResourceLocator.state() !== 'pending') {
-                return;
-            }
+        /**
+         * Returns all the rlp parts which have a non-empty value
+         * @returns {Object} an object containing all the non-empty rlp parts
+         */
+        getNonEmptyRlpParts: function() {
+            var parts = {}, value, sequence;
 
-            var parts = {},
-                complete = true;
-
-            // check if each part has a value
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
-                var value = property.$el.data('element').getValue(),
-                    sequence;
-
+                value = property.$el.data('element').getValue();
                 if (value !== '') {
-                    sequence = this.preview.getSequence(property.$el, this.sandbox);
+                    sequence = Preview.getSequence(property.$el);
                     if (!!sequence) {
                         parts[sequence] = value;
                     }
-                } else {
-                    complete = false;
                 }
             }.bind(this));
 
-            if (!!complete) {
-                this.startListening = true;
-                this.sandbox.emit('sulu.content.contents.get-rl', parts, function(rl) {
-                    // set resource locator to empty input fields
-                    this.getDomElementsForTagName('sulu.rlp', function(property) {
-                        var element = property.$el.data('element');
-                        if (element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
-                            element.setValue(rl);
-                        }
-                    }.bind(this));
+            return parts;
+        },
 
-                    this.dfdListenForResourceLocator.resolve();
+        /**
+         * Sets a given resource-locator as the value of the resource-locator inputs.
+         * Only those resource-locator inputs get updated, which have not been manually edited by the user
+         * @param {String} resourceLocator The resource locator to insert
+         */
+        setResourceLocator: function(resourceLocator) {
+            this.getDomElementsForTagName('sulu.rlp', function(property) {
+                if (!property.$el.data('user-edited')) {
+                    property.$el.data('element').setValue(resourceLocator);
+                }
+            }.bind(this));
+            this.whenResourceLocatorIsLoaded.resolve();
+            this.setHeaderBar(false);
+        },
 
-                    this.setHeaderBar(false);
-                }.bind(this));
-            } else {
-                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
-            }
+        /**
+         * @returns {boolean} True iff all resource locator parts are valid
+         */
+        areRlpPartsValid: function() {
+            var valid = true;
+            this.getDomElementsForTagName('sulu.rlp.part', function(property) {
+                if (!property.$el.data('element').validate()) {
+                    valid = false;
+                }
+            }.bind(this));
+
+            return valid;
         },
 
         listenForChange: function() {
-            this.dfdListenForResourceLocator.then(function() {
-                this.sandbox.dom.on(this.$el, 'keyup change', _.debounce(function() {
-                    this.setHeaderBar(false);
-                }.bind(this), 10), '.trigger-save-button');
-            }.bind(this));
+            this.sandbox.dom.on(this.$el, 'keyup change', _.debounce(function() {
+                this.setHeaderBar(false);
+            }.bind(this), 10), '.trigger-save-button');
 
             this.sandbox.on('sulu.content.changed', function() {
                 this.setHeaderBar(false);
@@ -434,22 +504,65 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
-
-            this.dfdListenForResourceLocator = $.Deferred();
         },
 
         submit: function(action) {
-            var data;
+            // only submit if all rlp parts are valid (a resource locator needs to be constructed)
+            if (!this.areRlpPartsValid()) {
+                return;
+            }
 
-            if (this.sandbox.form.validate(this.formId)) {
-                data = this.sandbox.form.getData(this.formId);
+            this.whenResourceLocatorIsLoaded.then(function() {
+                if (this.sandbox.form.validate(this.formId)) {
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+                    var data = this.sandbox.form.getData(this.formId);
+                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
 
-                data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                    this.sandbox.emit('sulu.content.contents.save', data, action);
+                }
+            }.bind(this));
+        },
 
-                this.sandbox.logger.log('data', data);
+        startCollaborationComponent: function() {
+            if (!this.options.id) {
+                return;
+            }
 
-                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data, action);
+            var $container = this.sandbox.dom.createElement('<div id="content-column-collaboration"/>');
+            this.$el.prepend($container);
+
+            this.sandbox.start([
+                {
+                    name: 'collaboration@sulucollaboration',
+                    options: {
+                        el: $container,
+                        id: this.options.id,
+                        webspace: this.options.webspace,
+                        userId: AppConfig.getUser().id,
+                        type: 'page'
+                    }
+                }
+            ]);
+        },
+
+        navigate: function(route) {
+            var doNavigate = function(route) {
+                this.sandbox.emit('sulu.router.navigate', route);
+            }.bind(this);
+
+            if (!this.saved) {
+                this.sandbox.emit('sulu.overlay.show-warning',
+                    'sulu.overlay.be-careful',
+                    'content.template.dialog.content',
+                    function() {
+                    },
+                    function() {
+                        // ok callback
+                        doNavigate.call(this, route);
+                    }.bind(this)
+                );
+            } else {
+                doNavigate.call(this, route);
             }
         }
     };

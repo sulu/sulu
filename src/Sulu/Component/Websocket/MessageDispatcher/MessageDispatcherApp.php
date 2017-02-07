@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -58,10 +58,6 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         try {
             $result = $this->dispatch($from, $context, $msg);
 
-            if (!is_string($result)) {
-                $result = json_encode($result);
-            }
-
             if ($result !== null) {
                 $from->send($result);
             }
@@ -73,6 +69,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
                         'type' => 'error',
                         'exception' => get_class($e),
                         'code' => $e->getCode(),
+                        'trace' => $e->getTrace(),
                         'msg' => $e->getMessage(),
                         'parentMsg' => $msg,
                     ]

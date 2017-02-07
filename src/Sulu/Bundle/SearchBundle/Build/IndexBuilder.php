@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,6 +43,6 @@ class IndexBuilder extends SuluBuilder
      */
     public function build()
     {
-        $this->execCommand('Create search indexes', 'sulu:search:reindex-content');
+        $this->execCommand('Create search indexes', 'massive:search:reindex');
     }
 }

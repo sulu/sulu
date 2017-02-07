@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,9 +76,7 @@ abstract class SuluKernel extends Kernel
     {
         return array_merge(
             parent::getKernelParameters(),
-            [
-                'sulu.context' => $this->getContext(),
-            ]
+            ['sulu.context' => $this->getContext()]
         );
     }
 }

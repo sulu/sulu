@@ -7,9 +7,7 @@ Feature: Collection management
         Given I am logged in as an administrator
 
     Scenario: Create collection
-        Given I am on "/admin/#media/collections/root"
-        # FIXME bad fix here but data-navigation needs additional time ...
-        And I expect a data-navigation to appear
+        Given I am on "/admin/#media/collections/en"
         When I click the add icon
         And I expect an overlay to appear
         And I fill in husky field "title" with "Dornbirn"
@@ -19,17 +17,22 @@ Feature: Collection management
 
     Scenario: Edit collection
         Given the media collection "Foobar" exists
-        And I am on "/admin/#media/collections/root"
-        And I expect a data-navigation to appear
-        When I click on the element ".data-navigation-item"
+        And I am on "/admin/#media/collections/en"
+        When I click on the element ".tile"
         Then I expect the "husky.loader.initialized" event
         Then I should see "Foobar"
+        Then I click on the element "li[data-id='editCollection']"
+        And I expect an overlay to appear
+        And I fill in husky field "title" with "Foobar changed"
+        And I click the ok button
+        Then I expect a success notification to appear
+        Then the media collection "Foobar changed" should exist
 
     Scenario: Delete collection
         Given the media collection "Foobar" exists
-        And I am on the settings page for the media collection
-        And I expect a data-navigation to appear
-        When I click the toolbar button "Delete collection"
+        And I am editing the media collection "Foobar"
+        When I click toolbar item "edit"
+        And I click toolbar item "deleteCollection"
         And I expect a confirmation dialog to appear
         And I confirm
         Then I expect a success notification to appear
@@ -47,24 +50,22 @@ Feature: Collection management
         Given the media collection "Dornbirn" exists
         And the media collection "Foobar" exists
         And I am editing the media collection "Dornbirn"
-        And I expect a data-navigation to appear
-        When I click the toolbar button "Move collection"
+        When I click toolbar item "moveCollection"
         Then I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
-        And I click the column navigation item "Collections"
+        And I click the column navigation item "All media"
         And I wait for the column navigation column 2
         And I double click the column navigation item "Foobar"
-        And I am on "/admin/"
-        And I wait a second
-        And I am editing the media collection "Foobar"
-        Then I expect to see "1" ".data-navigation-item" elements
+        And I click the ok button
+        Then I am editing the media collection "Dornbirn"
+        Then I expect to see "Foobar"
 
     Scenario: Delete item
         Given the file "image1.png" has been uploaded to the "Dornbirn" collection
         And I am on the media collection edit page
         Then I expect to see "1" ".masonry-item" elements
         When I click on the element ".masonry-item"
-        And I wait a second
+        And I expect the "husky.datagrid.item.select" event
         And I click on the element ".toolbar-item[data-id='deleteSelected']"
         And I expect a confirmation dialog to appear
         And I confirm
@@ -72,25 +73,21 @@ Feature: Collection management
 
     Scenario: Change item language
         Given the file "image1.png" has been uploaded to the "Dornbirn" collection
-        And I am on "/admin/#media/collections/root"
-        # FIXME bad fix here but data-navigation needs additional time ...
-        Then I expect a data-navigation to appear
-        When I click on the element ".masonry-item .head-image"
+        And I am on "/admin/#media/collections/en"
+        When I click on the element ".masonry-item .action-icons-overlay"
         And I expect an overlay to appear
         Then I expect the "husky.tabs.overlaymedia-edit.initialized" event
+        And I expect the "husky.dropzone.file-version.initialized" event
         And I fill in husky field "title" with "image of Dornbirn"
-        And I select "de" from the husky "language-changer .husky-select"
+        And I select "de" from the husky "language-changer.husky-select"
+        And I expect the "husky.datagrid.records.change" event
         Then I expect the "husky.tabs.overlaymedia-edit.initialized" event
+        And I expect the "husky.dropzone.file-version.initialized" event
         And I fill in husky field "title" with "Foto von Dornbirn" in the overlay
         And I confirm
-        When I am editing the media collection "Dornbirn"
-        And I expect the "husky.datagrid.loaded" event
-        Then I should see "image of Dornbirn"
-        # FIXME try to sovle this without reloading the page
-        When I reload the page
-        Then I expect a data-navigation to appear
+        Then I expect a success notification to appear
+        And I should see "image of Dornbirn"
         And I click on the element ".language-changer"
         And I click on the element "[data-id='de']"
-        And I expect the "husky.datagrid.updated" event
-        And I should see "Foto von Dornbirn"
-
+        And I expect the "husky.datagrid.initialized" event
+        And I expect to see "Foto von Dornbirn"

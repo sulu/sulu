@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,6 +33,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $metadata = $manager->getClassMetaData(get_class(new Operator()));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $i = 1;
         $file = dirname(__FILE__) . '/../../operators.xml';
@@ -143,6 +145,10 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
                 return DataTypes::DATETIME_TYPE;
             case 'boolean':
                 return DataTypes::BOOLEAN_TYPE;
+            case 'tags':
+                return DataTypes::TAGS_TYPE;
+            case 'auto-complete':
+                return DataTypes::AUTO_COMPLETE_TYPE;
             default:
                 return DataTypes::UNDEFINED_TYPE;
         }

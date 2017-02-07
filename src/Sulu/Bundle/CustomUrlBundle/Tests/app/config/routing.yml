@@ -1,0 +1,9 @@
+sulu_content:
+    resource: "@SuluContentBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /api
+
+sulu_custom_urls:
+    resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /api

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,11 +30,8 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('sulu_website');
 
         $rootNode->children()
-            ->arrayNode('preview_defaults')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('analytics_key')->defaultValue('UA-SULU-PREVIEW-KEY')->end()
-                ->end()
+            ->arrayNode('analytics')
+                ->canBeDisabled()
             ->end()
             ->arrayNode('twig')
                 ->addDefaultsIfNotSet()
@@ -57,6 +54,19 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('cache_lifetime')->defaultValue(43200)->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+            ->arrayNode('sitemap')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('dump_dir')->defaultValue('%sulu.cache_dir%/sitemaps')->end()
+                    ->scalarNode('default_host')->defaultNull()->end()
+                ->end()
+            ->end()
+            ->arrayNode('default_locale')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('provider_service_id')->defaultValue('sulu_website.default_locale.portal_provider')->end()
                 ->end()
             ->end();
 

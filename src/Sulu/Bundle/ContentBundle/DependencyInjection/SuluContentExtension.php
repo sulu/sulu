@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +11,12 @@
 
 namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType;
+use Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,37 +34,88 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_core')) {
-            $prepend = [
-                'content' => [
-                    'structure' => [
-                        'paths' => [
-                            [
-                                'path' => __DIR__ . '/../Content/templates',
-                                'type' => 'page',
+            $container->prependExtensionConfig(
+                'sulu_core',
+                [
+                    'content' => [
+                        'structure' => [
+                            'paths' => [
+                                [
+                                    'path' => __DIR__ . '/../Content/templates',
+                                    'type' => 'page',
+                                ],
+                            ],
+                            'type_map' => [
+                                'page' => PageBridge::class,
+                                'home' => PageBridge::class,
                             ],
                         ],
                     ],
-                ],
-            ];
-
-            $container->prependExtensionConfig('sulu_core', $prepend);
+                ]
+            );
         }
 
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', [
-                'metadata' => [
-                    'directories' => [
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
-                        ],
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\Content',
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Content',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Webspace',
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            'Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException' => 409,
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_content',
+                [
+                    'search' => [
+                        'mapping' => [
+                            PageDocument::class => ['index' => 'page'],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_document_manager')) {
+            $container->prependExtensionConfig(
+                'sulu_document_manager',
+                [
+                    'mapping' => [
+                        'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page', 'form_type' => PageDocumentType::class],
+                        'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home', 'form_type' => HomeDocumentType::class],
+                        'route' => ['class' => RouteDocument::class, 'phpcr_type' => 'sulu:path'],
+                    ],
+                ]
+            );
         }
     }
 
@@ -75,37 +132,29 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->processTemplates($container, $config);
-        $this->processPreview($container, $config);
 
-        if (isset($bundles['SuluSearchBundle'])) {
+        if (array_key_exists('SuluSearchBundle', $bundles)) {
             $this->processSearch($config, $loader, $container);
         }
 
         $loader->load('services.xml');
         $loader->load('smart_content.xml');
+        $loader->load('teaser.xml');
         $loader->load('content_types.xml');
-        $loader->load('preview.xml');
         $loader->load('structure.xml');
         $loader->load('extension.xml');
         $loader->load('form.xml');
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
-    }
+        $loader->load('export.xml');
+        $loader->load('import.xml');
+        $loader->load('command.xml');
+        $loader->load('link-tag.xml');
 
-    private function processPreview(ContainerBuilder $container, $config)
-    {
-        $container->setParameter('sulu.content.preview.mode', $config['preview']['mode']);
-        $container->setParameter('sulu.content.preview.websocket', $config['preview']['websocket']);
-        $container->setParameter('sulu.content.preview.delay', $config['preview']['delay']);
-        $errorTemplate = null;
-        if (isset($config['preview']['error_template'])) {
-            $errorTemplate = $config['preview']['error_template'];
+        if (array_key_exists('SuluAutomationBundle', $bundles)) {
+            $loader->load('automation.xml');
         }
-        $container->setParameter(
-            'sulu.content.preview.error_template',
-            $errorTemplate
-        );
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
@@ -153,6 +202,18 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $container->setParameter(
             'sulu.content.type.checkbox.template',
             $config['types']['checkbox']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.multiple_select.template',
+            $config['types']['multiple_select']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.single_select.template',
+            $config['types']['single_select']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.teaser_selection.template',
+            $config['types']['teaser_selection']['template']
         );
     }
 

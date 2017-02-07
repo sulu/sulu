@@ -2,15 +2,10 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
-
         <service id="sulu_content.compat.structure.legacy_property_factory" class="Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory">
             <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
-
-
     </services>
-
 </container>
 

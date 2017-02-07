@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,10 +11,9 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
-use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -22,22 +21,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TitleSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    const PROPERTY_NAME = 'title';
 
     /**
      * @var PropertyEncoder
      */
-    private $encoder;
+    private $propertyEncoder;
 
-    public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector
-    ) {
-        $this->encoder = $encoder;
-        $this->inspector = $inspector;
+    public function __construct(PropertyEncoder $propertyEncoder)
+    {
+        $this->propertyEncoder = $propertyEncoder;
     }
 
     /**
@@ -47,62 +40,85 @@ class TitleSubscriber implements EventSubscriberInterface
     {
         return [
             // should happen after content is hydrated
-            Events::HYDRATE => ['handleHydrate', -10],
-            Events::PERSIST => ['handlePersist', 10],
+            Events::HYDRATE => ['setTitleOnDocument', -10],
+            Events::PERSIST => ['setTitleOnNode', 10],
+            Events::PUBLISH => ['setTitleOnNode', 10],
         ];
     }
 
     /**
-     * @param HydrateEvent $event
+     * Sets the title on the document from the node.
+     *
+     * @param AbstractMappingEvent $event
      */
-    public function handleHydrate(AbstractMappingEvent $event)
+    public function setTitleOnDocument(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof TitleBehavior) {
+        if (!$this->supports($document)) {
             return;
         }
 
-        $title = $this->getTitle($document);
+        if ($document instanceof LocalizedTitleBehavior) {
+            if (!$event->getLocale()) {
+                return;
+            }
 
-        $document->setTitle($title);
+            $document->setTitle(
+                $event->getNode()->getPropertyValueWithDefault(
+                    $this->propertyEncoder->localizedContentName(static::PROPERTY_NAME, $event->getLocale()),
+                    ''
+                )
+            );
+        } else {
+            $document->setTitle(
+                $event->getNode()->getPropertyValueWithDefault(
+                    $this->propertyEncoder->contentName(static::PROPERTY_NAME),
+                    ''
+                )
+            );
+        }
     }
 
     /**
+     * Sets the title on the node from the value in the document.
+     *
      * @param PersistEvent $event
      */
-    public function handlePersist(PersistEvent $event)
+    public function setTitleOnNode(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof TitleBehavior) {
+        if (!$this->supports($document)) {
             return;
         }
 
-        $title = $document->getTitle();
+        if ($document instanceof LocalizedTitleBehavior) {
+            if (!$event->getLocale()) {
+                return;
+            }
 
-        $structure = $this->inspector->getStructureMetadata($document);
-        if (!$structure->hasProperty('title')) {
-            return;
+            $event->getNode()->setProperty(
+                $this->propertyEncoder->localizedContentName(static::PROPERTY_NAME, $event->getLocale()),
+                $document->getTitle()
+            );
+        } else {
+            $event->getNode()->setProperty(
+                $this->propertyEncoder->contentName(static::PROPERTY_NAME),
+                $document->getTitle()
+            );
         }
-
-        $document->getStructure()->getProperty('title')->setValue($title);
-        $this->handleHydrate($event);
     }
 
-    private function getTitle($document)
+    /**
+     * Returns true if the given document is supported by this subscriber.
+     *
+     * @param $document
+     *
+     * @return bool
+     */
+    private function supports($document)
     {
-        if (!$this->hasTitle($document)) {
-            return 'Document has no "title" property in content';
-        }
-
-        return $document->getStructure()->getProperty('title')->getValue();
-    }
-
-    private function hasTitle($document)
-    {
-        $structure = $this->inspector->getStructureMetadata($document);
-
-        return $structure->hasProperty('title');
+        return $document instanceof TitleBehavior;
     }
 }

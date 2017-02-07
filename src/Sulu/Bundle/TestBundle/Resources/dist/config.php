@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -9,14 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
+$filesystem = new \Symfony\Component\Filesystem\Filesystem();
+
 $context = $container->getParameter('sulu.context');
-
-$phpcr = getenv('SULU_PHPCR');
-$phpcr = $phpcr ?: 'jackrabbit';
-$orm = getenv('SULU_ORM');
-$orm = $orm ?: 'mysql';
-
+$path = __DIR__ . DIRECTORY_SEPARATOR;
+if (!$filesystem->exists($path . 'parameters.yml')) {
+    $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
+}
 $loader->import('parameters.yml');
 $loader->import('context_' . $context . '.yml');
-$loader->import('phpcr_' . $phpcr . '.yml');
-$loader->import('orm_' . $orm . '.yml');

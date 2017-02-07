@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +15,10 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Metadata;
@@ -27,27 +30,87 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var DocumentRegistry
+     */
+    private $documentRegistry;
+
+    /**
+     * @var PathSegmentRegistry
+     */
+    private $pathSegmentRegistry;
+
+    /**
+     * @var NamespaceRegistry
+     */
+    private $namespaceRegistry;
+
+    /**
+     * @var \stdClass
+     */
+    private $document;
+
+    /**
+     * @var NodeInterface
+     */
+    private $node;
+
+    /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
+     * @var StructureMetadataFactoryInterface
+     */
+    private $structureMetadataFactory;
+
+    /**
+     * @var Metadata\
+     */
+    private $metadata;
+
+    /**
+     * @var ProxyFactory
+     */
+    private $proxyFactory;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
     public function setUp()
     {
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
-        $this->pathRegistry = $this->prophesize(PathSegmentRegistry::class);
+        $this->pathSegmentRegistry = $this->prophesize(PathSegmentRegistry::class);
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
         $this->document = new \stdClass();
         $this->node = $this->prophesize(NodeInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
-        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
         $this->metadata = $this->prophesize(Metadata::class);
         $this->proxyFactory = $this->prophesize(ProxyFactory::class);
-        $this->encoder = $this->prophesize(PropertyEncoder::class);
+        $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->documentInspector = new DocumentInspector(
             $this->documentRegistry->reveal(),
-            $this->pathRegistry->reveal(),
+            $this->pathSegmentRegistry->reveal(),
             $this->namespaceRegistry->reveal(),
             $this->proxyFactory->reveal(),
             $this->metadataFactory->reveal(),
-            $this->structureFactory->reveal(),
-            $this->encoder->reveal(),
+            $this->structureMetadataFactory->reveal(),
+            $this->propertyEncoder->reveal(),
             $this->webspaceManager->reveal()
         );
     }
@@ -60,7 +123,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     public function testGetWebspace($path, $expectedWebspace)
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
-        $this->pathRegistry->getPathSegment('base')->willReturn('cmf');
+        $this->pathSegmentRegistry->getPathSegment('base')->willReturn('cmf');
         $this->node->getPath()->willReturn($path);
 
         $webspace = $this->documentInspector->getWebspace($this->document);
@@ -90,9 +153,26 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 
         $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($this->metadata->reveal());
         $this->metadata->getAlias()->willReturn('page');
-        $this->structureFactory->getStructureMetadata('page', 'foo')->willReturn($structure);
+        $this->structureMetadataFactory->getStructureMetadata('page', 'foo')->willReturn($structure);
         $result = $this->documentInspector->getStructureMetadata($document->reveal());
         $this->assertSame($structure, $result);
+    }
+
+    /**
+     * It should return null for a document with a not existing structure.
+     */
+    public function testGetStructureNotExisting()
+    {
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->getStructureType()->willReturn('foo');
+
+        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))
+            ->willReturn($this->metadata->reveal());
+        $this->metadata->getAlias()->willReturn('page');
+        $this->structureMetadataFactory->getStructureMetadata('page', 'foo')
+            ->willThrow(new StructureTypeNotFoundException());
+        $result = $this->documentInspector->getStructureMetadata($document->reveal());
+        $this->assertNull($result);
     }
 
     /**
@@ -131,6 +211,60 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should return the locale for a document.
+     */
+    public function testGetLocale()
+    {
+        $document = new \stdClass();
+        $this->documentRegistry->hasDocument($document)->willReturn(true);
+        $this->documentRegistry->getLocaleForDocument($document)->willReturn('fr');
+        $locale = $this->documentInspector->getLocale($document);
+
+        $this->assertEquals('fr', $locale);
+    }
+
+    /**
+     * It should return the locale for a document.
+     */
+    public function testGetLocaleNotRegistered()
+    {
+        $document = new \stdClass();
+        $this->documentRegistry->hasDocument($document)->willReturn(false);
+        $locale = $this->documentInspector->getLocale($document);
+
+        $this->assertNull($locale);
+    }
+
+    public function testGetConcreteLocales()
+    {
+        $document = $this->prophesize(ShadowLocaleBehavior::class);
+        $this->namespaceRegistry->getPrefix('system_localized')->willReturn('i18n');
+
+        $germanShadowOnProperty = $this->prophesize(PropertyInterface::class);
+        $germanShadowOnProperty->getName()->willReturn('i18n:de-shadow-on');
+        $englishShadowOnProperty = $this->prophesize(PropertyInterface::class);
+        $englishShadowOnProperty->getName()->willReturn('i18n:en-shadow-on');
+
+        $this->propertyEncoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD, 'de')
+            ->willReturn('i18n:de-shadow-on');
+        $this->propertyEncoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD, 'en')
+            ->willReturn('i18n:en-shadow-on');
+        $this->propertyEncoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, 'de')
+            ->willReturn('i18n:de-shadow-base');
+        $this->propertyEncoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, 'en')
+            ->willReturn('i18n:en-shadow-base');
+
+        $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(false);
+        $this->node->getPropertyValueWithDefault('i18n:en-shadow-on', false)->willReturn(true);
+        $this->node->getPropertyValue('i18n:en-shadow-base')->willReturn('de');
+
+        $this->documentRegistry->getNodeForDocument($document->reveal())->willReturn($this->node->reveal());
+        $this->node->getProperties()->willReturn([$englishShadowOnProperty->reveal(), $germanShadowOnProperty->reveal()]);
+
+        $this->assertEquals('["de"]', json_encode($this->documentInspector->getConcreteLocales($document->reveal())));
+    }
+
+    /**
      * It should return the webspace name for a given node.
      *
      * @dataProvider provideWebspace
@@ -139,7 +273,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
         $this->node->getPath()->willReturn($path);
-        $this->pathRegistry->getPathSegment('base')->willReturn('cmf');
+        $this->pathSegmentRegistry->getPathSegment('base')->willReturn('cmf');
         $webspace = $this->documentInspector->getWebspace($this->document);
 
         $this->assertEquals($expectedWebspace, $webspace);
@@ -155,6 +289,14 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             [
                 '/cmf/foobar/bar',
                 'foobar',
+            ],
+            [
+                '/cmf/foo-bar/bar',
+                'foo-bar',
+            ],
+            [
+                '/cmf/foo_bar/bar',
+                'foo_bar',
             ],
             [
                 '/foo/foo',

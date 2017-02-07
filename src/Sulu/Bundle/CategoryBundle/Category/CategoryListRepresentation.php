@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,8 +23,8 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
  * @Relation(
  *     "children",
  *     href = @Route(
- *         "expr(object.getRoute())",
- *         parameters = "expr({ parent: '{parentId}' } + object.getParameters())",
+ *         "get_category_children",
+ *         parameters = "expr({ parentId: '{parentId}' } + object.getParameters())",
  *         absolute = "expr(object.isAbsolute())",
  *     )
  * )

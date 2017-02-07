@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,14 +26,4 @@ interface RequestAnalyzerResolverInterface
      * @return array
      */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer);
-
-    /**
-     * Returns fake data for preview.
-     *
-     * @param string $webspaceKey
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function resolveForPreview($webspaceKey, $locale);
 }

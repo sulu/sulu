@@ -8,12 +8,16 @@
  */
 
 define([
+    'config',
+    'services/sulupreview/preview',
     'sulucontent/model/content',
-    'sulucontent/components/content/preview/main',
+    'sulucontent/services/content-manager',
+    'sulucontent/services/user-settings',
     'sulucontent/components/copy-locale-overlay/main',
-    'sulusecurity/services/security-checker',
-    'config'
-], function(Content, Preview, CopyLocale, SecurityChecker, Config) {
+    'sulucontent/components/open-ghost-overlay/main',
+    'sulusecurity/services/user-manager',
+    'sulusecurity/services/security-checker'
+], function(config, Preview, Content, ContentManager, UserSettings, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
 
     'use strict';
 
@@ -23,56 +27,32 @@ define([
 
         constants = {
             localizationUrl: '/admin/api/webspace/localizations',
-            previewExpandIcon: 'fa-step-backward',
-            previewCollapseIcon: 'fa-step-forward',
             tabPrefix: 'tab-',
             contentNodeType: 1,
             internalLinkNodeType: 2,
             externalLinkNodeType: 4
         },
 
+        errorCodes = {
+            contentChanged: 1102,
+            resourceLocatorAlreadyExists: 1103
+        },
+
         translationKeys = {
             deleteReferencedByFollowing: 'content.delete-referenced-by-following',
             deleteConfirmText: 'content.delete-confirm-text',
             deleteConfirmTitle: 'content.delete-confirm-title',
-            deleteDoIt: 'content.delete-do-it'
-        },
-
-        states = {
-            0: 'stateTest',
-            1: 'stateTest',
-            2: 'statePublish'
+            deleteDoIt: 'content.delete-do-it',
+            draftLabel: 'sulu-document-manager.draft-label',
+            unpublishConfirmTextNoDraft: 'sulu-content.unpublish-confirm-text-no-draft',
+            unpublishConfirmTextWithDraft: 'sulu-content.unpublish-confirm-text-with-draft',
+            unpublishConfirmTitle: 'sulu-content.unpublish-confirm-title',
+            removeDraft: 'sulu-content.delete-draft',
+            deleteDraftConfirmTitle: 'sulu-content.delete-draft-confirm-title',
+            deleteDraftConfirmText: 'sulu-content.delete-draft-confirm-text'
         },
 
         templates = {
-            preview: [
-                '<div class="sulu-content-preview auto">',
-                '   <div class="preview-toolbar">',
-                '       <div class="' + constants.previewExpandIcon + ' toggler"></div>',
-                '       <div class="toolbar"></div>',
-                '       <div class="fa-external-link new-window"></div>',
-                '   </div>',
-                '   <div class="container">',
-                '       <div class="wrapper">',
-                '           <div class="viewport">',
-                '               <iframe src="<%= url %>"></iframe>',
-                '           </div>',
-                '       </div>',
-                '   </div>',
-                '</div>'
-            ].join(''),
-
-            previewOnRequest: [
-                '<div class="v-center">',
-                '   <div id="preview-start" class="btn grey large">',
-                '       <span class="fa-play"></span>',
-                '       <span class="text"><%= startLabel %></span>',
-                '   </div>',
-                '</div>'
-            ].join(''),
-
-            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>',
-
             referentialIntegrityMessage: function(pageTitles) {
                 var message = [];
 
@@ -92,22 +72,25 @@ define([
 
         isHomeDocument = function(data) {
             return data.url === '/';
+        },
+
+        hasDraft = function(data) {
+            return !data.id || !!data.publishedState || !data.published;
+        },
+
+        setToolbarItems = function(item, value) {
+            this.sandbox.emit('sulu.header.toolbar.item.' + (!!value ? 'enable' : 'disable'), item, false);
+        },
+
+        saveUserLocaleForWebspace = function(locale) {
+            this.sandbox.sulu.saveUserSetting(this.options.webspace + '.' + CONTENT_LANGUAGE, locale);
+            this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, locale);
         };
 
     return {
 
         initialize: function() {
-            // init vars
             this.saved = true;
-            this.previewUrl = null;
-            this.previewWindow = null;
-            this.previewExpanded = false;
-            this.$preview = null;
-
-            this.previewMode = Config.get('sulu.content.preview').mode;
-
-            this.preview = new Preview();
-            this.preview.initialize(this.sandbox, this.options, this.$el);
 
             if (this.options.display === 'column') {
                 this.renderColumn();
@@ -118,22 +101,26 @@ define([
         },
 
         loadComponentData: function() {
-            var localization = $.Deferred();
-            var data = $.Deferred();
+            var localizationDeferred = $.Deferred();
+            var dataDeferred = $.Deferred();
 
             this.loadLocalizations().then(function() {
-                localization.resolve();
+                localizationDeferred.resolve();
             }.bind(this));
 
             if (this.options.display !== 'column') {
                 this.loadData().then(function() {
-                    data.resolve();
+                    if (!!this.options.preview) {
+                        this.preview = Preview.initialize(this.data._permissions, this.options.webspace);
+                    }
+
+                    dataDeferred.resolve();
                 }.bind(this));
             } else {
-                data.resolve();
+                dataDeferred.resolve();
             }
 
-            return $.when(localization, data);
+            return $.when(localizationDeferred, dataDeferred);
         },
 
         renderColumn: function() {
@@ -207,7 +194,7 @@ define([
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback) {
                 // deep copy of object
-                callback(this.sandbox.util.deepCopy(this.data));
+                callback(this.sandbox.util.deepCopy(this.data), this.preview);
             }.bind(this));
 
             // setter for header bar buttons
@@ -215,19 +202,43 @@ define([
                 this.setHeaderBar(saved);
             }.bind(this));
 
-            // setter for state bar buttons
-            this.sandbox.on('sulu.content.contents.set-state', function(data) {
-                this.setState(data);
-            }.bind(this));
+            // delegate save to tab
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.sandbox.emit('sulu.tab.save', action);
+            }, this);
 
             // change language
             this.sandbox.on('sulu.header.language-changed', function(item) {
-                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
+                saveUserLocaleForWebspace.call(this, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
 
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                        if (-1 === _(data.concreteLanguages).indexOf(item.id)
+                            && -1 === _(data.enabledShadowLanguages).values().indexOf(item.id)
+                        ) {
+                            OpenGhost.openGhost.call(this, data).then(function(copy, src) {
+                                if (!!copy) {
+                                    CopyLocale.copyLocale.call(
+                                        this,
+                                        data.id,
+                                        src,
+                                        [item.id],
+                                        function() {
+                                            this.load(data, this.options.webspace, item.id, true);
+                                        }.bind(this)
+                                    );
+                                } else {
+                                    // new page will be created
+                                    this.load({id: data.id}, this.options.webspace, item.id, true);
+                                }
+                            }.bind(this)).fail(function() {
+                                // the open-ghost page got canceled, so reset the language changer
+                                this.sandbox.emit('sulu.header.change-language', this.options.language);
+                            }.bind(this));
+                        } else {
+                            this.load(data, this.options.webspace, item.id, true);
+                        }
                     } else {
                         this.add(
                             !!this.options.parent ? {id: this.options.parent} : null,
@@ -244,6 +255,12 @@ define([
                 if (item.id === 'tab-excerpt') {
                     this.template = this.data.originTemplate;
                 }
+
+                if (item.id === 'tab-permissions') {
+                    this.showSaveItems('permissions');
+                } else {
+                    this.showSaveItems('content');
+                }
             }.bind(this));
 
             // change template
@@ -252,34 +269,28 @@ define([
             }.bind(this));
 
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function(id, data) {
-                this.data = data;
-                this.setHeaderBar(true);
-                this.updateTabVisibility();
-
-                // FIXME select should be able to override text in a item
-                this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
-
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
-            }, this);
-
-            // content save-error
-            this.sandbox.on('sulu.content.contents.save-error', function(status) {
-                if (status === 409) {
-                    this.sandbox.emit(
-                        'sulu.labels.error.show',
-                        'labels.error.content-save-resource-locator',
-                        'labels.error'
-                    );
+            this.sandbox.on('sulu.content.contents.saved', function(id, data, action) {
+                if (!this.options.id) {
+                    this.sandbox.sulu.viewStates.justSaved = true;
                 } else {
-                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.data = data;
+                    this.content.set(data);
+                    this.setHeaderBar(true);
+                    this.showDraftLabel();
+
+                    // FIXME select should be able to override text in a item
+                    this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
+
+                    this.sandbox.emit('sulu.header.saved', data);
+                    this.showState(!!this.data.published);
+                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
                 }
-                this.setHeaderBar(false);
+
+                this.afterSaveAction(action, !this.options.id);
             }, this);
 
-            // content delete
-            this.sandbox.on('sulu.preview.delete', function() {
-                this.sandbox.emit('sulu.content.content.delete', this.data.id);
+            this.sandbox.on('sulu.content.contents.error', function(code, data, action) {
+                this.handleError(code, data, action);
             }, this);
 
             // set default template
@@ -294,6 +305,10 @@ define([
                 }
             }, this);
 
+            this.sandbox.on('sulu.content.contents.show-save-items', function(state) {
+                this.showSaveItems(state);
+            }.bind(this));
+
             // expand navigation if navigation item is clicked
             this.sandbox.on('husky.navigation.item.select', function(event) {
                 // when navigation item is already opended do nothing - relevant for homepage
@@ -301,17 +316,6 @@ define([
                     this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
                 }
             }.bind(this));
-
-            // get changed state
-            this.sandbox.on('sulu.header.state.changed', function(state) {
-                if (this.state !== state) {
-                    this.state = state;
-                    this.setHeaderBar(false);
-                }
-            }.bind(this));
-
-            // change url of preview
-            this.sandbox.on('sulu.content.preview.change-url', this.changePreviewUrl.bind(this));
 
             this.sandbox.on('sulu.permission-tab.saved', function(data, action) {
                 this.afterSaveAction(action, false);
@@ -377,12 +381,12 @@ define([
         },
 
         getResourceLocator: function(parts, template, callback) {
-            var url = '/admin/api/nodes/resourcelocators/generates?' +
-                (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') +
-                (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') +
-                '&webspace=' + this.options.webspace +
-                '&language=' + this.options.language +
-                '&template=' + template;
+            var parentUuid = (!!this.options.parent) ? this.options.parent : this.data.parentUuid,
+                url = '/admin/api/nodes/resourcelocators/generates?' +
+                    (!!parentUuid ? 'parent=' + parentUuid + '&' : '') +
+                    '&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&template=' + template;
 
             this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
@@ -452,7 +456,7 @@ define([
         del: function(id) {
             this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
                     if (!this.content || id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, false, {
@@ -460,7 +464,6 @@ define([
                             success: this.deleteSuccessCallback.bind(this),
                             error: function(model, response) {
                                 this.displayReferentialIntegrityDialog(model, response.responseJSON);
-                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     } else {
@@ -473,7 +476,6 @@ define([
                             }.bind(this),
                             error: function(model, response) {
                                 this.displayReferentialIntegrityDialog(model, response.responseJSON);
-                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     }
@@ -539,26 +541,71 @@ define([
             this.sandbox.emit('sulu.content.content.deleted');
         },
 
-        changeState: function(state) {
-            this.sandbox.emit('sulu.content.contents.state.change');
-
-            this.content.stateSave(this.options.webspace, this.options.language, state, null, {
-                success: function() {
-                    this.sandbox.emit('sulu.content.contents.state.changed', state);
-                    this.sandbox.emit('sulu.labels.success.show',
-                        'labels.state-changed.success-desc',
-                        'labels.success',
-                        'sulu.content.contents.state.label');
+        /**
+         * Asks if the content should be overriden, if the content has been changed on the server.
+         * @param {Object} data
+         * @param {string} action
+         */
+        handleErrorContentChanged: function(data, action) {
+            this.sandbox.emit(
+                'sulu.overlay.show-warning',
+                'content.changed-warning.title',
+                'content.changed-warning.description',
+                function() {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                 }.bind(this),
-                error: function() {
-                    this.sandbox.emit('sulu.content.contents.state.changeFailed');
-                    this.sandbox.emit('sulu.labels.error.show',
-                        'labels.state-changed.error-desc',
-                        'labels.error',
-                        'sulu.content.contents.state.label');
-                    this.sandbox.logger.log("error while saving profile");
-                }.bind(this)
-            });
+                function() {
+                    this.saveContent(
+                        data,
+                        {
+                            // on success save contents id
+                            success: function(response) {
+                                var model = response.toJSON();
+                                this.sandbox.emit('sulu.content.contents.saved', model.id, model, action);
+                                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                            }.bind(this),
+                            error: function(model, response) {
+                                this.sandbox.emit(
+                                    'sulu.content.contents.error',
+                                    response.responseJSON.code,
+                                    data,
+                                    action
+                                );
+                            }.bind(this)
+                        },
+                        true,
+                        action
+                    );
+                }.bind(this),
+                {
+                    okDefaultText: 'content.changed-warning.ok-button'
+                }
+            );
+        },
+
+        /**
+         * Handles the error based on its error code.
+         * @param {number} errorCode
+         * @param {Object} data
+         * @param {string} action
+         */
+        handleError: function(errorCode, data, action) {
+            switch (errorCode) {
+                case errorCodes.contentChanged:
+                    this.handleErrorContentChanged(data, action);
+                    break;
+                case errorCodes.resourceLocatorAlreadyExists:
+                    this.sandbox.emit(
+                        'sulu.labels.error.show',
+                        'labels.error.content-save-resource-locator',
+                        'labels.error'
+                    );
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                    break;
+                default:
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+            }
         },
 
         save: function(data, action) {
@@ -566,41 +613,55 @@ define([
 
             var def = this.sandbox.data.deferred();
 
+            if (!!this.template) {
+                data.template = this.template;
+            }
+
             if (!!this.content) {
                 this.content.set(data);
             } else {
                 this.content = new Content(data);
             }
+
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
-            this.content.fullSave(
-                this.template,
-                this.options.webspace,
-                this.options.language,
-                this.options.parent,
-                this.state,
-                (isHomeDocument(data) ? 'home' : null),
-                null, {
+
+            this.saveContent(
+                data,
+                {
                     // on success save contents id
                     success: function(response) {
                         var model = response.toJSON();
-                        if (!!this.options.id) {
-                            this.sandbox.emit('sulu.content.contents.saved', model.id, model);
-                        } else {
-                            this.sandbox.sulu.viewStates.justSaved = true;
-                        }
-                        this.afterSaveAction(action, !this.options.id);
+                        this.sandbox.emit('sulu.content.contents.saved', model.id, model, action);
                         def.resolve();
                     }.bind(this),
                     error: function(model, response) {
-                        this.sandbox.logger.log("error while saving profile");
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
-                        this.sandbox.emit('sulu.content.contents.save-error', response.status);
+                        this.sandbox.emit('sulu.content.contents.error', response.responseJSON.code, data, action);
                     }.bind(this)
-                });
+                },
+                false,
+                action
+            );
 
             return def;
+        },
+
+        saveContent: function(data, options, force, action) {
+            if (typeof force === 'undefined') {
+                force = false;
+            }
+
+            this.content.fullSave(
+                this.options.webspace,
+                this.options.language,
+                this.options.parent,
+                (isHomeDocument(data) ? 'home' : null),
+                null,
+                options,
+                force,
+                action
+            );
         },
 
         /**
@@ -641,7 +702,7 @@ define([
                 'sulu.router.navigate',
                 'content/contents/' + (!webspace ? this.options.webspace : webspace) +
                 '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
-                undefined, undefined, forceReload
+                true, forceReload
             );
         },
 
@@ -664,29 +725,23 @@ define([
 
         render: function() {
             this.setTemplate(this.data);
-            this.setState(this.data);
-            this.updateTabVisibility();
+            this.showDraftLabel();
+
+            this.showState(!!this.data.published);
+
+            if (this.options.content === 'permissions') {
+                this.showSaveItems('permissions');
+            }
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
-                this.sandbox.on('sulu.preview.initiated', function() {
-                    this.renderPreview(this.data);
-                }.bind(this));
+                var objectClass = 'Sulu\\Bundle\\ContentBundle\\Document\\' + (isHomeDocument(this.data) ? 'Home' : 'Page') + 'Document';
 
-                this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
-
-                this.sandbox.on('sulu.preview.initialize', function(data, restart) {
-                    if (this.previewMode === 'auto') {
-                        // if mode is auto init immediately
-                        this.sandbox.emit('sulu.preview.initialize.force', data, restart);
-                    } else if (this.previewMode === 'on_request') {
-                        // if mode is on_request render the "start preview" button
-                        this.renderPreviewOnRequest(restart);
-                    }
-                }.bind(this));
-
-                this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
-                    this.previewInitialize(data, restart);
-                }.bind(this));
+                this.preview.start(
+                    objectClass,
+                    this.options.id,
+                    this.options.language,
+                    this.data
+                );
             } else {
                 this.sandbox.emit('sulu.sidebar.hide');
             }
@@ -703,89 +758,12 @@ define([
                         '/' + this.options.language + '/edit:' + this.data.id + '/settings'
                     );
                 }
+
+                // set current page as last selected one
+                UserSettings.setLastSelectedPage(this.options.webspace, this.options.id);
             }
 
             this.setHeaderBar(true);
-        },
-
-        previewInitialize: function(data, restart) {
-            data = this.sandbox.util.extend(true, {}, this.data, data);
-            if (!this.preview.initiated) {
-                this.preview.start(data, this.options);
-            } else if (!!restart) {
-                // force reload
-                this.sandbox.dom.remove(this.$preview);
-                this.$preview = null;
-                this.preview.restart(data, this.options, this.template);
-            }
-        },
-
-        renderPreviewOnRequest: function(restart) {
-            this.sandbox.emit('sulu.sidebar.change-width', 'max');
-            this.$preview = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.previewOnRequest, {startLabel: this.sandbox.translate('content.contents.start-preview')})
-            );
-            this.sandbox.dom.on(this.sandbox.dom.find('#preview-start', this.$preview), 'click', function() {
-                // reload preview container
-                this.sandbox.dom.remove(this.$preview);
-                this.$preview = null;
-
-                // get current data
-                var data = this.sandbox.form.getData('#content-form-container');
-
-                // initialize preview
-                this.sandbox.emit('sulu.preview.initialize.force', data, restart);
-            }.bind(this));
-
-            this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
-        },
-
-        /**
-         * Render preview for loaded content node
-         * @param data
-         */
-        renderPreview: function(data) {
-            this.sandbox.emit('sulu.sidebar.change-width', 'max');
-            if (this.$preview === null) {
-                this.previewUrl = this.sandbox.util.template(templates.previewUrl, {
-                    url: '/admin/content/preview/',
-                    webspace: this.options.webspace,
-                    language: this.options.language,
-                    uuid: data.id
-                });
-                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
-                    url: this.previewUrl
-                }));
-                this.bindPreviewEvents();
-                this.startPreviewToolbar();
-                this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
-            }
-        },
-
-        /**
-         * Starts the toolbar for the preview
-         */
-        startPreviewToolbar: function() {
-            this.sandbox.start([{
-                name: 'toolbar@husky',
-                options: {
-                    el: this.$preview.find('.toolbar'),
-                    instanceName: 'preview',
-                    skin: 'big',
-                    responsive: true,
-                    buttons: this.sandbox.sulu.buttons.get({
-                        displayDevices: {},
-                        refresh: {},
-                        cache: {
-                            options: {
-                                icon: 'recycle',
-                                title: 'sulu.website.cache.remove',
-                                callback: this.cacheClear.bind(this)
-                            }
-                        }
-                    })
-                }
-            }]);
         },
 
         /**
@@ -793,93 +771,6 @@ define([
          */
         cacheClear: function() {
             this.sandbox.website.cacheClear();
-        },
-
-        /**
-         * Binds events on preview elements and components
-         */
-        bindPreviewEvents: function() {
-            this.$preview.find('.new-window').on('click', this.openPreviewInNewWindow.bind(this));
-            this.$preview.find('.toggler').on('click', this.togglePreview.bind(this));
-
-            this.sandbox.on('sulu.toolbar.refresh', this.refreshPreview.bind(this));
-            this.sandbox.on('sulu.toolbar.display-device', this.changePreviewStyle.bind(this));
-        },
-
-        /**
-         * Changes the url of the preview
-         * @param params {Object} object with parameteres like webspace language etc.
-         */
-        changePreviewUrl: function(params) {
-            if (this.$preview !== null && !!this.content) {
-                var $iframe,
-                    content = this.content.toJSON(),
-                    defaults = {
-                        url: '/admin/content/preview/',
-                        webspace: this.options.webspace,
-                        language: this.options.language,
-                        uuid: content.id,
-                        template: content.template
-                    };
-                defaults = this.sandbox.util.extend(true, {}, defaults, params);
-                this.previewUrl = this.sandbox.util.template(templates.previewUrl)(defaults);
-                $iframe = this.sandbox.dom.find('iframe', this.$preview);
-                this.sandbox.dom.attr($iframe, 'src', this.previewUrl);
-                if (!!this.previewWindow && this.previewWindow.closed === false) {
-                    this.previewWindow.close();
-                }
-            }
-        },
-
-        /**
-         * Changes the style of the the preview. E.g. from desktop to smartphone
-         * @param newStyle {String} the new style
-         */
-        changePreviewStyle: function(newStyle) {
-            if (this.$preview !== null) {
-                this.$preview.removeClass(this.$preview.data('sulu-preview-style'));
-                this.$preview.addClass(newStyle);
-                this.$preview.data('sulu-preview-style', newStyle);
-            }
-        },
-
-        /**
-         * Shrinks or expands the content-column and therefore also the preview
-         */
-        togglePreview: function() {
-            if (this.previewExpanded) {
-                this.sandbox.emit('sulu.app.toggle-column', false);
-                this.sandbox.dom.removeClass(this.$preview.find('.toggler'), constants.previewCollapseIcon);
-                this.sandbox.dom.prependClass(this.$preview.find('.toggler'), constants.previewExpandIcon);
-                this.previewExpanded = false;
-            } else {
-                this.sandbox.emit('sulu.app.toggle-column', true);
-                this.previewExpanded = true;
-                this.sandbox.dom.removeClass(this.$preview.find('.toggler'), constants.previewExpandIcon);
-                this.sandbox.dom.prependClass(this.$preview.find('.toggler'), constants.previewCollapseIcon);
-            }
-        },
-
-        /**
-         * Hides the sidebar and opens a new window with the preview in it
-         */
-        openPreviewInNewWindow: function() {
-            this.sandbox.emit('sulu.app.change-width', 'fixed');
-            this.sandbox.emit('husky.navigation.show');
-            this.sandbox.emit('sulu.sidebar.hide');
-            this.previewWindow = window.open(this.previewUrl);
-            this.previewWindow.onload = function() {
-                this.previewWindow.onunload = function() {
-                    this.previewWindow = null;
-
-                    this.sandbox.emit('sulu.sidebar.show');
-                    this.sandbox.emit('sulu.sidebar.change-width', 'max');
-                }.bind(this);
-            }.bind(this);
-        },
-
-        refreshPreview: function() {
-            this.getPreviewDocument().location.reload();
         },
 
         /**
@@ -901,149 +792,27 @@ define([
         },
 
         /**
-         * Sets state to header
-         * @param {Object} data
-         */
-        setState: function(data) {
-            this.state = data.nodeState;
-
-            if (this.state !== '' && this.state !== undefined && this.state !== null) {
-                this.sandbox.emit('sulu.header.toolbar.item.change', 'state', states[this.state]);
-            }
-        },
-
-        /**
          * Sets header bar
          * @param {Boolean} saved
          */
         setHeaderBar: function(saved) {
-            if (saved === this.saved) {
-                return;
-            }
+            var saveDraft = !saved,
+                savePublish = !saved,
+                publish = !!saved && !this.data.publishedState;
 
-            if (saved === true) {
-                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            } else {
+            setToolbarItems.call(this, 'saveDraft', saveDraft);
+            setToolbarItems.call(this, 'savePublish', savePublish);
+            setToolbarItems.call(this, 'publish', publish);
+
+            setToolbarItems.call(this, 'unpublish', !!this.data.published);
+
+            if (!!saveDraft || !!savePublish || !!publish) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', false);
             }
-
-            this.sandbox.emit('sulu.preview.state.change', saved);
 
             this.saved = saved;
-        },
-
-        updateTabVisibility: function() {
-            var tabs = ['content', 'excerpt', 'seo'],
-                usedTabs = tabs,
-                unusedTabs;
-
-            if (this.data.nodeType === constants.internalLinkNodeType
-                || this.data.nodeType === constants.externalLinkNodeType
-            ) {
-                usedTabs = ['seo'];
-            } else if (!!this.data.shadowOn) {
-                usedTabs = [];
-            }
-
-            unusedTabs = _.difference(tabs, usedTabs);
-
-            usedTabs.forEach(function(tab) {
-                this.sandbox.emit('husky.tabs.header.item.show', constants.tabPrefix + tab);
-            }.bind(this));
-
-            unusedTabs.forEach(function(tab) {
-                this.sandbox.emit('husky.tabs.header.item.hide', constants.tabPrefix + tab);
-            }.bind(this));
-        },
-
-        getPreviewDocument: function() {
-            if (!!this.previewWindow) {
-                return this.previewWindow.document;
-            } else {
-                return this.sandbox.dom.find('iframe', this.$preview).contents()[0];
-            }
-        },
-
-        handleChanges: function(changes) {
-            if (!!changes.reload) {
-                this.getPreviewDocument().location.reload();
-            } else {
-                // foreach property which was changed
-                for (var propertyName in changes) {
-                    if (changes.hasOwnProperty(propertyName)) {
-                        if (-1 !== propertyName.indexOf(',')) {
-                            this.handleSequence(propertyName, changes[propertyName]);
-                        } else {
-                            this.handleSingle(propertyName, changes[propertyName]);
-                        }
-                    }
-                }
-            }
-        },
-
-        handleSequence: function(propertyName, content) {
-            var sequence = propertyName.split(','),
-                filter = '',
-                item, before = 0,
-            // regex for integer
-                isInt = /^\d*$/;
-
-            for (item in sequence) {
-                // check of integer
-                if (!isInt.test(sequence[item])) {
-                    before = sequence[item];
-                    filter += ' *[property="' + sequence[item] + '"]';
-                } else {
-                    filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
-                }
-            }
-
-            this.handle(content, filter, function() {
-                return true;
-            });
-        },
-
-        handleSingle: function(propertyName, content) {
-            var filter = '*[property="' + propertyName + '"]';
-
-            this.handle(content, filter, function(element) {
-                // check all parents if they has not the attribute property
-                // thats currently not supported by the api
-                var currentNode = element.parentNode;
-                while (null !== currentNode.parentNode) {
-                    if (currentNode.hasAttribute('property') && currentNode.getAttribute('typeof') === 'collection') {
-                        return false;
-                    }
-                    currentNode = currentNode.parentNode;
-                }
-
-                return true;
-            });
-        },
-
-        handle: function(content, selector, validate) {
-            var i = 0,
-                elements = this.getPreviewDocument().querySelectorAll(selector),
-                nodeArray = [].slice.call(elements);
-
-            nodeArray.forEach(function(element) {
-                if (!validate(element)) {
-                    return;
-                }
-
-                $.each(content[i], function(key, value) {
-                    if (key !== 'html') {
-                        $(element).attr(key, value);
-
-                        return;
-                    }
-
-                    element.innerHTML = value;
-                });
-
-                // FIXME jump to element: element.scrollIntoView();
-                i++;
-            });
         },
 
         getCopyLocaleUrl: function(id, src, dest) {
@@ -1096,12 +865,6 @@ define([
                         id: this.localizations[i].id,
                         title: this.localizations[i].title
                     };
-
-                    if (concreteLanguages.indexOf(this.localizations[i].id) < 0) {
-                        dropdownLocalizations[i].title += [
-                            ' (', this.sandbox.translate('content.contents.new'), ')'
-                        ].join('');
-                    }
                 }
 
                 navigationUrl = '/admin/content-navigations';
@@ -1115,15 +878,47 @@ define([
                     navigationUrlParams.push('webspace=' + this.options.webspace);
                 }
 
+                if (!!this.options.language) {
+                    navigationUrlParams.push('locale=' + this.options.language);
+                }
+
                 if (!!navigationUrlParams.length) {
                     navigationUrl += '?' + navigationUrlParams.join('&');
                 }
 
-                var buttons = {}, editDropdown = {};
+                var buttons = {}, editDropdown = {}, saveDropdown = {};
 
                 if (SecurityChecker.hasPermission(this.data, 'edit')) {
+                    saveDropdown.saveDraft = {};
+
+                    if (SecurityChecker.hasPermission(this.data, 'live')) {
+                        saveDropdown.savePublish = {};
+                        saveDropdown.publish = {};
+                    }
+
+                    if (!!config.has('sulu_automation.enabled')) {
+                        saveDropdown.automationInfo = {
+                            options: {
+                                entityId: this.options.id,
+                                entityClass: 'Sulu\\Bundle\\ContentBundle\\Document\\BasePageDocument',
+                                handlerClass: [
+                                    'Sulu\\Bundle\\ContentBundle\\Automation\\DocumentPublishHandler',
+                                    'Sulu\\Bundle\\ContentBundle\\Automation\\DocumentUnpublishHandler'
+                                ]
+                            }
+                        };
+                    }
+
                     buttons.save = {
-                        parent: 'saveWithOptions'
+                        options: {
+                            icon: 'floppy-o',
+                            title: 'public.save',
+                            disabled: true,
+                            callback: function() {
+                                this.sandbox.emit('sulu.toolbar.save', 'publish');
+                            }.bind(this),
+                            dropdownItems: saveDropdown
+                        }
                     };
 
                     buttons.template = {
@@ -1139,9 +934,26 @@ define([
                     };
                 }
 
+                if (SecurityChecker.hasPermission(this.data, 'live') && !isHomeDocument(this.data)) {
+                    editDropdown.unpublish = {
+                        options: {
+                            title: this.sandbox.translate('sulu-document-manager.unpublish'),
+                            disabled: !this.data.published,
+                            callback: this.unpublish.bind(this)
+                        }
+                    };
+
+                    editDropdown.divider = {
+                        options: {
+                            divider: true
+                        }
+                    };
+                }
+
                 if (SecurityChecker.hasPermission(this.data, 'delete') && !isHomeDocument(this.data)) {
                     editDropdown.delete = {
                         options: {
+                            disabled: !this.data.id,
                             callback: function() {
                                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
                             }.bind(this)
@@ -1153,9 +965,12 @@ define([
                     editDropdown.copyLocale = {
                         options: {
                             title: this.sandbox.translate('toolbar.copy-locale'),
+                            disabled: !this.data.id,
                             callback: function() {
-                                CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
-                                    this.load(this.data, this.options.webspace, this.options.language, true);
+                                CopyLocale.startCopyLocalesOverlay.call(this).then(function(newLocales) {
+                                    this.content.attributes.concreteLanguages = _.uniq(this.data.concreteLanguages.concat(newLocales));
+                                    this.data = this.content.toJSON();
+                                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.copy-locale-desc', 'labels.success');
                                 }.bind(this));
                             }.bind(this)
                         }
@@ -1170,23 +985,24 @@ define([
                     };
                 }
 
-                if (SecurityChecker.hasPermission(this.data, 'edit')) {
-                    buttons.state = {
-                        options: {
-                            disabled: isHomeDocument(this.data),
-                            dropdownItems: {
-                                statePublish: {},
-                                stateTest: {}
-                            }
-                        }
-                    };
-                }
+                buttons.statePublished = {};
+                buttons.stateTest = {};
 
                 header = {
                     noBack: isHomeDocument(this.data),
 
                     tabs: {
-                        url: navigationUrl
+                        url: navigationUrl,
+                        options: {
+                            locale: this.options.language,
+                            data: function() {
+                                return this.sandbox.util.deepCopy(this.content.toJSON());
+                            }.bind(this)
+                        },
+                        componentOptions: {
+                            values: this.content.toJSON(),
+                            previewService: this.preview
+                        }
                     },
 
                     title: function() {
@@ -1207,6 +1023,141 @@ define([
             return header;
         },
 
+        unpublish: function() {
+            this.sandbox.sulu.showConfirmationDialog({
+                callback: function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
+                    ContentManager.unpublish(this.data.id, this.options.language)
+                        .always(function() {
+                            this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit');
+                        }.bind(this))
+                        .then(function(response) {
+                            this.sandbox.emit(
+                                'sulu.labels.success.show',
+                                'labels.success.content-unpublish-desc',
+                                'labels.success'
+                            );
+                            this.sandbox.emit('sulu.content.contents.saved', response.id, response);
+                        }.bind(this))
+                        .fail(function() {
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'labels.error.content-unpublish-desc',
+                                'labels.error'
+                            );
+                        }.bind(this));
+                }.bind(this),
+                title: translationKeys.unpublishConfirmTitle,
+                description: !!hasDraft(this.data) ?
+                    translationKeys.unpublishConfirmTextNoDraft :
+                    translationKeys.unpublishConfirmTextWithDraft
+            });
+        },
+
+        showSaveItems: function(state) {
+            var allItems = ['saveDraft', 'savePublish', 'publish', 'saveOnly'], hiddenItems, shownItems;
+
+            if (!state) {
+                state = 'content';
+            }
+
+            switch (state) {
+                case 'content':
+                    hiddenItems = [];
+                    break;
+                case 'shadow':
+                case 'permissions':
+                    hiddenItems = ['saveDraft', 'savePublish', 'publish'];
+                    break;
+            }
+
+            shownItems = _.difference(allItems, hiddenItems);
+
+            this.sandbox.util.each(shownItems, function(index, shownItem) {
+                this.sandbox.emit('sulu.header.toolbar.item.show', shownItem);
+            }.bind(this));
+
+            this.sandbox.util.each(hiddenItems, function(index, hiddenItem) {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', hiddenItem);
+            }.bind(this));
+        },
+
+        showState: function(published) {
+            if (!!published) {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'stateTest');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'statePublished');
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'statePublished');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'stateTest');
+            }
+        },
+
+        showDraftLabel: function() {
+            this.sandbox.emit('sulu.header.tabs.label.hide');
+
+            if (hasDraft(this.data)) {
+                return;
+            }
+
+            UserManager.find(this.data.changer).then(function(response) {
+                this.sandbox.emit(
+                    'sulu.header.tabs.label.show',
+                    this.sandbox.util.sprintf(
+                        this.sandbox.translate(translationKeys.draftLabel),
+                        {
+                            changed: this.sandbox.date.format(this.data.changed, true),
+                            user: response.username
+                        }
+                    ),
+                    [
+                        {
+                            id: 'delete-draft',
+                            title: this.sandbox.translate(translationKeys.removeDraft),
+                            skin: 'critical',
+                            onClick: this.deleteDraft.bind(this)
+                        }
+                    ]
+                );
+            }.bind(this));
+        },
+
+        deleteDraft: function() {
+            this.sandbox.sulu.showDeleteDialog(
+                function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.label.header.loading');
+
+                    ContentManager.removeDraft(this.data.id, this.options.language)
+                        .then(function(response) {
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                this.sandbox.mvc.history.fragment,
+                                true,
+                                true
+                            );
+                            this.sandbox.emit('sulu.content.contents.saved', response.id, response);
+                        }.bind(this))
+                        .fail(function() {
+                            this.sandbox.emit('husky.label.header.reset');
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'labels.error.remove-draft-desc',
+                                'labels.error'
+                            );
+                        }.bind(this))
+                }.bind(this),
+                this.sandbox.translate(translationKeys.deleteDraftConfirmTitle),
+                this.sandbox.translate(translationKeys.deleteDraftConfirmText)
+            )
+        },
+
         layout: function() {
             if (this.options.display === 'column') {
                 return {};
@@ -1216,10 +1167,15 @@ define([
                         collapsed: true
                     },
                     content: {
-                        shrinkable: (!!this.options.preview) ? true : false
+                        shrinkable: !!this.options.preview
                     },
                     sidebar: (!!this.options.preview) ? 'max' : false
                 };
+            }
+        },
+        destroy: function() {
+            if (!!this.preview) {
+                Preview.destroy(this.preview);
             }
         }
     };

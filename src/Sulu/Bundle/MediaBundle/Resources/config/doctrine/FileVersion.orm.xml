@@ -5,7 +5,10 @@
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\FileVersion" table="me_file_versions">
         <indexes>
+            <index columns="mimeType"/>
+            <index columns="size"/>
             <index columns="version"/>
+            <index columns="name"/>
         </indexes>
 
         <id name="id" type="integer" column="id">
@@ -13,6 +16,11 @@
         </id>
         <field name="name" type="string" column="name" length="255" />
         <field name="version" type="integer" column="version" />
+        <field name="subVersion" type="integer" column="subVersion">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
         <field name="size" type="integer" column="size" />
         <field name="downloadCounter" type="integer" column="downloadCounter">
             <options>
@@ -22,6 +30,8 @@
         <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
         <field name="mimeType" type="string" column="mimeType" length="255" nullable="true" />
         <field name="properties" type="string" column="properties" length="1000" nullable="true" />
+        <field name="focusPointX" type="integer" column="focusPointX" nullable="true"/>
+        <field name="focusPointY" type="integer" column="focusPointY" nullable="true"/>
 
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
             <cascade>
@@ -45,12 +55,18 @@
                 <cascade-persist />
             </cascade>
         </one-to-many>
+        <one-to-many field="formatOptions" target-entity="Sulu\Bundle\MediaBundle\Entity\FormatOptions" index-by="formatKey" mapped-by="fileVersion">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>
                 <join-column name="idFiles" referenced-column-name="id" on-delete="CASCADE" nullable="true"/>
             </join-columns>
         </many-to-one>
+
         <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
             <join-table name="me_file_version_tags">
                 <join-columns>
@@ -60,6 +76,21 @@
                     <join-column name="idTags" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+        </many-to-many>
+
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface">
+            <join-table name="me_file_version_categories">
+                <join-columns>
+                    <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idCategories" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </inverse-join-columns>
+            </join-table>
+
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
 
     </entity>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_route.routing.uri_filter_regexp">null</parameter>
+    </parameters>
+
+    <services>
+        <!-- route-defaults -->
+        <service id="sulu_route.routing.defaults_provider" class="Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider">
+            <argument type="collection">%sulu_route.routing.defaults_provider%</argument>
+        </service>
+
+        <!-- router -->
+        <service id="sulu_route.routing.proxy_factor.configuration" class="ProxyManager\Configuration" public="false">
+            <call method="setProxiesTargetDir">
+                <argument>%sulu.cache_dir%</argument>
+            </call>
+        </service>
+
+        <service id="sulu_route.routing.proxy_factory" class="ProxyManager\Factory\LazyLoadingValueHolderFactory">
+            <argument type="service" id="sulu_route.routing.proxy_factor.configuration"/>
+        </service>
+
+        <service id="sulu_route.routing.provider" class="Sulu\Bundle\RouteBundle\Routing\RouteProvider">
+            <argument type="service" id="sulu.repository.route"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_route.routing.defaults_provider"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_route.routing.proxy_factory"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_route.routing.generator" class="Symfony\Cmf\Component\Routing\ProviderBasedGenerator">
+            <argument type="service" id="sulu_route.routing.provider"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_route.routing.final_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher">
+            <argument type="service" id="cmf_routing.matcher.dummy_collection"/>
+            <argument type="service" id="cmf_routing.matcher.dummy_context"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_route.routing.nested_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher">
+            <argument type="service" id="sulu_route.routing.provider"/>
+            <argument type="service" id="sulu_route.routing.final_matcher"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_route.routing.router" class="Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter">
+            <argument type="service" id="router.request_context"/>
+            <argument type="service" id="sulu_route.routing.nested_matcher"/>
+            <argument type="service" id="sulu_route.routing.generator"/>
+            <argument>%sulu_route.routing.uri_filter_regexp%</argument>
+            <argument type="service" id="event_dispatcher" on-invalid="ignore"/>
+            <argument type="service" id="sulu_route.routing.provider"/>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="router" priority="20"/>
+        </service>
+    </services>
+</container>

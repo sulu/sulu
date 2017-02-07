@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.sulu.io/class/general"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:complexType name="classType">
+        <xs:sequence>
+            <xs:element type="propertiesType" name="properties"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="propertiesType">
+        <xs:group ref="propertiesGroup"/>
+    </xs:complexType>
+
+    <xs:group name="propertiesGroup">
+        <xs:sequence>
+            <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="concatenationPropertyType" name="concatenation-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+            <xs:element type="casePropertyType" name="case-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+            <xs:element type="groupConcatPropertyType" name="group-concat-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+            <xs:element type="identityPropertyType" name="identity-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+            <xs:element type="countPropertyType" name="count-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:complexType name="propertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="countPropertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="identityPropertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="propertyRefType">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="concatenationPropertyType">
+        <xs:group ref="concatenationPropertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="casePropertyType">
+        <xs:group ref="concatenationPropertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="groupConcatPropertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:group name="propertyGroup">
+        <xs:sequence>
+            <xs:element name="filter-type-parameters" type="parametersType"/>
+
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="concatenationPropertyGroup">
+        <xs:sequence>
+            <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="propertyRefType" name="property-ref" maxOccurs="unbounded" minOccurs="0"/>
+
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:attributeGroup name="propertyAttributeGroup">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute name="filter-type" type="xs:string"/>
+        <xs:attribute type="xs:string" name="display">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="yes" />
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="always" />
+                    <xs:enumeration value="none" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+        <xs:anyAttribute/>
+    </xs:attributeGroup>
+
+    <xs:complexType name="parametersType">
+        <xs:sequence>
+            <xs:element type="parameterType" name="parameter"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="parameterType">
+        <xs:attribute name="key" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="class" type="classType"/>
+</xs:schema>

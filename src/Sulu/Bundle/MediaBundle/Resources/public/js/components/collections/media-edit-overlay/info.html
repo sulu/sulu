@@ -1,40 +1,42 @@
 <form id="media-info" class="grid">
+    <div class="info-label-container"></div>
     <div class="grid-row">
-        <% if (!!media.thumbnails && !!media.thumbnails['200x200']) { %>
-        <div class="grid-col-4">
-            <div class="media-edit-preview-image"
-                 style="background-image: url('<%=media.thumbnails['200x200']%>');">
-                <div id="file-version-change"></div>
+        <div class="grid-col-4 media-info-preview">
+            <div class="<%= icon %> icon media-edit-preview-image">
+<% if (!!media.thumbnails && !!media.thumbnails[thumbnailFormat]) { %>
+                <img src="<%=media.thumbnails[thumbnailFormat]%>"/>
+<% } %>
+                <div id="file-version-change" class="file-version-change"></div>
+            </div>
+            <div class="media-edit-preview-loader" style="display: none;">
+                <div class="loader"></div>
+                <div class="hint"></div>
             </div>
         </div>
         <div class="grid-col-8">
-            <% } else { %>
-            <div class="grid-col-12">
-                <% } %>
-                <div class="form-group m-bottom-20">
-                    <label for="media-edit-title"><%= translate('public.title') %></label>
-                    <input class="form-element" type="text" id="media-edit-title" value=""
-                           data-validation-required="true"
-                           data-mapper-property="title"/>
-                </div>
-                <div class="form-group">
-                    <label for="media-edit-description"><%= translate('public.description') %></label>
-                    <textarea class="small noResize form-element" id="media-edit-description"
-                              data-mapper-property="description"></textarea>
-                </div>
+            <div class="form-group m-bottom-20">
+                <label for="media-edit-title"><%= translate('public.title') %></label>
+                <input class="form-element" type="text" id="media-edit-title" value=""
+                       data-validation-required="true"
+                       data-mapper-property="title"/>
             </div>
-        </div>
-        <div class="grid-row">
-            <label for="media-info-<%= media.id %>"><%= translate('public.tags') %></label>
+            <div class="form-group m-bottom-20">
+                <label for="media-edit-description"><%= translate('public.description') %></label>
+                <textarea class="small noResize form-element description" id="media-edit-description"
+                          data-mapper-property="description"></textarea>
+            </div>
+            <div class="from-group">
+                <label for="media-info-<%= media.id %>"><%= translate('public.tags') %></label>
 
-            <div id="media-tags"
-                 data-mapper-property="tags"
-                 data-type="tagList"
-                 data-form="true"
-                 data-aura-component="auto-complete-list@husky"
-                 data-aura-instance-name="media-info-<%= media.id %>"
-                 data-aura-remote-url="/admin/api/tags?flat=true&sortBy=name&searchFields=name"
-                 data-aura-get-parameter="search">
+                <div id="media-tags"
+                     data-mapper-property="tags"
+                     data-type="tagList"
+                     data-form="true"
+                     data-aura-component="auto-complete-list@husky"
+                     data-aura-instance-name="media-info-<%= media.id %>"
+                     data-aura-remote-url="/admin/api/tags?flat=true&sortBy=name&searchFields=name"
+                     data-aura-get-parameter="search">
+                </div>
             </div>
         </div>
     </div>

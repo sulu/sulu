@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -197,50 +198,6 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $type->read(
             $this->node->reveal(),
-            $this->property->reveal(),
-            $this->webspaceKey,
-            $this->locale,
-            $this->segmentKey
-        );
-    }
-
-    public function testReadForPreview()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->accountManager->reveal(),
-            $this->serializer->reveal(),
-            new CustomerIdConverter(),
-            new IndexComparator()
-        );
-
-        $this->property->setValue([1, 2, 3])->shouldBeCalled();
-
-        $type->readForPreview(
-            [1, 2, 3],
-            $this->property->reveal(),
-            $this->webspaceKey,
-            $this->locale,
-            $this->segmentKey
-        );
-    }
-
-    public function testReadForPreviewNull()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->accountManager->reveal(),
-            $this->serializer->reveal(),
-            new CustomerIdConverter(),
-            new IndexComparator()
-        );
-
-        $this->property->setValue([])->shouldBeCalled();
-
-        $type->readForPreview(
-            null,
             $this->property->reveal(),
             $this->webspaceKey,
             $this->locale,

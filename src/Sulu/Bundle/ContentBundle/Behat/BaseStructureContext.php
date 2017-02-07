@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,8 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * Base context class for Structure based feature contexts.
@@ -73,6 +74,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
                 'locale' => 'de',
                 'data' => '{}',
                 'parent' => null,
+                'published' => true,
             ], $structureData);
 
             $parentUuid = null;
@@ -91,37 +93,43 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
                 }
             }
 
-            $request = ContentMapperRequest::create()
-                ->setTemplateKey($structureData['template'])
-                ->setType($type)
-                ->setUserId($this->getUserId())
-                ->setLocale('de')
-                ->setData(array_merge([
-                    'title' => $structureData['title'],
-                    'url' => $structureData['url'],
-                ], $propertyData));
+            $document = $this->getDocumentManager()->create($type);
+            $document->setStructureType($structureData['template']);
+            $document->setTitle($structureData['title']);
+            $document->getStructure()->bind($propertyData);
+            $document->setWorkflowStage(WorkflowStage::PUBLISHED);
 
+            if ($document instanceof ResourceSegmentBehavior) {
+                $document->setResourceSegment($structureData['url']);
+            }
+
+            $persistOptions = [];
             if ($type === 'page') {
-                $request->setWebspaceKey('sulu_io');
-                $request->setState(StructureInterface::STATE_PUBLISHED);
-
                 if ($parentUuid) {
-                    $request->setParentUuid($parentUuid);
+                    $document->setParent($this->getDocumentManager()->find($parentUuid, 'de'));
+                } else {
+                    $persistOptions = ['parent_path' => '/cmf/sulu_io/contents'];
                 }
             }
 
-            $this->getContentMapper()->saveRequest($request);
+            $this->getDocumentManager()->persist($document, 'de', $persistOptions);
+
+            if ($structureData['published']) {
+                $this->getDocumentManager()->publish($document, 'de');
+            }
+
+            $this->getDocumentManager()->flush();
         }
     }
 
     /**
-     * Return the content mapper.
+     * Returns the document manager.
      *
-     * @return Sulu\Component\Content\Mapper\ContentMapperInterface
+     * @return DocumentManagerInterface
      */
-    protected function getContentMapper()
+    protected function getDocumentManager()
     {
-        return $this->getService('sulu.content.mapper');
+        return $this->getService('sulu_document_manager.document_manager');
     }
 
     /**

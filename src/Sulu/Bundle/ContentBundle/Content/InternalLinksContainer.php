@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -88,6 +88,11 @@ class InternalLinksContainer implements ArrayableInterface
      */
     private $data;
 
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
     public function __construct(
         $ids,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -95,7 +100,8 @@ class InternalLinksContainer implements ArrayableInterface
         $params,
         LoggerInterface $logger,
         $webspaceKey,
-        $languageCode
+        $languageCode,
+        $showDrafts
     ) {
         $this->ids = $ids;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -104,6 +110,7 @@ class InternalLinksContainer implements ArrayableInterface
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
         $this->params = $params;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -131,6 +138,7 @@ class InternalLinksContainer implements ArrayableInterface
                 [
                     'ids' => $this->ids,
                     'properties' => (isset($this->params['properties']) ? $this->params['properties']->getValue() : []),
+                    'published' => !$this->showDrafts,
                 ]
             );
             $pages = $this->contentQueryExecutor->execute(

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RegisterContentTypesCompilerPass implements CompilerPassInterface
 {
+    const CONTENT_TYPE_TAG = 'sulu.content.type';
+
     /**
      * {@inheritdoc}
      */
@@ -30,7 +32,7 @@ class RegisterContentTypesCompilerPass implements CompilerPassInterface
 
         $contentTypeManager = $container->getDefinition('sulu.content.type_manager');
 
-        $ids = $container->findTaggedServiceIds('sulu.content.type');
+        $ids = $container->findTaggedServiceIds(self::CONTENT_TYPE_TAG);
         foreach ($ids as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new \InvalidArgumentException(

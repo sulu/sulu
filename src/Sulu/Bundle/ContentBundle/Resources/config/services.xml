@@ -9,7 +9,6 @@
         <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
         <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
-        <parameter key="sulu_content.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
     <services>
         <!-- admin class -->
@@ -20,6 +19,13 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu_admin.name%</argument>
+        </service>
+        <service id="sulu_content.js_config.webspace_input_types"
+                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceInputTypesJsConfig">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+
+            <tag name="sulu.js_config"/>
         </service>
 
         <!-- content -->
@@ -38,6 +44,29 @@
             <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
         </service>
 
+        <!-- webspace settings -->
+        <service id="sulu_content.webspace_navigation_provider"
+                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="sulu_content.webspace.serializer.event_subscriber"
+                 class="Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_core.webspace.url_provider"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- roles -->
+        <service id="sulu_content.roles_content_navigation_provider"
+                 class="Sulu\Bundle\ContentBundle\Admin\RolesContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="roles"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- nodes -->
         <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
             <argument type="service" id="sulu.content.mapper"/>
@@ -53,10 +82,8 @@
 
         <!-- resource locator -->
         <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu.content.type.resource_locator"/>
-            <argument type="service" id="sulu.content.mapper"/>
         </service>
 
         <!-- structure extension -->
@@ -68,19 +95,30 @@
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu_content.export.manager" />
+            <argument type="service" id="sulu_content.import.manager" />
             <argument type="service" id="massive_search.factory" />
 
             <tag name="sulu.structure.extension"/>
         </service>
 
         <!-- JsConfig -->
-        <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
+        <service id="sulu_content.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
+                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalesByWebspaces()</argument>
+                <argument key="versioning" type="collection">
+                    <argument key="enabled">%sulu_document_manager.versioning.enabled%</argument>
+                </argument>
             </argument>
 
             <tag name="sulu.js_config"/>
+        </service>
+        <service id="sulu_content.jsconfig.texteditor_toolbar" class="Sulu\Bundle\ContentBundle\Admin\TextEditorJsConfig">
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Content Repository -->
@@ -89,6 +127,7 @@
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
         </service>
         <service id="sulu_content.content_repository.event_subscriber"
@@ -98,6 +137,33 @@
 
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_content.preview.object_provider" class="Sulu\Bundle\ContentBundle\Preview\PageObjectProvider">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="serializer"/>
+
+            <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\HomeDocument"/>
+            <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\PageDocument"/>
+        </service>
+        <service id="sulu_content.preview.defaults_provider"
+                 class="Sulu\Bundle\ContentBundle\Preview\PageRouteDefaultsProvider">
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+
+            <tag name="sulu_route.defaults_provider"/>
+        </service>
+
+        <!-- builder -->
+        <service id="sulu_core.build.builder.node_order" class="Sulu\Bundle\ContentBundle\Build\NodeOrderBuilder">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="massive_build.builder" />
         </service>
     </services>
 </container>

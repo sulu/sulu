@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,8 +10,6 @@
  */
 
 namespace Sulu\Component\Security\Authentication;
-
-use Symfony\Component\Security\Core\Util\SecureRandom;
 
 /**
  * A simple class for creating random salts for users.
@@ -25,8 +23,6 @@ class SaltGenerator
      */
     public function getRandomSalt()
     {
-        $generator = new SecureRandom();
-
-        return base64_encode($generator->nextBytes(32));
+        return base64_encode(random_bytes(32));
     }
 }

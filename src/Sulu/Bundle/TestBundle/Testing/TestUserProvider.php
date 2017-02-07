@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Contact\Model\ContactRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,11 +36,28 @@ class TestUserProvider implements UserProviderInterface
     private $entityManager;
 
     /**
-     * @param EntityManager $entityManager
+     * @var ContactRepositoryInterface
      */
-    public function __construct(EntityManager $em)
-    {
-        $this->entityManager = $em;
+    private $contactRepository;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
+     * @param EntityManager $entityManager
+     * @param ContactRepositoryInterface $contactRepository
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function __construct(
+        EntityManager $entityManager,
+        ContactRepositoryInterface $contactRepository,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->entityManager = $entityManager;
+        $this->contactRepository = $contactRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -51,17 +69,15 @@ class TestUserProvider implements UserProviderInterface
             return $this->user;
         }
 
-        $user = $this->entityManager
-            ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
-            ->findOneByUsername('test');
+        $user = $this->userRepository->findOneByUsername('test');
 
         if (!$user) {
-            $contact = new Contact();
+            $contact = $this->contactRepository->createNew();
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
             $this->entityManager->persist($contact);
 
-            $user = new User();
+            $user = $this->userRepository->createNew();
             $this->setCredentials($user);
             $user->setSalt('');
             $user->setLocale('en');
@@ -125,11 +141,13 @@ class TestUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Sulu\Bundle\CoreBundle\Entity\TestUser';
+        return $class instanceof UserInterface;
     }
 
     /**
      * Sets the standard credentials for the user.
+     *
+     * @param UserInterface $user
      */
     private function setCredentials(UserInterface $user)
     {

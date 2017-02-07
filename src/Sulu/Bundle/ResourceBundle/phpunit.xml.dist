@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./Tests/bootstrap.php" colors="true">
+<phpunit bootstrap="../TestBundle/Resources/app/bootstrap.php" colors="true">
 
     <testsuites>
         <testsuite name="SuluResourceBundle Test Suite">
@@ -20,6 +20,7 @@
     <php>
         <server name="KERNEL_DIR" value="Tests/app"/>
         <var name="APP_DB" value="mysql"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 
 </phpunit>

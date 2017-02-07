@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -48,37 +49,45 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     private $contactRepository;
 
     /**
+     * @var MediaRepositoryInterface
+     */
+    protected $mediaRepository;
+
+    /**
      * @param ObjectManager $em
      * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
      * @param AccountFactory $accountFactory
      * @param AccountRepository $accountRepository
      * @param ContactRepository $contactRepository
+     * @param MediaRepositoryInterface $mediaRepository
      */
     public function __construct(
         ObjectManager $em,
-        TagmanagerInterface $tagManager,
+        TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
         AccountFactory $accountFactory,
         AccountRepository $accountRepository,
-        ContactRepository $contactRepository
+        ContactRepository $contactRepository,
+        MediaRepositoryInterface $mediaRepository
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
         $this->accountFactory = $accountFactory;
         $this->accountRepository = $accountRepository;
         $this->contactRepository = $contactRepository;
+        $this->mediaRepository = $mediaRepository;
     }
 
     /**
-     * adds an address to the entity.
+     * Adds an address to the entity.
      *
      * @param AccountApi $account The entity to add the address to
      * @param AddressEntity $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @return AccountAddressEntity
-     *
      * @throws \Exception
+     *
+     * @return AccountAddressEntity
      */
     public function addAddress($account, AddressEntity $address, $isMain = false)
     {
@@ -100,14 +109,15 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * removes the address relation from a contact and also deletes the address if it has no more relations.
+     * Removes the address relation from a contact and also deletes the address
+     * if it has no more relations.
      *
      * @param AccountInterface $account
      * @param AccountAddressEntity $accountAddress
      *
-     * @return mixed|void
-     *
      * @throws \Exception
+     *
+     * @return mixed|void
      */
     public function removeAddressRelation($account, $accountAddress)
     {
@@ -115,7 +125,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
             throw new \Exception('Account and AccountAddress cannot be null');
         }
 
-        // reload address to get all data (including relational data)
+        // Reload address to get all data (including relational data).
         /** @var AddressEntity $address */
         $address = $accountAddress->getAddress();
         $address = $this->em->getRepository('SuluContactBundle:Address')
@@ -123,16 +133,16 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
 
         $isMain = $accountAddress->getMain();
 
-        // remove relation
+        // Remove relation.
         $address->removeAccountAddress($accountAddress);
         $account->removeAccountAddress($accountAddress);
 
-        // if was main, set a new one
+        // If was main, set a new one.
         if ($isMain) {
             $this->setMainForCollection($account->getAccountContacts());
         }
 
-        // delete address if it has no more relations
+        // Delete address if it has no more relations.
         if (!$address->hasRelations()) {
             $this->em->remove($address);
         }
@@ -155,8 +165,8 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Gets account by id.
      *
-     * @param $id
-     * @param $locale
+     * @param int $id
+     * @param string $locale
      *
      * @throws EntityNotFoundException
      *
@@ -175,8 +185,8 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns account entities by ids.
      *
-     * @param $ids
-     * @param $locale
+     * @param array $ids
+     * @param string $locale
      *
      * @return array
      */
@@ -199,13 +209,13 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Gets account by id - can include relations.
      *
-     * @param $id
-     * @param $locale
-     * @param $includes
-     *
-     * @return AccountApi
+     * @param int $id
+     * @param string $locale
+     * @param array $includes
      *
      * @throws EntityNotFoundException
+     *
+     * @return AccountApi
      */
     public function getByIdAndInclude($id, $locale, $includes)
     {
@@ -221,8 +231,8 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns contacts by account id.
      *
-     * @param $id
-     * @param $locale
+     * @param int $id
+     * @param string $locale
      * @param bool $onlyFetchMainAccounts
      *
      * @return array|null
@@ -262,9 +272,45 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
+     * Sets the medias of the given account to the given medias.
+     * Currently associated medias are replaced.
+     *
+     * @param Account $account
+     * @param $medias
+     *
+     * @throws EntityNotFoundException
+     */
+    public function setMedias(Account $account, $medias)
+    {
+        $mediaIds = array_map(
+            function ($media) {
+                return $media['id'];
+            },
+            $medias
+        );
+
+        $foundMedias = $this->mediaRepository->findById($mediaIds);
+        $foundMediaIds = array_map(
+            function ($mediaEntity) {
+                return $mediaEntity->getId();
+            },
+            $foundMedias
+        );
+
+        if ($missingMediaIds = array_diff($mediaIds, $foundMediaIds)) {
+            throw new EntityNotFoundException($this->mediaRepository->getClassName(), reset($missingMediaIds));
+        }
+
+        $account->getMedias()->clear();
+        foreach ($foundMedias as $media) {
+            $account->addMedia($media);
+        }
+    }
+
+    /**
      * Returns all accounts.
      *
-     * @param $locale
+     * @param string $locale
      * @param null $filter
      *
      * @return array|null
@@ -307,36 +353,16 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * Takes a account entity and a locale and returns the api object.
-     *
-     * @param Account $account
-     * @param string $locale
-     *
-     * @return AccountApi
-     */
-    protected function getApiObject($account, $locale)
-    {
-        $apiObject = $this->accountFactory->createApiEntity($account, $locale);
-        if ($account->getLogo()) {
-            $apiLogo = $this->mediaManager->getById($account->getLogo()->getId(), $locale);
-            $apiObject->setLogo($apiLogo);
-        }
-
-        return $apiObject;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function deleteAllRelations($entity)
     {
         parent::deleteAllRelations($entity);
-        // add bank-accounts for accounts
         $this->deleteBankAccounts($entity);
     }
 
     /**
-     * deletes (not just removes) all bank-accounts which are assigned to a contact.
+     * Deletes (not just removes) all bank-accounts which are assigned to a contact.
      *
      * @param $entity
      */
@@ -361,5 +387,24 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
             },
             $entities
         );
+    }
+
+    /**
+     * Takes a account entity and a locale and returns the api object.
+     *
+     * @param Account $account
+     * @param string $locale
+     *
+     * @return AccountApi
+     */
+    protected function getApiObject($account, $locale)
+    {
+        $apiObject = $this->accountFactory->createApiEntity($account, $locale);
+        if ($account->getLogo()) {
+            $apiLogo = $this->mediaManager->getById($account->getLogo()->getId(), $locale);
+            $apiObject->setLogo($apiLogo);
+        }
+
+        return $apiObject;
     }
 }

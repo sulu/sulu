@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +17,6 @@ use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Extension\ManagedExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -71,7 +70,8 @@ class ExtensionSubscriber implements EventSubscriberInterface
     {
         return [
             // persist should happen before content is mapped
-            Events::PERSIST => ['handlePersist', 10],
+            Events::PERSIST => ['saveExtensionData', 10],
+            Events::PUBLISH => ['saveExtensionData', 10],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -10],
         ];
@@ -92,7 +92,7 @@ class ExtensionSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function handlePersist(PersistEvent $event)
+    public function saveExtensionData(AbstractMappingEvent $event)
     {
         $locale = $event->getLocale();
 

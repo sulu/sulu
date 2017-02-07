@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -8,12 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
@@ -33,12 +33,11 @@ class NodeControllerFieldsTest extends SuluTestCase
     {
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->initPhpcr();
     }
 
     public function testCGet()
     {
-        $this->initPhpcr();
-
         $this->createPage('test-1', 'de');
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
@@ -47,6 +46,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
@@ -63,8 +63,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetWithShadow()
     {
-        $this->initPhpcr();
-
         $this->createShadowPage('test-1', 'en', 'de');
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
@@ -86,8 +84,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetExcludeShadow()
     {
-        $this->initPhpcr();
-
         $this->createShadowPage('test-1', 'en', 'de');
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
@@ -112,8 +108,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetWithGhost()
     {
-        $this->initPhpcr();
-
         $this->createPage('test-1', 'en');
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
@@ -135,8 +129,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetExcludeGhost()
     {
-        $this->initPhpcr();
-
         $this->createPage('test-1', 'en');
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
@@ -161,8 +153,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetWithGhostAndShadow()
     {
-        $this->initPhpcr();
-
         $this->createPage('test-1', 'en');
         $this->createShadowPage('test-2', 'en', 'de');
         $this->createPage('test-3', 'de');
@@ -184,8 +174,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetExcludeGhostAndShadow()
     {
-        $this->initPhpcr();
-
         $this->createPage('test-1', 'en');
         $this->createShadowPage('test-2', 'en', 'de');
         $this->createPage('test-3', 'de');
@@ -209,8 +197,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testGet()
     {
-        $this->initPhpcr();
-
         $page1 = $this->createPage('test-1', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
 
@@ -230,8 +216,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testGetTree()
     {
-        $this->initPhpcr();
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page3 = $this->createPage('test-3', 'de', [], $page1);
@@ -245,7 +229,6 @@ class NodeControllerFieldsTest extends SuluTestCase
         $page11 = $this->createPage('test-11', 'de', [], $page10);
         $page12 = $this->createPage('test-12', 'de', [], $page10);
         $page13 = $this->createPage('test-13', 'de', [], $page12);
-
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -294,8 +277,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testLinkedInternal()
     {
-        $this->initPhpcr();
-
         $link = $this->createPage('test-1', 'en');
         $page = $this->createInternalLinkPage('test-2', 'en', $link);
 
@@ -313,8 +294,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testLinkedExternal()
     {
-        $this->initPhpcr();
-
         $page = $this->createExternalLinkPage('test-2', 'en', 'http://www.google.at');
 
         $client = $this->createAuthenticatedClient();
@@ -331,8 +310,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testTypeGhost()
     {
-        $this->initPhpcr();
-
         $page = $this->createPage('test-2', 'en');
 
         $client = $this->createAuthenticatedClient();
@@ -350,8 +327,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testTypeShadow()
     {
-        $this->initPhpcr();
-
         $page = $this->createShadowPage('test-2', 'en', 'de');
 
         $client = $this->createAuthenticatedClient();
@@ -369,9 +344,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetActionSingleWebspaceNodes()
     {
-        $this->initPhpcr();
-        $this->createWebspaceRoot('test_io');
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
@@ -407,9 +379,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetActionAllWebspaceNodes()
     {
-        $this->initPhpcr();
-        $this->createWebspaceRoot('test_io');
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
@@ -423,8 +392,12 @@ class NodeControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'all', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
-
         $layer = $result['_embedded']['nodes'];
+
+        usort($layer, function ($layer1, $layer2) {
+            return strcmp($layer1['title'], $layer2['title']);
+        });
+
         $this->assertCount(2, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -449,9 +422,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testGetTreeActionSingleWebspaceNodes()
     {
-        $this->initPhpcr();
-        $this->createWebspaceRoot('test_io');
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page11 = $this->createPage('test-1-1', 'de', [], $page1);
@@ -474,6 +444,10 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
+        usort($layer, function ($layer1, $layer2) {
+            return strcmp($layer1['title'], $layer2['title']);
+        });
+
         $this->assertCount(1, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -500,9 +474,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testGetTreeActionAllWebspaceNodes()
     {
-        $this->initPhpcr();
-        $this->createWebspaceRoot('test_io');
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page11 = $this->createPage('test-1-1', 'de', [], $page1);
@@ -525,6 +496,9 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
+        usort($layer, function ($layer1, $layer2) {
+            return strcmp($layer1['title'], $layer2['title']);
+        });
         $this->assertCount(2, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -554,46 +528,6 @@ class NodeControllerFieldsTest extends SuluTestCase
     }
 
     /**
-     * Create webspace root.
-     *
-     * @param string $key
-     */
-    private function createWebspaceRoot($key)
-    {
-        $session = $this->sessionManager->getSession();
-        $cmf = $session->getNode('/cmf');
-
-        // we should use the doctrinephpcrbundle repository initializer to do this.
-        $webspace = $cmf->addNode($key);
-        $webspace->addMixin('mix:referenceable');
-
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->setProperty('i18n:en-title', 'Homepage');
-        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
-        $content->setProperty('i18n:en-published', new \DateTime());
-        $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:home');
-
-        $webspace->addNode('temp');
-
-        $session->save();
-        $nodes = $webspace->addNode('routes');
-        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
-            $localeNode = $nodes->addNode($locale);
-            $localeNode->setProperty('sulu:content', $content);
-            $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('sulu:path');
-        }
-
-        $session->save();
-    }
-
-    /**
      * @param string $title
      * @param string $locale
      * @param array $data
@@ -612,7 +546,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
         }
         if ($parent !== null) {
-            $path = $parent->getPath();
+            $path = $parent->getPath() . '/' . $title;
             $document->setParent($parent);
         }
 

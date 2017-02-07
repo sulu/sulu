@@ -6,17 +6,9 @@
                 <source>navigation.media</source>
                 <target>Medien</target>
             </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
-                <source>navigation.media.collections</source>
-                <target>Kollektionen</target>
-            </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
                 <source>navigation.media.collections</source>
-                <target>Alle Kollektionen</target>
-            </trans-unit>
-            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
-                <source>navigation.media.collections.search</source>
-                <target>Kollektionen filtern...</target>
+                <target>Alle Ordner</target>
             </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
@@ -30,17 +22,21 @@
                 <source>media.media.size</source>
                 <target>Dateigröße</target>
             </trans-unit>
+            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b2ee" resname="media.media.mime-type">
+                <source>media.media.mime-type</source>
+                <target>MIME-Type</target>
+            </trans-unit>
             <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
                 <source>media.media.thumbnails</source>
                 <target>Vorschaubild</target>
             </trans-unit>
             <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
                 <source>sulu.media.new-collection</source>
-                <target>Neue Kollektion</target>
+                <target>Neuer Ordner</target>
             </trans-unit>
             <trans-unit id="71491ef900232b8755bf0842292e1ff4" resname="sulu.media.add-collection">
                 <source>sulu.media.add-collection</source>
-                <target>Neue Kollektion hinzufügen</target>
+                <target>Ordner hinzufügen</target>
             </trans-unit>
             <trans-unit id="90a2264459ba0f52ef7a4d3c0298d50" resname="content-navigation.media.settings">
                 <source>content-navigation.media.settings</source>
@@ -60,39 +56,39 @@
             </trans-unit>
             <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
                 <source>media-selection.collections</source>
-                <target>Kollektionen</target>
+                <target>Ordner</target>
             </trans-unit>
             <trans-unit id="2ed2e1bec2480b32fd6f8022a857c080" resname="media.collections.title">
                 <source>media.collections.title</source>
-                <target>Kollektionen</target>
+                <target>Ordner</target>
             </trans-unit>
             <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5d" resname="media.collection.title">
                 <source>media.collection.title</source>
-                <target>Kollektionstitel</target>
+                <target>Ordnertitel</target>
             </trans-unit>
             <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-save-desc">
                 <source>labels.success.collection-save-desc</source>
-                <target>Kollektion erfolgreich gespeichert</target>
+                <target>Ordner erfolgreich gespeichert</target>
             </trans-unit>
             <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-deleted-desc">
                 <source>labels.success.collection-deleted-desc</source>
-                <target>Kollektion erfolgreich gelöscht</target>
+                <target>Ordner erfolgreich gelöscht</target>
             </trans-unit>
             <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5c" resname="sulu.collections.delete-collection">
                 <source>sulu.collections.delete-collection</source>
-                <target>Kollektion löschen</target>
+                <target>Ordner löschen</target>
             </trans-unit>
             <trans-unit id="80a3272459ba0f52ef7a4d3c0298d5f" resname="media-selection.new-collection">
                 <source>media-selection.new-collection</source>
-                <target>Neue Kollektion</target>
+                <target>Neuer Ordner</target>
             </trans-unit>
             <trans-unit id="90a3273459ba0f52ef7a4d3c0298d5f" resname="media-selection.create-new-collection">
                 <source>media-selection.create-new-collection</source>
-                <target>Neue Kollektion erstellen</target>
+                <target>Neuer Ordner erstellen</target>
             </trans-unit>
             <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5f" resname="media-selection.upload-to-collection">
                 <source>media-selection.upload-to-collection</source>
-                <target>In Kollektion hochladen</target>
+                <target>In Ordner hochladen</target>
             </trans-unit>
             <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5d" resname="media-selection.upload-new">
                 <source>media-selection.upload-new</source>
@@ -112,7 +108,7 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22256" resname="sulu.media.move.overlay-title">
                 <source>sulu.media.move.overlay-title</source>
-                <target>Neue Kollektion wählen</target>
+                <target>Neuen Ordner wählen</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
                 <source>labels.success.media-move-desc</source>
@@ -120,19 +116,23 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
                 <source>labels.success.collection-move-desc</source>
-                <target>Kollektion erfolgreich verschoben</target>
+                <target>Ordner erfolgreich verschoben</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
                 <source>sulu.media.edit.loading</source>
                 <target>Medien werden geladen</target>
             </trans-unit>
+            <trans-unit id="243d19ff2f64452633a5c72169f22258" resname="sulu.collection.edit">
+                <source>sulu.collection.edit</source>
+                <target>Ordner editieren</target>
+            </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
                 <source>sulu.collection.move</source>
-                <target>Kollektion verschieben</target>
+                <target>Ordner verschieben</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
-                <source>navigation.media.collections.empty</source>
-                <target>Keine Kollektionen</target>
+            <trans-unit id="213d994f2f6465a633a5ce2169f22258" resname="sulu.collection.delete">
+                <source>sulu.collection.delete</source>
+                <target>Ordner löschen</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
@@ -140,14 +140,14 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22260" resname="sulu.collection.move.overlay-title">
                 <source>sulu.collection.move.overlay-title</source>
-                <target>Kollektion verschieben</target>
+                <target>Ordner verschieben</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-medias">
                 <source>media-selection.overlay.all-medias</source>
                 <target>Alle Medien</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
-                <source>sulu.media.all</source>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all-collections">
+                <source>sulu.media.all-collections</source>
                 <target>Alle Medien</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
@@ -180,7 +180,7 @@
             </trans-unit>
             <trans-unit id="243d88fse564652633a5ca2169f22407" resname="sulu.media.edit-collection">
                 <source>sulu.media.edit-collection</source>
-                <target>Kollektion bearbeiten</target>
+                <target>Ordner bearbeiten</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5cr443gf22407" resname="sulu.media.upload-new-version">
                 <source>sulu.media.upload-new-version</source>
@@ -196,11 +196,11 @@
             </trans-unit>
             <trans-unit id="243d88440f24652633778k2169f22407" resname="sulu.header.edit-collection">
                 <source>sulu.header.edit-collection</source>
-                <target>Kollektion bearbeiten</target>
+                <target>Ordner bearbeiten</target>
             </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22407" resname="sulu.header.delete-collection">
                 <source>sulu.header.delete-collection</source>
-                <target>Kollektion löschen</target>
+                <target>Ordner löschen</target>
             </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22417" resname="husky.upload.error.file-to-big">
                 <source>husky.upload.error.file-to-big</source>
@@ -222,6 +222,14 @@
                 <source>sulu.media.copyright</source>
                 <target>Urheberrecht</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f11111" resname="sulu.media.licence">
+                <source>sulu.media.licence</source>
+                <target>Lizenz</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22222" resname="sulu.media.credits-information">
+                <source>sulu.media.credits-information</source>
+                <target>Bildnachweis</target>
+            </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22124" resname="sulu.media.copyright-information">
                 <source>sulu.media.copyright-information</source>
                 <target>Urheberrechtsinformationen</target>
@@ -241,6 +249,162 @@
             <trans-unit id="243d88cf2f64352w337js55369f22124" resname="sulu.media.upload-new-preview">
                 <source>sulu.media.upload-new-preview</source>
                 <target>Neues Vorschaubild hochladen</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f22111" resname="sulu.dropzone.error.message.wrong-filetype">
+                <source>sulu.dropzone.error.message.wrong-filetype</source>
+                <target>Die neue Version muss den gleichen Medientyp aufweisen.</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221234" resname="sulu.media.copy_url">
+                <source>sulu.media.copy_url</source>
+                <target>URL kopieren</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221214" resname="sulu.media.copied_url">
+                <source>sulu.media.copied_url</source>
+                <target>URL kopiert</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221215" resname="sulu.media.original">
+                <source>sulu.media.original</source>
+                <target>Original</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221235" resname="sulu.media.copy_original">
+                <source>sulu.media.copy_original</source>
+                <target>Original URL kopieren</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221236" resname="sulu.media.download_original">
+                <source>sulu.media.download_original</source>
+                <target>Original herunterladen</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221237" resname="sulu.media.formats">
+                <source>sulu.media.formats</source>
+                <target>Medienformate</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221238" resname="sulu.media.categories">
+                <source>sulu.media.categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111111" resname="sulu-media.ckeditor.media-link">
+                <source>sulu-media.ckeditor.media-link</source>
+                <target>Medien Link</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111113" resname="sulu-media.ckeditor.media-link.dialog.selected-title">
+                <source>sulu-media.ckeditor.media-link.dialog.selected-title</source>
+                <target>Ausgewählte Datei</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111114" resname="sulu-media.ckeditor.media-link.dialog.remove">
+                <source>sulu-media.ckeditor.media-link.dialog.remove</source>
+                <target>Link entfernen</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111115" resname="sulu-media.ckeditor.media-link.edit">
+                <source>sulu-media.ckeditor.media-link.edit</source>
+                <target>Medien Link editieren</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111116" resname="sulu-media.ckeditor.media-link.edit.remove">
+                <source>sulu-media.ckeditor.media-link.edit.remove</source>
+                <target>Medien Link entfernen</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
+                <source>sulu-media.selection.overlay.save</source>
+                <target>Übernehmen</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js55369f111118" resname="sulu-media.upload-files">
+                <source>sulu-media.upload-files</source>
+                <target>Dateien uploaden</target>
+            </trans-unit>
+            <trans-unit id="243d11ca3f64352w337js33469f111118" resname="sulu-media.remove-crop">
+                <source>sulu-media.remove-crop</source>
+                <target>Ausschnitt zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="243123ca3f64352w337js33469f111118" resname="sulu-media.image-formats">
+                <source>sulu-media.image-formats</source>
+                <target>Bildformate</target>
+            </trans-unit>
+            <trans-unit id="143123ca3f64352w337js33469f111118" resname="sulu-media.crop-double-click-hint">
+                <source>sulu-media.crop-double-click-hint</source>
+                <target>Mit Doppelklick wird der Ausschnitt maximiert und zentriert</target>
+            </trans-unit>
+            <trans-unit id="155123ca3f64352w337js33469f111118" resname="sulu-media.edit-image">
+                <source>sulu-media.edit-image</source>
+                <target>Bild bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w337js33469f111118" resname="sulu-media.crop">
+                <source>sulu-media.crop</source>
+                <target>Ausschnitte festlegen</target>
+            </trans-unit>
+            <trans-unit id="215163ca7f64952w137j533499fa1b118" resname="sulu-media.focus-point">
+                <source>sulu-media.focus-point</source>
+                <target>Fokuspunkt setzen</target>
+            </trans-unit>
+            <trans-unit id="2111636a7f94951w13aj53l4993a1by18" resname="sulu-media.save-and-recrop">
+                <source>sulu-media.save-and-recrop</source>
+                <target>Speichern &amp; neu ausschneiden</target>
+            </trans-unit>
+            <trans-unit id="225123ca3f64352w117js33469f111118" resname="sulu-media.crop-save-success">
+                <source>sulu-media.crop-save-success</source>
+                <target>Ausschnitt erfolgreich gespeichert</target>
+            </trans-unit>
+            <trans-unit id="221143ca3f64352w117js33469f111118" resname="sulu-media.crop-remove-success">
+                <source>sulu-media.crop-remove-success</source>
+                <target>Ausschnitt erfolgreich zurückgesetzt</target>
+            </trans-unit>
+            <trans-unit id="112143ca3f64352w117js33469f111118" resname="sulu-media.crop-not-possible">
+                <source>sulu-media.crop-not-possible</source>
+                <target>Ausschneiden nicht möglich</target>
+            </trans-unit>
+            <trans-unit id="112145ca3e64352w117js33469f111119" resname="sulu-media.image-too-small">
+                <source>sulu-media.image-too-small</source>
+                <target>Das Originalbild ist zu klein</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33469f111119" resname="sulu-media.crop-out-of-date">
+                <source>sulu-media.crop-out-of-date</source>
+                <target>Ausschnitt veraltet</target>
+            </trans-unit>
+            <trans-unit id="332145ca3e64352w117js33488f111119" resname="sulu-media.crop-out-of-date-text">
+                <source>sulu-media.crop-out-of-date-text</source>
+                <target>Der definierte Ausschnitt ist aufgrund eines Bilduploads oder editiertem Bildformats veraltet</target>
+            </trans-unit>
+            <trans-unit id="123145ca3e64352w117js33488f121119" resname="sulu-media.minimum-size-reached">
+                <source>sulu-media.minimum-size-reached</source>
+                <target>Minimalgröße erreicht</target>
+            </trans-unit>
+            <trans-unit id="123145cabe64352w117js33488a321119" resname="sulu-media.crops-out-of-date">
+                <source>sulu-media.crops-out-of-date</source>
+                <target>Ausschnitte veraltet</target>
+            </trans-unit>
+            <trans-unit id="123145cabe77352w117js33488a321119" resname="sulu-media.following-crops-out-of-date">
+                <source>sulu-media.following-crops-out-of-date</source>
+                <target>Für folgende Formate sind die Ausschnitte veraltet</target>
+            </trans-unit>
+            <trans-unit id="944145cabe77352w117js33488a321119" resname="sulu-media.edit-original">
+                <source>sulu-media.edit-original</source>
+                <target>Originalbild bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321119" resname="sulu-media.new-version-will-be-created">
+                <source>sulu-media.new-version-will-be-created</source>
+                <target>Neue Bildversion wird erstellt</target>
+            </trans-unit>
+            <trans-unit id="944145cacc77352w117js33488a321177" resname="sulu-media.new-version-will-be-created-description">
+                <source>sulu-media.new-version-will-be-created-description</source>
+                <target>Eine neue Bildversion wird erstellt. Dabei können definierte Bildausschnitte verloren gehen.</target>
+            </trans-unit>
+            <trans-unit id="9f4145cacc77352w11ajs3a487a32217b" resname="sulu-media.external-server-title">
+                <source>sulu-media.external-server-title</source>
+                <target>Hinweis</target>
+            </trans-unit>
+            <trans-unit id="2f4125ca4cb7c52wc1ajs3a48ea32817a" resname="sulu-media.external-server-description">
+                <source>sulu-media.external-server-description</source>
+                <target>Die Datei wird zur Bearbeitung an einen externen Server geschickt.</target>
+            </trans-unit>
+            <trans-unit id="2f412aca9cb7cb2wc3ajs3a185a32817a" resname="sulu-media.unsaved-crop-title">
+                <source>sulu-media.unsaved-crop-title</source>
+                <target>Format wechseln?</target>
+            </trans-unit>
+            <trans-unit id="4f415ac89cb4cb22c32ja3a1b5ae2312a" resname="sulu-media.unsaved-crop-description">
+                <source>sulu-media.unsaved-crop-description</source>
+                <target>Der aktuelle Ausschnitt geht beim Wechseln verloren.</target>
+            </trans-unit>
+            <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
+                <source>sulu-media.saved-crops-not-visible</source>
+                <target>Die Ausschnitte wurde gespeichert, werden aber in dieser Voransicht nicht dargestellt</target>
             </trans-unit>
         </body>
     </file>

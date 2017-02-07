@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +15,7 @@ use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +48,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $locale = $this->getLocale($request);
 
             $media = $mediaManager->getById($id, $locale);
-            /** @var Media $mediaEntity */
+            /** @var MediaInterface $mediaEntity */
             $mediaEntity = $media->getEntity();
 
             $data = $this->getData($request, false);
@@ -68,7 +68,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
             $mediaEntity->setPreviewImage($previewImage->getEntity());
 
-            $this->getDoctrine()->getEntityManager()->flush();
+            $this->getDoctrine()->getManager()->flush();
 
             $view = $this->view($previewImage, 200);
         } catch (MediaNotFoundException $e) {
@@ -98,7 +98,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $locale = $this->getLocale($request);
 
             $media = $mediaManager->getById($id, $locale);
-            /** @var Media $mediaEntity */
+            /** @var MediaInterface $mediaEntity */
             $mediaEntity = $media->getEntity();
 
             if ($mediaEntity->getPreviewImage() !== null) {

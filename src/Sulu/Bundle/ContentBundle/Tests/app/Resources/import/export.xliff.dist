@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <!-- WebspaceKey: sulu_lo -->
+    <file source-language="en" datatype="plaintext" original="%uuid_page_0%">
+        <body>
+            <!-- title: text_line -->
+            <trans-unit id="0" resname="title">
+                <source>Parent</source>
+                <target>test 0 imported</target>
+            </trans-unit>
+
+            <!-- url: resource_locator -->
+            <trans-unit id="1" resname="url" translate="no">
+                <source>/parent</source>
+                <target></target>
+            </trans-unit>
+
+            <!-- article: text_editor -->
+            <trans-unit id="3" resname="article" datatype="html">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-title: -->
+            <trans-unit id="4" resname="seo-title">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-description: -->
+            <trans-unit id="5" resname="seo-description">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-keywords: -->
+            <trans-unit id="6" resname="seo-keywords">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-canonicalUrl: -->
+            <trans-unit id="7" resname="seo-canonicalUrl" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-noIndex: -->
+            <trans-unit id="8" resname="seo-noIndex" translate="no">
+                <source>0</source>
+                <target>0</target>
+            </trans-unit>
+
+            <!-- seo-noFollow: -->
+            <trans-unit id="9" resname="seo-noFollow" translate="no">
+                <source>0</source>
+                <target>0</target>
+            </trans-unit>
+
+            <!-- seo-hideInSitemap: -->
+            <trans-unit id="10" resname="seo-hideInSitemap" translate="no">
+                <source>0</source>
+                <target>0</target>
+            </trans-unit>
+
+            <!-- excerpt-title: text_line -->
+            <trans-unit id="11" resname="excerpt-title">
+                <source></source>
+                <target>Excerpt title</target>
+            </trans-unit>
+
+            <!-- excerpt-more: text_line -->
+            <trans-unit id="12" resname="excerpt-more">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-description: text_editor -->
+            <trans-unit id="13" resname="excerpt-description" datatype="html">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-categories: category_list -->
+            <trans-unit id="14" resname="excerpt-categories" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-tags: tag_list -->
+            <trans-unit id="15" resname="excerpt-tags" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-icon: media_selection -->
+            <trans-unit id="16" resname="excerpt-icon" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-images: media_selection -->
+            <trans-unit id="17" resname="excerpt-images" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- structureType: -->
+            <trans-unit id="18" resname="structureType" translate="no">
+                <source>overview</source>
+                <target>overview</target>
+            </trans-unit>
+
+            <!-- published: -->
+            <trans-unit id="19" resname="published" translate="no">
+                <source>2016-08-01T06:55:45+00:00</source>
+                <target>2016-08-01T06:55:45+00:00</target>
+            </trans-unit>
+
+            <!-- created: -->
+            <trans-unit id="20" resname="created" translate="no">
+                <source>2016-08-01T06:55:45+00:00</source>
+                <target>2016-08-01T06:55:45+00:00</target>
+            </trans-unit>
+
+            <!-- changed: -->
+            <trans-unit id="21" resname="changed" translate="no">
+                <source>2016-08-01T06:55:45+00:00</source>
+                <target>2016-08-01T06:55:45+00:00</target>
+            </trans-unit>
+
+            <!-- creator: -->
+            <trans-unit id="22" resname="creator" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- changer: -->
+            <trans-unit id="23" resname="changer" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- locale: -->
+            <trans-unit id="24" resname="locale" translate="no">
+                <source>en</source>
+                <target>en</target>
+            </trans-unit>
+
+            <!-- navigationContexts: -->
+            <trans-unit id="25" resname="navigationContexts" translate="no">
+                <source>[]</source>
+                <target>[]</target>
+            </trans-unit>
+
+            <!-- permissions: -->
+            <trans-unit id="26" resname="permissions" translate="no">
+                <source>[]</source>
+                <target>[]</target>
+            </trans-unit>
+
+            <!-- shadowLocale: -->
+            <trans-unit id="27" resname="shadowLocale" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- originalLocale: -->
+            <trans-unit id="28" resname="originalLocale" translate="no">
+                <source>en</source>
+                <target>en</target>
+            </trans-unit>
+
+            <!-- resourceSegment: -->
+            <trans-unit id="29" resname="resourceSegment" translate="no">
+                <source>/</source>
+                <target>/</target>
+            </trans-unit>
+
+            <!-- webspaceName: -->
+            <trans-unit id="30" resname="webspaceName" translate="no">
+                <source>sulu_lo</source>
+                <target>sulu_lo</target>
+            </trans-unit>
+
+            <!-- redirectExternal: -->
+            <trans-unit id="31" resname="redirectExternal" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- redirectType: -->
+            <trans-unit id="32" resname="redirectType" translate="no">
+                <source>1</source>
+                <target>1</target>
+            </trans-unit>
+
+            <!-- redirectTarget: -->
+            <trans-unit id="33" resname="redirectTarget" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- workflowStage: -->
+            <trans-unit id="34" resname="workflowStage" translate="no">
+                <source>2</source>
+                <target>2</target>
+            </trans-unit>
+
+            <!-- path: -->
+            <trans-unit id="35" resname="path" translate="no">
+                <source>/cmf/sulu_lo/contents</source>
+                <target>/cmf/sulu_lo/contents</target>
+            </trans-unit>
+        </body>
+    </file>
+        <file source-language="en" datatype="plaintext" original="%uuid_page_1%">
+        <body>
+            <!-- title: text_line -->
+            <trans-unit id="36" resname="title">
+                <source>Child</source>
+                <target>test 1 imported</target>
+            </trans-unit>
+
+            <!-- url: resource_locator -->
+            <trans-unit id="37" resname="url" translate="no">
+                <source>/child</source>
+                <target>/child</target>
+            </trans-unit>
+
+
+
+            <!-- article: text_editor -->
+            <trans-unit id="40" resname="article" datatype="html">
+                <source><![CDATA[]]></source>
+                <target><![CDATA[<p>Lorem ipsum</p>]]></target>
+            </trans-unit>
+
+            <!-- seo-title: -->
+            <trans-unit id="41" resname="seo-title">
+                <source></source>
+                <target>SEO Title</target>
+            </trans-unit>
+
+            <!-- seo-description: -->
+            <trans-unit id="42" resname="seo-description">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-keywords: -->
+            <trans-unit id="43" resname="seo-keywords">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-canonicalUrl: -->
+            <trans-unit id="44" resname="seo-canonicalUrl" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- seo-noIndex: -->
+            <trans-unit id="45" resname="seo-noIndex" translate="no">
+                <source>0</source>
+                <target>0</target>
+            </trans-unit>
+
+            <!-- seo-noFollow: -->
+            <trans-unit id="46" resname="seo-noFollow" translate="no">
+                <source>0</source>
+                <target>0</target>
+            </trans-unit>
+
+            <!-- seo-hideInSitemap: -->
+            <trans-unit id="47" resname="seo-hideInSitemap" translate="no">
+                <source>0</source>
+                <target>0</target>
+            </trans-unit>
+
+            <!-- excerpt-title: text_line -->
+            <trans-unit id="48" resname="excerpt-title">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-more: text_line -->
+            <trans-unit id="49" resname="excerpt-more">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-description: text_editor -->
+            <trans-unit id="50" resname="excerpt-description" datatype="html">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-categories: category_list -->
+            <trans-unit id="51" resname="excerpt-categories" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-tags: tag_list -->
+            <trans-unit id="52" resname="excerpt-tags" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-icon: media_selection -->
+            <trans-unit id="53" resname="excerpt-icon" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- excerpt-images: media_selection -->
+            <trans-unit id="54" resname="excerpt-images" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- structureType: -->
+            <trans-unit id="55" resname="structureType" translate="no">
+                <source>default</source>
+                <target>default</target>
+            </trans-unit>
+
+            <!-- published: -->
+            <trans-unit id="56" resname="published" translate="no">
+                <source>2016-08-01T06:56:55+00:00</source>
+                <target>2016-08-01T06:56:55+00:00</target>
+            </trans-unit>
+
+            <!-- created: -->
+            <trans-unit id="57" resname="created" translate="no">
+                <source>2016-08-01T06:56:31+00:00</source>
+                <target>2016-08-01T06:56:31+00:00</target>
+            </trans-unit>
+
+            <!-- changed: -->
+            <trans-unit id="58" resname="changed" translate="no">
+                <source>2016-08-01T06:56:55+00:00</source>
+                <target>2016-08-01T06:56:55+00:00</target>
+            </trans-unit>
+
+            <!-- creator: -->
+            <trans-unit id="59" resname="creator" translate="no">
+                <source>1</source>
+                <target>1</target>
+            </trans-unit>
+
+            <!-- changer: -->
+            <trans-unit id="60" resname="changer" translate="no">
+                <source>1</source>
+                <target>1</target>
+            </trans-unit>
+
+            <!-- locale: -->
+            <trans-unit id="61" resname="locale" translate="no">
+                <source>en</source>
+                <target>en</target>
+            </trans-unit>
+
+            <!-- navigationContexts: -->
+            <trans-unit id="62" resname="navigationContexts" translate="no">
+                <source>[]</source>
+                <target><![CDATA[["main"]]]></target>
+            </trans-unit>
+
+            <!-- permissions: -->
+            <trans-unit id="63" resname="permissions" translate="no">
+                <source>[]</source>
+                <target>[]</target>
+            </trans-unit>
+
+            <!-- shadowLocale: -->
+            <trans-unit id="64" resname="shadowLocale" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- originalLocale: -->
+            <trans-unit id="65" resname="originalLocale" translate="no">
+                <source>en</source>
+                <target>en</target>
+            </trans-unit>
+
+            <!-- resourceSegment: -->
+            <trans-unit id="66" resname="resourceSegment" translate="no">
+                <source>/uebersicht</source>
+                <target>/uebersicht</target>
+            </trans-unit>
+
+            <!-- webspaceName: -->
+            <trans-unit id="67" resname="webspaceName" translate="no">
+                <source>sulu_lo</source>
+                <target>sulu_lo</target>
+            </trans-unit>
+
+            <!-- redirectExternal: -->
+            <trans-unit id="68" resname="redirectExternal" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- redirectType: -->
+            <trans-unit id="69" resname="redirectType" translate="no">
+                <source>1</source>
+                <target>1</target>
+            </trans-unit>
+
+            <!-- redirectTarget: -->
+            <trans-unit id="70" resname="redirectTarget" translate="no">
+                <source></source>
+                <target></target>
+            </trans-unit>
+
+            <!-- workflowStage: -->
+            <trans-unit id="71" resname="workflowStage" translate="no">
+                <source>2</source>
+                <target>2</target>
+            </trans-unit>
+
+            <!-- path: -->
+            <trans-unit id="72" resname="path" translate="no">
+                <source>/cmf/sulu_lo/contents/uebersicht</source>
+                <target>/cmf/sulu_lo/contents/uebersicht</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
+

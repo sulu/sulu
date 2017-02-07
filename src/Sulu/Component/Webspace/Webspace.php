@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,7 +38,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Localization[]
      */
-    private $localizations;
+    private $localizations = [];
 
     /**
      * The default localization defined for this webspace.
@@ -46,6 +46,13 @@ class Webspace implements ArrayableInterface
      * @var Localization
      */
     private $defaultLocalization;
+
+    /**
+     * The x-default localization defined for this webspace.
+     *
+     * @var Localization
+     */
+    private $xDefaultLocalization;
 
     /**
      * The segments defined for this webspace.
@@ -64,7 +71,7 @@ class Webspace implements ArrayableInterface
     /**
      * The theme of the webspace.
      *
-     * @var Theme
+     * @var string
      */
     private $theme;
 
@@ -73,7 +80,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Portal[]
      */
-    private $portals;
+    private $portals = [];
 
     /**
      * The security system for this webspace.
@@ -88,6 +95,27 @@ class Webspace implements ArrayableInterface
      * @var Navigation
      */
     private $navigation;
+
+    /**
+     * A list of twig templates.
+     *
+     * @var array
+     */
+    private $templates = [];
+
+    /**
+     * Template which is selected by default if no other template is chosen.
+     *
+     * @var string[]
+     */
+    private $defaultTemplates = [];
+
+    /**
+     * The url generation strategy for this portal.
+     *
+     * @var string
+     */
+    private $resourceLocatorStrategy;
 
     /**
      * Sets the key of the webspace.
@@ -119,7 +147,11 @@ class Webspace implements ArrayableInterface
         $this->localizations[] = $localization;
 
         if ($localization->isDefault()) {
-            $this->defaultLocalization = $localization;
+            $this->setDefaultLocalization($localization);
+        }
+
+        if ($localization->isXDefault()) {
+            $this->xDefaultLocalization = $localization;
         }
     }
 
@@ -190,6 +222,10 @@ class Webspace implements ArrayableInterface
     public function setDefaultLocalization($defaultLocalization)
     {
         $this->defaultLocalization = $defaultLocalization;
+
+        if (!$this->getXDefaultLocalization()) {
+            $this->xDefaultLocalization = $defaultLocalization;
+        }
     }
 
     /**
@@ -199,7 +235,25 @@ class Webspace implements ArrayableInterface
      */
     public function getDefaultLocalization()
     {
+        if (!$this->defaultLocalization) {
+            return $this->localizations[0];
+        }
+
         return $this->defaultLocalization;
+    }
+
+    /**
+     * Returns the x-default localization for this webspace.
+     *
+     * @return Localization
+     */
+    public function getXDefaultLocalization()
+    {
+        if (!$this->xDefaultLocalization) {
+            return $this->localizations[0];
+        }
+
+        return $this->xDefaultLocalization;
     }
 
     /**
@@ -289,7 +343,7 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the default segment of this webspace.
      *
-     * @param \Sulu\Component\Webspace\Segment $defaultSegment
+     * @param Segment $defaultSegment
      */
     public function setDefaultSegment($defaultSegment)
     {
@@ -299,7 +353,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the default segment for this webspace.
      *
-     * @return \Sulu\Component\Webspace\Segment
+     * @return Segment
      */
     public function getDefaultSegment()
     {
@@ -309,9 +363,9 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the theme for this portal.
      *
-     * @param \Sulu\Component\Webspace\Theme $theme
+     * @param string|null $theme this parameter is options
      */
-    public function setTheme(Theme $theme)
+    public function setTheme($theme = null)
     {
         $this->theme = $theme;
     }
@@ -319,7 +373,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the theme for this portal.
      *
-     * @return \Sulu\Component\Webspace\Theme
+     * @return string
      */
     public function getTheme()
     {
@@ -363,6 +417,131 @@ class Webspace implements ArrayableInterface
     }
 
     /**
+     * Returns false if domain not exists in webspace.
+     *
+     * @param string $domain
+     * @param string $environment
+     * @param string $locale
+     *
+     * @return bool
+     *
+     * @throws Exception\EnvironmentNotFoundException
+     */
+    public function hasDomain($domain, $environment, $locale = null)
+    {
+        $localizationParts = explode('_', $locale);
+        $language = $localizationParts[0];
+        $country = isset($localizationParts[1]) ? $localizationParts[1] : null;
+
+        foreach ($this->getPortals() as $portal) {
+            foreach ($portal->getEnvironment($environment)->getUrls() as $url) {
+                $host = parse_url('//' . $url->getUrl())['host'];
+                if (($locale === null || $url->isValidLocale($language, $country))
+                    && ($host === $domain || $host === '{host}')
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Add a new template for given type.
+     *
+     * @param string $type
+     * @param string $template
+     */
+    public function addTemplate($type, $template)
+    {
+        $this->templates[$type] = $template;
+    }
+
+    /**
+     * Returns a template for the given type.
+     *
+     * @param string $type
+     *
+     * @return string|null
+     */
+    public function getTemplate($type)
+    {
+        if (array_key_exists($type, $this->templates)) {
+            return $this->templates[$type];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns an array of templates.
+     *
+     * @return string[]
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * Add a new default template for given type.
+     *
+     * @param string $type
+     * @param string $template
+     */
+    public function addDefaultTemplate($type, $template)
+    {
+        $this->defaultTemplates[$type] = $template;
+    }
+
+    /**
+     * Returns a error template for given code.
+     *
+     * @param string $type
+     *
+     * @return string|null
+     */
+    public function getDefaultTemplate($type)
+    {
+        if (array_key_exists($type, $this->defaultTemplates)) {
+            return $this->defaultTemplates[$type];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a array of default template.
+     *
+     * @return string
+     */
+    public function getDefaultTemplates()
+    {
+        return $this->defaultTemplates;
+    }
+
+    /**
+     * Set resource-locator strategy.
+     *
+     * @param string $resourceLocatorStrategy
+     */
+    public function setResourceLocatorStrategy($resourceLocatorStrategy)
+    {
+        $this->resourceLocatorStrategy = $resourceLocatorStrategy;
+    }
+
+    /**
+     * Returns resource-locator strategy.
+     *
+     * @return string
+     */
+    public function getResourceLocatorStrategy()
+    {
+        return $this->resourceLocatorStrategy;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -371,6 +550,9 @@ class Webspace implements ArrayableInterface
         $res['key'] = $this->getKey();
         $res['name'] = $this->getName();
         $res['localizations'] = [];
+        $res['templates'] = $this->getTemplates();
+        $res['defaultTemplates'] = $this->getDefaultTemplates();
+        $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
 
         foreach ($this->getLocalizations() as $localization) {
             $res['localizations'][] = $localization->toArray();
@@ -390,10 +572,9 @@ class Webspace implements ArrayableInterface
             }
         }
 
-        $res['theme'] = $this->getTheme()->toArray();
+        $res['theme'] = !$this->theme ? null : $this->theme;
 
         $res['portals'] = [];
-
         foreach ($this->getPortals() as $portal) {
             $res['portals'][] = $portal->toArray();
         }

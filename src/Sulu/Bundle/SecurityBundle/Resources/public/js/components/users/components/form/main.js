@@ -90,6 +90,9 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
             this.sandbox.emit('husky.toggler.sulu-toolbar.change', this.user.locked);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
+            if (this.user.enabled === false) {
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'enable');
+            }
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
                 user: !!this.user ? this.user : null,
                 headline: headline
@@ -100,6 +103,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
+            this.sandbox.emit('sulu.header.toolbar.item.hide', 'enable');
         },
 
         /**
@@ -231,6 +235,18 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.user.locked = value;
                 this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
+
+            this.sandbox.on('husky.toolbar.header.item.select', function(object) {
+                if (object.id === 'enable') {
+                    this.sandbox.emit('sulu.user.activate');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'enable');
+                }
+            }.bind(this));
+
+            this.sandbox.on('sulu.user.activated', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'enable', true);
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.user.activated');
+            }.bind(this))
         },
 
         save: function(action) {
@@ -243,7 +259,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         email: this.sandbox.dom.val('#email'),
                         contact: this.contact,
                         locale: this.systemLanguage,
-                        locked: this.user.locked
+                        locked: this.user.locked,
+                        enabled: this.user.enabled
                     },
 
                     selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),
@@ -263,6 +280,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.sandbox.once('sulu.user.permissions.saved', function(model) {
                     this.user = model;
                     this.sandbox.emit('sulu.tab.saved');
+                    this.sandbox.emit('sulu.labels.warning.show', 'security.warning');
                 }.bind(this));
             }
         },
@@ -337,6 +355,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
+                            dropdownPadding: 50,
                             data: localizations.map(function (localization) {
                                 return {
                                     id: localization.localization,
@@ -384,8 +403,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         prepareTableHeader: function() {
             return this.template.tableHead(
                 this.sandbox.translate('security.permission.role.title'),
-                this.sandbox.translate('security.permission.role.language'),
-                this.sandbox.translate('security.permission.role.permissions')
+                this.sandbox.translate('security.permission.role.language')
             );
         },
 
@@ -415,7 +433,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         },
 
         template: {
-            tableHead: function(thLabel1, thLabel2, thLabel3) {
+            tableHead: function(thLabel1, thLabel2) {
                 return [
                     '<thead>',
                     '   <tr>',
@@ -425,9 +443,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     '               <span class="icon"></span>',
                     '           </div>',
                     '       </th>',
-                    '       <th width="30%">', thLabel1, '</th>',
-                    '       <th width="45%">', thLabel2, '</th>',
-                    '       <th width="20%">', thLabel3, '</th>',
+                    '       <th width="40%">', thLabel1, '</th>',
+                    '       <th width="55%">', thLabel2, '</th>',
                     '   </tr>',
                     '</thead>'
                 ].join('');
@@ -448,7 +465,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         '   </td>',
                         '   <td>', title, '</td>',
                         '   <td class="m-top-15" id="languageSelector', id, '"></td>',
-                        '   <td></td>',
                         '</tr>'
                     ].join('');
                 } else {
@@ -462,7 +478,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         '   </td>',
                         '   <td>', title, '</td>',
                         '   <td class="m-top-15" id="languageSelector', id, '"></td>',
-                        '   <td></td>',
                         '</tr>'
                     ].join('');
                 }

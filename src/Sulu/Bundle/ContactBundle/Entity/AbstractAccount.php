@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,8 +12,12 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -37,7 +41,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     protected $depth;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     protected $children;
@@ -57,59 +61,59 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     protected $addresses;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $urls;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $phones;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $emails;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $notes;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $faxes;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $bankAccounts;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Accessor(getter="getTagNameArray")
      */
     protected $tags;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $accountContacts;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     protected $accountAddresses;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $medias;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $categories;
 
@@ -230,11 +234,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add urls.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     * @param Url $urls
      *
      * @return Account
      */
-    public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    public function addUrl(Url $urls)
     {
         $this->urls[] = $urls;
 
@@ -242,19 +246,19 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Remove urls.
+     * Remove url.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     * @param Url $url
      */
-    public function removeUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    public function removeUrl(Url $url)
     {
-        $this->urls->removeElement($urls);
+        $this->urls->removeElement($url);
     }
 
     /**
      * Get urls.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUrls()
     {
@@ -264,31 +268,31 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add phones.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     * @param Phone $phone
      *
      * @return Account
      */
-    public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
+    public function addPhone(Phone $phone)
     {
-        $this->phones[] = $phones;
+        $this->phones[] = $phone;
 
         return $this;
     }
 
     /**
-     * Remove phones.
+     * Remove phone.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     * @param Phone $phone
      */
-    public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
+    public function removePhone(Phone $phone)
     {
-        $this->phones->removeElement($phones);
+        $this->phones->removeElement($phone);
     }
 
     /**
      * Get phones.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhones()
     {
@@ -298,13 +302,13 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add emails.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     * @param Email $email
      *
      * @return Account
      */
-    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
+    public function addEmail(Email $email)
     {
-        $this->emails[] = $emails;
+        $this->emails[] = $email;
 
         return $this;
     }
@@ -312,17 +316,17 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove emails.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     * @param Email $email
      */
-    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
+    public function removeEmail(Email $email)
     {
-        $this->emails->removeElement($emails);
+        $this->emails->removeElement($email);
     }
 
     /**
      * Get emails.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEmails()
     {
@@ -332,13 +336,13 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add notes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     * @param Note $note
      *
      * @return Account
      */
-    public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
+    public function addNote(Note $note)
     {
-        $this->notes[] = $notes;
+        $this->notes[] = $note;
 
         return $this;
     }
@@ -346,17 +350,17 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove notes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     * @param Note $notes
      */
-    public function removeNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
+    public function removeNote(Note $note)
     {
-        $this->notes->removeElement($notes);
+        $this->notes->removeElement($note);
     }
 
     /**
      * Get notes.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getNotes()
     {
@@ -390,7 +394,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Get children.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChildren()
     {
@@ -400,31 +404,31 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add faxes.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @param Fax $fax
      *
      * @return Account
      */
-    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function addFax(Fax $fax)
     {
-        $this->faxes[] = $faxes;
+        $this->faxes[] = $fax;
 
         return $this;
     }
 
     /**
-     * Remove faxes.
+     * Remove fax.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @param Fax $faxes
      */
-    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function removeFax(Fax $fax)
     {
-        $this->faxes->removeElement($faxes);
+        $this->faxes->removeElement($fax);
     }
 
     /**
      * Get faxes.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFaxes()
     {
@@ -432,57 +436,33 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add faxes.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
-     *
-     * @return Account
-     */
-    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
-    {
-        $this->faxes[] = $faxes;
-
-        return $this;
-    }
-
-    /**
-     * Remove faxes.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
-     */
-    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
-    {
-        $this->faxes->removeElement($faxes);
-    }
-
-    /**
      * Add bankAccounts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @param BankAccount $bankAccount
      *
      * @return Account
      */
-    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    public function addBankAccount(BankAccount $bankAccount)
     {
-        $this->bankAccounts[] = $bankAccounts;
+        $this->bankAccounts[] = $bankAccount;
 
         return $this;
     }
 
     /**
-     * Remove bankAccounts.
+     * Remove bankAccount.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @param BankAccount $bankAccounts
      */
-    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    public function removeBankAccount(BankAccount $bankAccount)
     {
-        $this->bankAccounts->removeElement($bankAccounts);
+        $this->bankAccounts->removeElement($bankAccount);
     }
 
     /**
      * Get bankAccounts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getBankAccounts()
     {
@@ -492,31 +472,31 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add tags.
      *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @param Tag $tags
      *
      * @return Account
      */
-    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    public function addTag(Tag $tag)
     {
-        $this->tags[] = $tags;
+        $this->tags[] = $tag;
 
         return $this;
     }
 
     /**
-     * Remove tags.
+     * Remove tag.
      *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @param Tag $tag
      */
-    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    public function removeTag(Tag $tag)
     {
-        $this->tags->removeElement($tags);
+        $this->tags->removeElement($tag);
     }
 
     /**
      * Get tags.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTags()
     {
@@ -541,13 +521,13 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     }
 
     /**
-     * Add accountContacts.
+     * Add accountContact.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @param AccountContact $accountContact
      *
      * @return Account
      */
-    public function addAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    public function addAccountContact(AccountContact $accountContacts)
     {
         $this->accountContacts[] = $accountContacts;
 
@@ -557,9 +537,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove accountContacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts
+     * @param AccountContact $accountContacts
      */
-    public function removeAccountContact(\Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContacts)
+    public function removeAccountContact(AccountContact $accountContacts)
     {
         $this->accountContacts->removeElement($accountContacts);
     }
@@ -567,7 +547,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Get accountContacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAccountContacts()
     {
@@ -577,11 +557,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress
+     * @param AccountAddress $accountAddress
      *
      * @return Account
      */
-    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress)
+    public function addAccountAddress(AccountAddress $accountAddress)
     {
         $this->accountAddresses[] = $accountAddress;
 
@@ -591,9 +571,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove accountAddresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress
+     * @param AccountAddress $accountAddress
      */
-    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddress)
+    public function removeAccountAddress(AccountAddress $accountAddress)
     {
         $this->accountAddresses->removeElement($accountAddress);
     }
@@ -601,7 +581,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Get accountAddresses.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAccountAddresses()
     {
@@ -652,7 +632,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getContacts()
     {
@@ -672,13 +652,13 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add medias.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @param MediaInterface $media
      *
      * @return Account
      */
-    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    public function addMedia(MediaInterface $media)
     {
-        $this->medias[] = $medias;
+        $this->medias[] = $media;
 
         return $this;
     }
@@ -686,17 +666,17 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove medias.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $medias
+     * @param MediaInterface $media
      */
-    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $medias)
+    public function removeMedia(MediaInterface $media)
     {
-        $this->medias->removeElement($medias);
+        $this->medias->removeElement($media);
     }
 
     /**
      * Get medias.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMedias()
     {
@@ -730,31 +710,31 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add categories.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @param CategoryInterface $categories
      *
      * @return Account
      */
-    public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    public function addCategory(CategoryInterface $category)
     {
-        $this->categories[] = $categories;
+        $this->categories[] = $category;
 
         return $this;
     }
 
     /**
-     * Remove categories.
+     * Remove category.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @param CategoryInterface $category
      */
-    public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    public function removeCategory(CategoryInterface $category)
     {
-        $this->categories->removeElement($categories);
+        $this->categories->removeElement($category);
     }
 
     /**
      * Get categories.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCategories()
     {

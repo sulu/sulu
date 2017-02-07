@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,11 +19,6 @@ use Symfony\Component\Templating\EngineInterface;
 class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Twig_LoaderInterface
-     */
-    private $templates;
-
-    /**
      * @var EngineInterface
      */
     private $templateEngine;
@@ -35,18 +30,21 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->templateEngine = $this->getMock('\Symfony\Component\Templating\EngineInterface');
+        $this->templateEngine = $this->prophesize(EngineInterface::class);
 
-        $this->widgetsHandler = new WidgetsHandler($this->templateEngine, [
-            'test-group' => [
-                'mappings' => [
-                    'group-widget-1',
-                    'group-widget-1',
-                    'group-widget-3',
-                    'group-widget-2',
+        $this->widgetsHandler = new WidgetsHandler(
+            $this->templateEngine->reveal(),
+            [
+                'test-group' => [
+                    'mappings' => [
+                        'group-widget-1',
+                        'group-widget-1',
+                        'group-widget-3',
+                        'group-widget-2',
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
     }
 
     /**
@@ -58,25 +56,11 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private function getWidget($name, $template, $data)
     {
-        $widget = $this->getMock('\Sulu\Bundle\AdminBundle\Widgets\WidgetInterface');
+        $widget = $this->prophesize(WidgetInterface::class);
 
-        $widget->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue($name));
-
-        $widget->expects($this->any())
-            ->method('getTemplate')
-            ->will($this->returnValue($template));
-
-        if (is_callable($data)) {
-            $data = $this->returnCallback($data);
-        } else {
-            $data = $this->returnValue($data);
-        }
-
-        $widget->expects($this->any())
-            ->method('getData')
-            ->will($data);
+        $widget->getName()->willReturn($name);
+        $widget->getTemplate()->willReturn($template);
+        $widget->getData(['testParam' => 'super'])->willReturn($data);
 
         return $widget;
     }
@@ -84,44 +68,20 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
     public function testRender()
     {
         $this->widgetsHandler->addWidget(
-            $this->getWidget('widget1', 'SuluTestBundle:widget:widget1.html.twig', ['test' => '1']),
+            $this->getWidget('widget1', 'SuluTestBundle:widget:widget1.html.twig', ['test' => '1'])->reveal(),
             'widget-1'
         );
         $this->widgetsHandler->addWidget(
-            $this->getWidget('widget3', 'SuluTestBundle:widget:widget3.html.twig', ['test' => '3']),
+            $this->getWidget('widget3', 'SuluTestBundle:widget:widget3.html.twig', ['test' => '3'])->reveal(),
             'widget-3'
         );
         $this->widgetsHandler->addWidget(
-            $this->getWidget('widget2', 'SuluTestBundle:widget:widget2.html.twig', ['test' => '2']),
+            $this->getWidget('widget2', 'SuluTestBundle:widget:widget2.html.twig', ['test' => '2'])->reveal(),
             'widget-2'
         );
 
-        $param = false;
-        $template = false;
-
-        $this->templateEngine
-            ->expects($this->any())
-            ->method('render')
-            ->will(
-                $this->returnCallback(
-                    function ($t, $p) use (&$template, &$param) {
-                        $param = $p;
-                        $template = $t;
-
-                        return true;
-                    }
-                )
-            );
-
-        $this->assertTrue($this->widgetsHandler->render(
-            ['widget-2', 'widget-1', 'widget-3'],
-            ['testParam' => 'super']
-        ));
-        $this->assertTrue(false !== $param);
-        $this->assertTrue(false !== $template);
-
-        $this->assertEquals('SuluAdminBundle:Widgets:widgets.html.twig', $template);
-        $this->assertEquals(
+        $this->templateEngine->render(
+            'SuluAdminBundle:Widgets:widgets.html.twig',
             [
                 'widgets' => [
                     [
@@ -149,50 +109,32 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                 'parameters' => [
                     'testParam' => 'super',
                 ],
-            ],
-            $param
+            ]
+        )->shouldBeCalled();
+
+        $this->widgetsHandler->render(
+            ['widget-2', 'widget-1', 'widget-3'],
+            ['testParam' => 'super']
         );
     }
 
     public function testRenderWidgetGroup()
     {
         $this->widgetsHandler->addWidget(
-            $this->getWidget('group-widget-1', 'SuluTestBundle:widget:widget1.html.twig', ['test' => '1']),
+            $this->getWidget('group-widget-1', 'SuluTestBundle:widget:widget1.html.twig', ['test' => '1'])->reveal(),
             'group-widget-1'
         );
         $this->widgetsHandler->addWidget(
-            $this->getWidget('group-widget-3', 'SuluTestBundle:widget:widget3.html.twig', ['test' => '3']),
+            $this->getWidget('group-widget-3', 'SuluTestBundle:widget:widget3.html.twig', ['test' => '3'])->reveal(),
             'group-widget-3'
         );
         $this->widgetsHandler->addWidget(
-            $this->getWidget('group-widget-2', 'SuluTestBundle:widget:widget2.html.twig', ['test' => '2']),
+            $this->getWidget('group-widget-2', 'SuluTestBundle:widget:widget2.html.twig', ['test' => '2'])->reveal(),
             'group-widget-2'
         );
 
-        $param = false;
-        $template = false;
-
-        $this->templateEngine
-            ->expects($this->any())
-            ->method('render')
-            ->will(
-                $this->returnCallback(
-                    function ($t, $p) use (&$template, &$param) {
-                        $param = $p;
-                        $template = $t;
-
-                        return true;
-                    }
-                )
-            );
-
-        $this->assertTrue(
-            $this->widgetsHandler->renderWidgetGroup('test-group', ['testParam' => 'super'])
-        );
-        $this->assertTrue(false !== $param);
-        $this->assertTrue(false !== $template);
-        $this->assertEquals('SuluAdminBundle:Widgets:widgets.html.twig', $template);
-        $this->assertEquals(
+        $this->templateEngine->render(
+            'SuluAdminBundle:Widgets:widgets.html.twig',
             [
                 'widgets' => [
                     [
@@ -227,8 +169,9 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                 'parameters' => [
                     'testParam' => 'super',
                 ],
-            ],
-            $param
-        );
+            ]
+        )->shouldBeCalled();
+
+        $this->widgetsHandler->renderWidgetGroup('test-group', ['testParam' => 'super']);
     }
 }

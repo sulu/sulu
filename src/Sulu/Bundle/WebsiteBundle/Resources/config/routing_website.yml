@@ -1,3 +1,12 @@
-sulu_website.sitemap.xml:
+sulu_website.sitemap_index:
     path:      /sitemap.xml
     defaults:  { _controller: SuluWebsiteBundle:Sitemap:index }
+
+sulu_website.paginated_sitemap:
+    path:      /sitemaps/{alias}-{page}.xml
+    defaults:  { _controller: SuluWebsiteBundle:Sitemap:sitemapPaginated }
+    requirements: {page: \d+}
+
+sulu_website.sitemap:
+    path:      /sitemaps/{alias}.xml
+    defaults:  { _controller: SuluWebsiteBundle:Sitemap:sitemap }

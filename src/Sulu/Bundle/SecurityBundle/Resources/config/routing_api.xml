@@ -3,6 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://friendsofsymfony.github.com/schema/rest https://raw.github.com/FriendsOfSymfony/FOSRestBundle/master/Resources/config/schema/routing/rest_routing-1.0.xsd">
     <import id="sulu_security.roles" type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\RoleController"/>
+    <import id="sulu_security.role_settings" type="rest" parent= "sulu_security.roles" resource="Sulu\Bundle\SecurityBundle\Controller\RoleSettingController"/>
     <import id="sulu_security.groups" type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\GroupController"/>
     <import id="sulu_security.users" type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\UserController"/>
     <import id="sulu_security.permissions" type="rest" resource="sulu_security.permission_controller"/>

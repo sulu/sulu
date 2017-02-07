@@ -25,39 +25,47 @@ define(function() {
 
         UserSettingsManager.prototype = {
             getMediaLocale: function() {
-                return Husky.sulu.getUserSetting(mediaLanguageKey) || Husky.sulu.user.locale;
+                return app.sandbox.sulu.getUserSetting(mediaLanguageKey) || app.sandbox.sulu.getDefaultContentLocale();
             },
 
             setMediaLocale: function(locale) {
-                Husky.sulu.saveUserSetting(mediaLanguageKey, locale);
+                app.sandbox.sulu.saveUserSetting(mediaLanguageKey, locale);
             },
 
             getMediaListView: function() {
-                return Husky.sulu.getUserSetting(mediaListViewKey) || 'datagrid/decorators/masonry-view';
+                return app.sandbox.sulu.getUserSetting(mediaListViewKey) || 'datagrid/decorators/masonry-view';
             },
 
             setMediaListView: function(viewId) {
-                Husky.sulu.saveUserSetting(mediaListViewKey, viewId);
+                app.sandbox.sulu.saveUserSetting(mediaListViewKey, viewId);
             },
 
             getMediaListPagination: function() {
-                return Husky.sulu.getUserSetting(mediaListPaginationKey) || 'infinite-scroll';
+                return app.sandbox.sulu.getUserSetting(mediaListPaginationKey) || 'infinite-scroll';
             },
 
             setMediaListPagination: function(paginationId) {
-                Husky.sulu.saveUserSetting(mediaListPaginationKey, paginationId);
+                app.sandbox.sulu.saveUserSetting(mediaListPaginationKey, paginationId);
             },
 
             setLastVisitedCollection: function(collectionId) {
-                Husky.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+                if (!!collectionId) {
+                    app.sandbox.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+                } else if (!!app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey)) {
+                    app.sandbox.sulu.deleteUserSetting(lastVisitedCollectionKey);
+                }
+            },
+
+            getLastVisitedCollection: function() {
+                return app.sandbox.sulu.getUserSetting(lastVisitedCollectionKey);
             },
 
             getDropdownPageSize: function() {
-                return Husky.sulu.getUserSetting(dropdownPageSize) || 20;
+                return app.sandbox.sulu.getUserSetting(dropdownPageSize) || 20;
             },
 
             getInfinityPageSize: function() {
-                return Husky.sulu.getUserSetting(infinityPageSize) || 50;
+                return app.sandbox.sulu.getUserSetting(infinityPageSize) || 50;
             }
         };
 

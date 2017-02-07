@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -9,10 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\MediaBundle\DataFixtures\ORM;
+
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
 class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -21,36 +24,26 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
      */
     public function load(ObjectManager $manager)
     {
-        // force id = 1
+        // set id manually
         $metadata = $manager->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
-        $defaultCollectionType = $this->createCollectionType(1, 'collection.default', 'Default');
-        $manager->persist($defaultCollectionType);
+        // create or update collectiontype with id 1
+        $defaultCollectionType = new CollectionType();
+        $defaultCollectionType->setId(1);
+        $defaultCollectionType = $manager->merge($defaultCollectionType);
+        $defaultCollectionType->setKey('collection.default');
+        $defaultCollectionType->setName('Default');
 
-        $systemCollectionType = $this->createCollectionType(2, 'collection.system', 'System Collections');
-        $manager->persist($systemCollectionType);
+        // create or update collectiontype with id 2
+        $systemCollectionType = new CollectionType();
+        $systemCollectionType->setId(2);
+        $systemCollectionType = $manager->merge($systemCollectionType);
+        $systemCollectionType->setKey(SystemCollectionManagerInterface::COLLECTION_TYPE);
+        $systemCollectionType->setName('System Collections');
 
         $manager->flush();
-    }
-
-    /**
-     * Create a collection type with given parameter.
-     *
-     * @param int $id
-     * @param string $key
-     * @param string $name
-     *
-     * @return CollectionType
-     */
-    private function createCollectionType($id, $key, $name)
-    {
-        $collectionType = new CollectionType();
-        $collectionType->setId($id);
-        $collectionType->setKey($key);
-        $collectionType->setName($name);
-
-        return $collectionType;
     }
 
     /**

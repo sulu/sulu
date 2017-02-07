@@ -12,25 +12,34 @@
     </parameters>
 
     <services>
-        <service id="sulu_core.rest_helper" class="%sulu_core.rest_helper.class%" scope="request">
+        <service id="sulu_core.rest_helper" class="%sulu_core.rest_helper.class%">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%" scope="request">
+        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" scope="request">
-            <argument type="service" id="request"/>
+        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%">
+            <argument type="service" id="request_stack"/>
+        </service>
+
+        <service id="sulu_core.rest.exception_wrapper_handler" class="Sulu\Component\Rest\ExceptionWrapperHandler">
+            <argument>%kernel.environment%</argument>
         </service>
 
         <service id="sulu_core.doctrine_list_builder_factory" class="%sulu_core.doctrine_list_builder_factory.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument>%sulu_security.permissions%</argument>
         </service>
 
         <service id="sulu_core.rest.datetime_handler" class="%sulu_core.rest.datetime_handler.class%">
             <tag name="jms_serializer.subscribing_handler" />
+        </service>
+
+        <service id="sulu_core.rest.view_handler.csv" class="Sulu\Component\Rest\Csv\CsvHandler">
+            <argument type="service" id="serializer"/>
         </service>
     </services>
 </container>

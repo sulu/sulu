@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -107,9 +107,6 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     protected $propertyValue;
 
-    /**
-     * Constructor.
-     */
     public function __construct(
         $name,
         $metaData,
@@ -369,7 +366,26 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     public function getIsMultiple()
     {
-        return $this->minOccurs > 1 || $this->maxOccurs > 1;
+        $minOccurs = $this->getMinOccurs();
+        $maxOccurs = $this->getMaxOccurs();
+
+        if (is_null($minOccurs) && is_null($maxOccurs)) {
+            // if no occurs attributes are set it defaults to false
+            return false;
+        }
+
+        if (0 === $minOccurs && 1 === $maxOccurs) {
+            // this one allows to have an optional field
+            return true;
+        }
+
+        if (1 === $minOccurs && 1 === $maxOccurs) {
+            // if the occurences have a high and low limit of 1 it should be displayed as single
+            return false;
+        }
+
+        // if minOccurs is set a value of 1 is enough, because maxOccurs would be considered "unbound" when null
+        return $minOccurs >= 1 || $maxOccurs > 1;
     }
 
     /**

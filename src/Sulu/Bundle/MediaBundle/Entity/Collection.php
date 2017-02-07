@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -20,18 +21,18 @@ use JMS\Serializer\Annotation\Exclude;
 class Collection extends BaseCollection
 {
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection
      */
     private $meta;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection
      * @Exclude
      */
     private $media;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection
      */
     private $children;
 
@@ -53,7 +54,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection
      */
     public function getChildren()
     {
@@ -61,9 +62,9 @@ class Collection extends BaseCollection
     }
 
     /**
-     * @param \Doctrine\Common\Collections\Collection $children
+     * @param DoctrineCollection $children
      */
-    public function setChildren($children)
+    public function setChildren(DoctrineCollection $children)
     {
         $this->children = $children;
     }
@@ -119,7 +120,7 @@ class Collection extends BaseCollection
     /**
      * Get meta.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection
      */
     public function getMeta()
     {
@@ -129,11 +130,11 @@ class Collection extends BaseCollection
     /**
      * Add media.
      *
-     * @param Media $media
+     * @param MediaInterface $media
      *
      * @return Collection
      */
-    public function addMedia(Media $media)
+    public function addMedia(MediaInterface $media)
     {
         $this->media[] = $media;
 
@@ -143,9 +144,9 @@ class Collection extends BaseCollection
     /**
      * Remove media.
      *
-     * @param Media $media
+     * @param MediaInterface $media
      */
-    public function removeMedia(Media $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->media->removeElement($media);
     }
@@ -153,7 +154,7 @@ class Collection extends BaseCollection
     /**
      * Get media.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection
      */
     public function getMedia()
     {

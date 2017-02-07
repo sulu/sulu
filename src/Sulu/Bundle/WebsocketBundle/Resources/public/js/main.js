@@ -14,7 +14,8 @@ require.config({
         'websocket/abstract': '../../suluwebsocket/js/component/websocket-manager/client/client',
         'websocket/client': '../../suluwebsocket/js/component/websocket-manager/client/websocket',
         'websocket/fallback': '../../suluwebsocket/js/component/websocket-manager/client/ajax',
-        'websocket/wrapper': '../../suluwebsocket/js/component/websocket-manager/client/wrapper'
+        'websocket/wrapper': '../../suluwebsocket/js/component/websocket-manager/client/wrapper',
+        'websocket/dummy': '../../suluwebsocket/js/component/websocket-manager/client/dummy'
     }
 });
 

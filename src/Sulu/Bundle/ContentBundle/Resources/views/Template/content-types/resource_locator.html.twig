@@ -8,4 +8,6 @@
      data-type-instance-name="{{ id|raw }}"
      data-aura-history-api="/admin/api/nodes/<%=content.id%>/resourcelocators?language={{ languageCode }}&webspace={{ webspaceKey }}"
      data-aura-content-id="<%=options.id%>"
+     data-aura-webspace-key="{{ webspaceKey }}"
+     data-type-webspace-key="{{ webspaceKey }}"
      {% if property.mandatory %}data-validation-required="true"{% endif %} ></div>

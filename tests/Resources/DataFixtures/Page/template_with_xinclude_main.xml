@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <meta>
+        <title lang="de">Das ist das Template 1</title>
+        <title lang="en">That´s the template 1</title>
+    </meta>
+</template>

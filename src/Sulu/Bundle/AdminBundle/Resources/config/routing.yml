@@ -30,6 +30,11 @@ sulu_admin.contexts:
     defaults:
         _controller: sulu_admin.admin_controller:contextsAction
 
+sulu_admin.csv_export.form:
+    path: /templates/csv-export-form
+    defaults:
+        _controller: sulu_admin.template_controller:csvExportFormAction
+
 sulu_admin.login:
     path: /login
     defaults: { _controller: SuluAdminBundle:Security:login }

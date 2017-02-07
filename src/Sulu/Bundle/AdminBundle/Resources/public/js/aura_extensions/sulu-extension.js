@@ -78,37 +78,20 @@
             };
 
             /**
-             * load user settings
-             * @param key
-             * @param url Where to get data from, if not already available
-             * @param callback Function to return settings value
-             */
-            app.sandbox.sulu.loadUserSetting = function(key, url, callback) {
-                if (!!app.sandbox.sulu.userSettings[key]) {
-                    callback(app.sandbox.sulu.userSettings[key]);
-                } else {
-                    // get from server
-                    app.sandbox.util.load(url)
-                        .then(function(data) {
-                            app.sandbox.sulu.userSettings[key] = data;
-                            callback(data);
-                        }.bind(this))
-                        .fail(function(data) {
-                            app.sandbox.logger.log('data could not be loaded:', data);
-                        }.bind(this));
-                }
-            };
-
-            /**
              * loads an url and matches it against user settings
              * @param key Defines which setting to compare with
              * @param excludeAttributes Defines which Attributes should NOT be taken from user-settings and from fields API instead
              * @param url Where
              * @param callback
+             * @param filter callback to filter result
              */
-            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, excludeAttributes, url, callback) {
+            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, excludeAttributes, url, callback, filter) {
                 this.sandbox.util.load(url)
                     .then(function(data) {
+                        if (!!filter && typeof filter === 'function') {
+                            data = _.filter(data, filter);
+                        }
+
                         var userFields = app.sandbox.sulu.getUserSetting(key),
                             serverFields = data,
                             settingsArray = [],
@@ -205,6 +188,55 @@
                 });
             };
 
+            /**
+             * Returns the default locale for different content depending on the current
+             * user and the available locales.
+             *
+             * @returns {String} the default locale
+             */
+            app.sandbox.sulu.getDefaultContentLocale = function() {
+                if (!!SULU.user.locale && _.contains(SULU.locales, SULU.user.locale)) {
+                    return SULU.user.locale;
+                }
+
+                var savedLocale = app.sandbox.sulu.getUserSetting('contentLanguage');
+                if (!!savedLocale) {
+                    return savedLocale;
+                }
+
+                return SULU.locales[0];
+            };
+
+            /**
+             * Shows a standard confirmation dialog
+             * @param {object} options
+             * @param {function} options.callback The callback which should be called on a button click, the only
+             *                                    parameter passed is true when the action was confirmed and false
+             *                                    otherwise
+             * @param {string} options.title The title of the dialog
+             * @param {string} options.description The description shown in the dialog
+             * @param {string} options.buttonTitle The title of the ok button
+             */
+            app.sandbox.sulu.showConfirmationDialog = function(options) {
+                if (!options.callback || typeof(options.callback) !== 'function') {
+                    throw 'callback must be a function';
+                }
+
+                app.sandbox.emit(
+                    'sulu.overlay.show-warning',
+                    options.title,
+                    options.description,
+                    function() {
+                        return options.callback(false);
+                    },
+                    function() {
+                        return options.callback(true);
+                    },
+                    {
+                        okDefaultText: options.buttonTitle || 'public.ok'
+                    }
+                )
+            };
 
             /**
              * Shows a standard delete warning dialog
@@ -213,36 +245,20 @@
              *                            confirmed or not)
              * @param title {String} custom title of the dialog
              * @param description {String} custom description of the dialog
+             * @param description {Array} custom options of the dialog
              */
             app.sandbox.sulu.showDeleteDialog = function(callback, title, description) {
-                // check if callback is a function
-                if (!!callback && typeof(callback) !== 'function') {
-                    throw 'callback is not a function';
-                }
                 if (typeof title !== 'string') {
                     title = app.sandbox.util.capitalizeFirstLetter(app.sandbox.translate('public.delete')) + '?';
                 }
                 description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
 
-                // show warning dialog
-                app.sandbox.emit('sulu.overlay.show-warning',
-                    title,
-                    description,
-
-                    function() {
-                        // cancel callback
-                        callback(false);
-                    }.bind(this),
-
-                    function() {
-                        // ok callback
-                        callback(true);
-                    }.bind(this),
-
-                    {
-                        okDefaultText: 'public.delete'
-                    }
-                );
+                app.sandbox.sulu.showConfirmationDialog({
+                    callback: callback,
+                    title: title,
+                    description: description,
+                    buttonTitle: 'public.delete'
+                });
             };
 
             /*********
@@ -266,7 +282,7 @@
                  * @param order
                  */
                 insertOrderParamsInUrl = function(url, order) {
-                    if (!!order && !!order.length) {
+                    if (!!order) {
                         var idxBy = url.indexOf('sortBy'),
                             idxOrder = url.indexOf('sortOrder'),
                             divider = '&';
@@ -453,6 +469,7 @@
                         // add datagrid instance name to toolbar
                         toolbarOptions.datagridInstanceName = gridOptions.instanceName;
                         toolbarOptions.listInfoContainerSelector = listInfoContainerSelector;
+                        toolbarOptions.searchOptions = {storageName: gridOptions.storageName || null};
 
                         //start list-toolbar and datagrid
                         this.sandbox.start([
@@ -492,7 +509,10 @@
                         fieldsKey,
                         ['translation', 'default', 'editable', 'validation', 'width', 'type'],
                         url,
-                        callback.bind(this)
+                        callback.bind(this),
+                        function(item) {
+                            return !item.display || item.display !== 'never';
+                        }
                     );
                 } else {
                     callback.call(this, fields);
@@ -532,6 +552,21 @@
                             }
                         ]);
                     }.bind(this));
+            };
+
+            app.sandbox.sulu.showLoader = function($element) {
+                this.sandbox.start(
+                    [
+                        {
+                            name: 'loader@husky',
+                            options: {
+                                el: $element,
+                                size: '100px',
+                                color: '#ccc'
+                            }
+                        }
+                    ]
+                );
             };
         }
     });

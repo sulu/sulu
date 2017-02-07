@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,8 +14,8 @@ namespace Sulu\Bundle\ContentBundle\Behat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Behat context class for the ContentBundle.
@@ -27,7 +27,7 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
      */
     public function thereExistsAPageTemplateWithTheFollowingPropertyConfiguration($arg1, PyStringNode $string)
     {
-        $template = <<<EOT
+        $template = <<<'EOT'
 <?xml version="1.0" ?>
 
 <template xmlns="http://schemas.sulu.io/template/template"
@@ -70,8 +70,12 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
 </template>
 EOT;
 
-        $template = sprintf($template,
-            $arg1, $arg1, $arg1, $string->getRaw()
+        $template = sprintf(
+            $template,
+            $arg1,
+            $arg1,
+            $arg1,
+            $string->getRaw()
         );
 
         $this->createStructureTemplate('page', $arg1, $template);
@@ -92,20 +96,20 @@ EOT;
      */
     public function iAmEditingAPageOfType($arg1)
     {
-        $request = ContentMapperRequest::create()
-            ->setTemplateKey($arg1)
-            ->setType('page')
-            ->setWebspaceKey('sulu_io')
-            ->setUserId($this->getUserId())
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setLocale('de')
-            ->setData([
-                'title' => 'Behat Test Content',
-                'url' => '/behat-test-content',
-            ]);
+        /** @var PageDocument $document */
+        $document = $this->getDocumentManager()->create('page');
+        $document->setStructureType($arg1);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->setTitle('Behat Test Content');
+        $document->setResourceSegment('/behat-test-content');
 
-        $page = $this->getContentMapper()->saveRequest($request);
-        $this->visitPath('/admin/#content/contents/sulu_io/de/edit:' . $page->getUuid() . '/content');
+        $this->getDocumentManager()->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->getDocumentManager()->flush();
+
+        $this->visitPath(
+            '/admin/#content/contents/sulu_io/de/edit:'
+            . $document->getUuid() . '/content'
+        );
         $this->getSession()->wait(5000, '$("#content-form").length');
         sleep(1); // wait one more second to avoid flaky tests
     }
@@ -140,5 +144,19 @@ EOT;
     public function iFillInTheCKEditorWith($ckEditorId, $text)
     {
         $this->getSession()->executeScript("CKEDITOR.instances['" . $ckEditorId . "'].insertHtml('" . $text . "');");
+    }
+
+    /**
+     * @Then I expect the page state to be :state
+     */
+    public function iExpectThePageStateToBe($state)
+    {
+        if ($state === 'Published') {
+            $this->assertSelector('[data-id=\'statePublished\']:visible');
+            $this->assertSelectorIsHidden('[data-id=\'stateTest\']');
+        } else {
+            $this->assertSelector('[data-id=\'stateTest\']:visible');
+            $this->assertSelectorIsHidden('[data-id=\'statePublished\']');
+        }
     }
 }

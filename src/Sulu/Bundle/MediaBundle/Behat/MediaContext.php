@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -106,18 +106,8 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
             $collection = $this->getLastMediaCollection();
         }
 
-        $this->visitPath('/admin/#media/collections/edit:' . $collection->getId() . '/content');
+        $this->visitPath('/admin/#media/collections/edit:' . $collection->getId() . '/files');
         $this->waitForAuraEvents(['husky.datagrid.view.rendered']);
-    }
-
-    /**
-     * @Given I am on the settings page for the media collection
-     */
-    public function iOnTheSettingsPageForTheMediaCollection()
-    {
-        $collection = $this->getLastMediaCollection();
-        $this->visitPath('/admin/#media/collections/edit:' . $collection->getId() . '/settings');
-        $this->waitForAuraEvents(['husky.toolbar.header.initialized']);
     }
 
     /**

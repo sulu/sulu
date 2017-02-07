@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use InvalidArgumentException;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -24,6 +25,15 @@ abstract class WebsiteController extends Controller
 {
     /**
      * Returns a rendered structure.
+     *
+     * @param StructureInterface $structure The structure, which has been loaded for rendering
+     * @param array $attributes Additional attributes, which will be passed to twig
+     * @param bool $preview Defines if the site is rendered in preview mode
+     * @param bool $partial Defines if only the content block of the template should be rendered
+     *
+     * @return Response
+     *
+     * @deprecated will be remove with 2.0
      */
     protected function renderStructure(
         StructureInterface $structure,
@@ -59,11 +69,6 @@ abstract class WebsiteController extends Controller
                 );
             }
 
-            // remove empty first line
-            if (ob_get_length()) {
-                ob_clean();
-            }
-
             return new Response($content);
         } catch (InvalidArgumentException $e) {
             // template not found
@@ -90,8 +95,36 @@ abstract class WebsiteController extends Controller
     protected function renderBlock($template, $block, $attributes = [])
     {
         $twig = $this->get('twig');
+        $attributes = $twig->mergeGlobals($attributes);
+
+        /** @var \Twig_Template $template */
         $template = $twig->loadTemplate($template);
 
-        return $template->renderBlock($block, $attributes);
+        $level = ob_get_level();
+        ob_start();
+        try {
+            $rendered = $template->renderBlock($block, $attributes);
+            ob_end_clean();
+
+            return $rendered;
+        } catch (\Exception $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Returns the current request from the request stack.
+     *
+     * @return null|Request
+     *
+     * @deprecated will be remove with 2.0
+     */
+    public function getRequest()
+    {
+        return $this->get('request_stack')->getCurrentRequest();
     }
 }

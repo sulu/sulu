@@ -37,7 +37,15 @@ define(function () {
                 toolbar: {
                     buttons: {
                         add: {},
-                        deleteSelected: {}
+                        deleteSelected: {},
+                        export: {
+                            options: {
+                                urlParameter: {
+                                    flat: true
+                                },
+                                url: '/admin/api/categories.csv'
+                            }
+                        }
                     },
                     languageChanger: {
                         preSelected: this.options.locale
@@ -85,7 +93,9 @@ define(function () {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/category/template/category/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'categories', '/admin/api/categories/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 
+                'categories',
+                '/admin/api/categories/fields?locale=' + this.locale,
                 {
                     el: this.$find(constants.toolbarSelector),
                     template: 'default',
@@ -93,15 +103,16 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.locale,
+                    url: '/admin/api/categories?flat=true&sortBy=name&sortOrder=asc&locale=' + this.locale,
                     childrenPropertyName: 'hasChildren',
+                    expandIds: [this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey)],
                     resultKey: 'categories',
+                    storageName: 'categories',
                     searchFields: ['name'],
                     pagination: false,
                     actionCallback: this.editCategory.bind(this),
                     viewOptions: {
                         table: {
-                            openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),
                             hideChildrenAtBeginning: false,
                             cropContents: false,
                             selectItem: {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Log\NullLogger;
@@ -109,6 +110,20 @@ class LocalStorage implements StorageInterface
     /**
      * {@inheritdoc}
      */
+    public function loadAsString($fileName, $version, $storageOption)
+    {
+        $path = $this->load($fileName, $version, $storageOption);
+
+        if (!$path || !file_exists($path)) {
+            throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
+        }
+
+        return file_get_contents($path);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function remove($storageOption)
     {
         $this->storageOption = json_decode($storageOption);
@@ -144,7 +159,11 @@ class LocalStorage implements StorageInterface
 
         if ($counter > 0) {
             $fileNameParts = explode('.', $fileName, 2);
-            $newFileName = $fileNameParts[0] . '-' . $counter . '.' . $fileNameParts[1];
+            $newFileName = $fileNameParts[0] . '-' . $counter;
+
+            if (isset($fileNameParts[1])) {
+                $newFileName .= '.' . $fileNameParts[1];
+            }
         }
 
         $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);

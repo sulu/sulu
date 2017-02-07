@@ -25,7 +25,9 @@ Feature: Content type media selection
         When I click the action icon
         And I wait a second
         And I click on the element ".masonry-item:nth-child(1) .custom-checkbox input"
-        And I click the close icon in container ".media-selection-overlay-content"
+        And I confirm
         Then I expect to see "1" ".items-list li" elements
         And I click the save icon
+        And I click toolbar item "savePublish"
+        And I confirm
         And I expect a success notification to appear

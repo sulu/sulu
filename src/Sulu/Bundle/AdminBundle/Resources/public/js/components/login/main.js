@@ -77,7 +77,6 @@ define([], function() {
             forgotPasswordSwitchClass: 'forgot-password-switch',
             loginSwitchClass: 'login-switch-span',
             loginButtonId: 'login-button',
-            loginSubmitButtonId: 'login-submit',
 
             requestResetMailButtonId: 'request-mail-button',
             resendResetMailButtonId: 'resend-mail-button',
@@ -122,12 +121,11 @@ define([], function() {
                     '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                     '       </div>',
                     '       <input type="hidden" name="_csrf_token" id="_csrf_token" value="', this.options.csrfToken, '"/>',
-                    '       <input type="submit" id="' + constants.loginSubmitButtonId + '" value="Submit"/>',
+                    '       <div class="grid-row small box-frame-footer">',
+                    '           <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
+                    '           <div id="' + constants.loginButtonId + '" class="btn action large fit"><%= login %></div>',
+                    '       </div>',
                     '   </form>',
-                    '   <div class="grid-row small box-frame-footer">',
-                    '       <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
-                    '       <div id="' + constants.loginButtonId + '" class="btn action large fit"><%= login %></div>',
-                    '   </div>',
                     '</div>'
                 ].join('');
             },
@@ -417,8 +415,7 @@ define([], function() {
          * Bind login-frame related dom events
          */
         bindLoginDomEvents: function() {
-            this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.inputFormKeyHandler.bind(this, this.dom.$loginFrame));
+            this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.inputFormKeyHandler.bind(this, this.dom.$loginForm));
             this.sandbox.dom.on(this.dom.$forgotPasswordSwitch, 'click', this.moveToForgotPasswordFrame.bind(this));
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
 
@@ -468,8 +465,17 @@ define([], function() {
          * Handle click on login-button in login-frame
          */
         loginButtonClickHandler: function() {
-            // click hidden submit-button to provide password-saving in internet-explorer
-            $('#' + constants.loginSubmitButtonId).click();
+            var username = this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm)),
+                password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm)),
+                csrfToken = $('#_csrf_token').val();
+
+            if (username.length === 0 || password.length === 0) {
+                this.displayLoginError();
+            } else {
+                this.login(username, password, csrfToken);
+            }
+
+            return false;
         },
 
         /**
@@ -526,22 +532,6 @@ define([], function() {
                 return false;
             }
             this.resendResetMail();
-        },
-
-        /**
-         * Handles submit event of login-form in login-frame
-         */
-        loginFormSubmitHandler: function() {
-            var username = this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm)),
-                password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm)),
-                csrfToken = $('#_csrf_token').val();
-            if (username.length === 0 || password.length === 0) {
-                this.displayLoginError();
-            } else {
-                this.login(username, password, csrfToken);
-            }
-
-            return false;
         },
 
         /**
@@ -776,7 +766,6 @@ define([], function() {
 
             //set input cursor to end of input-value
             input.setSelectionRange(this.sandbox.dom.val(input).length, this.sandbox.dom.val(input).length);
-
         }
     };
 });

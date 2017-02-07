@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Creates default routes in PHPCR for webspaces.
+ *
+ * @deprecated Use the sulu:document:initialize command instead
  */
 class WebspacesInitCommand extends ContainerAwareCommand
 {
@@ -25,11 +27,18 @@ class WebspacesInitCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:webspaces:init')
             ->addOption('user-id', 'u', InputOption::VALUE_OPTIONAL, '', 1)
-            ->setDescription('Creates default nodes in PHPCR for webspaces');
+            ->setDescription('Creates default nodes in PHPCR for webspaces (deprecated)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('sulu_document_manager.initializer')->initialize($output);
+        $output->writeln(
+            $this->getHelper('formatter')->formatBlock(
+                'DEPRECATED: This command is deprecated. use sulu:document:initialize instead',
+                'comment',
+                true
+            )
+        );
+        $this->getContainer()->get('sulu_core.webspace.document_manager.webspace_initializer')->initialize($output);
     }
 }

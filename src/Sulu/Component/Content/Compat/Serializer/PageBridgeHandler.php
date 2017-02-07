@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -14,7 +15,6 @@ use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\VisitorInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -25,8 +25,19 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
  */
 class PageBridgeHandler implements SubscribingHandlerInterface
 {
+    /**
+     * @var StructureMetadataFactory
+     */
     private $structureFactory;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
     private $propertyFactory;
 
     public function __construct(
@@ -72,6 +83,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         $context->accept(
             [
                 'document' => $bridge->getDocument(),
+                'documentClass' => get_class($bridge->getDocument()),
                 'structure' => $bridge->getStructure()->getName(),
             ]
         );
@@ -91,10 +103,8 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $document = $context->accept($data['document'], ['name' => PageDocument::class]);
-
+        $document = $context->accept($data['document'], ['name' => $data['documentClass']]);
         $structure = $this->structureFactory->getStructureMetadata('page', $data['structure']);
-
         $bridge = new PageBridge($structure, $this->inspector, $this->propertyFactory, $document);
 
         // filthy hack to set the Visitor::$result to null and force the

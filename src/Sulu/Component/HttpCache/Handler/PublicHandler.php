@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use Sulu\Component\Content\Compat\PageInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +22,13 @@ use Symfony\Component\HttpFoundation\Response;
  * Set standard cache settings on the response.
  * Includes the TTL of the structure.
  */
-class PublicHandler implements
-    HandlerUpdateResponseInterface
+class PublicHandler implements HandlerUpdateResponseInterface
 {
+    /**
+     * @var CacheLifetimeResolverInterface
+     */
+    private $cacheLifetimeResolver;
+
     /**
      * @var int
      */
@@ -40,11 +45,18 @@ class PublicHandler implements
     private $usePageTtl;
 
     /**
-     * @param int $maxAge       Cache max age in seconds
+     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
+     * @param int $maxAge Cache max age in seconds
      * @param int $sharedMaxAge Cache shared max age in seconds
+     * @param bool $usePageTtl Use page TTL
      */
-    public function __construct($maxAge = 240, $sharedMaxAge = 960, $usePageTtl = true)
-    {
+    public function __construct(
+        CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        $maxAge = 240,
+        $sharedMaxAge = 960,
+        $usePageTtl = true
+    ) {
+        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->maxAge = $maxAge;
         $this->sharedMaxAge = $sharedMaxAge;
         $this->usePageTtl = $usePageTtl;
@@ -59,8 +71,14 @@ class PublicHandler implements
             return;
         }
 
+        $cacheLifetimeData = $structure->getCacheLifeTime();
+        $cacheLifetime = $this->cacheLifetimeResolver->resolve(
+            $cacheLifetimeData['type'],
+            $cacheLifetimeData['value']
+        );
+
         // when structure cache-lifetime disabled - return
-        if ((int) $structure->getCacheLifeTime() === 0) {
+        if (0 === $cacheLifetime) {
             return;
         }
 
@@ -72,9 +90,8 @@ class PublicHandler implements
         $response->setSharedMaxAge($this->sharedMaxAge);
 
         $proxyTtl = $this->usePageTtl ?
-            $response->getAge() + intval($structure->getCacheLifeTime()) :
-            $response->getAge()
-        ;
+            $response->getAge() + $cacheLifetime :
+            $response->getAge();
 
         // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...)
         $response->headers->set(HttpCache::HEADER_REVERSE_PROXY_TTL, $proxyTtl);

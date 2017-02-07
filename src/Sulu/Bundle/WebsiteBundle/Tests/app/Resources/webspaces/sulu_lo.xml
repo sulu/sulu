@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webspace xmlns="http://schemas.sulu.io/webspace/webspace"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
     <localizations>
-        <localization language="en" shadow="auto">
-            <localization language="en" country="us" shadow="auto"/>
-        </localization>
+        <localization language="en"/>
     </localizations>
 
-    <theme>
-        <key>default</key>
-        <default-templates>
-            <default-template type="page">default</default-template>
-            <default-template type="homepage">overview</default-template>
-        </default-templates>
-    </theme>
+    <theme>default</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
 
     <navigation>
         <contexts>
@@ -35,37 +32,35 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>Sulu CMF</name>
             <key>sulucmf</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
-                <localization language="en" country="us" default="true"/>
+                <localization language="en"/>
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="en" country="us">sulu.at</url>
-                        <url redirect="sulu.at">www.sulu.at</url>
+                        <url language="en">sulu.lo</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url language="en" country="us">sulu.lo</url>
-                        <url language="en" country="us">localhost</url>
-                        <url redirect="sulu.lo">sulu-redirect.lo</url>
+                        <url language="en">sulu.lo</url>
+                        <url language="en">localhost</url>
                     </urls>
                 </environment>
                 <environment type="test">
                     <urls>
-                        <url language="en" country="us">sulu.lo</url>
-                        <url language="en" country="us">localhost</url>
-                        <url redirect="sulu.lo">sulu-redirect.lo</url>
+                        <url language="en">sulu.lo</url>
+                        <url language="en">localhost</url>
                     </urls>
                 </environment>
             </environments>

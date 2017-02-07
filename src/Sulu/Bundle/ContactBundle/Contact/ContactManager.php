@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,6 +26,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -49,12 +50,18 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     private $contactRepository;
 
     /**
+     * @var MediaRepositoryInterface
+     */
+    protected $mediaRepository;
+
+    /**
      * @param ObjectManager $em
      * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
      * @param AccountRepository $accountRepository
      * @param ContactTitleRepository $contactTitleRepository
      * @param ContactRepository $contactRepository
+     * @param MediaRepositoryInterface $mediaRepository
      */
     public function __construct(
         ObjectManager $em,
@@ -62,12 +69,14 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         MediaManagerInterface $mediaManager,
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
-        ContactRepository $contactRepository
+        ContactRepository $contactRepository,
+        MediaRepositoryInterface $mediaRepository
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
+        $this->mediaRepository = $mediaRepository;
     }
 
     /**
@@ -210,9 +219,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
          * iteration the logic was just moved from the Controller to this class due
          * to better reusability.
          */
-        $firstName = $this->getProperty($data, 'firstName');
-        $lastName = $this->getProperty($data, 'lastName');
-        $avatar = $this->getProperty($data, 'avatar');
 
         if ($id) {
             /** @var Contact $contact */
@@ -255,31 +261,42 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $contact = $this->contactRepository->createNew();
         }
 
-        if (!$patch || $firstName !== null) {
-            $contact->setFirstName($firstName);
+        if (!$patch || $this->getProperty($data, 'firstName') !== null) {
+            $contact->setFirstName($this->getProperty($data, 'firstName'));
         }
-        if (!$patch || $lastName !== null) {
-            $contact->setLastName($lastName);
+        if (!$patch || $this->getProperty($data, 'lastName') !== null) {
+            $contact->setLastName($this->getProperty($data, 'lastName'));
         }
-        if (!$patch || $avatar !== null) {
-            $this->setAvatar($contact, $avatar);
+        if (!$patch || $this->getProperty($data, 'avatar') !== null) {
+            $this->setAvatar($contact, $this->getProperty($data, 'avatar'));
         }
-
-        // Set title relation on contact
-        $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
-        $formOfAddress = $this->getProperty($data, 'formOfAddress');
-        if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
-            $contact->setFormOfAddress($formOfAddress['id']);
+        if (!$patch || $this->getProperty($data, 'medias') !== null) {
+            $this->setMedias($contact, $this->getProperty($data, 'medias', []));
         }
 
-        $salutation = $this->getProperty($data, 'salutation');
-        if (!empty($salutation)) {
-            $contact->setSalutation($salutation);
+        if (!$patch || $this->getProperty($data, 'title')) {
+            $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
         }
 
-        $birthday = $this->getProperty($data, 'birthday');
-        if (!empty($birthday)) {
-            $contact->setBirthday(new DateTime($birthday));
+        if (!$patch || $this->getProperty($data, 'formOfAddress')) {
+            $formOfAddress = $this->getProperty($data, 'formOfAddress');
+            if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
+                $contact->setFormOfAddress($formOfAddress['id']);
+            }
+        }
+
+        if (!$patch || $this->getProperty($data, 'salutation')) {
+            $contact->setSalutation($this->getProperty($data, 'salutation'));
+        }
+
+        if (!$patch || $this->getProperty($data, 'birthday')) {
+            $birthday = $this->getProperty($data, 'birthday');
+            if (!empty($birthday)) {
+                $birthday = new DateTime($birthday);
+            } else {
+                $birthday = null;
+            }
+            $contact->setBirthday($birthday);
         }
 
         if (!$id) {
@@ -507,14 +524,57 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @param Contact $contact
      * @param array $avatar with id property
+     *
+     * @throws EntityNotFoundException
      */
     private function setAvatar(Contact $contact, $avatar)
     {
         $mediaEntity = null;
         if (is_array($avatar) && $this->getProperty($avatar, 'id')) {
-            $mediaEntity = $this->mediaManager->getEntityById($this->getProperty($avatar, 'id'));
+            $mediaId = $this->getProperty($avatar, 'id');
+            $mediaEntity = $this->mediaRepository->findMediaById($mediaId);
+
+            if (!$mediaEntity) {
+                throw new EntityNotFoundException($this->mediaRepository->getClassName(), $mediaId);
+            }
         }
         $contact->setAvatar($mediaEntity);
+    }
+
+    /**
+     * Sets the medias of the given contact to the given medias.
+     * Currently associated medias are replaced.
+     *
+     * @param Contact $contact
+     * @param $medias
+     *
+     * @throws EntityNotFoundException
+     */
+    private function setMedias(Contact $contact, $medias)
+    {
+        $mediaIds = array_map(
+            function ($media) {
+                return $media['id'];
+            },
+            $medias
+        );
+
+        $foundMedias = $this->mediaRepository->findById($mediaIds);
+        $foundMediaIds = array_map(
+            function ($mediaEntity) {
+                return $mediaEntity->getId();
+            },
+            $foundMedias
+        );
+
+        if ($missingMediaIds = array_diff($mediaIds, $foundMediaIds)) {
+            throw new EntityNotFoundException($this->mediaRepository->getClassName(), reset($missingMediaIds));
+        }
+
+        $contact->getMedias()->clear();
+        foreach ($foundMedias as $media) {
+            $contact->addMedia($media);
+        }
     }
 
     /**

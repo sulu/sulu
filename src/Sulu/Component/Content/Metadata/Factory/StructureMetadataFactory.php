@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -89,18 +89,14 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $structureType = $this->getDefaultStructureType($type);
         }
 
-        if (!is_string($structureType)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected string for structureType, got: %s',
-                    is_object($structureType) ? get_class($structureType) : gettype($structureType)
-                )
-            );
+        if (!$structureType) {
+            return;
         }
 
         $cachePath = sprintf(
-            '%s/%s%s',
+            '%s%s%s%s',
             $this->cachePath,
+            DIRECTORY_SEPARATOR,
             Inflector::camelize($type),
             Inflector::camelize($structureType)
         );
@@ -131,14 +127,12 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $resources = [new FileResource($filePath)];
 
             $cache->write(
-                sprintf('<?php $metadata = \'%s\';', serialize($metadata)),
+                serialize($metadata),
                 $resources
             );
         }
 
-        require $cachePath;
-
-        $structure = unserialize($metadata);
+        $structure = unserialize(file_get_contents($cachePath));
 
         $this->cache[$cacheKey] = $structure;
 
@@ -246,17 +240,12 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      *
      * @param string $type
      *
-     * @return string
+     * @return string|null
      */
     private function getDefaultStructureType($type)
     {
         if (!isset($this->defaultTypes[$type])) {
-            throw new \RuntimeException(
-                sprintf(
-                    'No structure type was available and no default exists for document with alias "%s"',
-                    $type
-                )
-            );
+            return;
         }
 
         return $this->defaultTypes[$type];

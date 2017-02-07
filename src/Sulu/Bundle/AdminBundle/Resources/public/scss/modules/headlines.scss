@@ -1,3 +1,5 @@
+// Colors
+$contentTitleBorderColor: $grayLighterer !default;
 
 /** header options menu toggle **/
 /** ========================== **/
@@ -5,22 +7,33 @@
     .option-dropdown-toggler
 **/
 .options-dropdown-container {
-  display: none;
+    display: none;
 
-  &.is-active {
-    display: block;
-  }
-  span {
-    background-color: $baseBackgroundColor;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
+    &.is-active {
+        display: block;
+    }
+    span {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
 }
 
 .options-dropdown-toggler {
-  &:hover {
-    .options-dropdown-container {
-      display: block;
+    &:hover {
+        .options-dropdown-container {
+            display: block;
+        }
     }
-  }
+}
+
+.content-title {
+    h2 {
+        margin-bottom: 0;
+    }
+
+    &.underlined {
+        border-bottom: 2px solid $contentTitleBorderColor;
+    }
+
+    margin-bottom: 30px;
 }

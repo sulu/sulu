@@ -1,5 +1,843 @@
 # Upgrade
 
+## dev-develop
+
+### Twig 2
+
+If you upgrade twig to version 2 please read follow
+[this instructions](http://twig.sensiolabs.org/doc/1.x/deprecated.html).
+
+The most important change is ``_self`` for calling macros. You have to import it before using.
+
+__Before:__
+```twig
+{ _self.macro_name() }}
+```
+
+__After:__
+```twig
+{% import _self as self %}
+{ self.macro_name() }}
+```
+
+If you dont want to use twig2 please add following line to your ``composer.json``:
+
+```json
+"require": {
+    ...
+    "twig/twig": "^1.11"
+}
+```
+
+### Deprecations
+
+Following classes and methods were removed because of deprecations:
+
+* Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlVoter
+* Sulu\Component\Rest\RestController::responsePersistSettings
+* Sulu\Component\Rest\RestController::responseList
+* Sulu\Component\Rest\RestController::createHalResponse
+* Sulu\Component\Rest\RestController::getHalLinks
+* Sulu\Bundle\WebsiteBundle\DefaultController::redirectAction
+* Sulu\Bundle\WebsiteBundle\DefaultController::redirectWebspaceAction
+
+Additionally the GeneratorBundle was removed because it was not maintained since a while.
+You have to remove the Bundle from you Kernels.
+
+## 1.4.3
+
+### Multiple properties in template
+
+There was a bug in the template definition for the `minOccurs` field. It was
+not working if the `minOccurs` field had a value of `1`. So if you have a field
+like the following and you don't want it to be a multiple field you have to
+remove the `minOccurs` property:
+
+```xml
+    <property name="test1" type="text_line" minOccurs="2"></property>
+```
+
+### Format cache
+
+To generate the correct file extension the `FormatManager::purge` interface
+has changed.
+
+```diff
+-    public function purge($idMedia, $fileName, $options)
++    public function purge($idMedia, $fileName, $mimeType, $options)
+```
+
+## 1.4.2
+
+### Security Context
+
+The length of the security context was rather short (only 60 character). The
+length has been increased to 255 characters, to also allow longer webspace
+names. Execute the `doctrine:schema:update --force` command to update the
+database schema.
+
+### Webspace keys
+
+Webspace keys are only allowed to have lower case letters, numbers and `-` or
+`_`. Other characters might cause problems and are therefore already restricted
+in the XSD file. If you have other characters you have to rename your webspace.
+
+In case you have to you also must rename the `/cmf/<webspace>` e.g. using the
+PHPCR shell and reconfigure your role permissions. You should also clear the
+search index with the `massive:search:purge` command and reindex with the
+`massive:search:reindex` command.
+
+## 1.4.0
+
+### Ports in webspace config
+
+From now on the the port has to be a part of the URL in the webspace
+configuration. So if you are running your website on a different port than the
+default port of the protocol you are using, you have to change the webspace
+config. The port must still be omitted when the `{host}` placeholder is used.
+
+## 1.4.0-RC2
+
+### Admin User Settings
+
+The method `sulu.loadUserSetting()` was removed from the Sulu Aura.js extension located in `Sulu/Bundle/AdminBundle/Resources/public/js/aura_extensions/sulu-extension.js`. 
+Instead the method `sulu.getUserSetting()` should be used, which provides same functionality, but is called differently (no need to provide neither URL nor callback in addition to the key).
+
+ 
+### Media StorageInterface
+
+The `StorageInterface` in the `Sulu\Bundle\MediaBundle\Media\Storage` namespace
+got a new `loadAsString` method, which should return the file for the given
+parameters as a binary string. If you have already developed your own storage
+implementation you have to add this method.
+
+### Page-Templates
+
+The cache-lifetime of page-templates was extended by the `type` attribute.
+This attribute is optional and default set to seconds which behaves like
+before and set the `max-age` to given integer.
+
+There is now a second type `expression` which allows you to define the
+lifetime with a cron-expression which enhances the developer to define
+that a page has to be invalidated at a specific time of the day (or
+whatever you need).
+
+__BEFORE:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+__NOW:__
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluContentBundle:Default:index</controller>
+
+    <!-- releases cache each day at mitnight -->
+    <cacheLifetime type="expression">@daily</cacheLifetime>
+    
+    ...
+    
+</template>
+```
+
+Therefor we changed the type of the return value for `Sulu\Component\Content\Compat\StructureInterface::getCacheLifeTime`
+to array. This array contains the `type` and the `value` of the configured
+cache-lifetime.
+
+For resolving this array to a concrete second value we introduced the service
+`sulu_http_cache.cache_lifetime.resolver` there you can call the `resolve`
+function which returns the concrete second value.
+
+## 1.4.0-RC1
+
+### Refactored category management in backend
+
+The backend of the category bundle was refactored and the category related entities were implemented extensible.
+This lead to the following changes:
+
+**API:**
+`/categories`: renamed parameter `parent` which accepted an id to `rootKey` which accepts a key
+`/categories/{key}/children` was replaced with `/categories/{id}/children`
+
+**Classes:**
+`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface` 
+`Category\KeywordRepositoryInterface` moved to `Entity\KeywordRepositoryInterface`
+`Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException` 
+`Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException` 
+`Category\Exception\KeyNotUniqueException` was replaced with `Exception\CategoryKeyNotUniqueException` 
+
+**Methods:**
+Removed: `Api\Category::setName($name)`
+Replacement: `Api\Category::setTranslation(CategoryTranslationInterface $translation)`
+Reason: The api-entity cannot create a translation-entity as the translation-entity is implemented extensible.
+
+Removed: `Api\Category::setMeta($metaArrays)`
+Replacement: `Api\Category::setMeta($metaEntities)`
+Reason: The api-entity cannot create a meta-entity as the meta-entity is implemented extensible.
+
+Deprecated: `CategoryRepositoryInterface::findCategoryByIds(array $ids)`
+Replacement: `CategoryRepositoryInterface::findCategoriesByIds(array $ids)`
+
+Deprecated: `CategoryRepositoryInterface::findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentId($parentId = null)`
+
+Deprecated: `CategoryRepositoryInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryRepositoryInterface::findChildrenCategoriesByParentKey($parentKey = null)`
+
+Deprecated: `CategoryManagerInterface::find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentId($parentId = null)`
+
+Deprecated: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortOrder = null)`
+Replacement: `CategoryManagerInterface::findChildrenByParentKey($parentKey = null)`
+
+**Container Parameters/Definitions:**
+Deprecated: `sulu_category.entity.category` 
+Replacement: `sulu.model.category.class` 
+
+Deprecated: `sulu_category.entity.keyword`
+Replacement: `sulu.model.keyword.class`
+
+Deprecated: `sulu_category.category_repository`
+Replacement: `sulu.repository.category`
+
+Deprecated: `sulu_category.keyword_repository`
+Replacement: `sulu.repository.keyword`
+
+**Extensibility**
+Every association of the `Category` entity must be of the type `CategoryInterface` to ensure extensibility
+Every association of the `CategoryTranslation` entity must be of the type `CategoryTranslationInterface` to ensure extensibility
+Every association of the `CategoryMeta` entity must be of the type `CategoryMetaInterface` to ensure extensibility
+Every association of the `Keyword` entity must be of the type `KeywordInterface` to ensure extensibility
+
+### New definition mechanism for image-formats
+
+A new structure for the image-formats configuration files was introduced.
+For an explanation on how to define image-formats in the new way please
+refer to the documentation (http://docs.sulu.io/en/latest/book/image-formats.html).
+
+Out of the box, image-formats defined in the old way do still work,
+but the `XMLLoader` and commands are marked as deprecated.
+However when using more profound functionality regarding the image-formats,
+there are some BC breaks:
+
+#### `sulu_media.image_format_file` changed to `sulu_media.image_format_files`
+The configuration `sulu_media.image_format_file` of the MediaBundle
+was changed to `sulu_media.image_format_files` and the type was changed
+from a scalar to an array.
+
+#### "Command" renamed to "Transformation"
+Internally the concept of a command on an image was renamed to 
+"transformation". This renaming was consequently executed throughout the
+MediaBundle. This BC break is only important when custom commands have
+been created. To update the custom commands (now transformations) they now have
+to implement the `TransformationInterface` instead of the `CommandInterface`.
+Moreover the service tag under which a transformation gets registered changed
+from `sulu_media.image.command` to `sulu_media.image.transformation`. The namespaces
+containing "Command" were changed to contain "Transformation" instead.
+Note that there was a slight change in the `TransformationInterface` itself.
+The `execute` method has to return an image and the passed parameter is not
+a reference anymore.
+
+#### Array structure of `sulu_media.image.formats`
+The structure of the arrays in which the formats are stored under
+the symfony parameter `sulu_media.image.formats` changed. `name` was
+renamed to `key`, `commands` was renamed to `transformation` and consequently
+`command` to `transformation.`. In addition the first `scale` or `resize` command
+is now not contained in the `commands` array anymore, but represented by the `scale`
+sub-array of the format.
+
+### ListRestHelper
+
+The `ListRestHelper` has changed its constructor, it takes the `RequestStack`
+instead of a `Request` now.
+
+### RouteGenerator
+
+The configuration for the route-generator has changed:
+
+**Before:**
+```
+sulu_route:
+    mappings:
+        AppBundle\Entity\Example:
+            route_schema: /example/{object.getTitle()}
+```
+
+**After:**
+```
+sulu_route:
+    mappings:
+        AppBundle\Entity\Example:
+            generator: schema
+            options:
+                route_schema: /example/{object.getTitle()}
+```
+
+### Data-Navigation
+
+The class `DataNavigationItem` got removed and is not supported
+anymore. Please use other forms of navigating instead.
+
+## 1.3.1
+
+If Sulu is used in combination with a port, the port has to be included in the
+URLs of the webspace configuration. So if you want to use Sulu on port 8080 the
+configuration has to look like this:
+
+```xml
+<url>sulu.lo:8080/{localization}</url>
+```
+
+The port can still be emitted if the standard HTTP or HTTPS port is used.
+
+## 1.3.0-RC3
+
+### Resource-locator generation
+
+The `generate` method of the `RlpStrategyInterface` uses `parentUuid` instead of `parentPath` now.
+The signature changed from
+`public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);`
+to
+`public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);`
+
+Also the `generateForUuid` method of the `RlpStrategyInterface` got removed.
+
+### 190x Image Format
+
+The image format "190x" got removed as it was only used in and old
+design. If this format is needed for a website please redefine it
+in the corresponding config file.
+
+### Address country is nullable
+
+To make it easier to migrate data the country in the address entity is now nullable in sulu.
+
+```sql
+ALTER TABLE co_addresses CHANGE idCountries idCountries INT DEFAULT NULL;
+```
+
+### Databases
+
+#### ORM
+
+The mapping structure of analytic settings have changed.
+Use the following command to update:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+## 1.3.0-RC2
+
+### RestController locale
+
+The `getLocale` method of the RestController returned the locale
+of the user (a system locale), if no request parameter with the name
+`locale` was passed. As RestControllers most often provide access
+to content in content locales and not in system locales,
+this behaviour was removed. The `getLocale` method now just returns
+a possibly passed request parameter named `locale` or null.
+If a locale is needed for sure, the `getLocale` method needs to be
+overwritten. It is also advised to override the method, if in no
+case locales are needed.
+
+### SearchController
+
+The `SearchController` has been moved from sulu-standard to sulu. Therefore the
+new template type `search` has been introduced. Just define the twig template
+you want to use for the search in your webspace configuration:
+
+```xml
+<templates>
+    <template type="search">ClientWebsiteBundle:views:query.html.twig</template>
+</templates>
+```
+
+The name of the route also changed from `website_search` to
+`sulu_search.website_search`, because the controller is located in the
+SuluSearchBundle now.
+
+### Removed HTTP Cache Paths-Handler
+
+The HTTP Cache Integration has been refactored. The following configuration
+is not available anymore and must be removed: `sulu_http_cache.handlers.paths`
+
+### Webspace Configuration
+
+The configuration schema for webspaces has changed. Instead of
+`error-templates` you have to define `templates` now with a certain type.
+For the error templates this type is `error` for the default error, and
+`error-<code>` for certain error codes.
+
+Before:
+```xml
+<error-templates>
+    <error-template code="404">SomeBundle:view:error404.html.twig</error-template>
+    <error-template default="true">SomeBundle:view:error.html.twig</error-template>
+</error-templates>
+```
+
+After:
+```xml
+<templates>
+    <template type="error-404">SomeBundle:views:error404.html.twig</template>
+    <template type="error">SomeBundle:views:error.html.twig</template>
+</templates>
+```
+
+And the `resource-locator` node has moved from `portal` to `webspace`. 
+
+This change only affects the files which use the 1.1 version of the webspace
+schema definition.
+
+## 1.3.0-RC1
+
+### Image Formats
+The image format "150x100" as well as the format "200x200" got removed
+from the backend formats. If a website relied on this format,
+it should be - as all image formats a website needs - defined
+in the theme specific config file.
+(http://docs.sulu.io/en/latest/book/creating-a-basic-website/configuring-image-formats.html)
+
+### PHPCR
+To adapt to the new PHPCR structure execute the migrations:
+
+```
+app/console phpcr:migrations:migrate
+```
+
+### Media selection overlay
+The frontend component 'media-selection-overlay@sulumedia' got removed,
+please use 'media-selection/overlay@sulumedia' instead.
+
+### NodeRepository
+
+The `orderBefore` method of the `NodeRepository` has been removed. Use the
+`reorder` method of the `DocumentManager` instead.
+
+### LocalizationProvider
+The core LocalizationProvider (which provided the system locales)
+got removed. At this point the WebspaceLocalizationProvider is the
+only LocalizationProvider in Sulu. If the system locales 
+(locales in which translations for the admin panel are available) are
+needed, please refer directly to the config `sulu_core.translations`.
+
+### Translations
+The command `sulu:translate:import` got removed, as the export command
+(`sulu:translate:export`) now takes its translations directly from
+the translation files and not from the database anymore. This change
+would only cause conflicts, if one had a dependency directly on the
+translations in the database. If so, please use the files in the
+`Resources` folders.
+
+### Publishing
+
+For the publishing a separate workspace was introduced. This workspace
+will be created and correctly filled by the PHPCR migrations.
+
+Because the search index is now split into draft and live pages you have
+to reindex all the content:
+
+```bash
+app/console massive:search:purge --all
+app/console massive:search:reindex
+app/webconsole massive:search:reindex
+```
+
+Also the `persist` call of the `DocumentManager` changed it behavior.
+After persisting a document it will not be available on the website
+immediately. Instead you also need to call `publish` with the same
+document and locale.
+
+### PHPCR Sessions
+
+The sessions for PHPCR were configured at `sulu_core.phpcr` in the
+configuration. This happens now at `sulu_document_manager.sessions`. You can
+define multiple sessions here using different names and refer to one of them as
+default session using the `sulu_document_manager.default_session` and to
+another as live session using the `sulu_document_manager.live_session`.
+
+### Documemt Manager Initializer
+
+The `initialize` method of the `InitializerInterface` has now also a `$purge`
+parameter, which tells the initializer if it should purge something. The
+Initializer can use this information or simply ignore it, but existing
+Initializers have to adapt to the new interface.
+
+### Twig variable `request.routeParameters` removed
+
+The `request.routeParameters` variable has been removed because it is not longer required when generate an url.
+
+**Before**
+
+```twig
+{{ path('client_website.search', request.routeParameters) }}
+```
+
+**After**
+
+```twig
+{{ path('client_website.search') }}
+```
+
+### TitleBehavior is not localized anymore
+
+If you have implemented your own Documents with an `TitleBehavior`,
+you will recognize that the title in PHPCR is not translated anymore.
+If you still want this Behavior you have to switch to the
+`LocalizedTitleBehavior`.
+
+### Indexing title of pages for search
+
+It was possible to define that the title field of a page should be
+indexed as title, although this value was already the default:
+
+```
+<property name="title" type="text_line" mandatory="true">
+    <meta>
+        <title lang="en">Title</title>
+    </meta>
+    <tag name="sulu.search.field" type="string" role="title" />
+</property>
+ ```
+
+ This setting does not work anymore, because the title is now handled
+ separately from the rest of the structure, and the title is not indexed
+ anymore with this tag. Just remove it, and it will be the same as
+ before.
+
+### Webspaces
+
+We have deprecated (1.0) the schema for webspaces and created a new version (1.1) of it. 
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+          
+          ...
+          
+</webspace>
+```
+
+You should update your webspace.xml files soonish. To do that you simply have to move the `default-templates` and
+`error-templates` from the `theme` node and put it into the `webspace` node after the `theme`.
+ 
+The theme is now optional and can be used with a theme-bundle. Sulu has extracted this functionality to make it
+replaceable with any theming bundle you want. To keep the old directory-structure and functionality please read the
+next part of this file.
+
+### Theming
+
+If you have multiple themes (or you don't want to change the folder structure of you project) you have to include the
+bundle https://github.com/sulu/SuluThemeBundle in your abstract kernel.
+
+This bundle contains all the code which is necessary to use theming in your application.
+
+### Configuration
+
+The configuration of `sulu_content.preview` and `sulu_website.preview_defaults` has been moved to:
+
+```
+$ app/console config:dump-reference sulu_preview
+# Default configuration for extension with alias: "sulu_preview"
+sulu_preview:
+    defaults:
+        analytics_key:        UA-SULU-PREVIEW-KEY
+    error_template:       ~ # Example: ClientWebsiteBundle:Preview:error.html.twig
+    mode:                 auto
+
+    # Used for the delayed send of changes
+    delay:                500
+```
+
+The flag `sulu_content.preview.websocket` has been replaced with `sulu_websocket.enabled`. This flag is
+now default `false`.
+
+### Content-Types
+
+The Interface or content-types has been cleaned. The function `ContentTypeInterface::readForPreview` will never
+be called in the future and can therefor be removed.
+
+## 1.2.7
+
+### Default Country
+
+The default country for addresses in the ContactBundle is set by the ISO 3166 country-code
+instead the of database-id now.
+
+## 1.2.4
+
+### ContactRepository
+
+A Interface for the ContactRepository has been created. Due to the refactoring
+the function `appendJoins` has been changed from public to protected.
+Therefore this function cannot be called anymore.
+
+## 1.2.1
+
+### UserRepository
+
+The methods from the `UserProviderInterface` of Symfony have been moved to a
+separate `UserProvider` implementation. Also, the `getUserInSystem` method
+has been renamed to `findUserBySystem` and takes the system as an argument.
+
+If you want to use the `Sulu` system you should inject the
+`sulu_security.system` container parameter instead of hardcoding it.
+
+## 1.2.0
+
+### sulu_content_path
+src/Sulu/Bundle/WebsiteBundle/Resources/config/services.xml
+The twig function `sulu_content_path('/path')` now always returning the full-qualified-domain
+`http://www.sulu.io/de/path`.
+
+### Custom-Routes
+
+The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
+and pass the host and prefix in the parameter. The current parameter will be populated in the variable
+`request.routeParameters`.
+
+__before:__
+```
+{{ path(request.portalUrl ~'.'~ request.locale ~ '.website_search') }}
+```
+
+__after:__
+```
+{{ path('website_search', request.routeParameters) }}
+```
+
+### Admin
+
+The navigation entry with the empty name wont be used in sulu anymore. It should be replaced by:
+
+__before:__
+
+```php
+    $section = new NavigationItem('');
+```
+
+__after:__
+
+```php
+    $section = new NavigationItem('navigation.modules');
+```
+
+### Twig function `sulu_resolve_user`
+
+This twig function returns now the user. To get the related contact use following code snippet:
+
+```twig
+{{ sulu_resolve_user(userId).contact.fullName }}
+```
+
+### Webspace validation
+
+Webspaces which have unused localizations by portals will now be not valid and ignored. Remove this
+localizations or add them to a portal.
+
+### New security permission for cache
+ 
+To be able to clear the cache the user need the permission LIVE in the
+webspace context.
+
+### Document-Manager
+
+The Behaviors `TimestampBehavior` and `BlameBehavior` now save the values in the non-localized
+properties. To keep the old behavior use the `LocalizedTimestampBehavior` and 
+`LocalizedBlameBehavior` instead.
+
+### Deprecated sulu:phpcr:init and sulu:webspace:init
+
+The `sulu:phpcr:init` and `sulu:webspace:init` commands are now deprecated.
+Use the `sulu:document:initialize` command instead.
+
+### Definition of security contexts
+
+The definition of security contexts in the `Admin` classes has changed. They
+used to look like the following example:
+
+```php
+public function getSecurityContexts()
+{
+    return [
+        'Sulu' => [
+            'Media' => [
+                'sulu.media.collections',
+            ],
+        ],
+    ];
+}
+```
+
+Now you should also pass the permission types that you want to enable in the
+context:
+
+```php
+public function getSecurityContexts()
+{
+    return [
+        'Sulu' => [
+            'Media' => [
+                'sulu.media.collections' => [
+                    PermissionTypes::VIEW,
+                    PermissionTypes::ADD,
+                    PermissionTypes::EDIT,
+                    PermissionTypes::DELETE,
+                    PermissionTypes::SECURITY,
+                ],
+            ],
+        ],
+    ];
+}
+```
+
+By default, we will enable the permission types `VIEW`, `ADD`, `EDIT`, `DELETE`
+and `SECURITY` in your context.
+
+### Page search index
+
+The metadata for pages has changed. Run following command to update your search index
+
+```bash
+app/console massive:search:purge --all
+app/console massive:search:reindex
+```
+
+### Media uploads
+
+Write permissions for the webserver must be set on `web/uploads` instead of
+`web/uploads/media` alone to support simple cache clearing.
+
+### BlameSubscriber
+
+The BlameBehavior has been moved from the DocumentManager component to the
+Sulu Content component. Documents which implemented
+`Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior` should now
+implement `Sulu\Component\Content\Document\Behavior\BlameBehavior` instead.
+
+### Contact Entity is required for User
+
+When you create new `User` entities in your application it is required now
+that this user has a `Contact` entity. The following SQL will return you
+all users which have no contact entity. You need to update them manually.
+
+```sql
+SELECT * FROM se_users WHERE se_users.idContacts IS NULL 
+```
+
+### Admin Commands
+
+The method `getCommands` on the Admin has been removed, because Symfony can
+autodetect Commands in the `Command` directory of each bundle anyway. This only
+affects you, if you have not followed the Symfony standards and located your
+commands somewhere else.
+
+### WebsiteRequestAnalyzer
+
+The `Current`-part of all setters have been removed, because they have already
+been removed from the getters. This only affects you if you have overridden the
+`WebsiteRequestAnalyzer` and have called or overridden these methods.
+
+### Databases
+
+#### PHPCR
+
+A new namespace and additional system nodes were added. To create them run the following command:
+
+```bash
+app/console sulu:document:initialize
+```
+
+#### ORM
+
+The relational structure of categories, translations and users have changed. 
+Use the following command to update:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+It might be possible that foreign key checks have to be disabled for this update.
+
+### ContentNavigation & Navigation
+
+The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position set, the item
+will be placed behind all other items.
+
+```php
+$item = new ContentNavigationItem('content-navigation.entry');
+$item->setPosition(10);
+```
+
+## 1.1.10
+
+### Filter
+
+Update the schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
+ 
+```sql
+UPDATE re_conditions SET value = CONCAT('"', value, '"') WHERE value NOT LIKE '"%"';
+INSERT INTO `re_operators` (`id`, `operator`, `type`, `inputType`) VALUES
+    (16, 'and', 5, 'tags'),
+    (17, 'or', 5, 'tags'),
+    (18, '=', 6, 'auto-complete'),
+    (19, '!=', 6, 'auto-complete');
+INSERT INTO `re_operator_translations` (`id`, `name`, `locale`, `shortDescription`, `longDescription`, `idOperators`) VALUES
+    (35, 'gleich', 'de', NULL, NULL, 18),
+    (36, 'is', 'en', NULL, NULL, 18),
+    (37, 'ungleich', 'de', NULL, NULL, 19),
+    (38, 'is not', 'en', NULL, NULL, 19),
+    (39, 'und', 'de', NULL, NULL, 16),
+    (40, 'and', 'en', NULL, NULL, 16),
+    (41, 'oder', 'de', NULL, NULL, 17),
+    (42, 'or', 'en', NULL, NULL, 17);
+```
+
+Additionally the filter by country has changed. Run following SQL script to update your filter conditions:
+
+```sql
+UPDATE `re_conditions` SET `field` = 'countryId', `type` = 6, `value` = CONCAT('"', (SELECT `id` FROM `co_countries` WHERE `code` = REPLACE(`re_conditions`. `value`, '"', '') LIMIT 1), '"') WHERE `field` = 'countryCode' AND `operator` != 'LIKE';
+
+DELETE FROM `re_filters` WHERE `re_filters`.`id` IN (SELECT `re_condition_groups`.`idFilters` FROM `re_condition_groups` LEFT JOIN `re_conditions` ON `re_condition_groups`.`id` = `re_conditions`.`idConditionGroups` WHERE `re_conditions`.`operator` = 'LIKE');
+```
+
+Filter with a "like" condition for country (account and contact) will be lost after the upgrade because there is no
+functionality for that anymore.
+
+## 1.1.2
+
+### Reindex-Command & Date Content-Type
+
+First remove the version node `201511240844` with following command:
+
+```bash
+app/console doctrine:phpcr:node:remove /jcr:versions/201511240844
+```
+
+Then run the migrate command (`app/console phpcr:migrations:migrate`) to remove translated properties with non locale
+and upgrade date-values within blocks.
+
 ## 1.1.0
 
 ### IndexName decorators from MassiveSearchBundle
@@ -191,6 +1029,24 @@ __nested properties:__
     {% endif %}
 </div>
 ```
+
+### Content Type Export Interface added
+
+All default content type implement the new `ContentTypeExportInterface`.  
+Content types which were exportable need to implement this interface and tag for which export `format` they are available.  
+
+``` xml
+        <service id="client_website.content.type.checkbox" class="%client_website.content.type.checkbox.class%">
+            <tag name="sulu.content.type" alias="custom_checkbox"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+```
+
+### Extensions constructor changed
+
+Extensions can also be exportable for this they need to implement the new `ExportExtensionInterface`.  
+In the sulu excerpt extension the constructor changed, if you extend or overwrite this extension you maybe need to add
+the `sulu_content.export.manager` service to the constructor.
 
 ### ApiCategory
 The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories

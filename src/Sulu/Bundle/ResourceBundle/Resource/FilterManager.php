@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -234,7 +235,7 @@ class FilterManager implements FilterManagerInterface
             }
         }
 
-        if (array_key_exists('private', $data) &&  $data['private'] === true) {
+        if (array_key_exists('private', $data) && $data['private'] === true) {
             $filter->setPrivate($data['private']);
             $filter->setUser($user);
         } else {
@@ -322,6 +323,7 @@ class FilterManager implements FilterManagerInterface
                     $conditionEntity->setConditionGroup($conditionGroup);
                     $conditionGroup->addCondition($conditionEntity);
                     $this->em->persist($conditionEntity);
+                    $conditionIds[] = $conditionEntity->getId();
                 }
 
                 $conditionEntity->setField($this->getProperty($conditionData, 'field', $conditionEntity->getField()));

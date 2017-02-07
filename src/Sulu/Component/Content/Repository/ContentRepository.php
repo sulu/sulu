@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -13,12 +14,17 @@ namespace Sulu\Component\Content\Repository;
 use Jackalope\Query\QOM\PropertyValue;
 use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
@@ -40,9 +46,9 @@ class ContentRepository implements ContentRepositoryInterface
         'creator',
         'changed',
         'changer',
+        'published',
         'shadowOn',
         'shadowBase',
-        'url', // TODO non fix name in templates
     ];
 
     /**
@@ -76,6 +82,11 @@ class ContentRepository implements ContentRepositoryInterface
     private $localizationFinder;
 
     /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
      * @var SuluNodeHelper
      */
     private $nodeHelper;
@@ -85,12 +96,14 @@ class ContentRepository implements ContentRepositoryInterface
         PropertyEncoder $propertyEncoder,
         WebspaceManagerInterface $webspaceManager,
         LocalizationFinderInterface $localizationFinder,
+        StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper
     ) {
         $this->sessionManager = $sessionManager;
         $this->propertyEncoder = $propertyEncoder;
         $this->webspaceManager = $webspaceManager;
         $this->localizationFinder = $localizationFinder;
+        $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
 
         $this->session = $sessionManager->getSession();
@@ -111,7 +124,7 @@ class ContentRepository implements ContentRepositoryInterface
                 $this->qomFactory->literal($uuid)
             )
         );
-        $this->appendMapping($queryBuilder, $mapping, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         $rows = $queryBuilder->execute();
 
@@ -119,7 +132,7 @@ class ContentRepository implements ContentRepositoryInterface
             throw new ItemNotFoundException();
         }
 
-        return $this->resolveContent($rows->getRows()->current(), $locale, $webspaceKey, $mapping, $user);
+        return $this->resolveContent($rows->getRows()->current(), $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -137,9 +150,9 @@ class ContentRepository implements ContentRepositoryInterface
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
         $queryBuilder->where($this->qomFactory->childNode('node', $path));
-        $this->appendMapping($queryBuilder, $mapping, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -152,9 +165,9 @@ class ContentRepository implements ContentRepositoryInterface
         $queryBuilder->where(
             $this->qomFactory->childNode('node', $this->sessionManager->getContentPath($webspaceKey))
         );
-        $this->appendMapping($queryBuilder, $mapping, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -167,23 +180,27 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
         $path = $this->resolvePathByUuid($uuid);
+        if (empty($webspaceKey)) {
+            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($path);
+        }
+
+        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
             ->orderBy($this->qomFactory->propertyValue('node', 'jcr:path'))
             ->where($this->qomFactory->childNode('node', $path));
 
-        while ($path !== $contentPath) {
-            $path = dirname($path);
+        while (PathHelper::getPathDepth($path) > PathHelper::getPathDepth($contentPath)) {
+            $path = PathHelper::getParentPath($path);
             $queryBuilder->orWhere($this->qomFactory->childNode('node', $path));
         }
 
         $mapping->addProperties(['order']);
-        $this->appendMapping($queryBuilder, $mapping, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        $result = $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
+        $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
 
         return $this->generateTreeByPath($result);
     }
@@ -205,9 +222,75 @@ class ContentRepository implements ContentRepositoryInterface
                 $this->qomFactory->sameNode('node', $path)
             );
         }
-        $this->appendMapping($queryBuilder, $mapping, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, null, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByUuids(
+        array $uuids,
+        $locale,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
+        if (count($uuids) === 0) {
+            return [];
+        }
+
+        $locales = $this->getLocales();
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
+
+        foreach ($uuids as $uuid) {
+            $queryBuilder->orWhere(
+                $this->qomFactory->comparison(
+                    $queryBuilder->qomf()->propertyValue('node', 'jcr:uuid'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+                    $queryBuilder->qomf()->literal($uuid)
+                )
+            );
+        }
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
+    {
+        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
+
+        $locales = $this->getLocalesByWebspaceKey($webspaceKey);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
+            ->where($this->qomFactory->descendantNode('node', $contentPath))
+            ->orWhere($this->qomFactory->sameNode('node', $contentPath));
+
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null)
+    {
+        $webspaceKey = $this->webspaceManager->findPortalByKey($portalKey)->getWebspace()->getKey();
+
+        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
+
+        $locales = $this->getLocalesByPortalKey($portalKey);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
+            ->where($this->qomFactory->descendantNode('node', $contentPath))
+            ->orWhere($this->qomFactory->sameNode('node', $contentPath));
+
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -222,7 +305,7 @@ class ContentRepository implements ContentRepositoryInterface
         $childrenByPath = [];
 
         foreach ($contents as $content) {
-            $path = dirname($content->getPath());
+            $path = PathHelper::getParentPath($content->getPath());
             if (!isset($childrenByPath[$path])) {
                 $childrenByPath[$path] = [];
             }
@@ -242,6 +325,10 @@ class ContentRepository implements ContentRepositoryInterface
 
             ksort($childrenByPath[$content->getPath()]);
             $content->setChildren(array_values($childrenByPath[$content->getPath()]));
+        }
+
+        if (!array_key_exists('/', $childrenByPath) || !is_array($childrenByPath['/'])) {
+            return [];
         }
 
         ksort($childrenByPath['/']);
@@ -287,7 +374,6 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @param QueryBuilder $queryBuilder
      * @param string $locale
-     * @param string $webspaceKey
      * @param MappingInterface $mapping
      * @param UserInterface $user
      *
@@ -296,15 +382,15 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolveQueryBuilder(
         QueryBuilder $queryBuilder,
         $locale,
-        $webspaceKey = null,
+        $locales,
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
         return array_values(
             array_filter(
                 array_map(
-                    function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
-                        return $this->resolveContent($row, $locale, $webspaceKey, $mapping, $user);
+                    function (Row $row) use ($mapping, $locale, $locales, $user) {
+                        return $this->resolveContent($row, $locale, $locales, $mapping, $user);
                     },
                     iterator_to_array($queryBuilder->execute())
                 )
@@ -332,17 +418,21 @@ class ContentRepository implements ContentRepositoryInterface
             ->addSelect('node', $this->propertyEncoder->localizedContentName('state', $locale), 'state')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-on', $locale), 'shadowOn')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
             ->addSelect('node', $this->propertyEncoder->systemName('order'), 'order')
             ->from($this->qomFactory->selector('node', 'nt:unstructured'))
             ->orderBy($this->qomFactory->propertyValue('node', 'sulu:order'));
 
         $this->appendSingleMapping($queryBuilder, 'template', $locales);
         $this->appendSingleMapping($queryBuilder, 'shadow-on', $locales);
+        $this->appendSingleMapping($queryBuilder, 'state', $locales);
 
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                $queryBuilder->addSelect('node', sprintf('sec:%s', 'role-' . $role->getId()), $role->getIdentifier());
+                $queryBuilder->addSelect(
+                    'node',
+                    sprintf('sec:%s', 'role-' . $role->getId()),
+                    sprintf('role%s', $role->getId())
+                );
             }
         }
 
@@ -369,6 +459,25 @@ class ContentRepository implements ContentRepositoryInterface
     }
 
     /**
+     * Returns array of locales for given portal key.
+     *
+     * @param string $portalKey
+     *
+     * @return string[]
+     */
+    private function getLocalesByPortalKey($portalKey)
+    {
+        $portal = $this->webspaceManager->findPortalByKey($portalKey);
+
+        return array_map(
+            function (Localization $localization) {
+                return $localization->getLocalization();
+            },
+            $portal->getLocalizations()
+        );
+    }
+
+    /**
      * Returns array of locales for webspaces.
      *
      * @return string[]
@@ -387,14 +496,32 @@ class ContentRepository implements ContentRepositoryInterface
      * Append mapping selects to given query-builder.
      *
      * @param QueryBuilder $queryBuilder
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
+     * @param string $locale
      * @param string[] $locales
      */
-    private function appendMapping(QueryBuilder $queryBuilder, MappingInterface $mapping, $locales)
+    private function appendMapping(QueryBuilder $queryBuilder, MappingInterface $mapping, $locale, $locales)
     {
+        if ($mapping->onlyPublished()) {
+            $queryBuilder->andWhere(
+                $this->qomFactory->comparison(
+                    $this->qomFactory->propertyValue(
+                        'node',
+                        $this->propertyEncoder->localizedSystemName('state', $locale)
+                    ),
+                    '=',
+                    $this->qomFactory->literal(WorkflowStage::PUBLISHED)
+                )
+            );
+        }
+
         $properties = $mapping->getProperties();
         foreach ($properties as $propertyName) {
             $this->appendSingleMapping($queryBuilder, $propertyName, $locales);
+        }
+
+        if ($mapping->resolveUrl()) {
+            $this->appendUrlMapping($queryBuilder, $locales);
         }
     }
 
@@ -419,12 +546,37 @@ class ContentRepository implements ContentRepositoryInterface
     }
 
     /**
+     * Append mapping for url to given query-builder.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string[] $locales
+     */
+    private function appendUrlMapping(QueryBuilder $queryBuilder, $locales)
+    {
+        $structures = $this->structureManager->getStructures(Structure::TYPE_PAGE);
+        $urlNames = [];
+
+        foreach ($structures as $structure) {
+            if (!$structure->hasTag('sulu.rlp')) {
+                continue;
+            }
+
+            $propertyName = $structure->getPropertyByTagName('sulu.rlp')->getName();
+
+            if (!in_array($propertyName, $urlNames)) {
+                $this->appendSingleMapping($queryBuilder, $propertyName, $locales);
+                $urlNames[] = $propertyName;
+            }
+        }
+    }
+
+    /**
      * Resolve a single result row to a content object.
      *
      * @param Row $row
      * @param string $locale
-     * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param string $locales
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content
@@ -432,13 +584,11 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolveContent(
         Row $row,
         $locale,
-        $webspaceKey,
+        $locales,
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        if (!$webspaceKey) {
-            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
-        }
+        $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
 
         $originalLocale = $locale;
         $ghostLocale = $this->localizationFinder->findAvailableLocale(
@@ -453,7 +603,7 @@ class ContentRepository implements ContentRepositoryInterface
                 return;
             }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
-        } elseif ($ghostLocale !== $originalLocale) {
+        } elseif ($ghostLocale !== null && $ghostLocale !== $originalLocale) {
             if (!$mapping->shouldHydrateGhost()) {
                 return;
             }
@@ -461,7 +611,12 @@ class ContentRepository implements ContentRepositoryInterface
             $type = StructureType::getGhost($locale);
         }
 
-        if ($row->getValue('nodeType') === RedirectType::INTERNAL && $mapping->followInternalLink()) {
+        if (
+            $row->getValue('nodeType') === RedirectType::INTERNAL
+            && $mapping->followInternalLink()
+            && $row->getValue('internalLink') !== ''
+            && $row->getValue('internalLink') !== $row->getValue('uuid')
+        ) {
             // TODO collect all internal link contents and query once
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
@@ -476,18 +631,44 @@ class ContentRepository implements ContentRepositoryInterface
             $data[$item] = $this->resolveProperty($row, $item, $locale, $shadowBase);
         }
 
-        return new Content(
-            $locale,
+        $content = new Content(
+            $originalLocale,
             $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
             $row->getValue('nodeType'),
-            $this->resolveHasChildren($row),
+            $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale, $shadowBase),
             $data,
             $this->resolvePermissions($row, $user),
             $type
         );
+        $content->setRow($row);
+
+        if (!$content->getTemplate() || !$this->structureManager->getStructure($content->getTemplate())) {
+            $content->setBrokenTemplate();
+        }
+
+        if ($mapping->resolveUrl()) {
+            $url = $this->resolveUrl($row, $locale);
+            $urls = [];
+            array_walk(
+                $locales,
+                function ($item) use (&$urls, $row) {
+                    $urls[$item] = $this->resolveUrl($row, $item);
+                }
+            );
+
+            $content->setUrl($url);
+            $content->setUrls($urls);
+        }
+
+        if ($mapping->resolveConcreteLocales()) {
+            $locales = $this->resolveAvailableLocales($row);
+            $content->setConcreteLanguages($locales);
+        }
+
+        return $content;
     }
 
     /**
@@ -501,7 +682,9 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $locales = [];
         foreach ($row->getValues() as $key => $value) {
-            if (preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value) {
+            if (preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value
+                && !$row->getValue(sprintf('node.%sShadow_on', $matches[1]))
+            ) {
                 $locales[] = $matches[1];
             }
         }
@@ -515,7 +698,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param StructureType $type
      * @param UserInterface $user
      *
@@ -539,18 +722,24 @@ class ContentRepository implements ContentRepositoryInterface
             $data[$property] = $this->resolveProperty($row, $property, $locale);
         }
 
-        return new Content(
+        $content = new Content(
             $locale,
             $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
             $row->getValue('nodeType'),
-            $this->resolveHasChildren($row),
+            $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale),
             $data,
             $this->resolvePermissions($row, $user),
             $type
         );
+
+        if (!$content->getTemplate() || !$this->structureManager->getStructure($content->getTemplate())) {
+            $content->setBrokenTemplate();
+        }
+
+        return $content;
     }
 
     /**
@@ -573,9 +762,43 @@ class ContentRepository implements ContentRepositoryInterface
             $locale = $shadowLocale;
         }
 
-        $name = sprintf('%s%s', $locale, ucfirst($name));
+        $name = sprintf('%s%s', $locale, str_replace('-', '_', ucfirst($name)));
 
-        return $row->getValue($name);
+        try {
+            return $row->getValue($name);
+        } catch (ItemNotFoundException $e) {
+            // the default value of a non existing property in jackalope is an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Resolve url property.
+     *
+     * @param Row $row
+     * @param string $locale
+     *
+     * @return string
+     */
+    private function resolveUrl(Row $row, $locale)
+    {
+        if ($this->resolveProperty($row, $locale . 'State', $locale) !== WorkflowStage::PUBLISHED) {
+            return;
+        }
+
+        $template = $this->resolveProperty($row, 'template', $locale);
+        if (empty($template)) {
+            return;
+        }
+
+        $structure = $this->structureManager->getStructure($template);
+        if (!$structure->hasTag('sulu.rlp')) {
+            return;
+        }
+
+        $propertyName = $structure->getPropertyByTagName('sulu.rlp')->getName();
+
+        return $this->resolveProperty($row, $propertyName, $locale);
     }
 
     /**
@@ -604,7 +827,7 @@ class ContentRepository implements ContentRepositoryInterface
         $permissions = [];
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                foreach (array_filter(explode(' ', $row->getValue($role->getIdentifier()))) as $permission) {
+                foreach (array_filter(explode(' ', $row->getValue(sprintf('role%s', $role->getId())))) as $permission) {
                     $permissions[$role->getId()][$permission] = true;
                 }
             }

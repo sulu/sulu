@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Contact\Model\ContactRepositoryInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
@@ -21,20 +22,16 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 /**
  * Repository for the contacts, implementing some additional functions for querying objects.
  */
-class ContactRepository extends EntityRepository implements DataProviderRepositoryInterface
+class ContactRepository extends EntityRepository implements DataProviderRepositoryInterface, ContactRepositoryInterface
 {
     use DataProviderRepositoryTrait;
 
     /**
-     * find a contact by id.
-     *
-     * @param $id
-     *
-     * @return mixed|null
+     * {@inheritdoc}
      */
     public function findById($id)
     {
-        // create basic query
+        // Create basic query
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
@@ -99,11 +96,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
-     * find a contacts by ids.
-     *
-     * @param $ids
-     *
-     * @return mixed|null
+     * {@inheritdoc}
      */
     public function findByIds($ids)
     {
@@ -111,7 +104,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             return [];
         }
 
-        // create basic query
+        // Create basic query
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
@@ -161,7 +154,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->addSelect('medias')
             ->addSelect('categories')
             ->addSelect('bankAccounts')
-            ->where('u.id IN (:ids)');
+            ->where('u.id IN (:ids)')
+            ->orderBy('u.id', 'ASC');
 
         $query = $qb->getQuery();
         $query->setParameter('ids', $ids);
@@ -174,15 +168,11 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
-     * find a contact by id and load additional infos to delete referenced entities.
-     *
-     * @param $id
-     *
-     * @return mixed|null
+     * {@inheritdoc}
      */
     public function findByIdAndDelete($id)
     {
-        // create basic query
+        // Create basic query
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
@@ -255,25 +245,19 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
-     * Searches Entities by where clauses, pagination and sorted.
-     *
-     * @param int|null $limit Page size for Pagination
-     * @param int|null $offset Offset for Pagination
-     * @param array|null $sorting Columns to sort
-     * @param array|null $where Where clauses
-     *
-     * @return array Results
+     * {@inheritdoc}
      */
-    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = [])
+    public function findGetAll($limit = null, $offset = null, $sorting = ['id' => 'asc'], $where = [])
     {
-        // create basic query
+        // Create basic query
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.emails', 'emails')
             ->leftJoin('u.phones', 'phones')
             ->leftJoin('u.faxes', 'faxes')
             ->leftJoin('u.contactAddresses', 'contactAddresses')
             ->leftJoin('contactAddresses.address', 'addresses')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.title', 'title')
             ->addSelect('title')
             ->addSelect('emails')
@@ -285,9 +269,9 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         $qb = $this->addSorting($qb, $sorting, 'u');
         $qb = $this->addPagination($qb, $offset, $limit);
 
-        // if needed add where statements
+        // If needed add where statements
         if (is_array($where) && count($where) > 0) {
-            $qb = $this->addWhere($qb, $where);
+            $qb = $this->addWhere($qb, $where, 'u');
         }
 
         $query = $qb->getQuery();
@@ -296,14 +280,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
-     * Searches for contacts with a specific account and the ability to exclude a certain contacts.
-     *
-     * @param $accountId
-     * @param null $excludeContactId
-     * @param bool $arrayResult
-     * @param bool $onlyFetchMainAccounts Defines if only main relations should be returned
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function findByAccountId(
         $accountId,
@@ -313,7 +290,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     ) {
         $qb = $this->createQueryBuilder('c');
 
-        // only fetch main accounts
+        // Only fetch main accounts
         if ($onlyFetchMainAccounts) {
             $qb->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true');
         } else {
@@ -347,7 +324,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     private function addSorting($qb, $sorting, $prefix = 'u')
     {
-        // add order by
+        // Add order by
         foreach ($sorting as $k => $d) {
             $qb->addOrderBy($prefix . '.' . $k, $d);
         }
@@ -366,7 +343,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     private function addPagination($qb, $offset, $limit)
     {
-        // add pagination
+        // Add pagination
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
 
@@ -395,19 +372,11 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
-     * finds a contact based on criteria and one email and one phone
-     * also joins account.
-     *
-     * @param $where
-     * @param $email
-     * @param $phone
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function findByCriteriaEmailAndPhone($where, $email = null, $phone = null)
     {
-
-        // create basic query
+        // Create basic query
         $qb = $this->createQueryBuilder('contact')
             ->leftJoin('contact.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
@@ -446,15 +415,11 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
-     * find a contact by id.
-     *
-     * @param $id
-     *
-     * @return mixed|null
+     * {@inheritdoc}
      */
     public function findContactWithAccountsById($id)
     {
-        // create basic query
+        // Create basic query
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
@@ -478,7 +443,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     /**
      * {@inheritdoc}
      */
-    public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
+    protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder->addSelect('emails')
             ->addSelect('emailType')

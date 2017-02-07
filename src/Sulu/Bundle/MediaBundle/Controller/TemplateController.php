@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,16 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TemplateController extends Controller
 {
-    /**
-     * renders template for the collection files-view.
-     *
-     * @return Response
-     */
-    public function collectionFilesAction()
-    {
-        return $this->render('SuluMediaBundle:Template:collection-files.html.twig');
-    }
-
     /**
      * renders template for the collection settings-view.
      *

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_collaboration.admin" class="Sulu\Bundle\CollaborationBundle\Admin\CollaborationAdmin">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument>%sulu_admin.name%</argument>
+        </service>
+
+        <service id="sulu_collaboration.message_handler" class="Sulu\Component\Collaboration\CollaborationMessageHandler">
+            <argument type="service" id="sulu_websocket.admin.message_builder"/>
+            <argument type="service" id="sulu_security.user_repository"/>
+            <argument type="service" id="sulu_collaboration.entity_cache"/>
+            <argument type="service" id="sulu_collaboration.connection_cache"/>
+            <argument>%sulu_collaboration.interval%</argument>
+            <argument>%sulu_collaboration.threshold%</argument>
+            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_collaboration" />
+        </service>
+
+        <service id="sulu_collaboration.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+            <argument type="string">sulu-collaboration</argument>
+            <argument key="collaboration" type="collection">
+                <argument key="interval">%sulu_collaboration.interval%</argument>
+            </argument>
+            <tag name="sulu.js_config"/>
+        </service>
+    </services>
+</container>

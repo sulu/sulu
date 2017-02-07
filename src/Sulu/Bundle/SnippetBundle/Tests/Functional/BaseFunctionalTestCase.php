@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,27 +11,32 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional;
 
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure\Snippet;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
 {
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     protected $hotel1;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     protected $hotel2;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     protected $car1;
+
+    /**
+     * @var DocumentManager
+     */
+    private $manager;
 
     /**
      * {@inheritdoc}
@@ -41,107 +46,77 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
         return ['environment' => 'dev'];
     }
 
+    private function createSnippet($type, array $localizedData)
+    {
+        $snippet = new SnippetDocument();
+        $snippet->setStructureType($type);
+
+        foreach ($localizedData as $locale => $data) {
+            $snippet->setTitle($data['title']);
+            $this->manager->persist($snippet, $locale);
+        }
+
+        return $snippet;
+    }
+
     /**
      * Load fixtures for snippet functional tests.
      */
     protected function loadFixtures()
     {
-        // HOTELS (including page)
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'Le grande budapest',
-            ]);
-        $this->hotel1 = $this->contentMapper->saveRequest($req);
+        $this->manager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
-        // HOTELS (including page)
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('en')
-            ->setUserId(1)
-            ->setUuid($this->hotel1->getUuid())
-            ->setData([
-                'title' => 'Le grande budapest (en)',
-            ]);
-        $this->hotel1 = $this->contentMapper->saveRequest($req);
-
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'L\'Hôtel New Hampshire',
-            ]);
-        $this->hotel2 = $this->contentMapper->saveRequest($req);
-
-        $req = ContentMapperRequest::create()
-            ->setType('page')
-            ->setWebspaceKey('sulu_io')
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setTemplateKey('hotel_page')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'Hotels page',
-                'url' => '/hotels',
-                'hotels' => [
-                    $this->hotel1->getUuid(),
-                    $this->hotel2->getUuid(),
+        $this->hotel1 = $this->createSnippet(
+            'hotel',
+            [
+                'en' => [
+                    'title' => 'Le grande budapest (en)',
                 ],
-            ]);
+                'de' => [
+                    'title' => 'Le grande budapest',
+                ],
+            ]
+        );
 
-        $hotels = $this->contentMapper->saveRequest($req);
+        $this->hotel2 = $this->createSnippet(
+            'hotel',
+            [
+                'de' => [
+                    'title' => 'L\'Hôtel New Hampshire',
+                ],
+            ]
+        );
 
-        $req = ContentMapperRequest::create()
-            ->setType('page')
-            ->setWebspaceKey('sulu_io')
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setTemplateKey('hotel_page')
-            ->setLocale('en')
-            ->setUserId(1)
-            ->setUuid($hotels->getUuid())
-            ->setIsShadow(true)
-            ->setShadowBaseLanguage('de')
-            ->setData([
-                'title' => 'Hotels',
-            ]);
+        $page = new PageDocument();
+        $page->setTitle('Hotels Page');
+        $page->setStructureType('hotel_page');
+        $page->setResourceSegment('/hotels');
+        $page->getStructure()->bind([
+            'hotels' => [
+                $this->hotel1->getUuid(),
+                $this->hotel2->getUuid(),
+            ],
+        ]);
 
-        $this->contentMapper->saveRequest($req);
+        $this->manager->persist($page, 'de', [
+            'path' => '/cmf/sulu_io/contents/hotels',
+        ]);
 
-        // CARS
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('car')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'C car',
-            ]);
-        $this->car1 = $this->contentMapper->saveRequest($req);
+        $page->setTitle('Hotels');
+        $page->setShadowLocaleEnabled(true);
+        $page->setShadowLocale('de');
+        $page->getStructure()->bind([
+            'hotels' => [],
+        ]);
 
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('car')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'A car',
-            ]);
-        $this->contentMapper->saveRequest($req);
+        $this->manager->persist($page, 'en', [
+            'path' => '/cmf/sulu_io/contents/hotels',
+        ]);
 
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('car')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'B car',
-            ]);
-        $this->contentMapper->saveRequest($req);
+        $this->car1 = $this->createSnippet('car', ['de' => ['title' => 'C car']]);
+        $this->createSnippet('car', ['de' => ['title' => 'B car']]);
+        $this->createSnippet('car', ['de' => ['title' => 'A car']]);
+
+        $this->manager->flush();
     }
 }

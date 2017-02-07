@@ -25,6 +25,8 @@ define([], function() {
             actionIcon: 'fa-file-text-o',
             hidePositionElement: true,
             hideConfigButton: true,
+            locale: null,
+            navigateEvent: 'sulu.router.navigate',
             translations: {
                 noContentSelected: 'snippet-content.nosnippets-selected',
                 addSnippets: 'snippet-content.add'
@@ -46,8 +48,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(value) {
-                return ['<span class="value">', value, '</span>'].join('');
+            contentItem: function(id, value) {
+                return [
+                    '<a href="#" class="link" data-id="', id, '">',
+                    '   <span class="value">', value, '</span>',
+                    '</a>'
+                ].join('');
             }
         },
 
@@ -163,6 +169,19 @@ define([], function() {
                     return false;
                 }
             }.bind(this), '.search-input');
+
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'snippet/snippets/' + this.options.locale + '/edit:' + id
+                );
+
+                return false;
+            }.bind(this), 'a.link');
+
+            this.sandbox.on(this.DATA_RETRIEVED(), removeInvalidReferences.bind(this));
         },
 
         /**
@@ -183,7 +202,7 @@ define([], function() {
                         container: this.$el,
 
                         instanceName: 'snippet-content.' + this.options.instanceName + '.add',
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addSnippets),
@@ -201,6 +220,40 @@ define([], function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
                 this.setData(selected);
             }.bind(this));
+        },
+
+        /**
+         * Removes references linking to deleted snippets.
+         *
+         * @param existingSnippets {object} The data returned from the api containing all existing snippets
+         */
+        removeInvalidReferences = function(existingSnippets) {
+            var data = this.getData();
+            var cleanedData = [];
+
+            for (var i = 0; i < data.length; ++i) {
+                if (isArrayContainingSnippet(existingSnippets, data[i])) {
+                    cleanedData.push(data[i]);
+                }
+            }
+
+            this.setData(cleanedData, false);
+        },
+
+        /**
+         * Checks if the snippet list contains the snippet with the provided uuid.
+         *
+         * @param {object} snippets
+         * @param {number} snippetUuid
+         */
+        isArrayContainingSnippet = function(snippets, snippetUuid) {
+            for (var i = 0; i < snippets.length; ++i) {
+                if (snippets[i].id === snippetUuid) {
+                    return true;
+                }
+            }
+
+            return false;
         };
 
     return {
@@ -241,7 +294,7 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title);
+            return templates.contentItem(item.id, item.title);
         },
 
         sortHandler: function(ids) {

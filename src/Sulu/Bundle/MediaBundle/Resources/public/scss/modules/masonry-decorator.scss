@@ -1,0 +1,184 @@
+.masonry-container {
+    $fadeInDuration: 100ms;
+    $effectDuration: 200ms;
+
+    .empty-list {
+        background: none;
+    }
+
+    .masonry-grid {
+        margin-bottom: -20px;
+        position: relative;
+        text-align: center;
+    }
+
+    .masonry-item {
+        $width: 260px;
+        $checkboxWidth: 15px;
+        $checkboxMargin: 8px;
+        box-shadow: 0 0 10px -10px rgba(0, 0, 0, 0.2);
+
+        width: $width;
+        background-color: $white;
+        opacity: 1;
+        border-radius: $borderRadius;
+        border: 1px solid $white;
+        @include transition(
+            opacity $fadeInDuration,
+            box-shadow $effectDuration
+        );
+
+        &.loading {
+            opacity: 0;
+        }
+
+        .action-navigator, .download-navigator, .play-video-navigator {
+            cursor: pointer;
+            color: #000;
+        }
+
+        .custom-checkbox {
+            width: 0;
+            margin: 0;
+            overflow: hidden;
+            font-size: $baseFontSize;
+            @include transition(width 80ms, margin 80ms);
+        }
+
+        &:hover {
+            box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.2);
+
+            .custom-checkbox {
+                width: $checkboxWidth;
+                margin-right: $checkboxMargin;
+            }
+
+            .masonry-info .icons > *::before {
+                color: $black;
+            }
+        }
+
+        &.selected {
+            box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.2);
+            .custom-checkbox {
+                width: $checkboxWidth;
+                margin-right: $checkboxMargin
+            }
+        }
+
+        &.no-image .masonry-image {
+            background: $grayLighterer;
+        }
+    }
+
+    .masonry-image {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 0 0 $borderRadius $borderRadius;
+        background: url("../img/checked.gif") repeat;
+        position: relative;
+        $zoomAnimationDuration: 200ms;
+
+        .image-icon {
+            color: white;
+            font-size: 70px;
+            margin: 30px;
+        }
+
+        .image {
+            position: relative;
+            left: 0;
+            vertical-align: middle;
+            border-radius: 0 0 $borderRadius $borderRadius;
+            @include transition(transform $zoomAnimationDuration);
+        }
+
+        &:hover {
+            .image {
+                @include transform(scale(1.05));
+            }
+        }
+    }
+
+    .action-icons-overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        @include transition(opacity $effectDuration);
+
+        &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: black;
+            opacity: 0.6;
+            width: 100%;
+            height: 100%;
+            border-radius: 0 0 $borderRadius $borderRadius;
+        }
+
+        .action-icons {
+            display: block;
+            @include centerBlock;
+            color: $white;
+            font-size: 24px;
+        }
+
+        .action-icon {
+            padding: 10px;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .masonry-info {
+        height: 80px;
+        text-align: left;
+        padding: 20px 20px 0 20px;
+        position: relative;
+
+        .main {
+            font-size: 0;
+            line-height: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .title {
+            font-size: $baseFontSize;
+        }
+
+        .description {
+            font-size: $smallFontSize;
+            line-height: $smallFontSize;
+            color: $grayLight;
+        }
+
+        .icons {
+            position: absolute;
+            bottom: 5px;
+            right: 20px;
+        }
+
+        .icons > * {
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .icons > *::before {
+            color: transparent;
+        }
+
+        .badge {
+            vertical-align: super;
+            margin-right: 3px;
+        }
+    }
+}

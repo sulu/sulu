@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
@@ -22,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class MediaStreamController extends Controller
@@ -79,12 +79,16 @@ class MediaStreamController extends Controller
             $version = $request->get('v', null);
             $noCount = $request->get('no-count', false);
 
+            $fileVersion = $this->getFileVersion($id, $version);
+
+            if (!$fileVersion) {
+                return new Response(null, 404);
+            }
+
             $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
             if ($request->get('inline', false)) {
                 $dispositionType = ResponseHeaderBag::DISPOSITION_INLINE;
             }
-
-            $fileVersion = $this->getFileVersion($id, $version);
 
             if (!$noCount) {
                 $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
@@ -150,11 +154,13 @@ class MediaStreamController extends Controller
     protected function getFileVersion($id, $version)
     {
         /*
-         * @var Media
+         * @var MediaInterface
          */
-        $mediaEntity = $this->getDoctrine()
-            ->getRepository('SuluMediaBundle:Media')
-            ->findMediaById($id);
+        $mediaEntity = $this->container->get('sulu.repository.media')->findMediaById($id);
+
+        if (!$mediaEntity) {
+            return;
+        }
 
         $currentFileVersion = null;
         $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;

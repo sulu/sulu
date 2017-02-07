@@ -1,4 +1,4 @@
-Feature: Internal links content type
+Feature: Single Internal links content type
     In order to provide a single link to an internal page
     As a user
     I need to be able to select internal link
@@ -25,15 +25,18 @@ Feature: Internal links content type
             | article | /articles | Articles | | {"body": "This is article 1"} |
         And I am logged in as an administrator
 
-    Scenario: Single internal link select
+    Scenario: Single internal link
         Given I am editing a page of type "single_internal_link_page"
         And I expect the aura component "link" to appear
-        When I click the search icon
+        When I click the link icon
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.link.loaded" event
         And I click the column navigation item "sulu.io"
         And I expect the "husky.column-navigation.link.loaded" event
         And I double click the column navigation item "Articles"
+        And I click the ok button
         And I expect the "sulu.content.changed" event
         And I click the save icon
+        And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,29 +12,19 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized Interface to load content.
  */
-class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
+class MemoizedContentTwigExtension extends \Twig_Extension
 {
-    /**
-     * @var ContentTwigExtensionInterface
-     */
-    private $extension;
+    use MemoizeTwigExtensionTrait;
 
     /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
-
-    /**
-     * Constructor.
+     * @param ContentTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param $lifeTime
      */
     public function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -46,32 +36,8 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     /**
      * {@inheritdoc}
      */
-    public function loadParent($uuid)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'loadParent'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load($uuid)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'load'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->extension->getFunctions();
     }
 }

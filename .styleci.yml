@@ -11,3 +11,5 @@ disabled:
     - phpdoc_indent
     - phpdoc_to_comment
     - blankline_after_open_tag
+    - function_declaration
+    - single_line_class_definition

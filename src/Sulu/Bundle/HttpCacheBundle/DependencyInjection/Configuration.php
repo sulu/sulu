@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,11 +14,6 @@ namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -36,24 +31,25 @@ class Configuration implements ConfigurationInterface
                     ->info('Configuration for structure cache handlers')
                     ->children()
                         ->arrayNode('public')
-                            ->canBeEnabled()
+                            ->canBeDisabled()
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->integerNode('max_age')->defaultValue(300)->end()
-                                ->integerNode('shared_max_age')->defaultValue(300)->end()
-                                ->booleanNode('use_page_ttl')->defaultValue(true)
+                                ->integerNode('max_age')->defaultValue(240)->end()
+                                ->integerNode('shared_max_age')->defaultValue(240)->end()
+                                ->booleanNode('use_page_ttl')
+                                    ->defaultValue(true)
                                     ->info('Use the dynamic pages cache lifetime for reverse proxy server')
                                 ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('paths')
-                            ->canBeEnabled()
+                        ->arrayNode('url')
+                            ->canBeDisabled()
                         ->end()
                         ->arrayNode('tags')
                             ->canBeEnabled()
                         ->end()
                         ->arrayNode('debug')
-                            ->canBeEnabled()
+                            ->canBeDisabled()
                         ->end()
                     ->end()
                 ->end()
@@ -69,7 +65,9 @@ class Configuration implements ConfigurationInterface
                             ->fixXmlConfig('server')
                             ->children()
                                 ->arrayNode('servers')
-                                    ->beforeNormalization()->ifString()->then(function ($v) { return preg_split('/\s*,\s*/', $v); })->end()
+                                    ->beforeNormalization()->ifString()->then(function ($v) {
+                                        return preg_split('/\s*,\s*/', $v);
+                                    })->end()
                                     ->useAttributeAsKey('name')
                                     ->isRequired()
                                     ->requiresAtLeastOneElement()

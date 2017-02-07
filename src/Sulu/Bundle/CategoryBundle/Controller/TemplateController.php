@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,15 +23,5 @@ class TemplateController extends Controller
     public function categoriesListAction()
     {
         return $this->render('SuluCategoryBundle:Template:category.list.html.twig');
-    }
-
-    /**
-     * Returns Template for the details-tab in the category-form.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function categoriesFormDetailsAction()
-    {
-        return $this->render('SuluCategoryBundle:Template:category.form.details.html.twig');
     }
 }

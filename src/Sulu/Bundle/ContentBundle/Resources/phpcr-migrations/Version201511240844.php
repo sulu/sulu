@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -26,6 +27,9 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Upgrades URLs within block properties.
+ */
 class Version201511240844 implements VersionInterface, ContainerAwareInterface
 {
     /**
@@ -262,7 +266,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             }
         }
 
-        $this->documentManager->persist($document, $locale);
+        $this->documentManager->persist($document, $locale, ['auto_name' => false]);
     }
 
     /**
@@ -335,7 +339,14 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
      */
     private function upgradeUrl(&$value)
     {
-        if (!empty($value) && !strpos($value, '://')) {
+        if (!empty($value)
+            && strpos($value, 'http://') === false
+            && strpos($value, 'https://') === false
+            && strpos($value, 'ftp://') === false
+            && strpos($value, 'ftps://') === false
+            && strpos($value, 'mailto:') === false
+            && strpos($value, '//') === false
+        ) {
             $value = 'http://' . $value;
         }
 

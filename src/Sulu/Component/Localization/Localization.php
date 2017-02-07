@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,6 +19,11 @@ use Sulu\Component\Util\ArrayableInterface;
  */
 class Localization implements \JsonSerializable, ArrayableInterface
 {
+    const UNDERSCORE = 'de_at';
+    const DASH = 'de-at';
+    const ISO6391 = 'de-AT';
+    const LCID = 'de_AT';
+
     /**
      * The language of the localization.
      *
@@ -68,6 +73,12 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * @var
      */
     private $xDefault;
+
+    public function __construct($language = null, $country = null)
+    {
+        $this->language = $language;
+        $this->country = $country;
+    }
 
     /**
      * Sets the country of this localization.
@@ -166,12 +177,51 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @return string
      * @VirtualProperty
+     *
+     * @deprecated use getLocale instead
      */
     public function getLocalization($delimiter = '_')
     {
+        @trigger_error(__method__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', E_USER_DEPRECATED);
+
         $localization = $this->getLanguage();
         if ($this->getCountry() != null) {
             $localization .= $delimiter . $this->getCountry();
+        }
+
+        return $localization;
+    }
+
+    /**
+     * Returns the localization code, which is a combination of the language and the country in a specific format.
+     *
+     * @param string $format requested localization format
+     *
+     * @return string
+     * @VirtualProperty
+     */
+    public function getLocale($format = self::UNDERSCORE)
+    {
+        $localization = strtolower($this->getLanguage());
+
+        if (null != $this->getCountry()) {
+            $country = strtolower($this->getCountry());
+            $delimiter = '-';
+
+            switch ($format) {
+                case self::UNDERSCORE:
+                    $delimiter = '_';
+                    break;
+                case self::ISO6391:
+                    $country = strtoupper($country);
+                    break;
+                case self::LCID:
+                    $delimiter = '_';
+                    $country = strtoupper($country);
+                    break;
+            }
+
+            $localization .= $delimiter . $country;
         }
 
         return $localization;
@@ -244,7 +294,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function findLocalization($localization)
     {
-        if ($this->getLocalization() == $localization) {
+        if ($this->getLocale() == $localization) {
             return $this;
         }
 
@@ -306,7 +356,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         $res = [];
         $res['country'] = $this->getCountry();
         $res['language'] = $this->getLanguage();
-        $res['localization'] = $this->getLocalization();
+        $res['localization'] = $this->getLocale();
         $res['default'] = $this->isDefault();
         $res['xDefault'] = $this->isXDefault();
         $res['children'] = [];

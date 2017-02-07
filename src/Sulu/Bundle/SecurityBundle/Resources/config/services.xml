@@ -126,25 +126,28 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument>%sulu_security.system%</argument>
-            <argument>%sulu.model.user.class%</argument>
-            <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
-        </service>
+        <service id="sulu_security.group_repository" class="%sulu_security.group_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 
-        <service id="sulu_security.group_repository" class="%sulu_security.group_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
             <argument>%sulu_security.entity.group%</argument>
         </service>
 
-        <service id="sulu_security.user_setting_repository" class="%sulu_security.user_setting_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+        <service id="sulu_security.user_setting_repository" class="%sulu_security.user_setting_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+
             <argument>%sulu_security.entity.user_setting%</argument>
         </service>
 
-        <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"
-                 factory-service="sulu_security.user_repository_factory" factory-method="getRepository">
+        <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+
+            <argument>%sulu.model.user.class%</argument>
+        </service>
+
+        <service id="sulu_security.user_provider" class="Sulu\Bundle\SecurityBundle\User\UserProvider">
+            <argument type="service" id="sulu_security.user_repository"/>
+            <argument type="service" id="request_stack"/>
+            <argument>%sulu_security.system%</argument>
         </service>
 
         <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
@@ -154,7 +157,34 @@
         <service id="sulu_security.serializer.handler.secured_entity" class="Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage"/>
+
             <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.document.serializer.subscriber.security"
+                 class="Sulu\Bundle\SecurityBundle\Serializer\Subscriber\SecuritySubscriber">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_security.twig_extension.user.cache" class="Doctrine\Common\Cache\ArrayCache"/>
+        <service id="sulu_security.twig_extension.user" class="Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension">
+            <argument type="service" id="sulu_security.twig_extension.user.cache"/>
+            <argument type="service" id="sulu.repository.user"/>
+
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="sulu_security.js_config" class="Sulu\Bundle\SecurityBundle\Security\SecurityConfig">
+            <argument type="string">sulu_security.contexts</argument>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="sulu_admin.admin_pool"/>
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.js_config"/>
             <tag name="sulu.context" context="admin"/>
         </service>
     </services>

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,9 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
@@ -36,6 +33,9 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactControllerTest extends SuluTestCase
@@ -54,6 +54,16 @@ class ContactControllerTest extends SuluTestCase
      * @var Media
      */
     private $avatar = null;
+
+    /**
+     * @var Media
+     */
+    private $media1 = null;
+
+    /**
+     * @var Media
+     */
+    private $media2 = null;
 
     /**
      * @var EntityManager
@@ -137,7 +147,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->initOrm();
     }
 
@@ -148,6 +158,7 @@ class ContactControllerTest extends SuluTestCase
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
         $contact->setPosition('CEO');
+        $contact->setBirthday(new \DateTime());
         $contact->setFormOfAddress(1);
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
 
@@ -283,21 +294,21 @@ class ContactControllerTest extends SuluTestCase
 
         /* First Category
         -------------------------------------*/
-        $category = new Category();
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey('first-category-key');
         $category->setDefaultLocale('en');
 
         $this->category = $category;
 
         // name for first category
-        $categoryTrans = new CategoryTranslation();
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('First Category');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
         // meta for first category
-        $categoryMeta = new CategoryMeta();
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta->setLocale('en');
         $categoryMeta->setKey('description');
         $categoryMeta->setValue('Description of Category');
@@ -308,21 +319,21 @@ class ContactControllerTest extends SuluTestCase
 
         /* Second Category
         -------------------------------------*/
-        $category2 = new Category();
+        $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category2->setKey('second-category-key');
         $category2->setDefaultLocale('en');
 
         $this->category2 = $category2;
 
         // name for second category
-        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2 = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans2->setLocale('de');
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
 
         // meta for second category
-        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
         $categoryMeta2->setValue('Description of second Category');
@@ -331,7 +342,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->persist($category2);
 
-        $this->initAvatar();
+        $this->initMedias();
         $contact->setAvatar($this->avatar);
 
         $this->em->flush();
@@ -340,7 +351,7 @@ class ContactControllerTest extends SuluTestCase
         $this->contactPosition = $position;
     }
 
-    public function initAvatar()
+    public function initMedias()
     {
         $collectionType = new CollectionType();
         $collectionType->setName('My collection type');
@@ -376,6 +387,49 @@ class ContactControllerTest extends SuluTestCase
         $this->avatar->addFile($file);
         $file->setMedia($this->avatar);
         $this->em->persist($this->avatar);
+        $this->em->persist($file);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media1.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1950-04-20'));
+        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->media1 = new Media();
+        $this->media1->setType($imageType);
+        $this->media1->setCollection($collection);
+        $this->media1->addFile($file);
+        $file->setMedia($this->media1);
+        $this->em->persist($this->media1);
+        $this->em->persist($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media2.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1970-04-20'));
+        $fileVersion->setCreated(new \DateTime('1970-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->media2 = new Media();
+        $this->media2->setType($imageType);
+        $this->media2->setCollection($collection);
+        $this->media2->addFile($file);
+        $file->setMedia($this->media2);
+        $this->em->persist($this->media2);
         $this->em->persist($file);
     }
 
@@ -517,7 +571,7 @@ class ContactControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
@@ -830,8 +884,11 @@ class ContactControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument', $response->message);
+        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertEquals(
+            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument',
+            $response->message
+        );
     }
 
     public function testPostWithEmptyAdditionalData()
@@ -881,24 +938,72 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
     }
 
-    public function testGetListSearch()
+    public function testGetListSearchEmpty()
     {
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, count($response->_embedded->contacts));
+    }
 
-        $client->request('GET', '/api/contacts?flat=true&search=Max&searchFields=fullName');
+    public function testGetListSearch()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $this->em->persist($contact1);
+        $this->em->flush();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        // dont use max here because the user for tests also is called max
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, count($response->_embedded->contacts));
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->contacts));
+        $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
+    }
+
+    public function testGetListBySystem()
+    {
+        $suluContact = new Contact();
+        $suluContact->setFirstName('Max');
+        $suluContact->setLastName('Mustermann');
+
+        $user = new User();
+        $user->setUsername('max');
+        $user->setPassword('max');
+        $user->setLocale('de');
+        $user->setSalt('salt');
+        $role = new Role();
+        $role->setName('User');
+        $role->setSystem('Sulu');
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setUser($user);
+        $userRole->setLocale('[]');
+        $user->setContact($suluContact);
+
+        $this->em->persist($suluContact);
+        $this->em->persist($user);
+        $this->em->persist($userRole);
+        $this->em->persist($role);
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?bySystem=true');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(1, $response->_embedded->contacts);
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
@@ -1530,13 +1635,13 @@ class ContactControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testGetList()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true');
+        $client->request('GET', '/api/contacts?flat=true&fields=fullName,title,formOfAddress,salutation');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
@@ -1588,7 +1693,7 @@ class ContactControllerTest extends SuluTestCase
         $ids = sprintf('%s,%s,%s', $contact1->getId(), $contact2->getId(), $contact3->getId());
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
@@ -1628,7 +1733,7 @@ class ContactControllerTest extends SuluTestCase
         $ids = sprintf('%s,%s,%s', $contact3->getId(), $contact1->getId(), $contact2->getId());
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
@@ -1643,12 +1748,12 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/' . $this->contact->getId());
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts/' . $this->contact->getId());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testDeleteNotExisting()
@@ -1656,7 +1761,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/4711');
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
@@ -1886,7 +1991,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->notes));
 
         $this->assertEquals(0, $response->formOfAddress);
-        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertFalse(property_exists($response, 'salutation'));
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1909,7 +2014,84 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->notes));
 
         $this->assertEquals(0, $response->formOfAddress);
-        $this->assertEquals('Sehr geehrter John', $response->salutation);
+        $this->assertFalse(property_exists($response, 'salutation'));
+    }
+
+    public function testPatchNotExisting()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PATCH',
+            '/api/contacts/101',
+            [
+                'medias' => [],
+            ]
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
+    public function testPatchAssignedMedias()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+
+        // add two medias
+        $client->request(
+            'PATCH',
+            '/api/contacts/' . $this->contact->getId(),
+            [
+                'medias' => [
+                    [
+                        'id' => $this->media1->getId(),
+                    ],
+                    [
+                        'id' => $this->media2->getId(),
+                    ],
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, count($response->medias));
+
+        // remove medias
+        $client->request(
+            'PATCH',
+            '/api/contacts/' . $this->contact->getId(),
+            [
+                'medias' => [],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
+
+        // missing media
+        $client->request(
+            'PATCH',
+            '/api/contacts/' . $this->contact->getId(),
+            [
+                'medias' => [
+                    [
+                        'id' => $this->media1->getId(),
+                    ],
+                    [
+                        'id' => 101,
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->medias));
     }
 
     public function testPrimaryAddressHandlingPost()
@@ -2159,6 +2341,30 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+    }
+
+    public function testPostEmptyBirthday()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('birthday', $response);
+
+        $data = [
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'title' => $this->contactTitle->getId(),
+            'birthday' => '',
+        ];
+
+        $client->request('PUT', '/api/contacts/' . $this->contact->getId(), $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('birthday', $response);
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('birthday', $response);
     }
 
     public function sortAddressesPrimaryLast()

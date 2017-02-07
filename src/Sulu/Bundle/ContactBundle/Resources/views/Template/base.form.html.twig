@@ -39,7 +39,7 @@
                         <div class="grid-col-12 floating m-top-0 address-component">
                             <~ var uid = _.uniqueId('address_'), first = true; ~>
                             <~ var lines = []; ~>
-                            <~ if (title !== '') { lines.push(title); } ~>
+                            <~ if (typeof title !== 'undefined' && title !== '') { lines.push(title); } ~>
                             <~ var streetAndNumber = (street + ' ' + number).trim(); if (streetAndNumber !== '') { lines.push(streetAndNumber); } ~>
                             <~ var zipAndCity = (zip + ' ' + city).trim(); if (zipAndCity !== '') { lines.push(zipAndCity); } ~>
                             <~ lines.push(country.name); ~>
@@ -66,17 +66,17 @@
 
                                     <div class="hidden">
                                         <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                        <span data-mapper-property="title" data-form="true"></span>
-                                        <span data-mapper-property="street" data-form="true"></span>
-                                        <span data-mapper-property="number" data-form="true"></span>
-                                        <span data-mapper-property="zip" data-form="true"></span>
-                                        <span data-mapper-property="city" data-form="true"></span>
-                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
-                                        <span data-mapper-property="state" data-form="true"></span>
-                                        <span data-mapper-property="addition" data-form="true"></span>
-                                        <span data-mapper-property="postboxNumber" data-form="true"></span>
-                                        <span data-mapper-property="postboxPostcode" data-form="true"></span>
-                                        <span data-mapper-property="postboxCity" data-form="true"></span>
+                                        <input type="hidden" data-mapper-property="title" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="street" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="number" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="zip" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="city" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"/>
+                                        <input type="hidden" data-mapper-property="state" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="addition" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="postboxNumber" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="postboxPostcode" data-form="true"/>
+                                        <input type="hidden" data-mapper-property="postboxCity" data-form="true"/>
                                     </div>
 
                                     <~ if(billingAddress && deliveryAddress) { ~>

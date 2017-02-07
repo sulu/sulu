@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,22 +11,22 @@
 
 namespace Sulu\Bundle\MediaBundle\Composer;
 
-use Composer\Script\CommandEvent;
+use Composer\Script\Event;
 use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 
 class MediaScriptHandler extends ScriptHandler
 {
     /**
-     * @param $event CommandEvent A instance
+     * @param $event Event A instance
      */
-    public static function initBundle(CommandEvent $event)
+    public static function initBundle(Event $event)
     {
         $options = parent::getOptions($event);
-        $appDir = $options['symfony-app-dir'];
+        $consoleDir = isset($options['symfony-bin-dir']) ? $options['symfony-bin-dir'] : $options['symfony-app-dir'];
 
         parent::executeCommand(
             $event,
-            $appDir,
+            $consoleDir,
             'sulu:media:init'
         );
     }

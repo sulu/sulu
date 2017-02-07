@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -46,15 +47,18 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [Events::PERSIST => 'handlePersist'];
+        return [
+            Events::PERSIST => ['copyShadowProperties', -256],
+            Events::PUBLISH => 'copyShadowProperties',
+        ];
     }
 
     /**
      * Handles persist event of document manager.
      *
-     * @param PersistEvent $event
+     * @param AbstractMappingEvent $event
      */
-    public function handlePersist(PersistEvent $event)
+    public function copyShadowProperties(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
@@ -62,14 +66,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->doPersist($event);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doPersist(PersistEvent $event)
-    {
         if (!$event->getDocument()->isShadowLocaleEnabled()) {
             $this->copyToShadows($event->getDocument(), $event->getNode());
         } else {

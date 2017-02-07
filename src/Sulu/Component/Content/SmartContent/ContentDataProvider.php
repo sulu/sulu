@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -10,6 +11,8 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
+use PHPCR\ItemNotFoundException;
+use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
@@ -54,16 +57,30 @@ class ContentDataProvider implements DataProviderInterface
      */
     private $proxyFactory;
 
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
         DocumentManagerInterface $documentManager,
-        LazyLoadingValueHolderFactory $proxyFactory
+        LazyLoadingValueHolderFactory $proxyFactory,
+        SessionInterface $session,
+        $showDrafts
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->documentManager = $documentManager;
         $this->proxyFactory = $proxyFactory;
+        $this->session = $session;
+        $this->showDrafts = $showDrafts;
     }
 
     /**
@@ -94,8 +111,8 @@ class ContentDataProvider implements DataProviderInterface
             ->enableDatasource(
                 'content-datasource@sulucontent',
                 [
-                    'rootUrl' => '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
-                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+                    'rootUrl' => '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=single',
+                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=single',
                     'resultKey' => 'nodes',
                 ]
             )
@@ -107,6 +124,7 @@ class ContentDataProvider implements DataProviderInterface
                     ['column' => 'changed', 'title' => 'smart-content.changed'],
                 ]
             )
+            ->setDeepLink('content/contents/{webspace}/{locale}/edit:{id}/details')
             ->getConfiguration();
 
         return $this->configuration;
@@ -232,11 +250,19 @@ class ContentDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        if (!array_key_exists('dataSource', $filters) ||
-            $filters['dataSource'] === '' ||
-            ($limit !== null && $limit < 1)
+        $emptyFilterResult = [[], false];
+
+        if (!array_key_exists('dataSource', $filters)
+            || $filters['dataSource'] === ''
+            || ($limit !== null && $limit < 1)
         ) {
-            return [[], false];
+            return $emptyFilterResult;
+        }
+
+        try {
+            $this->session->getNodeByIdentifier($filters['dataSource']);
+        } catch (ItemNotFoundException $e) {
+            return $emptyFilterResult;
         }
 
         $properties = array_key_exists('properties', $propertyParameter) ?
@@ -247,6 +273,7 @@ class ContentDataProvider implements DataProviderInterface
                 'config' => $filters,
                 'properties' => $properties,
                 'excluded' => $filters['excluded'],
+                'published' => !$this->showDrafts,
             ]
         );
 

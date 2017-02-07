@@ -14,6 +14,10 @@
                 <source>navigation.settings.categories</source>
                 <target>Categories</target>
             </trans-unit>
+            <trans-unit id="143c99ff2964652133a5ca2169f22236" resname="search-overlay.index.category.title">
+                <source>search-overlay.index.category.title</source>
+                <target>Categories</target>
+            </trans-unit>
             <trans-unit id="642c99ff2964652633a5ca2169f22236" resname="sulu.category.new-category">
                 <source>sulu.category.new-category</source>
                 <target>New category</target>
@@ -45,6 +49,38 @@
             <trans-unit id="143d99fa2864553633a5ca2169f22236" resname="sulu.category.no-categories-available">
                 <source>sulu.category.no-categories-available</source>
                 <target>No categories available</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11111" resname="sulu.category.keywords">
+                <source>sulu.category.keywords</source>
+                <target>Keywords</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11112" resname="sulu.category.keyword">
+                <source>sulu.category.keyword</source>
+                <target>Keyword</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11113" resname="sulu.category.used-multiple">
+                <source>sulu.category.used-multiple</source>
+                <target>Multiple usage</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11114" resname="sulu.category.keyword_conflict.title">
+                <source>sulu.category.keyword_conflict.title</source>
+                <target>Keyword is used multiple times</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11115" resname="sulu.category.keyword_conflict.message">
+                <source>sulu.category.keyword_conflict.message</source>
+                <target>Change keyword for all or create a new keyword?</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11116" resname="sulu.category.keyword_conflict.detach">
+                <source>sulu.category.keyword_conflict.detach</source>
+                <target>Create new keyword</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11117" resname="sulu.category.keyword_conflict.overwrite">
+                <source>sulu.category.keyword_conflict.overwrite</source>
+                <target>Overwrite</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11118" resname="sulu.category.medias">
+                <source>sulu.category.medias</source>
+                <target>Media</target>
             </trans-unit>
         </body>
     </file>

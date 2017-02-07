@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -167,7 +167,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
     {
         try {
             $delete = function ($id) {
-
                 /* @var ContactTitle $title */
                 $title = $this->getDoctrine()
                     ->getRepository(self::$entityName)

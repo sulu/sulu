@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,13 +33,6 @@ class Portal
      * @var string
      */
     private $key;
-
-    /**
-     * The url generation strategy for this portal.
-     *
-     * @var string
-     */
-    private $resourceLocatorStrategy;
 
     /**
      * An array of localizations.
@@ -106,22 +99,6 @@ class Portal
     public function getKey()
     {
         return $this->key;
-    }
-
-    /**
-     * @param string $resourceLocatorStrategy
-     */
-    public function setResourceLocatorStrategy($resourceLocatorStrategy)
-    {
-        $this->resourceLocatorStrategy = $resourceLocatorStrategy;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResourceLocatorStrategy()
-    {
-        return $this->resourceLocatorStrategy;
     }
 
     /**
@@ -285,7 +262,6 @@ class Portal
         $res = [];
         $res['name'] = $this->getName();
         $res['key'] = $this->getKey();
-        $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
 
         $res['localizations'] = [];
 

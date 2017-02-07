@@ -1,8 +1,0 @@
-sulu_core:
-    phpcr:
-        backend:
-            type: jackrabbit
-            url:  "%phpcr_backend_url%"
-        workspace: test
-        username: "%phpcr_username%"
-        password: "%phpcr_password%"

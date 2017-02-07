@@ -2,17 +2,19 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
 
     <testsuites>
-        <testsuite name="Sulu Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="components">
+            <directory suffix="Test.php">./src/Sulu/Component/*/Tests</directory>
         </testsuite>
     </testsuites>
 
+    <!-- Code coverage filter -->
     <filter>
         <whitelist>
             <directory>./</directory>
             <exclude>
                 <directory>./tests</directory>
                 <directory>./vendor</directory>
+                <directory>./src/Sulu/Component/*/Tests</directory>
             </exclude>
         </whitelist>
     </filter>
@@ -20,5 +22,6 @@
     <php>
         <server name="KERNEL_DIR" value="tests/app"/>
         <var name="APP_DB" value="mysql"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 </phpunit>

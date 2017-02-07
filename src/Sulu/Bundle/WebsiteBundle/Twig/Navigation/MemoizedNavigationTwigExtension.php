@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,29 +12,19 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized navigation functions.
  */
-class MemoizedNavigationTwigExtension extends \Twig_Extension implements NavigationTwigExtensionInterface
+class MemoizedNavigationTwigExtension extends \Twig_Extension
 {
-    /**
-     * @var NavigationTwigExtensionInterface
-     */
-    private $extension;
+    use MemoizeTwigExtensionTrait;
 
     /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
-
-    /**
-     * Constructor.
+     * @param NavigationTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param $lifeTime
      */
     public function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -46,56 +36,8 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     /**
      * {@inheritdoc}
      */
-    public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'flatRootNavigationFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'treeRootNavigationFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'treeNavigationFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'flatNavigationFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function breadcrumbFunction($uuid)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'breadcrumbFunction'], $this->lifeTime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->extension->getFunctions();
     }
 }

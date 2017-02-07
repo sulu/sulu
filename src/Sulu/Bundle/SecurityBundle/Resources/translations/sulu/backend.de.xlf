@@ -60,11 +60,11 @@
             </trans-unit>
             <trans-unit id="aa9d596361fe589c984464479c6198cb" resname="security.roles.all">
                 <source>security.roles.all</source>
-                <target>Alle auswählen</target>
+                <target>Alle aktivieren</target>
             </trans-unit>
             <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff0" resname="security.roles.none">
                 <source>security.roles.none</source>
-                <target>Keine auswählen</target>
+                <target>Alle deaktivieren</target>
             </trans-unit>
             <trans-unit id="630afebcb7daa7f0a5addd4a3c76fff1" resname="security.roles.security-type">
                 <source>security.roles.security-type</source>
@@ -121,6 +121,42 @@
             <trans-unit id="1cd67d24ab0a432414bc0685517c721c" resname="security.reset.mail-message">
                 <source>security.reset.mail-message</source>
                 <target>Klicken Sie auf den folgenden Link oder kopieren Sie ihn in Ihren Browser um Ihr Sulu Passwort zurückzusetzen:</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
+                <source>security.warning</source>
+                <target>Um die Änderungen an den Sicherheitseinstellungen zu sehen, muss das System neu geladen werden.</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
+                <source>sulu-security.role.removed</source>
+                <target>Rolle erfolgreich entfernt</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
+                <source>sulu-security.role.saved</source>
+                <target>Rolle erfolgreich gespeichert</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236l" resname="security.permissions.view">
+                <source>security.permissions.view</source>
+                <target>Ansehen</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236z" resname="security.permissions.add">
+                <source>security.permissions.add</source>
+                <target>Hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236c" resname="security.permissions.edit">
+                <source>security.permissions.edit</source>
+                <target>Bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236q" resname="security.permissions.delete">
+                <source>security.permissions.delete</source>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236t" resname="security.permissions.security">
+                <source>security.permissions.security</source>
+                <target>Sicherheit</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c236x" resname="security.permissions.live">
+                <source>security.permissions.live</source>
+                <target>Live</target>
             </trans-unit>
         </body>
     </file>

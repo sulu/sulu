@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\NodeManager;
@@ -46,22 +47,15 @@ class SearchIntegrationTest extends SuluTestCase
      */
     private $mediaSelectionContainer;
 
-    protected function getKernelConfiguration()
-    {
-        return [
-            'sulu_context' => 'website',
-        ];
-    }
-
     public function setUp()
     {
         $this->initPhpcr();
-        $this->documentManager = $this->container->get('sulu_document_manager.document_manager');
-        $this->nodeManager = $this->container->get('sulu_document_manager.node_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->nodeManager = $this->getContainer()->get('sulu_document_manager.node_manager');
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();
-        $tagManager = $this->getMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
+        $tagManager = $this->prophesize(TagManagerInterface::class);
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
 
         $this->mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
@@ -90,7 +84,12 @@ class SearchIntegrationTest extends SuluTestCase
             $format => 'myimage.jpg',
         ]);
 
-        $testAdapter = $this->container->get('massive_search.adapter.test');
+        $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
+
+        // remove the documents indexed when creating the fixtures
+        foreach ($testAdapter->listIndexes() as $indexName) {
+            $testAdapter->purge($indexName);
+        }
 
         $document = $this->documentManager->create('page');
         $document->setTitle('Hallo');
@@ -105,7 +104,7 @@ class SearchIntegrationTest extends SuluTestCase
 
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
-        $document = current($documents);
+        $document = end($documents);
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
         $this->assertEquals('myimage.jpg', $document->getImageUrl());
     }

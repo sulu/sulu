@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
@@ -102,16 +101,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * persists a setting.
-     *
-     * @Put("tags/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
-    }
-
-    /**
      * Returns a single tag with the given id.
      *
      * @param $id
@@ -148,9 +137,15 @@ class TagController extends RestController implements ClassResourceInterface, Se
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
+            $fieldDescriptors = $this->getManager()->getFieldDescriptors();
             $listBuilder = $factory->create(self::$entityName);
 
-            $restHelper->initializeListBuilder($listBuilder, $this->getManager()->getFieldDescriptors());
+            $ids = array_filter(explode(',', $request->get('ids', '')));
+            if (count($ids) > 0) {
+                $listBuilder->in($fieldDescriptors['id'], $ids);
+            }
+
+            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),

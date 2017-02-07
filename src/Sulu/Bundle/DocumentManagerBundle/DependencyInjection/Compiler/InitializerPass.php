@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -32,7 +32,7 @@ class InitializerPass implements CompilerPassInterface
 
         foreach ($ids as $id => $attributes) {
             $priority = 0;
-            if (isset($attributes[0]['priotity'])) {
+            if (isset($attributes[0]['priority'])) {
                 $priority = $attributes[0]['priority'];
             }
             $map[$id] = $priority;

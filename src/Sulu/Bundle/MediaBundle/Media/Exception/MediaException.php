@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -166,11 +166,32 @@ class MediaException extends Exception
     const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
 
     /**
+     * Format cache is not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_CACHE_NOT_FOUND = 5022;
+
+    /**
      * Systemfile is not found.
      *
      * @var int
      */
     const EXCEPTION_CODE_ORIGINAL_FILE_NOT_FOUND = 5027;
+
+    /**
+     * Format is not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_FORMAT_NOT_FOUND = 5028;
+
+    /**
+     * Format options parameter is missing.
+     *
+     * @var int
+     */
+    const EXCEPTION_FORMAT_OPTIONS_MISSING_PARAMETER = 5029;
 
     public function toArray()
     {

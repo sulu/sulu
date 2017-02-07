@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/collection-manager', 'services/husky/mediator'], function(CollectionManager, Mediator) {
+define([
+    'services/sulumedia/collection-manager',
+    'services/sulumedia/user-settings-manager',
+    'services/husky/mediator'
+], function(CollectionManager, UserSettingsManager, Mediator) {
 
     'use strict';
 
@@ -101,10 +105,9 @@ define(['services/sulumedia/collection-manager', 'services/husky/mediator'], fun
         okCallback: function() {
             if (this.sandbox.form.validate(constants.newFormSelector)) {
                 this.addCollection();
-                this.sandbox.stop();
-            } else {
-                return false;
             }
+
+            return false;
         },
 
         /**
@@ -113,10 +116,15 @@ define(['services/sulumedia/collection-manager', 'services/husky/mediator'], fun
          */
         addCollection: function() {
             var collection = this.sandbox.form.getData(constants.newFormSelector);
+
+            this.sandbox.emit('husky.overlay.add-collection.show-loader');
             collection.parent = this.options.parent;
+            collection.locale = UserSettingsManager.getMediaLocale();
 
             CollectionManager.save(collection).done(function(collection) {
                 Mediator.emit('sulu.media.collection-create.created', collection);
+                this.sandbox.emit('husky.overlay.add-collection.hide-loader');
+                this.sandbox.stop();
             }.bind(this));
         },
 

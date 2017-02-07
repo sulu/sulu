@@ -10,10 +10,10 @@
 /**
  * handles resource locator
  *
- * @class AutoComplete
+ * @class ResourceLocator
  * @constructor
  */
-define([], function() {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -22,7 +22,8 @@ define([], function() {
             url: null,
             historyApi: null,
             deleteApi: null,
-            restoreApi: null
+            inputType: null,
+            webspaceKey: null
         },
 
         skeleton = function(options) {
@@ -34,15 +35,19 @@ define([], function() {
                     '</div>'
                 ].join('');
             } else {
+                var history = [
+                    '<span class="show pointer small-font" id="' + options.ids.toggle + '">',
+                    '   <span class="fa-history icon"></span>',
+                    '   <span>' + options.showHistoryText + '</span>',
+                    '</span>'
+                ];
+
                 return [
                     '<div class="resource-locator">',
                     '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
                     '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
                     '   <input type="text" id="' + options.ids.input + '" class="form-element"/>',
-                    '   <span class="show pointer small-font" id="', options.ids.toggle, '">',
-                    '       <span class="fa-history icon"></span>',
-                    '       <span>', options.showHistoryText, '</span>',
-                    '   </span>',
+                    !!options.historyApi ? history.join('') : '',
                     '   <div class="loader" id="', options.ids.loader, '"></div>',
                     '</div>'
                 ].join('');
@@ -134,46 +139,28 @@ define([], function() {
 
             // delete
             this.sandbox.dom.on(this.$el, 'click', deleteUrl.bind(this), '.options-delete');
-
-            // restore
-            this.sandbox.dom.on(this.$el, 'click', restoreUrl.bind(this), '.options-restore');
         },
 
         deleteUrl = function(e) {
-            var $currentElement = this.sandbox.dom.$(e.currentTarget),
-                $element = this.sandbox.dom.parent($currentElement),
-                id = this.sandbox.dom.data($element, 'id');
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (confirmed === true) {
+                    var $currentElement = this.sandbox.dom.$(e.currentTarget),
+                        $element = this.sandbox.dom.parent($currentElement),
+                        id = this.sandbox.dom.data($element, 'id');
 
-            startOptionsLoader.call(this, $element);
+                    startOptionsLoader.call(this, $element);
 
-            this.sandbox.util.save(this.items[id]._links.delete, 'DELETE', {})
-                .then(function() {
-                    stopOptionsLoader.call(this, $element);
-                    this.sandbox.dom.remove($element);
-                }.bind(this))
-                .fail(function() {
-                    // FIXME message
-                    stopOptionsLoader.call(this, $element);
-                });
-        },
-
-        restoreUrl = function(e) {
-            var $currentElement = this.sandbox.dom.$(e.currentTarget),
-                $element = this.sandbox.dom.parent($currentElement),
-                id = this.sandbox.dom.data($element, 'id');
-
-            startOptionsLoader.call(this, $element);
-
-            this.sandbox.util.save(this.items[id]._links.restore, 'PUT', {})
-                .then(function(data) {
-                    setValue.call(this, data.resourceLocator);
-                    this.sandbox.emit('husky.overlay.url-history.close');
-                    stopOptionsLoader.call(this, $element);
-                }.bind(this))
-                .fail(function() {
-                    // FIXME message
-                    stopOptionsLoader.call(this, $element);
-                });
+                    this.sandbox.util.save(this.items[id]._links.delete, 'DELETE')
+                        .then(function() {
+                            stopOptionsLoader.call(this, $element);
+                            this.sandbox.dom.remove($element);
+                        }.bind(this))
+                        .fail(function() {
+                            // FIXME message
+                            stopOptionsLoader.call(this, $element);
+                        });
+                }
+            }.bind(this), 'public.delete', 'sulu-content.resource-locator.delete');
         },
 
         setValue = function(value) {
@@ -183,8 +170,14 @@ define([], function() {
                     value = '';
                 }
             }
-            var parts = value.split('/'),
+            var parts, part;
+            if (getInputType.call(this, this.options.webspaceKey) === 'leaf') {
+                parts = value.split('/');
                 part = parts.pop();
+            } else {
+                parts = [];
+                part = value.substring(1);
+            }
 
             this.sandbox.dom.data(this.$el, 'part', part);
 
@@ -213,7 +206,6 @@ define([], function() {
                     this.items[history.id] = history;
                     html.push(
                             '<li data-id="' + history.id + '" data-path="' + history.resourceLocator + '">' +
-                            '   <span class="options-restore"><i class="fa fa-refresh pointer"></i></span>' +
                             '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 30) + '</span>' +
                             '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
                             '   <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>' +
@@ -244,7 +236,7 @@ define([], function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'url-history',
-                        skin: 'wide',
+                        skin: 'medium',
                         data: content
                     }
                 }
@@ -258,6 +250,14 @@ define([], function() {
                 var content = renderHistories.call(this, data._embedded.resourcelocators);
                 startOverlay.call(this, content);
             }.bind(this));
+        },
+
+        getInputType = function(webspaceKey) {
+            if (!!this.options.inputType) {
+                return this.options.inputType;
+            }
+
+            return Config.get('sulu_content.webspace_input_types')[webspaceKey];
         };
 
     return {

@@ -1,13 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
+namespace Sulu\Bundle\ContactBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -25,91 +27,89 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function load(ObjectManager $manager)
     {
-        $phoneType1 = new PhoneType();
-        $phoneType1->setId(1);
-
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class($phoneType1));
+        // phone types
+        $metadata = $manager->getClassMetaData(PhoneType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
+        $phoneType1 = new PhoneType();
+        $phoneType1->setId(1);
+        $phoneType1 = $manager->merge($phoneType1);
         $phoneType1->setName('phone.work');
-        $manager->persist($phoneType1);
 
         $phoneType2 = new PhoneType();
         $phoneType2->setId(2);
+        $phoneType2 = $manager->merge($phoneType2);
         $phoneType2->setName('phone.home');
-        $manager->persist($phoneType2);
 
         $phoneType3 = new PhoneType();
         $phoneType3->setId(3);
+        $phoneType3 = $manager->merge($phoneType3);
         $phoneType3->setName('phone.mobile');
-        $manager->persist($phoneType3);
+
+        // email types
+        $metadata = $manager->getClassMetaData(EmailType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $emailType1 = new EmailType();
         $emailType1->setId(1);
-
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class($emailType1));
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-
+        $emailType1 = $manager->merge($emailType1);
         $emailType1->setName('email.work');
-        $manager->persist($emailType1);
 
         $this->addReference('email.type.work', $emailType1);
 
         $emailType2 = new EmailType();
         $emailType2->setId(2);
+        $emailType2 = $manager->merge($emailType2);
         $emailType2->setName('email.home');
-        $manager->persist($emailType2);
 
         $this->addReference('email.type.home', $emailType2);
 
-        $addressType1 = new AddressType();
-        $addressType1->setId(1);
-
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class($addressType1));
+        // address types
+        $metadata = $manager->getClassMetaData(AddressType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
+        $addressType1 = new AddressType();
+        $addressType1->setId(1);
+        $addressType1 = $manager->merge($addressType1);
         $addressType1->setName('address.work');
-        $manager->persist($addressType1);
 
         $addressType2 = new AddressType();
         $addressType2->setId(2);
+        $addressType2 = $manager->merge($addressType2);
         $addressType2->setName('address.home');
-        $manager->persist($addressType2);
+
+        // url types
+        $metadata = $manager->getClassMetaData(UrlType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $urlType1 = new UrlType();
         $urlType1->setId(1);
-
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class($urlType1));
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-
+        $urlType1 = $manager->merge($urlType1);
         $urlType1->setName('url.work');
-        $manager->persist($urlType1);
 
         $urlType2 = new UrlType();
         $urlType2->setId(2);
+        $urlType2 = $manager->merge($urlType2);
         $urlType2->setName('url.home');
-        $manager->persist($urlType2);
 
-        $manager->flush();
+        // fax types
+        $metadata = $manager->getClassMetaData(FaxType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $faxType1 = new FaxType();
         $faxType1->setId(1);
-
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class($faxType1));
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-
+        $faxType1 = $manager->merge($faxType1);
         $faxType1->setName('fax.work');
-        $manager->persist($faxType1);
 
         $faxType2 = new FaxType();
         $faxType2->setId(2);
+        $faxType2 = $manager->merge($faxType2);
         $faxType2->setName('fax.home');
-        $manager->persist($faxType2);
 
         $manager->flush();
     }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="543c99ff2964652633a5ca2169f22236" resname="content-navigation.category.details">
+                <source>content-navigation.category.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="143c99ff2964652633a5ca2169f22236" resname="category.categories.title">
+                <source>category.categories.title</source>
+                <target>Categorieën</target>
+            </trans-unit>
+            <trans-unit id="623c99ff2964652633a5ca2169f22236" resname="navigation.settings.categories">
+                <source>navigation.settings.categories</source>
+                <target>Categorieën</target>
+            </trans-unit>
+            <trans-unit id="143c99ff2964652133a5ca2169f22236" resname="search-overlay.index.category.title">
+                <source>search-overlay.index.category.title</source>
+                <target>Categorieën</target>
+            </trans-unit>
+            <trans-unit id="642c99ff2964652633a5ca2169f22236" resname="sulu.category.new-category">
+                <source>sulu.category.new-category</source>
+                <target>Nieuwe categorie</target>
+            </trans-unit>
+            <trans-unit id="643999ff2964652633a5ca2169f22236" resname="sulu.category.category-name">
+                <source>sulu.category.category-name</source>
+                <target>Naam van categorie</target>
+            </trans-unit>
+            <trans-unit id="643999ff2964952633a5ca2169f22236" resname="sulu.category.category-key">
+                <source>sulu.category.category-key</source>
+                <target>Categorie keyword</target>
+            </trans-unit>
+            <trans-unit id="643a99ff2964652633a5ca2169f22236" resname="labels.success.category-save-desc">
+                <source>labels.success.category-save-desc</source>
+                <target>Categorie succesvol opgeslagen</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2964652633a5ca2169f22236" resname="labels.success.category-delete-desc">
+                <source>labels.success.category-delete-desc</source>
+                <target>Categorie succesvol verwijderd</target>
+            </trans-unit>
+            <trans-unit id="643d99ff2864653633a5ca2169f22236" resname="labels.error.category-unique-key">
+                <source>labels.error.category-unique-key</source>
+                <target>Het keyword moet uniek zijn</target>
+            </trans-unit>
+            <trans-unit id="143d99ff2864653633a5ca2169f22236" resname="labels.success.category-save-error">
+                <source>labels.success.category-save-error</source>
+                <target>Er ging iets fout bij het opslaan van de categorie</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f22236" resname="sulu.category.no-categories-available">
+                <source>sulu.category.no-categories-available</source>
+                <target>Geen categorieën beschikbaar</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11111" resname="sulu.category.keywords">
+                <source>sulu.category.keywords</source>
+                <target>Keywords</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11112" resname="sulu.category.keyword">
+                <source>sulu.category.keyword</source>
+                <target>Keyword</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11113" resname="sulu.category.used-multiple">
+                <source>sulu.category.used-multiple</source>
+                <target>Vaker gebruikt</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11114" resname="sulu.category.keyword_conflict.title">
+                <source>sulu.category.keyword_conflict.title</source>
+                <target>Het keyword is meerder keren gebruikt</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11115" resname="sulu.category.keyword_conflict.message">
+                <source>sulu.category.keyword_conflict.message</source>
+                <target>Het keyword voor alles veranderen of een nieuwe maken?</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11116" resname="sulu.category.keyword_conflict.detach">
+                <source>sulu.category.keyword_conflict.detach</source>
+                <target>Maak een nieuw keyword</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11117" resname="sulu.category.keyword_conflict.overwrite">
+                <source>sulu.category.keyword_conflict.overwrite</source>
+                <target>Overschrijven</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11118" resname="sulu.category.medias">
+                <source>sulu.category.medias</source>
+                <target>Media</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

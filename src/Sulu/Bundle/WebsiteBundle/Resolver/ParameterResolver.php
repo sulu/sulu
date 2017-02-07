@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,7 +33,7 @@ class ParameterResolver implements ParameterResolverInterface
     /**
      * ParameterResolver constructor.
      *
-     * @param StructureResolverInterface       $structureResolver
+     * @param StructureResolverInterface $structureResolver
      * @param RequestAnalyzerResolverInterface $requestAnalyzerResolver
      */
     public function __construct(
@@ -59,12 +59,7 @@ class ParameterResolver implements ParameterResolverInterface
             $structureData = [];
         }
 
-        if (!$preview) {
-            $requestAnalyzerData = $this->requestAnalyzerResolver->resolve($requestAnalyzer);
-        } else {
-            $requestAnalyzerData = $this->requestAnalyzerResolver
-                ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
-        }
+        $requestAnalyzerData = $this->requestAnalyzerResolver->resolve($requestAnalyzer);
 
         if (null !== ($portal = $requestAnalyzer->getPortal())) {
             $allLocalizations = $portal->getLocalizations();

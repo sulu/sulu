@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="fbf4558377419fbed4a73a4ba3fdf006" resname="public.name">
+                <source>public.name</source>
+                <target>Nom</target>
+            </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c73a4ba3fdf006" resname="public.key">
+                <source>public.key</source>
+                <target>Clef Publique</target>
+            </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c73a4ba3fdf007" resname="public.empty-list">
+                <source>public.empty-list</source>
+                <target>La liste est vide</target>
+            </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c723f096fdf007" resname="public.reached-list-end">
+                <source>public.reached-list-end</source>
+                <target>Vous avez atteint la fin de la liste</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2d39e" resname="public.edit">
+                <source>public.edit</source>
+                <target>Edition</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e8bdbc" resname="header.add">
+                <source>header.add</source>
+                <target>Ajout</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e865fc" resname="public.tags">
+                <source>public.tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863ade53bc0e1bd8822e865d5" resname="public.show-tags">
+                <source>public.show-tags</source>
+                <target>Voir tags</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863adc53bc0e1bd8822e865d5" resname="public.view-all">
+                <source>public.view-all</source>
+                <target>Voir tous</target>
+            </trans-unit>
+            <trans-unit id="a10bd71863adc53bc0e1bd8822e865f5" resname="public.view-less">
+                <source>public.view-less</source>
+                <target>Voir moins</target>
+            </trans-unit>
+            <trans-unit id="4190dab27f368a8a2e5f4f20f8aec708" resname="header.save">
+                <source>header.save</source>
+                <target>Sauvegarder</target>
+            </trans-unit>
+            <trans-unit id="307fb80b1557fd5a20078b81d3315516" resname="header.saved">
+                <source>header.saved</source>
+                <target>Sauvé</target>
+            </trans-unit>
+            <trans-unit id="732b6d11a1ea5b3a2155a4b9e7340af4" resname="header.delete">
+                <source>header.delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+            <trans-unit id="77bd83ff9256e9f3a39136fc93557c51" resname="navigation.list">
+                <source>navigation.list</source>
+                <target>Retour à la liste</target>
+            </trans-unit>
+            <trans-unit id="9055acd6577ed6a6fb7c625afcaff86f" resname="translate.package.title">
+                <source>translate.package.title</source>
+                <target>Paquet</target>
+            </trans-unit>
+            <trans-unit id="a0ff6dd7ef4022e0b90d8176c6ed89b0" resname="translate.package.catalogues">
+                <source>translate.package.catalogues</source>
+                <target>Catalogues de langue</target>
+            </trans-unit>
+            <trans-unit id="b0a7a12cf626e2af8f2d747e10805dda" resname="translate.package.settings.locale">
+                <source>translate.package.settings.locale</source>
+                <target>Locale</target>
+            </trans-unit>
+            <trans-unit id="effc1e2fb2feae3c2dd8cb28cce0e0fa" resname="translate.package.settings.addCatalogue">
+                <source>translate.package.settings.addCatalogue</source>
+                <target>Ajouter Catalogue</target>
+            </trans-unit>
+            <trans-unit id="364906a0b1507d380e04114b14ab6ccf" resname="translate.package.details.key">
+                <source>translate.package.details.key</source>
+                <target>Clef</target>
+            </trans-unit>
+            <trans-unit id="f4bbd008d107977776f2c941372ac49d" resname="translate.package.details.translation">
+                <source>translate.package.details.translation</source>
+                <target>Traduction</target>
+            </trans-unit>
+            <trans-unit id="88e1528289c61505fab3bf4918c63940" resname="translate.package.details.suggestion">
+                <source>translate.package.details.suggestion</source>
+                <target>Suggestion</target>
+            </trans-unit>
+            <trans-unit id="2390c5e7e1e39575faf1d4560233b254" resname="translate.package.details.maxLength">
+                <source>translate.package.details.maxLength</source>
+                <target>Longueur Maximum</target>
+            </trans-unit>
+            <trans-unit id="ff58c981a4179edc0054ab79f2139419" resname="translate.package.details.length">
+                <source>translate.package.details.length</source>
+                <target>Longueur</target>
+            </trans-unit>
+            <trans-unit id="2c54260ae1ff88b98bc26f899039de1b" resname="translate.package.details.frontend">
+                <source>translate.package.details.frontend</source>
+                <target>Frontend</target>
+            </trans-unit>
+            <trans-unit id="e5c1b1c082cab176cde2b5128281eee3" resname="translate.package.details.backend">
+                <source>translate.package.details.backend</source>
+                <target>Backend</target>
+            </trans-unit>
+            <trans-unit id="5302353bfd4da5508f093bb893147557" resname="translate.package.details.addElement">
+                <source>translate.package.details.addElement</source>
+                <target>Ajouter un élément</target>
+            </trans-unit>
+            <trans-unit id="ebee6be3618fa603188921cf16eedb1c" resname="public.delete">
+                <source>public.delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+            <trans-unit id="d604cadd9da2288a7c6dedec8fe50b72" resname="public.no-pages">
+                <source>public.no-pages</source>
+                <target>Pas de Pages</target>
+            </trans-unit>
+            <trans-unit id="6603511ae852ff46c20147528150e4b1" resname="translate.package.settings.title">
+                <source>translate.package.settings.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="7a842ee77239dc1f4f19f06e46a89125" resname="public.email">
+                <source>public.email</source>
+                <target>E-Mail</target>
+            </trans-unit>
+            <trans-unit id="0b5526f6b188d3fa7c6bfb36813bb77f" resname="public.phone">
+                <source>public.phone</source>
+                <target>Téléphone</target>
+            </trans-unit>
+            <trans-unit id="f87ae60abcd8be768e4315c9bb0497a5" resname="public.address">
+                <source>public.address</source>
+                <target>Addresse</target>
+            </trans-unit>
+            <trans-unit id="21739fb59ce76aa58404d9fc613ba40d" resname="email.home">
+                <source>email.home</source>
+                <target>Privé</target>
+            </trans-unit>
+            <trans-unit id="9c0bd43954c93c8e2cbfe94ecdd649c7" resname="email.work">
+                <source>email.work</source>
+                <target>Travail</target>
+            </trans-unit>
+            <trans-unit id="1eddecabfe3e3149071096c39a2069b1" resname="phone.home">
+                <source>phone.home</source>
+                <target>Privé</target>
+            </trans-unit>
+            <trans-unit id="2ae8f62c2530b4303646d95f70bfa62e" resname="phone.work">
+                <source>phone.work</source>
+                <target>Travail</target>
+            </trans-unit>
+            <trans-unit id="27b4428805be5d6c32f51fd103b76cef" resname="phone.fax">
+                <source>phone.fax</source>
+                <target>Fax</target>
+            </trans-unit>
+            <trans-unit id="e7f59f60cc850de26922b29a1dcc3826" resname="address.home">
+                <source>address.home</source>
+                <target>Privé</target>
+            </trans-unit>
+            <trans-unit id="4b006ce36bf3e4f6bb24fd13e8dc29a9" resname="address.work">
+                <source>address.work</source>
+                <target>Travail</target>
+            </trans-unit>
+            <trans-unit id="a6287b824eeb3893ce4ef15ee503f47d" resname="country.austria">
+                <source>country.austria</source>
+                <target>Autriche</target>
+            </trans-unit>
+            <trans-unit id="78faa530839099878354d0f97c165f67" resname="country.germany">
+                <source>country.germany</source>
+                <target>Allemagne</target>
+            </trans-unit>
+            <trans-unit id="769a438685ade58b963d872013c70edd" resname="public.delete">
+                <source>public.delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+            <trans-unit id="b0e756e39c8e2107ac4461ba08222b46" resname="sulu.list-toolbar.import">
+                <source>sulu.list-toolbar.import</source>
+                <target>Importer</target>
+            </trans-unit>
+            <trans-unit id="cfa5e5c51304396fa907ae54c84ab855" resname="sulu.list-toolbar.export">
+                <source>sulu.list-toolbar.export</source>
+                <target>Exporter</target>
+            </trans-unit>
+            <trans-unit id="305f571ce8dc8b08470285f8a990899a" resname="navigation.tools">
+                <source>navigation.tools</source>
+                <target>Outils</target>
+            </trans-unit>
+            <trans-unit id="435b1473d76660a3ea27a2e9335a8d5d" resname="navigation.settings">
+                <source>navigation.settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="a4e5be148f7d93a106d468391b00d055" resname="navigation.settings.translate">
+                <source>navigation.settings.translate</source>
+                <target>Traduire</target>
+            </trans-unit>
+            <trans-unit id="883c0562a1ae3578239d1803dfe61292" resname="navigation.webspaces">
+                <source>navigation.webspaces</source>
+                <target>Webspaces</target>
+            </trans-unit>
+            <trans-unit id="eefab6371eb9c8bb5457d1f5e35014a2" resname="navigation.webspaces.pages">
+                <source>navigation.webspaces.pages</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="565274b9a7087049d8d48e907c8971e8" resname="navigation.version-history">
+                <source>navigation.version-history</source>
+                <target>Version historique</target>
+            </trans-unit>
+            <trans-unit id="04dd24f22e20babfcfc76089b8caf841" resname="navigation.user">
+                <source>navigation.user</source>
+                <target>Utilisateur</target>
+            </trans-unit>
+            <trans-unit id="da096463200e2c1bd9bdd1321852e268" resname="content-navigation.security.permissions">
+                <source>content-navigation.security.permissions</source>
+                <target>Permissions</target>
+            </trans-unit>
+            <trans-unit id="fd444a99cbd01ff26a3efa16ff6da07e" resname="content-navigation.security.details">
+                <source>content-navigation.security.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="4a89b50039803b376bde5c46837b91a4" resname="content-navigation.contents.content">
+                <source>content-navigation.contents.content</source>
+                <target>Contenu</target>
+            </trans-unit>
+            <trans-unit id="ecfca947639c0251512a8c1990132da0" resname="content-navigation.contents.settings">
+                <source>content-navigation.contents.settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="208ce313bf52378e0d6891d69ffcddd4" resname="public.search">
+                <source>public.search</source>
+                <target>Recherche ...</target>
+            </trans-unit>
+            <trans-unit id="5e151909a6ee7c2c566d068d611a848b" resname="navigation.hide">
+                <source>navigation.hide</source>
+                <target>CACHER</target>
+            </trans-unit>
+            <trans-unit id="0b7fef1b3b6a056c4a7b4a9fb6901586" resname="navigation.show">
+                <source>navigation.show</source>
+                <target>AFFICHER</target>
+            </trans-unit>
+            <trans-unit id="8c16a1fe6abba7701446e0f4515e096b" resname="security.permission.locale">
+                <source>security.permission.locale</source>
+                <target>Langue Systeme</target>
+            </trans-unit>
+            <trans-unit id="ba94026d08c4e74cc8d19436f7838a95" resname="pagination.page">
+                <source>pagination.page</source>
+                <target>Page:</target>
+            </trans-unit>
+            <trans-unit id="dc473bd06017432f7b455dc710046d13" resname="pagination.of">
+                <source>pagination.of</source>
+                <target>de</target>
+            </trans-unit>
+            <trans-unit id="317132c150958a110ab6c49ea2f99dee" resname="pagination.elements">
+                <source>pagination.elements</source>
+                <target>éléments</target>
+            </trans-unit>
+            <trans-unit id="f293f6bd000d7e96b51c24c6e4b22e59" resname="pagination.show">
+                <source>pagination.show</source>
+                <target>Afficher</target>
+            </trans-unit>
+            <trans-unit id="611c731dd700d92d4246a4dc57996bec" resname="pagination.elements-of">
+                <source>pagination.elements-of</source>
+                <target>elements de</target>
+            </trans-unit>
+            <trans-unit id="a8930b800abe85d3b19da82ca85dc4c0" resname="pagination.elements-per-page">
+                <source>pagination.elements-per-page</source>
+                <target>Eléments par page</target>
+            </trans-unit>
+            <trans-unit id="ab31942997c01851a4e84e476882c5bc" resname="pagination.show-all-elements">
+                <source>pagination.show-all-elements</source>
+                <target>Afficher tous les éléments</target>
+            </trans-unit>
+            <trans-unit id="84e007577e7329f1ac8509c8e6b6e038" resname="navigation.settings.tags">
+                <source>navigation.settings.tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="72e14b96918d836a8db5575ca94133a8" resname="public.id">
+                <source>public.id</source>
+                <target>ID</target>
+            </trans-unit>
+            <trans-unit id="aa1e276ea5cedf84599572e2dcf07f28" resname="list-toolbar.column-options">
+                <source>list-toolbar.column-options</source>
+                <target>Options colonne</target>
+            </trans-unit>
+            <trans-unit id="ab1e276ea5cedf84599572e2dcf07f28" resname="list-toolbar.column-options.title">
+                <source>list-toolbar.column-options.title</source>
+                <target>Options colonne</target>
+            </trans-unit>
+            <trans-unit id="2b8871c8001f2c3566269f5ad4515b89" resname="tags.name">
+                <source>tags.name</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="3e0f7ed3323ebf452bdbd57f077e6347" resname="tags.author">
+                <source>tags.author</source>
+                <target>Auteur</target>
+            </trans-unit>
+            <trans-unit id="414427d622e07cebcb5f315c2e926b53" resname="tags.changed">
+                <source>tags.changed</source>
+                <target>Dernière changement</target>
+            </trans-unit>
+            <trans-unit id="da7c493010f2c3545706969e142d0749" resname="public.changed">
+                <source>public.changed</source>
+                <target>Dernière changement</target>
+            </trans-unit>
+            <trans-unit id="da7c493010f2c3545706919e142d0749" resname="public.changer">
+                <source>public.changer</source>
+                <target>Dernière changement par</target>
+            </trans-unit>
+            <trans-unit id="892cc3ad5bdba41fcf1b98298a4aee6a" resname="public.created">
+                <source>public.created</source>
+                <target>Créer le</target>
+            </trans-unit>
+            <trans-unit id="892cc3ad5bdba41f2f1b98298a4aee6a" resname="public.creator">
+                <source>public.creator</source>
+                <target>Créé par</target>
+            </trans-unit>
+            <trans-unit id="4ea635d980999da6a15ef3782d251878" resname="public.title">
+                <source>public.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="574466b8b3f0b6830dc2e83f5a8c4726" resname="tag.tags.title">
+                <source>tag.tags.title</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="5f5ac49151e05def2320eb2b8f72dc56" resname="toolbar.state-publish">
+                <source>toolbar.state-publish</source>
+                <target>Publié</target>
+            </trans-unit>
+            <trans-unit id="fec4ff95aaa266783001a9aa4f4f8ef7" resname="toolbar.state-unpublish">
+                <source>toolbar.state-unpublish</source>
+                <target>Dépublié</target>
+            </trans-unit>
+            <trans-unit id="c964185c0ace3c5ab313933e33bd5e4b" resname="toolbar.state-test">
+                <source>toolbar.state-test</source>
+                <target>Test</target>
+            </trans-unit>
+            <trans-unit id="dc28c61f746b3a3f606aa4b24724d5c6" resname="template.default">
+                <source>template.default</source>
+                <target>Defaut</target>
+            </trans-unit>
+            <trans-unit id="02b4d013de976ab3f59f84e9106c0175" resname="template.simple">
+                <source>template.simple</source>
+                <target>Simple</target>
+            </trans-unit>
+            <trans-unit id="24291c9e058f4e7ee3f959ac29f5d970" resname="template.overview">
+                <source>template.overview</source>
+                <target>Vue d'ensemble</target>
+            </trans-unit>
+            <trans-unit id="f387813a5748c1a5ca6f6394439f6d69" resname="template.complex">
+                <source>template.complex</source>
+                <target>Complexe</target>
+            </trans-unit>
+            <trans-unit id="9b9f05a3f23cb61902773ac06161f04d" resname="public.published">
+                <source>public.published</source>
+                <target>Publié</target>
+            </trans-unit>
+            <trans-unit id="cdae7f0dde969793a5e8be3c6afc2c3b" resname="labels.state-changed.success-desc">
+                <source>labels.state-changed.success-desc</source>
+                <target>Status changé</target>
+            </trans-unit>
+            <trans-unit id="2e6ea49ed75467320c8fe78379b9fcff" resname="labels.success">
+                <source>labels.success</source>
+                <target>Success</target>
+            </trans-unit>
+            <trans-unit id="cb650d8a319e35b49d7e146b13f194ee" resname="labels.state-changed.error-desc">
+                <source>labels.state-changed.error-desc</source>
+                <target>Status ne peut pas être changé</target>
+            </trans-unit>
+            <trans-unit id="fab30c862efedd8823650c0078a80eff" resname="labels.error">
+                <source>labels.error</source>
+                <target>Erreur</target>
+            </trans-unit>
+            <trans-unit id="289876c1d5db2938a83428a72a03d8fe" resname="labels.warning">
+                <source>labels.warning</source>
+                <target>Attention</target>
+            </trans-unit>
+            <trans-unit id="58b06d6f4d02d93226d543aa6df546cc" resname="sulu.matcher.unmatched-column">
+                <source>sulu.matcher.unmatched-column</source>
+                <target>Colonne incomparable</target>
+            </trans-unit>
+            <trans-unit id="88a3440757127accbe0f8aefa78de0f5" resname="sulu.matcher.matched-column">
+                <source>sulu.matcher.matched-column</source>
+                <target>Colonne identifié</target>
+            </trans-unit>
+            <trans-unit id="f10513fb27976295fe1f7186e5fa40a9" resname="sulu.matcher.edit">
+                <source>sulu.matcher.edit</source>
+                <target>Edition</target>
+            </trans-unit>
+            <trans-unit id="f48bae00ed524529404524a247120cf8" resname="sulu.matcher.skip">
+                <source>sulu.matcher.skip</source>
+                <target>Sauter</target>
+            </trans-unit>
+            <trans-unit id="5af9c8fc4bcece63d07861c08f88f85e" resname="sulu.matcher.skipped">
+                <source>sulu.matcher.skipped</source>
+                <target>Sauté</target>
+            </trans-unit>
+            <trans-unit id="3c8b6b82809d03e6d6f26d0e402817da" resname="sulu.matcher.column">
+                <source>sulu.matcher.column</source>
+                <target>Colonne</target>
+            </trans-unit>
+            <trans-unit id="0f9a2fc219bd75f314c1ab6eef4e0820" resname="sulu.matcher.please-choose">
+                <source>sulu.matcher.please-choose</source>
+                <target>Merci de choisir..</target>
+            </trans-unit>
+            <trans-unit id="fee413c552881531c70b1ac61da07738" resname="public.deactivate">
+                <source>public.deactivate</source>
+                <target>Désactivé</target>
+            </trans-unit>
+            <trans-unit id="d2d787cf3136eff4a01713ab1fb3580b" resname="public.add-fields">
+                <source>public.add-fields</source>
+                <target>Ajouter de nouveaux champs</target>
+            </trans-unit>
+            <trans-unit id="1b176c832ae286918c40fdf57483b459" resname="public.edit-fields">
+                <source>public.edit-fields</source>
+                <target>Editer les champs</target>
+            </trans-unit>
+            <trans-unit id="19be38e89ee7f37a396474cf1ead3669" resname="public.fax">
+                <source>public.fax</source>
+                <target>Fax</target>
+            </trans-unit>
+            <trans-unit id="1d091270adb3ddee0d6c25c251f1ebc3" resname="public.url">
+                <source>public.url</source>
+                <target>Website</target>
+            </trans-unit>
+            <trans-unit id="3aeff9585c15e4e9ff463c01a84ddfe0" resname="public.note">
+                <source>public.note</source>
+                <target>Note</target>
+            </trans-unit>
+            <trans-unit id="5e094185aac3985e962e3f53246d096e" resname="public.all">
+                <source>public.all</source>
+                <target>Tous</target>
+            </trans-unit>
+            <trans-unit id="e63a6f1eeec7841c91164669e7c4a420" resname="public.comments">
+                <source>public.comments</source>
+                <target>Commentaires</target>
+            </trans-unit>
+            <trans-unit id="3a355674907a96d3e74f6c0efd33acbf" resname="dropdown.please-choose">
+                <source>dropdown.please-choose</source>
+                <target>Merci de choisir..</target>
+            </trans-unit>
+            <trans-unit id="f94b6c9be6a0ff700e3acdf6fd987af6" resname="navigation.webspaces.content">
+                <source>navigation.webspaces.content</source>
+                <target>Contenu</target>
+            </trans-unit>
+            <trans-unit id="f03b39fa050b422d85db9d84cd54fee3" resname="navigation.webspaces.index-page">
+                <source>navigation.webspaces.index-page</source>
+                <target>Homepage</target>
+            </trans-unit>
+            <trans-unit id="069f3fbf0731ab7dbc2d8627334aad5f" resname="url.home">
+                <source>url.home</source>
+                <target>Privé</target>
+            </trans-unit>
+            <trans-unit id="57f4d7b8b30c684e992e01b8d1df4d90" resname="sulu.overlay.be-careful">
+                <source>sulu.overlay.be-careful</source>
+                <target>Soyez prudent</target>
+            </trans-unit>
+            <trans-unit id="d5f4a99d54bb05a92a78146053c828d9" resname="sulu.overlay.delete-desc">
+                <source>sulu.overlay.delete-desc</source>
+                <target>L'opération que vous êtes en train de faire va supprimer des données.
+                    Cela est définitif ! S'il vous plaît accepter ou refuser.
+                </target>
+            </trans-unit>
+            <trans-unit id="d5f4a99d54bb05a92a781460534528d9" resname="sulu.overlay.unsaved-changes-confirm">
+                <source>sulu.overlay.unsaved-changes-confirm</source>
+                <target><![CDATA[Vous avez des modifications non enregistrées.<br/>Voulez-vous vraiment continuer sans enregistrer?]]></target>
+            </trans-unit>
+            <trans-unit id="d5f4a99d54bb05a92a78146053452810" resname="sulu.overlay.save-unsaved-changes-confirm">
+                <source>sulu.overlay.save-unsaved-changes-confirm</source>
+                <target><![CDATA[Vous avez des modifications non enregistrées.<br/>Voulez-vous enregistrer et continuer?]]></target>
+            </trans-unit>
+            <trans-unit id="deb752167002b44bbc2030c7f1c8250b" resname="public.show-history">
+                <source>public.show-history</source>
+                <target>Afficher historique</target>
+            </trans-unit>
+            <trans-unit id="80e0a3efaeceebe465c1a679e89c5139" resname="public.url-history">
+                <source>public.url-history</source>
+                <target>Url historique</target>
+            </trans-unit>
+            <trans-unit id="b3eabeaf680b421a9d705e5b069e8503" resname="sulu.property.title">
+                <source>sulu.property.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="3254be45310f0bdfc2132b9826238bda" resname="sulu.property.url">
+                <source>sulu.property.url</source>
+                <target>Url</target>
+            </trans-unit>
+            <trans-unit id="bde9f2a43b131e7b10aae230895b34c4" resname="sulu.property.block.title">
+                <source>sulu.property.block.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="0dd9dc67f11e38c557c2d7f175dc5b2a" resname="sulu.property.block.article">
+                <source>sulu.property.block.article</source>
+                <target>Article</target>
+            </trans-unit>
+            <trans-unit id="4beb88481f563a5f172342d48660ee8c" resname="sulu.property.tags">
+                <source>sulu.property.tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="9c56afd726b34f68697a1846e4e632de" resname="sulu.property.article">
+                <source>sulu.property.article</source>
+                <target>Article</target>
+            </trans-unit>
+            <trans-unit id="9377b96425b464e812cf979825d3b5e2" resname="sulu.property.smartcontent">
+                <source>sulu.property.smartcontent</source>
+                <target>Smart-content</target>
+            </trans-unit>
+            <trans-unit id="b8e1a770d7d287dd5bdd1e758dbdcb3d" resname="sulu.property.block">
+                <source>sulu.property.block</source>
+                <target>Block</target>
+            </trans-unit>
+            <trans-unit id="3ce9a72d652b2885fd27dded383f9c60" resname="sulu.type.editor">
+                <source>sulu.type.editor</source>
+                <target>Editeur</target>
+            </trans-unit>
+            <trans-unit id="2e8bb7d315d95bf4768f32dc624f02ac" resname="sulu.type.area">
+                <source>sulu.type.area</source>
+                <target>Text</target>
+            </trans-unit>
+            <trans-unit id="3d44400ee5b215b4b16913d68868140f" resname="sulu.type.title_only">
+                <source>sulu.type.title_only</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="e475ebdeff70002fbd1ac9a8aa1ece1b" resname="sulu.overlay.delete-no-items">
+                <source>sulu.overlay.delete-no-items</source>
+                <target>Aucun élément à supprimer sélectionnées.</target>
+            </trans-unit>
+            <trans-unit id="0a14cd1cbbc4d6c03ecf832a50c3fb6e" resname="sulu.overlay.error">
+                <source>sulu.overlay.error</source>
+                <target>Erreur!</target>
+            </trans-unit>
+            <trans-unit id="47a985c32e496819ae346f7fb780926b" resname="public.and-number-more">
+                <source>public.and-number-more</source>
+                <target>et &lt;%= nombre %&gt; plus</target>
+            </trans-unit>
+            <trans-unit id="03d0a7c832c6c581e97fcf01aea8a30b" resname="public.open-all">
+                <source>public.open-all</source>
+                <target>Ouvrir tous</target>
+            </trans-unit>
+            <trans-unit id="51b5233b5b7bbe1e1c7a6fbde4035d62" resname="public.close-all">
+                <source>public.close-all</source>
+                <target>Fermer tous</target>
+            </trans-unit>
+            <trans-unit id="08f6ef9c711e42e2a336883a2f9e528e" resname="pagination.show-all">
+                <source>pagination.show-all</source>
+                <target>Monter tous</target>
+            </trans-unit>
+            <trans-unit id="6c01dbc259d279576ab8d385c110e66c" resname="public.elements">
+                <source>public.elements</source>
+                <target>elements</target>
+            </trans-unit>
+            <trans-unit id="5ce49fa74807f040dd27e417751cb9e1" resname="sulu.upload.dropzone-title">
+                <source>sulu.upload.dropzone-title</source>
+                <target>Glissez et déposez les assets ici pour télécharger</target>
+            </trans-unit>
+            <trans-unit id="ab1a58cd4f177db063487ed70698126a" resname="sulu.upload.dropzone-desc">
+                <source>sulu.upload.dropzone-desc</source>
+                <target>Ou cliquez sur ajouter</target>
+            </trans-unit>
+            <trans-unit id="2e3b70e82001f5bfc22e941e65376ee6" resname="sulu.toolbar.small-thumbnails">
+                <source>sulu.toolbar.small-thumbnails</source>
+                <target>Petites vignettes</target>
+            </trans-unit>
+            <trans-unit id="8c04c5d1dbf406f6222a2c4338e26663" resname="sulu.toolbar.big-thumbnails">
+                <source>sulu.toolbar.big-thumbnails</source>
+                <target>Grandes vignettes</target>
+            </trans-unit>
+            <trans-unit id="aa005e19189f861dc79bc978a5caa663" resname="sulu.toolbar.table">
+                <source>sulu.toolbar.table</source>
+                <target>Liste</target>
+            </trans-unit>
+            <trans-unit id="b7c8c053e39fcd8e8a627e91dd6b650e" resname="public.disabled">
+                <source>public.disabled</source>
+                <target>Désactivé</target>
+            </trans-unit>
+            <trans-unit id="7b9e03b4c0a92d2120e3301c3d7a91e9" resname="public.public">
+                <source>public.public</source>
+                <target>Public</target>
+            </trans-unit>
+            <trans-unit id="1f8faefde5f77a4f3139b079a5b51d29" resname="public.iban">
+                <source>public.iban</source>
+                <target>IBAN</target>
+            </trans-unit>
+            <trans-unit id="486a915651120d7595c6d99a9c362f0c" resname="public.bic">
+                <source>public.bic</source>
+                <target>BIC</target>
+            </trans-unit>
+            <trans-unit id="c9276aa93501d9bd79d95617a0687c61" resname="public.please-choose">
+                <source>public.please-choose</source>
+                <target>Choisissez s'il vous plaît</target>
+            </trans-unit>
+            <trans-unit id="68f3cef76066b2a5ee8da26341eb373b" resname="public.color">
+                <source>public.color</source>
+                <target>Couleur</target>
+            </trans-unit>
+            <trans-unit id="9050263af3ba0f52ef7a4d3c0298d50" resname="url.work">
+                <source>url.work</source>
+                <target>Travail</target>
+            </trans-unit>
+            <trans-unit id="9051263af3ba0f52ef7a4d3c0298d50" resname="fax.work">
+                <source>fax.work</source>
+                <target>Travail</target>
+            </trans-unit>
+            <trans-unit id="9051363af3ba0f52ef7a4d3c0298d50" resname="public.internal">
+                <source>public.internal</source>
+                <target>Interne</target>
+            </trans-unit>
+            <trans-unit id="9051563af3ba0f52ef7a4d3c0298d50" resname="address.delivery">
+                <source>address.delivery</source>
+                <target>Adresse de livraison</target>
+            </trans-unit>
+            <trans-unit id="9051663af3ba0f52ef7a4d3c0298d50" resname="address.invoice">
+                <source>address.invoice</source>
+                <target>Adresse de facturation</target>
+            </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d50" resname="phone.mobile">
+                <source>phone.mobile</source>
+                <target>Mobile</target>
+            </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d52" resname="public.forbidden.description">
+                <source>public.forbidden</source>
+                <target>Opération interdite</target>
+            </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d54" resname="public.forbidden">
+                <source>public.forbidden.description</source>
+                <target>Les autorisations disponibles ne sont pas suffisantes pour cette opération</target>
+            </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d1c0218d54" resname="public.server_error">
+                <source>public.server_error</source>
+                <target>Erreur du serveur</target>
+            </trans-unit>
+            <trans-unit id="9052263af3ba0f52ef7a4d3c0298d50" resname="public.add-entry">
+                <source>public.add-entry</source>
+                <target>Ajouter nouvelle entrée</target>
+            </trans-unit>
+            <trans-unit id="9052264af3ba0f52ef7a4d3c0298d50" resname="public.edit-entries">
+                <source>public.edit-entries</source>
+                <target>Modifier entrées</target>
+            </trans-unit>
+            <trans-unit id="90a2264419ba0f52ef7a4d3c0298d50" resname="public.info">
+                <source>public.info</source>
+                <target>Info</target>
+            </trans-unit>
+            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d50" resname="public.description">
+                <source>public.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929652633a5ce2178d22192" resname="sulu.upload.small-dropzone-title">
+                <source>sulu.upload.small-dropzone-title</source>
+                <target>Cliquez ou faites glisser et déposer une nouvelle version</target>
+            </trans-unit>
+            <trans-unit id="643c992f1929652633a5ca2178d2219f" resname="public.show-descriptions">
+                <source>public.show-descriptions</source>
+                <target>Afficher les descriptions</target>
+            </trans-unit>
+            <trans-unit id="243c99ff1964652633a5ca2178d2219f" resname="template.example">
+                <source>template.example</source>
+                <target>Exemple</target>
+            </trans-unit>
+            <trans-unit id="623c99ff1964652633a5ca2178d2219f" resname="sulu.property.phone">
+                <source>sulu.property.phone</source>
+                <target>Téléphone</target>
+            </trans-unit>
+            <trans-unit id="642c99ff1964652633a5ca2178d2219f" resname="sulu.property.password">
+                <source>sulu.property.password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="643299ff1964652633a5ca2178d2219f" resname="sulu.property.link">
+                <source>sulu.property.link</source>
+                <target>Lien</target>
+            </trans-unit>
+            <trans-unit id="643c29ff1964652633a5ca2178d2219f" resname="sulu.property.email">
+                <source>sulu.property.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="643c92ff1964652633a5ca2178d2219f" resname="sulu.property.color">
+                <source>sulu.property.color</source>
+                <target>Couleur</target>
+            </trans-unit>
+            <trans-unit id="643c992f1964652633a5ca2178d2219f" resname="sulu.property.date">
+                <source>sulu.property.date</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="643c99f21964652633a5ca2178d2219f" resname="sulu.property.time">
+                <source>sulu.property.time</source>
+                <target>Time</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d2219f" resname="sulu.property.note">
+                <source>sulu.property.note</source>
+                <target>Note</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2178d22194" resname="public.locked">
+                <source>public.locked</source>
+                <target>Vérouillé</target>
+            </trans-unit>
+            <trans-unit id="643d99fa2964652633a5ca2169f22238" resname="fax.home">
+                <source>fax.home</source>
+                <target>Privé</target>
+            </trans-unit>
+            <trans-unit id="643d99fa2964652633a5ca2169f22242" resname="dropdown.no-selection">
+                <source>labels.success.category-delete-desc</source>
+                <target>Pas de sélection</target>
+            </trans-unit>
+            <trans-unit id="343d99ff2f64652633a5ca2169f22254" resname="content-navigation.contents.seo">
+                <source>content-navigation.contents.seo</source>
+                <target>SEO</target>
+            </trans-unit>
+            <trans-unit id="143d99ff2f64652633a5ca2169f22254" resname="content-navigation.contents.excerpt">
+                <source>content-navigation.contents.excerpt</source>
+                <target>Extrait &amp; Categories</target>
+            </trans-unit>
+            <trans-unit id="948826fa2261f741d03a40c20af27c1b" resname="content-navigation.contents.permissions">
+                <source>content-navigation.contents.permissions</source>
+                <target>Permissions</target>
+            </trans-unit>
+            <trans-unit id="c964588d92c25e70ec2d7f9be4e28ebc" resname="select.edit-entries">
+                <source>select.edit-entries</source>
+                <target>Editer</target>
+            </trans-unit>
+            <trans-unit id="c364388d92823e70ec2d8f9be4e88ebc" resname="select.no-choice">
+                <source>select.no-choice</source>
+                <target>Pas de sélection</target>
+            </trans-unit>
+            <trans-unit id="c364388d91823e70cc7d829be1e81abc" resname="select.add-item">
+                <source>select.add-item</source>
+                <target>Nouvelle Entrée</target>
+            </trans-unit>
+            <trans-unit id="c50af528fc121350142c0b4720e29a8c" resname="public.choose">
+                <source>public.choose</source>
+                <target>Choisir</target>
+            </trans-unit>
+            <trans-unit id="c50af528fc121350142c0b4720e29a8d" resname="public.visible">
+                <source>public.visible</source>
+                <target>visible</target>
+            </trans-unit>
+            <trans-unit id="c58af528fc121350142c0b4720e29a8a" resname="public.of">
+                <source>public.of</source>
+                <target>de</target>
+            </trans-unit>
+            <trans-unit id="c50af521ac121350142c0b4720e29a2f" resname="internal-links.add">
+                <source>internal-links.add</source>
+                <target>Ajouter des liens internes</target>
+            </trans-unit>
+            <trans-unit id="c50af521ac181350142c0b4720e29a2f" resname="internal-links.nolinks-selected">
+                <source>internal-links.nolinks-selected</source>
+                <target>Pas de liens internes sélectionnés</target>
+            </trans-unit>
+            <trans-unit id="a50af522a1231350142c0b4720e29a3f" resname="public.no-title">
+                <source>public.no-title</source>
+                <target>Pas de titre</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="public.previous">
+                <source>public.previous</source>
+                <target>Retour</target>
+            </trans-unit>
+            <trans-unit id="a50af522de181350142c0b4720e29a4f" resname="public.overview">
+                <source>public.overview</source>
+                <target>Vue d'ensemble</target>
+            </trans-unit>
+            <trans-unit id="a50af522de18a350142c0b4720e29a4f" resname="public.details">
+                <source>public.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="a50af522de145350142c0b4720e29a4f" resname="public.selection">
+                <source>public.selection</source>
+                <target>Selection</target>
+            </trans-unit>
+            <trans-unit id="a50af522de145350142c0b4720e29a5f" resname="public.current-entry">
+                <source>public.current-entry</source>
+                <target>Actuel</target>
+            </trans-unit>
+            <trans-unit id="a50af522de18a35014430b4720e29a4f" resname="form.validation-warning">
+                <source>form.validation-warning</source>
+                <target>S'il vous plaît vérifier votre saisie. Vous ne pouvez pas enregistrer tant que pas tous les champs obligatoires sont bien remplis.</target>
+            </trans-unit>
+            <trans-unit id="a504f522de145650142c0b4720e29a4f" resname="public.status">
+                <source>public.status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="a504f522de145650142c0b4820e29a4f" resname="public.number">
+                <source>public.number</source>
+                <target>Numéro</target>
+            </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a4f" resname="labels.successfully-saved">
+                <source>labels.successfully-saved</source>
+                <target>La donnée a bien été enregistrée.</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.reset-password">
+                <source>sulu.login.reset-password</source>
+                <target>Réinitialisez votre mot de passe:</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a4d" resname="public.reset">
+                <source>public.reset</source>
+                <target>Réinitialiser</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a43" resname="public.email">
+                <source>public.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a41" resname="sulu.login.back-login">
+                <source>sulu.login.back-login</source>
+                <target>Retour connexion</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a42" resname="sulu.login.resend-email">
+                <source>sulu.login.resend-email</source>
+                <target>Ré-envoyer l'email</target>
+            </trans-unit>
+            <trans-unit id="a404f52dde1456ff4132c0b4820e29a43" resname="sulu.login.email-sent-message">
+                <source>sulu.login.email-sent-message</source>
+                <target>Un courriel avec des instructions pour réinitialiser votre mot de passe a été envoyé à:</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.back-website">
+                <source>sulu.login.back-website</source>
+                <target>Retour au site</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29add" resname="public.login">
+                <source>public.login</source>
+                <target>S'identifier</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad1" resname="sulu.login.error-message">
+                <source>sulu.login.error-message</source>
+                <target>Cette combinaison Email / Mot de passe est erroné. S'il vous plaît essayer à nouveau.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad7" resname="sulu.login.forgot-password">
+                <source>sulu.login.forgot-password</source>
+                <target>J'ai oublié mon mot de passe</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff3132c0b4820e29ad7" resname="sulu.login.email-username">
+                <source>sulu.login.email-username</source>
+                <target>Nom d'utilisateur ou email</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad2" resname="public.password">
+                <source>public.password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad2" resname="sulu.login.mail.user-not-found">
+                <source>sulu.login.mail.user-not-found</source>
+                <target>Un utilisateur avec cet e-mail / nom d'utilisateur ne existe pas.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad1" resname="sulu.login.mail.already-sent">
+                <source>sulu.login.mail.already-sent</source>
+                <target>Un courriel avec des instructions sur la façon de réinitialiser votre mot de passe a déjà été envoyé.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad3" resname="sulu.login.token-does-not-exist">
+                <source>sulu.login.token-does-not-exist</source>
+                <target>Votre jeton n'existe pas.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad4" resname="sulu.login.mail.limit-reached">
+                <source>sulu.login.mail.limit-reached</source>
+                <target>Vous avez atteint la limite de courriels envoyés.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29adf" resname="sulu.login.repeat-password">
+                <source>sulu.login.repeat-password</source>
+                <target>Confirmer le nouveau mot de passe</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29adc" resname="sulu.login.enter-new-password">
+                <source>sulu.login.enter-new-password</source>
+                <target>Entrez un nouveau mot de passe</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4134c0b4820e28adf" resname="sulu.login.email-sent-success">
+                <source>sulu.login.email-sent-success</source>
+                <target>Courriel envoyé avec succès</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2354cc4132c0b4820e28adc" resname="public.elements-selected">
+                <source>public.elements-selected</source>
+                <target>éléments sélectionnés</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde2354cc4132c0b4820e28ade" resname="public.save">
+                <source>public.save</source>
+                <target>Enregistré</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde2354cc4132c0b4820e22ade" resname="public.save-and-back">
+                <source>public.save-and-back</source>
+                <target>Enregistrer et retour</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e22ade" resname="public.save-and-new">
+                <source>public.save-and-new</source>
+                <target>Enregistrer et nouveau</target>
+            </trans-unit>
+            <trans-unit id="b504a54dde1354cc4132c0b4820e22ade" resname="public.settings">
+                <source>public.settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e22ada" resname="public.delete">
+                <source>public.delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e28ada" resname="public.delete-selected">
+                <source>public.delete-selected</source>
+                <target>Supprimer la sélection</target>
+            </trans-unit>
+            <trans-unit id="b503a53dde1354cc4132c0b4820e28ada" resname="public.add-new">
+                <source>public.add-new</source>
+                <target>Ajouter un nouveau</target>
+            </trans-unit>
+            <trans-unit id="b500b52dde1354cc4132c0b4820e28ada" resname="public.avatar">
+                <source>public.avatar</source>
+                <target>Avatar</target>
+            </trans-unit>
+            <trans-unit id="a300b52dde1354cc4132c0b4820e28ada" resname="public.logo">
+                <source>public.logo</source>
+                <target>Logo</target>
+            </trans-unit>
+            <trans-unit id="a321c52dae1354cc4132c0b4820e28ada" resname="public.refresh">
+                <source>public.refresh</source>
+                <target>Recharger</target>
+            </trans-unit>
+            <trans-unit id="a329c52dae1354cc4132c0b4820e23cda" resname="public.cancel">
+                <source>public.cancel</source>
+                <target>Annuler</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4132c0b4820e23cda" resname="public.ok">
+                <source>public.ok</source>
+                <target>Ok</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4123c0b4820e23cda" resname="public.show-selected">
+                <source>public.show-selected</source>
+                <target>Afficher les options sélectionnées</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4123c0b4820e23cdb" resname="public.show-all">
+                <source>public.show-all</source>
+                <target>Afficher tous</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23cdb" resname="public.type">
+                <source>public.type</source>
+                <target>Genre</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23cdb" resname="labels.success.save-desc">
+                <source>labels.success.save-desc</source>
+                <target>enregistrée avec succès</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c11" resname="labels.success.delete-desc">
+                <source>labels.success.save-desc</source>
+                <target>succès supprimé</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c22" resname="public.yes">
+                <source>public.yes</source>
+                <target>Oui</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c33" resname="public.no">
+                <source>public.no</source>
+                <target>Non</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23110" resname="public.export">
+                <source>public.export</source>
+                <target>Exporter</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23111" resname="csv_export.export-title">
+                <source>csv_export.export-title</source>
+                <target>Configurer le format des données</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23112" resname="csv_export.delimiter">
+                <source>csv_export.delimiter</source>
+                <target>tiret</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23113" resname="csv_export.delimiter-info">
+                <source>csv_export.delimiter-info</source>
+                <target>Signe pour séparer les cellules.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23114" resname="csv_export.enclosure">
+                <source>csv_export.enclosure</source>
+                <target>Enserrer</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23115" resname="csv_export.enclosure-info">
+                <source>csv_export.enclosure-info</source>
+                <target>Marquer entrées avec plusieurs mots.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23116" resname="csv_export.escape">
+                <source>csv_export.escape</source>
+                <target>Masquer</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23117" resname="csv_export.escape-info">
+                <source>csv_export.escape-info</source>
+                <target>Ajout en cas de caractères spéciaux.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23118" resname="csv_export.new-line">
+                <source>csv_export.new-line</source>
+                <target>Nouvelle ligne</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23119" resname="csv_export.new-line-info">
+                <source>csv_export.new-line-info</source>
+                <target>Signe pour retour à la ligne.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23133" resname="navigation.modules">
+                <source>navigation.modules</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23233" resname="public.version">
+                <source>public.version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4831a23233" resname="public.items">
+                <source>public.version</source>
+                <target>choses</target>
+            </trans-unit>
+            <trans-unit id="c337c52dae1354cc4123c0b4831a23233" resname="public.save-and-apply">
+                <source>public.save-and-apply</source>
+                <target>Enregistrer &amp; appliquer</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

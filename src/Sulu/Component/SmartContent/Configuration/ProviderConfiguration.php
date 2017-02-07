@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -51,6 +52,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      * @var bool
      */
     private $paginated = false;
+
+    /**
+     * @var string
+     */
+    private $deepLink;
 
     /**
      * {@inheritdoc}
@@ -178,5 +184,21 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setPaginated($paginated)
     {
         $this->paginated = $paginated;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeepLink()
+    {
+        return $this->deepLink;
+    }
+
+    /**
+     * @param string $deepLink
+     */
+    public function setDeepLink($deepLink)
+    {
+        $this->deepLink = $deepLink;
     }
 }

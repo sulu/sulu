@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,15 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
-use PHPCR\SessionInterface;
-use PHPCR\Util\NodeHelper;
-use PHPCR\WorkspaceInterface;
-use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * initiate phpcr repository (namespaces, nodetypes).
+ *
+ * @deprecated use sulu:document:initialize instead
  */
 class PHPCRInitCommand extends ContainerAwareCommand
 {
@@ -34,44 +27,18 @@ class PHPCRInitCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:phpcr:init')
             ->addOption('clear', 'c', InputOption::VALUE_OPTIONAL, '', false)
-            ->setDescription('initiate phpcr repository (namespaces, nodetypes)');
+            ->setDescription('initiate phpcr repository (deprecated)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
-        /** @var WorkspaceInterface $workspace */
-        $workspace = $session->getWorkspace();
-
-        // init node namespace and types
-        $output->writeln('Register namespace');
-        $workspace->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $workspace->getNamespaceRegistry()->registerNamespace('sec', 'http://sulu.io/phpcr/sec');
-        $workspace->getNamespaceRegistry()->registerNamespace(
-            $this->getContainer()->getParameter('sulu.content.language.namespace'),
-            'http://sulu.io/phpcr/locale'
+        $output->writeln(
+            $this->getHelper('formatter')->formatBlock(
+                'DEPRECATED: This command is deprecated. use sulu:document:initialize instead',
+                'comment',
+                true
+            )
         );
-
-        $output->writeln('Register node types');
-        foreach ([
-            new SuluNodeType(),
-            new PathNodeType(),
-            new ContentNodeType(),
-            new SnippetNodeType(),
-            new PageNodeType(),
-            new HomeNodeType(),
-        ] as $nodeType) {
-            $output->writeln('  - ' . $nodeType->getName());
-            $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);
-        }
-
-        /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
-        if ($input->getOption('clear')) {
-            NodeHelper::purgeWorkspace($session);
-            $session->save();
-            $output->writeln('Clear repository');
-        }
+        $this->getContainer()->get('sulu_content.document_manager.content_initializer')->initialize($output);
     }
 }

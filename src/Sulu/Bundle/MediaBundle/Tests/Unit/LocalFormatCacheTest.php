@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,15 +51,16 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
     public function testMediaUrlEncoding()
     {
         $version = 2;
+        $subVersion = 3;
         $fileId = 1;
         $segment = ($fileId % $this->segments);
         $format = '50x50';
         $fileName = 'Test With Spaces & Co.jpg';
-        $filePath = $this->localStorage->getMediaUrl($fileId, $fileName, [], $format, $version);
+        $filePath = $this->localStorage->getMediaUrl($fileId, $fileName, [], $format, $version, $subVersion);
         $encodedFileName = 'Test%20With%20Spaces%20%26%20Co.jpg';
 
         $this->assertSame(
-            '/uploads/media/50x50/01/1-Test%20With%20Spaces%20%26%20Co.jpg?v=2',
+            '/uploads/media/50x50/01/1-Test%20With%20Spaces%20%26%20Co.jpg?v=2-3',
             $filePath
         );
     }

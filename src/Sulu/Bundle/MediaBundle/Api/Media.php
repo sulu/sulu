@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,12 +15,14 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CategoryBundle\Api\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -87,11 +89,16 @@ class Media extends ApiWrapper
     protected $fileVersion = null;
 
     /**
+     * @var FileVersionMeta
+     */
+    protected $localizedMeta = null;
+
+    /**
      * @var File
      */
     protected $file = null;
 
-    public function __construct(Entity $media, $locale, $version = null)
+    public function __construct(MediaInterface $media, $locale, $version = null)
     {
         $this->entity = $media;
         $this->locale = $locale;
@@ -119,6 +126,22 @@ class Media extends ApiWrapper
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getFallbackLocale()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return;
+        }
+
+        $fallbackLocale = $this->getLocalizedMeta()->getLocale();
+
+        return $fallbackLocale !== $this->locale ? $fallbackLocale : null;
     }
 
     /**
@@ -215,16 +238,11 @@ class Media extends ApiWrapper
      */
     public function getTitle()
     {
-        $title = null;
-        /** @var FileVersionMeta $meta */
-        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
-            // get title of the meta in locale, when not exists return title of the first meta
-            if ($meta->getLocale() == $this->locale || $key == 0) {
-                $title = $meta->getTitle();
-            }
+        if (!$this->getLocalizedMeta()) {
+            return;
         }
 
-        return $title;
+        return $this->getLocalizedMeta()->getTitle();
     }
 
     /**
@@ -247,16 +265,11 @@ class Media extends ApiWrapper
      */
     public function getDescription()
     {
-        $description = null;
-        /** @var FileVersionMeta $meta */
-        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
-            // get description of the meta in locale, when not exists return description of the first meta
-            if ($meta->getLocale() == $this->locale || $key == 0) {
-                $description = $meta->getDescription();
-            }
+        if (!$this->getLocalizedMeta()) {
+            return;
         }
 
-        return $description;
+        return $this->getLocalizedMeta()->getDescription();
     }
 
     /**
@@ -283,16 +296,42 @@ class Media extends ApiWrapper
      */
     public function getCopyright()
     {
-        $copyright = null;
-        /** @var FileVersionMeta $meta */
-        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
-            // get description of the meta in locale, when not exists return description of the first meta
-            if ($meta->getLocale() == $this->locale || $key == 0) {
-                $copyright = $meta->getCopyright();
-            }
+        if (!$this->getLocalizedMeta()) {
+            return;
         }
 
-        return $copyright;
+        return $this->getLocalizedMeta()->getCopyright();
+    }
+
+    /**
+     * @param string $credits
+     *
+     * @return $this
+     */
+    public function setCredits($credits)
+    {
+        $this->getMeta(true)->setCredits($credits);
+
+        return $this;
+    }
+
+    /**
+     * Returns copyright for media.
+     *
+     * @VirtualProperty
+     * @SerializedName("credits")
+     *
+     * @return string
+     *
+     * @throws FileVersionNotFoundException
+     */
+    public function getCredits()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return;
+        }
+
+        return $this->getLocalizedMeta()->getCredits();
     }
 
     /**
@@ -316,6 +355,17 @@ class Media extends ApiWrapper
     public function getVersion()
     {
         return $this->getFileVersion()->getVersion();
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("subVersion")
+     *
+     * @return int
+     */
+    public function getSubVersion()
+    {
+        return $this->getFileVersion()->getSubVersion();
     }
 
     /**
@@ -789,36 +839,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     * Returns array representation of media.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'id' => $this->getId(),
-            'locale' => $this->getLocale(),
-            'collection' => $this->getCollection(),
-            'size' => $this->getSize(),
-            'mimeType' => $this->getMimeType(),
-            'title' => $this->getTitle(),
-            'description' => $this->getDescription(),
-            'version' => $this->getVersion(),
-            'name' => $this->getName(),
-            'storageOptions' => $this->getStorageOptions(),
-            'publishLanguages' => $this->getPublishLanguages(),
-            'tags' => $this->getTags(),
-            'thumbnails' => $this->getThumbnails(),
-            'url' => $this->getUrl(),
-            'changed' => $this->getChanged(),
-            'changer' => $this->getChanger(),
-            'created' => $this->getCreated(),
-            'creator' => $this->getCreator(),
-            'downloadCounter' => $this->getDownloadCounter(),
-        ];
-    }
-
-    /**
      * @return FileVersion
      *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
@@ -909,5 +929,123 @@ class Media extends ApiWrapper
 
         // return exists
         return $metaCollectionFiltered->first();
+    }
+
+    /**
+     * Searches the meta for the file version in the media locale. Might also return a fallback.
+     *
+     * @return FileVersionMeta
+     *
+     * @throws FileVersionNotFoundException
+     */
+    private function getLocalizedMeta()
+    {
+        if ($this->localizedMeta) {
+            return $this->localizedMeta;
+        }
+
+        $metas = $this->getFileVersion()->getMeta();
+        $this->localizedMeta = $metas[0];
+
+        foreach ($metas as $key => $meta) {
+            if ($meta->getLocale() == $this->locale) {
+                $this->localizedMeta = $meta;
+                break;
+            }
+        }
+
+        return $this->localizedMeta;
+    }
+
+    /**
+     * Adds a category to the entity.
+     *
+     * @param CategoryEntity $category
+     */
+    public function addCategory(CategoryEntity $category)
+    {
+        $fileVersion = $this->getFileVersion();
+        $fileVersion->addCategory($category);
+
+        return $this;
+    }
+
+    /**
+     * Removes all category from the entity.
+     */
+    public function removeCategories()
+    {
+        $fileVersion = $this->getFileVersion();
+        $fileVersion->removeCategories();
+    }
+
+    /**
+     * Returns the categories of the media.
+     *
+     * @VirtualProperty
+     * @SerializedName("categories")
+     *
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        $apiCategories = [];
+        $fileVersion = $this->getFileVersion();
+        $categories = $fileVersion->getCategories();
+
+        // return Category API item
+        if (count($categories)) {
+            foreach ($categories as $category) {
+                $apiCategories[] = new Category($category, $this->locale);
+            }
+        }
+
+        return $apiCategories;
+    }
+
+    /**
+     * Returns the x coordinate of the focus point.
+     *
+     * @VirtualProperty
+     * @SerializedName("focusPointX")
+     *
+     * @return int
+     */
+    public function getFocusPointX()
+    {
+        return $this->getFileVersion()->getFocusPointX();
+    }
+
+    /**
+     * Sets the x coordinate of the focus point.
+     *
+     * @param int $focusPointX
+     */
+    public function setFocusPointX($focusPointX)
+    {
+        $this->getFileVersion()->setFocusPointX($focusPointX);
+    }
+
+    /**
+     * Returns the y coordinate of the focus point.
+     *
+     * @VirtualProperty
+     * @SerializedName("focusPointY")
+     *
+     * @return int
+     */
+    public function getFocusPointY()
+    {
+        return $this->getFileVersion()->getFocusPointY();
+    }
+
+    /**
+     * Sets the y coordinate of the focus point.
+     *
+     * @param int $focusPointY
+     */
+    public function setFocusPointY($focusPointY)
+    {
+        $this->getFileVersion()->setFocusPointY($focusPointY);
     }
 }

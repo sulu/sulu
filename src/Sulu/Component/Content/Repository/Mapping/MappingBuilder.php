@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -73,6 +74,48 @@ class MappingBuilder
     public function setHydrateShadow($enable)
     {
         $this->mapping->setHydrateShadow($enable);
+
+        return $this;
+    }
+
+    /**
+     * Enable resolve url.
+     *
+     * @param bool $enable
+     *
+     * @return $this
+     */
+    public function setResolveUrl($enable)
+    {
+        $this->mapping->setResolveUrl($enable);
+
+        return $this;
+    }
+
+    /**
+     * Enable only published.
+     *
+     * @param bool $enable
+     *
+     * @return $this
+     */
+    public function setOnlyPublished($enable)
+    {
+        $this->mapping->setOnlyPublished($enable);
+
+        return $this;
+    }
+
+    /**
+     * Enable resolve concrete locales.
+     *
+     * @param bool $enable
+     *
+     * @return $this
+     */
+    public function setResolveConcreteLocales($enable)
+    {
+        $this->mapping->setResolveConcreteLocales($enable);
 
         return $this;
     }

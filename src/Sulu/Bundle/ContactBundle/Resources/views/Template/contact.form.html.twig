@@ -147,13 +147,13 @@
 
             <div id="categories">
                 <div data-aura-component="datagrid@husky"
-                     data-aura-url="{{ categoryUrl }}"
+                     data-aura-url="{{ categoryUrl }}&locale=<%= categoryLocale %>"
                      data-aura-result-key="categories"
                      data-aura-pagination="false"
                      data-aura-instance-name="categories"
                      data-aura-children-property-name="hasChildren"
                      data-aura-resize-listeners="false"
-                     data-aura-view-options='{"table":{"hideChildrenAtBeginning":false,"cropContents":false,"openPathToSelectedChildren":"true","noItemsText":"sulu.category.no-categories-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
+                     data-aura-view-options='{"table":{"cropContents":false,"noItemsText":"sulu.category.no-categories-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
                      data-aura-matchings='[{"name":"name","content":"Name"},{"name":"id","disabled":true},{"name":"children","disabled":true},{"name":"parent","disabled":true}]'
                      data-form="true"
                      data-type="categoryList"

@@ -12,7 +12,6 @@
 
         <service id="sulu_document_manager.data_fixtures.executor" class="Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor">
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_document_manager.node_manager" />
             <argument type="service" id="sulu_document_manager.initializer" />
         </service>
 

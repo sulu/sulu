@@ -8,9 +8,9 @@
  */
 
 /**
- * handles media selection
+ * handles internal links
  *
- * @class MediaSelection
+ * @class InternalLinks
  * @constructor
  */
 define([], function() {
@@ -27,12 +27,18 @@ define([], function() {
             hidePositionElement: true,
             dataAttribute: 'internal-links',
             actionIcon: 'fa-link',
+            disabledIds: [],
             dataDefault: [],
+            navigateEvent: 'sulu.router.navigate',
+            publishedStateName: 'publishedState',
+            publishedName: 'published',
             translations: {
                 noContentSelected: 'internal-links.nolinks-selected',
                 addLinks: 'internal-links.add',
                 visible: 'public.visible',
-                of: 'public.of'
+                of: 'public.of',
+                unpublished: 'public.unpublished',
+                publishedWithDraft: 'public.published-with-draft'
             }
         },
 
@@ -43,8 +49,25 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(value) {
-                return ['<span class="value">', value, '</span>'].join('');
+            contentItem: function(id, value, url, icons, cropper) {
+                return [
+                    '<a href="#" data-id="', id, '" class="link">',
+                    '    <span class="icons">' + icons + '</span>',
+                    '    <span class="value" title="', value ,'">', (typeof cropper === 'function') ? cropper(value, 48) : value, '</span>',
+                    '    <span class="description" title="', url ,'">', (typeof cropper === 'function') ? cropper(url, 55) : value ,'</span>',
+                    '</a>'
+                ].join('');
+            },
+
+            icons: {
+                draft: function(title) {
+                    return '<span class="draft-icon" title="' + title + '"/>';
+                },
+                published: function(title) {
+                    return [
+                        '<span class="published-icon" title="' + title + '"/>'
+                    ].join('');
+                }
             }
         },
 
@@ -59,9 +82,22 @@ define([], function() {
          * custom event handling
          */
         bindCustomEvents = function() {
-            this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
+            this.sandbox.on('sulu.internal-links.' + this.options.instanceName + '.add-button-clicked', startAddOverlay.bind(this));
+            this.sandbox.on(
+                'husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized',
+                initColumnNavigation.bind(this)
+            );
 
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'content/contents/' + this.options.webspace + '/' + this.options.locale + '/edit:' + id + '/content'
+                );
+
+                return false;
+            }.bind(this), 'a.link');
         },
 
         /**
@@ -74,14 +110,11 @@ define([], function() {
             if (data.indexOf(item.id) === -1) {
                 // FIXME return of node api returns for column-navigation id and for "filter by id" uuid as id key
                 item.uuid = item.id;
-                
+
                 data.push(item.id);
 
                 this.setData(data, false);
-
-                if (!!item.publishedState) {
-                    this.addItem(item);
-                }
+                this.addItem(item);
             }
         },
 
@@ -102,15 +135,14 @@ define([], function() {
                             typeName: 'type',
                             hasSubName: 'hasChildren',
                             instanceName: this.options.instanceName,
-                            actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showOptions: false,
-                            showStatus: true,
                             responsive: false,
                             skin: 'fixed-height-small',
                             markable: true,
                             sortable: false,
-                            premarkedIds: data
+                            premarkedIds: data,
+                            disableIds: this.options.disabledIds
                         }
                     }
                 ]
@@ -125,11 +157,14 @@ define([], function() {
         getColumnNavigationUrl = function() {
             var url = '/admin/api/nodes',
                 urlParts = [
-                    'webspace=' + this.options.webspace,
                     'language=' + this.options.locale,
-                    'fields=title,order',
+                    'fields=title,order,published',
                     'webspace-nodes=all'
                 ];
+
+            if (!!this.options.webspace) {
+                urlParts.push('webspace=' + this.options.webspace);
+            }
 
             return url + '?' + urlParts.join('&');
         },
@@ -145,18 +180,25 @@ define([], function() {
                 {
                     name: 'overlay@husky',
                     options: {
-                        triggerEl: this.$addButton,
                         cssClass: 'internal-links-overlay',
                         el: $element,
                         container: this.$el,
-                        removeOnClose: false,
+                        openOnStart: true,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
-                        skin: 'wide',
+                        skin: 'responsive-width',
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addLinks),
                                 cssClass: 'internal-links-overlay-add',
-                                data: templates.data(this.options)
+                                data: templates.data(this.options),
+                                contentSpacing: false,
+                                okCallback: function() {
+                                    this.overlayOkCallback();
+                                    this.sandbox.stop(getId.call(this, 'columnNavigation'));
+                                }.bind(this),
+                                cancelCallback: function () {
+                                    this.sandbox.stop(getId.call(this, 'columnNavigation'));
+                                }.bind(this)
                             }
                         ]
                     }
@@ -186,9 +228,6 @@ define([], function() {
 
             // sandbox event handling
             bindCustomEvents.call(this);
-
-            // init overlays
-            startAddOverlay.call(this);
         },
 
         getUrl: function(data) {
@@ -197,8 +236,56 @@ define([], function() {
             return [this.options.url, delimiter, this.options.idsParameter, '=', (data || []).join(',')].join('');
         },
 
+        overlayOkCallback: function () {
+            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.get-marked', function (markedCollections) {
+                var data = this.sandbox.util.deepCopy(this.getData());
+
+                $.each(markedCollections, function (id, element) {
+                    if ($.inArray(id, data) < 0) {
+                        selectLink.call(this, element);
+                    }
+                }.bind(this));
+
+                data.forEach(function (item) {
+                    if (!(item in markedCollections)) {
+                        this.removeHandler(item);
+                    }
+                }.bind(this));
+            }.bind(this));
+        },
+
         getItemContent: function(item) {
-            return templates.contentItem(item.title);
+            return templates.contentItem(
+                item[this.options.idKey],
+                item.title,
+                item.url,
+                this.getItemIcons(item),
+                this.sandbox.util.cropMiddle
+            );
+        },
+
+        /**
+         * Returns the icons of an item for given item data
+         *
+         * @param {Object} itemData The data of the item
+         * @returns {string} the html string of icons
+         */
+        getItemIcons: function(itemData) {
+            if (itemData[this.options.publishedStateName] === undefined) {
+                return '';
+            }
+
+            var icons = '',
+                tooltip = this.sandbox.translate(this.options.translations.unpublished);
+            if (!itemData[this.options.publishedStateName] && !!itemData[this.options.publishedName]) {
+                tooltip = this.sandbox.translate(this.options.translations.publishedWithDraft);
+                icons += templates.icons.published(tooltip);
+            }
+            if (!itemData[this.options.publishedStateName]) {
+                icons += templates.icons.draft(tooltip);
+            }
+
+            return icons;
         },
 
         sortHandler: function(ids) {
@@ -215,9 +302,7 @@ define([], function() {
                 }
             }
 
-            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.unmark', id);
-
-            this.setData(data, false);
+            this.setData(data);
         }
     };
 });

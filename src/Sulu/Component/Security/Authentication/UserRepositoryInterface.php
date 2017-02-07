@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,25 +11,14 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Defines the interface for a UserRepository.
  */
-interface UserRepositoryInterface extends UserProviderInterface, RepositoryInterface
+interface UserRepositoryInterface extends RepositoryInterface
 {
-    /**
-     * initializes the UserRepository.
-     *
-     * @param string                   $suluSystem      The standard sulu system
-     * @param RequestAnalyzerInterface $requestAnalyzer The RequestAnalyzer is required for getting the current security
-     *
-     * @return
-     */
-    public function init($suluSystem, RequestAnalyzerInterface $requestAnalyzer = null);
-
     /**
      * Returns the user with the given id.
      *
@@ -38,4 +27,34 @@ interface UserRepositoryInterface extends UserProviderInterface, RepositoryInter
      * @return UserInterface
      */
     public function findUserById($id);
+
+    /**
+     * Returns the users with the given ids.
+     *
+     * @param array $ids The ids of the user to load
+     *
+     * @return UserInterface[]
+     */
+    public function findUsersById(array $ids);
+
+    /**
+     * @param int $id
+     *
+     * @return UserInterface
+     *
+     * @throws NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findUserWithSecurityById($id);
+
+    /**
+     * Finds a user for a given email or username.
+     *
+     * @param string $identifier The email-address or username
+     *
+     * @return UserInterface
+     *
+     * @throws NoResultException if the user is not found
+     */
+    public function findUserByIdentifier($identifier);
 }

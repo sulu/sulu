@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -21,12 +22,13 @@ use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * ContentType for Contact.
  */
-class ContactSelectionContentType extends ComplexContentType
+class ContactSelectionContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var string
@@ -96,20 +98,9 @@ class ContactSelectionContentType extends ComplexContentType
         if ($node->hasProperty($property->getName())) {
             $values = $node->getPropertyValue($property->getName());
         }
-        $this->setData($values, $property);
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        $this->setData($data, $property);
+        $refs = isset($values) ? $values : [];
+        $property->setValue($refs);
     }
 
     /**
@@ -215,14 +206,30 @@ class ContactSelectionContentType extends ComplexContentType
     }
 
     /**
-     * Set data to given property.
-     *
-     * @param array $data
-     * @param PropertyInterface $property
+     * {@inheritdoc}
      */
-    protected function setData($data, PropertyInterface $property)
+    public function exportData($propertyValue)
     {
-        $refs = isset($data) ? $data : [];
-        $property->setValue($refs);
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($value));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

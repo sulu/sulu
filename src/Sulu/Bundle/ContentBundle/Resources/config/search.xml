@@ -7,7 +7,6 @@
         <parameter key="sulu_content.search.metadata.provider.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureProvider</parameter>
         <parameter key="sulu_content.search.event_subscriber.blame_timestamp.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\BlameTimestampSubscriber</parameter>
         <parameter key="sulu_content.search.event_subscriber.structure.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\StructureSubscriber</parameter>
-        <parameter key="sulu_content.search.event_listener.reindex.class">Sulu\Bundle\ContentBundle\Search\EventListener\ReindexListener</parameter>
         <parameter key="sulu_search.event_listener.hit.class">Sulu\Bundle\ContentBundle\Search\EventListener\HitListener</parameter>
     </parameters>
 
@@ -28,14 +27,13 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <!-- Rebuild structure index on massive:search:index:rebuild -->
-        <service id="sulu_content.search.event_listener.search" class="%sulu_content.search.event_listener.reindex.class%">
+        <service id="sulu_content.search.reindex.structure_provider" class="Sulu\Bundle\ContentBundle\Search\Reindex\StructureProvider">
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
-            <argument>%sulu_content.search.mapping%</argument>
-            <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
+            <argument type="service" id="sulu_content.structure.factory" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument>%sulu.context%</argument>
+            <tag name="massive_search.reindex.provider" id="sulu_structure"/>
         </service>
 
         <service id="sulu_content.search.event_subscriber.structure" class="%sulu_content.search.event_subscriber.structure.class%">

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,18 +15,23 @@ use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
+/**
+ * Represents a kernel for sulu-application tests.
+ */
 class SuluTestKernel extends SuluKernel
 {
+    /**
+     * {@inheritdoc}
+     */
     public function registerBundles()
     {
         $bundles = [
             // Dependencies
-            new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
-            new \FOS\RestBundle\FOSRestBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
-            new \Liip\ThemeBundle\LiipThemeBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -37,9 +42,11 @@ class SuluTestKernel extends SuluKernel
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
 
+            // php-task
+            new \Task\TaskBundle\TaskBundle(),
+
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
-            new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
@@ -56,11 +63,32 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
+            new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
+            new \Sulu\Bundle\HashBundle\SuluHashBundle(),
+            new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
+            new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
+            new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
+            new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
+            new \Sulu\Bundle\AutomationBundle\SuluAutomationBundle(),
         ];
+
+        if ($this->getContext() === self::CONTEXT_WEBSITE) {
+            // smyfony-cmf
+            $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
+        }
+
+        if ($this->getContext() === self::CONTEXT_ADMIN) {
+            // rest
+            $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
+            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
+        }
 
         return $bundles;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
@@ -73,6 +101,9 @@ class SuluTestKernel extends SuluKernel
         });
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCacheDir()
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;

@@ -9,7 +9,7 @@
 
     <services>
         <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
-            <argument type="service" id="doctrine_phpcr.default_session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>
                 <argument key="content">%sulu.content.node_names.content%</argument>

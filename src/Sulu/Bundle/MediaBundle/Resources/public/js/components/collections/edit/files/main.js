@@ -11,10 +11,17 @@ define([
     'config',
     'services/sulumedia/collection-manager',
     'services/sulumedia/media-manager',
+    'services/sulumedia/media-router',
     'services/sulumedia/user-settings-manager',
-    'services/sulumedia/overlay-manager',
-    'sulusecurity/services/security-checker'
-], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
+    'services/sulumedia/overlay-manager'
+], function(
+    Config,
+    CollectionManager,
+    MediaManager,
+    MediaRouter,
+    UserSettingsManager,
+    OverlayManager
+) {
 
     'use strict';
 
@@ -24,100 +31,123 @@ define([
 
         constants = {
             hideToolbarClass: 'toolbar-hidden',
-            dropzoneSelector: '.dropzone-container',
-            toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
-            collectionTitleSelector: '.collection-title h2'
+            collectionTitleSelector: '.content-title h2'
         };
 
     return {
 
-        stickyToolbar: true,
-
         layout: {
-            navigation: {
-                collapsed: true
-            },
             content: {
                 width: 'max'
             }
         },
 
-        templates: [
-            '/admin/media/template/collection/files'
-        ],
-
         /**
          * Initialize the component
          */
         initialize: function() {
-            // extend defaults with options
+            var $collectionView = $('<div class="collection-view"/>');
+
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.data = this.options.getData();
 
-            this.bindDatagridEvents();
-            this.bindDropzoneEvents();
-            this.bindOverlayEvents();
+            this.$el.append($collectionView);
+
+            this.sandbox.start([{
+                name: 'collection-view@sulumedia',
+                options: {
+                    el: $collectionView,
+                    data: this.data,
+                    locale: this.options.locale,
+                    instanceName: this.options.instanceName,
+                    assetActions: [
+                        'fa-pencil',
+                        {
+                            icon: 'fa-crop',
+                            type: 'image',
+                            action: function(media) {
+                                this.editMedia(media.id, true);
+                            }.bind(this)
+                        }
+                    ]
+                }
+            }]);
+
+            this.bindCollectionViewEvents();
             this.bindManagerEvents();
-            this.bindListToolbarEvents();
+            this.bindOverlayEvents();
 
-            this.sandbox.emit('sulu.medias.collection.get-data', function(data) {
-                this.data = data;
-                this.render();
-            }.bind(this));
-
-            // start edit if media was clicked in root-component
-            if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
-                var editId = this.sandbox.sulu.viewStates['media-file-edit-id'];
-                OverlayManager.startEditMediaOverlay.call(this, editId, UserSettingsManager.getMediaLocale());
-                delete this.sandbox.sulu.viewStates['media-file-edit-id'];
+            if (this.options.editId) {
+                this.editMedia(this.options.editId);
             }
         },
 
-        /**
-         * Bind datagrid related events
-         */
-        bindDatagridEvents: function() {
-            // toggle item buttons
-            this.sandbox.on('husky.datagrid.number.selections', function(selectedItems) {
-                var string = (selectedItems > 0) ? 'enable' : 'disable';
-                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'media-move', false);
-                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'editSelected', false);
-                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'delete', false);
+        bindCollectionViewEvents: function() {
+            this.sandbox.on('sulu.collection-view.' + this.options.instanceName + '.folder.clicked', function(id) {
+                MediaRouter.toCollection(id, this.options.locale);
             }.bind(this));
-        },
 
-        /**
-         * Bind dropzone related events
-         */
-        bindDropzoneEvents: function() {
-            // add uploaded medias to datagrid
-            this.sandbox.on('husky.dropzone.' + this.options.instanceName + '.success', function(file, mediaResponse) {
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
-                this.sandbox.emit('husky.datagrid.records.add', [mediaResponse]);
-            }, this);
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.folder.add-clicked',
+                OverlayManager.startCreateCollectionOverlay.bind(this, this.data)
+            );
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.asset.edit-clicked',
+                this.editMedias,
+                this
+            );
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.asset.delete-clicked',
+                this.deleteMedia,
+                this
+            );
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.asset.move-clicked',
+                function() {
+                    OverlayManager.startMoveMediaOverlay.call(this, this.data.id, this.options.locale);
+                }.bind(this)
+            );
+
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.asset.clicked',
+                this.editMedia,
+                this
+            );
+            this.sandbox.on(
+                'sulu.collection-view.' + this.options.instanceName + '.folder.breadcrumb-clicked',
+                this.breadcrumbClickHandler,
+                this
+            );
         },
 
         /**
          * Bind data management related events
          */
         bindManagerEvents: function() {
-            // remove deleted medias from datagrid
-            this.sandbox.on('sulu.medias.media.deleted', function(id) {
-                this.sandbox.emit('husky.datagrid.record.remove', id);
-            }.bind(this));
-
-            // remove moved medias from datagrid
-            this.sandbox.on('sulu.medias.media.moved', function(id) {
-                this.sandbox.emit('husky.datagrid.record.remove', id);
-                this.sandbox.emit('husky.data-navigation.collections.reload');
-            }.bind(this));
-
             // change saved medias in datagrid
             this.sandbox.on('sulu.medias.media.saved', function(id, media) {
                 // change medias if media is saved without locale or locale is current media-locale
-                if (!media.locale || media.locale === UserSettingsManager.getMediaLocale()) {
-                    this.sandbox.emit('husky.datagrid.records.change', media);
+                if (!media.locale || media.locale === this.options.locale) {
+                    this.sandbox.emit(
+                        'husky.datagrid.' + this.options.instanceName + '.records.change',
+                        this.sandbox.util.extend(true, {}, media, {
+                            type: (!!media.type.name) ? media.type.name : media.type
+                        })
+                    );
                 }
+            }.bind(this));
+
+            this.sandbox.on('sulu.medias.media.deleted', function(id) {
+                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.record.remove', id);
+            }.bind(this));
+
+
+            this.sandbox.on('sulu.medias.media.moved', function(id) {
+                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.record.remove', id);
             }.bind(this));
         },
 
@@ -125,213 +155,15 @@ define([
          * Bind overlay related events
          */
         bindOverlayEvents: function() {
-            // chose collection to move media in collection-select overlay
-            this.sandbox.on('sulu.collection-select.move-media.selected', this.moveMedia.bind(this));
+            this.sandbox.on('sulu.collection-select.move-media.selected', this.moveMedia, this);
 
-            // disable dropzone popup when overlay is active
-            this.sandbox.on('sulu.collection-add.initialized', this.disableDropzone.bind(this));
-            this.sandbox.on('sulu.collection-edit.initialized', this.disableDropzone.bind(this));
-            this.sandbox.on('sulu.collection-select.move-collection.initialized', this.disableDropzone.bind(this));
-            this.sandbox.on('sulu.collection-select.move-media.initialized', this.disableDropzone.bind(this));
-            this.sandbox.on('sulu.media-edit.initialized', this.disableDropzone.bind(this));
-            this.sandbox.on('sulu.permission-settings.initialized', this.disableDropzone.bind(this));
-
-            // enable dropzone popup on overlay close
-            this.sandbox.on('sulu.collection-add.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.collection-edit.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.collection-select.move-collection.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.collection-select.move-media.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.media-edit.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.permission-settings.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.medias.collection.saved', this.savedHandler.bind(this));
-        },
-
-        /**
-         * Bind events which are emited from the list-toolbar
-         */
-        bindListToolbarEvents: function() {
-            // show dropzone popup
-            this.sandbox.on('sulu.list-toolbar.add', function() {
-                this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.show-popup');
-            }.bind(this));
-
-            // delete a media
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
-
-            // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', this.editMedias.bind(this));
-
-            // start collection-select overlay on move-click
-            this.sandbox.on('sulu.list-toolbar.media-move', function() {
-                OverlayManager.startMoveMediaOverlay.call(
-                    this, this.options.id, UserSettingsManager.getMediaLocale()
-                );
-            }.bind(this));
-
-            // change datagrid view to table
-            this.sandbox.on('sulu.toolbar.change.table', function() {
-                UserSettingsManager.setMediaListView('table');
-                UserSettingsManager.setMediaListPagination('dropdown');
-
-                this.sandbox.emit('husky.datagrid.change',
-                    1,
-                    UserSettingsManager.getDropdownPageSize(),
-                    'table',
-                    [],
-                    'dropdown'
-                );
-
-                this.sandbox.stickyToolbar.reset(this.$el);
-            }.bind(this));
-
-            // change datagrid view to masonry
-            this.sandbox.on('sulu.toolbar.change.masonry', function() {
-                UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
-                UserSettingsManager.setMediaListPagination('infinite-scroll');
-
-                this.sandbox.emit(
-                    'husky.datagrid.change',
-                    1,
-                    UserSettingsManager.getInfinityPageSize(),
-                    'datagrid/decorators/masonry-view',
-                    null,
-                    'infinite-scroll'
-                );
-
-                this.sandbox.stickyToolbar.reset(this.$el);
-            }.bind(this));
+            this.sandbox.on('sulu.medias.collection.saved', this.savedHandler, this);
         },
 
         savedHandler: function(id, collection) {
-            if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
+            if (!collection.locale || collection.locale === this.options.locale) {
                 $(constants.collectionTitleSelector).text(collection.title)
             }
-        },
-
-        /**
-         * Renders the files component
-         */
-        render: function() {
-            this.sandbox.dom.html(
-                this.$el,
-                this.renderTemplate('/admin/media/template/collection/files')
-            );
-
-            if (SecurityChecker.hasPermission(this.data, 'add')) {
-                this.startDropzone();
-            }
-
-            this.startDatagrid();
-        },
-
-        /**
-         * Start the list toolbar and the datagrid
-         */
-        startDatagrid: function() {
-            var view = UserSettingsManager.getMediaListView();
-
-            // init list-toolbar and datagrid
-            var settingsDropdown = [], buttons = {};
-
-            if (SecurityChecker.hasPermission(this.data, 'add')) {
-                buttons.add = {
-                    options: {
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.add');
-                        }.bind(this)
-                    }
-                };
-            }
-
-            if (SecurityChecker.hasPermission(this.data, 'edit')) {
-                buttons.editSelected = {
-                    options: {
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.edit');
-                        }.bind(this)
-                    }
-                };
-            }
-
-            if (SecurityChecker.hasPermission(this.data, 'delete')) {
-                buttons.deleteSelected = {
-                    options: {
-                        callback: function() {
-                            this.sandbox.emit('sulu.list-toolbar.delete');
-                        }.bind(this)
-                    }
-                };
-            }
-
-            if (SecurityChecker.hasPermission(this.data, 'edit')) {
-                settingsDropdown.push({
-                    id: 'media-move',
-                    title: this.sandbox.translate('sulu.media.move'),
-                    callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.media-move');
-                    }.bind(this)
-                });
-            }
-
-            settingsDropdown.push({
-                type: 'columnOptions'
-            });
-
-            buttons.settings = {
-                options: {
-                    dropdownItems: settingsDropdown
-                }
-            };
-
-            buttons.mediaDecoratorDropdown = {};
-
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'media', '/admin/api/media/fields',
-                {
-                    el: this.$find(constants.toolbarSelector),
-                    instanceName: this.options.instanceName,
-                    template: this.sandbox.sulu.buttons.get(buttons)
-                },
-                {
-                    el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
-                    view: view,
-                    pagination: UserSettingsManager.getMediaListPagination(),
-                    resultKey: 'media',
-                    sortable: false,
-                    actionCallback: function(clickedId) {
-                        this.editMedia(clickedId);
-                    }.bind(this),
-                    viewOptions: {
-                        table: {
-                            actionIconColumn: 'name'
-                        }
-                    },
-                    paginationOptions: {
-                        'infinite-scroll': {
-                            reachedBottomMessage: 'public.reached-list-end',
-                            scrollOffset: 500
-                        }
-                    }
-                });
-        },
-
-        /**
-         * Starts the dropzone component
-         */
-        startDropzone: function() {
-            this.sandbox.start([
-                {
-                    name: 'dropzone@husky',
-                    options: {
-                        el: this.$find(constants.dropzoneSelector),
-                        maxFilesize: Config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media?collection=' + this.options.id,
-                        method: 'POST',
-                        paramName: 'fileVersion',
-                        instanceName: this.options.instanceName
-                    }
-                }
-            ]);
         },
 
         /**
@@ -339,52 +171,68 @@ define([
          * @param collection
          */
         moveMedia: function(collection) {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                MediaManager.move(ids, collection.id);
+            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.items.get-selected', function(ids) {
+                MediaManager.move(ids, collection.id, this.options.locale);
+
+                // If the media was moved to a child collection, update the children tiles
+                this.sandbox.emit('husky.datagrid.' + this.data.id + '.children.records.get',
+                    function(childCollections) {
+                        childCollections.forEach(function(childCollection) {
+                            // update the mediaCount property of a child collection in the datagrid
+                            // if media got moved to it
+                            if (childCollection.id === collection.id) {
+                                this.sandbox.emit('husky.datagrid.' + this.data.id + '.children.records.change',
+                                    _.extend(childCollection, {
+                                        mediaCount: childCollection.mediaCount + ids.length
+                                    })
+                                );
+                            }
+                        }.bind(this));
+                    }.bind(this)
+                );
             }.bind(this));
         },
 
         /**
          * Edits all selected medias
          */
-        editMedias: function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
-                OverlayManager.startEditMediaOverlay.call(this, mediaIds, UserSettingsManager.getMediaLocale());
-            }.bind(this));
+        editMedias: function(mediaIds) {
+            OverlayManager.startEditMediaOverlay.call(this, mediaIds, this.options.locale);
         },
 
         /**
          * Edit given media
          */
-        editMedia: function(mediaId) {
-            OverlayManager.startEditMediaOverlay.call(this, [mediaId], UserSettingsManager.getMediaLocale());
+        editMedia: function(mediaId, crop) {
+            var startingSlide = 'edit';
+            if (crop === true) {
+                startingSlide = 'crop';
+            }
+            OverlayManager.startEditMediaOverlay.call(this, [mediaId], this.options.locale, startingSlide);
         },
 
         /**
          * Show confimation dialog and delete all selected medias if confirmed
          */
-        deleteMedia: function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
-                    if (!!confirmed) {
-                        MediaManager.delete(ids);
-                    }
-                }.bind(this));
+        deleteMedia: function(mediaIds) {
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    MediaManager.delete(mediaIds);
+                }
             }.bind(this));
         },
 
         /**
-         * Disable dropzone-popup on drag-over
+         * Handles the click on a breadcrumb item.
+         *
+         * @param {Object} crumb The data of the clicked breadcrumb item.
          */
-        disableDropzone: function() {
-            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.disable');
-        },
-
-        /**
-         * Enable dropzone popup on drag-over
-         */
-        enableDropzone: function() {
-            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
+        breadcrumbClickHandler: function(crumb) {
+            if (!!crumb.data.id) {
+                MediaRouter.toCollection(crumb.data.id, this.options.locale);
+            } else {
+                MediaRouter.toRootCollection(this.options.locale);
+            }
         }
     };
 });

@@ -130,276 +130,281 @@ define(function() {
             return item;
         };
 
-    return {
+    return function() {
+        return {
 
-        /**
-         * Initializes the view, gets called only once
-         * @param {Object} context The context of the datagrid class
-         * @param {Object} options The options used by the view
-         */
-        initialize: function(context, options) {
-            // context of the datagrid-component
-            this.datagrid = context;
+            /**
+             * Initializes the view, gets called only once
+             * @param {Object} context The context of the datagrid class
+             * @param {Object} options The options used by the view
+             */
+            initialize: function(context, options) {
+                // context of the datagrid-component
+                this.datagrid = context;
 
-            // make sandbox available in this-context
-            this.sandbox = this.datagrid.sandbox;
+                // make sandbox available in this-context
+                this.sandbox = this.datagrid.sandbox;
 
-            // merge defaults with options
-            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+                // merge defaults with options
+                this.options = this.sandbox.util.extend(true, {}, defaults, options);
 
-            this.setVariables();
-        },
+                this.setVariables();
+            },
 
-        /**
-         * Sets the starting variables for the view
-         */
-        setVariables: function() {
-            this.rendered = false;
-            this.$el = null;
+            /**
+             * Sets the starting variables for the view
+             */
+            setVariables: function() {
+                this.rendered = false;
+                this.$el = null;
 
-            // global array to store the dom elements
-            this.$items = {};
-        },
+                // global array to store the dom elements
+                this.$items = {};
+            },
 
-        /**
-         * Method to render this view
-         * @param data object containing the data which is rendered
-         * @param $container dom-element to render datagrid in
-         */
-        render: function(data, $container) {
-            this.renderCardContainer($container);
-            this.bindGeneralDomEvents();
+            /**
+             * Method to render this view
+             * @param data object containing the data which is rendered
+             * @param $container dom-element to render datagrid in
+             */
+            render: function(data, $container) {
+                this.renderCardContainer($container);
+                this.bindGeneralDomEvents();
 
-            this.renderRecords(data.embedded);
-            this.rendered = true;
-        },
+                this.renderRecords(data.embedded);
+                this.rendered = true;
+            },
 
-        /**
-         * Render the card-container into the given dom element
-         * The card-container contains the empty-list-indicator and the card-grid
-         * @param $container
-         */
-        renderCardContainer: function($container) {
-            this.$el = this.sandbox.dom.createElement('<div class="card-grid-container"/>');
+            /**
+             * Render the card-container into the given dom element
+             * The card-container contains the empty-list-indicator and the card-grid
+             * @param $container
+             */
+            renderCardContainer: function($container) {
+                this.$el = this.sandbox.dom.createElement('<div class="card-grid-container"/>');
 
-            // render empty indicator
-            var $empty = this.sandbox.util.template(templates.emptyIndicator, {
-                text: this.sandbox.translate(this.options.emptyListTranslation)
-            });
-            this.sandbox.dom.append(this.$el, $empty);
+                // render empty indicator
+                var $empty = this.sandbox.util.template(templates.emptyIndicator, {
+                    text: this.sandbox.translate(this.options.emptyListTranslation)
+                });
+                this.sandbox.dom.append(this.$el, $empty);
 
-            // render card-grid
-            var $grid = this.sandbox.dom.createElement('<div class="' + constants.cardGridClass + '"/>');
-            this.sandbox.dom.append(this.$el, $grid);
+                // render card-grid
+                var $grid = this.sandbox.dom.createElement('<div class="' + constants.cardGridClass + '"/>');
+                this.sandbox.dom.append(this.$el, $grid);
 
-            this.sandbox.dom.append($container, this.$el);
-        },
+                this.sandbox.dom.append($container, this.$el);
+            },
 
-        /**
-         * Show the empty-list-indicator if datagrid contains no data, else hide it
-         */
-        updateEmptyIndicatorVisibility: function() {
-            if (!!this.datagrid.data.embedded && this.datagrid.data.embedded.length > 0) {
-                this.sandbox.dom.hide('.' + constants.emptyIndicatorClass);
-            } else {
-                this.sandbox.dom.show('.' + constants.emptyIndicatorClass);
-            }
-        },
+            /**
+             * Show the empty-list-indicator if datagrid contains no data, else hide it
+             */
+            updateEmptyIndicatorVisibility: function() {
+                if (!!this.datagrid.data.embedded && this.datagrid.data.embedded.length > 0) {
+                    this.sandbox.dom.hide('.' + constants.emptyIndicatorClass);
+                } else {
+                    this.sandbox.dom.show('.' + constants.emptyIndicatorClass);
+                }
+            },
 
-        /**
-         * Bind dom related events for datagrid-view
-         */
-        bindGeneralDomEvents: function() {
-            if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('body', 'click.cards', function() {
-                    this.deselectAllRecords();
+            /**
+             * Bind dom related events for datagrid-view
+             */
+            bindGeneralDomEvents: function() {
+                if (this.options.unselectOnBackgroundClick) {
+                    this.sandbox.dom.on('body', 'click.cards', function() {
+                        this.deselectAllRecords();
+                    }.bind(this));
+                }
+            },
+
+            /**
+             * Parses the data and passes it item by item to a render function
+             * @param items {Array} array with items to render
+             */
+            renderRecords: function(items, appendAtBottom) {
+                if (typeof appendAtBottom === 'undefined') {
+                    appendAtBottom = true;
+                }
+                this.updateEmptyIndicatorVisibility();
+                this.sandbox.util.foreach(items, function(record) {
+                    var item = processContentFilters.call(this, record);
+                    var id, picture, title, firstInfoRow, secondInfoRow;
+
+                    id = item.id;
+                    picture = item[this.options.fields.picture].url || '';
+
+                    title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title);
+                    firstInfoRow = concatRecordColumns(item, this.options.fields.firstInfoRow, this.options.separators.infoRow);
+                    secondInfoRow = concatRecordColumns(item, this.options.fields.secondInfoRow, this.options.separators.infoRow);
+
+                    // pass the found data to a render method
+                    this.renderItem(id, picture, title, firstInfoRow, secondInfoRow, appendAtBottom);
                 }.bind(this));
-            }
-        },
+            },
 
-        /**
-         * Parses the data and passes it item by item to a render function
-         * @param items {Array} array with items to render
-         */
-        renderRecords: function(items, appendAtBottom) {
-            this.updateEmptyIndicatorVisibility();
-            this.sandbox.util.foreach(items, function(record) {
-                var item = processContentFilters.call(this, record);
-                var id, picture, title, firstInfoRow, secondInfoRow;
+            /**
+             * Renders a card-grid item with the given properties
+             * @param id
+             * @param picture
+             * @param title
+             * @param firstInfoRow
+             * @param secondInfoRow
+             */
+            renderItem: function(id, picture, title, firstInfoRow, secondInfoRow, appendAtBottom) {
+                this.$items[id] = this.sandbox.dom.createElement(
+                    this.sandbox.util.template(templates.item)({
+                        name: this.sandbox.util.cropTail(String(title), 25),
+                        picture: picture,
+                        pictureIcon: this.options.icons.picture
+                    })
+                );
 
-                id = item.id;
-                picture = item[this.options.fields.picture].url || '';
+                if (!!picture) {
+                    this.sandbox.dom.addClass(this.sandbox.dom.find('.head-image', this.$items[id]), 'no-default');
+                }
 
-                title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title);
-                firstInfoRow = concatRecordColumns(item, this.options.fields.firstInfoRow, this.options.separators.infoRow);
-                secondInfoRow = concatRecordColumns(item, this.options.fields.secondInfoRow, this.options.separators.infoRow);
+                if (!!firstInfoRow) {
+                    this.addInfoRowToItem(this.$items[id], this.options.icons.firstInfoRow, firstInfoRow);
+                }
 
-                // pass the found data to a render method
-                this.renderItem(id, picture, title, firstInfoRow, secondInfoRow, appendAtBottom);
-            }.bind(this));
-        },
+                if (!!secondInfoRow) {
+                    this.addInfoRowToItem(this.$items[id], this.options.icons.secondInfoRow, secondInfoRow);
+                }
 
-        /**
-         * Renders a card-grid item with the given properties
-         * @param id
-         * @param picture
-         * @param title
-         * @param firstInfoRow
-         * @param secondInfoRow
-         */
-        renderItem: function(id, picture, title, firstInfoRow, secondInfoRow, appendAtBottom) {
-            this.$items[id] = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.item)({
-                    name: this.sandbox.util.cropTail(String(title), 25),
-                    picture: picture,
-                    pictureIcon: this.options.icons.picture
-                })
-            );
+                if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
+                    this.selectRecord(id);
+                }
 
-            if (!!picture) {
-                this.sandbox.dom.addClass(this.sandbox.dom.find('.head-image', this.$items[id]), 'no-default');
-            }
+                if (!!appendAtBottom) {
+                    $('.' + constants.cardGridClass).append(this.$items[id]);
+                } else {
+                    $('.' + constants.cardGridClass).prepend(this.$items[id]);
+                }
 
-            if (!!firstInfoRow) {
-                this.addInfoRowToItem(this.$items[id], this.options.icons.firstInfoRow, firstInfoRow);
-            }
+                this.bindItemEvents(id);
+            },
 
-            if (!!secondInfoRow) {
-                this.addInfoRowToItem(this.$items[id], this.options.icons.secondInfoRow, secondInfoRow);
-            }
-
-            if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
-                this.selectRecord(id);
-            }
-
-            if (!!appendAtBottom) {
-                $('.' + constants.cardGridClass).append(this.$items[id]);
-            } else {
-                $('.' + constants.cardGridClass).prepend(this.$items[id]);
-            }
-
-            this.bindItemDomEvents(id);
-        },
-
-        /**
-         * Add an info-row to the given item
-         * @param $item
-         * @param icon icon-class of the info-row
-         * @param text text of the info row
-         */
-        addInfoRowToItem: function($item, icon, text) {
-            var $container = this.sandbox.dom.find('.' + constants.itemInfoClass, $item);
-            if (!$container.length) {
-                $container = this.sandbox.dom.createElement(this.sandbox.util.template(templates.infoContainer)());
-                this.sandbox.dom.append($item, $container);
-            }
-            this.sandbox.dom.append($container, this.sandbox.dom.createElement(
+            /**
+             * Add an info-row to the given item
+             * @param $item
+             * @param icon icon-class of the info-row
+             * @param text text of the info row
+             */
+            addInfoRowToItem: function($item, icon, text) {
+                var $container = this.sandbox.dom.find('.' + constants.itemInfoClass, $item);
+                if (!$container.length) {
+                    $container = this.sandbox.dom.createElement(this.sandbox.util.template(templates.infoContainer)());
+                    this.sandbox.dom.append($item, $container);
+                }
+                this.sandbox.dom.append($container, this.sandbox.dom.createElement(
                     this.sandbox.util.template(templates.infoRow)({
                         icon: icon,
                         text: this.sandbox.util.cropMiddle(String(text), 22)
                     }))
-            );
-        },
+                );
+            },
 
-        /**
-         * Takes an object with options and extends the current ones
-         * @param options {Object} new options to merge to the current ones
-         */
-        extendOptions: function(options) {
-            this.options = this.sandbox.util.extend(true, {}, this.options, options);
-        },
+            /**
+             * Takes an object with options and extends the current ones
+             * @param options {Object} new options to merge to the current ones
+             */
+            extendOptions: function(options) {
+                this.options = this.sandbox.util.extend(true, {}, this.options, options);
+            },
 
-        /**
-         * Destroys the view
-         */
-        destroy: function() {
-            this.sandbox.dom.off('body', 'click.cards');
-            this.sandbox.dom.remove(this.$el);
-        },
+            /**
+             * Destroys the view
+             */
+            destroy: function() {
+                this.sandbox.dom.off('body', 'click.cards');
+                this.sandbox.dom.remove(this.$el);
+            },
 
-        /**
-         * Binds Dom-Events for a card-item
-         * @param id {Number|String} the identifier of the thumbnail to bind events on
-         */
-        bindItemDomEvents: function(id) {
-            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                this.datagrid.itemAction.call(this.datagrid, id);
-            }.bind(this), "." + constants.actionNavigatorClass);
+            /**
+             * Binds Dom-Events for a card-item
+             * @param id {Number|String} the identifier of the thumbnail to bind events on
+             */
+            bindItemEvents: function(id) {
+                this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                    this.datagrid.itemAction.call(this.datagrid, id);
+                }.bind(this), "." + constants.actionNavigatorClass);
 
-            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                this.toggleItemSelected(id);
-            }.bind(this));
-        },
+                this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                    this.toggleItemSelected(id);
+                }.bind(this));
+            },
 
-        /**
-         * Toggles an item with a given id selected or unselected
-         * @param id {Number|String} the id of the item
-         */
-        toggleItemSelected: function(id) {
-            if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
-                this.deselectRecord(id);
-            } else {
-                this.selectRecord(id);
+            /**
+             * Toggles an item with a given id selected or unselected
+             * @param id {Number|String} the id of the item
+             */
+            toggleItemSelected: function(id) {
+                if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
+                    this.deselectRecord(id);
+                } else {
+                    this.selectRecord(id);
+                }
+            },
+
+            /**
+             * Selects an item with a given id
+             * @param id {Number|String} the id of the item
+             */
+            selectRecord: function(id) {
+                this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
+                if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
+                    this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
+                }
+                this.datagrid.setItemSelected.call(this.datagrid, id);
+            },
+
+            /**
+             * Unselects an item with a given id
+             * @param id {Number|String} the id of the item
+             */
+            deselectRecord: function(id) {
+                this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
+                if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
+                    this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
+                }
+                this.datagrid.setItemUnselected.call(this.datagrid, id);
+            },
+
+            /**
+             * Adds a record to the view
+             * @param record
+             * @public
+             */
+            addRecord: function(record, appendAtBottom) {
+                this.renderRecords([record], appendAtBottom);
+            },
+
+            /**
+             * Removes a data record from the view
+             * @param recordId {Number|String} the records identifier
+             * @returns {Boolean} true if deleted succesfully
+             */
+            removeRecord: function(recordId) {
+                if (!!this.$items[recordId]) {
+                    this.sandbox.dom.remove(this.$items[recordId]);
+                    this.datagrid.removeRecord.call(this.datagrid, recordId);
+                    this.updateEmptyIndicatorVisibility();
+                    return true;
+                }
+                return false;
+            },
+
+            /**
+             * Unselects all card items
+             */
+            deselectAllRecords: function() {
+                this.sandbox.util.each(this.$items, function(id) {
+                    this.deselectRecord(Number(id));
+                }.bind(this));
             }
-        },
-
-        /**
-         * Selects an item with a given id
-         * @param id {Number|String} the id of the item
-         */
-        selectRecord: function(id) {
-            this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
-            if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
-                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
-            }
-            this.datagrid.setItemSelected.call(this.datagrid, id);
-        },
-
-        /**
-         * Unselects an item with a given id
-         * @param id {Number|String} the id of the item
-         */
-        deselectRecord: function(id) {
-            this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
-            if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
-                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
-            }
-            this.datagrid.setItemUnselected.call(this.datagrid, id);
-        },
-
-        /**
-         * Adds a record to the view
-         * @param record
-         * @public
-         */
-        addRecord: function(record, appendAtBottom) {
-            this.renderRecords([record], appendAtBottom);
-        },
-
-        /**
-         * Removes a data record from the view
-         * @param recordId {Number|String} the records identifier
-         * @returns {Boolean} true if deleted succesfully
-         */
-        removeRecord: function(recordId) {
-            if (!!this.$items[recordId]) {
-                this.sandbox.dom.remove(this.$items[recordId]);
-                this.datagrid.removeRecord.call(this.datagrid, recordId);
-                this.updateEmptyIndicatorVisibility();
-                return true;
-            }
-            return false;
-        },
-
-        /**
-         * Unselects all card items
-         */
-        deselectAllRecords: function() {
-            this.sandbox.util.each(this.$items, function(id) {
-                this.deselectRecord(Number(id));
-            }.bind(this));
-        }
+        };
     };
 });

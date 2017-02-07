@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,10 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Initializers are called when the repository is initialized (or reinitialized).
  *
- * They should create any necessary nodes/documents in the content repository and
- * they MUST NOT remove or destructively modify existing nodes/documents.
+ * They should create any necessary nodes/documents in the content repository and they MUST NOT remove or destructively
+ * modify existing nodes/documents when the purge flag is set to false.
  */
 interface InitializerInterface
 {
-    public function initialize(OutputInterface $output);
+    public function initialize(OutputInterface $output, $purge = false);
 }

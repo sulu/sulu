@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AccountMediaController.
@@ -28,7 +29,7 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
      * @param $id - account id
      * @param $slug - media id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id, $slug)
     {
@@ -39,9 +40,9 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
      * Adds a new media to the account.
      *
      * @param $id
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction($id, Request $request)
     {
@@ -55,7 +56,7 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction($id, Request $request)
     {
@@ -71,7 +72,7 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
     /**
      * Returns all fields that can be used by list.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function fieldsAction()
     {

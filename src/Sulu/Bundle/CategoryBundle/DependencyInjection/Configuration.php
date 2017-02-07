@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -49,6 +50,53 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
+        $this->addObjectsSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    /**
+     * Adds `objects` section.
+     *
+     * @param ArrayNodeDefinition $node
+     */
+    private function addObjectsSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('objects')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('category')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\Category')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryRepository')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('category_meta')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepository')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('category_translation')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepository')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('keyword')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                    ->scalarNode('model')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\Keyword')->end()
+                                    ->scalarNode('repository')->defaultValue('Sulu\Bundle\CategoryBundle\Entity\KeywordRepository')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }

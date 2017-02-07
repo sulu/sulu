@@ -1,18 +1,20 @@
 <?php
+
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ResourceBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -40,6 +42,31 @@ class SuluResourceExtension extends Extension
         );
 
         $container->setParameter('sulu_resource.filters.contexts', $config['contexts']);
+
+        $container->setParameter(
+            'sulu_resource.list_builder.metadata.provider.filter.cache_dir',
+            $this->createOrGetFolder('%sulu.cache_dir%/list-builder/filter', $container)
+        );
+    }
+
+    /**
+     * Create and return directory.
+     *
+     * @param string $directory
+     * @param ContainerBuilder $container
+     *
+     * @return string
+     */
+    private function createOrGetFolder($directory, ContainerBuilder $container)
+    {
+        $filesystem = new Filesystem();
+
+        $directory = $container->getParameterBag()->resolveValue($directory);
+        if (!file_exists($directory)) {
+            $filesystem->mkdir($directory);
+        }
+
+        return $directory;
     }
 
     /**

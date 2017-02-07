@@ -1,114 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <formats xmlns="http://schemas.sulu.io/media/formats"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.0.xsd">
-    <format>
-        <name>400x400</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">400</parameter>
-                    <parameter name="y">400</parameter>
-                </parameters>
-            </command>
-        </commands>
+         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
+
+    <format key="400x400" internal="true">
+        <meta>
+            <title lang="en">Contact avatar (Sulu)</title>
+            <title lang="de">Kontaktavatar (Sulu)</title>
+            <title lang="fr">Avatar du contact (Sulu)</title>
+            <title lang="nl">Contact avatar (Sulu)</title>
+        </meta>
+        <scale x="400" y="400"/>
     </format>
-    <format>
-        <name>400x400-inset</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">400</parameter>
-                    <parameter name="y">400</parameter>
-                    <parameter name="mode">inset</parameter>
-                </parameters>
-            </command>
-        </commands>
+    <format key="400x400-inset" internal="true">
+        <meta>
+            <title lang="en">Organization logo (Sulu)</title>
+            <title lang="de">Organisationslogo (Sulu)</title>
+            <title lang="fr">Logo d'organisation (Sulu)</title>
+            <title lang="nl">Organisatie logo (Sulu)</title>
+        </meta>
+        <scale x="400" y="400" mode="inset"/>
     </format>
-    <format>
-        <name>200x200</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">200</parameter>
-                    <parameter name="y">200</parameter>
-                </parameters>
-            </command>
-        </commands>
+    <format key="260x" internal="true">
+        <meta>
+            <title lang="en">Masonry preview (Sulu)</title>
+            <title lang="de">Masonry Vorschau (Sulu)</title>
+            <title lang="fr">Prévisualisation maçonnerie (Sulu)</title>
+            <title lang="nl">Masonry voorbeeld (Sulu)</title>
+        </meta>
+        <scale x="260"/>
     </format>
-    <format>
-        <name>190x</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">190</parameter>
-                </parameters>
-            </command>
-        </commands>
+    <format key="170x170" internal="true">
+        <meta>
+            <title lang="en">Search (Sulu)</title>
+            <title lang="de">Suche (Sulu)</title>
+            <title lang="fr">Recherche (Sulu)</title>
+            <title lang="nl">Zoeken (Sulu)</title>
+        </meta>
+        <scale x="170" y="170"/>
     </format>
-    <format>
-        <name>170x170</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">170</parameter>
-                    <parameter name="y">170</parameter>
-                </parameters>
-            </command>
-        </commands>
+    <format key="100x100" internal="true">
+        <meta>
+            <title lang="en">Contact card (Sulu)</title>
+            <title lang="de">Personenkarte (Sulu)</title>
+            <title lang="fr">Carte personnelle (Sulu)</title>
+            <title lang="nl">Contact kaart (Sulu)</title>
+        </meta>
+        <scale x="100" y="100"/>
     </format>
-    <format>
-        <name>150x100</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">150</parameter>
-                    <parameter name="y">100</parameter>
-                </parameters>
-            </command>
-        </commands>
+    <format key="100x100-inset" internal="true">
+        <meta>
+            <title lang="en">Organization card (Sulu)</title>
+            <title lang="de">Organisationskarte (Sulu)</title>
+            <title lang="fr">Carte d'organisation (Sulu)</title>
+            <title lang="nl">Organisatie kaart (Sulu)</title>
+        </meta>
+        <scale x="100" y="100" mode="inset"/>
     </format>
-    <format>
-        <name>100x100</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">100</parameter>
-                    <parameter name="y">100</parameter>
-                </parameters>
-            </command>
-        </commands>
-    </format>
-    <format>
-        <name>100x100-inset</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">100</parameter>
-                    <parameter name="y">100</parameter>
-                    <parameter name="mode">inset</parameter>
-                </parameters>
-            </command>
-        </commands>
-    </format>
-    <format>
-        <name>50x50</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">50</parameter>
-                    <parameter name="y">50</parameter>
-                </parameters>
-            </command>
-        </commands>
+    <format key="50x50" internal="true">
+        <meta>
+            <title lang="en">Small thumbnail (Sulu)</title>
+            <title lang="de">Kleines Thumbnail (Sulu)</title>
+            <title lang="fr">Image miniature (Sulu)</title>
+            <title lang="nl">Kleine thumbnail (Sulu)</title>
+        </meta>
+        <scale x="50" y="50"/>
     </format>
 </formats>

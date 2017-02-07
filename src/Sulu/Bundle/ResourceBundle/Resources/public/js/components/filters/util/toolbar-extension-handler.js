@@ -14,7 +14,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
     var constants = {
             filterListUrl: 'resource/filters/',
             manageFilters: 'manage',
-            filtersUrl: 'api/filters?flat=true&context=',
+            filtersUrl: 'api/filters?locale={locale}&flat=true&limit=100&context=',
             filterUrl: 'resource/filters/',
             toolbarSelectButtonId: 'filters'
         },
@@ -32,6 +32,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
             if (!!context && !!toolbarItems && !!dataGridInstanceName && !!this.config.contexts[context]) {
                 var url = constants.filtersUrl + context,
                     updateEventName = 'husky.datagrid.' + dataGridInstanceName + '.updated',
+                    errorEventName = 'husky.datagrid.' + dataGridInstanceName + '.loading.failed',
                     filterDropDown = getFilterDropdown.call(this, context, dataGridInstanceName, url);
 
                 this.filterResultSelector = filterResultSelector;
@@ -42,6 +43,8 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 toolbarItems.push(filterDropDown);
                 this.sandbox.off(updateEventName);
                 this.sandbox.on(updateEventName, updateFilterResult.bind(this));
+
+                this.sandbox.on(errorEventName, handleLoadingError.bind(this));
             }
         },
 
@@ -84,6 +87,18 @@ define(['app-config', 'config'], function(AppConfig, Config) {
             }
         },
 
+        handleLoadingError = function() {
+            this.sandbox.emit('sulu.labels.error.show',
+                this.sandbox.translate('resource.filter.error-loading'),
+                'labels.error',
+                ''
+            );
+
+            this.sandbox.emit('husky.datagrid.' + this.datagridInstance + '.url.update', {filter: ''});
+
+            unsetFilter.call(this);
+        },
+
         /**
          * Called when filter is unset
          */
@@ -107,6 +122,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          * @returns {Object}
          */
         getFilterDropdown = function(context, dataGridInstanceName, url) {
+            url = url.replace('{locale}', this.sandbox.sulu.getDefaultContentLocale());
             return {
                 id: constants.toolbarSelectButtonId,
                 icon: 'filter',
@@ -148,7 +164,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          * @returns {string}
          */
         createUrlToFilterDetails = function() {
-            return constants.filterUrl + this.context + '/' + AppConfig.getUser().locale + '/edit:' + this.filter.id + '/edit';
+            return constants.filterUrl + this.context + '/' + this.sandbox.sulu.getDefaultContentLocale() + '/edit:' + this.filter.id + '/edit';
         },
 
         /**

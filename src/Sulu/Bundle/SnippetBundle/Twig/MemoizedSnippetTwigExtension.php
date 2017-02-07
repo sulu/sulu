@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,29 +12,19 @@
 namespace Sulu\Bundle\SnippetBundle\Twig;
 
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 
 /**
  * Provides memoized Twig functions to handle snippets.
  */
-class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
+class MemoizedSnippetTwigExtension extends \Twig_Extension
 {
-    /**
-     * @var SnippetTwigExtensionInterface
-     */
-    private $extension;
+    use MemoizeTwigExtensionTrait;
 
     /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime;
-
-    /**
-     * Constructor.
+     * @param SnippetTwigExtensionInterface $extension
+     * @param MemoizeInterface $memoizeCache
+     * @param int $lifeTime
      */
     public function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
@@ -49,21 +39,5 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     public function getName()
     {
         return $this->extension->getName();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions()
-    {
-        return $this->extension->getFunctions();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadSnippet($uuid, $locale = null)
-    {
-        return $this->memoizeCache->memoize([$this->extension, 'loadSnippet'], $this->lifeTime);
     }
 }

@@ -83,7 +83,10 @@ define(function() {
             }
 
             if (!!id) {
-                var strSearch = 'edit:' + id;
+                var regex = new RegExp("\\w*:" + id),
+                    result = regex.exec(url),
+                    strSearch = result[0];
+
                 url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
             }
 
@@ -306,6 +309,7 @@ define(function() {
                         el: $container,
                         noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
                         title: (!!header.title) ? header.title : false,
+                        breadcrumb: (!!header.breadcrumb) ? header.breadcrumb : false,
                         underline: header.hasOwnProperty('underline') ? header.underline : true,
 
                         toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
@@ -381,7 +385,15 @@ define(function() {
         app.components.before('initialize', function() {
             //load view data before rendering tabs
             var dataLoaded = $.Deferred(),
-                afterData = $.Deferred();
+                afterData = $.Deferred(),
+                resolveData = function(data) {
+                    if (!!data) {
+                        this.data = data;
+                    }
+                    executeAfterDataHandler.call(this).then(function() {
+                        afterData.resolve();
+                    }.bind(this));
+                };
 
             executeBeforeDataHandler.call(this);
 
@@ -391,14 +403,11 @@ define(function() {
                 dataLoaded.resolve();
             }
 
-            dataLoaded.then(function(data) {
-                if (!!data) {
-                    this.data = data;
-                }
-                executeAfterDataHandler.call(this).then(function() {
-                    afterData.resolve();
-                }.bind(this));
-            }.bind(this));
+            if (!!dataLoaded.then) {
+                dataLoaded.then(resolveData.bind(this));
+            } else {
+                resolveData.call(this, dataLoaded);
+            }
 
             return $.when(dataLoaded, afterData);
         });

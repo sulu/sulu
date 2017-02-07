@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,20 +14,25 @@ namespace Sulu\Component\HttpCache\Handler;
 use Sulu\Component\Content\Compat\PageInterface;
 use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Adds some debug information.
  */
-class DebugHandler implements
-    HandlerUpdateResponseInterface
+class DebugHandler implements HandlerUpdateResponseInterface
 {
     const HEADER_HANDLERS = 'X-Sulu-Handlers';
     const HEADER_CLIENT_NAME = 'X-Sulu-Proxy-Client';
     const HEADER_STRUCTURE_TYPE = 'X-Sulu-Structure-Type';
     const HEADER_STRUCTURE_UUID = 'X-Sulu-Structure-UUID';
     const HEADER_STRUCTURE_TTL = 'X-Sulu-Page-TTL';
+
+    /**
+     * @var CacheLifetimeResolverInterface
+     */
+    private $cacheLifetimeResolver;
 
     /**
      * @var string[]
@@ -40,13 +45,16 @@ class DebugHandler implements
     private $proxyClientName;
 
     /**
-     * @param array List of handlers (strings)
-     * @param string Current proxy client nme
+     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
+     * @param array $handlerNames List of handlers (strings)
+     * @param string $proxyClientName Current proxy client name
      */
     public function __construct(
+        CacheLifetimeResolverInterface $cacheLifetimeResolver,
         $handlerNames,
         $proxyClientName
     ) {
+        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->handlerNames = $handlerNames;
         $this->proxyClientName = $proxyClientName;
     }
@@ -63,7 +71,9 @@ class DebugHandler implements
 
         // Structures implementing PageInterface have a TTL
         if ($structure instanceof PageInterface) {
-            $response->headers->set(self::HEADER_STRUCTURE_TTL, $structure->getCacheLifeTime());
+            $cacheLifetimeData = $structure->getCacheLifeTime();
+            $cacheLifeTime = $this->cacheLifetimeResolver->resolve($cacheLifetimeData['type'], $cacheLifetimeData['value']);
+            $response->headers->set(self::HEADER_STRUCTURE_TTL, $cacheLifeTime);
         }
     }
 }

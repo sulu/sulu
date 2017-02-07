@@ -153,13 +153,19 @@ define([
          * @returns {Boolean} true iff a title has been found
          */
         setCollapsedText = function($field, $block) {
+            var type, text;
+
             if (!!$field.data('element')) {
-                if (!!$field.data('element').getType && $field.data('element').getType().name === 'textEditor') {
-                    if (!!$($field.data('element').getValue()).text()) {
-                        $block.find('.collapsed-container .text').html($($field.data('element').getValue()).text());
+                type = !!$field.data('element').getType ? $field.data('element').getType() : null;
+                if (!!type && type.name === 'textEditor') {
+                    text = $('<div/>').append($field.data('element').getValue()).text();
+
+                    if (!!text) {
+                        $block.find('.collapsed-container .text').html(text);
                         return true;
                     }
                 }
+
                 if ($field.is('textarea')) {
                     if (!!$field.data('element').getValue()) {
                         $block.find('.collapsed-container .text').html($field.data('element').getValue());
@@ -199,7 +205,10 @@ define([
         };
 
     return function($el, options, form) {
-        var defaults = {},
+        var defaults = {
+                min: 0,
+                max: null
+            },
 
             subType = {
                 initializeSub: function() {
@@ -222,12 +231,11 @@ define([
                     if (this.getMinOccurs() !== this.getMaxOccurs()) {
                         this.initSelectComponent(selectData);
                     } else {
-                        Husky.dom.remove(this.$addButton);
+                        this.$addButton.remove();
                     }
 
                     this.bindDomEvents();
                     this.setSortable();
-                    this.setValue([]);
 
                     $('#collapse-text-blocks-' + this.id).addClass('hidden');
                     $('#expand-text-blocks-' + this.id).addClass('hidden');
@@ -235,7 +243,7 @@ define([
                 },
 
                 getChildren: function() {
-                    return this.$el.children();
+                    return this.$el.children().filter(':not(script)');
                 },
 
                 getMinOccurs: function() {
@@ -298,22 +306,19 @@ define([
                     $('#expand-text-blocks-' + this.id).on('click', this.expandAll.bind(this));
                 },
 
+
                 removeBlockHandler: function(event) {
-                    Husky.sulu.showDeleteDialog(function(confirmed) {
-                            if (confirmed) {
-                                var $removeButton = $(event.target),
-                                    $element = $removeButton.closest('.' + this.propertyName + '-element');
+                    var $removeButton = $(event.target),
+                        $element = $removeButton.closest('.' + this.propertyName + '-element');
 
-                                if (this.canRemove()) {
-                                    this.form.removeFields($element);
-                                    $element.remove();
+                    if (this.canRemove()) {
+                        Husky.stop($element.find('*'));
+                        Husky.stop($element);
+                        $element.remove();
+                        this.checkFullAndEmpty();
+                    }
 
-                                    $(form.$el).trigger('form-remove', [this.propertyName]);
-                                    this.checkFullAndEmpty();
-                                }
-                            }
-                        }.bind(this)
-                    );
+                    $(form.$el).trigger('form-remove', [this.propertyName]);
                 },
 
                 /**
@@ -359,21 +364,24 @@ define([
 
                 //TODO: make cleaner
                 addChild: function(type, data, fireEvent, index, keepExpanded) {
-                    var options, template, $template,
-                        dfd = Husky.data.deferred();
-
-                    if (typeof index === 'undefined' || index === null) {
-                        index = this.getChildren().length;
-                    }
+                    var options, template, $template, newSubForm,
+                        dfd = Husky.data.deferred(),
+                        hasIndex = !(typeof index === 'undefined' || index === null);
 
                     if (!this.templates.hasOwnProperty(type)) {
                         type = this.options.default;
                     }
 
-                    if (this.canAdd()) {
-                        // remove index
+                    // remove index
+                    if (!!hasIndex) {
                         Husky.dom.remove(Husky.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
+                    }
 
+                    if (!hasIndex) {
+                        index = this.getChildren().length;
+                    }
+
+                    if (this.canAdd()) {
                         // FIXME this should not be necessary (see https://github.com/sulu-io/sulu/issues/1263)
                         data.type = type;
 
@@ -385,10 +393,10 @@ define([
                         Husky.dom.insertAt(index, '> *', this.$el, $template);
 
                         if (this.types.length > 1) {
-                            initializeTypeSelect.call(this, $template, options, function(item) {
-                                var data = form.mapper.getData($template);
+                            initializeTypeSelect.call(this, $template, options, function(type) {
+                                var data = Husky.form.getObject($template).mapper.getData();
                                 Husky.stop($template.find('*'));
-                                this.addChild(item, data, true, $template.index(), true);
+                                this.addChild(type, data, true, $template.index(), true);
                             }.bind(this));
                         }
 
@@ -397,8 +405,9 @@ define([
                             Husky.dom.remove(Husky.dom.find('.options-remove', $template));
                         }
 
-                        form.initFields($template).then(function() {
-                            form.mapper.setData(data, $template).then(function() {
+                        newSubForm = Husky.form.create($template);
+                        newSubForm.initialized.then(function() {
+                            newSubForm.mapper.setData(data, $template).then(function() {
                                 if (!keepExpanded) {
                                     collapseBlock.call(this, $template);
                                 } else {
@@ -479,9 +488,10 @@ define([
 
                 getValue: function() {
                     var data = [];
-                    Husky.dom.children(this.$el).each(function() {
-                        data.push(form.mapper.getData($(this)));
+                    this.$el.children().filter(':not(script)').each(function(index, $element) {
+                        data.push(Husky.form.getObject($element).mapper.getData());
                     });
+
                     return data;
                 },
 
@@ -504,7 +514,7 @@ define([
                 },
 
                 setSortable: function() {
-                    if (this.getMaxOccurs() > 1) {
+                    if (this.getMaxOccurs() === null || this.getMaxOccurs() > 1) {
                         this.$el.addClass('sortable');
                     }
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.sulu.io/class/doctrine"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="fieldType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="field-name"/>
+            <xs:element type="xs:string" name="entity-name"/>
+
+            <xs:element type="joinsType" name="joins" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="property-ref" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="joinsType">
+        <xs:sequence>
+            <xs:element type="joinType" name="join" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="name" use="optional"/>
+        <xs:attribute type="xs:string" name="ref" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="joinType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="entity-name"/>
+            <xs:element type="xs:string" name="field-name"/>
+            <xs:element type="xs:string" name="condition" minOccurs="0"/>
+            <xs:element type="xs:string" name="method" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element type="xs:string" name="field-name"/>
+    <xs:element type="xs:string" name="entity-name"/>
+
+    <xs:element type="joinsType" name="joins"/>
+    <xs:element type="fieldType" name="field"/>
+
+    <xs:attribute name="glue" type="xs:string"/>
+</xs:schema>

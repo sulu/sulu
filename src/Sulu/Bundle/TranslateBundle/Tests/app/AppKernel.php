@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,13 +13,4 @@ use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 
 class AppKernel extends SuluTestKernel
 {
-    public function registerBundles()
-    {
-        return array_merge(
-            parent::registerBundles(),
-            [
-                new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
-            ]
-        );
-    }
 }

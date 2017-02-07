@@ -1,0 +1,516 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
+
+// Setup the runner application
+// ============================
+
+// ensure that we don't timeout
+set_time_limit(0);
+
+// require the autoloader
+$autoloadFile = __DIR__ . '/../vendor/autoload.php';
+if (!file_exists($autoloadFile)) {
+    echo(sprintf(
+        'Could not find autoload file "%s", make sure you have ' .
+        'installed the projects dependencies (i.e. `composer install`).',
+        $autoloadFile
+    ));
+    exit(255);
+}
+require_once $autoloadFile;
+
+// setup the application - not that we ONLY use the Application class
+// to get the terminal dimensions currently, not for "hosting" any commands
+// etc.
+$application = new Application();
+list($termWidth, $termHeight) = $application->getTerminalDimensions();
+
+$definition = new InputDefinition();
+$definition->addOption(new InputOption('initialize', 'i', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('flags', 'f', InputOption::VALUE_REQUIRED));
+$definition->addOption(new InputOption('target', 't', InputOption::VALUE_REQUIRED));
+$definition->addOption(new InputOption('all', 'a', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('jackrabbit-restart', 'r', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('help', 'h', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('no-component-tests', 'C', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('no-bundle-tests', 'B', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('verbose', 'v', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('cache-clear', null, InputOption::VALUE_NONE));
+$input = new ArgvInput(null, $definition);
+$output = new ConsoleOutput();
+$output->getFormatter()->setStyle('red', new OutputFormatterStyle('red'));
+$failedTests = new \ArrayObject();
+$verbose = $input->getOption('verbose');
+$filesystem = new Filesystem();
+global $output, $input, $failedTests, $termWidth, $verbose;
+
+// Utility methods
+// ===============
+
+function write_logo()
+{
+    writeln(<<<'EOT'
+   _____       _        _____ __  __ ______ 
+  / ____|     | |      / ____|  \/  |  ____|
+ | (___  _   _| |_   _| |    | \  / | |__   
+  \___ \| | | | | | | | |    | |\/| |  __|  
+  ____) | |_| | | |_| | |____| |  | | |     
+ |_____/ \__,_|_|\__,_|\_____|_|  |_|_|     
+
+             * Test Runner *
+                                            
+EOT
+    );
+}
+
+function write_break($style = 'info')
+{
+    global $termWidth;
+    writeln('<' . $style . '>' . str_repeat('=', $termWidth) . '</>');
+}
+
+function write_header($text)
+{
+    write_break();
+    writeln($text);
+    write_break();
+    write(PHP_EOL);
+}
+
+function write_info($info)
+{
+    writeln('<comment>>> ' . $info . '</>');
+}
+
+function write_error($error)
+{
+    writeln('<error>' . $error . '</>');
+}
+
+function writeln($line)
+{
+    write($line . PHP_EOL);
+}
+
+function write_formatted_field_value($line)
+{
+    preg_match('{^\s*(.+?)\s+(.*?)\s*$}', $line, $matches);
+    writeln(sprintf("   %-'.40s%s", $matches[1], $matches[2]));
+}
+
+function write($line)
+{
+    global $output;
+    $output->write($line);
+}
+
+function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
+{
+    global $verbose;
+
+    if ($verbose) {
+        $cmd .= ' --verbose';
+    }
+    return exec_cmd(
+        'php ' . __DIR__ . '/console ' . $cmd,
+        $echo,
+        $checkForError
+    );
+}
+
+function exec_cmd($cmdLine, $echo = true, $checkForError = true)
+{
+    $process = new Process($cmdLine);
+    $process->setTimeout(null);
+    $process->run(function ($type, $out) use ($echo) {
+        if (!$echo) {
+            return;
+        }
+
+        write($out);
+    });
+
+    if ($checkForError && $process->getExitCode() !== 0) {
+        write_error(sprintf(
+            'Could not execute command "%s", got exit code "%s": %s',
+            $cmdLine,
+            $process->getExitCode(),
+            $process->getErrorOutput()
+        ));
+    }
+
+    return $process;
+}
+
+// Information functions
+// =====================
+
+function show_storage_params()
+{
+    write_header('Storage parameters');
+    $process = exec_sf_cmd('debug:container --parameters', false);
+    foreach (explode("\n", $process->getOutput()) as $line) {
+        if (0 === strpos(trim($line), 'database')) {
+            write_formatted_field_value($line);
+        }
+
+        if (0 === strpos(trim($line), 'phpcr')) {
+            write_formatted_field_value($line);
+        }
+    }
+    write(PHP_EOL);
+}
+
+function show_help()
+{
+    writeln(<<<'EOT'
+
+<comment>Usage:</>
+
+  $ php ./bin/runtests -i -a             <comment># initialize and run all tests</>
+  $ php ./bin/runtests -t LocationBundle <comment># run only LocationBundle tests</>
+  $ php ./bin/runtests -f"--debug"       <comment># pass flags to PHPUnit</>
+
+<comment>Options:</>
+
+  -i, --initialize            Execute the initializaction script before running the tests.
+  -f, --flags                 Pass flags to PHPUnit.
+  -t, --target                Specify a target bundle.
+  -a, --all                   Run all tests.
+  -r, --restart-jackrabbit    Restart jackrabbit between bundle tests.
+  -h, --help                  Show this help.
+  -C, --no-component-tests    Do not run the component tests.
+  -B, --no-bundle-tests       Do not run the bundle tests.
+  -v, --verbose               Verbose (pass flag to sub commands).
+EOT
+    );
+}
+
+function get_bundles($target = null)
+{
+    $finder = Finder::create();
+
+    if ($target) {
+        $finder->in(__DIR__ . '/../src/Sulu/Bundle/' . $target);
+    } else {
+        $finder->in(__DIR__ . '/../src/Sulu/Bundle/*');
+    }
+    $finder->name('phpunit.xml.dist');
+    $finder->depth(' < 1');
+
+    return iterator_to_array($finder);
+}
+
+function get_bundle_console_path($bundlePath)
+{
+    $consolePath = realpath($bundlePath . '/..') . '/TestBundle/Resources/app/console';
+
+    if (!file_exists($consolePath)) {
+        write_error(sprintf('Could not find test console "%s", is the test being executed in the correct directory?', $consolePath));
+        exit(1);
+    }
+
+    return $consolePath;
+}
+
+function get_kernel_dir($phpunitPath)
+{
+    $dom = new \DOMDocument();
+    $dom->load($phpunitPath);
+    $xpath = new \DOMXpath($dom);
+
+    return $xpath->evaluate('string(./php/server[@name="KERNEL_DIR"]/@value)');
+}
+
+// Jackrabbit functions
+// ====================
+
+function jackrabbit_restart()
+{
+    $pid = jackrabbit_pid();
+
+    write_info('Restarting Jackrabbit');
+    write('   ');
+    if (false !== $pid) {
+        exec_cmd('kill '  . $pid);
+
+        while ($pid = jackrabbit_pid()) {
+            write('<red>.</>');
+            sleep(1);
+        }
+    }
+
+    $jackrabbitJar = jackrabbit_get_path();
+
+    $process = new Process(sprintf(
+        'java -jar %s --repo %s/jackrabbit > jackrabbit_process.log &',
+        $jackrabbitJar->getPathname(), dirname(dirname($jackrabbitJar->getPathname()))
+    ));
+    $process->start();
+    while (false === jackrabbit_is_up()) {
+        write('<info>.</>');
+        sleep(1);
+    }
+    write(PHP_EOL);
+}
+
+function jackrabbit_is_up()
+{
+    $process = exec_cmd('curl -s http://localhost:8080', false, false);
+
+    return $process->getExitCode() === 0;
+}
+
+function jackrabbit_pid()
+{
+    $jackrabbitJar = jackrabbit_get_path();
+    $process = exec_cmd('pgrep -f -n "java \-jar .*' . basename($jackrabbitJar) . '"', false, false);
+
+    // no process found
+    if ($process->getExitCode() == 1) {
+        return false;
+    }
+
+    return trim($process->getOutput());
+}
+
+function jackrabbit_get_path()
+{
+    static $jackrabbit = null;
+    $jackrabbitPath = realpath(__DIR__ . '/../downloads');
+
+    if (!$jackrabbit) {
+        $finder = Finder::create()
+            ->in($jackrabbitPath)
+            ->name('jackrabbit-standalone*.jar')
+            ->depth('== 0');
+        $jackrabbit = null;
+        foreach ($finder as $jackrabbit) {
+            break;
+        }
+    }
+
+    if (null === $jackrabbit) {
+        write_error(sprintf(
+            'Could not find jackrabbit-standalone executable in "%s"',
+            $jackrabbitPath
+        ));
+        exit(1);
+    }
+
+    return $jackrabbit;
+}
+
+// Tasks
+// =====
+
+function init_dbal()
+{
+    write_info('Creating database');
+    exec_sf_cmd(
+        'doctrine:database:create',
+        false, false
+    );
+
+    write_info('Updating schema');
+    exec_sf_cmd(
+        'doctrine:schema:update --force'
+    );
+}
+
+function init_phpcr_dbal()
+{
+    exec_sf_cmd('doctrine:phpcr:init:dbal');
+}
+
+function run_bundle_tests(\SplFileInfo $phpunitFile)
+{
+    global $failedTests, $input, $filesystem;
+
+    $bundleName = basename($phpunitFile->getPath());
+    $bundleDir = $phpunitFile->getPath();
+
+    write_header('Testing: ' . $bundleName);
+
+    $baseVendorDir = getcwd() . '/vendor';
+    $bundleVendorDir = $bundleDir . '/vendor';
+
+    if (!file_exists($bundleVendorDir)) {
+        symlink($baseVendorDir, $bundleVendorDir);
+        write_info('Symlinked base vendor dir');
+    }
+
+    $cacheDir = getcwd() . '/Tests/app/cache';
+    if ($input->getOption('cache-clear')) {
+        write_info('Clear cache');
+        $filesystem->remove($cacheDir);
+    }
+
+    // see if this bundle uses doctrine orm, and update the schema if so..
+    // (we assume that the bundle will purge the fixtures etc.)
+    init_bundle($phpunitFile->getPathname());
+
+    putenv('KERNEL_DIR=' . $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname()));
+
+    write_info('Running tests');
+
+    $flags = $input->getOption('flags');
+    $process = exec_cmd(sprintf(
+        'vendor%sbin%sphpunit --configuration %s %s',
+        DIRECTORY_SEPARATOR,
+        DIRECTORY_SEPARATOR,
+        $phpunitFile->getPathname(),
+        $flags
+    ), true, false);
+
+    if ($process->getExitCode() !== 0) {
+        $failedTests[] = $bundleName;
+    }
+
+    if ($input->getOption('jackrabbit-restart')) {
+        // TODO: Not all bundles use Jackrabbit, so it would be nice to only
+        //       restart jackrabbit for those bundles which DO use it, however
+        //       the PHPCR stuff is currently registered by default.
+        jackrabbit_restart();
+    }
+    writeln('');
+}
+
+function init_bundle($phpunitPath)
+{
+    if (!$console = get_bundle_console_path(dirname($phpunitPath))) {
+        return;
+    }
+
+    $process = exec_cmd(sprintf(
+        'php %s %s',
+        $console,
+        'debug:container doctrine.orm.entity_manager'
+    ), false);
+
+    // bundle does not use Doctrine ORM
+    if ($process->getExitCode() !== 0) {
+        return;
+    }
+
+    write_info('Doctrine ORM detected, updating the schema for the bundle.');
+
+    exec_cmd(sprintf(
+        'php %s %s',
+        $console,
+        ' doctrine:schema:update --force'
+    ));
+
+    exec_sf_cmd('sulu:document:initialize --ansi', false);
+}
+
+function is_everything_ok()
+{
+    global $failedTests;
+
+    if ($failedTests->count() == 0) {
+        write_header('Everythig is AWESOME! \o/');
+
+        return true;
+    }
+
+    write(PHP_EOL);
+    write_break('red');
+    writeln(sprintf(
+        'Oh no %d suite(s) failed:',
+        count($failedTests)
+    ));
+    write_break('red');
+    write(PHP_EOL);
+
+    foreach ($failedTests as $bundleName) {
+        writeln('  - ' . $bundleName);
+    }
+    write(PHP_EOL);
+}
+
+// Main
+// ====
+
+write_logo();
+
+// if help option is given or no options or arguments are given, then show the help.
+if (!isset($argv[1]) || $input->getOption('help')) {
+    show_help();
+    exit(0);
+}
+
+// show the storage parameters
+show_storage_params();
+
+if ($input->getOption('initialize')) {
+    write_header('Initialization');
+    if ($input->getOption('cache-clear')) {
+        write_info('Clear cache');
+        $filesystem->remove(getcwd() . '/tests/app/cache');
+    }
+    init_dbal();
+    write_info('Initializing the content repository');
+    exec_sf_cmd('sulu:document:initialize --ansi', true);
+    if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'doctrine_dbal') {
+        init_phpcr_dbal();
+    }
+    write(PHP_EOL);
+}
+
+$bundles = [];
+if (false === $input->getOption('no-bundle-tests') || $input->getOption('all')) {
+    $bundles = get_bundles();
+}
+
+if ($target = $input->getOption('target')) {
+    $bundles = get_bundles($target);
+}
+
+foreach ($bundles as $bundle) {
+    run_bundle_tests($bundle);
+}
+
+if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
+    write_header('Component Tests');
+
+    // reset the use the "default" test kernel, the same which is used for
+    // bin/console. note this is historically something of a mess. test classes
+    // should explicitly indicate which kernels they are using.
+    // https://github.com/sulu-io/sulu/issues/2187
+    putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
+    $process = exec_cmd(
+        'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
+        true,
+        false
+    );
+    if ($process->getExitCode() !== 0) {
+        $failedTests[] = 'Components';
+    }
+}
+
+if (is_everything_ok()) {
+    exit(0);
+}
+
+// everything is NOT ok
+exit(255);

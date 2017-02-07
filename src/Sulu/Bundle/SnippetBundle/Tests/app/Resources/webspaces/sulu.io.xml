@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webspace xmlns="http://schemas.sulu.io/webspace/webspace"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>sulu.io</name>
     <key>sulu_io</key>
@@ -15,13 +15,12 @@
         </localization>
     </localizations>
 
-    <theme>
-        <key>default</key>
-        <default-templates>
-            <default-template type="page">default</default-template>
-            <default-template type="homepage">overview</default-template>
-        </default-templates>
-    </theme>
+    <theme>default</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">default</default-template>
+    </default-templates>
 
     <navigation>
         <contexts>
@@ -40,17 +39,20 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>sulu.io</name>
             <key>sulu_io</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
-                <localization language="en" default="true"/>
+                <localization language="en"/>
+                <localization language="en" country="us"/>
                 <localization language="de"/>
+                <localization language="de" country="at"/>
             </localizations>
 
             <environments>

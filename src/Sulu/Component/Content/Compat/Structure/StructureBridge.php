@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,6 +27,9 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
+/**
+ * @deprecated Should be replaced by a proper StructureInterface implementation
+ */
 class StructureBridge implements StructureInterface
 {
     /**
@@ -59,7 +62,7 @@ class StructureBridge implements StructureInterface
      *
      * @var string
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @param StructureMetadata $structure
@@ -104,7 +107,7 @@ class StructureBridge implements StructureInterface
             return $this->locale;
         }
 
-        return $this->inspector->getOriginalLocale($this->getDocument());
+        return $this->inspector->getLocale($this->getDocument());
     }
 
     /**
@@ -291,16 +294,19 @@ class StructureBridge implements StructureInterface
     {
         $children = [];
 
-        foreach ($this->getDocument()->getChildren($this->getDocument()) as $child) {
+        foreach ($this->getDocument()->getChildren() as $child) {
             $children[] = $this->documentToStructure($child);
         }
 
         return $children;
     }
 
+    /**
+     * @return $this
+     */
     public function getParent()
     {
-        return $this->documentToStructure($this->documentInspector->getParent($this->getDocument()));
+        return $this->documentToStructure($this->inspector->getParent($this->getDocument()));
     }
 
     /**
@@ -455,7 +461,7 @@ class StructureBridge implements StructureInterface
                     [
                         'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
                         'shadowOn' => $document->isShadowLocaleEnabled(),
-                        'shadowBaseLanguage' => $document->getShadowLocale() ?: false,
+                        'shadowBaseLanguage' => $document->getShadowLocale(),
                     ]
                 );
             }
@@ -610,7 +616,7 @@ class StructureBridge implements StructureInterface
     /**
      * Magic getter.
      *
-     * @deprecated Do not use magic getters. Use ArrayAccess instead.
+     * @deprecated Do not use magic getters. Use ArrayAccess instead
      */
     public function __get($name)
     {
@@ -630,13 +636,21 @@ class StructureBridge implements StructureInterface
     public function getIsShadow()
     {
         $document = $this->getDocument();
+        if (!$document instanceof ShadowLocaleBehavior) {
+            return false;
+        }
 
         return $document->isShadowLocaleEnabled();
     }
 
     public function getShadowBaseLanguage()
     {
-        return $this->getDocument()->getShadowLocale();
+        $document = $this->getDocument();
+        if (!$document instanceof ShadowLocaleBehavior) {
+            return;
+        }
+
+        return $document->getShadowLocale();
     }
 
     public function getResourceLocator()
@@ -695,6 +709,11 @@ class StructureBridge implements StructureInterface
         );
     }
 
+    /**
+     * @param StructureBehavior $document The document to convert
+     *
+     * @return $this
+     */
     protected function documentToStructure(StructureBehavior $document)
     {
         return new $this(

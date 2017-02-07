@@ -7,10 +7,10 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="field" type="string" length="255" nullable="false"/>
-        <field name="operator" type="string" length="255" nullable="false"/>
-        <field name="type" type="integer" nullable="false"/>
-        <field name="value" type="string" length="255" nullable="false"/>
+        <field name="field" column="field" type="string" length="255" nullable="false"/>
+        <field name="operator" column="operator" type="string" length="255" nullable="false"/>
+        <field name="type" column="type" type="integer" nullable="false"/>
+        <field name="value" column="value" type="json_array" nullable="false"/>
 
         <many-to-one target-entity="Sulu\Bundle\ResourceBundle\Entity\ConditionGroup" field="conditionGroup"
                      inversed-by="conditions">

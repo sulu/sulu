@@ -5,33 +5,70 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="sulu_content.document.serializer.handler.structure" class="Sulu\Component\Content\Document\Serializer\Handler\StructureHandler">
+        <service id="sulu_content.document.serializer.handler.structure"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Handler\StructureHandler">
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
 
-        <service id="sulu_content.document.serializer.handler.extension_container" class="Sulu\Component\Content\Document\Serializer\Handler\ExtensionContainerHandler">
+        <service id="sulu_content.document.serializer.handler.extension_container"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Handler\ExtensionContainerHandler">
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
 
-        <service id="sulu_content.document.serializer.handler.page_document" class="Sulu\Component\Content\Document\Serializer\Subscriber\PageDocumentSubscriber">
-            <argument type="service" id="sulu_document_manager.document_registry" />
-            <argument type="service" id="doctrine_phpcr.default_session" />
-            <tag name="jms_serializer.event_subscriber" />
+        <service id="sulu_content.document.serializer.subscriber.structure_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\StructureSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
-        <service id="sulu_content.document.serializer.subscriber.structure" class="Sulu\Component\Content\Document\Serializer\Subscriber\StructureSubscriber">
-            <tag name="jms_serializer.event_subscriber" />
+        <service id="sulu_content.document.serializer.subscriber.extension_container"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\ExtensionContainerSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
-        <service id="sulu_content.document.serializer.subscriber.extension_container" class="Sulu\Component\Content\Document\Serializer\Subscriber\ExtensionContainerSubscriber">
-            <tag name="jms_serializer.event_subscriber" />
+        <service id="sulu_content.document.serializer.subscriber.path_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\PathSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_content.document.serializer.subscriber.parent_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\ParentSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_content.document.serializer.subscriber.locale"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\LocaleSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_content.document.serializer.subscriber.shadow_locale_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\ShadowLocaleSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_content.document.serializer.subscriber.redirect_type_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\RedirectTypeSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_content.document.serializer.subscriber.workflow_stage_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\WorkflowStageSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
         <!-- Serializer for Compat PageBridge (legacy) -->
-        <service id="sulu_content.compat.serializer.handler.page_bridge" class="Sulu\Component\Content\Compat\Serializer\PageBridgeHandler">
+        <service id="sulu_content.compat.serializer.handler.page_bridge"
+                 class="Sulu\Component\Content\Compat\Serializer\PageBridgeHandler">
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <argument type="service" id="sulu_content.structure.factory" />
+
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
 

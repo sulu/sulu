@@ -53,10 +53,13 @@ define([], function() {
         constants = {
             componentClass: 'sulu-header',
             hasTabsClass: 'has-tabs',
+            hasLabelClass: 'has-label',
             backClass: 'back',
             backIcon: 'chevron-left',
             toolbarClass: 'toolbar',
+            tabsRowClass: 'tabs-row',
             tabsClass: 'tabs',
+            tabsLabelContainer: 'tabs-label',
             tabsSelector: '.tabs-container',
             toolbarSelector: '.toolbar-container',
             rightSelector: '.right-container',
@@ -64,6 +67,7 @@ define([], function() {
             hideTabsClass: 'tabs-hidden',
             tabsContentClass: 'tabs-content',
             contentTitleClass: 'sulu-title',
+            breadcrumbContainerClass: 'sulu-breadcrumb',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'}
@@ -91,8 +95,8 @@ define([], function() {
                 '</div>'
             ].join(''),
             tabsRow: [
-                '<div class="tabs-row">',
-                '    <div class="' + constants.tabsClass + '"></div>',
+                '<div class="', constants.tabsRowClass, '">',
+                '    <div class="', constants.tabsClass, '"></div>',
                 '</div>'
             ].join(''),
             languageChanger: [
@@ -103,7 +107,9 @@ define([], function() {
             ].join(''),
             titleElement: [
                 '<div class="' + constants.contentTitleClass + '">',
-                '   <h2 class="content-title <% if(!!underline){ %>underlined<% } %>"><%= title %></h2>',
+                '   <div class="content-title <% if(!!underline){ %>underlined<% } %>">',
+                '       <h2><%= title %></h2>',
+                '   </div>',
                 '</div>'
             ].join('')
         },
@@ -131,13 +137,33 @@ define([], function() {
         },
 
         /**
-         * emited if the language changer got changed
+         * Emitted if the language changer got changed
          *
          * @event sulu.header.[INSTANCE_NAME].language-changed
          * @param {string} the language which got changed to
          */
         LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
+        },
+
+        /**
+         * Emitted when a breadcrumb item got clicked
+         *
+         * @event sulu.header.[INSTANCE_NAME].breadcrumb-clicked
+         * @param {Object} The data of the breadcrumb item
+         */
+        BREADCRUMB_CLICKED = function() {
+            return createEventName.call(this, 'breadcrumb-clicked');
+        },
+
+        /**
+         * changes the html value of the language changer
+         *
+         * @event sulu.header.[INSTANCE_NAME].change-language
+         * @param {string} the language to change to
+         */
+        CHANGE_LANGUAGE = function() {
+            return createEventName.call(this, 'change-language');
         },
 
         /**
@@ -151,13 +177,23 @@ define([], function() {
         },
 
         /**
-         * listens on and renderes a title
+         * listens on and renders a title
          *
          * @event sulu.header.[INSTANCE_NAME].set-title
          * @param {String} the title to render
          */
         SET_TITLE = function() {
             return createEventName.call(this, 'set-title');
+        },
+
+        /**
+         * listens on and update for example the tabs
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title
+         * @param {Object} data save data
+         */
+        SAVED = function() {
+            return createEventName.call(this, 'saved');
         },
 
         /**
@@ -191,6 +227,24 @@ define([], function() {
          */
         TABS_DEACTIVATE = function() {
             return createEventName.call(this, 'tabs.deactivate');
+        },
+
+        /**
+         * listens on showing tab labels
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.show
+         */
+        TABS_LABEL_SHOW = function() {
+            return createEventName.call(this, 'tabs.label.show');
+        },
+
+        /**
+         * listens on hiding tab labels
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.hide
+         */
+        TABS_LABEL_HIDE = function() {
+            return createEventName.call(this, 'tabs.label.hide');
         },
 
         /**
@@ -299,7 +353,6 @@ define([], function() {
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
             this.oldScrollPosition = 0;
-            this.$tabs = null;
             this.tabsAction = null;
 
             this.bindCustomEvents();
@@ -318,7 +371,7 @@ define([], function() {
         },
 
         /**
-         * Destorys the component
+         * Destroys the component
          */
         destroy: function() {
             this.removeTitle();
@@ -352,21 +405,49 @@ define([], function() {
          */
         renderTitle: function() {
             var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title,
-                underline = this.options.underline;
+                $element;
 
             this.removeTitle();
-
             if (!!title) {
-                $('.page').prepend(this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement, {
+                $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement, {
                     title: this.sandbox.translate(title),
-                    underline: underline
-                })));
+                    underline: this.options.underline
+                }));
+                $('.page').prepend($element);
+                this.renderBreadcrumb($element.children().first());
             }
         },
 
         /**
+         * Renders the breadcrumb into a given container. If no breadcrumb
+         * got passed, this method does nothing.
+         *
+         * @param {Object} $container The container to render the breadcrumb in
+         */
+        renderBreadcrumb: function($container) {
+            var breadcrumbs = this.options.breadcrumb, $element;
+            breadcrumbs = (typeof breadcrumbs === 'function') ? breadcrumbs() : breadcrumbs;
+
+            if (!breadcrumbs) {
+                return;
+            }
+
+            $element = $('<div class="' + constants.breadcrumbContainerClass + '"/>');
+            $container.append($element);
+
+            this.sandbox.start([{
+                name: 'breadcrumbs@suluadmin',
+                options: {
+                    el: $element,
+                    instanceName:'header',
+                    breadcrumbs: breadcrumbs
+                }
+            }]);
+        },
+
+        /**
          * Sets a new title
-         * @param title {String} the new title to set
+         * @param {String} title the new title to set
          */
         setTitle: function(title) {
             this.options.title = title;
@@ -388,10 +469,7 @@ define([], function() {
 
             if (!this.options.tabsData) {
                 def.resolve();
-            } else if (this.options.tabsData.length === 1) {
-                def.resolve();
-                this.tabChangedHandler(this.options.tabsData[0]);
-            } else if (this.options.tabsData.length > 1) {
+            } else if (this.options.tabsData.length > 0) {
                 this.startTabsComponent(def);
             } else {
                 def.resolve();
@@ -416,10 +494,12 @@ define([], function() {
                         fragment: this.sandbox.mvc.history.fragment
                     };
 
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-
                 // wait for initialized
-                this.sandbox.once('husky.tabs.header.initialized', function() {
+                this.sandbox.once('husky.tabs.header.initialized', function(selectedItem, visibleTabs) {
+                    if (visibleTabs > 1) {
+                        this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                    }
+
                     def.resolve();
                 }.bind(this));
 
@@ -456,18 +536,20 @@ define([], function() {
         },
 
         /**
-         * Renderes and starts the language-changer dropdown
+         * Renders and starts the language-changer dropdown
          */
         startLanguageChanger: function() {
             if (!!this.options.toolbarLanguageChanger) {
                 var $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.languageChanger)({
-                        title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale
+                            title: this.options.toolbarLanguageChanger.preSelected
+                                || this.sandbox.sulu.getDefaultContentLocale()
                     })),
                     options = constants.languageChangerDefaults;
                 this.sandbox.dom.show(this.$find(constants.rightSelector));
                 this.sandbox.dom.append(this.$find(constants.rightSelector), $element);
                 options.el = $element;
                 options.data = this.options.toolbarLanguageChanger.data || this.getDefaultLanguages();
+
                 this.sandbox.start([{
                     name: 'dropdown@husky',
                     options: options
@@ -536,10 +618,29 @@ define([], function() {
             this.sandbox.on('husky.tabs.header.initialized', this.tabChangedHandler.bind(this));
             this.sandbox.on('husky.tabs.header.item.select', this.tabChangedHandler.bind(this));
 
+            this.sandbox.on('sulu.breadcrumbs.header.breadcrumb-clicked', function(breadcrumbData) {
+                this.sandbox.emit(BREADCRUMB_CLICKED.call(this), breadcrumbData);
+            }.bind(this));
+
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
+            this.sandbox.on(SAVED.call(this), this.saved.bind(this));
+            this.sandbox.on(CHANGE_LANGUAGE.call(this), this.setLanguageChanger.bind(this));
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
+        },
+
+        saved: function(data) {
+            // wait for initialized
+            this.sandbox.once('husky.tabs.header.updated', function(visibleTabs) {
+                if (visibleTabs > 1) {
+                    this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                } else {
+                    this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
+                }
+            }.bind(this));
+
+            this.sandbox.emit('husky.tabs.header.update', data);
         },
 
         /**
@@ -561,7 +662,7 @@ define([], function() {
         },
 
         /**
-         * Renderes and starts a tab-content component if specified. if not emits an event
+         * Renders and starts a tab-content component if specified. if not emits an event
          * @param tabItem {Object} the Tabs object
          */
         tabChangedHandler: function(tabItem) {
@@ -611,7 +712,6 @@ define([], function() {
         stopTabContent: function() {
             App.stop('.' + constants.tabsContentClass + ' *');
             App.stop('.' + constants.tabsContentClass);
-            this.sandbox.dom.empty(this.options.tabsContainer);
         },
 
         /**
@@ -619,8 +719,16 @@ define([], function() {
          * @param item
          */
         languageChanged: function(item) {
-            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), item.title);
+            this.setLanguageChanger(item.title);
             this.sandbox.emit(LANGUAGE_CHANGED.call(this), item);
+        },
+
+        /**
+         * Changes the html of the language changer to a given string
+         * @param {String} newLanguage the string to show in the language changer
+         */
+        setLanguageChanger: function(newLanguage) {
+            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), newLanguage);
         },
 
         /**
@@ -675,6 +783,14 @@ define([], function() {
             this.sandbox.on(TABS_DEACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_SHOW.call(this), function(description, buttons) {
+                this.showTabsLabel(description, buttons);
+            }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_HIDE.call(this), function() {
+                this.hideTabsLabel();
+            }.bind(this));
         },
 
         /**
@@ -716,6 +832,43 @@ define([], function() {
          */
         showTabs: function() {
             this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
+        },
+
+        /**
+         * Shows a tabs label with the given text.
+         *
+         * @param {String} description
+         * @param {Array} buttons
+         */
+        showTabsLabel: function(description, buttons) {
+            var $tabsLabelContainer = $('<div class="' + constants.tabsLabelContainer + '"/>');
+
+            this.$find('.' + constants.tabsRowClass).append($tabsLabelContainer);
+
+            this.sandbox.emit(
+                'sulu.labels.label.show',
+                {
+                    instanceName: 'header',
+                    el: $tabsLabelContainer,
+                    type: 'WARNING',
+                    description: description,
+                    title: '',
+                    autoVanish: false,
+                    hasClose: false,
+                    additionalLabelClasses: 'small',
+                    buttons: buttons || []
+                }
+            );
+
+            this.sandbox.dom.addClass(this.$el, constants.hasLabelClass);
+        },
+
+        /**
+         * Hides all the tabs labels.
+         */
+        hideTabsLabel: function() {
+            this.sandbox.stop('.' + constants.tabsLabelContainer);
+            this.$el.removeClass(constants.hasLabelClass);
         }
     };
 });

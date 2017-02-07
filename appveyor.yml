@@ -1,0 +1,65 @@
+build: false
+
+init:
+  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php;c:\cygwin\bin;%PATH%
+
+  # uncomment to allow remote desktop connection
+  #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+  # uncomment to show remote desktop connection details and block build
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+services:
+  - mysql
+
+environment:
+  JACKRABBIT_VERSION: '2.12.0'
+  SYMFONY__DATABASE__PASSWORD: Password12!
+
+platform: x86
+
+cache:
+  # cache composer downloads
+  - '%LOCALAPPDATA%\Composer\files'
+
+  # jackrabbit will be re-downloaded when jackrabbit.sh is modified.
+  - jackrabbit-standalone-%JACKRABBIT_VERSION%.jar -> bin\jackrabbit.sh
+
+
+install:
+  # install SSL and php
+  - cinst -y OpenSSL.Light
+  - cinst -y php --version 7.0.9 --allow-empty-checksums
+
+  # configure PHP and enable extensions.
+  - cd c:\tools\php
+  - copy php.ini-production php.ini /Y
+  - echo date.timezone="UTC" >> php.ini
+  - echo extension_dir=ext >> php.ini
+  - echo extension=php_gd2.dll >> php.ini
+  - echo extension=php_openssl.dll >> php.ini
+  - echo extension=php_mbstring.dll >> php.ini
+  - echo extension=php_intl.dll >> php.ini
+  - echo extension=php_pdo_sqlite.dll >> php.ini
+  - echo extension=php_pdo_mysql.dll >> php.ini
+  - echo extension=php_curl.dll >> php.ini
+  - echo extension=php_fileinfo.dll >> php.ini
+  - echo memory_limit=1G >> php.ini
+  - appveyor DownloadFile https://phar.phpunit.de/phpunit.phar
+  - ps: echo ("@php c:\tools\php\phpunit.phar %*") | Out-File phpunit.bat -encoding ascii
+
+  # install and start jackrabbit
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - ls 
+  - if not exist jackrabbit-standalone-%JACKRABBIT_VERSION%.jar appveyor DownloadFile http://archive.apache.org/dist/jackrabbit/%JACKRABBIT_VERSION%/jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
+  - ls
+  - ps: Start-Process ("jackrabbit-standalone-" + $env:JACKRABBIT_VERSION + ".jar")
+
+  # install composer and phpunit
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - php -r "readfile('http://getcomposer.org/installer');" | php
+  - php composer.phar install --no-interaction --no-progress --prefer-dist
+
+test_script:
+   - cd %APPVEYOR_BUILD_FOLDER%
+   - php bin/runtests -i -a

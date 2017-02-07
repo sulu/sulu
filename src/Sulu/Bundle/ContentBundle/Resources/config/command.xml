@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_content.command.maintain_resource_locator"
+                 class="Sulu\Bundle\ContentBundle\Command\MaintainResourceLocatorCommand">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_document_manager.metadata_factory"/>
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.cleanup_history"
+                 class="Sulu\Bundle\ContentBundle\Command\CleanupHistoryCommand">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <tag name="console.command"/>
+        </service>
+    </services>
+</container>
+

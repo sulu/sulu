@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,6 +15,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 
@@ -27,6 +28,11 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      * @var StructureManagerInterface
      */
     protected $structureManager;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    protected $extensionManager;
 
     /**
      * @var string
@@ -72,9 +78,13 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     protected $excerpt = true;
 
-    public function __construct(StructureManagerInterface $structureManager, $languageNamespace)
-    {
+    public function __construct(
+        StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
+        $languageNamespace
+    ) {
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->languageNamespace = $languageNamespace;
 
         $properties = array_merge($this->defaultProperties, $this->properties);
@@ -146,6 +156,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $customOrder = $this->buildOrder($webspaceKey, $locale);
             if (!empty($customOrder)) {
                 $order[] = $customOrder;
+            } else {
+                $order = ['[jcr:path] ASC'];
             }
         }
 
@@ -239,7 +251,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     private function buildSelectorForExcerpt($locale, &$additionalFields)
     {
         $excerptStructure = $this->structureManager->getStructure('excerpt');
-        $extension = $this->structureManager->getExtension('', 'excerpt');
+        $extension = $this->extensionManager->getExtension('', 'excerpt');
 
         foreach ($excerptStructure->getProperties(true) as $property) {
             $additionalFields[$locale][] = [

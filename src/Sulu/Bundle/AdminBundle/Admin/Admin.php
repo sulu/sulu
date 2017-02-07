@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -53,18 +53,6 @@ abstract class Admin
     public function getJsBundleName()
     {
         return;
-    }
-
-    /**
-     * Returns all the commands available in a concrete admin.
-     * An empty array is the default value (no commands available), and the concrete class
-     * can override this method, to add all the available commands.
-     *
-     * @return array
-     */
-    public function getCommands()
-    {
-        return [];
     }
 
     /**

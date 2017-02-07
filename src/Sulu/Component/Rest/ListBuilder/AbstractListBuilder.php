@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,20 +12,22 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
     /**
      * The field descriptors for the current list.
      *
-     * @var AbstractFieldDescriptor[]
+     * @var FieldDescriptorInterface[]
      */
     protected $selectFields = [];
 
     /**
      * The field descriptors for the field, which will be used for the search.
      *
-     * @var AbstractFieldDescriptor[]
+     * @var FieldDescriptorInterface[]
      */
     protected $searchFields = [];
 
@@ -39,7 +41,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The field descriptor for the field to sort.
      *
-     * @var AbstractFieldDescriptor[]
+     * @var FieldDescriptorInterface[]
      */
     protected $sortFields = [];
 
@@ -74,7 +76,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * All field descriptors for the current context.
      *
-     * @var AbstractFieldDescriptor[]
+     * @var FieldDescriptorInterface[]
      */
     protected $fieldDescriptors = [];
 
@@ -84,11 +86,35 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $expressions = [];
 
     /**
+     * @var UserInterface
+     */
+    protected $user;
+
+    /**
+     * @var string
+     */
+    protected $permission;
+
+    /**
      * {@inheritdoc}
      */
     public function setSelectFields($fieldDescriptors)
     {
-        $this->selectFields = $fieldDescriptors;
+        $this->selectFields = array_filter(
+            $fieldDescriptors,
+            function (FieldDescriptorInterface $fieldDescriptor) {
+                if (null === $fieldDescriptor->getMetadata()
+                    || !$fieldDescriptor->getMetadata()->has(PropertyMetadata::class)
+                ) {
+                    return true;
+                }
+
+                /** @var PropertyMetadata $propertyMetadata */
+                $propertyMetadata = $fieldDescriptor->getMetadata()->get(PropertyMetadata::class);
+
+                return $propertyMetadata->getDisplay() !== PropertyMetadata::DISPLAY_NEVER;
+            }
+        );
     }
 
     /**
@@ -102,7 +128,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor)
+    public function addSelectField(FieldDescriptorInterface $fieldDescriptor)
     {
         $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
@@ -112,7 +138,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use addSelectField instead
      */
-    public function addField(AbstractFieldDescriptor $fieldDescriptor)
+    public function addField(FieldDescriptorInterface $fieldDescriptor)
     {
         $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
@@ -170,7 +196,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function addSearchField(AbstractFieldDescriptor $fieldDescriptor)
+    public function addSearchField(FieldDescriptorInterface $fieldDescriptor)
     {
         $this->searchFields[] = $fieldDescriptor;
 
@@ -188,10 +214,17 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
+    public function sort(FieldDescriptorInterface $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortFields[] = $fieldDescriptor;
-        $this->sortOrders[] = $order;
+        $existingIndex = $this->retrieveIndexOfFieldDescriptor($fieldDescriptor, $this->sortFields);
+
+        if ($existingIndex !== false) {
+            $this->sortOrders[$existingIndex] = $order;
+        } else {
+            // Else add to list of sort-fields.
+            $this->sortFields[] = $fieldDescriptor;
+            $this->sortOrders[] = $order;
+        }
 
         return $this;
     }
@@ -235,7 +268,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    public function setPermissionCheck(UserInterface $user, $permission)
+    {
+        $this->user = $user;
+        $this->permission = $permission;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function where(FieldDescriptorInterface $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
         $this->expressions[] = $this->createWhereExpression($fieldDescriptor, $value, $comparator);
         $this->addFieldDescriptor($fieldDescriptor);
@@ -244,10 +286,9 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * @deprecated use where instead
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param $value
+     * {@inheritdoc}
      */
-    public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
+    public function whereNot(FieldDescriptorInterface $fieldDescriptor, $value)
     {
         $this->expressions[] = $this->createWhereExpression($fieldDescriptor, $value, self::WHERE_COMPARATOR_UNEQUAL);
         $this->addFieldDescriptor($fieldDescriptor);
@@ -256,7 +297,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    public function in(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
         $this->expressions[] = $this->createInExpression($fieldDescriptor, $values);
         $this->addFieldDescriptor($fieldDescriptor);
@@ -265,7 +306,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    public function between(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
         $this->expressions[] = $this->createBetweenExpression($fieldDescriptor, $values);
         $this->addFieldDescriptor($fieldDescriptor);
@@ -274,9 +315,9 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * Adds a field descriptor.
      *
-     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param FieldDescriptorInterface $fieldDescriptor
      */
-    protected function addFieldDescriptor(AbstractFieldDescriptor $fieldDescriptor)
+    protected function addFieldDescriptor(FieldDescriptorInterface $fieldDescriptor)
     {
         $this->fieldDescriptors[$fieldDescriptor->getName()] = $fieldDescriptor;
     }
@@ -284,7 +325,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor)
+    public function addGroupBy(FieldDescriptorInterface $fieldDescriptor)
     {
         $this->groupByFields[$fieldDescriptor->getName()] = $fieldDescriptor;
     }
@@ -295,5 +336,27 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function addExpression(ExpressionInterface $expression)
     {
         $this->expressions[] = $expression;
+    }
+
+    /**
+     * Returns index of given FieldDescriptor in given array of descriptors.
+     * If no match is found, false will be returned.
+     *
+     * @param FieldDescriptorInterface $fieldDescriptor
+     * @param FieldDescriptorInterface[] $fieldDescriptors
+     *
+     * @return bool|int|string
+     */
+    protected function retrieveIndexOfFieldDescriptor(
+        FieldDescriptorInterface $fieldDescriptor,
+        array $fieldDescriptors
+    ) {
+        foreach ($fieldDescriptors as $index => $other) {
+            if ($fieldDescriptor->compare($other)) {
+                return $index;
+            }
+        }
+
+        return false;
     }
 }

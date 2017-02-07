@@ -12,13 +12,12 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": "^5.5 || ^7.0",
 
         "sulu/sulu": "dev-develop",
 
         "doctrine/orm": "2.4.*",
-        "symfony-cmf/routing-bundle": "1.2.*",
-        "liip/theme-bundle": "1.1.*"
+        "symfony-cmf/routing-bundle": "1.2.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
@@ -26,7 +25,7 @@
         "phpunit/phpunit": "3.7.*",
         "phpspec/prophecy-phpunit": "1.0.*",
         "sulu/test-bundle": "dev-develop",
-        "matthiasnoback/symfony-dependency-injection-test": "~0.7.1"
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7.3"
     },
     "autoload": {
         "psr-0": {

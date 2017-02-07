@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,24 +11,35 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ * Container extension for sulu-http-cache bundle.
  */
-class SuluHttpCacheExtension extends Extension
+class SuluHttpCacheExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container)
     {
-        return new Configuration();
+        if (in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
+            $container->prependExtensionConfig(
+                'sulu_http_cache',
+                [
+                    'handlers' => [
+                        'public' => ['enabled' => false],
+                        'url' => ['enabled' => false],
+                        'tags' => ['enabled' => false],
+                    ],
+                ]
+            );
+        }
     }
 
     /**
@@ -42,6 +53,7 @@ class SuluHttpCacheExtension extends Extension
         $loader->load('event-subscribers.xml');
         $loader->load('proxy-client.xml');
         $loader->load('structure-cache-handlers.xml');
+        $loader->load('services.xml');
 
         $this->configureProxyClient($config['proxy_client'], $container);
         $this->configureStructureCacheHandlers($config['handlers'], $container);
@@ -52,7 +64,7 @@ class SuluHttpCacheExtension extends Extension
     /**
      * Configure the proxy client services.
      *
-     * @param array            $config
+     * @param array $config
      * @param ContainerBuilder $container
      */
     private function configureProxyClient($config, ContainerBuilder $container)
@@ -67,11 +79,13 @@ class SuluHttpCacheExtension extends Extension
             }
 
             if (null !== $proxyClientName) {
-                throw new InvalidConfigurationException(sprintf(
-                    'Cannot enable more than one proxy, trying to enable "%s" when "%s" is already enabled',
-                    $name,
-                    $proxyClientName
-                ));
+                throw new InvalidConfigurationException(
+                    sprintf(
+                        'Cannot enable more than one proxy, trying to enable "%s" when "%s" is already enabled',
+                        $name,
+                        $proxyClientName
+                    )
+                );
             }
 
             $proxyClientName = $name;
@@ -88,7 +102,7 @@ class SuluHttpCacheExtension extends Extension
     /**
      * Configure the varnish services.
      *
-     * @param array            $config
+     * @param array $config
      * @param ContainerBuilder $container
      */
     private function configureProxyClientVarnish($config, ContainerBuilder $container)
@@ -104,7 +118,7 @@ class SuluHttpCacheExtension extends Extension
     /**
      * Configure the structure cache handler services.
      *
-     * @param array            $config
+     * @param array $config
      * @param ContainerBuilder $container
      */
     private function configureStructureCacheHandlers($config, ContainerBuilder $container)

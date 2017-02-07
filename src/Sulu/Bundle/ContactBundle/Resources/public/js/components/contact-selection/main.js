@@ -29,10 +29,26 @@ define([], function() {
             contactUrl: null,
             account: true,
             accountUrl: null,
+            navigateEvent: 'sulu.router.navigate',
             translations: {
                 noContentSelected: 'contact-selection.no-contact-selected',
                 add: 'contact-selection.add'
-            }
+            },
+            matchings: [
+                {
+                    content: 'id',
+                    name: 'id',
+                    disabled: true
+                },
+                {
+                    content: 'contact.contacts.firstName',
+                    name: 'firstName'
+                },
+                {
+                    content: 'contact.contacts.lastName',
+                    name: 'lastName'
+                }
+            ]
         },
 
         templates = {
@@ -50,8 +66,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(value) {
-                return ['<span class="value">', value, '</span>'].join('');
+            contentItem: function(id, value) {
+                return [
+                    '<a href="#" class="link" data-id="', id, '">',
+                    '   <span class="value">', value, '</span>',
+                    '</a>'
+                ].join('');
             }
         },
 
@@ -75,6 +95,17 @@ define([], function() {
                 'husky.overlay.contact-selection.' + this.options.instanceName + '.add.opened',
                 updateList.bind(this)
             );
+
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var element = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    type = element.substr(0, 1),
+                    id = parseInt(element.substr(1)),
+                    route = 'contacts/' + (type === 'c' ? 'contacts' : 'accounts') + '/edit:' + id + '/details';
+
+                this.sandbox.emit(this.options.navigateEvent, route);
+
+                return false;
+            }.bind(this), 'a.link');
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.datagrid.contact.view.rendered', function() {
@@ -116,21 +147,7 @@ define([], function() {
                                 limit: 20
                             }
                         },
-                        matchings: [
-                            {
-                                content: 'id',
-                                name: 'id',
-                                disabled: true
-                            },
-                            {
-                                content: 'contact.contacts.firstName',
-                                name: 'firstName'
-                            },
-                            {
-                                content: 'contact.contacts.lastName',
-                                name: 'lastName'
-                            }
-                        ]
+                        matchings: this.options.matchings
                     }
                 }
             ];
@@ -303,7 +320,7 @@ define([], function() {
                         removeOnClose: false,
                         container: this.$el,
                         instanceName: 'contact-selection.' + this.options.instanceName + '.add',
-                        skin: 'wide',
+                        skin: 'medium',
                         slides: [slide]
                     }
                 }
@@ -390,7 +407,7 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.name);
+            return templates.contentItem(item.id, item.name);
         },
 
         sortHandler: function(ids) {

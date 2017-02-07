@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,6 +25,8 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
 
     public function testLoad()
     {
+        $this->container->setParameter('kernel.root_dir', __DIR__);
+
         $this->load();
 
         $this->assertContainerBuilderHasService('sulu_media.media_manager');

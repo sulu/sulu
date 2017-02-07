@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +29,6 @@ use Sulu\Component\Rest\RestHelperInterface;
  */
 abstract class AbstractMediaController extends RestController
 {
-    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $collectionEntityName = 'SuluMediaBundle:Collection';
     protected static $fileVersionEntityName = 'SuluMediaBundle:FileVersion';
     protected static $fileEntityName = 'SuluMediaBundle:File';
@@ -51,14 +50,14 @@ abstract class AbstractMediaController extends RestController
         try {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository($entityName)->find($id);
-            $media = $em->getRepository(self::$mediaEntityName)->find($mediaId);
+            $media = $this->container->get('sulu.repository.media')->find($mediaId);
 
             if (!$entity) {
                 throw new EntityNotFoundException($entityName, $id);
             }
 
             if (!$media) {
-                throw new EntityNotFoundException(self::$mediaEntityName, $mediaId);
+                throw new EntityNotFoundException($this->getParameter('sulu.model.media.class'), $mediaId);
             }
 
             if ($entity->getMedias()->contains($media)) {
@@ -94,7 +93,7 @@ abstract class AbstractMediaController extends RestController
      * @param string $id
      * @param string $mediaId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function removeMediaFromEntity($entityName, $id, $mediaId)
     {
@@ -102,20 +101,22 @@ abstract class AbstractMediaController extends RestController
             $delete = function () use ($entityName, $id, $mediaId) {
                 $em = $this->getDoctrine()->getManager();
                 $entity = $em->getRepository($entityName)->find($id);
-                $media = $em->getRepository(self::$mediaEntityName)->find($mediaId);
+                $media = $this->container->get('sulu.repository.media')->find($mediaId);
 
                 if (!$entity) {
                     throw new EntityNotFoundException($entityName, $id);
                 }
 
+                $mediaEntityName = $this->getParameter('sulu.model.media.class');
+
                 if (!$media) {
-                    throw new EntityNotFoundException(self::$mediaEntityName, $mediaId);
+                    throw new EntityNotFoundException($mediaEntityName, $mediaId);
                 }
 
                 if (!$entity->getMedias()->contains($media)) {
                     throw new RestException(
                         'Relation between ' . $entityName .
-                        ' and ' . self::$mediaEntityName . ' with id ' . $mediaId . ' does not exists!'
+                        ' and ' . $mediaEntityName . ' with id ' . $mediaId . ' does not exists!'
                     );
                 }
 
@@ -142,9 +143,9 @@ abstract class AbstractMediaController extends RestController
      * @param string $routeName
      * @param AbstractContactManager $contactManager
      * @param string $id
-     * @param bool $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function getMultipleView($entityName, $routeName, AbstractContactManager $contactManager, $id, $request)
     {
@@ -159,8 +160,8 @@ abstract class AbstractMediaController extends RestController
                 $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
                 $listBuilder = $factory->create($entityName);
-                $fieldDescriptors = $this->getFieldDescriptors($entityName);
-                $listBuilder->where($fieldDescriptors['entity'], $id);
+                $fieldDescriptors = $this->getFieldDescriptors($entityName, $id);
+                $listBuilder->setIdField($fieldDescriptors['id']);
                 $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
                 $listResponse = $listBuilder->execute();
@@ -193,11 +194,11 @@ abstract class AbstractMediaController extends RestController
      *
      * @param $entityName
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function getFieldsView($entityName)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($entityName)), 200));
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors($entityName, null)), 200));
     }
 
     /**
@@ -207,10 +208,10 @@ abstract class AbstractMediaController extends RestController
      *
      * @return DoctrineFieldDescriptor[]
      */
-    private function getFieldDescriptors($entityName)
+    private function getFieldDescriptors($entityName, $id)
     {
         if ($this->fieldDescriptors === null) {
-            $this->initFieldDescriptors($entityName);
+            $this->initFieldDescriptors($entityName, $id);
         }
 
         return $this->fieldDescriptors;
@@ -221,8 +222,17 @@ abstract class AbstractMediaController extends RestController
      *
      * @param $entityName
      */
-    private function initFieldDescriptors($entityName)
+    private function initFieldDescriptors($entityName, $id)
     {
+        $mediaEntityName = $this->getParameter('sulu.model.media.class');
+
+        $entityJoin = new DoctrineJoinDescriptor(
+            $mediaEntityName,
+            $entityName . '.medias',
+            $entityName . '.id = ' . $id,
+            DoctrineJoinDescriptor::JOIN_METHOD_INNER
+        );
+
         $this->fieldDescriptors = [];
 
         $this->fieldDescriptors['entity'] = new DoctrineFieldDescriptor(
@@ -238,15 +248,10 @@ abstract class AbstractMediaController extends RestController
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            self::$mediaEntityName,
+            $mediaEntityName,
             'public.id',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
             ],
             true,
             false
@@ -255,15 +260,10 @@ abstract class AbstractMediaController extends RestController
         $this->fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
             'id',
             'thumbnails',
-            self::$mediaEntityName,
+            $mediaEntityName,
             'media.media.thumbnails',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
             ],
             false,
             true,
@@ -279,15 +279,10 @@ abstract class AbstractMediaController extends RestController
             self::$fileVersionEntityName,
             'public.name',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
                 self::$fileEntityName => new DoctrineJoinDescriptor(
                     self::$fileEntityName,
-                    self::$mediaEntityName . '.files'
+                    $mediaEntityName . '.files'
                 ),
                 self::$fileVersionEntityName => new DoctrineJoinDescriptor(
                     self::$fileVersionEntityName,
@@ -302,15 +297,10 @@ abstract class AbstractMediaController extends RestController
             self::$fileVersionEntityName,
             'media.media.size',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
                 self::$fileEntityName => new DoctrineJoinDescriptor(
                     self::$fileEntityName,
-                    self::$mediaEntityName . '.files'
+                    $mediaEntityName . '.files'
                 ),
                 self::$fileVersionEntityName => new DoctrineJoinDescriptor(
                     self::$fileVersionEntityName,
@@ -329,15 +319,10 @@ abstract class AbstractMediaController extends RestController
             self::$fileVersionEntityName,
             'public.changed',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
                 self::$fileEntityName => new DoctrineJoinDescriptor(
                     self::$fileEntityName,
-                    self::$mediaEntityName . '.files'
+                    $mediaEntityName . '.files'
                 ),
                 self::$fileVersionEntityName => new DoctrineJoinDescriptor(
                     self::$fileVersionEntityName,
@@ -356,15 +341,10 @@ abstract class AbstractMediaController extends RestController
             self::$fileVersionEntityName,
             'public.created',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
                 self::$fileEntityName => new DoctrineJoinDescriptor(
                     self::$fileEntityName,
-                    self::$mediaEntityName . '.files'
+                    $mediaEntityName . '.files'
                 ),
                 self::$fileVersionEntityName => new DoctrineJoinDescriptor(
                     self::$fileVersionEntityName,
@@ -383,15 +363,10 @@ abstract class AbstractMediaController extends RestController
             self::$fileVersionMetaEntityName,
             'public.title',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
                 self::$fileEntityName => new DoctrineJoinDescriptor(
                     self::$fileEntityName,
-                    self::$mediaEntityName . '.files'
+                    $mediaEntityName . '.files'
                 ),
                 self::$fileVersionEntityName => new DoctrineJoinDescriptor(
                     self::$fileVersionEntityName,
@@ -414,15 +389,10 @@ abstract class AbstractMediaController extends RestController
             self::$fileVersionMetaEntityName,
             'media.media.description',
             [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $entityName . '.medias',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
+                $mediaEntityName => $entityJoin,
                 self::$fileEntityName => new DoctrineJoinDescriptor(
                     self::$fileEntityName,
-                    self::$mediaEntityName . '.files'
+                    $mediaEntityName . '.files'
                 ),
                 self::$fileVersionEntityName => new DoctrineJoinDescriptor(
                     self::$fileVersionEntityName,
@@ -450,11 +420,12 @@ abstract class AbstractMediaController extends RestController
     {
         $ids = array_filter(array_column($entities, 'thumbnails'));
         $thumbnails = $this->getMediaManager()->getFormatUrls($ids, $locale);
-        $i = 0;
         foreach ($entities as $key => $entity) {
-            if (array_key_exists('thumbnails', $entity) && $entity['thumbnails']) {
-                $entities[$key]['thumbnails'] = $thumbnails[$i];
-                $i += 1;
+            if (array_key_exists('thumbnails', $entity)
+                && $entity['thumbnails']
+                && array_key_exists($entity['thumbnails'], $thumbnails)
+            ) {
+                $entities[$key]['thumbnails'] = $thumbnails[$entity['thumbnails']];
             }
         }
 

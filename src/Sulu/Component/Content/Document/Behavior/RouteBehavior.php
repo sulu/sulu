@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,19 +16,19 @@ namespace Sulu\Component\Content\Document\Behavior;
  * a reference to the document which should form the basis of the
  * page rendered when the URL is accessed.
  */
-interface RouteBehavior
+interface RouteBehavior extends TargetBehavior
 {
     /**
-     * Get the route target document.
+     * Returns history flag.
      *
-     * @return object
+     * @return bool
      */
-    public function getTargetDocument();
+    public function isHistory();
 
     /**
-     * Set the target document.
+     * Set history flag.
      *
-     * @param object $targetDocument
+     * @param bool $history
      */
-    public function setTargetDocument($targetDocument);
+    public function setHistory($history);
 }

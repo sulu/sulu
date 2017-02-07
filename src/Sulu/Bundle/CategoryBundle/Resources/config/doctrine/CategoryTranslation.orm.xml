@@ -3,16 +3,22 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" table="ca_category_translations">
-
+    <mapped-superclass name="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" table="ca_category_translations">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
 
         <field name="translation" column="translation" type="string" length="255"/>
         <field name="locale" column="locale" type="string" length="5"/>
+        <field name="description" type="text" column="description" nullable="true"/>
 
-        <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category" inversed-by="translations">
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+
+        <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="translations">
             <cascade>
                 <cascade-all/>
             </cascade>
@@ -20,6 +26,7 @@
                 <join-column name="idCategories" on-delete="CASCADE" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-
-    </entity>
+        <many-to-many field="keywords" mapped-by="categoryTranslations"
+                      target-entity="Sulu\Bundle\CategoryBundle\Entity\KeywordInterface"/>
+    </mapped-superclass>
 </doctrine-mapping>

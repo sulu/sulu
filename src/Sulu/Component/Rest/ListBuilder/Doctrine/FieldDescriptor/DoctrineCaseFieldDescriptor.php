@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -65,7 +66,20 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
     public function getSelect()
     {
         return sprintf(
-            'CASE WHEN %s IS NOT NULL THEN %s ELSE %s END',
+            '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
+            $this->case1->getSelect(),
+            $this->case1->getSelect(),
+            $this->case2->getSelect()
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearch()
+    {
+        return sprintf(
+            '%s LIKE :search OR (%s is NULL AND %s LIKE :search)',
             $this->case1->getSelect(),
             $this->case1->getSelect(),
             $this->case2->getSelect()

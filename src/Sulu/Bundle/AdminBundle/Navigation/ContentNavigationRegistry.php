@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,14 +11,16 @@
 
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Collects all the content navigations from all bundles using a specific alias.
  */
-class ContentNavigationRegistry extends ContainerAware implements ContentNavigationRegistryInterface
+class ContentNavigationRegistry implements ContentNavigationRegistryInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var array
      */
@@ -46,6 +48,16 @@ class ContentNavigationRegistry extends ContainerAware implements ContentNavigat
                 $this->container->get($providerId)->getNavigationItems($options)
             );
         }
+
+        usort(
+            $navigationItems,
+            function (ContentNavigationItem $a, ContentNavigationItem $b) {
+                $aPosition = $a->getPosition() ?: PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?: PHP_INT_MAX;
+
+                return $aPosition - $bPosition;
+            }
+        );
 
         return $navigationItems;
     }

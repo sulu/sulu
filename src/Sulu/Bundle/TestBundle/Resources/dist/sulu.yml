@@ -11,10 +11,6 @@ framework:
     profiler:
         enabled: false
 
-fos_rest:
-    routing_loader:
-        default_format: json
-
 # Monolog is needed for the webspace bundle
 monolog:
     handlers:
@@ -43,34 +39,11 @@ sulu_core:
                  sulu_1:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
                      type: "page"
-
-             type_map:
-                 page: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
-                 home: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
-                 snippet: "\\Sulu\\Component\\Content\\Compat\\Structure\\SnippetBridge"
     webspace: ~
-    locales:
-        de: Deutsch
-        en: English
-    translations: ['de', 'en']
-    fallback_locale: 'en'
-
-sulu_content:
-    search:
-        mapping:
-            Sulu\Bundle\ContentBundle\Document\PageDocument:
-                index: page
-            Sulu\Bundle\SnippetBundle\Document\SnippetDocument:
-                index: snippet
 
 sulu_admin:
     name: SULU 2.0
     email: installation.email@sulu.test
-
-liip_theme:
-    themes: ["default"]
-    active_theme: "default"
-    load_controllers: false
 
 doctrine:
     orm:
@@ -89,35 +62,45 @@ doctrine:
                 dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                 alias: GedmoTree # this one is optional and will default to the name set for the mapping
                 is_bundle: false
+        dql:
+            string_functions:
+                group_concat: Oro\ORM\Query\AST\Functions\String\GroupConcat
+    dbal:
+        driver: "%database.driver%"
+        host: "%database.host%"
+        port: "%database.port%"
+        dbname: "%database.name%"
+        user: "%database.user%"
+        password: "%database.password%"
+        path: "%database.path%"
+        server_version: "%database.version%"
+        charset:  UTF8
 
 stof_doctrine_extensions:
     orm:
         default:
             tree: true
 
-parameters:
-    # Just a dirty hack to get the jms serializer bundle correctly working
-    # schmittjoh/JMSSerializerBundle#270 (comment)
-    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
-
 sulu_test:
     enable_test_user_provider: true
 
 sulu_document_manager:
+    sessions:
+        default:
+            backend:
+                type: "%phpcr.transport%"
+                url:  "%phpcr.backend_url%"
+            workspace: "%phpcr.workspace%"
+            username: "%phpcr.username%"
+            password: "%phpcr.password%"
+        live:
+            backend:
+                type: "%phpcr.transport%"
+                url:  "%phpcr.backend_url%"
+            workspace: "%phpcr.workspace%_live"
+            username: "%phpcr.username%"
+            password: "%phpcr.password%"
     debug: false
-    mapping:
-        page:
-            class: Sulu\Bundle\ContentBundle\Document\PageDocument
-            phpcr_type: sulu:page
-        home:
-            class: Sulu\Bundle\ContentBundle\Document\HomeDocument
-            phpcr_type: sulu:home
-        route:
-            class: Sulu\Bundle\ContentBundle\Document\RouteDocument
-            phpcr_type: sulu:path
-        snippet:
-            class: Sulu\Bundle\SnippetBundle\Document\SnippetDocument
-            phpcr_type: sulu:snippet
 
 jms_serializer:
     metadata:
@@ -128,3 +111,4 @@ dubture_f_fmpeg:
     ffprobe_binary: /usr/local/bin/ffprobe # path to ffprobe
     binary_timeout: 300 # Use 0 for infinite
     threads_count: 4
+

@@ -9,7 +9,10 @@
 
     <services>
         <!-- structure manager -->
-        <service id="sulu_content.structure.loader.xml" class="%sulu_content.structure.loader.xml.class%" public="false"/>
+        <service id="sulu_content.structure.loader.xml" class="%sulu_content.structure.loader.xml.class%"
+                 public="false">
+            <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
+        </service>
 
         <service id="sulu_content.structure.factory" class="%sulu_content.structure.factory.class%">
             <argument type="service" id="sulu_content.structure.loader.xml" />

@@ -1,0 +1,17 @@
+.husky-table.light {
+    .task-state {
+        width: 30px;
+        text-align: center;
+        margin-left: 10px;
+
+        &.fa-check-circle {
+            color: $green;
+        }
+        &.fa-exclamation-triangle {
+            color: $yellowWarning;
+        }
+        &.fa-ban {
+            color: $red;
+        }
+    }
+}

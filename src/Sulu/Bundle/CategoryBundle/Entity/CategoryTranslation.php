@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,37 +11,79 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
  * CategoryTranslation.
  */
-class CategoryTranslation
+class CategoryTranslation implements CategoryTranslationInterface
 {
     /**
      * @var string
      */
-    private $translation;
+    protected $translation;
 
     /**
      * @var string
      */
-    private $locale;
+    protected $description;
+
+    /**
+     * @var Media[]
+     */
+    protected $medias;
+
+    /**
+     * @var string
+     */
+    protected $locale;
 
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
-     * @var \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @var CategoryInterface
      */
-    private $category;
+    protected $category;
 
     /**
-     * Set translation.
-     *
-     * @param string $translation
-     *
-     * @return CategoryTranslation
+     * @var UserInterface
+     */
+    protected $creator;
+
+    /**
+     * @var UserInterface
+     */
+    protected $changer;
+
+    /**
+     * @var \DateTime
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime
+     */
+    protected $changed;
+
+    /**
+     * @var Collection
+     */
+    protected $keywords;
+
+    public function __construct()
+    {
+        $this->keywords = new ArrayCollection();
+        $this->medias = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setTranslation($translation)
     {
@@ -51,9 +93,7 @@ class CategoryTranslation
     }
 
     /**
-     * Get translation.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTranslation()
     {
@@ -61,11 +101,41 @@ class CategoryTranslation
     }
 
     /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return CategoryTranslation
+     * {@inheritdoc}
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMedias()
+    {
+        return $this->medias;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMedias($medias)
+    {
+        $this->medias = $medias;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -75,9 +145,7 @@ class CategoryTranslation
     }
 
     /**
-     * Get locale.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -85,9 +153,7 @@ class CategoryTranslation
     }
 
     /**
-     * Get id.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -95,13 +161,9 @@ class CategoryTranslation
     }
 
     /**
-     * Set category.
-     *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
-     *
-     * @return CategoryTranslation
+     * {@inheritdoc}
      */
-    public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
+    public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;
 
@@ -109,12 +171,112 @@ class CategoryTranslation
     }
 
     /**
-     * Get category.
-     *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
+     * {@inheritdoc}
      */
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setChanger($changer)
+    {
+        $this->changer = $changer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addKeyword(KeywordInterface $keyword)
+    {
+        $this->keywords[] = $keyword;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeKeyword(KeywordInterface $keyword)
+    {
+        $this->keywords->removeElement($keyword);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getKeywords()
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasKeyword(KeywordInterface $keyword)
+    {
+        return $this->getKeywords()->exists(
+            function ($key, KeywordInterface $element) use ($keyword) {
+                return $element->equals($keyword);
+            }
+        );
     }
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="navigation.snippets">
+                <source>navigation.snippets</source>
+                <target>Fragments</target>
+            </trans-unit>
+            <trans-unit id="2" resname="snippets.snippet.title">
+                <source>snippets.snippet.title</source>
+                <target>Fragments</target>
+            </trans-unit>
+            <trans-unit id="3" resname="snippets.list.template">
+                <source>snippets.list.template</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="4" resname="content-navigation.snippets.details">
+                <source>content-navigation.snippets.details</source>
+                <target>Détails</target>
+            </trans-unit>
+            <trans-unit id="5" resname="navigation.global-content">
+                <source>navigation.global-content</source>
+                <target>Contenu Global</target>
+            </trans-unit>
+            <trans-unit id="6" resname="snippet-content.add">
+                <source>snippet-content.add</source>
+                <target>Choisir un fragment</target>
+            </trans-unit>
+            <trans-unit id="9" resname="snippet.delete-referenced-by-following">
+                <source>snippet.delete-referenced-by-following</source>
+                <target>Ce fragment est référencé par les pages suivantes:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="snippet.delete-confirm-text">
+                <source>snippet.delete-confirm-text</source>
+                <target>Etes-vous sûr que vous voulez le retirer?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="snippet.delete-confirm-title">
+                <source>snippet.delete-confirm-title</source>
+                <target>Confirmation de la suppression</target>
+            </trans-unit>
+            <trans-unit id="12" resname="snippet.delete-do-it">
+                <source>snippet.delete-do-it</source>
+                <target>Oui, je suis sûr</target>
+            </trans-unit>
+            <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
+                <source>snippet.delete-no-snippets-selected</source>
+                <target>Il n'y a pas des fragments choisis</target>
+            </trans-unit>
+            <trans-unit id="14" resname="snippet-content.nosnippets-selected">
+                <source>snippet.delete-no-snippets-selected</source>
+                <target>Aucune fragments sélectionnés</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.index.snippet.title">
+                <source>search-overlay.index.snippet.title</source>
+                <target>Fragments</target>
+            </trans-unit>
+            <trans-unit id="19" resname="snippet.changed-warning.title">
+                <source>snippet.changed-warning.title</source>
+                <target>Attention, le contenu risque de s'écraser!</target>
+            </trans-unit>
+            <trans-unit id="20" resname="snippet.changed-warning.description">
+                <source>snippet.changed-warning.description</source>
+                <target>Ce fragment a été changée par un autre utilisateur dans l’intervalle. En cas que ce fragment est sauvegardée, ces données se perdent.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="snippet.changed-warning.ok-button">
+                <source>snippet.changed-warning.ok-button</source>
+                <target>Enregistrer le fragment</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

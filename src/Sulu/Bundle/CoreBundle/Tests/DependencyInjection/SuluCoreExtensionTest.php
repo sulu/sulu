@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,6 +16,15 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.cache_dir', __DIR__);
+        $this->container->setParameter('sulu.context', 'admin');
+    }
+
     protected function getContainerExtensions()
     {
         return [

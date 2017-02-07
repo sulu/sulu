@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
@@ -28,7 +28,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -981,11 +981,11 @@ class Contact extends ApiWrapper
     /**
      * Add media.
      *
-     * @param MediaEntity $media
+     * @param MediaInterface $media
      *
      * @return Contact
      */
-    public function addMedia(MediaEntity $media)
+    public function addMedia(MediaInterface $media)
     {
         $this->entity->addMedia($media);
     }
@@ -993,9 +993,9 @@ class Contact extends ApiWrapper
     /**
      * Remove media.
      *
-     * @param MediaEntity $media
+     * @param MediaInterface $media
      */
-    public function removeMedia(MediaEntity $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->entity->removeMedia($media);
     }

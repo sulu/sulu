@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,16 +22,10 @@ class TemplateControllerTest extends SuluTestCase
 
     public function testContentForm()
     {
-        $client = $this->createClient(
-            [],
-            [
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            ]
-        );
+        $client = $this->createAuthenticatedClient();
         $crawler = $client->request('GET', '/content/template/form/default.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(1, $crawler->filter('form#content-form')->count());
 
         // foreach property one textfield
@@ -40,5 +34,22 @@ class TemplateControllerTest extends SuluTestCase
         $this->assertEquals(1, $crawler->filter('textarea#article')->count());
         // for tags 2
         $this->assertEquals(1, $crawler->filter('div#tags')->count());
+    }
+
+    public function testGetActionSorting()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/content/template');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        for ($i = 0; $i < $response['total'] - 1; ++$i) {
+            $this->assertLessThan(
+                0,
+                strcmp($response['_embedded'][$i]['title'], $response['_embedded'][$i + 1]['title'])
+            );
+        }
     }
 }

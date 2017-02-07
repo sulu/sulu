@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,6 +18,7 @@ use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -107,7 +108,7 @@ class PermissionController implements ClassResourceInterface
             }
 
             if ($securityContext) {
-                $this->securityChecker->checkPermission($securityContext, 'security');
+                $this->securityChecker->checkPermission($securityContext, PermissionTypes::SECURITY);
             }
 
             // transfer all permission strings to booleans

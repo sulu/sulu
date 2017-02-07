@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,11 +51,29 @@ class Url implements ArrayableInterface
     private $redirect;
 
     /**
+     * Indicate the main url.
+     *
+     * @var bool
+     */
+    private $main;
+
+    /**
      * The analytics key for the given url.
      *
      * @var string
      */
     private $analyticsKey;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct($url = null, $environment = null)
+    {
+        $this->url = $url;
+        $this->environment = $environment;
+    }
 
     /**
      * Sets the url.
@@ -158,6 +176,26 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Return main flag.
+     *
+     * @return bool
+     */
+    public function isMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * Sets main flag.
+     *
+     * @param bool $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
      * Sets the analytics key for this url.
      *
      * @param string $analyticsKey
@@ -178,6 +216,40 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Returns the environment.
+     *
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * Sets the environment.
+     *
+     * @param string $environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * Checks if this URL handles the locale for the given language and country.
+     *
+     * @param string $language
+     * @param string $country
+     *
+     * @return bool
+     */
+    public function isValidLocale($language, $country)
+    {
+        return (empty($this->getLanguage()) || $this->getLanguage() === $language)
+            && (empty($this->getCountry()) || $this->getCountry() === $country);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -188,7 +260,9 @@ class Url implements ArrayableInterface
         $res['country'] = $this->getCountry();
         $res['segment'] = $this->getSegment();
         $res['redirect'] = $this->getRedirect();
+        $res['main'] = $this->isMain();
         $res['analyticsKey'] = $this->getAnalyticsKey();
+        $res['environment'] = $this->getEnvironment();
 
         return $res;
     }

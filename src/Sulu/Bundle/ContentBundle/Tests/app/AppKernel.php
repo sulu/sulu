@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,6 +17,10 @@ class AppKernel extends SuluTestKernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         parent::registerContainerConfiguration($loader);
+
+        if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'jackrabbit') {
+            $loader->load(__DIR__ . '/config/versioning.yml');
+        }
 
         if (class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
             $loader->load(__DIR__ . '/config/search.yml');

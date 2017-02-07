@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/codes",defaults:{id:null,code:"",backend:!1,frontend:!1,length:50,"package":null}})});

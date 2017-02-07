@@ -16,6 +16,7 @@ use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -41,12 +42,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     protected static $entityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
-    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $positionEntityName = 'SuluContactBundle:Position';
-    protected static $addressEntityName = 'SuluContactBundle:Address';
-    protected static $countryEntityName = 'SuluContactBundle:Country';
-    protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
     // serialization groups for contact
     protected static $contactSerializationGroups = [
@@ -103,311 +99,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = [];
-
-        $contactAddressJoin = [
-            self::$contactAddressEntityName => new DoctrineJoinDescriptor(
-                self::$contactAddressEntityName,
-                $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
-                self::$contactAddressEntityName . '.main = true',
-                'LEFT'
-            ),
-            self::$addressEntityName => new DoctrineJoinDescriptor(
-                self::$addressEntityName,
-                self::$contactAddressEntityName . '.address'
-            ),
-        ];
-
-        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
-            'id',
-            'avatar',
-            self::$mediaEntityName,
-            'public.avatar',
-            [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
-                ),
-            ],
-            false,
-            true,
-            'thumbnails',
-            '',
-            '',
-            false
-        );
-
-        $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
-            [
-                new DoctrineFieldDescriptor(
-                    'firstName',
-                    'firstName',
-                    $this->container->getParameter('sulu.model.contact.class')
-                ),
-                new DoctrineFieldDescriptor(
-                    'lastName',
-                    'lastName',
-                    $this->container->getParameter('sulu.model.contact.class')
-                ),
-            ],
-            'fullName',
-            'public.name',
-            ' ',
-            true,
-            false,
-            'string',
-            '',
-            '',
-            false
-        );
-
-        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
-            'firstName',
-            'firstName',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.firstName',
-            [],
-            false,
-            true,
-            'string',
-            ''
-        );
-
-        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
-            'lastName',
-            'lastName',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.lastName',
-            [],
-            false,
-            true,
-            'string',
-            ''
-        );
-
-        $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
-            'mainEmail',
-            'mainEmail',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.email',
-            [],
-            false,
-            true,
-            'string',
-            ''
-        );
-
-        $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
-            'name',
-            'account',
-            $this->getAccountEntityName(),
-            'contact.contacts.company',
-            [
-                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                    self::$accountContactEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts',
-                    self::$accountContactEntityName . '.main = true',
-                    'LEFT'
-                ),
-                $this->getAccountEntityName() => new DoctrineJoinDescriptor(
-                    $this->getAccountEntityName(),
-                    self::$accountContactEntityName . '.account'
-                ),
-            ],
-            false,
-            true,
-            'string'
-        );
-
-        $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
-            'city',
-            'city',
-            self::$addressEntityName,
-            'contact.address.city',
-            $contactAddressJoin,
-            false,
-            true,
-            'string'
-        );
-
-        $this->fieldDescriptors['zip'] = new DoctrineFieldDescriptor(
-            'zip',
-            'zip',
-            self::$addressEntityName,
-            'contact.address.zip',
-            $contactAddressJoin,
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['state'] = new DoctrineFieldDescriptor(
-            'state',
-            'state',
-            self::$addressEntityName,
-            'contact.address.state',
-            $contactAddressJoin,
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['countryCode'] = new DoctrineFieldDescriptor(
-            'code',
-            'countryCode',
-            self::$countryEntityName,
-            'contact.address.countryCode',
-            array_merge(
-                $contactAddressJoin,
-                [
-                    self::$countryEntityName => new DoctrineJoinDescriptor(
-                        self::$countryEntityName,
-                        self::$addressEntityName . '.country'
-                    ),
-                ]
-            ),
-            false,
-            true,
-            'string'
-        );
-
-        $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
-            'mainPhone',
-            'mainPhone',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.phone',
-            [],
-            false,
-            true,
-            'string'
-        );
-
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id',
-            'id',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.id',
-            [],
-            true,
-            false,
-            'integer'
-        );
-
-        $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
-            'mainFax',
-            'mainFax',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.fax',
-            [],
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
-            'mainUrl',
-            'mainUrl',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.url',
-            [],
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
-            'created',
-            'created',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.created',
-            [],
-            true,
-            false,
-            'date'
-        );
-
-        $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
-            'changed',
-            'changed',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.changed',
-            [],
-            true,
-            false,
-            'date'
-        );
-
-        $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor(
-            'birthday',
-            'birthday',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.birthday',
-            [],
-            true,
-            false,
-            'date'
-        );
-
-        $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
-            'title',
-            'title',
-            self::$titleEntityName,
-            'public.title',
-            [
-                self::$titleEntityName => new DoctrineJoinDescriptor(
-                    self::$titleEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.title'
-                ),
-            ],
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['salutation'] = new DoctrineFieldDescriptor(
-            'salutation',
-            'salutation',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.salutation',
-            [],
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['formOfAddress'] = new DoctrineFieldDescriptor(
-            'formOfAddress',
-            'formOfAddress',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.formOfAddress',
-            [],
-            true,
-            false,
-            'string'
-        );
-
-        $this->fieldDescriptors['position'] = new DoctrineFieldDescriptor(
-            'position',
-            'position',
-            self::$positionEntityName,
-            'contact.contacts.position',
-            [
-                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                    self::$accountContactEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
-                ),
-                self::$positionEntityName => new DoctrineJoinDescriptor(
-                    self::$positionEntityName,
-                    self::$accountContactEntityName . '.position'
-                ),
-            ],
-            true,
-            false,
-            'string',
-            '',
-            '',
-            false
-        );
+        $this->fieldDescriptors = $this->get(
+            'sulu_core.list_builder.field_descriptor_factory'
+        )->getFieldDescriptorForClass(Contact::class);
 
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = [];
@@ -739,6 +433,39 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Partially update an existing contact.
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction($id, Request $request)
+    {
+        try {
+            $contact = $this->getContactManager()->save(
+                $request->request->all(),
+                $id,
+                true
+            );
+
+            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $view = $this->view($apiContact, 200);
+            $view->setSerializationContext(
+                SerializationContext::create()->setGroups(
+                    static::$contactSerializationGroups
+                )
+            );
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
      * @return ContactManager
      */
     protected function getContactManager()
@@ -752,7 +479,7 @@ class ContactController extends RestController implements ClassResourceInterface
     protected function getContactsByUserSystem()
     {
         $repo = $this->get('sulu_security.user_repository');
-        $users = $repo->getUserInSystem();
+        $users = $repo->findUserBySystem($this->getParameter('sulu_security.system'));
         $contacts = [];
 
         foreach ($users as $user) {
@@ -760,11 +487,6 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $contacts;
-    }
-
-    private function getAccountEntityName()
-    {
-        return $this->container->getParameter('sulu_contact.account.entity');
     }
 
     /**
@@ -788,11 +510,12 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $ids = array_filter(array_column($contacts, 'avatar'));
         $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
-        $i = 0;
         foreach ($contacts as $key => $contact) {
-            if (array_key_exists('avatar', $contact) && $contact['avatar']) {
-                $contacts[$key]['avatar'] = $avatars[$i];
-                $i += 1;
+            if (array_key_exists('avatar', $contact)
+                && $contact['avatar']
+                && array_key_exists($contact['avatar'], $avatars)
+            ) {
+                $contacts[$key]['avatar'] = $avatars[$contact['avatar']];
             }
         }
 

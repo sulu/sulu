@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,25 +11,14 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\Response;
-use Guzzle\Plugin\Mock\MockPlugin;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator;
 
 class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
 {
-    protected $geolocator;
-    protected $mockPlugin;
-
-    public function setUp()
-    {
-        $client = new Client();
-        $this->mockPlugin = new MockPlugin();
-        $client->addSubscriber($this->mockPlugin);
-
-        $this->geolocator = new NominatimGeolocator($client);
-    }
-
     public function provideLocate()
     {
         return [
@@ -57,9 +46,12 @@ class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
     {
         $fixtureName = __DIR__ . '/responses/' . md5($query) . '.json';
         $fixture = file_get_contents($fixtureName);
-        $this->mockPlugin->addResponse(new Response(200, null, $fixture));
+        $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
 
-        $results = $this->geolocator->locate($query);
+        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $geolocator = new NominatimGeolocator($client, '');
+
+        $results = $geolocator->locate($query);
         $this->assertCount($expectedCount, $results);
 
         if (0 == count($results)) {

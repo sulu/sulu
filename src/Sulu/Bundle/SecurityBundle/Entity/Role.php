@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Security\Authentication\RoleSettingInterface;
 
 /**
  * Role.
@@ -19,29 +22,38 @@ use JMS\Serializer\Annotation\Exclude;
 class Role extends BaseRole
 {
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $permissions;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
+     *
      * @Exclude
      */
     private $userRoles;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
+     *
+     * @Exclude
      */
     private $groups;
+
+    /**
+     * @var Collection
+     */
+    private $settings;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->permissions = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->settings = new ArrayCollection();
     }
 
     /**
@@ -71,7 +83,7 @@ class Role extends BaseRole
     /**
      * Get permissions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPermissions()
     {
@@ -105,7 +117,7 @@ class Role extends BaseRole
     /**
      * Get userRoles.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUserRoles()
     {
@@ -139,10 +151,52 @@ class Role extends BaseRole
     /**
      * Get groups.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getGroups()
     {
         return $this->groups;
+    }
+
+    /**
+     * Add setting.
+     *
+     * @param RoleSettingInterface $setting
+     *
+     * @return Role
+     */
+    public function addSetting(RoleSettingInterface $setting)
+    {
+        $this->settings->set($setting->getKey(), $setting);
+
+        return $this;
+    }
+
+    /**
+     * Remove setting.
+     *
+     * @param RoleSettingInterface $setting
+     */
+    public function removeSetting(RoleSettingInterface $setting)
+    {
+        $this->settings->remove($setting->getKey());
+    }
+
+    /**
+     * Get settings.
+     *
+     * @return Collection
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSetting($key)
+    {
+        return $this->settings->get($key);
     }
 }

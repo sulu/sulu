@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
@@ -53,7 +54,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected static $emailEntityName = 'SuluContactBundle:Email';
     protected static $urlEntityName = 'SuluContactBundle:Url';
     protected static $phoneEntityName = 'SuluContactBundle:Phone';
-    protected static $categoryEntityName = 'SuluCategoryBundle:Category';
+    protected static $categoryEntityName = CategoryInterface::class;
 
     /**
      * @var ObjectManager

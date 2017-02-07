@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,9 +11,12 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Psr\Log\LoggerInterface;
+use Sulu\Component\Util\WildcardUrlUtil;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -39,14 +42,17 @@ class WebspaceManager implements WebspaceManagerInterface
     private $loader;
 
     /**
-     * @var LoggerInterface
+     * @var ReplacerInterface
      */
-    private $logger;
+    private $urlReplacer;
 
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = [])
-    {
+    public function __construct(
+        LoaderInterface $loader,
+        ReplacerInterface $urlReplacer,
+        $options = []
+    ) {
         $this->loader = $loader;
-        $this->logger = $logger;
+        $this->urlReplacer = $urlReplacer;
         $this->setOptions($options);
     }
 
@@ -75,20 +81,13 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns the portal with the given url (which has not necessarily to be the main url).
-     *
-     * @param string $url         The url to search for
-     * @param string $environment The environment in which the url should be searched
-     *
-     * @return array|null
+     * {@inheritdoc}
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach (
-            $this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation
-        ) {
-            $nextChar = substr($url, strlen($portalUrl), 1);
-            if (strpos($url, $portalUrl) === 0 && ($nextChar === '/' || $nextChar === '.' || $nextChar === false)) {
+        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
+        foreach ($portalInformations as $portalInformation) {
+            if ($this->matchUrl($url, $portalInformation->getUrl())) {
                 return $portalInformation;
             }
         }
@@ -97,31 +96,112 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns all possible urls for resourcelocator.
-     *
-     * @param string      $resourceLocator
-     * @param string      $environment
-     * @param string      $languageCode
-     * @param null|string $webspaceKey
-     * @param null|string $domain
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null, $domain = null)
+    public function findPortalInformationsByUrl($url, $environment)
     {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portalInformation) use ($url) {
+                return $this->matchUrl($url, $portalInformation->getUrl());
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portalInformation) use ($webspaceKey, $locale) {
+                return $portalInformation->getWebspace()->getKey() === $webspaceKey
+                    && $portalInformation->getLocale() === $locale;
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findPortalInformationsByPortalKeyAndLocale($portalKey, $locale, $environment)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portalInformation) use ($portalKey, $locale) {
+                return $portalInformation->getPortal()
+                    && $portalInformation->getPortal()->getKey() === $portalKey
+                    && $portalInformation->getLocale() === $locale;
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findUrlsByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null,
+        $scheme = 'http'
+    ) {
         $urls = [];
-        $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
-        foreach ($portals as $url => $portalInformation) {
+        $portals = $this->getWebspaceCollection()->getPortalInformations(
+            $environment,
+            [RequestAnalyzerInterface::MATCH_TYPE_FULL]
+        );
+        foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            // TODO protocol
-            $url = rtrim('http://' . $url . $resourceLocator, '/');
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
         }
 
         return $urls;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findUrlByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null,
+        $scheme = 'http'
+    ) {
+        $urls = [];
+        $portals = $this->getWebspaceCollection()->getPortalInformations(
+            $environment,
+            [
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
+                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
+            ]
+        );
+        foreach ($portals as $portalInformation) {
+            $sameLocalization = (
+                $portalInformation->getLocalization() === null
+                || $portalInformation->getLocalization()->getLocalization() === $languageCode
+            );
+            $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
+            if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
+                if ($portalInformation->isMain()) {
+                    array_unshift($urls, $url);
+                } else {
+                    $urls[] = $url;
+                }
+            }
+        }
+
+        return reset($urls);
     }
 
     /**
@@ -157,6 +237,19 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portal) use ($webspaceKey) {
+                return $portal->getWebspaceKey() === $webspaceKey;
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAllLocalizations()
     {
         $localizations = [];
@@ -164,11 +257,33 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($this->getWebspaceCollection() as $webspace) {
             /** @var Webspace $webspace */
             foreach ($webspace->getAllLocalizations() as $localization) {
-                $localizations[$localization->getLocalization()] = $localization;
+                $localizations[$localization->getLocale()] = $localization;
             }
         }
 
         return $localizations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllLocalesByWebspaces()
+    {
+        $webspaces = [];
+        foreach ($this->getWebspaceCollection() as $webspace) {
+            /** @var Webspace $webspace */
+            $locales = [];
+            $defaultLocale = $webspace->getDefaultLocalization();
+            $locales[$defaultLocale->getLocale()] = $defaultLocale;
+            foreach ($webspace->getAllLocalizations() as $localization) {
+                if (!array_key_exists($localization->getLocale(), $locales)) {
+                    $locales[$localization->getLocale()] = $localization;
+                }
+            }
+            $webspaces[$webspace->getKey()] = $locales;
+        }
+
+        return $webspaces;
     }
 
     /**
@@ -188,7 +303,7 @@ class WebspaceManager implements WebspaceManagerInterface
             if (!$cache->isFresh()) {
                 $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
                     $this->loader,
-                    $this->logger,
+                    $this->urlReplacer,
                     $this->options['config_dir']
                 );
                 $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -204,17 +319,12 @@ class WebspaceManager implements WebspaceManagerInterface
                 );
             }
 
-            require_once $cache;
+            require_once $cache->getPath();
 
             $this->webspaceCollection = new $class();
         }
 
         return $this->webspaceCollection;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     /**
@@ -263,5 +373,18 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Matches given url with portal-url.
+     *
+     * @param string $url
+     * @param string $portalUrl
+     *
+     * @return bool
+     */
+    protected function matchUrl($url, $portalUrl)
+    {
+        return WildcardUrlUtil::match($url, $portalUrl);
     }
 }

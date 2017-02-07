@@ -1,0 +1,44 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:list="http://schemas.sulu.io/class/list"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <property name="id" list:translation="public.id" display="no" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.keyword.class%</orm:entity-name>
+        </property>
+
+        <property name="keyword" list:translation="sulu.category.keyword" display="always" list:editable="true">
+            <orm:field-name>keyword</orm:field-name>
+            <orm:entity-name>%sulu.model.keyword.class%</orm:entity-name>
+        </property>
+
+        <property name="locale" display="never">
+            <orm:field-name>locale</orm:field-name>
+            <orm:entity-name>%sulu.model.keyword.class%</orm:entity-name>
+        </property>
+
+        <group-concat-property name="categoryTranslationIds" display="never" orm:glue=",">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+                    <orm:field-name>%sulu.model.keyword.class%.categoryTranslations</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </group-concat-property>
+
+        <count-property name="categoryTranslationCount" display="always" list:translation="sulu.category.used-multiple">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+                    <orm:field-name>%sulu.model.keyword.class%.categoryTranslations</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </count-property>
+    </properties>
+</class>

@@ -10,12 +10,11 @@
 define([
     './models/user',
     'sulusecurity/models/role',
-    'sulusecurity/models/permission',
     'sulucontact/models/contact',
     './collections/roles',
     './models/userRole',
     'widget-groups'
-], function(User, Role, Permission, Contact, Roles, UserRole, WidgetGroups) {
+], function(User, Role, Contact, Roles, UserRole, WidgetGroups) {
 
     'use strict';
 
@@ -218,6 +217,7 @@ define([
             this.sandbox.util.save(url, 'POST', {})
                 .then(function(response) {
                     this.sandbox.logger.log('successfully enabled user', response);
+                    this.sandbox.emit('sulu.user.activated');
                     this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + this.user.attributes.contact.id + '/permissions', true, false, true);
                     dfd.resolve();
                 }.bind(this))

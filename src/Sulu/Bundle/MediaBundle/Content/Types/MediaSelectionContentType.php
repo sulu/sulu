@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,12 +17,13 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var MediaManagerInterface
@@ -63,6 +64,7 @@ class MediaSelectionContentType extends ComplexContentType
                 ],
                 'collection'
             ),
+            'formats' => new PropertyParameter('formats', []),
         ];
     }
 
@@ -96,34 +98,6 @@ class MediaSelectionContentType extends ComplexContentType
     ) {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
 
-        $this->setData($data, $property, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-        $this->setData($data, $property, $languageCode);
-    }
-
-    /**
-     * set data to property.
-     *
-     * @param string[]          $data     ids of images
-     * @param PropertyInterface $property
-     * @param $languageCode
-     */
-    private function setData($data, PropertyInterface $property, $languageCode)
-    {
         $property->setValue($data);
     }
 
@@ -203,5 +177,37 @@ class MediaSelectionContentType extends ComplexContentType
     public function getViewData(PropertyInterface $property)
     {
         return $property->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (!is_array($propertyValue)) {
+            return '';
+        }
+
+        if (!empty($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($value, true));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

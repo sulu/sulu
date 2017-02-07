@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -33,21 +34,25 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "all",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999 }
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "locale" = "expr(object.getLocale())" }
  *      )
  * )
  * @Relation(
  *      "filterByTypes",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "types" = "{types}" }
+ *          parameters = {
+ *              "collection" = "expr(object.getId())",
+ *              "types" = "{types}",
+ *              "locale" = "expr(object.getLocale())"
+ *          }
  *      )
  * )
  * @Relation(
  *      "self",
  *      href = @Route(
  *          "get_collection",
- *          parameters = { "id" = "expr(object.getId())" }
+ *          parameters = { "id" = "expr(object.getId())", "locale" = "expr(object.getLocale())" }
  *      )
  * )
  * @Relation(
@@ -58,7 +63,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "children",
  *      href = @Route(
  *          "get_collection",
- *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title" }
+ *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title", "locale" = "expr(object.getLocale())" }
  *      )
  * )
  * @Relation(
@@ -114,6 +119,16 @@ class Collection extends ApiWrapper
      * @var CollectionInterface
      */
     protected $entity;
+
+    /**
+     * @var int
+     */
+    protected $mediaCount = 0;
+
+    /**
+     * @var int
+     */
+    protected $subCollectionCount = 0;
 
     public function __construct(CollectionInterface $collection, $locale)
     {
@@ -488,13 +503,62 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
+     * @return int The number of media contained by the collection
+     */
+    public function getMediaCount()
+    {
+        return $this->mediaCount;
+    }
+
+    /**
+     * @param int $mediaCount The new number of media
+     */
+    public function setMediaCount($mediaCount)
+    {
+        $this->mediaCount = $mediaCount;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return int The number of sub collections contained by the collection
+     */
+    public function getSubCollectionCount()
+    {
+        return $this->subCollectionCount;
+    }
+
+    /**
+     * @param int $subCollectionCount The new number of sub collections
+     */
+    public function setSubCollectionCount($subCollectionCount)
+    {
+        $this->subCollectionCount = $subCollectionCount;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * Returns the total number of all types of sub objects of this collection.
+     *
+     * @return int
+     */
+    public function getObjectCount()
+    {
+        return $this->getMediaCount() + $this->getSubCollectionCount();
+    }
+
+    /**
+     * @VirtualProperty
      * @SerializedName("locked")
      *
      * @return string
      */
     public function getLocked()
     {
-        return !$this->entity->getType() || $this->entity->getType()->getKey() === 'collection.system';
+        return !$this->entity->getType()
+            || $this->entity->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE;
     }
 
     /**

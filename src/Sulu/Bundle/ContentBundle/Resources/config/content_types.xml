@@ -20,45 +20,66 @@
             <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="logger"/>
             <argument>%sulu.content.type.internal_links.template%</argument>
+            <argument>%sulu_document_manager.show_drafts%</argument>
             <tag name="sulu.content.type" alias="internal_links"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <service id="sulu.content.type.single_internal_link" class="%sulu.content.type.single_internal_link.class%">
             <argument>%sulu.content.type.single_internal_link.template%</argument>
             <tag name="sulu.content.type" alias="single_internal_link"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
             <argument>%sulu.content.type.phone.template%</argument>
             <tag name="sulu.content.type" alias="phone"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.password" class="%sulu.content.type.password.class%">
             <argument>%sulu.content.type.password.template%</argument>
             <tag name="sulu.content.type" alias="password"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.url" class="%sulu.content.type.url.class%">
             <argument>%sulu.content.type.url.template%</argument>
             <tag name="sulu.content.type" alias="url"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.email" class="%sulu.content.type.email.class%">
             <argument>%sulu.content.type.email.template%</argument>
             <tag name="sulu.content.type" alias="email"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.date" class="%sulu.content.type.date.class%">
             <argument>%sulu.content.type.date.template%</argument>
             <tag name="sulu.content.type" alias="date"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.time" class="%sulu.content.type.time.class%">
             <argument>%sulu.content.type.time.template%</argument>
             <tag name="sulu.content.type" alias="time"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.color" class="%sulu.content.type.color.class%">
             <argument>%sulu.content.type.color.template%</argument>
             <tag name="sulu.content.type" alias="color"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.checkbox" class="%sulu.content.type.checkbox.class%">
             <argument>%sulu.content.type.checkbox.template%</argument>
             <tag name="sulu.content.type" alias="checkbox"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.multiple_select" class="Sulu\Bundle\ContentBundle\Content\Types\MultipleSelect">
+            <argument>%sulu.content.type.multiple_select.template%</argument>
+            <tag name="sulu.content.type" alias="multiple_select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.single_select" class="Sulu\Bundle\ContentBundle\Content\Types\SingleSelect">
+            <argument>%sulu.content.type.single_select.template%</argument>
+            <tag name="sulu.content.type" alias="single_select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
     </services>
 </container>

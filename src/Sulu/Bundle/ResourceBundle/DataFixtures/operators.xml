@@ -3,37 +3,49 @@
     <operator type="number" inputType="" operator="&gt;">
         <translations>
             <translation locale="de">größer als</translation>
+            <translation locale="de_ch">grösser als</translation>
             <translation locale="en">greater than</translation>
+            <translation locale="fr">supérieur à</translation>
         </translations>
     </operator>
     <operator type="number" inputType="" operator="&lt;">
         <translations>
             <translation locale="de">kleiner als</translation>
+            <translation locale="de_ch">kleiner als</translation>
             <translation locale="en">less than</translation>
+            <translation locale="fr">inférieur à</translation>
         </translations>
     </operator>
     <operator type="number" inputType="" operator="&lt;=">
         <translations>
             <translation locale="de">kleiner gleich</translation>
+            <translation locale="de_ch">kleiner gleich</translation>
             <translation locale="en">less than or equal</translation>
+            <translation locale="fr">inférieur ou égal</translation>
         </translations>
     </operator>
     <operator type="number" inputType="" operator="&gt;=">
         <translations>
             <translation locale="de">größer gleich</translation>
+            <translation locale="de_ch">grösser gleich</translation>
             <translation locale="en">greater than or equal</translation>
+            <translation locale="fr">supérieur ou égal</translation>
         </translations>
     </operator>
     <operator type="number" inputType="" operator="=">
         <translations>
             <translation locale="de">gleich</translation>
+            <translation locale="de_ch">gleich</translation>
             <translation locale="en">is</translation>
+            <translation locale="fr">égal</translation>
         </translations>
     </operator>
     <operator type="number" inputType="" operator="!=">
         <translations>
             <translation locale="de">ungleich</translation>
+            <translation locale="de_ch">ungleich</translation>
             <translation locale="en">is not</translation>
+            <translation locale="fr">inégal</translation>
         </translations>
     </operator>
 
@@ -41,19 +53,25 @@
     <operator type="string" inputType="" operator="LIKE">
         <translations>
             <translation locale="de">enthält</translation>
+            <translation locale="de_ch">enthält</translation>
             <translation locale="en">contains</translation>
+            <translation locale="fr">contient</translation>
         </translations>
     </operator>
     <operator type="string" inputType="" operator="=">
         <translations>
             <translation locale="de">gleich</translation>
+            <translation locale="de_ch">gleich</translation>
             <translation locale="en">is</translation>
+            <translation locale="fr">égal</translation>
         </translations>
     </operator>
     <operator type="string" inputType="" operator="!=">
         <translations>
             <translation locale="de">ungleich</translation>
+            <translation locale="de_ch">ungleich</translation>
             <translation locale="en">is not</translation>
+            <translation locale="fr">inégal</translation>
         </translations>
     </operator>
 
@@ -61,19 +79,25 @@
     <operator type="boolean" inputType="select" operator="=">
         <translations>
             <translation locale="de">ist</translation>
+            <translation locale="de_ch">ist</translation>
             <translation locale="en">is</translation>
+            <translation locale="fr">est</translation>
         </translations>
         <values>
             <value value="true">
                 <translations>
                     <translation locale="de">wahr</translation>
+                    <translation locale="de_ch">wahr</translation>
                     <translation locale="en">true</translation>
+                    <translation locale="fr">vrai</translation>
                 </translations>
             </value>
             <value value="false">
                 <translations>
                     <translation locale="de">falsch</translation>
+                    <translation locale="de_ch">falsch</translation>
                     <translation locale="en">false</translation>
+                    <translation locale="fr">faux</translation>
                 </translations>
             </value>
         </values>
@@ -83,45 +107,95 @@
     <operator type="date" inputType="datepicker" operator="&gt;">
         <translations>
             <translation locale="de">nach</translation>
+            <translation locale="de_ch">nach</translation>
             <translation locale="en">after</translation>
+            <translation locale="fr">après</translation>
         </translations>
     </operator>
     <operator type="date" inputType="datepicker" operator="&lt;">
         <translations>
             <translation locale="de">vor</translation>
+            <translation locale="de_ch">vor</translation>
             <translation locale="en">before</translation>
+            <translation locale="fr">avant</translation>
         </translations>
     </operator>
     <operator type="date" inputType="datepicker" operator="=">
         <translations>
             <translation locale="de">gleich</translation>
+            <translation locale="de_ch">gleich</translation>
             <translation locale="en">is</translation>
+            <translation locale="fr">avant</translation>
         </translations>
     </operator>
     <operator type="date" inputType="datepicker" operator="!=">
         <translations>
             <translation locale="de">ungleich</translation>
+            <translation locale="de_ch">ungleich</translation>
             <translation locale="en">is not</translation>
+            <translation locale="fr">inégal</translation>
         </translations>
     </operator>
     <operator type="date" inputType="select" operator="between">
         <translations>
             <translation locale="de">innerhalb</translation>
+            <translation locale="de_ch">innerhalb</translation>
             <translation locale="en">within</translation>
+            <translation locale="fr">dans</translation>
         </translations>
         <values>
             <value value="-1 week">
                 <translations>
                     <translation locale="de">von 7 Tagen</translation>
+                    <translation locale="de_ch">von 7 Tagen</translation>
                     <translation locale="en">last 7 days</translation>
+                    <translation locale="fr">7 jours</translation>
                 </translations>
             </value>
             <value value="first day of this month">
                 <translations>
                     <translation locale="de">des aktuellen Monats</translation>
+                    <translation locale="de_ch">des aktuellen Monats</translation>
                     <translation locale="en">current month</translation>
+                    <translation locale="fr">ce mois</translation>
                 </translations>
             </value>
         </values>
+    </operator>
+
+    <!-- tags -->
+    <operator type="tags" inputType="tags" operator="and">
+        <translations>
+            <translation locale="de">Übereinstimmung mit allen Tags</translation>
+            <translation locale="de_ch">Übereinstimmung mit allen Tags</translation>
+            <translation locale="en">Use records that use ALL tags</translation>
+            <translation locale="fr">en conformité avec tous les mots clés</translation>
+        </translations>
+    </operator>
+    <operator type="tags" inputType="tags" operator="or">
+        <translations>
+            <translation locale="de">Übereinstimmung mit mind. einem Tag</translation>
+            <translation locale="de_ch">Übereinstimmung mit mind. einem Tag</translation>
+            <translation locale="en">Use records that use ANY tag</translation>
+            <translation locale="fr">conformité aves au moins un mot-clé</translation>
+        </translations>
+    </operator>
+
+    <!-- auto-complete -->
+    <operator type="auto-complete" inputType="auto-complete" operator="=">
+        <translations>
+            <translation locale="de">gleich</translation>
+            <translation locale="de_ch">gleich</translation>
+            <translation locale="en">is</translation>
+            <translation locale="fr">égal</translation>
+        </translations>
+    </operator>
+    <operator type="auto-complete" inputType="auto-complete" operator="!=">
+        <translations>
+            <translation locale="de">ungleich</translation>
+            <translation locale="de_ch">ungleich</translation>
+            <translation locale="en">is not</translation>
+            <translation locale="fr">inégal</translation>
+        </translations>
     </operator>
 </operators>

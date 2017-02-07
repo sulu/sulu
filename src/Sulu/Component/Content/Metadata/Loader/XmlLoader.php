@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,6 +76,9 @@ class XmlLoader extends XmlLegacyLoader
         if (isset($data['meta']['title'])) {
             $section->title = $data['meta']['title'];
         }
+        if (isset($data['meta']['info_text'])) {
+            $section->description = $data['meta']['info_text'];
+        }
 
         foreach ($data['properties'] as $name => $property) {
             $section->children[$name] = $this->createProperty($name, $property);
@@ -93,6 +96,9 @@ class XmlLoader extends XmlLegacyLoader
         if (isset($data['meta']['title'])) {
             $blockProperty->title = $data['meta']['title'];
         }
+        if (isset($data['meta']['info_text'])) {
+            $blockProperty->description = $data['meta']['info_text'];
+        }
 
         $this->mapProperty($blockProperty, $data);
 
@@ -102,6 +108,9 @@ class XmlLoader extends XmlLegacyLoader
 
             if (isset($type['meta']['title'])) {
                 $component->title = $type['meta']['title'];
+            }
+            if (isset($data['meta']['info_text'])) {
+                $component->description = $data['meta']['info_text'];
             }
 
             foreach ($type['properties'] as $propertyName => $propertyData) {
@@ -125,51 +134,60 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = $data['minOccurs'] !== null ? intval($data['minOccurs']) : 1;
-        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : 999;
+        $property->minOccurs = $data['minOccurs'] !== null ? intval($data['minOccurs']) : null;
+        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : null;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }
 
     private function normalizePropertyData($data)
     {
-        $data = array_replace_recursive([
-            'type' => null,
-            'multilingual' => true,
-            'mandatory' => true,
-            'colSpan' => null,
-            'cssClass' => null,
-            'minOccurs' => null,
-            'maxOccurs' => null,
-        ], $this->normalizeItem($data));
+        $data = array_replace_recursive(
+            [
+                'type' => null,
+                'multilingual' => true,
+                'mandatory' => true,
+                'colSpan' => null,
+                'cssClass' => null,
+                'minOccurs' => null,
+                'maxOccurs' => null,
+            ],
+            $this->normalizeItem($data)
+        );
 
         return $data;
     }
 
     private function normalizeStructureData($data)
     {
-        $data = array_replace_recursive([
-            'key' => null,
-            'view' => null,
-            'controller' => null,
-            'internal' => false,
-            'cacheLifetime' => null,
-        ], $this->normalizeItem($data));
+        $data = array_replace_recursive(
+            [
+                'key' => null,
+                'view' => null,
+                'controller' => null,
+                'internal' => false,
+                'cacheLifetime' => null,
+            ],
+            $this->normalizeItem($data)
+        );
 
         return $data;
     }
 
     private function normalizeItem($data)
     {
-        $data = array_merge_recursive([
-            'meta' => [
-                'title' => [],
-                'info_text' => [],
-                'placeholder' => [],
+        $data = array_merge_recursive(
+            [
+                'meta' => [
+                    'title' => [],
+                    'info_text' => [],
+                    'placeholder' => [],
+                ],
+                'params' => [],
+                'tags' => [],
             ],
-            'params' => [],
-            'tags' => [],
-        ], $data);
+            $data
+        );
 
         return $data;
     }

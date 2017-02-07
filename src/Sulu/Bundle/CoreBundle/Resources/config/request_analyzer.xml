@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_core.webspace.request_analyzer"
+                 class="Sulu\Component\Webspace\Analyzer\RequestAnalyzer">
+            <argument type="service" id="request_stack"/>
+            <argument type="collection"/>
+        </service>
+
+        <service id="sulu_core.request_processor.parameter"
+                 class="Sulu\Component\Webspace\Analyzer\Attributes\ParameterRequestProcessor">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="sulu.request_attributes" priority="128"/>
+        </service>
+
+        <service id="sulu_core.request_processor.admin"
+                 class="Sulu\Component\Webspace\Analyzer\Attributes\AdminRequestProcessor">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+            <tag name="sulu.request_attributes" priority="0"/>
+        </service>
+
+        <service id="sulu_core.request_processor.website"
+                 class="Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="sulu.request_attributes" priority="0"/>
+        </service>
+
+        <service id="sulu_core.request_processor.portal_information"
+                 class="Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor">
+            <tag name="sulu.context" context="website"/>
+            <tag name="sulu.request_attributes" priority="-128"/>
+        </service>
+    </services>
+</container>

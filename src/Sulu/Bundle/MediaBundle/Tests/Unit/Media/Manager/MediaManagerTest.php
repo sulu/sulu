@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,15 +12,20 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
+use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -56,6 +61,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      * @var ObjectProphecy
      */
     private $userRepository;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
 
     /**
      * @var ObjectProphecy
@@ -107,6 +117,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $ffprobe;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $categoryManager;
+
     public function setUp()
     {
         parent::setUp();
@@ -114,11 +129,13 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $this->em = $this->prophesize(EntityManager::class);
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
+        $this->categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
@@ -129,6 +146,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->mediaRepository->reveal(),
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),
+            $this->categoryRepository->reveal(),
             $this->em->reveal(),
             $this->storage->reveal(),
             $this->validator->reveal(),
@@ -197,6 +215,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
+        $fileVersion->getMimeType()->willReturn('image/png');
         $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
 
         $media = $this->prophesize(Media::class);
@@ -207,6 +226,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatManager->purge(
             1,
             'test',
+            'image/png',
             json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
         )->shouldBeCalled();
 
@@ -224,7 +244,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSpecialCharacterFileName
      */
-    public function testSpecialCharacterFileName($fileName, $cleanUpArgument)
+    public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension)
     {
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
@@ -236,8 +256,131 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
         $this->userRepository->findUserById(1)->willReturn($user);
 
-        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled();
-        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+        $this->mediaRepository->createNew()->willReturn(new Media());
+
+        $this->storage->save('', $cleanUpResult . $extension, 1)->shouldBeCalled();
+
+        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
+        $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+
+        $this->assertEquals($fileName, $media->getName());
+    }
+
+    public function testSaveWrongVersionType()
+    {
+        $this->setExpectedException(InvalidMediaTypeException::class);
+
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.pdf');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('img');
+
+        $media = $this->prophesize(Media::class);
+        $media->setChanger(Argument::any())->willReturn(null);
+        $media->setChanged(Argument::any())->willReturn(null);
+
+        $mediaType = $this->prophesize(MediaType::class);
+        $mediaType->getId()->willReturn(1);
+        $media->getType()->willReturn($mediaType->reveal());
+
+        $file = $this->prophesize(File::class);
+        $file->getVersion()->willReturn(1);
+        $file->setChanger(Argument::any())->willReturn(null);
+        $file->setChanged(Argument::any())->willReturn(null);
+        $media->getFiles()->willReturn([$file->reveal()]);
+
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getVersion()->willReturn(1);
+        $file->getFileVersions()->willReturn([$fileVersion]);
+
+        $this->typeManager->getMediaType('img')->willReturn(2);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $this->mediaManager->save($uploadedFile->reveal(), ['id' => 1], 42);
+    }
+
+    public function testSaveWithChangedFocusPoint()
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersion->getFocusPointX()->willReturn(null);
+        $fileVersion->getFocusPointY()->willReturn(null);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldBeCalled();
+        $this->formatManager->purge(1, 'test', 'image/jpeg', [])->shouldBeCalled();
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testSaveWithSameFocusPoint()
+    {
+        $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
+        $media->getPreviewImage()->willReturn(null);
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn([]);
+        $fileVersion->getSubVersion()->willReturn(1);
+        $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('image/jpeg');
+        $fileVersion->getProperties()->willReturn([]);
+        $fileVersion->getFocusPointX()->willReturn(1);
+        $fileVersion->getFocusPointY()->willReturn(2);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getVersion()->willReturn(1);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $media->setChanger(Argument::any())->shouldBeCalled();
+        $media->setChanged(Argument::any())->shouldBeCalled();
+        $file->setChanger(Argument::any())->shouldBeCalled();
+        $file->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->shouldBeCalled();
+        $fileVersion->setProperties([])->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
+    }
+
+    public function testVideoUploadWithoutFFmpeg()
+    {
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.ogg');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('video/ogg');
+        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class);
+
+        $this->mediaRepository->createNew()->willReturn(new Media());
+
+        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
     }
 
     public function provideGetByIds()
@@ -256,8 +399,8 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     public function provideSpecialCharacterFileName()
     {
         return [
-            ['aäüßa', 'aäüßa'],
-            ['aäüßa.mp4', 'aäüßa'],
+            ['aäüßa', 'aäüßa', 'aaeuesa', ''],
+            ['aäüßa.mp4', 'aäüßa', 'aaeuesa', '.mp4'],
         ];
     }
 

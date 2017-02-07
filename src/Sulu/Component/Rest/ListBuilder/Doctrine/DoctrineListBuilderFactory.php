@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,13 +30,20 @@ class DoctrineListBuilderFactory
     private $em;
 
     /**
+     * @var array
+     */
+    private $permissions;
+
+    /**
      * @param EntityManager $em
      * @param EventDispatcherInterface $eventDispatcher
+     * @param array $permissions
      */
-    public function __construct(EntityManager $em, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManager $em, EventDispatcherInterface $eventDispatcher, array $permissions)
     {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -48,6 +55,6 @@ class DoctrineListBuilderFactory
      */
     public function create($entityName)
     {
-        return new DoctrineListBuilder($this->em, $entityName, $this->eventDispatcher);
+        return new DoctrineListBuilder($this->em, $entityName, $this->eventDispatcher, $this->permissions);
     }
 }

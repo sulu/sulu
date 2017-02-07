@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -70,7 +71,7 @@ class LocalizationFinder implements LocalizationFinderInterface
             return;
         }
 
-        return $resultLocalization->getLocalization();
+        return $resultLocalization->getLocale();
     }
 
     /**
@@ -84,7 +85,7 @@ class LocalizationFinder implements LocalizationFinderInterface
     private function findAvailableParentLocalization(array $availableLocales, Localization $localization)
     {
         do {
-            if (in_array($localization->getLocalization(), $availableLocales)) {
+            if (in_array($localization->getLocale(), $availableLocales)) {
                 return $localization;
             }
 
@@ -110,7 +111,7 @@ class LocalizationFinder implements LocalizationFinderInterface
         if (!empty($childrenLocalizations)) {
             foreach ($childrenLocalizations as $childrenLocalization) {
                 // return the localization if a translation exists in the child localization
-                if (in_array($childrenLocalization->getLocalization(), $availableLocales)) {
+                if (in_array($childrenLocalization->getLocale(), $availableLocales)) {
                     return $childrenLocalization;
                 }
 
@@ -134,7 +135,7 @@ class LocalizationFinder implements LocalizationFinderInterface
     private function findAvailableLocalization(array $availableLocales, array $localizations)
     {
         foreach ($localizations as $localization) {
-            if (in_array($localization->getLocalization(), $availableLocales)) {
+            if (in_array($localization->getLocale(), $availableLocales)) {
                 return $localization;
             }
 

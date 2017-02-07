@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,4 +38,25 @@ interface UserInterface extends BaseUserInterface
      * @return RoleInterface[]
      */
     public function getRoleObjects();
+
+    /**
+     * Returns the full name of the user.
+     *
+     * @return string
+     */
+    public function getFullName();
+
+    /**
+     * Get locked.
+     *
+     * @return bool
+     */
+    public function getLocked();
+
+    /**
+     * Get enabled.
+     *
+     * @return bool
+     */
+    public function getEnabled();
 }

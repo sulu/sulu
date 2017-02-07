@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -94,7 +95,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
 
         foreach ($this->collectionData as $collection) {
             $this->collections[] = $this->createCollection($collection[0], $collection[1]);
@@ -475,6 +476,30 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 array_slice($this->mediaData, 4, 3),
                 [],
                 [],
+            ],
+            // sort-by default sortMethod
+            [
+                ['dataSource' => 'root', 'sortBy' => ['fileVersionMeta.title']],
+                1,
+                null,
+                null,
+                $this->mediaData,
+            ],
+            // sort-by asc
+            [
+                ['dataSource' => 'root', 'sortBy' => ['fileVersionMeta.title'], 'sortMethod' => 'asc'],
+                1,
+                null,
+                null,
+                $this->mediaData,
+            ],
+            // sort-by desc
+            [
+                ['dataSource' => 'root', 'sortBy' => ['fileVersionMeta.title'], 'sortMethod' => 'desc'],
+                1,
+                null,
+                null,
+                array_reverse($this->mediaData),
             ],
         ];
     }

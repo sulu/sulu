@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,13 +51,13 @@ class MaskConverter implements MaskConverterInterface
     public function convertPermissionsToArray($permissions)
     {
         $permissionsData = [
-            'view' => (bool) ($permissions & $this->permissions['view']),
-            'add' => (bool) ($permissions & $this->permissions['add']),
-            'edit' => (bool) ($permissions & $this->permissions['edit']),
-            'delete' => (bool) ($permissions & $this->permissions['delete']),
-            'archive' => (bool) ($permissions & $this->permissions['archive']),
-            'live' => (bool) ($permissions & $this->permissions['live']),
-            'security' => (bool) ($permissions & $this->permissions['security']),
+            PermissionTypes::VIEW => (bool) ($permissions & $this->permissions[PermissionTypes::VIEW]),
+            PermissionTypes::ADD => (bool) ($permissions & $this->permissions[PermissionTypes::ADD]),
+            PermissionTypes::EDIT => (bool) ($permissions & $this->permissions[PermissionTypes::EDIT]),
+            PermissionTypes::DELETE => (bool) ($permissions & $this->permissions[PermissionTypes::DELETE]),
+            PermissionTypes::ARCHIVE => (bool) ($permissions & $this->permissions[PermissionTypes::ARCHIVE]),
+            PermissionTypes::LIVE => (bool) ($permissions & $this->permissions[PermissionTypes::LIVE]),
+            PermissionTypes::SECURITY => (bool) ($permissions & $this->permissions[PermissionTypes::SECURITY]),
         ];
 
         return $permissionsData;

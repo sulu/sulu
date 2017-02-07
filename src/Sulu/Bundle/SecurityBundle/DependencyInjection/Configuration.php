@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -75,6 +75,13 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\Role')->end()
                                 ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleRepository')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('role_setting')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleSetting')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleSettingRepository')->end()
                             ->end()
                         ->end()
                         ->arrayNode('access_control')

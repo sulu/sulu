@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +15,6 @@ use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddJsConfigPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ContentNavigationPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\WidgetsPass;
-use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -29,6 +28,5 @@ class SuluAdminBundle extends Bundle
         $container->addCompilerPass(new AddJsConfigPass());
         $container->addCompilerPass(new ContentNavigationPass());
         $container->addCompilerPass(new WidgetsPass());
-        $container->addCompilerPass(new SuluVersionPass());
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,15 +41,15 @@ class SearchResultRepresentation extends PaginatedRepresentation
     public function __construct(
         $inline,
         $route,
-        array $parameters = [],
+        array $parameters,
         $page,
         $limit,
         $pages,
-        $pageParameterName = null,
-        $limitParameterName = null,
-        $absolute = false,
-        $total = null,
-        $totals = [],
+        $pageParameterName,
+        $limitParameterName,
+        $absolute,
+        $total,
+        $totals,
         $time
     ) {
         parent::__construct(
@@ -62,8 +62,7 @@ class SearchResultRepresentation extends PaginatedRepresentation
             $pageParameterName,
             $limitParameterName,
             $absolute,
-            $total,
-            $time
+            $total
         );
 
         $this->totals = $totals;

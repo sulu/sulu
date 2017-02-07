@@ -1,6 +1,5 @@
 // Column structure of the admin
 /*----------------------------------------*/
-
 #main {
     height: 100%;
     min-width: 50px + $contentMinWidth;
@@ -72,6 +71,11 @@
         padding-left: $contentPaddingLeft;
         padding-right: $contentPaddingRight;
         min-width: $contentMinWidth;
+
+        &.no-padding {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 
     .fixed-width {
@@ -118,27 +122,6 @@
         }
         .sulu-title {
             @include transition(none);
-        }
-    }
-
-    .sulu-app-shrink {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        z-index: 120;
-        cursor: pointer;
-        width: 25px;
-        height: 25px;
-        overflow: hidden;
-        background: #21272E;
-        color: $white;
-        text-align: center;
-        line-height: 25px;
-        .fa-chevron-right {
-            padding-left: 2px;
-        }
-        .fa-chevron-left {
-            padding-right: 2px;
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,83 +13,82 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Category.
  */
-class Category implements AuditableInterface
+class Category implements CategoryInterface
 {
     /**
      * @var int
      */
-    private $lft;
+    protected $lft;
 
     /**
      * @var int
      */
-    private $rgt;
+    protected $rgt;
 
     /**
      * @var int
      */
-    private $depth;
+    protected $depth;
 
     /**
      * @var \DateTime
      */
-    private $created;
+    protected $created;
 
     /**
      * @var \DateTime
      */
-    private $changed;
+    protected $changed;
 
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $key;
+    protected $key;
 
     /**
      * @var string
      */
-    private $defaultLocale;
+    protected $defaultLocale;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var CategoryInterface
      */
-    private $meta;
+    protected $parent;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var UserInterface
      */
-    private $translations;
+    protected $creator;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var UserInterface
      */
-    private $children;
+    protected $changer;
 
     /**
-     * @var \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @var Collection
      */
-    private $parent;
+    protected $meta;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var Collection
      */
-    private $creator;
+    protected $translations;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var Collection
      */
-    private $changer;
+    protected $children;
 
     /**
      * Constructor.
@@ -102,11 +101,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set id.
-     *
-     * @param int $id
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setId($id)
     {
@@ -116,11 +111,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setLft($lft)
     {
@@ -130,9 +121,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get lft.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getLft()
     {
@@ -140,11 +129,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setRgt($rgt)
     {
@@ -154,9 +139,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get rgt.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getRgt()
     {
@@ -164,11 +147,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set depth.
-     *
-     * @param int $depth
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setDepth($depth)
     {
@@ -178,9 +157,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get depth.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getDepth()
     {
@@ -188,9 +165,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getCreated()
     {
@@ -198,9 +173,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get key.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getKey()
     {
@@ -208,11 +181,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set key.
-     *
-     * @param string $key
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setKey($key)
     {
@@ -222,11 +191,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set defaultLocale.
-     *
-     * @param string $defaultLocale
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setDefaultLocale($defaultLocale)
     {
@@ -236,9 +201,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get defaultLocale.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getDefaultLocale()
     {
@@ -246,9 +209,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get changed.
-     *
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getChanged()
     {
@@ -256,9 +217,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get id.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -266,135 +225,9 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Add meta.
-     *
-     * @param CategoryMeta $meta
-     *
-     * @return Category
+     * {@inheritdoc}
      */
-    public function addMeta(CategoryMeta $meta)
-    {
-        $this->meta[] = $meta;
-
-        return $this;
-    }
-
-    /**
-     * Remove meta.
-     *
-     * @param CategoryMeta $meta
-     */
-    public function removeMeta(CategoryMeta $meta)
-    {
-        $this->meta->removeElement($meta);
-    }
-
-    /**
-     * Get meta.
-     *
-     * @return Collection
-     */
-    public function getMeta()
-    {
-        return $this->meta;
-    }
-
-    /**
-     * Add translations.
-     *
-     * @param CategoryTranslation $translations
-     *
-     * @return Category
-     */
-    public function addTranslation(CategoryTranslation $translations)
-    {
-        $this->translations[] = $translations;
-
-        return $this;
-    }
-
-    /**
-     * Remove translations.
-     *
-     * @param CategoryTranslation $translations
-     */
-    public function removeTranslation(CategoryTranslation $translations)
-    {
-        $this->translations->removeElement($translations);
-    }
-
-    /**
-     * Get translations.
-     *
-     * @return Collection
-     */
-    public function getTranslations()
-    {
-        return $this->translations;
-    }
-
-    /**
-     * {@see Category::addChild}.
-     *
-     * @deprecated use Category::addChild instead
-     */
-    public function addChildren(Category $child)
-    {
-        $this->addChild($child);
-    }
-
-    /**
-     * Add children.
-     *
-     * @param Category $child
-     *
-     * @return Category
-     */
-    public function addChild(Category $child)
-    {
-        $this->children[] = $child;
-
-        return $this;
-    }
-
-    /**
-     * {@see Category::removeChild}.
-     *
-     * @deprecated use Category::addChild instead
-     */
-    public function removeChildren(Category $child)
-    {
-        $this->removeChild($child);
-    }
-
-    /**
-     * Remove children.
-     *
-     * @param Category $child
-     */
-    public function removeChild(Category $child)
-    {
-        $this->children->removeElement($child);
-    }
-
-    /**
-     * Get children.
-     *
-     * @return Collection
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * Set parent.
-     *
-     * @param Category $parent
-     *
-     * @return Category
-     */
-    public function setParent(Category $parent = null)
+    public function setParent(CategoryInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -402,9 +235,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get parent.
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function getParent()
     {
@@ -412,11 +243,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setCreator(UserInterface $creator = null)
     {
@@ -426,9 +253,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get creator.
-     *
-     * @return UserInterface
+     * {@inheritdoc}
      */
     public function getCreator()
     {
@@ -436,11 +261,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return Category
+     * {@inheritdoc}
      */
     public function setChanger(UserInterface $changer = null)
     {
@@ -450,12 +271,130 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get changer.
-     *
-     * @return UserInterface
+     * {@inheritdoc}
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getChanger()
     {
         return $this->changer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMeta(CategoryMetaInterface $meta)
+    {
+        $this->meta[] = $meta;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeMeta(CategoryMetaInterface $meta)
+    {
+        $this->meta->removeElement($meta);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addTranslation(CategoryTranslationInterface $translations)
+    {
+        $this->translations[] = $translations;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeTranslation(CategoryTranslationInterface $translations)
+    {
+        $this->translations->removeElement($translations);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findTranslationByLocale($locale)
+    {
+        return $this->translations->filter(
+            function (CategoryTranslationInterface $translation) use ($locale) {
+                return $translation->getLocale() === $locale;
+            }
+        )->first();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addChildren(CategoryInterface $child)
+    {
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use addChild() instead.', E_USER_DEPRECATED);
+
+        $this->addChild($child);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addChild(CategoryInterface $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeChildren(CategoryInterface $child)
+    {
+        @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use removeChild() instead.', E_USER_DEPRECATED);
+
+        $this->removeChild($child);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeChild(CategoryInterface $child)
+    {
+        $this->children->removeElement($child);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 }

@@ -22,9 +22,11 @@ Feature: Content type: Tag list
     Scenario: Tag select
         Given I am editing a page of type "tag_page"
         And I expect the aura component "tags" to appear
-        When I fill in "tags" with "bar, boo, bim"
+        When I fill in "tags" with "bar, boo, bim,"
         And I wait a second
         And I click the save icon
+        And I click toolbar item "savePublish"
+        And I confirm
         Then I expect a success notification to appear
         And the tag "boo" should exist
         And the tag "bim" should exist

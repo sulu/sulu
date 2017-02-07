@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,6 +56,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             new \Twig_SimpleFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
             new \Twig_SimpleFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
             new \Twig_SimpleFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
+            new \Twig_SimpleFunction('sulu_navigation_is_active', [$this, 'navigationIsActiveFunction']),
         ];
     }
 
@@ -146,6 +147,21 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             $webspaceKey,
             $locale
         );
+    }
+
+    /**
+     * @param string $requestPath
+     * @param string $itemPath
+     *
+     * @return bool
+     */
+    public function navigationIsActiveFunction($requestPath, $itemPath)
+    {
+        if ($requestPath === $itemPath) {
+            return true;
+        }
+
+        return preg_match(sprintf('/%s([\/]|$)/', preg_quote($itemPath, '/')), $requestPath);
     }
 
     /**

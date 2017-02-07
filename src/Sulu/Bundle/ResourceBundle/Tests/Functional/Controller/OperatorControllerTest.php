@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -44,7 +45,7 @@ class OperatorControllerTest extends SuluTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
         $this->setUpOperators();
         $this->client = $this->createAuthenticatedClient();
@@ -132,12 +133,21 @@ class OperatorControllerTest extends SuluTestCase
     {
         $this->client->request(
             'GET',
-            '/api/operators'
+            '/api/operators?locale=de'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
         $this->assertEquals(3, count($response->_embedded->items));
+    }
+
+    public function testCgetWithNoLocale()
+    {
+        $this->client->request(
+            'GET',
+            '/api/operators'
+        );
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 }

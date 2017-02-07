@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,8 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.
@@ -27,20 +27,20 @@ class StructureResolver implements StructureResolverInterface
     protected $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var ExtensionManagerInterface
      */
-    protected $structureManager;
+    protected $extensionManager;
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureManagerInterface   $structureManager
+     * @param ExtensionManagerInterface   $structureManager
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
-        StructureManagerInterface $structureManager
+        ExtensionManagerInterface $structureManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->extensionManager = $structureManager;
     }
 
     /**
@@ -67,7 +67,7 @@ class StructureResolver implements StructureResolverInterface
             $data['shadowBaseLocale'] = $structure->getShadowBaseLanguage();
 
             foreach ($data['extension'] as $name => $value) {
-                $extension = $this->structureManager->getExtension($structure->getKey(), $name);
+                $extension = $this->extensionManager->getExtension($structure->getKey(), $name);
                 $data['extension'][$name] = $extension->getContentData($value);
             }
         }

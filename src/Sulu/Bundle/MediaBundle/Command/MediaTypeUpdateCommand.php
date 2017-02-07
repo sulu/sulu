@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,8 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- */
 class MediaTypeUpdateCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -38,7 +36,7 @@ class MediaTypeUpdateCommand extends ContainerAwareCommand
         /** @var TypeManagerInterface $typeManager */
         $typeManager = $this->getContainer()->get('sulu_media.type_manager');
         $counter = 0;
-        /** @var Media $media */
+        /** @var MediaInterface $media */
         foreach ($medias as $media) {
             /** @var File $file */
             foreach ($media->getFiles() as $file) {

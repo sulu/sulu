@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/webspace/webspace" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:webspace="http://schemas.sulu.io/webspace/webspace"
+           xmlns="http://schemas.sulu.io/webspace/webspace">
+    <xs:complexType name="webspaceType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="name"/>
+            <xs:element name="key">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[a-z0-9_-]+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element type="security" name="security" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="localizationsType" name="localizations"/>
+            <xs:element type="segmentsType" name="segments" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="theme" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="defaultTemplatesType" name="default-templates" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="templatesType" name="templates" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="navigationType" name="navigation"/>
+            <xs:element type="resource-locatorType" name="resource-locator" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="portalsType" name="portals"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="security">
+        <xs:sequence>
+            <xs:element type="xs:string" name="system" maxOccurs="1" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="localizationsType">
+        <xs:sequence>
+            <xs:element type="localizationType" name="localization" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="localizationType" mixed="true">
+        <xs:sequence>
+            <xs:element type="localizationType" name="localization" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="language" use="required"/>
+        <xs:attribute type="xs:string" name="country" use="optional"/>
+        <xs:attribute type="xs:boolean" name="default" use="optional"/>
+        <xs:attribute type="xs:boolean" name="x-default" use="optional"/>
+        <xs:attribute name="shadow" use="optional">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="auto"/>
+                    <xs:enumeration value="none"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="segmentsType">
+        <xs:sequence>
+            <xs:element type="segmentType" name="segment" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="segmentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="optional"/>
+                <xs:attribute type="xs:boolean" name="default" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="navigationType">
+        <xs:sequence>
+            <xs:element type="navigationContextsType" name="contexts" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="navigationContextsType">
+        <xs:sequence>
+            <xs:element type="navigationContextType" name="context" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="navigationContextType">
+        <xs:sequence>
+            <xs:element name="meta">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element type="langType" name="title"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+
+        <xs:attribute name="key" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="langType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="lang" use="required" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="resource-locatorType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="strategy"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="portalsType">
+        <xs:sequence>
+            <xs:element type="portalType" name="portal" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="portalType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="name"/>
+            <xs:element type="xs:string" name="key"/>
+            <xs:element type="localizationsType" name="localizations" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="environmentsType" name="environments"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="defaultTemplatesType">
+        <xs:sequence>
+            <xs:element type="defaultTemplateType" name="default-template" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="defaultTemplateType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="templatesType">
+        <xs:sequence>
+            <xs:element type="templateType" name="template" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="templateType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="environmentsType">
+        <xs:sequence>
+            <xs:element type="environmentType" name="environment" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="environmentType">
+        <xs:sequence>
+            <xs:element type="urlsType" name="urls"/>
+            <xs:element type="customUrlsType" name="custom-urls" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="type" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="urlsType">
+        <xs:sequence>
+            <xs:element type="urlType" name="url" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="urlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="language" use="optional"/>
+                <xs:attribute type="xs:string" name="country" use="optional"/>
+                <xs:attribute type="xs:string" name="segment" use="optional"/>
+                <xs:attribute type="xs:string" name="redirect" use="optional"/>
+                <xs:attribute type="xs:boolean" name="main" use="optional"/>
+                <xs:attribute type="xs:string" name="analytics-key" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="customUrlsType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="custom-url" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="webspace" type="webspaceType">
+        <xs:unique name="uniqueTemplateTypes">
+            <xs:selector xpath="./webspace:templates/webspace:template"/>
+            <xs:field xpath="@type"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -13,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Twig;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension;
 
@@ -154,5 +156,24 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $result[0]->getId());
         $this->assertEquals(3, $result[1]->getId());
         $this->assertEquals(2, $result[2]->getId());
+    }
+
+    public function testResolveNullMedia()
+    {
+        $mediaManager = $this->prophesize(MediaManagerInterface::class);
+        $extension = new MediaTwigExtension($mediaManager->reveal());
+
+        $this->assertNull($extension->resolveMediaFunction(null, 'en'));
+    }
+
+    public function testResolveNotExistMedia()
+    {
+        $mediaManager = $this->prophesize(MediaManagerInterface::class);
+        $extension = new MediaTwigExtension($mediaManager->reveal());
+        $mediaManager->getById(404, 'en')->will(function($args) {
+            throw new MediaNotFoundException($args[0]);
+        });
+
+        $this->assertNull($extension->resolveMediaFunction(404, 'en'));
     }
 }

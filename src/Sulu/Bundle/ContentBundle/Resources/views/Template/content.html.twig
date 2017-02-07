@@ -16,7 +16,8 @@
                         'webspaceKey': webspaceKey,
                         'languageCode': languageCode,
                         'userLocale': userLocale,
-                        'title': false
+                        'title': false,
+                        'uuid':uuid
                         } only %}
                     </div>
                 </div>
@@ -25,7 +26,24 @@
     {% endif %}
 
     <div class="fixed-width">
+        <div class="grid-row">
+        {# initialize columns #}
+        {% set columns = 0 %}
         {% for property in template.properties if property != firstSection %}
+
+            {# set propertyColspan with default if colspan is not set #}
+            {% set propertyColspan = property.colspan != "" ? property.colspan : 12 %}
+
+            {# create new row if there are more then 12 colspans in a row #}
+            {% if columns + propertyColspan <= 12 %}
+                {# set current amount of colspans #}
+                {% set columns = columns + propertyColspan %}
+            {% else %}
+                </div>
+                <div class="grid-row">
+                {# set current amount of colspans #}
+                {% set columns = propertyColspan %}
+            {% endif %}
 
             {# get params for property #}
             {% set params = sulu_get_params(property) %}
@@ -38,7 +56,8 @@
                 'webspaceKey': webspaceKey,
                 'languageCode': languageCode,
                 'userLocale': userLocale,
-                'title': true
+                'title': true,
+                'uuid':uuid
                 } only %}
             {% else %}
                 {# get type for property #}
@@ -52,7 +71,8 @@
                     'id': property.name,
                     'webspaceKey': webspaceKey,
                     'languageCode': languageCode,
-                    'userLocale': userLocale
+                    'userLocale': userLocale,
+                    'uuid':uuid
                     } only %}
                 {% elseif property is multiple %}
                     {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {
@@ -62,7 +82,8 @@
                     'id': property.name,
                     'webspaceKey': webspaceKey,
                     'languageCode': languageCode,
-                    'userLocale': userLocale
+                    'userLocale': userLocale,
+                    'uuid':uuid
                     } only %}
                 {% else %}
                     {% include 'SuluContentBundle:Template:macros/single.html.twig' with {
@@ -72,11 +93,13 @@
                     'id': property.name,
                     'webspaceKey': webspaceKey,
                     'languageCode': languageCode,
-                    'userLocale': userLocale
+                    'userLocale': userLocale,
+                    'uuid':uuid
                     } only %}
                 {% endif %}
             {% endif %}
         {% endfor %}
+        </div>
     </div>
 </form>
 

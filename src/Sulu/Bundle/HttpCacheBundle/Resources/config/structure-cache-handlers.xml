@@ -3,42 +3,36 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="sulu_http_cache.handler.aggregate.class">Sulu\Component\HttpCache\Handler\AggregateHandler</parameter>
-        <parameter key="sulu_http_cache.handler.tags.class">Sulu\Component\HttpCache\Handler\TagsHandler</parameter>
-        <parameter key="sulu_http_cache.handler.paths.class">Sulu\Component\HttpCache\Handler\PathsHandler</parameter>
-        <parameter key="sulu_http_cache.handler.public.class">Sulu\Component\HttpCache\Handler\PublicHandler</parameter>
-        <parameter key="sulu_http_cache.handler.debug.class">Sulu\Component\HttpCache\Handler\DebugHandler</parameter>
-    </parameters>
-
     <services>
 
-        <service id="sulu_http_cache.handler.aggregate" class="%sulu_http_cache.handler.aggregate.class%">
+        <service id="sulu_http_cache.handler.aggregate" class="Sulu\Component\HttpCache\Handler\AggregateHandler">
             <argument type="collection" />
             <argument type="service" id="logger" />
         </service>
 
-        <service id="sulu_http_cache.handler.tags" class="%sulu_http_cache.handler.tags.class%">
+        <service id="sulu_http_cache.handler.tags" class="Sulu\Component\HttpCache\Handler\TagsHandler">
             <argument type="service" id="sulu_http_cache.proxy_client"/>
             <argument type="service" id="sulu.content.type_manager" />
             <tag name="sulu_http_cache.handler" alias="tags" />
         </service>
 
-        <service id="sulu_http_cache.handler.paths" class="%sulu_http_cache.handler.paths.class%">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        <service id="sulu_http_cache.handler.url" class="Sulu\Component\HttpCache\Handler\UrlHandler">
             <argument type="service" id="sulu_http_cache.proxy_client"/>
-            <argument>%kernel.environment%</argument>
-            <tag name="sulu_http_cache.handler" alias="paths" />
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
+            <tag name="sulu_http_cache.handler" alias="url" />
         </service>
 
-        <service id="sulu_http_cache.handler.public" class="%sulu_http_cache.handler.public.class%">
+        <service id="sulu_http_cache.handler.public" class="Sulu\Component\HttpCache\Handler\PublicHandler">
+            <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument>%sulu_http_cache.handler.public.max_age%</argument>
             <argument>%sulu_http_cache.handler.public.shared_max_age%</argument>
             <argument>%sulu_http_cache.handler.public.use_page_ttl%</argument>
             <tag name="sulu_http_cache.handler" alias="public" />
         </service>
 
-        <service id="sulu_http_cache.handler.debug" class="%sulu_http_cache.handler.debug.class%">
+        <service id="sulu_http_cache.handler.debug" class="Sulu\Component\HttpCache\Handler\DebugHandler">
+            <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument>%sulu_http_cache.handler.aggregate.handlers%</argument>
             <argument>%sulu_http_cache.proxy_client.name%</argument>
             <tag name="sulu_http_cache.handler" alias="debug" />

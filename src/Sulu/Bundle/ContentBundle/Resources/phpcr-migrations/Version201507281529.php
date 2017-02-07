@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -72,7 +72,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                         if (true === $directionUp) {
                             $node->setProperty(
                                 $templatePropertyName,
-                                $webspace->getTheme()->getDefaultTemplate('page')
+                                $webspace->getDefaultTemplate('page')
                             );
                         } else {
                             $node->setProperty($templatePropertyName, 'external-link');

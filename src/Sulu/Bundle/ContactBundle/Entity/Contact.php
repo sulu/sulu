@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,9 +19,9 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -225,7 +225,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $bankAccounts;
 
     /**
-     * @var Media
+     * @var MediaInterface
      */
     protected $avatar;
 
@@ -930,7 +930,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function addMedia(Media $media)
+    public function addMedia(MediaInterface $media)
     {
         $this->medias[] = $media;
     }
@@ -938,7 +938,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeMedia(Media $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->medias->removeElement($media);
     }
@@ -962,7 +962,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function addCategory(Category $category)
+    public function addCategory(CategoryInterface $category)
     {
         $this->categories[] = $category;
 
@@ -972,7 +972,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeCategory(Category $category)
+    public function removeCategory(CategoryInterface $category)
     {
         $this->categories->removeElement($category);
     }
@@ -1017,7 +1017,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function toArray()
     {
         return [
-            'id' => $this->getLastName(),
+            'id' => $this->getId(),
             'firstName' => $this->getFirstName(),
             'middleName' => $this->getMiddleName(),
             'lastName' => $this->getLastName(),

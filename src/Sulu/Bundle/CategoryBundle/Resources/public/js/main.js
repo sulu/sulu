@@ -12,11 +12,18 @@ require.config({
         sulucategory: '../../sulucategory/js',
         sulucategorycss: '../../sulucategory/css',
 
-        "type/categoryList": '../../sulucategory/js/validation/types/categoryList'
+        'services/sulucategory/category-manager': '../../sulucategory/js/services/category-manager',
+        'services/sulucategory/category-router': '../../sulucategory/js/services/category-router',
+
+        'type/categoryList': '../../sulucategory/js/validation/types/categoryList'
     }
 });
 
-define(['config', 'css!sulucategorycss/main'], function(Config) {
+define([
+    'config',
+    'services/sulucategory/category-router',
+    'css!sulucategorycss/main'
+], function(Config, CategoryRouter) {
     return {
 
         name: "SuluCategoryBundle",
@@ -25,90 +32,71 @@ define(['config', 'css!sulucategorycss/main'], function(Config) {
 
             'use strict';
 
-            var sandbox = app.sandbox,
-                CATEGORIES_LOCALE = 'categoryLocale',
+            var CATEGORIES_LOCALE = 'categoryLocale',
                 getLocale = function() {
-                    return sandbox.sulu.getUserSetting(CATEGORIES_LOCALE) || sandbox.sulu.user.locale;
-                },
-                toList = function(locale) {
-                    sandbox.emit('sulu.router.navigate', 'settings/categories/' + locale, false, false);
-                },
-                toEdit = function(locale, id, content) {
-                    sandbox.emit('sulu.router.navigate', 'settings/categories/' + locale + '/edit:' + id + '/' + content, false, false);
-                },
-                toNew = function(locale, content, parent) {
-                    sandbox.emit('sulu.router.navigate', 'settings/categories/' + locale + '/new/' + (!!parent ? parent + '/' : '') + content, false, false);
+                    return app.sandbox.sulu.getUserSetting(CATEGORIES_LOCALE)
+                        || app.sandbox.sulu.getDefaultContentLocale();
                 };
 
             Config.set('sulu_category.user_settings.category_locale', CATEGORIES_LOCALE);
 
+            app.sandbox.urlManager.setUrl('category', 'settings/categories/<%= locale %>/edit:<%= id %>/details');
+
             app.components.addSource('sulucategory', '/bundles/sulucategory/js/components');
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories',
                 callback: function() {
-                    var locale = getLocale();
-                    toList(locale);
-
-                    return '<div data-aura-component="categories@sulucategory" data-aura-display="list" data-aura-locale="' + locale + '"/>';
+                    return CategoryRouter.toList(getLocale());
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/:locale',
                 callback: function(locale) {
                     return '<div data-aura-component="categories@sulucategory" data-aura-display="list" data-aura-locale="' + locale + '"/>';
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/new/:parent/:content',
                 callback: function(parent, content) {
-                    var locale = getLocale();
-                    toNew(locale, content, parent);
-
-                    return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-parent="' + parent + '" data-aura-locale="' + locale + '"/>';
+                    return CategoryRouter.toNew(getLocale(), content, parent);
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/:locale/new/:parent/:content',
                 callback: function(locale, parent) {
                     return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-parent="' + parent + '" data-aura-locale="' + locale + '"/>';
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/new/:content',
                 callback: function(content) {
-                    var locale = getLocale();
-                    toNew(locale, content);
-
-                    return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-locale="' + locale + '"/>';
+                    return CategoryRouter.toNew(getLocale(), content);
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/:locale/new/:content',
-                callback: function(locale) {
-                    return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-locale="' + locale + '"/>';
+                callback: function(locale, content) {
+                    return '<div data-aura-component="categories/edit@sulucategory" data-aura-content="' + content + '" data-aura-locale="' + locale + '"/>';
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/edit::id/:content',
                 callback: function(id, content) {
-                    var locale = getLocale();
-                    toEdit(locale, id, content);
-
-                    return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-id="' + id + '" data-aura-locale="' + locale + '"/>';
+                    return CategoryRouter.toEdit(getLocale(), id, content);
                 }
             });
 
-            sandbox.mvc.routes.push({
+            app.sandbox.mvc.routes.push({
                 route: 'settings/categories/:locale/edit::id/:content',
-                callback: function(locale, id) {
-                    return '<div data-aura-component="categories@sulucategory" data-aura-display="edit" data-aura-id="' + id + '" data-aura-locale="' + locale + '"/>';
+                callback: function(locale, id, content) {
+                    return '<div data-aura-component="categories/edit@sulucategory" data-aura-id="' + id + '" data-aura-content="' + content + '" data-aura-locale="' + locale + '"/>';
                 }
             });
         }

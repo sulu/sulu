@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webspace xmlns="http://schemas.sulu.io/webspace/webspace"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>Massive Art</name>
     <key>massiveart</key>
@@ -18,13 +18,12 @@
         <segment key="s" default="true">summer</segment>
     </segments>
 
-    <theme>
-        <key>massiveart</key>
-        <default-templates>
-            <default-template type="page">default</default-template>
-            <default-template type="homepage">overview</default-template>
-        </default-templates>
-    </theme>
+    <theme>massiveart</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
 
     <navigation>
         <contexts>
@@ -43,16 +42,19 @@
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
             <name>Massive Art US</name>
             <key>massiveart_us</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="en" country="us"/>
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca"/>
             </localizations>
 
             <environments>
@@ -71,9 +73,6 @@
         <portal>
             <name>Massive Art CA</name>
             <key>massiveart_ca</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
 
             <localizations>
                 <localization language="en" country="ca"/>

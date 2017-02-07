@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,20 +12,13 @@
 namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 class SuluCollector extends DataCollector
 {
-    protected $requestAnalyzer;
-
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer)
-    {
-        $this->requestAnalyzer = $requestAnalyzer;
-    }
-
     public function data($key)
     {
         return $this->data[$key];
@@ -33,15 +26,20 @@ class SuluCollector extends DataCollector
 
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $requestAnalyzer = $this->requestAnalyzer;
+        if (!$request->attributes->has('_sulu')) {
+            return;
+        }
 
-        $webspace = $requestAnalyzer->getWebspace();
-        $portal = $requestAnalyzer->getPortal();
-        $segment = $requestAnalyzer->getSegment();
+        /** @var RequestAttributes $requestAttributes */
+        $requestAttributes = $request->attributes->get('_sulu');
 
-        $this->data['match_type'] = $requestAnalyzer->getMatchType();
-        $this->data['redirect'] = $requestAnalyzer->getRedirect();
-        $this->data['portal_url'] = $requestAnalyzer->getPortalUrl();
+        $webspace = $requestAttributes->getAttribute('webspace');
+        $portal = $requestAttributes->getAttribute('portal');
+        $segment = $requestAttributes->getAttribute('segment');
+
+        $this->data['match_type'] = $requestAttributes->getAttribute('matchType');
+        $this->data['redirect'] = $requestAttributes->getAttribute('redirect');
+        $this->data['portal_url'] = $requestAttributes->getAttribute('portalUrl');
 
         if ($webspace) {
             $this->data['webspace'] = $webspace->toArray();
@@ -55,9 +53,9 @@ class SuluCollector extends DataCollector
             $this->data['segment'] = $segment->toArray();
         }
 
-        $this->data['localization'] = $requestAnalyzer->getCurrentLocalization();
-        $this->data['resource_locator'] = $requestAnalyzer->getResourceLocator();
-        $this->data['resource_locator_prefix'] = $requestAnalyzer->getResourceLocatorPrefix();
+        $this->data['localization'] = $requestAttributes->getAttribute('localization');
+        $this->data['resource_locator'] = $requestAttributes->getAttribute('resourceLocator');
+        $this->data['resource_locator_prefix'] = $requestAttributes->getAttribute('resourceLocatorPrefix');
 
         $structure = null;
         if ($request->attributes->has('_route_params')) {

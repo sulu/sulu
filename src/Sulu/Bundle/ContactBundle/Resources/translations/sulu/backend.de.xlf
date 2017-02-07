@@ -524,6 +524,10 @@
                 <source>contact.address.number</source>
                 <target>Nummer</target>
             </trans-unit>
+            <trans-unit id="588849ca29af69fb11e87e00fc749ede" resname="contact.address.address-line">
+                <source>contact.address.address-line</source>
+                <target>Addresszeile</target>
+            </trans-unit>
             <trans-unit id="892c81dcb8e0d2de200e48faa929bff2" resname="contact.address.additional">
                 <source>contact.address.additional</source>
                 <target>Haus, Stock, etc.</target>
@@ -559,6 +563,10 @@
             <trans-unit id="425b1432d76660a3e434s2e9335a8d5d" resname="contact.accounts.documents-removed">
                 <source>contact.accounts.documents-removed</source>
                 <target>Dokumente entfernt</target>
+            </trans-unit>
+            <trans-unit id="435b147223ft60a3essds2e9335a8d5d" resname="contact.accounts.documents-saved">
+                <source>contact.accounts.documents-saved</source>
+                <target>Dokumente gespeichert</target>
             </trans-unit>
             <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
                 <source>contact.accounts.deleted</source>
@@ -596,6 +604,10 @@
                 <source>contact.contacts.document-added</source>
                 <target>Dokument hinzugefügt</target>
             </trans-unit>
+            <trans-unit id="435b1472d76660a3e3z5e2e9335a8d5d" resname="contact.contacts.documents-saved">
+                <source>contact.contacts.documents-saved</source>
+                <target>Dokumente gespeichert</target>
+            </trans-unit>
             <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
                 <source>contact.address.countryCode</source>
                 <target>Land</target>
@@ -610,19 +622,27 @@
             </trans-unit>
             <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
                 <source>contact.contacts.avatar-dropzone-text</source>
-                <target>Bild ablegen oder Klicken um das Avatar zu ändern</target>
+                <target>Bild ablegen oder klicken um das Avatar zu ändern</target>
             </trans-unit>
             <trans-unit id="235b14f26g7593a3e44gs2e9335a8d5d" resname="contact.accounts.logo-dropzone-text">
                 <source>contact.accounts.logo-dropzone-text</source>
-                <target>Bild ablegen oder Klicken um das Logo zu ändern</target>
+                <target>Bild ablegen oder klicken um das Logo zu ändern</target>
             </trans-unit>
             <trans-unit id="235b14f26g712345e44gs2e9335a8d50" resname="contact-selection.no-contact-selected">
                 <source>contact-selection.no-contact-selected</source>
-                <target>Keine Kontakt ausgewählt</target>
+                <target>Keine Kontakte ausgewählt</target>
             </trans-unit>
             <trans-unit id="235b14f26g712345e44gs2e9335a8d51" resname="contact-selection.add">
                 <source>contact-selection.add</source>
-                <target>Kontakt auswählen</target>
+                <target>Kontakte auswählen</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="user.enable">
+                <source>user.enable</source>
+                <target>Benutzer aktivieren</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="labels.success.user.activated">
+                <source>labels.success.user.activated</source>
+                <target>Benutzer aktiviert</target>
             </trans-unit>
         </body>
     </file>

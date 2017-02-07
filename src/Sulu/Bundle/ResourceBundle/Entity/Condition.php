@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -66,7 +67,7 @@ class Condition
     /**
      * Get field.
      *
-     * @return string 
+     * @return string
      */
     public function getField()
     {
@@ -90,7 +91,7 @@ class Condition
     /**
      * Get operator.
      *
-     * @return string 
+     * @return string
      */
     public function getOperator()
     {
@@ -114,7 +115,7 @@ class Condition
     /**
      * Get type.
      *
-     * @return int 
+     * @return int
      */
     public function getType()
     {
@@ -138,7 +139,7 @@ class Condition
     /**
      * Get value.
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -148,7 +149,7 @@ class Condition
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -172,7 +173,7 @@ class Condition
     /**
      * Get conditionGroup.
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup
      */
     public function getConditionGroup()
     {

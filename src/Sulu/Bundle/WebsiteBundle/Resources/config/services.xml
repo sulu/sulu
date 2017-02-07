@@ -7,7 +7,6 @@
         <parameter key="sulu_website.admin.class">Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin</parameter>
         <parameter key="sulu_website.navigation_mapper.class">Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper</parameter>
         <parameter key="sulu_website.sitemap.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator</parameter>
-        <parameter key="sulu_website.sitemap_xml_generator.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapXMLGenerator</parameter>
         <parameter key="sulu_website.twig.content_path.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension</parameter>
         <parameter key="sulu_website.twig.navigation.class">Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension</parameter>
         <parameter key="sulu_website.twig.navigation.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension</parameter>
@@ -31,7 +30,10 @@
     <services>
         <!-- website admin -->
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu_security.security_checker" />
             <argument type="string">%sulu_admin.name%</argument>
+
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -39,6 +41,7 @@
         <!-- navigation mapper -->
         <service id="sulu_website.navigation_mapper.query_builder" class="%sulu_website.navigation_mapper.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_content.extension.manager"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
@@ -52,6 +55,7 @@
         <!-- sitemap generator -->
         <service id="sulu_website.sitemap.query_builder" class="%sulu_website.sitemap.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_content.extension.manager"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_website.sitemap" class="%sulu_website.sitemap.class%">
@@ -60,13 +64,9 @@
             <argument type="service" id="sulu_website.sitemap.query_builder"/>
             <argument>%kernel.environment%</argument>
         </service>
-        <service id="sulu_website.sitemap_xml_generator" class="%sulu_website.sitemap_xml_generator.class%">
-            <argument type="service" id="twig" />
-        </service>
 
         <!-- twig extension: content path -->
         <service id="sulu_website.twig.content_path" class="%sulu_website.twig.content_path.class%">
-            <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
@@ -129,6 +129,7 @@
         <service id="sulu_website.twig.seo" class="%sulu_website.twig.seo.class%">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.twig.content_path"/>
+            <argument type="service" id="request_stack"/>
 
             <tag name="twig.extension"/>
         </service>
@@ -140,23 +141,28 @@
 
         <!-- portal loader -->
         <service id="sulu_website.routing.portal_loader" class="%sulu_website.routing.portal_loader.class%">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument>%kernel.environment%</argument>
             <tag name="routing.loader"/>
         </service>
 
         <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%">
             <argument type="service" id="sulu.content.type_manager" />
-            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_content.extension.manager"/>
         </service>
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
             <argument>%kernel.environment%</argument>
-            <argument type="collection">
-                <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analytics_key%</argument>
-            </argument>
+        </service>
+
+        <service id="sulu_website.resolver.template_attribute"
+                 class="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.request_analyzer"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="router"/>
+            <argument type="service" id="request_stack"/>
+            <argument>%kernel.environment%</argument>
         </service>
 
         <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%">
@@ -164,13 +170,69 @@
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
         </service>
 
+        <service id="sulu_website.routing.request_listener" class="Sulu\Bundle\WebsiteBundle\Routing\RequestListener">
+            <argument type="service" id="router"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onRequest" />
+        </service>
+
         <!-- exception controller -->
-        <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
+        <service id="sulu_website.exception_controller"
+                 decorates="twig.controller.exception"
+                 class="Sulu\Bundle\WebsiteBundle\Controller\ExceptionController">
+            <argument type="service" id="sulu_website.exception_controller.inner"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.parameter" />
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
-            <argument type="service" id="sulu_website.resolver.parameter" />
-            <argument type="service" id="sulu.content.mapper" />
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.exception.controller" alias="twig.controller.exception">
+            <deprecated>The "%service_id%" service is deprecated since 1.5. Use "twig.controller.exception" instead</deprecated>
+
+            <argument type="service" id="twig.controller.exception"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+            <argument type="service" id="sulu_website.resolver.parameter"/>
+            <argument type="service" id="twig"/>
+            <argument>%kernel.debug%</argument>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <!-- cache clearer -->
+        <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer">
+            <argument type="service" id="filesystem"/>
+            <argument type="string">%kernel.environment%</argument>
+            <argument type="string">%kernel.root_dir%</argument>
+            <argument type="service" id="request_stack"/>
+            <argument type="expression">container.hasParameter('kernel.var_dir') ? parameter('kernel.var_dir') : null</argument>
+            <argument type="service" id="sulu_http_cache.proxy_client" on-invalid="null"/>
+        </service>
+
+        <service id="sulu_website.translator.request_analyzer"
+                 class="Sulu\Bundle\WebsiteBundle\Translator\RequestAnalyzerTranslator" decorates="translator">
+            <argument type="service" id="sulu_website.translator.request_analyzer.inner"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+
+        <service id="sulu_website.router_listener"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\RouterListener"
+                 decorates="router_listener">
+            <argument type="service" id="sulu_website.router_listener.inner"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_website.event_listener.translator"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener">
+            <argument type="service" id="translator"/>
+
+            <tag name="kernel.event_listener" event="%sulu_preview.events.pre-render%"
+                 method="setLocaleOnPreviewPreRender"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

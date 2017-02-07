@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,10 +15,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Routing\Route;
 
-/**
- */
 class LocalFormatCache implements FormatCacheInterface
 {
     /**
@@ -48,9 +45,6 @@ class LocalFormatCache implements FormatCacheInterface
 
     public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
     {
-        /*
-         * @var Route
-         */
         $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;
@@ -61,7 +55,7 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function save($tmpPath, $id, $fileName, $options, $format)
+    public function save($content, $id, $fileName, $options, $format)
     {
         $savePath = $this->getPath($this->path, $id, $fileName, $format);
         if (!is_dir(dirname($savePath))) {
@@ -69,7 +63,7 @@ class LocalFormatCache implements FormatCacheInterface
         }
 
         try {
-            $this->filesystem->copy($tmpPath, $savePath);
+            $this->filesystem->dumpFile($savePath, $content);
         } catch (IOException $ioException) {
             return false;
         }
@@ -83,7 +77,7 @@ class LocalFormatCache implements FormatCacheInterface
     public function purge($id, $fileName, $options)
     {
         foreach ($this->formats as $format) {
-            $path = $this->getPath($this->path, $id, $fileName, $format['name']);
+            $path = $this->getPath($this->path, $id, $fileName, $format['key']);
             $this->filesystem->remove($path);
         }
 
@@ -93,14 +87,35 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function getMediaUrl($id, $fileName, $options, $format, $version)
+    public function getMediaUrl($id, $fileName, $options, $format, $version, $subVersion)
     {
-        return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version);
+        return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version, $subVersion);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clear()
+    {
+        $realCacheDir = $this->path;
+        $oldCacheDir = $realCacheDir . '_old';
+
+        if (!is_writable($realCacheDir)) {
+            throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $realCacheDir));
+        }
+
+        if ($this->filesystem->exists($oldCacheDir)) {
+            $this->filesystem->remove($oldCacheDir);
+        }
+
+        $this->filesystem->rename($realCacheDir, $oldCacheDir);
+        $this->filesystem->mkdir($realCacheDir);
+        $this->filesystem->remove($oldCacheDir);
     }
 
     /**
      * @param string $prePath
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
      * @param string $format
      *
@@ -116,19 +131,24 @@ class LocalFormatCache implements FormatCacheInterface
 
     /**
      * @param string $prePath
-     * @param int    $id
+     * @param int $id
      * @param string $fileName
      * @param string $format
      * @param string $version
+     * @param string $subVersion
      *
      * @return string
      */
-    protected function getPathUrl($prePath, $id, $fileName, $format, $version = '')
+    protected function getPathUrl($prePath, $id, $fileName, $format, $version = '', $subVersion = '')
     {
         $segment = $this->getSegment($id) . '/';
         $prePath = rtrim($prePath, '/');
 
-        return str_replace('{slug}', $format . '/' . $segment . $id . '-' . rawurlencode($fileName), $prePath) . ($version != '' ? '?v=' . $version : '');
+        return str_replace(
+            '{slug}',
+            $format . '/' . $segment . $id . '-' . rawurlencode($fileName),
+            $prePath
+        ) . '?v=' . $version . '-' . $subVersion;
     }
 
     /**

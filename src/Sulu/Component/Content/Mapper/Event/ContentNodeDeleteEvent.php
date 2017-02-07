@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,6 +19,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This event is thrown when a node is deleted.
+ *
+ * @deprecated use events of DocumentManager instead
  */
 class ContentNodeDeleteEvent extends Event
 {

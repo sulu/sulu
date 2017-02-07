@@ -1,13 +1,13 @@
-<?php
+{% import _self as self %}<?php
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -47,7 +47,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0->setDefault('{{ localization.default }}');
         $localization0->setXDefault('{{ localization.xDefault }}');
 {% for childLocalization in localization.children %}
-{{ _self.create_localizations(childLocalization, 1, 0, webspace) }}
+{{ self.create_localizations(childLocalization, 1, 0, webspace) }}
 {% endfor %}
         $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization0;
         $webspace->addLocalization($localization0);
@@ -62,17 +62,21 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% endfor %}
         // add theme
-        $theme = new Theme();
-        $theme->setKey('{{ webspace.theme.key }}');
-{% for code,template in webspace.theme.errorTemplates %}        $theme->addErrorTemplate({{ (code=='default'?"'default'":code)|raw }}, '{{ template }}');
+{% if webspace.theme != null %}
+        $webspace->setTheme('{{ webspace.theme }}');
+{% endif %}
+
+
+{% for type,template in webspace.templates %}        $webspace->addTemplate('{{ type|raw }}', '{{ template }}');
 {% endfor %}
-{% for type,template in webspace.theme.defaultTemplates %}        $theme->addDefaultTemplate('{{ type }}', '{{ template }}');
-{% endfor %}        $webspace->setTheme($theme);
+{% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
+{% endfor %}
 
         // add navigation
         $navigation = new Navigation();
-{% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ _self.renderArray(context.metadata) }}));
+{% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ self.renderArray(context.metadata) }}));
 {% endfor %}        $webspace->setNavigation($navigation);
+        $webspace->setResourceLocatorStrategy('{{ webspace.resourceLocator.strategy }}');
 
 {% for portal in webspace.portals %}
 
@@ -80,7 +84,6 @@ class {{ cache_class }} extends {{ base_class }}
         $portal = new Portal();
         $portal->setName('{{ portal.name }}');
         $portal->setKey('{{ portal.key }}');
-        $portal->setResourceLocatorStrategy('{{ portal.resourceLocator.strategy }}');
         $portal->setWebspace($webspace);
 {% for localization in portal.localizations %}
 
@@ -107,8 +110,12 @@ class {{ cache_class }} extends {{ base_class }}
         $url->setCountry('{{ url.country }}');
         $url->setSegment('{{ url.segment }}');
         $url->setRedirect('{{ url.redirect }}');
+        $url->setMain({{ url.main?'true':'false' }});
         $url->setAnalyticsKey('{{ url.analyticsKey }}');
         $environment->addUrl($url);
+{% endfor %}
+{% for customUrl in environment.customUrls %}
+        $environment->addCustomUrl(new CustomUrl('{{ customUrl.url }}'));
 {% endfor %}
 
         $portal->addEnvironment($environment);
@@ -149,10 +156,21 @@ class {{ cache_class }} extends {{ base_class }}
             null,
 {% endif %}
 {% if portalInformation.analyticsKey %}
-            '{{ portalInformation.analyticsKey }}'
+            '{{ portalInformation.analyticsKey }}',
 {% else %}
-            null
+            null,
 {% endif %}
+{% if portalInformation.main %}
+            true,
+{% else %}
+            false,
+{% endif %}
+{% if portalInformation.urlExpression %}
+            '{{ portalInformation.urlExpression }}',
+{% else %}
+            null,
+{% endif %}
+            {{ portalInformation.priority }}
         );
 
 {% endfor %}
@@ -164,11 +182,11 @@ class {{ cache_class }} extends {{ base_class }}
     }
 }
 
-{% macro renderArray(array) %}
+{% macro renderArray(array) %}{% import _self as self %}
     array(
     {% for key, value in array %}
         {% if is_array(value) %}
-            '{{ key }}' => {{ _self.renderArray(value) }},
+            '{{ key }}' => {{ self.renderArray(value) }},
         {% else %}
             '{{ key }}' => '{{ value }}',
         {% endif %}
@@ -176,7 +194,7 @@ class {{ cache_class }} extends {{ base_class }}
     )
 {% endmacro %}
 
-{% macro create_localizations(localization, count, parent, webspace) %}
+{% macro create_localizations(localization, count, parent, webspace) %}{% import _self as self %}
     // parent id {{ parent }}
     $localization{{ count }} = new Localization();
     $localization{{ count }}->setLanguage('{{ localization.language }}');
@@ -189,7 +207,7 @@ class {{ cache_class }} extends {{ base_class }}
     $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization{{ count }};
 
     {% for childLocalization in localization.children %}
-        {{ _self.create_localizations(childLocalization, count + 1, count) }}
+        {{ self.create_localizations(childLocalization, count + 1, count) }}
     {% endfor %}
     $localization{{ count - 1 }}->addChild($localization{{ count }});
 {% endmacro %}

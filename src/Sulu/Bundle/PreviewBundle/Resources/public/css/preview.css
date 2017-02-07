@@ -1,0 +1,43 @@
+/*----------------------------------------*/
+/* line 5, ../scss/preview.scss */
+body {
+  color: #fff;
+  background: #999;
+}
+
+/* line 10, ../scss/preview.scss */
+h1 {
+  color: #fff;
+  font-size: 22px;
+  line-height: 30px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+/* line 18, ../scss/preview.scss */
+h2 {
+  color: #fff;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+/* line 25, ../scss/preview.scss */
+div.container {
+  width: 75%;
+  margin: 120px auto;
+  text-align: center;
+}
+
+/* line 32, ../scss/preview.scss */
+.fa {
+  display: inline-block;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 110px;
+}
+
+/* line 40, ../scss/preview.scss */
+.fa-eye-slash:before {
+  content: "\f070";
+}

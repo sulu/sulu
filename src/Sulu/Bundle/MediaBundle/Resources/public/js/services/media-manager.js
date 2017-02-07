@@ -48,19 +48,22 @@ define([
          * Move media to collection
          * @param mediaId media to move
          * @param collectionId collection to move media to
+         * @param locale the locale for the return value of the collection
          * @returns {*}
          */
-        moveMedia = function(mediaId, collectionId) {
+        moveMedia = function(mediaId, collectionId, locale) {
             var promise = $.Deferred();
 
-            Util.save('/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId, 'POST')
-                .done(function() {
-                    Mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
-                    Mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
-                    promise.resolve();
-                }.bind(this)).fail(function() {
-                    promise.reject();
-                }.bind(this));
+            Util.save(
+                '/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId + '&locale=' + locale,
+                'POST'
+            ).done(function() {
+                Mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
+                Mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
+                promise.resolve();
+            }.bind(this)).fail(function() {
+                promise.reject();
+            }.bind(this));
 
 
             return promise;
@@ -96,8 +99,9 @@ define([
     MediaManager.prototype = {
 
         /**
-         * Load media by given id
-         * @param mediaId
+         * Load media by given id.
+         * @param {Number} mediaId
+         * @param {String} locale
          * @returns promise
          */
         loadOrNew: function(mediaId, locale) {
@@ -109,8 +113,13 @@ define([
                 promise.resolve(media.toJSON());
             } else {
                 media = Media.findOrCreate({id: mediaId});
+                media.clear();
+                media.set({id: mediaId});
+
                 media.fetch({
-                    data: (!!locale) ? {locale: locale} : null,
+                    data: {
+                        locale: locale
+                    },
                     success: function(response) {
                         Mediator.emit('sulu.medias.media.loaded', mediaId);
                         promise.resolve(response.toJSON());
@@ -176,9 +185,10 @@ define([
          * Move medias to a collection
          * @param mediaIds
          * @param collectionId
+         * @param locale The locale for the return value of the media
          * @returns {*}
          */
-        move: function(mediaIds, collectionId) {
+        move: function(mediaIds, collectionId, locale) {
             if (!$.isArray(mediaIds)) {
                 mediaIds = [mediaIds];
             }
@@ -187,7 +197,7 @@ define([
                 promise = $.Deferred();
 
             Util.each(mediaIds, function(index, mediaId) {
-                requests.push(moveMedia(mediaId, collectionId));
+                requests.push(moveMedia(mediaId, collectionId, locale));
             }.bind(this));
 
             $.when.apply(null, requests).done(function() {

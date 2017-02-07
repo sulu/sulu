@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -52,7 +52,8 @@ class DataNormalizer
             $data['_embedded'],
             $data['_links'],
             $data['navigation'],
-            $data['id']
+            $data['id'],
+            $data['parentUuid']
         );
 
         $normalized = [
@@ -64,9 +65,8 @@ class DataNormalizer
             'redirectExternal' => self::getAndUnsetValue($data, 'external'),
             'navigationContexts' => self::getAndUnsetValue($data, 'navContexts'),
             'shadowLocale' => self::getAndUnsetValue($data, 'shadowBaseLanguage'),
-            'structureType' => self::getAndUnsetValue($data, 'structureType'),
-            'shadowLocaleEnabled' => self::getAndUnsetValue($data, 'shadowLocaleEnabled') ? true : false,
-            'shadowLocale' => self::getAndUnsetValue($data, 'shadowLocale'),
+            'structureType' => self::getAndUnsetValue($data, 'template'),
+            'shadowLocaleEnabled' => self::getAndUnsetValue($data, 'shadowOn') ? true : false,
             'parent' => self::getAndUnsetValue($data, 'parent'),
             'workflowStage' => self::getAndUnsetValue($data, 'workflowStage'),
             'structure' => $data,

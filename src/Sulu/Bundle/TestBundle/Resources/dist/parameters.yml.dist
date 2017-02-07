@@ -1,0 +1,15 @@
+parameters:
+    database.driver:   pdo_mysql
+    database.host:     localhost
+    database.path:     ~
+    database.user:     root
+    database.name:     sulu_test
+    database.port:     ~
+    database.password: ~
+    database.version:  5.7
+
+    phpcr.transport:   doctrinedbal
+    phpcr.backend_url: http://localhost:8080/server/
+    phpcr.username:    admin
+    phpcr.password:    admin
+    phpcr.workspace:   test

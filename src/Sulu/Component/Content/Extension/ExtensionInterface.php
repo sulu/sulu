@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -67,7 +67,7 @@ interface ExtensionInterface
     /**
      * Returns field mapping for documents with this extension.
      *
-     * @return array field mapping for indexed fields.
+     * @return array field mapping for indexed fields
      */
     public function getFieldMapping();
 }

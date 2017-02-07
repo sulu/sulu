@@ -13,7 +13,11 @@
  * @class MediaSelection
  * @constructor
  */
-define(function() {
+define([
+    'underscore',
+    'services/sulumedia/overlay-manager',
+    'services/sulumedia/user-settings-manager'
+], function(_, OverlayManager, UserSettingsManager) {
 
     'use strict';
 
@@ -21,10 +25,14 @@ define(function() {
             eventNamespace: 'sulu.media-selection',
             thumbnailKey: 'thumbnails',
             thumbnailSize: '50x50',
+            formats: [],
             resultKey: 'media',
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
             types: null,
+            url: '/admin/api/media',
+            navigateEvent: 'sulu.router.navigate',
+            locale: '',
             dataDefault: {
                 displayOption: 'top',
                 ids: []
@@ -38,7 +46,8 @@ define(function() {
                 upload: 'media-selection.upload-new',
                 collection: 'media-selection.upload-to-collection',
                 createNewCollection: 'media-selection.create-new-collection',
-                newCollection: 'media-selection.new-collection'
+                newCollection: 'media-selection.new-collection',
+                crop: 'sulu-media.crop'
             }
         },
 
@@ -59,11 +68,33 @@ define(function() {
         },
 
         templates = {
-            contentItem: function(title, thumbnails) {
-                return [
-                    '   <img src="', thumbnails['50x50'], '"/>',
-                    '   <span class="title">', title, '</span>'
-                ].join('');
+            contentItem: function(id, collection, title, thumbnail, fallbackLocale, type, cropText) {
+                var content = [
+                    '<a href="#" class="media-selection-item link" data-id="', id, '" data-collection="', collection, '">'
+                ];
+
+                if (thumbnail) {
+                    content.push([
+                        '<span class="image">',
+                        '    <img src="', thumbnail, '"/>',
+                        '</span>'
+                    ].join(''));
+                }
+
+                if (fallbackLocale) {
+                    content.push('<div class="badges">');
+                    content.push('    <span class="badge">', fallbackLocale, '</span>');
+                    content.push('</div>');
+                }
+
+                content.push('<span class="title">', title, '</span>');
+                if (type === 'image') {
+                    content.push('<span class="crop"><span class="fa-crop"></span>', cropText, '</span>');
+                }
+
+                content.push('</a>');
+
+                return content.join('');
             }
         },
 
@@ -84,44 +115,47 @@ define(function() {
                 setData.call(this, {ids: ids}, false);
             }, this);
 
-            // add image to the selected images grid
-            this.sandbox.on(
-                'sulu.media-selection-overlay.' + this.options.instanceName + '.record-selected',
-                function(itemId, item) {
-                    var data = this.getData(),
-                        index = data.ids.indexOf(itemId);
-
-                    if (index > -1) {
-                        return;
-                    }
-
-                    data.ids.push(itemId);
-                    this.setData(data, false);
-                    this.addItem(item);
-                }.bind(this)
-            );
-
-            // remove image to the selected images grid
-            this.sandbox.on(
-                'sulu.media-selection-overlay.' + this.options.instanceName + '.record-deselected',
-                function(itemId) {
-                    var data = this.getData(),
-                        index = data.ids.indexOf(itemId);
-
-                    if (index > -1) {
-                        data.ids.splice(index, 1);
-                    }
-
-                    this.setData(data, false);
-                    this.removeItemById(itemId);
-                }.bind(this)
-            );
-
             this.sandbox.on('sulu.media-selection.' + this.options.instanceName + '.add-button-clicked', function() {
+                var items = _.map(this.getData().ids, function(id) {
+                    return {id: id};
+                });
+
                 this.sandbox.emit(
-                    'sulu.media-selection-overlay.' + this.options.instanceName + '.set-selected', this.getData().ids
+                    'sulu.media-selection-overlay.' + this.options.instanceName + '.set-items',
+                    items
                 );
                 this.sandbox.emit('sulu.media-selection-overlay.' + this.options.instanceName + '.open');
+            }.bind(this));
+        },
+
+        /**
+         * Bind events to dom elements
+         */
+        bindDomEvents = function() {
+            this.$el.on('click', '.crop', function(event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                var id = $(event.currentTarget).parents('a').data('id');
+                OverlayManager.startEditMediaOverlay.call(
+                    this,
+                    id,
+                    UserSettingsManager.getMediaLocale(),
+                    'crop',
+                    this.options.formats
+                );
+            }.bind(this));
+
+            this.$el.on('click', 'a.link', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    collection = this.sandbox.dom.data(e.currentTarget, 'collection');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'media/collections/edit:' + collection + '/files/edit:' + id
+                );
+
+                return false;
             }.bind(this));
         },
 
@@ -132,12 +166,31 @@ define(function() {
             var $container = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.start([{
-                name: 'media-selection-overlay@sulumedia',
+                name: 'media-selection/overlay@sulumedia',
                 options: {
                     el: $container,
+                    url: this.options.url,
                     instanceName: this.options.instanceName,
-                    preSelectedIds: this.getData().ids,
-                    types: this.options.types
+                    preSelectedIds: _.map(this.getData().ids, function(id) {
+                        return {id: id};
+                    }),
+                    removeOnClose: false,
+                    autoStart: false,
+                    removeable: false,
+                    types: this.options.types,
+                    locale: this.options.locale,
+                    saveCallback: function(items) {
+                        var data = this.getData();
+                        _.each(data.ids, this.removeItemById.bind(this));
+
+                        data.ids = _.map(items, function(item) {
+                            this.addItem(item);
+
+                            return item.id;
+                        }.bind(this));
+
+                        this.setData(data, false);
+                    }.bind(this)
                 }
             }]);
         },
@@ -177,6 +230,8 @@ define(function() {
             };
 
             bindCustomEvents.call(this);
+            bindDomEvents.call(this);
+
             this.render();
 
             // set display option
@@ -197,12 +252,21 @@ define(function() {
             return [
                 this.options.url,
                 delimiter,
-                this.options.idsParameter, '=', (data.ids || []).join(',')
+                this.options.idsParameter, '=', (data.ids || []).join(','),
+                '&locale=', this.options.locale
             ].join('');
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title, item.thumbnails);
+            return templates.contentItem(
+                item.id,
+                item.collection,
+                item.title,
+                item.thumbnails ? item.thumbnails[this.options.thumbnailSize] : null,
+                item.locale !== this.options.locale ? item.locale : null,
+                item.type,
+                this.sandbox.translate(this.options.translations.crop)
+            );
         },
 
         sortHandler: function(ids) {

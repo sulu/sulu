@@ -10,6 +10,10 @@
                 <source>category.categories.title</source>
                 <target>Kategorien</target>
             </trans-unit>
+            <trans-unit id="143c99ff2964652133a5ca2169f22236" resname="search-overlay.index.category.title">
+                <source>search-overlay.index.category.title</source>
+                <target>Kategorien</target>
+            </trans-unit>
             <trans-unit id="623c99ff2964652633a5ca2169f22236" resname="navigation.settings.categories">
                 <source>navigation.settings.categories</source>
                 <target>Kategorien</target>
@@ -45,6 +49,38 @@
             <trans-unit id="143d99fa2864553633a5ca2169f22236" resname="sulu.category.no-categories-available">
                 <source>sulu.category.no-categories-available</source>
                 <target>Keine Kategorien verfügbar</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11111" resname="sulu.category.keywords">
+                <source>sulu.category.keywords</source>
+                <target>Schlüsselwörter</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11112" resname="sulu.category.keyword">
+                <source>sulu.category.keyword</source>
+                <target>Schlüsselwort</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11113" resname="sulu.category.used-multiple">
+                <source>sulu.category.used-multiple</source>
+                <target>Mehrfachverwendung</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11114" resname="sulu.category.keyword_conflict.title">
+                <source>sulu.category.keyword_conflict.title</source>
+                <target>Schlüsselwort wird mehrfach verwendet</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11115" resname="sulu.category.keyword_conflict.message">
+                <source>sulu.category.keyword_conflict.message</source>
+                <target>Schlüsselwort für alle ändern oder neues Schlüsselwort erstellen?</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11116" resname="sulu.category.keyword_conflict.detach">
+                <source>sulu.category.keyword_conflict.detach</source>
+                <target>Neues Schlüsselwort erstellen</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11117" resname="sulu.category.keyword_conflict.overwrite">
+                <source>sulu.category.keyword_conflict.overwrite</source>
+                <target>Überschreiben</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f11118" resname="sulu.category.medias">
+                <source>sulu.category.medias</source>
+                <target>Medien</target>
             </trans-unit>
         </body>
     </file>

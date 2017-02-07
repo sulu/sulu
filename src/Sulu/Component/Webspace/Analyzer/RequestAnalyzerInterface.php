@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,13 +46,25 @@ interface RequestAnalyzerInterface
     const MATCH_TYPE_REDIRECT = 3;
 
     /**
+     * Type for a wildcard url.
+     *
+     * The url contains a wildcard, which can be replaced with anything.
+     */
+    const MATCH_TYPE_WILDCARD = 4;
+
+    /**
      * Analyzes the current request, and saves the values for portal, language, country and segment for further usage.
      *
      * @param Request $request The request to analyze
-     *
-     * @return
      */
     public function analyze(Request $request);
+
+    /**
+     * Validates the data written on the given request and throws exceptions in case something is wrong or missing.
+     *
+     * @param Request $request
+     */
+    public function validate(Request $request);
 
     /**
      * Returns the current match type for this request.
@@ -136,4 +149,21 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getAnalyticsKey();
+
+    /**
+     * Returns portal-information of request.
+     *
+     * @return PortalInformation
+     */
+    public function getPortalInformation();
+
+    /**
+     * Returns request attribute with given name.
+     *
+     * @param string $name
+     * @param mixed|null $default
+     *
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null);
 }

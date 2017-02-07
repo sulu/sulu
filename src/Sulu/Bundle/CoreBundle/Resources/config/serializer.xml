@@ -13,5 +13,21 @@
             <argument type="service" id="jms_serializer.naming_strategy" />
             <tag name="jms_serializer.serialization_visitor" format="array" />
         </service>
+
+        <service id="jms_serializer.identical_property_naming_strategy"
+                 class="JMS\Serializer\Naming\IdenticalPropertyNamingStrategy"
+                 public="false"/>
+
+        <service id="sulu_core.serialize_naming_strategy"
+                 class="JMS\Serializer\Naming\SerializedNameAnnotationStrategy"
+                 public="false">
+            <argument type="service" id="jms_serializer.identical_property_naming_strategy"/>
+        </service>
+
+        <service id="sulu_core.serialize_caching_strategy"
+                 class="JMS\Serializer\Naming\CacheNamingStrategy"
+                 public="false">
+            <argument type="service" id="sulu_core.serialize_naming_strategy"/>
+        </service>
     </services>
 </container>

@@ -522,6 +522,10 @@
                 <source>contact.address.number</source>
                 <target>Number</target>
             </trans-unit>
+            <trans-unit id="588849ca29af69fb11e87e00fc749ede" resname="contact.address.address-line">
+                <source>contact.address.address-line</source>
+                <target>Addressline</target>
+            </trans-unit>
             <trans-unit id="892c81dcb8e0d2de200e48faa929bff2" resname="contact.address.additional">
                 <source>contact.address.additional</source>
                 <target>Additional</target>
@@ -557,6 +561,10 @@
             <trans-unit id="425b1432d76660a3e434s2e9335a8d5d" resname="contact.accounts.documents-removed">
                 <source>contact.accounts.documents-removed</source>
                 <target>Documents removed</target>
+            </trans-unit>
+            <trans-unit id="435b147223ft60a3essds2e9335a8d5d" resname="contact.accounts.documents-saved">
+                <source>contact.accounts.documents-saved</source>
+                <target>Documents saved</target>
             </trans-unit>
             <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
                 <source>contact.accounts.deleted</source>
@@ -594,6 +602,10 @@
                 <source>contact.contacts.document-added</source>
                 <target>Document added</target>
             </trans-unit>
+            <trans-unit id="435b1472d76660a3e3z5e2e9335a8d5d" resname="contact.contacts.documents-saved">
+                <source>contact.contacts.documents-saved</source>
+                <target>Documents saved</target>
+            </trans-unit>
             <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
                 <source>contact.address.countryCode</source>
                 <target>Country</target>
@@ -621,6 +633,14 @@
             <trans-unit id="235b14f26g712345e44gs2e9335a8d51" resname="contact-selection.add">
                 <source>contact-selection.add</source>
                 <target>Choose contact</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="user.enable">
+                <source>user.enable</source>
+                <target>Enable user</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="labels.success.user.activated">
+                <source>labels.success.user.activated</source>
+                <target>User enable</target>
             </trans-unit>
         </body>
     </file>

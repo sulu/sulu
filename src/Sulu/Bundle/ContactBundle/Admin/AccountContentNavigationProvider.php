@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,15 +20,18 @@ class AccountContentNavigationProvider implements ContentNavigationProviderInter
     {
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
+        $details->setPosition(10);
         $details->setComponent('accounts/edit/details@sulucontact');
 
         $contacts = new ContentNavigationItem('content-navigation.contact.accounts.contacts');
         $contacts->setAction('contacts');
+        $contacts->setPosition(20);
         $contacts->setComponent('accounts/edit/contacts@sulucontact');
         $contacts->setDisplay(['edit']);
 
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');
+        $documents->setPosition(30);
         $documents->setComponent('documents-tab@sulucontact');
         $documents->setDisplay(['edit']);
         $documents->setComponentOptions(['type' => 'account']);

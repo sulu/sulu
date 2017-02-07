@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,7 +73,6 @@ class RecoverCommand extends ContainerAwareCommand
 
         // fix depths if -depth is defined
         if ($fixDepth) {
-
             // fix categories without parents
             $numberParentLess = $this->findCategoriesWithoutParents();
             if ($numberParentLess > 0) {
@@ -180,7 +179,7 @@ class RecoverCommand extends ContainerAwareCommand
         $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
             ->update()
             ->set('c2.depth', 0)
-            ->where('c2.parent IS NULL AND depth != 0');
+            ->where('c2.parent IS NULL AND c2.depth != 0');
 
         $qb->getQuery()->execute();
     }
@@ -194,10 +193,10 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return CategoryRepository
+     * @return CategoryRepositoryInterface
      */
     private function getCategoryRepository()
     {
-        return $this->getContainer()->get('sulu_category.category_repository');
+        return $this->getContainer()->get('sulu.repository.category');
     }
 }

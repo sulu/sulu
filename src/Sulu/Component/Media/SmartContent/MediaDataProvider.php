@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -43,6 +44,7 @@ class MediaDataProvider extends BaseDataProvider
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()
+            ->enableCategories()
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
@@ -52,6 +54,10 @@ class MediaDataProvider extends BaseDataProvider
                     'rootUrl' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}&include-root=true',
                     'selectedUrl' => '/admin/api/collections/{datasource}?tree=true&sortBy=title&locale={locale}&include-root=true',
                     'resultKey' => 'collections',
+                ]
+            )->enableSorting(
+                [
+                    ['column' => 'fileVersionMeta.title', 'title' => 'public.title'],
                 ]
             )
             ->getConfiguration();

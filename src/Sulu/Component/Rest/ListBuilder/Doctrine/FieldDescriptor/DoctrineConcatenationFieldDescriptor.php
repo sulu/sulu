@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +23,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
     /**
      * The field descriptors which will be concatenated.
      *
-     * @var AbstractDoctrineFieldDescriptor[]
+     * @var DoctrineFieldDescriptorInterface[]
      */
     private $fieldDescriptors;
 

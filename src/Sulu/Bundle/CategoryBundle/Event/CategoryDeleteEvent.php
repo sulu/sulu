@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Event;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -20,14 +20,14 @@ use Symfony\Component\EventDispatcher\Event;
 class CategoryDeleteEvent extends Event
 {
     /**
-     * @var Category
+     * @var CategoryInterface
      */
     protected $category;
 
     /**
-     * @param Category $category The deleted category
+     * @param CategoryInterface $category The deleted category
      */
-    public function __construct(Category $category)
+    public function __construct(CategoryInterface $category)
     {
         $this->category = $category;
     }
@@ -35,7 +35,7 @@ class CategoryDeleteEvent extends Event
     /**
      * Returns the deleted category.
      *
-     * @return Category
+     * @return CategoryInterface
      */
     public function getCategory()
     {

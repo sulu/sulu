@@ -15,8 +15,7 @@ define([
     var namespace = 'sulu.collection-edit.',
 
         defaults = {
-            instanceName: '',
-            locale: Husky.sulu.user.locale
+            instanceName: ''
         },
 
         constants = {
@@ -55,14 +54,16 @@ define([
          */
         initialize: function() {
             // extend defaults with options
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.options = this.sandbox.util.extend(true, {
+                locale: this.sandbox.sulu.getDefaultContentLocale()
+            }, defaults, this.options);
 
             if (!this.options.collectionId) {
                 throw new Error('collection-id is not defined');
             }
 
             this.bindEvents();
-            CollectionManager.loadOrNew(this.options.collectionId, this.options.locale).then(function(collection) {
+            CollectionManager.load(this.options.collectionId, this.options.locale).then(function(collection) {
                 this.data = collection;
                 this.openOverlay();
             }.bind(this));

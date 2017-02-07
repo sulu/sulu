@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,6 +18,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InitializerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var InitializerInterface
+     */
+    private $initializer1;
+
+    /**
+     * @var InitializerInterface
+     */
+    private $initializer2;
+
+    /**
+     * @var InitializerInterface
+     */
+    private $initializer3;
+
+    /**
+     * @var Initializer
+     */
+    private $initializer;
+
     public function setUp()
     {
         $this->container = $this->prophesize(ContainerInterface::class);
@@ -39,21 +64,18 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         $this->container->get('service3')->willReturn($this->initializer3->reveal());
     }
 
-    /**
-     * It should execute the initializers in the correct order.
-     */
     public function testInitialize()
     {
         $calls = [];
-        $out = new NullOutput();
+        $output = new NullOutput();
 
-        $this->initializer1->initialize($out)->will(function () use (&$calls) {
+        $this->initializer1->initialize($output, false)->will(function () use (&$calls) {
             $calls[] = 'service1';
         });
-        $this->initializer2->initialize($out)->will(function () use (&$calls) {
+        $this->initializer2->initialize($output, false)->will(function () use (&$calls) {
             $calls[] = 'service2';
         });
-        $this->initializer3->initialize($out)->will(function () use (&$calls) {
+        $this->initializer3->initialize($output, false)->will(function () use (&$calls) {
             $calls[] = 'service3';
         });
 
@@ -62,5 +84,25 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([
             'service1', 'service3', 'service2',
         ], $calls);
+    }
+
+    public function testInitializeWithPurge()
+    {
+        $calls = [];
+        $output = new NullOutput();
+
+        $this->initializer1->initialize($output, true)->will(function () use (&$calls) {
+            $calls[] = 'service1';
+        });
+        $this->initializer2->initialize($output, true)->will(function () use (&$calls) {
+            $calls[] = 'service2';
+        });
+        $this->initializer3->initialize($output, true)->will(function () use (&$calls) {
+            $calls[] = 'service3';
+        });
+
+        $this->initializer->initialize(null, true);
+
+        $this->assertEquals(['service1', 'service3', 'service2'], $calls);
     }
 }

@@ -1,0 +1,19 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:list="http://schemas.sulu.io/class/list"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <property name="city">
+            <orm:field-name>city</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluContactBundle:ContactAddress</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.contactAddresses</orm:field-name>
+                    <orm:method>LEFT</orm:method>
+                    <orm:condition>SuluContactBundle:ContactAddress.locale = ':locale'</orm:condition>
+                </orm:join>
+            </orm:joins>
+        </property>
+    </properties>
+</class>

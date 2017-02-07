@@ -4,57 +4,71 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- Subscribers -->
-        <service id="sulu_content.document.subscriber.content" class="Sulu\Component\Content\Document\Subscriber\StructureSubscriber">
+        <service id="sulu_content.document.subscriber.content"
+                 class="Sulu\Component\Content\Document\Subscriber\StructureSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument>%sulu.content.structure.default_types%</argument>
+
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_navigationContext.document.subscriber.navigation_context" class="Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber">
+        <service id="sulu_navigationContext.document.subscriber.navigation_context"
+                 class="Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber">
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_redirect_type.document.subscriber.redirect_type" class="Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber">
+        <service id="sulu_redirect_type.document.subscriber.redirect_type"
+                 class="Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber">
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_resource_segment.document.subscriber.resource_segment" class="Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber">
+        <service id="sulu_resource_segment.document.subscriber.resource_segment"
+                 class="Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool" />
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.workflow_stage" class="Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
+        <service id="sulu_document_manager.document.subscriber.workflow_stage"
+                 class="Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber">
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.workflow_stage" class="Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
-            <tag name="sulu_document_manager.event_subscriber" />
-        </service>
-
-        <service id="sulu_document_manager.document.subscriber.shadow_locale" class="Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber">
+        <service id="sulu_document_manager.document.subscriber.shadow_locale"
+                 class="Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.shadow_copy_properties" class="Sulu\Component\Content\Document\Subscriber\ShadowCopyPropertiesSubscriber">
+        <service id="sulu_document_manager.document.subscriber.shadow_copy_properties"
+                 class="Sulu\Component\Content\Document\Subscriber\ShadowCopyPropertiesSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.title" class="Sulu\Component\Content\Document\Subscriber\TitleSubscriber">
+        <service id="sulu_document_manager.document.subscriber.title"
+                 class="Sulu\Component\Content\Document\Subscriber\TitleSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.fallback_localization" class="Sulu\Component\Content\Document\Subscriber\FallbackLocalizationSubscriber">
+        <service id="sulu_document_manager.document.subscriber.fallback_localization"
+                 class="Sulu\Component\Content\Document\Subscriber\FallbackLocalizationSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
@@ -63,7 +77,8 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.extension" class="Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber">
+        <service id="sulu_document_manager.document.subscriber.extension"
+                 class="Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
@@ -71,40 +86,78 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.order" class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
+        <service id="sulu_document_manager.document.subscriber.order"
+                 class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.security" class="Sulu\Component\Content\Document\Subscriber\SecuritySubscriber">
+        <service id="sulu_document_manager.document.subscriber.security"
+                 class="Sulu\Component\Content\Document\Subscriber\SecuritySubscriber">
+            <argument>%sulu_security.permissions%</argument>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.webspace" class="Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber">
+        <service id="sulu_document_manager.document.subscriber.webspace"
+                 class="Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.route" class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
+        <service id="sulu_document_manager.document.subscriber.route"
+                 class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.target"
+                 class="Sulu\Component\Content\Document\Subscriber\TargetSubscriber">
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.document.subscriber.robot"
+                 class="Sulu\Component\Content\Document\Subscriber\RobotSubscriber">
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.document.subscriber.publish"
+                 class="Sulu\Bundle\ContentBundle\Document\Subscriber\PublishSubscriber">
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_document_manager.node_helper"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
+        </service>
+
         <!-- Compat -->
-        <service id="sulu_document_manager.document.subscriber.compat.mapper_remove" class="Sulu\Component\Content\Document\Subscriber\Compat\MapperRemoveSubscriber">
+        <service id="sulu_document_manager.document.subscriber.compat.content_mapper"
+                 class="Sulu\Component\Content\Document\Subscriber\Compat\ContentMapperSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu.util.node_helper" />
+            <argument type="service" id="sulu.content.structure_manager"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.behavior.remove_content" class="Sulu\Component\Content\Document\Subscriber\StructureRemoveSubscriber">
+        <service id="sulu_document_manager.subscriber.behavior.remove_content"
+                 class="Sulu\Component\Content\Document\Subscriber\StructureRemoveSubscriber">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
             <argument type="service" id="sulu_document_manager.metadata_factory" />
             <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_content.document_manager.content_initializer" class="Sulu\Bundle\ContentBundle\DocumentManager\ContentInitializer">
+            <argument type="service" id="doctrine_phpcr" />
+            <argument>%sulu.content.language.namespace%</argument>
+            <tag name="sulu_document_manager.initializer" priority="127"/>
         </service>
     </services>
 </container>

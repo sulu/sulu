@@ -11,7 +11,7 @@
  * @class SmartContent/Categories
  * @constructor
  */
-define(['services/husky/util'], function(util) {
+define(['services/husky/util', 'services/sulucontent/user-settings-manager'], function(util, UserSettingsManager) {
 
     'use strict';
 
@@ -20,7 +20,8 @@ define(['services/husky/util'], function(util) {
                 instanceName: 'categories',
                 preselectedOperator: 'or',
                 preselectedCategories: [],
-                root: null
+                root: null,
+                webspace: null
             },
             translations: {
                 operatorLabel: 'smart-content.categories.operator-label',
@@ -137,8 +138,9 @@ define(['services/husky/util'], function(util) {
                             instanceName: this.options.instanceName,
                             url: [
                                 '/admin/api/categories',
-                                (!!this.options.root ? ('/' + this.options.root) + '/children' : ''),
-                                '?flat=true&sortBy=depth&sortOrder=asc'
+                                '?locale=' + UserSettingsManager.getContentLocale(this.options.webspace),
+                                (!!this.options.root ? '&rootKey=' + this.options.root : ''),
+                                '&flat=true&sortBy=name&sortOrder=asc'
                             ].join(''),
                             resultKey: 'categories',
                             pagination: false,
@@ -190,7 +192,7 @@ define(['services/husky/util'], function(util) {
             );
             this.sandbox.on(
                 this.sandbox.events.createEventName('husky.datagrid.', 'item.deselect', this.options.instanceName),
-                this.remove.bind(this)
+                this.removeItem.bind(this)
             );
             this.sandbox.on(
                 this.sandbox.events.createEventName('husky.select.', 'selected.item', this.options.instanceName),
@@ -221,7 +223,7 @@ define(['services/husky/util'], function(util) {
          * Remove category from data with given id.
          * @param {Integer} id
          */
-        remove: function(id) {
+        removeItem: function(id) {
             var index = this.data.ids.indexOf(id);
 
             if (index > -1) {

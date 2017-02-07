@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,12 +22,16 @@ use Sulu\Bundle\TestBundle\Behat\BaseContext;
  */
 class ContactContext extends BaseContext implements SnippetAcceptingContext
 {
+    private static $emailTypeId = 100;
+
     /**
      * @Given the email type :type exists
      */
     public function theEmailTypeExists($type)
     {
         $emailType = new EmailType();
+        $emailType->setId(self::$emailTypeId);
+        self::$emailTypeId += 1;
         $emailType->setName($type);
 
         $this->getEntityManager()->persist($emailType);
@@ -113,7 +117,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheEditIconInTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
             var f = function () {
                 var cards = document.querySelectorAll(".card-item .head-name");
 

@@ -17,13 +17,28 @@ define([
         urlRoot: '/admin/api/snippets',
 
         fullFetch: function(language, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language});
+            options = _.defaults(
+                (options || {}),
+                {
+                    url: this.urlRoot
+                        + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language
+                }
+            );
 
             return this.fetch.call(this, options);
         },
 
-        fullSave: function(template, language, state, attributes, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language + '&template=' + template + (!!state ? '&state=' + state : '')});
+        fullSave: function(language, state, attributes, options, force) {
+            options = _.defaults(
+                (options || {}),
+                {
+                    url: this.urlRoot
+                        + (this.get('id') !== undefined ? '/' + this.get('id') : '')
+                        + '?language=' + language
+                        + (!!state ? '&state=' + state : '')
+                        + (!!force ? '&force=true' : '')
+                }
+            );
 
             return this.save.call(this, attributes, options);
         }

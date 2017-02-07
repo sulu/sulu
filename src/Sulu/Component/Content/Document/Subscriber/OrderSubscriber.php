@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,8 +12,8 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
-use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
@@ -28,11 +28,24 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
 
-    private $inspector;
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
 
-    public function __construct(DocumentInspector $inspector)
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
+     * @param DocumentInspector $documentInspector
+     * @param PropertyEncoder $propertyEncoder
+     */
+    public function __construct(DocumentInspector $documentInspector, PropertyEncoder $propertyEncoder)
     {
-        $this->inspector = $inspector;
+        $this->documentInspector = $documentInspector;
+        $this->propertyEncoder = $propertyEncoder;
     }
 
     /**
@@ -83,7 +96,7 @@ class OrderSubscriber implements EventSubscriberInterface
         $nodeCount = count($parent->getNodes());
         $order = ($nodeCount + 1) * 10;
 
-        $event->getAccessor()->set('suluOrder', $order);
+        $document->setSuluOrder($order);
     }
 
     /**
@@ -99,21 +112,25 @@ class OrderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $parentDocument = $this->inspector->getParent($document);
+        $parentDocument = $this->documentInspector->getParent($document);
 
         if (null === $parentDocument) {
             return;
         }
 
-        $count = 0;
-        foreach ($this->inspector->getChildren($parentDocument) as $childDocument) {
+        $count = 1;
+        foreach ($this->documentInspector->getChildren($parentDocument) as $childDocument) {
             if (!$childDocument instanceof OrderBehavior) {
                 continue;
             }
 
-            $accessor = new DocumentAccessor($childDocument);
-            $order = ($count + 1) * 10;
-            $accessor->set('suluOrder', $order);
+            $order = $count * 10;
+            $childDocument->setSuluOrder($order);
+
+            // TODO move to NodeHelper once integrated in sulu/sulu?
+            $childNode = $this->documentInspector->getNode($childDocument);
+            $childNode->setProperty($this->propertyEncoder->systemName(static::FIELD), $order);
+
             ++$count;
         }
     }

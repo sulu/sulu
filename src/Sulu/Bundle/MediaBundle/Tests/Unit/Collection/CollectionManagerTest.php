@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -11,7 +12,9 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Collection;
 
 use Doctrine\ORM\EntityManager;
+use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -21,6 +24,56 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class CollectionManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var CollectionRepository
+     */
+    private $collectionRepository;
+
+    /**
+     * @var MediaRepository
+     */
+    private $mediaRepository;
+
+    /**
+     * @var FormatManagerInterface
+     */
+    private $formatManager;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var CollectionManagerInterface
+     */
+    private $collectionManager;
+
+    public function setUp()
+    {
+        $this->collectionRepository = $this->prophesize(CollectionRepository::class);
+        $this->mediaRepository = $this->prophesize(MediaRepository::class);
+        $this->formatManager = $this->prophesize(FormatManagerInterface::class);
+        $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->entityManager = $this->prophesize(EntityManager::class);
+
+        $this->collectionManager = new CollectionManager(
+            $this->collectionRepository->reveal(),
+            $this->mediaRepository->reveal(),
+            $this->formatManager->reveal(),
+            $this->userRepository->reveal(),
+            $this->entityManager->reveal(),
+            null,
+            '50x50',
+            ['view' => 64]
+        );
+    }
+
     private function createEntity($id, $locale, $parent = null)
     {
         $entity = $this->prophesize(Collection::class);
@@ -41,25 +94,46 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
         return $entity->reveal();
     }
 
+    public function testGetTreeWithSystemCollections()
+    {
+        $this->collectionRepository->findCollectionSet(
+            0,
+            ['offset' => 10, 'limit' => 10, 'search' => 'test', 'locale' => 'de', 'systemCollections' => true],
+            null,
+            ['test'],
+            Argument::any(),
+            Argument::any()
+        )->willReturn(new \ArrayIterator([]));
+        $this->collectionRepository->count(
+            0,
+            ['search' => 'test', 'locale' => 'de', 'systemCollections' => true],
+            null
+        )->willReturn(0);
+
+        $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
+    }
+
+    public function testGetTreeWithoutSystemCollections()
+    {
+        $this->collectionRepository->findCollectionSet(
+            0,
+            ['offset' => 10, 'limit' => 10, 'search' => 'test', 'locale' => 'de', 'systemCollections' => false],
+            null,
+            ['test'],
+            Argument::any(),
+            Argument::any()
+        )->willReturn(new \ArrayIterator([]));
+        $this->collectionRepository->count(
+            0,
+            ['search' => 'test', 'locale' => 'de', 'systemCollections' => false],
+            null
+        )->willReturn(0);
+
+        $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test'], false);
+    }
+
     public function testGetTreeById()
     {
-        $collectionRepository = $this->prophesize(CollectionRepository::class);
-        $mediaRepository = $this->prophesize(MediaRepository::class);
-        $formatManager = $this->prophesize(FormatManagerInterface::class);
-        $userRepository = $this->prophesize(UserRepositoryInterface::class);
-        $entityManager = $this->prophesize(EntityManager::class);
-
-        $collectionManager = new CollectionManager(
-            $collectionRepository->reveal(),
-            $mediaRepository->reveal(),
-            $formatManager->reveal(),
-            $userRepository->reveal(),
-            $entityManager->reveal(),
-            null,
-            '50x50',
-            []
-        );
-
         $entities = [
             $this->createEntity(1, 'de'),
             $this->createEntity(2, 'de', 1),
@@ -69,9 +143,9 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             $this->createEntity(6, 'de'),
         ];
 
-        $collectionRepository->findTree(5, 'de')->willReturn($entities);
+        $this->collectionRepository->findTree(5, 'de')->willReturn($entities);
 
-        $result = $collectionManager->getTreeById(5, 'de');
+        $result = $this->collectionManager->getTreeById(5, 'de');
 
         $this->assertCount(2, $result);
         $this->assertEquals(1, $result[0]->getId());

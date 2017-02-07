@@ -89,7 +89,9 @@ define([
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
-            this.html(this.renderTemplate('/admin/contact/template/account/form'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/form', {
+                categoryLocale: this.sandbox.sulu.getDefaultContentLocale()
+            }));
 
             var formData = this.initAccountData();
             this.initForm(formData);
@@ -147,7 +149,8 @@ define([
          * @param data
          */
         initLogoContainer: function(data) {
-            if (!!data.logo) {
+            // if logo is selected and is not a "dummy"
+            if (!!data.logo && !!data.logo.id) {
                 this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat], data.logo.url);
             }
 
@@ -161,11 +164,12 @@ define([
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
+                
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.getDefaultContentLocale());
 
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {
                     url = url + '&title=' + encodeURIComponent(data.name);
-                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
 
                 return url;
@@ -364,7 +368,7 @@ define([
                 // set form data
                 var formObject = this.sandbox.form.create(constants.formSelector);
                 formObject.initialized.then(function() {
-                    this.formInitializedHandler(data);
+                    this.setFormData(data, true);
                 }.bind(this));
             }.bind(this));
 
@@ -381,11 +385,7 @@ define([
             ]);
         },
 
-        formInitializedHandler: function(data) {
-            this.setFormData(data);
-        },
-
-        setFormData: function(data) {
+        setFormData: function(data, startForm) {
             // add collection filters to form
             this.sandbox.emit('sulu.contact-form.add-collectionfilters', constants.formSelector);
 
@@ -393,7 +393,12 @@ define([
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
             this.sandbox.form.setData(constants.formSelector, data).then(function() {
-                this.sandbox.start(constants.formContactFields);
+                if (!!startForm) {
+                    this.sandbox.start(constants.formSelector);
+                } else {
+                    this.sandbox.start(constants.formContactFields);
+                }
+
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                 this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();

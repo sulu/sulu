@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,6 +37,7 @@ class MediaContentNavigationProvider implements ContentNavigationProviderInterfa
     {
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
+        $files->setPosition(10);
         $files->setComponent('collections/edit/files@sulumedia');
 
         return [$files];

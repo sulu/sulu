@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,10 +11,17 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+
 /**
  * Defines the interface for the Factory of the DoctrineListBuilde.
  */
 interface DoctrineListBuilderFactoryInterface
 {
+    /**
+     * @param string $entityName
+     *
+     * @return ListBuilderInterface
+     */
     public function create($entityName);
 }

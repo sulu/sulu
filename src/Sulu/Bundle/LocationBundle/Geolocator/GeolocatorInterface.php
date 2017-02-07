@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,5 +16,12 @@ namespace Sulu\Bundle\LocationBundle\Geolocator;
  */
 interface GeolocatorInterface
 {
+    /**
+     * Locates given query.
+     *
+     * @param string $query
+     *
+     * @return GeolocatorResponse
+     */
     public function locate($query);
 }

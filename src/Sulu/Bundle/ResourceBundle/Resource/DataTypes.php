@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,6 +23,8 @@ final class DataTypes
     const NUMBER_TYPE = 2;
     const DATETIME_TYPE = 3;
     const BOOLEAN_TYPE = 4;
+    const TAGS_TYPE = 5;
+    const AUTO_COMPLETE_TYPE = 6;
 
     /**
      * Types constructor.

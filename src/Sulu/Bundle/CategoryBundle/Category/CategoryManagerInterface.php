@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,8 +11,11 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 /**
@@ -22,6 +25,38 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 interface CategoryManagerInterface
 {
     /**
+     * Returns the category which is assigned to the given id.
+     *
+     * @param int $id
+     *
+     * @return CategoryInterface
+     *
+     * @throws CategoryIdNotFoundException if the given id is not assigned to an existing category
+     */
+    public function findById($id);
+
+    /**
+     * Returns the category which is assigned to the given key.
+     *
+     * @param string $key
+     *
+     * @return CategoryInterface
+     *
+     * @throws CategoryKeyNotFoundException if the given key is not assigned to an existing category
+     */
+    public function findByKey($key);
+
+    /**
+     * Returns an array of categories which are assigned to the given array of ids.
+     * If an id of the array is not assigned to a category, no error is thrown.
+     *
+     * @param array $ids
+     *
+     * @return CategoryInterface[]
+     */
+    public function findByIds(array $ids);
+
+    /**
      * Returns tags with a given parent and/or a given depth-level
      * if no arguments passed returns all categories.
      *
@@ -30,9 +65,23 @@ interface CategoryManagerInterface
      * @param string|null $sortBy    column name to sort the categories by
      * @param string|null $sortOrder sort order
      *
-     * @return Category[]
+     * @return CategoryInterface[]
+     *
+     * @deprecated Use ::findChildrenByParentId instead
      */
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null);
+
+    /**
+     * Returns the whole category graph.
+     * If parentId is set, only the sub-graph below the category which is assigned to the given id is returned.
+     *
+     * @param null $parentId
+     *
+     * @return array
+     *
+     * @throws CategoryIdNotFoundException if the parentId is not assigned to an existing category
+     */
+    public function findChildrenByParentId($parentId = null);
 
     /**
      * Returns the children for a given category.
@@ -41,51 +90,48 @@ interface CategoryManagerInterface
      * @param string|null $sortBy    column name to sort by
      * @param string|null $sortOrder sort order
      *
-     * @return Category[]
+     * @return CategoryInterface[]
+     *
+     * @deprecated Use ::findChildrenByParentKey instead
      */
     public function findChildren($key, $sortBy = null, $sortOrder = null);
 
     /**
-     * Returns a category with a given id.
+     * Returns the whole category graph.
+     * If parentKey is set, only the sub-graph below the category which is assigned to the given key is returned.
      *
-     * @param int $id the id of the category
+     * @param null $parentKey
      *
-     * @return Category
+     * @return array
+     *
+     * @throws CategoryKeyNotFoundException if the parentKey is not assigned to an existing category
      */
-    public function findById($id);
+    public function findChildrenByParentKey($parentKey = null);
 
     /**
-     * Returns a category with a given key.
+     * Creates or updates the given data as category in the given locale and return the saved category.
+     * If data.id is set, the category which is assigned to the given id is overwritten.
+     * If patch is set, the category which is assigned to the given id is updated partially.
      *
-     * @param string $key the key of the category
+     * @param $data
+     * @param $userId int Id of the user which is set as creator/changer. If null, the user of the request is set
+     * @param $locale
+     * @param bool $patch
      *
-     * @return Category
+     * @return CategoryInterface
+     *
+     * @throws CategoryIdNotFoundException if data.id is set, but the id is not assigned to a existing category
+     * @throws CategoryKeyNotUniqueException
+     * @throws MissingArgumentException
      */
-    public function findByKey($key);
+    public function save($data, $userId, $locale, $patch = false);
 
     /**
-     * Returns the categories with the given ids.
+     * Deletes the category which is assigned to the given id.
      *
-     * @param $ids
+     * @param int $id
      *
-     * @return Category[]
-     */
-    public function findByIds(array $ids);
-
-    /**
-     * Creates a new category or overrides an existing one.
-     *
-     * @param array $data   The data of the category to save
-     * @param int   $userId The id of the user, who is doing this change
-     *
-     * @return Category
-     */
-    public function save($data, $userId);
-
-    /**
-     * Deletes a category with a given id.
-     *
-     * @param int $id the id of the category to delete
+     * @throws CategoryIdNotFoundException if the given id is not assigned to an existing category
      */
     public function delete($id);
 
@@ -93,20 +139,20 @@ interface CategoryManagerInterface
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
      * and provides neat getters and setters.
      *
-     * @param Category $category
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category
      * @param string   $locale
      *
-     * @return CategoryWrapper
+     * @return CategoryInterface
      */
     public function getApiObject($category, $locale);
 
     /**
      * Same as getApiObject, but takes multiple category-entities.
      *
-     * @param Category[] $categories
+     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
      * @param string     $locale
      *
-     * @return CategoryWrapper[]
+     * @return CategoryInterface
      */
     public function getApiObjects($categories, $locale);
 

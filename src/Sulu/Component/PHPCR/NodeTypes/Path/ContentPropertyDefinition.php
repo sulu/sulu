@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,7 +25,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplate) that is not attached to a live NodeType. In
      * such cases this method returns null.
      *
-     * @return \PHPCR\NodeType\NodeTypeInterface A NodeType object.
+     * @return \PHPCR\NodeType\NodeTypeInterface A NodeType object
      *
      * @api
      */
@@ -46,7 +46,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplate or NodeDefinitionTemplate, then this method
      * will return null.
      *
-     * @return string A string denoting the name or "*".
+     * @return string A string denoting the name or "*"
      *
      * @api
      */
@@ -78,7 +78,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * will return false.
      *
      * @return bool True, if the item is automatically created when its
-     *              parent node is created, else false.
+     *              parent node is created, else false
      *
      * @api
      */
@@ -106,7 +106,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      *
      * An item definition cannot be both residual and mandatory.
      *
-     * @return bool True, if the item is mandatory, else false.
+     * @return bool True, if the item is mandatory, else false
      *
      * @api
      */
@@ -133,7 +133,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplateInterface or NodeDefinitionTemplateInterface,
      * then this method will return OnParentVersionAction::COPY.
      *
-     * @return int An int constant member of OnParentVersionAction.
+     * @return int An int constant member of OnParentVersionAction
      *
      * @api
      */
@@ -161,7 +161,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplateInterface or NodeDefinitionTemplateInterface,
      * then this method will return false.
      *
-     * @return bool True, if the child item is protected, else false.
+     * @return bool True, if the child item is protected, else false
      *
      * @api
      */
@@ -195,7 +195,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinition object is actually a newly-created empty
      * PropertyDefinitionTemplate, then this method will return PropertyType::STRING.
      *
-     * @return int An integer constant member of PropertyType.
+     * @return int An integer constant member of PropertyType
      *
      * @api
      */
@@ -374,7 +374,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinition object is actually a newly-created empty
      * PropertyDefinitionTemplate, then this method will return null.
      *
-     * @return array An array of mixed php values.
+     * @return array An array of mixed php values
      *
      * @api
      */
@@ -398,7 +398,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplate, then this method will return false.
      *
      * @return bool True, if this property may have multiple values, else
-     *              false.
+     *              false
      *
      * @api
      */
@@ -453,7 +453,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * This attribute only takes effect if the node type holding the
      * property definition has a queryable setting of true.
      *
-     * @return bool True, if this property is full-text searchable, else false.
+     * @return bool True, if this property is full-text searchable, else false
      *
      * @api
      */
@@ -472,7 +472,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * This attribute only takes effect if the node type holding the
      * property definition has a queryable setting of true.
      *
-     * @return bool True, if this property is query orderable, else false.
+     * @return bool True, if this property is query orderable, else false
      *
      * @api
      */

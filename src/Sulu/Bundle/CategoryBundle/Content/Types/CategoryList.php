@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,12 +15,13 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
  */
-class CategoryList extends ComplexContentType
+class CategoryList extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for persisting the categories in the database.
@@ -54,23 +55,12 @@ class CategoryList extends ComplexContentType
     }
 
     /**
-     * Sets the given array as values on the property.
-     *
-     * @param array             $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $property->setValue($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $categoryIds = $node->getPropertyValueWithDefault($property->getName(), []);
-        $this->setData($categoryIds, $property);
+        $property->setValue($categoryIds);
     }
 
     /**
@@ -84,22 +74,14 @@ class CategoryList extends ComplexContentType
         }
 
         $data = [];
-        $categoryEntities = $this->categoryManager->findByIds($ids);
-        $categoryApiEntities = $this->categoryManager->getApiObjects($categoryEntities, $property->getStructure()->getLanguageCode());
+        $entities = $this->categoryManager->findByIds($ids);
+        $categories = $this->categoryManager->getApiObjects($entities, $property->getStructure()->getLanguageCode());
 
-        foreach ($categoryApiEntities as $category) {
+        foreach ($categories as $category) {
             $data[] = $category->toArray();
         }
 
         return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property);
     }
 
     /**
@@ -154,5 +136,33 @@ class CategoryList extends ComplexContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_array($propertyValue) && count($propertyValue) > 0) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($value));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

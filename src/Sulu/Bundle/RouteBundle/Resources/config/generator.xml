@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="sulu_route.generator.route_generator" class="Sulu\Bundle\RouteBundle\Generator\RouteGenerator">
+            <argument type="service" id="sulu_route.generator.expression_token_provider"/>
+            <argument type="service" id="sulu_document_manager.slugifier"/>
+
+            <tag name="sulu.route_generator" alias="schema"/>
+        </service>
+
+        <service id="sulu_route.generator.expression_token_provider"
+                 class="Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider">
+            <argument type="service" id="translator"/>
+        </service>
+    </services>
+</container>

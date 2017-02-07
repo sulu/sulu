@@ -700,7 +700,7 @@ define([
                         removeOnClose: true,
                         instanceName: 'add-address',
                         data: addressTemplate,
-                        skin: 'wide',
+                        skin: 'large',
                         okCallback: addAddressOkClicked.bind(this, mapperId),
                         cancelCallback: removeAddressFormEvents.bind(this)
                     }
@@ -752,7 +752,7 @@ define([
                         removeOnClose: true,
                         instanceName: 'add-bank-account',
                         data: bankAccountTemplate,
-                        skin: 'wide',
+                        skin: 'medium',
                         okCallback: addBankAccountOkClicked.bind(this, mapperId),
                         cancelCallback: removeBankAccountFormEvents.bind(this)
                     }

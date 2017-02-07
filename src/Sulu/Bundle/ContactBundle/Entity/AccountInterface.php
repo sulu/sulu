@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,8 +11,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Doctrine\Common\Collections\Collection;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 
 /**
@@ -352,7 +353,7 @@ interface AccountInterface
     /**
      * Get urls.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUrls();
 
@@ -375,7 +376,7 @@ interface AccountInterface
     /**
      * Get phones.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhones();
 
@@ -398,7 +399,7 @@ interface AccountInterface
     /**
      * Get emails.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEmails();
 
@@ -421,14 +422,14 @@ interface AccountInterface
     /**
      * Get notes.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getNotes();
 
     /**
      * Get children.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChildren();
 
@@ -451,7 +452,7 @@ interface AccountInterface
     /**
      * Get faxes.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFaxes();
 
@@ -474,7 +475,7 @@ interface AccountInterface
     /**
      * Get bankAccounts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getBankAccounts();
 
@@ -497,7 +498,7 @@ interface AccountInterface
     /**
      * Get tags.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTags();
 
@@ -520,14 +521,14 @@ interface AccountInterface
     /**
      * Get accountContacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAccountContacts();
 
     /**
      * Get accountAddresses.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAccountAddresses();
 
@@ -541,30 +542,30 @@ interface AccountInterface
     /**
      * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getContacts();
 
     /**
-     * Add medias.
+     * Add media.
      *
-     * @param Media $medias
+     * @param MediaInterface $media
      *
      * @return Account
      */
-    public function addMedia(Media $medias);
+    public function addMedia(MediaInterface $media);
 
     /**
-     * Remove medias.
+     * Remove media.
      *
-     * @param Media $medias
+     * @param MediaInterface $media
      */
-    public function removeMedia(Media $medias);
+    public function removeMedia(MediaInterface $media);
 
     /**
      * Get medias.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMedias();
 
@@ -603,23 +604,23 @@ interface AccountInterface
     /**
      * Add categories.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      *
      * @return Account
      */
-    public function addCategory(Category $category);
+    public function addCategory(CategoryInterface $category);
 
     /**
      * Remove categories.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      */
-    public function removeCategory(Category $category);
+    public function removeCategory(CategoryInterface $category);
 
     /**
      * Get categories.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCategories();
 }

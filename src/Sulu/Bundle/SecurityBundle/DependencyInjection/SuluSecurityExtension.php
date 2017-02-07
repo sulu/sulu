@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,15 +12,17 @@
 namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
  */
-class SuluSecurityExtension extends Extension
+class SuluSecurityExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
 
@@ -43,5 +45,21 @@ class SuluSecurityExtension extends Extension
         }
 
         $this->configurePersistence($config['objects'], $container);
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            RoleNameAlreadyExistsException::class => 409,
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 }

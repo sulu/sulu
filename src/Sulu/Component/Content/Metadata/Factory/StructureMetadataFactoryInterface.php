@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,7 +24,7 @@ interface StructureMetadataFactoryInterface
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
      * @throws Exception\DocumentTypeNotFoundException  If the document type was not mapped
      *
-     * @return StructureMetadata[]
+     * @return StructureMetadata|null
      */
     public function getStructureMetadata($type, $structureType);
 

@@ -25,7 +25,8 @@ require.config({
     ],
     exclude: [
         'husky'
-    ]
+    ],
+    urlArgs: 'v=develop'
 });
 
 define('underscore', function() {
@@ -36,34 +37,35 @@ require(['husky'], function(Husky) {
 
     'use strict';
 
-    var browserLocale,
-        language = 'en';
+    var locale,
+        translations = SULU.translations,
+        fallbackLocale = SULU.fallbackLocale;
 
     // detect browser locale (ie, ff, chrome fallbacks)
-    browserLocale = window.navigator.languages ? window.navigator.languages[0] : null;
-    browserLocale = browserLocale || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
+    locale = window.navigator.languages ? window.navigator.languages[0] : null;
+    locale = locale || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
 
     // select only language
-    browserLocale = browserLocale.slice(0, 2).toLowerCase();
-
-    // get the locale for the login
-    for (var i = -1, length = SULU.locales.length; ++i < length;) {
-        if (SULU.locales[i] === browserLocale) {
-            language = SULU.locales[i];
-            break;
-        }
+    locale = locale.slice(0, 2).toLowerCase();
+    if (translations.indexOf(locale) === -1) {
+        locale = fallbackLocale;
     }
 
-    require(['text!/admin/translations/sulu.' + language + '.json'], function(messagesText) {
+    require([
+        'text!/admin/translations/sulu.' + locale + '.json',
+        'text!/admin/translations/sulu.' + fallbackLocale + '.json'
+    ], function(messagesText, defaultMessagesText) {
         var messages = JSON.parse(messagesText),
+            defaultMessages = JSON.parse(defaultMessagesText);
 
-        app = new Husky({
+        var app = new Husky({
             debug: {
                 enable: !!SULU.debug
             },
             culture: {
-                name: language,
-                messages: messages
+                name: locale,
+                messages: messages,
+                defaultMessages: defaultMessages
             }
         });
 

@@ -105,20 +105,19 @@ define([], function() {
          * Bind custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on(SHOW_ERROR.call(this), function(description, title, id) {
-                this.showLabel('ERROR', description, title, id, false);
+            this.sandbox.on(SHOW_ERROR.call(this), function(description, title, id, autoVanish) {
+                this.showLabel('ERROR', description, (title || 'labels.error'), id, false, autoVanish);
             }.bind(this));
 
-            this.sandbox.on(SHOW_WARNING.call(this), function(description, title, id) {
-                this.showLabel('WARNING', description, title, id, false);
+            this.sandbox.on(SHOW_WARNING.call(this), function(description, title, id, autoVanish) {
+                this.showLabel('WARNING', description, (title || 'labels.warning'), id, false, autoVanish);
             }.bind(this));
 
-            this.sandbox.on(SHOW_SUCCESS.call(this), function(description, title, id) {
-                this.showLabel('SUCCESS_ICON', description, title, id, true);
+            this.sandbox.on(SHOW_SUCCESS.call(this), function(description, title, id, autoVanish) {
+                this.showLabel('SUCCESS_ICON', description, (title || 'labels.success'), id, true, autoVanish);
             }.bind(this));
 
-            this.sandbox.on(SHOW_LABEL.call(this), function(configs, id) {
-                configs.el = this.createLabelContainer(id);
+            this.sandbox.on(SHOW_LABEL.call(this), function(configs) {
                 this.startLabelComponent(configs);
             }.bind(this));
 
@@ -158,7 +157,7 @@ define([], function() {
 
             this.sandbox.dom.attr($container, 'id', 'sulu-labels-' + uniqueId);
             this.sandbox.dom.attr($container, 'data-id', uniqueId);
-            if (inNavigation) {
+            if (!!inNavigation) {
                 this.$navigationLabels.prepend($container);
             } else {
                 this.sandbox.dom.prepend(this.$el, $container);
@@ -188,7 +187,7 @@ define([], function() {
          * @param id
          * @param inNavigation
          */
-        showLabel: function(type, description, title, id, inNavigation) {
+        showLabel: function(type, description, title, id, inNavigation, autoVanish) {
             id = id || ++this.labelId;
             if (!!this.labels[type][description]) {
                 this.sandbox.emit('husky.label.' + this.labels[type][description] + '.refresh');
@@ -198,7 +197,8 @@ define([], function() {
                     description: this.sandbox.translate(description),
                     title: this.sandbox.translate(title),
                     el: this.createLabelContainer(id, inNavigation),
-                    instanceName: id
+                    instanceName: id,
+                    autoVanish: autoVanish
                 });
                 this.labels[type][description] = id;
                 this.labelsById[id] = {
