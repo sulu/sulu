@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #3188 [AutomationBundle]    Extracted the automation-bundle
     * BUGFIX      #3183 [ContentBundle]       Fixed grid usage in conten form
+    * BUGFIX      #3186 [Cache]               Fixed wrong cache key generation for MemoizeTwigExtensionTrait
     * ENHANCMENT  #3182 [SecurityBundle]      Added unique constraint for permission context and role
     * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
     * BUGFIX      #3040 [MediaBundle]         Throw exception when multiple formats have the same key
