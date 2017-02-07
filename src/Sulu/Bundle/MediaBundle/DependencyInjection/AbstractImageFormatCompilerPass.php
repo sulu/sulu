@@ -20,8 +20,14 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
+/**
+ * This abstract class contains all the shared logic to load image formats.
+ */
 abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @var array
+     */
     private $globalOptions;
 
     /**

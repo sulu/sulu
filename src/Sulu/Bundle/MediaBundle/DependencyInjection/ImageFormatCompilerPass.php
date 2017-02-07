@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class ImageFormatCompilerPass.
+ * This compiler pass loads all the image formats defined in the files listed in the sulu_media configuration.
  */
 class ImageFormatCompilerPass extends AbstractImageFormatCompilerPass
 {
