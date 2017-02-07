@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * ENHANCMENT  #3182 [SecurityBundle]      Added unique constraint for permission context and role
     * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
     * BUGFIX      #3040 [MediaBundle]         Throw exception when multiple formats have the same key
+    * BUGFIX      #3180 [AutomationBundle]    Remove the automation tab from ghost page forms
     * FEATURE     #3164 [AdminBundle]         Extracted csv-export into extension
     * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
     * BUGFIX      #3149 [ContentBundle]       Fixed cache clearing on publishing
