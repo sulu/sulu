@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCMENT  #3182 [SecurityBundle]      Added unique constraint for permission context and role
     * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
     * FEATURE     #3164 [AdminBundle]         Extracted csv-export into extension
     * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
