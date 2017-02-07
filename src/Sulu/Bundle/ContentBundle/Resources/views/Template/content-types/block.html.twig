@@ -51,36 +51,12 @@
                                 </div>
                             </div>
                             {# initialize columns #}
-                            {% set columns = 0 %}
                             <div class="block block-{{ property.name }}">
-                                <div class="grid-row small">
-                                {% for child in type.childProperties %}
-                                    {# set childColspan with default if colspan is not set #}
-                                    {% set childColspan = child.colspan != "" ? child.colspan : 12 %}
-
-                                    {# create new row if there are more then 12 colspans in a row #}
-                                    {% if columns + childColspan <= 12 %}
-                                        {# set current amount of colspans #}
-                                        {% set columns = columns + childColspan %}
-                                    {% else %}
-                                        </div>
-                                        <div class="grid-row small">
-                                        {# set current amount of colspans #}
-                                        {% set columns = childColspan %}
-                                    {% endif %}
-
-                                    {# get Type for property #}
-                                    {% set type = sulu_get_type(child.contentTypeName) %}
-                                    {# get params for property #}
-                                    {% set params = sulu_get_params(child) %}
-
-                                    {% if child is multiple %}
-                                        {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-                                    {% else %}
-                                        {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-                                    {% endif %}
-                                {% endfor %}
-                                </div>
+                                {% include 'SuluContentBundle:Template:macros/properties.html.twig' with {
+                                    'properties': type.childProperties,
+                                    'propertyPrefix': id,
+                                    'propertyPostfix': '<~=index~>'
+                                } %}
                             </div>
                         </div>
                     </div>
