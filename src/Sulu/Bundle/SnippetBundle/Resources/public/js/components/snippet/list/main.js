@@ -107,6 +107,7 @@ define([
                 el: this.sandbox.dom.find('#snippet-list', this.$el),
                 url: '/admin/api/snippets?language=' + this.options.language,
                 searchInstanceName: 'snippets',
+                storageName: 'snippets',
                 searchFields: ['title'], // TODO ???
                 resultKey: 'snippets',
                 actionCallback: function(id, item) {

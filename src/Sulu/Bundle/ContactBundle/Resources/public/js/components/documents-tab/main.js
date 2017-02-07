@@ -108,6 +108,7 @@ define([
                     el: this.$find('#documents-list'),
                     url: managerData.listUrl,
                     instanceName: 'documents',
+                    storageName: this.options.type + '-' + this.data.id + '-documents',
                     resultKey: 'media',
                     searchFields: ['name', 'title', 'description'],
                     sortable: false,

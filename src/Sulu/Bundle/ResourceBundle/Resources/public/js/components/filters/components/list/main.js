@@ -89,6 +89,7 @@ define(['config'], function(Config) {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
                     url: '/admin/api/filters?locale=' + this.options.locale + '&flat=true&context='+this.options.type,
                     resultKey: 'filters',
+                    storageName: 'filters',
                     searchInstanceName: 'filterSearch',
                     searchFields: ['name'],
                     actionCallback: function(id) {

@@ -154,6 +154,7 @@ define([
                 el: this.sandbox.dom.find('#companies-list', this.$el),
                 url: '/admin/api/accounts?flat=true',
                 searchInstanceName: 'accounts',
+                storageName: 'accounts',
                 searchFields: ['name', 'mainEmail'],
                 resultKey: 'accounts',
                 instanceName: constants.datagridInstanceName,

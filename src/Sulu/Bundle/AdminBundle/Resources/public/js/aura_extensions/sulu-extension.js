@@ -469,6 +469,7 @@
                         // add datagrid instance name to toolbar
                         toolbarOptions.datagridInstanceName = gridOptions.instanceName;
                         toolbarOptions.listInfoContainerSelector = listInfoContainerSelector;
+                        toolbarOptions.searchOptions = {storageName: gridOptions.storageName || null};
 
                         //start list-toolbar and datagrid
                         this.sandbox.start([

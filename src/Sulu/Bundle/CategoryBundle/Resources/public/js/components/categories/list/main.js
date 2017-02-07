@@ -107,6 +107,7 @@ define(function () {
                     childrenPropertyName: 'hasChildren',
                     expandIds: [this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey)],
                     resultKey: 'categories',
+                    storageName: 'categories',
                     searchFields: ['name'],
                     pagination: false,
                     actionCallback: this.editCategory.bind(this),
