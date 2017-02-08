@@ -1304,7 +1304,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testReadTemplateWithXInclude()
     {
-
         $template = [
             'key' => 'template',
             'view' => 'page.html.twig',
