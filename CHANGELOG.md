@@ -45,6 +45,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
     * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
+    * BUGFIX      #3183 [ContentComponent]    Fixed Windows xinclude error
 
 * 1.4.6 (2017-02-03)
     * HOTFIX      #3177 [WebsiteBundle]         Fixed wrong hreflang tag
