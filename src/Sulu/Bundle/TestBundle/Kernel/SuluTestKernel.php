@@ -42,9 +42,6 @@ class SuluTestKernel extends SuluKernel
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
 
-            // php-task
-            new \Task\TaskBundle\TaskBundle(),
-
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
@@ -69,7 +66,6 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
-            new \Sulu\Bundle\AutomationBundle\SuluAutomationBundle(),
         ];
 
         if ($this->getContext() === self::CONTEXT_WEBSITE) {
