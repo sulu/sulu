@@ -31,7 +31,7 @@ define(function() {
 
     var defaults = {
             unselectOnBackgroundClick: true,
-            imageFormat: '100x100',
+            imageFormat: 'sulu-100x100',
             emptyListTranslation: 'public.empty-list',
             fields: {
                 firstInfoRow: ['city', 'countryCode'],

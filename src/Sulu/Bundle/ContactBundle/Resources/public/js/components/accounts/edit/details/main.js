@@ -29,7 +29,7 @@ define([
             logoDropzoneSelector: '#image-dropzone',
             logoDeleteSelector: '#image-delete',
             avatarDownloadSelector: '#image-download',
-            logoThumbnailFormat: '400x400-inset'
+            logoThumbnailFormat: 'sulu-400x400-inset'
         },
 
         customTemplates = {
@@ -164,7 +164,7 @@ define([
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
-                
+
                 url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.getDefaultContentLocale());
 
                 // if possible, change the title of the logo to the name of the account

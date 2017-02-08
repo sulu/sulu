@@ -2,6 +2,27 @@
 
 ## dev-develop
 
+### Media formats uniqueness
+
+The uniqueness of media formats is now checked, and an exception is thrown in
+case duplicated format keys exist.
+
+In addition to that the existing formats have been prefixed with `sulu-`,
+so that they are less likely to conflict. If you have relied on these formats,
+which you shouldn't have, then you have to create them now in your own theme.
+
+The following formats do not exist anymore, and should therefore be deleted
+from the `web/uploads/media`-folder, except you decide to create the image
+format on your own:
+
+* 400x400
+* 400x400-inset
+* 260x
+* 170x170
+* 100x100
+* 100x100-inset
+* 50x50
+
 ### Twig 2
 
 If you upgrade twig to version 2 please read follow

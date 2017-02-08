@@ -19,7 +19,7 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/uploads/media/400x400/01/test.jpg?v=1');
+        $client->request('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
 
         $this->assertHttpStatusCode(404, $client->getResponse());
     }

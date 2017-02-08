@@ -167,7 +167,7 @@ define([
                         noImgIcon: 'fa-home'
                     },
                     'datagrid/decorators/card-view': {
-                        imageFormat: '100x100-inset',
+                        imageFormat: 'sulu-100x100-inset',
                         fields: {
                             picture: 'logo',
                             title: ['name']

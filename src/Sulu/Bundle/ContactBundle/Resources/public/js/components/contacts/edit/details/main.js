@@ -28,7 +28,7 @@ define([
             avatarDropzoneSelector: '#image-dropzone',
             avatarDeleteSelector: '#image-delete',
             avatarDownloadSelector: '#image-download',
-            imageFormat: '400x400'
+            imageFormat: 'sulu-400x400'
         },
 
         customTemplates = {
@@ -155,7 +155,7 @@ define([
                     '/admin/api/media?collection=' + this.formOptions.contactAvatarCollection;
 
                 url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.getDefaultContentLocale());
-                
+
                 // if possible, change the title of the avatar to the name of the contact
                 if (!!data.fullName) {
                     url = url + '&title=' + encodeURIComponent(data.fullName);
