@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3183 [ContentBundle]       Fixed grid usage in conten form
     * ENHANCMENT  #3182 [SecurityBundle]      Added unique constraint for permission context and role
     * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
+    * BUGFIX      #3040 [MediaBundle]         Throw exception when multiple formats have the same key
     * FEATURE     #3164 [AdminBundle]         Extracted csv-export into extension
     * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
     * BUGFIX      #3149 [ContentBundle]       Fixed cache clearing on publishing
@@ -80,7 +81,6 @@ CHANGELOG for Sulu
 
 * 1.4.2 (2016-11-24)
     * HOTFIX      #3032 [ContentBundle]         Fixed publishing for shadow page targeting drafts
-    * BUGFIX      #3040 [MediaBundle]           Throw exception when multiple formats have the same key
     * BUGFIX      #3035 [DocumentManagerBundle] Fixed bug for save if route already exists empty
     * HOTFIX      #3039 [ContentBundle]         Fixed wrong parsing of webspace from path
 
