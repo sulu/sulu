@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3188 [AutomationBundle]    Extracted the automation-bundle
     * BUGFIX      #3183 [ContentBundle]       Fixed grid usage in conten form
     * ENHANCMENT  #3182 [SecurityBundle]      Added unique constraint for permission context and role
     * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
