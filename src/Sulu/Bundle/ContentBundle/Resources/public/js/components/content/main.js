@@ -902,8 +902,8 @@ define([
                                 entityId: this.options.id,
                                 entityClass: 'Sulu\\Bundle\\ContentBundle\\Document\\BasePageDocument',
                                 handlerClass: [
-                                    'Sulu\\Bundle\\ContentBundle\\Automation\\DocumentPublishHandler',
-                                    'Sulu\\Bundle\\ContentBundle\\Automation\\DocumentUnpublishHandler'
+                                    'Sulu\\Bundle\\AutomationBundle\\Handler\\DocumentPublishHandler',
+                                    'Sulu\\Bundle\\AutomationBundle\\Handler\\DocumentUnpublishHandler'
                                 ]
                             }
                         };

@@ -60,7 +60,6 @@
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
         "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "sulu/automation-bundle": "dev-master",
         "php-task/php-task": "@dev",
         "php-task/task-bundle": "@dev"
     },
