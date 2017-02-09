@@ -69,7 +69,9 @@ class TagTwigExtension extends \Twig_Extension
      */
     public function getTagsFunction()
     {
-        return $this->memoizeCache->memoize(
+        return $this->memoizeCache->memoizeById(
+            'sulu_tags',
+            func_get_args(),
             function () {
                 $tags = $this->tagManager->findAll();
 
