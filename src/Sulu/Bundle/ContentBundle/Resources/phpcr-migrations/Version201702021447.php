@@ -16,17 +16,14 @@ use PHPCR\Migrations\VersionInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Localization\Localization;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Adds the property `i18n:<locale>-author` and `i18n:<locale>-authored` and prefill it with creator/created.
  */
 class Version201702021447 implements VersionInterface, ContainerAwareInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    use ContainerAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -124,15 +121,5 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
                 }
             }
         }
-    }
-
-    /**
-     * Sets the container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 }

@@ -444,7 +444,7 @@ define([
                 })
             }
 
-            if (data.author) {
+            if (!!data.author) {
                 author = new Contact({id: data.author});
                 author.fetch({
                     global: false,
@@ -723,7 +723,6 @@ define([
             this.data.authored = data.authored;
 
             if (!data.authorItem) {
-                // TODO keep author name
                 setAuthorChangelog.call(this, null, new Date(data.authored));
 
                 return;

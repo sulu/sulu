@@ -12,39 +12,8 @@
 namespace Sulu\Component\Content\Document\Behavior;
 
 /**
- * Adds the user which is defined as author and an authored date.
+ * Adds the user which is defined as author and an authored date (without locale).
  */
-interface AuthorBehavior
+interface AuthorBehavior extends LocalizedAuthorBehavior
 {
-    /**
-     * Returns author-date.
-     *
-     * @return string
-     */
-    public function getAuthored();
-
-    /**
-     * Set author-date.
-     *
-     * @param string $authored
-     *
-     * @return $this
-     */
-    public function setAuthored($authored);
-
-    /**
-     * Returns id of author contact.
-     *
-     * @return int
-     */
-    public function getAuthor();
-
-    /**
-     * Set id of author contact.
-     *
-     * @param int $author
-     *
-     * @return $this
-     */
-    public function setAuthor($author);
 }

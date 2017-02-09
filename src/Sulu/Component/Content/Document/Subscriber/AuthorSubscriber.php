@@ -60,17 +60,15 @@ class AuthorSubscriber implements EventSubscriberInterface
     public function setAuthorOnDocument(HydrateEvent $event)
     {
         $document = $event->getDocument();
-        if (!$document instanceof AuthorBehavior) {
+        if (!$document instanceof LocalizedAuthorBehavior) {
             return;
         }
 
-        $encoding = 'system';
-        if ($document instanceof LocalizedAuthorBehavior) {
-            if (!$event->getLocale()) {
-                return;
-            }
-
-            $encoding = 'system_localized';
+        $encoding = 'system_localized';
+        if ($document instanceof AuthorBehavior) {
+            $encoding = 'system';
+        } elseif (!$event->getLocale()) {
+            return;
         }
 
         $node = $event->getNode();
@@ -96,17 +94,25 @@ class AuthorSubscriber implements EventSubscriberInterface
     public function setAuthorOnNode(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
-        if (!$document instanceof AuthorBehavior) {
+        if (!$document instanceof LocalizedAuthorBehavior) {
             return;
         }
 
-        $encoding = 'system';
-        if ($document instanceof LocalizedAuthorBehavior) {
-            if (!$event->getLocale()) {
-                return;
-            }
+        // Set default value if authored is not set.
+        if ($document->getAuthored() === null) {
+            $document->setAuthored(new \DateTime());
+        }
 
-            $encoding = 'system_localized';
+        // Set default value if author is not set.
+        if ($document->getAuthor() === null) {
+            $document->setAuthor($document->getCreator());
+        }
+
+        $encoding = 'system_localized';
+        if ($document instanceof AuthorBehavior) {
+            $encoding = 'system';
+        } elseif (!$event->getLocale()) {
+            return;
         }
 
         $node = $event->getNode();

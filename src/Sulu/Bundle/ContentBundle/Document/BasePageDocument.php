@@ -620,8 +620,6 @@ class BasePageDocument implements
     public function setVersions($versions)
     {
         $this->versions = $versions;
-
-        return $this;
     }
 
     /**
@@ -638,8 +636,6 @@ class BasePageDocument implements
     public function setAuthored($authored)
     {
         $this->authored = $authored;
-
-        return $this;
     }
 
     /**
@@ -656,7 +652,5 @@ class BasePageDocument implements
     public function setAuthor($author)
     {
         $this->author = $author;
-
-        return $this;
     }
 }
