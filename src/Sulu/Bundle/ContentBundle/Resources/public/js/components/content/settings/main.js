@@ -458,7 +458,7 @@ define([
                     }.bind(this)
                 });
             } else {
-                authorDef.resolve(null, data.authored);
+                authorDef.resolve(null, new Date(data.authored));
             }
 
             this.sandbox.data.when(creatorDef, changerDef, authorDef).then(function(creation, change, author) {
