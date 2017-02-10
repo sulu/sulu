@@ -14,7 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Behavior\AuthorBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 /**
@@ -73,7 +73,7 @@ class StructureResolver implements StructureResolverInterface
             }
 
             $document = $structure->getDocument();
-            if ($document instanceof AuthorBehavior) {
+            if ($document instanceof LocalizedAuthorBehavior) {
                 $data['authored'] = $document->getAuthored();
                 $data['author'] = $document->getAuthor();
             }
