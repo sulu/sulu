@@ -171,7 +171,7 @@ __NOW:__
     <view>page.html.twig</view>
     <controller>SuluContentBundle:Default:index</controller>
 
-    <!-- releases cache each day at mitnight -->
+    <!-- releases cache each day at midnight -->
     <cacheLifetime type="expression">@daily</cacheLifetime>
     
     ...
