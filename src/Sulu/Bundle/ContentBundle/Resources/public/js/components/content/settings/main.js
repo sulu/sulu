@@ -450,11 +450,11 @@ define([
                     global: false,
 
                     success: function(model) {
-                        authorDef.resolve(model.get('fullName'), data.authored);
+                        authorDef.resolve(model.get('fullName'), new Date(data.authored));
                     }.bind(this),
 
                     error: function() {
-                        authorDef.resolve(null, data.authored);
+                        authorDef.resolve(null, new Date(data.authored));
                     }.bind(this)
                 });
             } else {

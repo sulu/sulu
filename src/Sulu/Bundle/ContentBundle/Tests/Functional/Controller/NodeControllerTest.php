@@ -136,6 +136,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(['tag1', 'tag2'], $response->tags);
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->changer);
+        $this->assertNotFalse(\DateTime::createFromFormat('Y-m-d', $response->authored));
 
         /** @var NodeInterface $content */
         $defaultContent = $this->session->getNode('/cmf/sulu_io/contents/news/test-1');
@@ -263,6 +264,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(['tag1', 'tag2'], $response['tags']);
         $this->assertEquals('/test_en', $response['url']);
         $this->assertEquals('Test English', $response['article']);
+        $this->assertNotFalse(\DateTime::createFromFormat('Y-m-d', $response['authored']));
 
         $client->request('GET', '/api/nodes/' . $document->getUuid() . '?language=de');
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -535,6 +537,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response['changer']);
         $this->assertEquals($this->getTestUserId(), $response['creator']);
 
+        $this->assertNotFalse(\DateTime::createFromFormat('Y-m-d', $response['authored']));
         $this->assertEquals('2016-12-21', (new \DateTime($response['authored']))->format('Y-m-d'));
         $this->assertEquals(1, $response['author']);
 
