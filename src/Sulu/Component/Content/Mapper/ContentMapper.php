@@ -27,8 +27,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Behavior\AuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -747,7 +747,7 @@ class ContentMapper implements ContentMapperInterface
             'parent' => $this->inspector->getParent($document)->getUuid(),
         ];
 
-        if ($document instanceof AuthorBehavior) {
+        if ($document instanceof LocalizedAuthorBehavior) {
             $documentData['author'] = $document->getAuthor();
             $documentData['authored'] = $document->getAuthored();
         }
@@ -821,8 +821,7 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $locale
             );
-        } elseif (
-            isset($field['property'])
+        } elseif (isset($field['property'])
             && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)
         ) {
             // not extension data but property of node
