@@ -16,19 +16,5 @@
             <tag name="sulu_admin.content_navigation" alias="content"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-
-        <service id="sulu_content.automation.publish_handler"
-                 class="Sulu\Bundle\ContentBundle\Automation\DocumentPublishHandler">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-
-            <tag name="task.handler"/>
-        </service>
-
-        <service id="sulu_content.automation.unpublish_handler"
-                 class="Sulu\Bundle\ContentBundle\Automation\DocumentUnpublishHandler">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-
-            <tag name="task.handler"/>
-        </service>
     </services>
 </container>

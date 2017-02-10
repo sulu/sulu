@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3190 [ContentBundle]       Extracted automation handler
     * ENHANCEMENT #3188 [AutomationBundle]    Extracted the automation-bundle
     * BUGFIX      #3183 [ContentBundle]       Fixed grid usage in conten form
     * BUGFIX      #3186 [Cache]               Fixed wrong cache key generation for MemoizeTwigExtensionTrait
