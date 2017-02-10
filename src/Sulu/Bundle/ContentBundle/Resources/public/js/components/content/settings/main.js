@@ -720,8 +720,9 @@ define([
         },
 
         setAuthor: function(data) {
-            this.data.authored = data.authored;
+            this.setHeaderBar(false);
 
+            this.data.authored = data.authored;
             if (!data.authorItem) {
                 setAuthorChangelog.call(this, null, new Date(data.authored));
 
@@ -729,7 +730,6 @@ define([
             }
 
             setAuthorChangelog.call(this, data.authorItem.firstName + ' ' + data.authorItem.lastName, new Date(data.authored));
-            this.setHeaderBar(false);
             this.data.author = data.author;
         }
     };
