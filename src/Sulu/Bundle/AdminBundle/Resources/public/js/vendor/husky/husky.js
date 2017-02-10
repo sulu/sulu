@@ -30852,7 +30852,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             addRowTop: true,
             excludeFields: [''],
             cssClass: '',
-            thumbnailFormat: '50x50',
+            thumbnailFormat: 'sulu-50x50',
             showHead: true,
             hideChildrenAtBeginning: true,
             openChildId: null,
