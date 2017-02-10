@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3195 [MediaBundle]           Fixed media linking in texteditor overlay
+
 * 1.4.6 (2017-02-03)
     * HOTFIX      #3177 [WebsiteBundle]         Fixed wrong hreflang tag
     * HOTFIX      #3173 [ContentBundle]         Fixed generating of resource locator with missing parents
