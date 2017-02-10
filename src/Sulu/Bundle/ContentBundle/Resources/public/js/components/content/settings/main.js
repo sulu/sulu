@@ -684,7 +684,7 @@ define([
                 name: 'overlay@husky',
                 options: {
                     el: $overlayContainer,
-                    instanceName: 'contact-selection',
+                    instanceName: 'author-selection',
                     openOnStart: true,
                     removeOnClose: true,
                     skin: 'medium',
@@ -700,10 +700,10 @@ define([
                 }
             }]);
 
-            this.sandbox.once('husky.overlay.contact-selection.initialized', function() {
+            this.sandbox.once('husky.overlay.author-selection.initialized', function() {
                 this.sandbox.start([
                     {
-                        name: 'content/settings/contact-selection@sulucontent',
+                        name: 'content/settings/author-selection@sulucontent',
                         options: {
                             el: $componentContainer,
                             locale: this.options.locale,
@@ -711,7 +711,7 @@ define([
                             selectCallback: function(data) {
                                 this.setAuthor(data);
 
-                                this.sandbox.emit('husky.overlay.contact-selection.close');
+                                this.sandbox.emit('husky.overlay.author-selection.close');
                             }.bind(this)
                         }
                     }
@@ -729,6 +729,7 @@ define([
             }
 
             setAuthorChangelog.call(this, data.authorItem.firstName + ' ' + data.authorItem.lastName, new Date(data.authored));
+            this.setHeaderBar(false);
             this.data.author = data.author;
         }
     };

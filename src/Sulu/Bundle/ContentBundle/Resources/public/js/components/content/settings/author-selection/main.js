@@ -37,10 +37,10 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                 '   </div>',
                 '   <div class="grid-row search-row">',
                 '       <div class="grid-col-8"/>',
-                '       <div class="grid-col-4 contact-selection-search"/>',
+                '       <div class="grid-col-4 author-selection-search"/>',
                 '   </div>',
                 '   <div class="grid-row">',
-                '       <div class="grid-col-12 contact-selection-list" style="max-height: 500px; overflow: scroll;"/>',
+                '       <div class="grid-col-12 author-selection-list" style="max-height: 500px; overflow: scroll;"/>',
                 '   </div>',
                 '</div>'
             ].join('')
@@ -64,21 +64,21 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                 {
                     name: 'search@husky',
                     options: {
-                        el: '.contact-selection-search',
+                        el: '.author-selection-search',
                         appearance: 'white small',
-                        instanceName: 'contact-selection-search'
+                        instanceName: 'author-selection-search'
                     }
                 },
                 {
                     name: 'datagrid@husky',
                     options: {
-                        el: '.contact-selection-list',
-                        instanceName: 'contact-selection',
+                        el: '.author-selection-list',
+                        instanceName: 'author-selection',
                         url: '/admin/api/contacts?flat=true',
                         resultKey: 'contacts',
                         sortable: false,
                         selectedCounter: false,
-                        searchInstanceName: 'contact-selection-search',
+                        searchInstanceName: 'author-selection-search',
                         preselected: !!this.options.data.author ? [this.options.data.author] : [],
                         paginationOptions: {
                             dropdown: {
@@ -102,7 +102,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             this.sandbox.once('sulu.content.contents.get-author', function() {
                 this.data.authored = this.$el.find('.authored-component').data('value');
 
-                this.sandbox.emit('husky.datagrid.contact-selection.items.get-selected', function(ids, items) {
+                this.sandbox.emit('husky.datagrid.author-selection.items.get-selected', function(ids, items) {
                     if (items.length > 0) {
                         this.data.author = ids[0];
                         this.data.authorItem = items[0];
