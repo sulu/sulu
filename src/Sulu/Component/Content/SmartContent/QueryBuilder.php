@@ -168,7 +168,7 @@ class QueryBuilder extends ContentQueryBuilder
             foreach ($sortBy as $sortColumn) {
                 // TODO implement more generic
                 $order = 'page.[i18n:' . $locale . '-' . $sortColumn . '] ';
-                if (!in_array($sortColumn, ['published', 'created', 'changed'])) {
+                if (!in_array($sortColumn, ['published', 'created', 'changed', 'authored'])) {
                     $order = sprintf('lower(%s)', $order);
                 }
 

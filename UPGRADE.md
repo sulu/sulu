@@ -23,6 +23,14 @@ format on your own:
 * 100x100-inset
 * 50x50
 
+### Page author
+
+The page has a new property `author` and `authored` which will be prefilled with values from `creator`/`created`.
+
+```
+app/console phpcr:migrations:migrate
+```
+
 ### Twig 2
 
 If you upgrade twig to version 2 please read follow

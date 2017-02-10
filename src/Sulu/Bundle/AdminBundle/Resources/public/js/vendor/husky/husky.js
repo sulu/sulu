@@ -32302,7 +32302,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 if (this.table.rows[id]) {
                     // ensure that checkboxes are checked
                     this.sandbox.dom.prop(
-                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', true
+                        this.sandbox.dom.find(
+                            '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                            this.table.rows[id].$el
+                        ),
+                        'checked',
+                        true
                     );
                     this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
                     this.indeterminateSelectParents(id);

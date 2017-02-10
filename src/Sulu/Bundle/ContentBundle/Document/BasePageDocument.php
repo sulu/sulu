@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
@@ -34,6 +35,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
+use Sulu\Component\DocumentManager\Version;
 
 /**
  * Base document for Page-like documents (i.e. Page and Home documents).
@@ -55,7 +57,8 @@ class BasePageDocument implements
     SecurityBehavior,
     LocalizedAuditableBehavior,
     LocalizedTitleBehavior,
-    VersionBehavior
+    VersionBehavior,
+    LocalizedAuthorBehavior
 {
     /**
      * The name of this node.
@@ -237,7 +240,26 @@ class BasePageDocument implements
      */
     protected $permissions;
 
+    /**
+     * List of versions.
+     *
+     * @var Version[]
+     */
     protected $versions = [];
+
+    /**
+     * Date of authoring.
+     *
+     * @var \DateTime
+     */
+    protected $authored;
+
+    /**
+     * Id of author.
+     *
+     * @var int
+     */
+    protected $author;
 
     public function __construct()
     {
@@ -598,5 +620,37 @@ class BasePageDocument implements
     public function setVersions($versions)
     {
         $this->versions = $versions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthored()
+    {
+        return $this->authored;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAuthored($authored)
+    {
+        $this->authored = $authored;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
     }
 }

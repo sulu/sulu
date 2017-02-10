@@ -81,11 +81,11 @@ class StructureSubscriber implements EventSubscriberInterface
         }
 
         $visitor = $event->getVisitor();
-        $visitor->addData('originTemplate', $document->getStructureType());
         $structureMetadata = $this->inspector->getStructureMetadata($document);
 
         if ($structureMetadata) {
             $visitor->addData('template', $document->getStructureType());
+            $visitor->addData('originTemplate', $document->getStructureType());
             $visitor->addData('internal', false);
             $visitor->addData(
                 'localizedTemplate',

@@ -20,6 +20,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3142 [CoreBundle]          Added a script handler to delete the composer.lock file from gitignore
     * FEATURE     #3042 [ContentBundle]       Added versioning functionality
     * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
+    * FEATURE     #3113 [ContentBundle]       Added authored/author field to pages
     * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
     * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
     * ENHANCEMENT #3110 [WebsiteBundle]       Fixed deprecation of flatten-exception by decorating twig-exception-controller
