@@ -96,7 +96,7 @@ class XmlLegacyLoader implements LoaderInterface
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
         $cwd = getcwd();
-        @chdir(dirname($resource));
+        chdir(dirname($resource));
 
         // read file
         $xmlDocument = XmlUtils::loadFile(
@@ -109,7 +109,7 @@ class XmlLegacyLoader implements LoaderInterface
             }
         );
 
-        @chdir($cwd);
+        chdir($cwd);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
