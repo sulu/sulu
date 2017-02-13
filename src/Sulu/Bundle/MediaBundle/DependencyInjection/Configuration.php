@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('search')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('default_image_format')->defaultValue('170x170')->end()
+                    ->scalarNode('default_image_format')->defaultValue('sulu-170x170')->end()
                     ->booleanNode('enabled')->info(
                         'Enable integration with SuluMediaBundle'
                     )->defaultValue(false)->end()
@@ -105,9 +105,6 @@ class Configuration implements ConfigurationInterface
                         ])
                     ->end()
                     ->arrayNode('default_imagine_options')
-                        ->prototype('scalar')->end()
-                    ->end()
-                    ->arrayNode('config_paths')
                         ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('blocked_file_types')

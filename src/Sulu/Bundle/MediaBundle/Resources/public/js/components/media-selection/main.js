@@ -24,7 +24,7 @@ define([
     var defaults = {
             eventNamespace: 'sulu.media-selection',
             thumbnailKey: 'thumbnails',
-            thumbnailSize: '50x50',
+            thumbnailSize: 'sulu-50x50',
             formats: [],
             resultKey: 'media',
             dataAttribute: 'media-selection',

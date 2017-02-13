@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
 
-    <format key="400x400" internal="true">
+    <format key="sulu-400x400" internal="true">
         <meta>
             <title lang="en">Contact avatar (Sulu)</title>
             <title lang="de">Kontaktavatar (Sulu)</title>
@@ -12,7 +12,7 @@
         </meta>
         <scale x="400" y="400"/>
     </format>
-    <format key="400x400-inset" internal="true">
+    <format key="sulu-400x400-inset" internal="true">
         <meta>
             <title lang="en">Organization logo (Sulu)</title>
             <title lang="de">Organisationslogo (Sulu)</title>
@@ -21,7 +21,7 @@
         </meta>
         <scale x="400" y="400" mode="inset"/>
     </format>
-    <format key="260x" internal="true">
+    <format key="sulu-260x" internal="true">
         <meta>
             <title lang="en">Masonry preview (Sulu)</title>
             <title lang="de">Masonry Vorschau (Sulu)</title>
@@ -30,7 +30,7 @@
         </meta>
         <scale x="260"/>
     </format>
-    <format key="170x170" internal="true">
+    <format key="sulu-170x170" internal="true">
         <meta>
             <title lang="en">Search (Sulu)</title>
             <title lang="de">Suche (Sulu)</title>
@@ -39,7 +39,7 @@
         </meta>
         <scale x="170" y="170"/>
     </format>
-    <format key="100x100" internal="true">
+    <format key="sulu-100x100" internal="true">
         <meta>
             <title lang="en">Contact card (Sulu)</title>
             <title lang="de">Personenkarte (Sulu)</title>
@@ -48,7 +48,7 @@
         </meta>
         <scale x="100" y="100"/>
     </format>
-    <format key="100x100-inset" internal="true">
+    <format key="sulu-100x100-inset" internal="true">
         <meta>
             <title lang="en">Organization card (Sulu)</title>
             <title lang="de">Organisationskarte (Sulu)</title>
@@ -57,7 +57,7 @@
         </meta>
         <scale x="100" y="100" mode="inset"/>
     </format>
-    <format key="50x50" internal="true">
+    <format key="sulu-50x50" internal="true">
         <meta>
             <title lang="en">Small thumbnail (Sulu)</title>
             <title lang="de">Kleines Thumbnail (Sulu)</title>

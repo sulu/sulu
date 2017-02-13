@@ -8,20 +8,9 @@
 
     <div class="grid">
         <div class="grid-row">
-            {% for child in property.childProperties %}
-                {# get Type for property #}
-                {% set type = sulu_get_type(child.contentTypeName) %}
-                {# get params for property #}
-                {% set params = sulu_get_params(child) %}
-
-                {% if child.contentTypeName == 'block' %}
-                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
-                {% elseif child is multiple %}
-                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
-                {% else %}
-                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
-                {% endif %}
-            {% endfor %}
+            {% include 'SuluContentBundle:Template:macros/properties.html.twig' with {
+                'properties': property.childProperties
+            } %}
         </div>
     </div>
 </div>

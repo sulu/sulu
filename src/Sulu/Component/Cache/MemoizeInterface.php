@@ -26,6 +26,8 @@ interface MemoizeInterface
      * @throws \InvalidArgumentException
      *
      * @return mixed
+     *
+     * @deprecated Will be removed with 2.0. Use MemoizeInterface::memoizeById instead.
      */
     public function memoize($compute, $lifeTime = null);
 

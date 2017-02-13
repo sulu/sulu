@@ -16,7 +16,7 @@
     "require": {
         "php": "^5.5 || ^7.0",
         "cboden/ratchet": "0.3.*",
-        "doctrine/orm": "2.5.*",
+        "doctrine/orm": "^2.5.3",
         "doctrine/annotations": "^1.2",
         "doctrine/phpcr-bundle": "^1.3.5",
         "doctrine/doctrine-bundle": "~1.0",
@@ -27,7 +27,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1",
         "massive/search-bundle": "0.16.*",
-        "sulu/document-manager": "dev-develop",
+        "sulu/document-manager": "0.9.*@RC",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "gedmo/doctrine-extensions": "~2.4",
@@ -43,9 +43,7 @@
         "layershifter/tld-extract": "^1.1",
         "mtdowling/cron-expression": "^1.1",
         "ramsey/uuid": "^3.1",
-        "twig/twig": "^1.11 || ^2.0",
-        "php-task/task-bundle": "dev-master",
-        "php-task/php-task": "@dev"
+        "twig/twig": "^1.11 || ^2.0"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0",

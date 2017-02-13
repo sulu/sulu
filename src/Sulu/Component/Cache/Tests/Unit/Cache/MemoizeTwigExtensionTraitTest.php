@@ -90,11 +90,18 @@ class MemoizeTwigExtensionTraitTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->extension->getFunctions()->willReturn($before);
-        $this->memoizeCache->memoize(Argument::type('callable'), $this->lifeTime)->will(
-            function ($arguments) {
-                return call_user_func($arguments[0]);
-            }
-        )->shouldBeCalledTimes(2);
+        $this->memoizeCache->memoizeById('sulu_content_load', [], Argument::type('callable'), $this->lifeTime)
+            ->will(
+                function ($arguments) {
+                    return call_user_func($arguments[2]);
+                }
+            );
+        $this->memoizeCache->memoizeById('sulu_content_load_parent', [], Argument::type('callable'), $this->lifeTime)
+            ->will(
+                function ($arguments) {
+                    return call_user_func($arguments[2]);
+                }
+            );
 
         /** @var \Twig_SimpleFunction[] $result */
         $result = $this->trait->getFunctions();

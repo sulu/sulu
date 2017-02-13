@@ -451,6 +451,14 @@
                 <source>sulu.content.form.settings.changelog.changed-only</source>
                 <target>Dernier changement le %(changed)s</target>
             </trans-unit>
+            <trans-unit id="abbaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.authored">
+                <source>sulu.content.form.settings.changelog.authored</source>
+                <target>Créé par %(author)s le %(authored)s</target>
+            </trans-unit>
+            <trans-unit id="abcaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.authored-only">
+                <source>sulu.content.form.settings.changelog.authored-only</source>
+                <target>Créé le %(authored)s</target>
+            </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.created">
                 <source>sulu.content.form.settings.changelog.created</source>
                 <target>Créé par %(creator)s le %(created)s</target>
@@ -812,20 +820,28 @@
                  <target>Dépublier</target>
              </trans-unit>
             <trans-unit id="75" resname="sulu_content.broken-template.title">
-                 <source>"sulu_content.broken-template.title</source>
+                 <source>sulu_content.broken-template.title</source>
                  <target>De pagina-template is beschadigd</target>
              </trans-unit>
             <trans-unit id="76" resname="sulu_content.broken-template.message">
-                 <source>"sulu_content.broken-template.message</source>
+                 <source>sulu_content.broken-template.message</source>
                  <target>Neem contact op met de systeembeheerder.</target>
              </trans-unit>
             <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
-                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <source>sulu_content.broken-template.message.template-name</source>
                  <target>Templatenaam</target>
              </trans-unit>
             <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
-                 <source>"sulu_content.broken-template.message.template-name</source>
+                 <source>sulu_content.broken-template.message.template-name</source>
                  <target>UUID</target>
+             </trans-unit>
+            <trans-unit id="79" resname="sulu.content.form.settings.author">
+                 <source>sulu.content.form.settings.author</source>
+                 <target>Auteur</target>
+             </trans-unit>
+            <trans-unit id="80" resname="sulu.content.form.settings.authored">
+                 <source>sulu.content.form.settings.authored</source>
+                 <target>Date</target>
              </trans-unit>
         </body>
     </file>

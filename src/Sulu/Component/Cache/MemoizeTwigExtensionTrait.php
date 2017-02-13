@@ -39,11 +39,12 @@ trait MemoizeTwigExtensionTrait
         $result = [];
         foreach ($this->extension->getFunctions() as $function) {
             $callable = $function->getCallable();
+            $name = $function->getName();
 
             $result[] = new \Twig_SimpleFunction(
-                $function->getName(),
-                function () use ($callable) {
-                    return $this->memoizeCache->memoize($callable, $this->lifeTime);
+                $name,
+                function () use ($callable, $name) {
+                    return $this->memoizeCache->memoizeById($name, func_get_args(), $callable, $this->lifeTime);
                 }
             );
         }

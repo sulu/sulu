@@ -363,7 +363,7 @@ define([
                     locale: this.options.locale,
                     instanceName: this.options.instanceName,
                     assetActions: ['fa-check-circle-o'],
-                    assetTypes: this.options.types.split(','),
+                    assetTypes: this.getTypes(),
                     assetSelectOnClick: true,
                     assetSingleSelect: !!this.options.singleSelect,
                     assetPreselected: _.map(this.items, function (item) {
@@ -378,6 +378,14 @@ define([
                     parentContainer: constants.listContainerSelector
                 }
             }]);
+        },
+
+        getTypes: function() {
+            if (!this.options.types) {
+                return [];
+            }
+
+            return this.options.types.split(',');
         },
 
         handleBackButtonDisplay: function () {

@@ -108,7 +108,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             'sulu_media.format_manager.default_imagine_options',
             $config['format_manager']['default_imagine_options']
         );
-        $container->setParameter('sulu_media.format_manager.config_paths', $config['format_manager']['config_paths']);
         $container->setParameter('sulu_media.format_manager.mime_types', $config['format_manager']['mime_types']);
 
         // format cache
@@ -133,7 +132,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // collections
         $container->setParameter('sulu_media.collection.type.default', ['id' => 1]);
 
-        $container->setParameter('sulu_media.collection.previews.format', '50x50');
+        $container->setParameter('sulu_media.collection.previews.format', 'sulu-50x50');
 
         // media
         $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);

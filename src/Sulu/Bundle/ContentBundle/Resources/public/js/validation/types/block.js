@@ -134,7 +134,7 @@ define([
                             if (images.length > 0) {
                                 $block.find('.collapsed-container').removeClass('empty');
                                 $block.find('.collapsed-container .image').html(
-                                    '<img src="' + images[0].thumbnails['50x50'] + '"/>'
+                                    '<img src="' + images[0].thumbnails['sulu-50x50'] + '"/>'
                                 );
                             }
                         }.bind(this)

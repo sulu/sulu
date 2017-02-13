@@ -12,23 +12,17 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.repository.task"/>
             <argument type="string">%sulu_content.page_document.class%</argument>
+            <argument>45</argument>
+            <argument type="collection">
+                <argument type="collection">
+                    <argument key="property">url</argument>
+                    <argument key="operator" type="constant">\Sulu\Bundle\AdminBundle\Navigation\DisplayCondition::OPERATOR_NOT_EQUAL</argument>
+                    <argument key="value"></argument>
+                </argument>
+            </argument>
 
             <tag name="sulu_admin.content_navigation" alias="content"/>
             <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_content.automation.publish_handler"
-                 class="Sulu\Bundle\ContentBundle\Automation\DocumentPublishHandler">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-
-            <tag name="task.handler"/>
-        </service>
-
-        <service id="sulu_content.automation.unpublish_handler"
-                 class="Sulu\Bundle\ContentBundle\Automation\DocumentUnpublishHandler">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-
-            <tag name="task.handler"/>
         </service>
     </services>
 </container>

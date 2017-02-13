@@ -14,7 +14,7 @@
   "dependencies": {
     "backbone-relational": "0.8.*",
     "globalize": "0.1.*",
-    "husky": "0.28.*",
+    "husky": "0.29.*",
     "jquery": "1.10.*",
     "require-css": "~0.1.8",
     "clipboard": "^1.5.9"

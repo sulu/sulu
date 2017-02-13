@@ -69,7 +69,7 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             $this->userRepository->reveal(),
             $this->entityManager->reveal(),
             null,
-            '50x50',
+            'sulu-50x50',
             ['view' => 64]
         );
     }
