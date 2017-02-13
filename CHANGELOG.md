@@ -102,7 +102,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
     * BUGFIX      #3019 [WebsiteBundle]       Fixed redirect for double slash
-    * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension 
+    * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes
     * BUGFIX      #3014 [PreviewBundle]       Use the correct PHPCR session for the preview
