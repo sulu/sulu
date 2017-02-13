@@ -96,7 +96,7 @@ class XmlLegacyLoader implements LoaderInterface
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
         $cwd = getcwd();
-        // mute errors for non-Windows machines that have chdir disabled by their hosting provider
+        // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
         @chdir(dirname($resource));
 
         // read file
@@ -109,8 +109,8 @@ class XmlLegacyLoader implements LoaderInterface
                 return @$dom->schemaValidate($schemaPath);
             }
         );
-        
-        // mute errors for non-Windows machines that have chdir disabled by their hosting provider
+
+        // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
         @chdir($cwd);
 
         // generate xpath for file
