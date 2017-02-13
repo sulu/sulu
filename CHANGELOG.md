@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #3183 [ContentComponent]    Fixed Windows xinclude error
+
 * 1.5.0-RC1 (2017-02-13)
     * BUGFIX      #3022 [ContentBundle]       Fixed property-value offset set
     * ENHANCEMENT #3190 [ContentBundle]       Extracted automation handler

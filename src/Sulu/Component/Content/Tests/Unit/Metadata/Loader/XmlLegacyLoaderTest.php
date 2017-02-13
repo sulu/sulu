@@ -1304,10 +1304,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testReadTemplateWithXInclude()
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $this->markTestSkipped('Xinclude are not supported with php(unit) and windows.');
-        }
-
         $template = [
             'key' => 'template',
             'view' => 'page.html.twig',
