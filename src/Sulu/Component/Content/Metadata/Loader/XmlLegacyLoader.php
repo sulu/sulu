@@ -96,7 +96,8 @@ class XmlLegacyLoader implements LoaderInterface
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
         $cwd = getcwd();
-        chdir(dirname($resource));
+        // mute errors for non-Windows machines that have chdir disabled by their hosting provider
+        @chdir(dirname($resource));
 
         // read file
         $xmlDocument = XmlUtils::loadFile(
@@ -108,8 +109,9 @@ class XmlLegacyLoader implements LoaderInterface
                 return @$dom->schemaValidate($schemaPath);
             }
         );
-
-        chdir($cwd);
+        
+        // mute errors for non-Windows machines that have chdir disabled by their hosting provider
+        @chdir($cwd);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
