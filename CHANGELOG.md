@@ -15,9 +15,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
     * BUGFIX      #3149 [ContentBundle]       Fixed cache clearing on publishing
     * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id
-
     * ENHANCEMENT #3146 [TestBundle]          SuluTestCase: Adopted initPhpcr to work for all kernels
-
     * ENHANCEMENT #3147 [All]                 Updated minimum "phpspec/prophecy" version
     * ENHANCEMENT #3142 [CoreBundle]          Added a script handler to delete the composer.lock file from gitignore
     * FEATURE     #3042 [ContentBundle]       Added versioning functionality
@@ -53,6 +51,10 @@ CHANGELOG for Sulu
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
     * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
+
+* 1.4.7 (2017-02-13)
+    * HOTFIX      #3195 [MediaBundle]           Fixed media linking in texteditor overlay
+    * BUGFIX      #3186 [Cache]                 Fixed wrong cache key generation for MemoizeTwigExtensionTrait
 
 * 1.4.6 (2017-02-03)
     * HOTFIX      #3177 [WebsiteBundle]         Fixed wrong hreflang tag
