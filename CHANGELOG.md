@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.5.0-RC1 (2017-02-13)
     * BUGFIX      #3022 [ContentBundle]       Fixed property-value offset set
     * ENHANCEMENT #3190 [ContentBundle]       Extracted automation handler
     * ENHANCEMENT #3188 [AutomationBundle]    Extracted the automation-bundle

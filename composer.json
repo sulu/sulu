@@ -27,7 +27,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1",
         "massive/search-bundle": "0.16.*",
-        "sulu/document-manager": "dev-develop",
+        "sulu/document-manager": "0.9.*@RC",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "gedmo/doctrine-extensions": "~2.4",
@@ -59,9 +59,7 @@
         "symfony/monolog-bundle": "~2.8 || ~3.0",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
-        "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "php-task/php-task": "@dev",
-        "php-task/task-bundle": "@dev"
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "replace": {
         "sulu/media-bundle": "self.version",
