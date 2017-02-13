@@ -179,6 +179,7 @@ define([
                     removeable: false,
                     types: this.options.types,
                     locale: this.options.locale,
+                    maximumSelection: this.options.maximumSelection,
                     saveCallback: function(items) {
                         var data = this.getData();
                         _.each(data.ids, this.removeItemById.bind(this));

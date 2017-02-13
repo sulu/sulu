@@ -48,6 +48,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     {
         return [
             'types' => new PropertyParameter('types', null),
+            'maximumSelection' => new PropertyParameter('maximumSelection', null),
             'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'top'),
             'displayOptions' => new PropertyParameter(
                 'displayOptions',

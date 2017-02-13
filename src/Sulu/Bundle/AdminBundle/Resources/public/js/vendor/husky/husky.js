@@ -52819,6 +52819,7 @@ define('husky_extensions/itembox',[],function() {
             hideSelectedCounter: false,
             defaultDisplayOption: 'top',
             actionIcon: 'fa-plus-circle',
+            maximumSelection: null,
             displayOptions: {
                 leftTop: true,
                 top: true,
@@ -52868,7 +52869,11 @@ define('husky_extensions/itembox',[],function() {
                     '    <div class="header">',
                     '        <span class="', this.options.actionIcon, ' icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
                     '        <span class="selected-counter', !!this.options.hideSelectedCounter ? ' hidden' : '', '">',
-                    '            <span class="num">0</span><span> ', this.sandbox.translate(this.options.translations.elementsSelected) ,'</span>',
+                    '            <span class="num">0</span><span> ',
+                    !this.options.maximumSelection ?
+                        this.sandbox.translate(this.options.translations.elementsSelected)
+                        : this.sandbox.translate(this.options.translations.of) + ' ' + this.options.maximumSelection,
+                    '            </span>',
                     '        </span>',
                     '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
                     '        <span class="no-content-message">', this.sandbox.translate(this.options.translations.noContentSelected), '</span>',

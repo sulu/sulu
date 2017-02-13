@@ -58,6 +58,7 @@ define([
                 types: null,
                 removeOnClose: false,
                 openOnStart: false,
+                maximumSelection: null,
                 saveCallback: function() {
                 },
                 removeCallback: function() {
@@ -173,6 +174,18 @@ define([
             this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.loaded', function(data) {
                 _.each(data._embedded.media, function(item) {
                     this.loadedItems[item.id] = item;
+                }.bind(this));
+            }.bind(this));
+
+            this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.number.selections', function(selections) {
+                if (!this.options.maximumSelection || selections < this.options.maximumSelection) {
+                    return;
+                }
+
+                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.items.get-selected', function(ids) {
+                    for (var i = 0; i < ids.length - this.options.maximumSelection; i++) {
+                        this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.deselect.item', ids[i]);
+                    }
                 }.bind(this));
             }.bind(this));
         },
