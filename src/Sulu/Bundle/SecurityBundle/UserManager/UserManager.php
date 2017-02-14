@@ -586,6 +586,12 @@ class UserManager implements UserManagerInterface
      */
     private function encodePassword(UserInterface $user, $password, $salt)
     {
+        if (!$this->encoderFactory) {
+            throw new \InvalidArgumentException(
+                'For encoding a password the "EncoderFactory" must be passed to the "UserManager".'
+            );
+        }
+
         $encoder = $this->encoderFactory->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
