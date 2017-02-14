@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #3183 [ContentComponent]    Fixed Windows xinclude error
+    * BUGFIX      #3200 [SecurityBundle]      Fixed broken UserManager when used without Security
+    * BUGFIX      #3183 [ContentBundle]       Fixed Windows xinclude error
 
 * 1.5.0-RC1 (2017-02-13)
     * BUGFIX      #3022 [ContentBundle]       Fixed property-value offset set
