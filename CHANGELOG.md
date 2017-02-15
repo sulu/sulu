@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3210 [MediaBundle]         Allow same image format key if formats are identical
     * BUGFIX      #3200 [SecurityBundle]      Fixed broken UserManager when used without Security
     * BUGFIX      #3183 [ContentBundle]       Fixed Windows xinclude error
 
