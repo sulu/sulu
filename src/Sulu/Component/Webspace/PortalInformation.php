@@ -297,7 +297,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function getPrefix()
     {
-        return substr($this->url, $this->getHostLength());
+        return substr($this->url, $this->getHostLength(true));
     }
 
     /**
@@ -375,11 +375,17 @@ class PortalInformation implements ArrayableInterface
     /**
      * Calculate the length of the host part of the URL.
      *
+     * @param bool $withPort
+     *
      * @return int
      */
-    private function getHostLength()
+    private function getHostLength($withPort = false)
     {
-        $hostLength = strpos($this->url, '/');
+        $hostLength = false;
+        if (!$withPort) {
+            $hostLength = strpos($this->url, ':');
+        }
+        $hostLength = ($hostLength === false) ? strpos($this->url, '/') : $hostLength;
         $hostLength = ($hostLength === false) ? strlen($this->url) : $hostLength;
 
         return $hostLength;
