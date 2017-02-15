@@ -137,7 +137,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * It should throw an exception if no locale can be determined.
      *
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testNoLocale()
     {

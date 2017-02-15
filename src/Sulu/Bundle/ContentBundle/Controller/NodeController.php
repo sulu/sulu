@@ -159,7 +159,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
         $locale = $this->getRequestParameter($request, 'language', true);
-        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $webspaceKey = $this->getRequestParameter($request, 'webspace');
 
         $user = $this->getUser();
 
@@ -226,7 +226,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $webspaceKey, $locale, $user);
+            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
         } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
@@ -298,7 +298,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
-        $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         try {
             if ($uuid !== null && $uuid !== '') {
@@ -307,8 +306,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $webspace,
                     $language,
                     $excludeGhosts,
-                    $excludeShadows,
-                    $appendWebspaceNode
+                    $excludeShadows
                 );
             } elseif ($webspace !== null) {
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
@@ -488,7 +486,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $webspaceKey, $locale, $user);
+            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
         } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
@@ -601,11 +599,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ]
         );
 
-        $type = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getAlias();
+        $formType = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getFormType();
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
-        $this->persistDocument($request, $type, $document, $language);
+        $this->persistDocument($request, $formType, $document, $language);
         $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
@@ -636,8 +634,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->checkActionParameterSecurity($action, $language);
 
         $document = $this->getDocumentManager()->create($type);
+        $formType = $this->getMetadataFactory()->getMetadataForAlias($type)->getFormType();
 
-        $this->persistDocument($request, $type, $document, $language);
+        $this->persistDocument($request, $formType, $document, $language);
         $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
@@ -860,7 +859,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
      *
      * @param MappingInterface $mapping
      * @param array $contents
-     * @param string|null $webspaceKey
      * @param string $locale
      * @param UserInterface $user
      *
@@ -869,7 +867,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     private function getWebspaceNodes(
         MappingInterface $mapping,
         array $contents,
-        $webspaceKey,
         $locale,
         UserInterface $user
     ) {
@@ -888,7 +885,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $webspaces[$webspace->getKey()] = $webspace;
         }
 
-        return $this->getWebspaceNodesByPaths($paths, $webspaceKey, $locale, $mapping, $webspaces, $contents, $user);
+        return $this->getWebspaceNodesByPaths($paths, $locale, $mapping, $webspaces, $contents, $user);
     }
 
     /**
@@ -919,7 +916,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         return $this->getWebspaceNodesByPaths(
             $paths,
-            $webspaceKey,
             $locale,
             $mapping,
             $webspaces,
@@ -930,7 +926,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * @param string[] $paths
-     * @param string $webspaceKey
      * @param string $locale
      * @param MappingInterface $mapping
      * @param Webspace[] $webspaces
@@ -941,13 +936,17 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     private function getWebspaceNodesByPaths(
         array $paths,
-        $webspaceKey,
         $locale,
         MappingInterface $mapping,
         array $webspaces,
         array $contents,
         UserInterface $user
     ) {
+        $webspaceKey = null;
+        if ($firstContent = reset($contents)) {
+            $webspaceKey = $firstContent->getWebspaceKey();
+        }
+
         $webspaceContents = $this->get('sulu_content.content_repository')->findByPaths(
             $paths,
             $locale,
@@ -970,14 +969,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Persists the document using the given information.
      *
      * @param Request $request
-     * @param $type
+     * @param $formType
      * @param $document
      * @param $language
      *
      * @throws InvalidFormException
      * @throws MissingParameterException
      */
-    private function persistDocument(Request $request, $type, $document, $language)
+    private function persistDocument(Request $request, $formType, $document, $language)
     {
         $data = $request->request->all();
 
@@ -986,7 +985,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         $form = $this->createForm(
-            $type,
+            $formType,
             $document,
             [
                 // disable csrf protection, since we can't produce a token, because the form is cached on the client

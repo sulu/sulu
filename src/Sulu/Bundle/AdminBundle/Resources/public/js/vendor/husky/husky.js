@@ -28541,6 +28541,65 @@ define('services/husky/translator',[],function() {
     return Translator.getInstance();
 });
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('services/husky/storage',[],function() {
+
+    'use strict';
+
+    function Storage() {
+        this.values = {};
+    }
+
+    Storage.prototype.set = function(key, value) {
+        this.values[key] = value;
+    };
+
+    Storage.prototype.remove = function(key, value) {
+        delete this.values[key];
+    };
+
+    Storage.prototype.has = function(key) {
+        return this.values.hasOwnProperty(key);
+    };
+
+    Storage.prototype.get = function(key) {
+        if (!this.has(key)) {
+            throw 'Value for key "' + key + '" does not exist';
+        }
+
+        return this.values[key];
+    };
+
+    Storage.prototype.getWithDefault = function(key, defaultValue) {
+        if (!this.has(key)) {
+            return defaultValue;
+        }
+
+        return this.get(key);
+    };
+
+    var stores = {};
+
+    return {
+        get: function(type, instanceName) {
+            var key = type + '.' + instanceName;
+            if (!stores.hasOwnProperty(key)) {
+                stores[key] = new Storage();
+            }
+
+            return stores[key];
+        }
+    };
+});
+
 define('bower_components/aura/lib/platform',[],function() {
   // The bind method is used for callbacks.
   //
@@ -29354,9 +29413,7 @@ define('bower_components/aura/lib/aura',[
   return Aura;
 });
 
-define('husky',[
-    'bower_components/aura/lib/aura'
-], function(Aura) {
+define('husky',['bower_components/aura/lib/aura'], function(Aura) {
 
     'use strict';
 
@@ -30795,7 +30852,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             addRowTop: true,
             excludeFields: [''],
             cssClass: '',
-            thumbnailFormat: '50x50',
+            thumbnailFormat: 'sulu-50x50',
             showHead: true,
             hideChildrenAtBeginning: true,
             openChildId: null,
@@ -32245,7 +32302,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 if (this.table.rows[id]) {
                     // ensure that checkboxes are checked
                     this.sandbox.dom.prop(
-                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', true
+                        this.sandbox.dom.find(
+                            '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                            this.table.rows[id].$el
+                        ),
+                        'checked',
+                        true
                     );
                     this.sandbox.dom.addClass(this.table.rows[id].$el, constants.selectedRowClass);
                     this.indeterminateSelectParents(id);
@@ -33378,8 +33440,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
         'husky_components/datagrid/decorators/table-view',
         'husky_components/datagrid/decorators/tiles-view',
         'husky_components/datagrid/decorators/dropdown-pagination',
-        'husky_components/datagrid/decorators/infinite-scroll-pagination'
-    ], function(decoratorTableView, decoratorTilesView, decoratorDropdownPagination, infiniteScrollPagination) {
+        'husky_components/datagrid/decorators/infinite-scroll-pagination',
+        'services/husky/storage'
+    ], function(decoratorTableView, decoratorTilesView, decoratorDropdownPagination, infiniteScrollPagination, storage) {
 
         /* Default values for options */
 
@@ -33403,6 +33466,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 data: null,
                 instanceName: '',
                 searchInstanceName: null,
+                storageName: null,
                 searchFields: [],
                 columnOptionsInstanceName: null,
                 defaultMeasureUnit: 'px',
@@ -34050,6 +34114,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 // extend default options and set variables
                 this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+                this.storage = storage.get('datagrid', this.options.storageName || this.sandbox.util.uniqueId('datgrid'));
+
                 this.matchings = [];
                 this.requestFields = [];
                 this.selectedItems = [];
@@ -34108,13 +34174,18 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * Gets the data either via the url or the array
              */
             loadAndRenderData: function() {
-                var url;
+                var url, separator;
                 if (!!this.options.url) {
-                    url = this.options.url;
+                    if (this.storage.has('url')) {
+                        url = this.storage.get('url');
+                    } else {
+                        url = this.options.url;
+                        separator = (url.indexOf('?') === -1) ? '?' : '&';
 
-                    if (this.requestFields.length > 0) {
-                        url += (url.indexOf('?') === -1) ? '?' : '&';
-                        url += 'fields=' + this.requestFields.join(',');
+                        if (this.requestFields.length > 0) {
+                            url += separator + 'fields=' + this.requestFields.join(',');
+                            separator = '&';
+                        }
                     }
 
                     this.sandbox.logger.log('load data from url');
@@ -35506,6 +35577,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         url = this.sandbox.uritemplate.expand(uriTemplate, {page: page, limit: limit});
                     }
 
+                    if (this.viewId === 'table') {
+                        this.storage.set('url', url);
+                    }
+
                     this.sandbox.emit(PAGE_CHANGE.call(this), url);
                     this.load({
                         url: url,
@@ -35641,6 +35716,11 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                             searchString: searchString,
                             searchFields: this.options.searchFields.join(',')
                         });
+                    }
+                    if (searchString !== '') {
+                        this.storage.set('url', url);
+                    } else {
+                        this.storage.remove('url');
                     }
 
                     this.destroy();
@@ -36365,7 +36445,7 @@ define('__component__$matrix@husky',[],function() {
  * @param {String} [options.placeholderText=Search...] the text to be shown as placeholder
  * @param {String} [options.appearance=gray] appearance can be 'gray', 'white' or 'small'
  */
-define('__component__$search@husky',[], function() {
+define('__component__$search@husky',['services/husky/storage'], function(storage) {
 
     'use strict';
 
@@ -36378,6 +36458,7 @@ define('__component__$search@husky',[], function() {
         },
         defaults = {
             instanceName: null,
+            storageName: null,
             placeholderText: 'public.search',
             appearance: 'gray',
             slide: false
@@ -36426,6 +36507,7 @@ define('__component__$search@husky',[], function() {
         initialize: function() {
             this.sandbox.logger.log('initialize', this);
             this.options = this.sandbox.util.extend({}, defaults, this.options);
+            this.storage = storage.get('search', this.options.storageName || this.sandbox.util.uniqueId('search'));
 
             this.render();
 
@@ -36450,6 +36532,12 @@ define('__component__$search@husky',[], function() {
             }
 
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {placeholderText: this.sandbox.translate(this.options.placeholderText)}));
+
+            if (this.storage.has('searchString')) {
+                this.$el.find('input').val(this.storage.get('searchString'));
+                this.$el.find('.remove-icon').show();
+                this.searchSubmitted = true;
+            }
         },
 
         // bind dom elements
@@ -36493,6 +36581,7 @@ define('__component__$search@husky',[], function() {
             }
 
             this.searchSubmitted = false;
+            this.storage.remove('searchString');
         },
 
         checkKeyPressed: function(event) {
@@ -36534,6 +36623,7 @@ define('__component__$search@husky',[], function() {
             }
 
             this.searchSubmitted = true;
+            this.storage.set('searchString', searchString);
 
             // emit event
             this.sandbox.emit(SEARCH.call(this), searchString);
@@ -36560,7 +36650,6 @@ define('__component__$search@husky',[], function() {
         selectInput: function(event) {
             this.sandbox.dom.trigger(event.currentTarget, 'select');
         },
-
 
         /**
          * function emits event based on options.name
@@ -36809,6 +36898,16 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
         },
 
         /**
+         * used to update the notification badge of a single tab.
+         * @event husky.tabs.update-notification
+         * @param {String} id
+         * @param {Number} notificationBadge
+         */
+        UPDATE_NOTIFICATION = function() {
+            return this.createEventName('update-notification');
+        },
+
+        /**
          * used to update the tab-component.
          * @event husky.tabs.initialized
          * @param {Number} visibleTabs object
@@ -36915,6 +37014,15 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
             setMarker.call(this);
         },
 
+        updateNotification = function(id, notificationNumber) {
+            var $item = this.$find('li[data-id="' + id + '"] a');
+            if (!!notificationNumber) {
+                return $item.attr('data-badge', notificationNumber);
+            }
+
+            $item.removeAttr('data-badge');
+        },
+
         bindDOMEvents = function() {
             if (!!this.options.preSelectEvent.enabled) {
                 this.sandbox.dom.on(this.$el, 'click', preSelectEvent.bind(this), 'li');
@@ -36935,6 +37043,7 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
             this.sandbox.on(ITEM_HIDE.call(this), hideItem.bind(this));
             this.sandbox.on(ITEM_CLICKED.call(this), selectItem.bind(this));
             this.sandbox.on(UPDATE.call(this), update.bind(this));
+            this.sandbox.on(UPDATE_NOTIFICATION.call(this), updateNotification.bind(this));
         };
 
     return {
@@ -37028,9 +37137,14 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
             var visibleTabs = 0;
             this.sandbox.util.foreach(this.data, function(item, index) {
                 this.items[item.id] = item;
-                $item = this.sandbox.dom.createElement(
-                    '<li data-id="' + item.id + '"><a href="#">' + this.sandbox.translate(item.name) + '</a></li>'
-                );
+                $item = this.sandbox.dom.createElement([
+                    '<li data-id="' + item.id + '">',
+                    '    <a href="#" ', (item.notificationBadge ? 'data-badge="' + item.notificationBadge : ''), '">',
+                    this.sandbox.translate(item.name),
+                    '    </a>',
+                    '</li>'
+                ].join(''));
+
                 this.sandbox.dom.append($list, $item);
 
                 if ((!!item.disabled && item.disabled.toString() === 'true')
@@ -37116,6 +37230,7 @@ define('__component__$tabs@husky',['services/husky/expression'], function(Expres
  * @param {Boolean} [options.buttons.hidden] if true button gets hidden form the beginning on
  *
  * @param {Array} [options.buttons.dropdownItems]
+ * @param {Deferred|Object} [options.buttons.dropdownItems.initialize] callback will be called before rendering.
  * @param {String} [options.buttons.dropdownItems.title]
  * @param {String} [options.buttons.dropdownItems.icon] false will remove icon
  * @param {Function} [options.buttons.dropdownItems.callback]
@@ -37916,8 +38031,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param parent
          */
         createDropdownMenu = function(listItem, parent) {
-            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
-                $item;
+            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />');
 
             if (!!parent.dropdownOptions && !!parent.dropdownOptions.maxHeight) {
                 $list.css('maxHeight', parent.dropdownOptions.maxHeight);
@@ -37925,7 +38039,6 @@ define('__component__$toolbar@husky',[],function() {
 
             this.sandbox.dom.append(listItem, $list);
             this.sandbox.util.foreach(parent.dropdownItems, function(dropdownItem) {
-                dropdownItem.title = this.sandbox.translate(dropdownItem.title);
                 if (dropdownItem.divider) {
                     // prevent divider when not enough items
                     if (this.items[parent.id].dropdownItems.length <= 2) {
@@ -37936,27 +38049,55 @@ define('__component__$toolbar@husky',[],function() {
                 }
 
                 dropdownItem.parentId = parent.id;
+
                 // check id for uniqueness
                 checkItemId.call(this, dropdownItem);
-                $item = this.sandbox.dom.createElement(
-                    '<li data-id="' + dropdownItem.id + '"><a href="#">' + dropdownItem.title + '</a></li>'
+                var $item = this.sandbox.dom.createElement(
+                    '<li data-id="' + dropdownItem.id + '"></li>'
                 );
-                dropdownItem.$el = $item;
-                this.items[dropdownItem.id] = dropdownItem;
-
-                if (dropdownItem.disabled === true) {
-                    this.sandbox.dom.addClass($item, 'disabled');
-                }
-                if (dropdownItem.marked === true) {
-                    uniqueMarkItem.call(this, dropdownItem.id);
-                }
-                if (!!dropdownItem.styleClass) {
-                    $item.addClass(dropdownItem.styleClass);
-                }
                 this.sandbox.dom.append($list, $item);
+
+                if (!dropdownItem.initialize || typeof dropdownItem.initialize !== 'function') {
+                    return createDropdownItem.call(this, $list, $item, dropdownItem);
+                }
+
+                var result = dropdownItem.initialize(dropdownItem, $item, this.sandbox);
+                if (!result.then) {
+                    return createDropdownItem.call(this, $list, $item, result);
+                }
+
+                result.then(function(dropdownItem) {
+                    createDropdownItem.call(this, $list, $item, dropdownItem);
+                }.bind(this));
             }.bind(this));
 
             updateDropdownArrow.call(this, $list);
+        },
+
+        createDropdownItem = function($list, $item, dropdownItem) {
+            dropdownItem.title = this.sandbox.translate(dropdownItem.title);
+            if (typeof dropdownItem.link !== 'undefined' && false === dropdownItem.link) {
+                $item.addClass('no-link');
+                $item.html(dropdownItem.title);
+            } else {
+                $item.append('<a href="#">' + dropdownItem.title + '</a>');
+            }
+
+            dropdownItem.$el = $item;
+            this.items[dropdownItem.id] = dropdownItem;
+
+            if (dropdownItem.hidden === true) {
+                this.sandbox.dom.addClass($item, 'hidden');
+            }
+            if (dropdownItem.disabled === true) {
+                this.sandbox.dom.addClass($item, 'disabled');
+            }
+            if (dropdownItem.marked === true) {
+                uniqueMarkItem.call(this, dropdownItem.id);
+            }
+            if (!!dropdownItem.styleClass) {
+                $item.addClass(dropdownItem.styleClass);
+            }
         },
 
         countVisibleItemsInDropdown = function($list) {
@@ -41636,11 +41777,8 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Boolean} [options.showStatus] hide or display status of elements
  * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
  * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
-<<<<<<< 76cfc9f9d9eb8f8abf34f388ef807f5629319370
  * @params {Boolean} [options.singleMarkable] If true just one item is markable
-=======
  * @params {Boolean} [options.actionOnGhostPage] If true action Button on ghost page will be shown
->>>>>>> Added actionOnGhostPage option in column navigation
  * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
  * @params {Array} [options.disableIds] an array of uuids which will be disabled
  * @params {Array} [options.disabledChildren] an array of uuids which will be disabled
@@ -41691,6 +41829,9 @@ define('__component__$column-navigation@husky',[],function() {
             singleMarkable: false,
             orderable: true,
             showActionIcon: true,
+            isBrokenCallback: function(item) {
+                return false;
+            },
             orderConfirmTitle: 'column-navigation.order-title',
             orderConfirmMessage: 'column-navigation.order-message',
             tooltipTranslations: {
@@ -42361,6 +42502,10 @@ define('__component__$column-navigation@husky',[],function() {
             this.renderLeftInfo($item, data);
             this.renderItemText($item, data);
             this.renderRightInfo($item, data, disabled);
+
+            if (this.options.isBrokenCallback(data)) {
+                $item.addClass('broken');
+            }
 
             return $item;
         },
@@ -46533,6 +46678,8 @@ define('__component__$input@husky',[], function() {
         bindDatepickerDomEvents: function() {
             this.sandbox.dom.on(this.input.$input, 'focusout', function() {
                 this.setDatepickerValueAttr(this.sandbox.datepicker.getDate(this.input.$input));
+
+                return false;
             }.bind(this));
         },
 
@@ -52684,7 +52831,6 @@ define('husky_extensions/itembox',[],function() {
             },
             translations: {
                 noContentSelected: 'listbox.nocontent-selected',
-                viewAll: 'public.view-all',
                 viewLess: 'public.view-less',
                 of: 'public.of',
                 visible: 'public.visible',
@@ -52859,9 +53005,11 @@ define('husky_extensions/itembox',[],function() {
             render: function() {
                 this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-                var data = this.getData();
+                if (!!this.options.defaultDisplayOption) {
+                    this.options.dataDefault.displayOption = this.options.defaultDisplayOption;
+                }
 
-                this.viewAll = true;
+                var data = this.getData();
 
                 this.ids = {
                     container: 'listbox-' + this.options.instanceName + '-container',
@@ -52963,9 +53111,6 @@ define('husky_extensions/itembox',[],function() {
             loadContent: function(data) {
                 this.$container.addClass(constants.isLoadingClass);
 
-                // reset items visible when new content is loaded
-                this.viewAll = false;
-
                 if (!!data && (!data.length || data.length > 0)) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
@@ -53052,7 +53197,6 @@ define('husky_extensions/itembox',[],function() {
              * @param event
              */
             changeDisplayOption: function(event) {
-                // TODO move display options to own component?
                 var position = this.sandbox.dom.data(event.currentTarget, 'position');
 
                 this.setDisplayOption(position);

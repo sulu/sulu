@@ -1,0 +1,75 @@
+<div class="grid-row">
+{# initialize columns #}
+{% set columns = 0 %}
+{% for property in properties %}
+
+    {# set propertyColspan with default if colspan is not set #}
+    {% set propertyColspan = property.colspan != "" ? property.colspan : 12 %}
+
+    {# create new row if there are more then 12 colspans in a row #}
+    {% if columns + propertyColspan <= 12 %}
+        {# set current amount of colspans #}
+        {% set columns = columns + propertyColspan %}
+    {% else %}
+        </div>
+        <div class="grid-row">
+        {# set current amount of colspans #}
+        {% set columns = propertyColspan %}
+    {% endif %}
+
+    {# get params for property #}
+    {% set params = sulu_get_params(property) %}
+    {% set id = propertyPrefix|default('') ~ property.name ~ propertyPostfix|default('') %}
+
+    {% if property.contentTypeName == 'section' %}
+        {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+            'property': property,
+            'params': params,
+            'id': id,
+            'webspaceKey': webspaceKey,
+            'languageCode': languageCode,
+            'userLocale': userLocale,
+            'title': true,
+            'uuid':uuid
+        } only %}
+    {% else %}
+        {# get type for property #}
+        {% set type = sulu_get_type(property.contentTypeName) %}
+
+        {% if property.contentTypeName == 'block' %}
+            {% include type.template with {
+                'property': property,
+                'params': params,
+                'type': type,
+                'id': id,
+                'webspaceKey': webspaceKey,
+                'languageCode': languageCode,
+                'userLocale': userLocale,
+                'uuid':uuid
+            } only %}
+        {% elseif property is multiple %}
+            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {
+                'property': property,
+                'params': params,
+                'type': type,
+                'id': id,
+                'webspaceKey': webspaceKey,
+                'languageCode': languageCode,
+                'userLocale': userLocale,
+                'uuid':uuid
+            } only %}
+        {% else %}
+            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {
+                'property': property,
+                'params': params,
+                'type': type,
+                'id': id,
+                'webspaceKey': webspaceKey,
+                'languageCode': languageCode,
+                'userLocale': userLocale,
+                'uuid':uuid
+            } only %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+</div>

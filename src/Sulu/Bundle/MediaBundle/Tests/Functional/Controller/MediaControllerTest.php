@@ -339,7 +339,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
+            '/uploads/media/sulu-50x50/01/' . $media->getId() . '-photo.jpeg'
         );
         $this->assertEquals(
             $date->format('Y-m-d'),

@@ -1,7 +1,7 @@
 <div class="view" style="display: inline-block;">
     <div class="value">
         <% if (!!mediaId) { %>
-        <span class="image"><img src="/admin/media/redirect/media/<%= mediaId %>?locale=<%= locale %>&format=50x50"/></span>
+        <span class="image"><img src="/admin/media/redirect/media/<%= mediaId %>?locale=<%= locale %>&format=sulu-50x50"/></span>
         <% } %>
 
         <span class="title"><%= title %></span>
@@ -23,7 +23,7 @@
     <div>
         <div class="image">
             <% if (!!mediaId) { %>
-            <div class="image-content"><img class="mediaId" data-id="<%= mediaId %>" src="/admin/media/redirect/media/<%= mediaId %>?locale=<%= locale %>&format=50x50"/></div>
+            <div class="image-content"><img class="mediaId" data-id="<%= mediaId %>" src="/admin/media/redirect/media/<%= mediaId %>?locale=<%= locale %>&format=sulu-50x50"/></div>
             <% } else { %>
             <div class="fa-picture-o image-content"/>
             <% } %>

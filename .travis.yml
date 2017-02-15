@@ -17,8 +17,11 @@ env:
 matrix:
   include:
     - php: 5.5
+      env:
+        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
     - php: 7.0
       env:
+        - COMPOSER_FLAGS="--prefer-dist --no-interaction
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
@@ -55,7 +58,8 @@ before_script:
   - echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini
   - composer self-update
-  - composer install  --prefer-dist --no-interaction
+  - composer update $COMPOSER_FLAGS
+  - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 ; fi
 
 script: 
   - time ./bin/runtests -i -a $TEST_FLAGS

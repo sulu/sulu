@@ -365,7 +365,7 @@ class WebspaceCollectionBuilder
                 $replacers = [
                     ReplacerInterface::REPLACER_LANGUAGE => $language,
                     ReplacerInterface::REPLACER_COUNTRY => $country,
-                    ReplacerInterface::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
+                    ReplacerInterface::REPLACER_LOCALIZATION => $localization->getLocale(Localization::DASH),
                 ];
 
                 $this->buildUrlFullMatch(

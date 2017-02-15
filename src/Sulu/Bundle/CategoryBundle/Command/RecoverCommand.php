@@ -73,7 +73,6 @@ class RecoverCommand extends ContainerAwareCommand
 
         // fix depths if -depth is defined
         if ($fixDepth) {
-
             // fix categories without parents
             $numberParentLess = $this->findCategoriesWithoutParents();
             if ($numberParentLess > 0) {

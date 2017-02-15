@@ -1,9 +1,64 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #3200 [SecurityBundle]      Fixed broken UserManager when used without Security
+    * BUGFIX      #3183 [ContentBundle]       Fixed Windows xinclude error
+
+* 1.5.0-RC1 (2017-02-13)
+    * BUGFIX      #3022 [ContentBundle]       Fixed property-value offset set
+    * ENHANCEMENT #3190 [ContentBundle]       Extracted automation handler
+    * ENHANCEMENT #3188 [AutomationBundle]    Extracted the automation-bundle
+    * BUGFIX      #3183 [ContentBundle]       Fixed grid usage in conten form
+    * BUGFIX      #3186 [Cache]               Fixed wrong cache key generation for MemoizeTwigExtensionTrait
+    * ENHANCMENT  #3182 [SecurityBundle]      Added unique constraint for permission context and role
+    * ENHANCEMENT #3179 [All]                 Added exception throw when field descriptor reference is not found
+    * BUGFIX      #3040 [MediaBundle]         Throw exception when multiple formats have the same key
+    * BUGFIX      #3180 [AutomationBundle]    Remove the automation tab from ghost page forms
+    * FEATURE     #3164 [AdminBundle]         Extracted csv-export into extension
+    * BUGFIX      #3158 [WebsiteBundle]       Fixed error where URL displayed in exception is missing
+    * BUGFIX      #3149 [ContentBundle]       Fixed cache clearing on publishing
+    * BUGFIX      #3141 [All]                 Fixed doctrine list builder id when name is not id
+    * ENHANCEMENT #3146 [TestBundle]          SuluTestCase: Adopted initPhpcr to work for all kernels
+    * ENHANCEMENT #3147 [All]                 Updated minimum "phpspec/prophecy" version
+    * ENHANCEMENT #3142 [CoreBundle]          Added a script handler to delete the composer.lock file from gitignore
+    * FEATURE     #3042 [ContentBundle]       Added versioning functionality
+    * ENHANCEMENT #3126 [All]                 Fixed deprecations to be compatible to twig2
+    * FEATURE     #3113 [ContentBundle]       Added authored/author field to pages
+    * ENHANCEMENT #3094 [MarkupBundle]        Extracted tag-extractor from html-markup-parser
+    * BUGFIX      #3111 [LocationBundle]      Fixed coordinates update for google map provider
+    * ENHANCEMENT #3110 [WebsiteBundle]       Fixed deprecation of flatten-exception by decorating twig-exception-controller
+    * BUGFIX      #3109 [SnippetBundle]       Added publish snippet after copy locale
+    * FEATURE     #3107 [All]                 Added storage-name to list components
+    * BUGFIX      #3098 [AdminBundle]         Fixed typo in english translation
+    * ENHANCEMENT #3097 [All]                 Updated dependencies
+    * BUGFIX      #3095 [ContentBundle]       Fixed sort-by for data-provider
+    * BUGFIX      #3092 [ContentBundle]       Fixed api if structure-type was removed or is not valid
+    * ENHANCEMENT #3084 [GeneratorBundle]     Removed generator-bundle
+    * ENHANCEMENT #3080 [All]                 Removed getRequest calls
+    * ENHANCENEMT #3070 [All]                 Removed guzzle3 dependency
+    * FEATURE     #3078 [MediaBundle]         Added sort-by title for media-dataprovider
+    * FEATURE     #3069 [PreviewBundle]       Added cache configuration for preview & websocket context
+    * ENHANCEMENT #3071 [All]                 Updated willdurand/hateoas-bundle
+    * ENHANCEMENT #3072 [SnippetBundle]       Fixed deprecations for symfony 3.0
+    * ENHANCEMENT #3072 [AdminBundle]         Fixed deprecations for symfony 3.0
+    * FEATURE     #3066 [AutomationBundle]    Added notification-badge to automation-tab
+    * ENHANCEMENT #3059 [ContentBundle]       Fixed deprecation in WebspaceCollection rendering
+    * ENHANCEMENT #3058 [All]                 Fixed some config files for symfony3
+    * BUGFIX      #3043 [ContentBundle]       Fixed bind null values on managed-structure
+    * FEATURE     #3037 [AutomationBundle]    Added automation-bundle
+    * BUGFIX      #3052 [ContentBundle]       Fixed loading tree (with uuid) without webspace
+    * ENHANCEMENT #3067 [ContentBundle]       Removed symfony-acl-voter
+    * ENHANCEMENT #3068 [CoreBundle]          Removed phpcr-odm
+    * ENHANCEMENT #2856 [ContactBundle]       Removed not needed css
+    * BUGFIX      #3034 [LocationBundle]      Load external map data over https
+    * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
+    * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
+    * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
+
 * 1.4.7 (2017-02-13)
     * HOTFIX      #3195 [MediaBundle]           Fixed media linking in texteditor overlay
-    * BUGFIX      #3186 [Cache]               Fixed wrong cache key generation for MemoizeTwigExtensionTrait
+    * BUGFIX      #3186 [Cache]                 Fixed wrong cache key generation for MemoizeTwigExtensionTrait
 
 * 1.4.6 (2017-02-03)
     * HOTFIX      #3177 [WebsiteBundle]         Fixed wrong hreflang tag
@@ -50,7 +105,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2997 [AdminBundle]         Disabled double click on ghost page in internal links
     * BUGFIX      #2834 [SecurityBundle]      Fixed bug with set all/none button in settings/ user role
     * ENHANCEMENT #3004 [ContentBundle]       Fixed last selected page after search
-    * BUGFIX      #3019 [WesbiteBundle]       Fixed redirect for double slash
+    * BUGFIX      #3019 [WebsiteBundle]       Fixed redirect for double slash
     * BUGFIX      #2969 [MediaBundle]         Fixed uncatchable exception when use sulu_media_resolve twig extension
     * BUGFIX      #3018 [WebsiteBundle]       Fixed port handling for webspaces
     * BUGFIX      #3012 [MediaBundle]         Update format url when subversion changes

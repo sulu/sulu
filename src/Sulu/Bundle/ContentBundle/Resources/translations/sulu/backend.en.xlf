@@ -445,15 +445,27 @@
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.changed">
                 <source>sulu.content.form.settings.changelog.changed</source>
-                <target>Changed by:</target>
+                <target>Last change from %(changer)s at %(changed)s</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.created">
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.changed-only">
+                <source>sulu.content.form.settings.changelog.changed-only</source>
+                <target>Last change at %(changed)s</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.created">
                 <source>sulu.content.form.settings.changelog.created</source>
-                <target>Created by:</target>
+                <target>Created by %(creator)s at %(created)s</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.user-not-found">
-                <source>sulu.content.form.settings.changelog.user-not-found</source>
-                <target>User not found</target>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf034" resname="sulu.content.form.settings.changelog.created-only">
+                <source>sulu.content.form.settings.changelog.created-only</source>
+                <target>Created by %(created)s</target>
+            </trans-unit>
+            <trans-unit id="abbaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.authored">
+                <source>sulu.content.form.settings.changelog.authored</source>
+                <target>Authored by %(author)s at %(authored)s</target>
+            </trans-unit>
+            <trans-unit id="abcaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.authored-only">
+                <source>sulu.content.form.settings.changelog.authored-only</source>
+                <target>Authored at %(authored)s</target>
             </trans-unit>
             <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
                 <source>column-navigation.ghost</source>
@@ -799,6 +811,38 @@
                 <source>content.ckeditor.internal-link.remove-drop-down</source>
                 <target>Remove</target>
             </trans-unit>
+            <trans-unit id="73" resname="sulu_content.task_handler.publish">
+                 <source>sulu_content.task_handler.publish</source>
+                 <target>Publish</target>
+             </trans-unit>
+            <trans-unit id="74" resname="sulu_content.task_handler.unpublish">
+                 <source>sulu_content.task_handler.unpublish</source>
+                 <target>Unpublish</target>
+             </trans-unit>
+            <trans-unit id="75" resname="sulu_content.broken-template.title">
+                 <source>sulu_content.broken-template.title</source>
+                 <target>Page-Template is broken</target>
+             </trans-unit>
+            <trans-unit id="76" resname="sulu_content.broken-template.message">
+                 <source>sulu_content.broken-template.message</source>
+                 <target>Please contact system your administrator.</target>
+             </trans-unit>
+            <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
+                 <source>sulu_content.broken-template.message.template-name</source>
+                 <target>Template name</target>
+             </trans-unit>
+            <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
+                 <source>sulu_content.broken-template.message.template-name</source>
+                 <target>UUID</target>
+             </trans-unit>
+            <trans-unit id="79" resname="sulu.content.form.settings.author">
+                 <source>sulu.content.form.settings.author</source>
+                 <target>Authored by</target>
+             </trans-unit>
+            <trans-unit id="80" resname="sulu.content.form.settings.authored">
+                 <source>sulu.content.form.settings.authored</source>
+                 <target>Authored Date</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

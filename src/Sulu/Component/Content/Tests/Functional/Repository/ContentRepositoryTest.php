@@ -495,6 +495,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertNotNull($result->getId());
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-1', $result->getPath());
+        $this->assertEquals('simple', $result->getTemplate());
         $this->assertEquals('test-1', $result['title']);
     }
 
@@ -775,6 +776,22 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page12->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(0, $layer[1]->getChildren());
+    }
+
+    public function testFindParentsWithSiblingsByUuidWithoutWebspaceKey()
+    {
+        $page = $this->createPage('test-1', 'de');
+
+        $result = $this->contentRepository->findParentsWithSiblingsByUuid(
+            $page->getUuid(),
+            'de',
+            '',
+            MappingBuilder::create()->getMapping()
+        );
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($page->getUuid(), $result[0]->getId());
+        $this->assertEquals($page->getWebspaceName(), $result[0]->getWebspaceKey());
     }
 
     public function testFindByPaths()

@@ -22,6 +22,22 @@
                 <source>sulu-document-manager.unpublish</source>
                 <target>Set to unpublished</target>
             </trans-unit>
+            <trans-unit id="7" resname="sulu-document-manager.version.author">
+                <source>sulu-document-manager.version.author</source>
+                <target>Creator</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu-document-manager.version.authored">
+                <source>sulu-document-manager.version.authored</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="9" resname="sulu-document-manager.restore-confirmation-title">
+                <source>sulu-document-manager.restore-confirmation-title</source>
+                <target>Restore version?</target>
+            </trans-unit>
+            <trans-unit id="10" resname="sulu-document-manager.restore-confirmation-description">
+                <source>sulu-document-manager.restore-confirmation-description</source>
+                <target>A new draft will be created. An existing draft version will be overwritten.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

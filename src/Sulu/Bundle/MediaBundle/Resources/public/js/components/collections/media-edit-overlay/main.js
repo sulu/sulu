@@ -51,7 +51,7 @@ define([
         },
 
         constants = {
-            thumbnailFormat: '260x',
+            thumbnailFormat: 'sulu-260x',
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             fileDropzoneSelector: '#file-version-change',

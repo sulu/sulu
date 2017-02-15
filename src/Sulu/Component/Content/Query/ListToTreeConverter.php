@@ -156,7 +156,7 @@ class ListToTreeConverter
      *
      * @version   SVN: Release: $Id: explodeTree.inc.php 89 2008-09-05 20:52:48Z kevin $
      *
-     * @link      http://kevin.vanzonneveld.net/
+     * @see      http://kevin.vanzonneveld.net/
      *
      * @param array  $array
      * @param string $delimiter

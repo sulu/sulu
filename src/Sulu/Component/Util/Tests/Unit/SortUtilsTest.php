@@ -146,7 +146,7 @@ class SortUtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testSortMissingField()
     {

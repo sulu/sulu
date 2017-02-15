@@ -1,8 +1,9 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
 {% block toolbar %}
+    {% import _self as self %}
     {% set icon %}
-    <img width="28" height="28" alt="Sulu" src="data:image/png;base64,{{ _self.logo_small }}" />
+    <img width="28" height="28" alt="Sulu" src="data:image/png;base64,{{ self.logo_small }}" />
     {% endset %}
 
     {% set text %}
@@ -34,13 +35,15 @@
 {% endblock %}
 
 {% block menu %}
+{% import _self as self %}
 <span class="label">
-    <span class="icon"><img height="40" width="40" src="data:imagebbng;base64,{{ _self.logo }}" alt="Sulu"></span>
+    <span class="icon"><img height="40" width="40" src="data:imagebbng;base64,{{ self.logo }}" alt="Sulu"></span>
     <strong>Sulu</strong>
 </span>
 {% endblock %}
 
 {% block panel %}
+    {% import _self as self %}
     <h2>Webspace</h2>
     <table>
         <tbody>
@@ -78,27 +81,26 @@
     <h2>Structure</h2>
     <table>
         <tbody>
-            {{ _self.table_row('id', collector.data('structure').id) }}
-            {{ _self.table_row('path', collector.data('structure').path) }}
-            {{ _self.table_row('nodeType', collector.data('structure').nodeType) }}
-            {{ _self.table_row('internal', collector.data('structure').internal ? 'yes' : 'no') }}
-            {{ _self.table_row('nodeState', collector.data('structure').nodeState) }}
-            {{ _self.table_row('published', collector.data('structure').published.format('Y-m-d H:i:s')) }}
-            {{ _self.table_row('nodeState', collector.data('structure').nodeState) }}
-            {{ _self.table_row('navContexts', collector.data('structure').navContexts) }}
-            {{ _self.table_row('enabledShadowLanguages', collector.data('structure').enabledShadowLanguages) }}
-            {{ _self.table_row('concreteLanguages', collector.data('structure').concreteLanguages) }}
-            {{ _self.table_row('shadowOn', collector.data('structure').shadowOn ? 'yes' : 'no') }}
-            {{ _self.table_row('shadowBaseLanguage', collector.data('structure').shadowBaseLanguage) }}
-            {{ _self.table_row('template', collector.data('structure').template) }}
-            {{ _self.table_row('has children', collector.data('structure').hasSub ? 'yes' : 'no') }}
-            {{ _self.table_row('creator', collector.data('structure').creator) }}
-            {{ _self.table_row('changer', collector.data('structure').changer) }}
-            {{ _self.table_row('created', collector.data('structure').created.format('Y-m-d H:i:s')) }}
-            {{ _self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
+            {{ self.table_row('id', collector.data('structure').id) }}
+            {{ self.table_row('path', collector.data('structure').path) }}
+            {{ self.table_row('nodeType', collector.data('structure').nodeType) }}
+            {{ self.table_row('internal', collector.data('structure').internal ? 'yes' : 'no') }}
+            {{ self.table_row('nodeState', collector.data('structure').nodeState) }}
+            {{ self.table_row('published', collector.data('structure').published.format('Y-m-d H:i:s')) }}
+            {{ self.table_row('nodeState', collector.data('structure').nodeState) }}
+            {{ self.table_row('navContexts', collector.data('structure').navContexts) }}
+            {{ self.table_row('enabledShadowLanguages', collector.data('structure').enabledShadowLanguages) }}
+            {{ self.table_row('concreteLanguages', collector.data('structure').concreteLanguages) }}
+            {{ self.table_row('shadowOn', collector.data('structure').shadowOn ? 'yes' : 'no') }}
+            {{ self.table_row('shadowBaseLanguage', collector.data('structure').shadowBaseLanguage) }}
+            {{ self.table_row('template', collector.data('structure').template) }}
+            {{ self.table_row('has children', collector.data('structure').hasSub ? 'yes' : 'no') }}
+            {{ self.table_row('creator', collector.data('structure').creator) }}
+            {{ self.table_row('changer', collector.data('structure').changer) }}
+            {{ self.table_row('created', collector.data('structure').created.format('Y-m-d H:i:s')) }}
+            {{ self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
         </tbody>
     </table>
-
 {% endblock %}
 
 {% macro table_row(field, value) %}

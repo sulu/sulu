@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
@@ -128,16 +127,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
     {
         // default contacts list
         return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
-    }
-
-    /**
-     * persists a setting.
-     *
-     * @Put("roles/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
     }
 
     /**

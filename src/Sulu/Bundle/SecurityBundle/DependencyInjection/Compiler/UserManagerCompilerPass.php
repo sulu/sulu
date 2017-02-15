@@ -23,32 +23,20 @@ class UserManagerCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('security.token_storage')) {
-            $container->setDefinition(
-                'sulu_security.user_manager',
-                new Definition(
-                    'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
-                    [
-                        new Reference('doctrine.orm.entity_manager'),
-                        new Reference('security.encoder_factory'),
-                        new Reference('sulu.repository.role'),
-                        new Reference('sulu_security.group_repository'),
-                        new Reference('sulu_contact.contact_manager'),
-                        new Reference('sulu_security.salt_generator'),
-                        new Reference('sulu.repository.user'),
-                    ]
-                )
-            );
-        } else {
-            $container->setDefinition(
-                'sulu_security.user_manager',
-                new Definition(
-                    'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
-                    [
-                        new Reference('doctrine.orm.entity_manager'),
-                    ]
-                )
-            );
-        }
+        $container->setDefinition(
+            'sulu_security.user_manager',
+            new Definition(
+                'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+                [
+                    new Reference('doctrine.orm.entity_manager'),
+                    $container->hasDefinition('security.token_storage') ? new Reference('security.encoder_factory') : null,
+                    new Reference('sulu.repository.role'),
+                    new Reference('sulu_security.group_repository'),
+                    new Reference('sulu_contact.contact_manager'),
+                    new Reference('sulu_security.salt_generator'),
+                    new Reference('sulu.repository.user'),
+                ]
+            )
+        );
     }
 }

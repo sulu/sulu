@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\Listing;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,7 +21,7 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
+        $this->em = $this->prophesize(ObjectManager::class);
     }
 
     public function testGetFields()
@@ -34,7 +35,7 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
             'limit' => 10,
             'page' => 3,
         ]);
-        $helper = new ListRestHelper($request, $this->em);
+        $helper = new ListRestHelper($request, $this->em->reveal());
 
         $this->assertEquals(['field1', 'field2', 'field3'], $helper->getFields());
         $this->assertEquals(['id' => 'desc'], $helper->getSorting());

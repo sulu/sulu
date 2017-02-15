@@ -11,27 +11,19 @@
 
 namespace Sulu\Bundle\ContentBundle\Form\Type;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HomeDocumentType extends BasePageDocumentType
 {
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $options)
+    public function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([
             'data_class' => 'Sulu\Bundle\ContentBundle\Document\HomeDocument',
         ]);
 
-        parent::setDefaultOptions($options);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'home';
+        parent::configureOptions($options);
     }
 }

@@ -7,8 +7,20 @@
             <argument type="collection"/>
         </service>
 
+        <service id="sulu_markup.parser.html_extractor" class="Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor">
+            <argument type="string">sulu</argument>
+
+            <tag name="sulu_markup.parser.html_extractor"/>
+        </service>
+
+        <service id="sulu_markup.parser.delegating_html_extractor"
+                 class="Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor">
+            <argument type="collection"/>
+        </service>
+
         <service id="sulu_markup.parser" class="Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser">
             <argument type="service" id="sulu_markup.tag.registry"/>
+            <argument type="service" id="sulu_markup.parser.delegating_html_extractor"/>
 
             <tag name="sulu_markup.parser" type="html"/>
         </service>

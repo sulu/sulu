@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
-use InvalidArgumentException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
 use Prophecy\Argument;
@@ -110,7 +109,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Property value must either be a UUID or a Snippet
      */
     public function testPropertyWriteUnknownType()

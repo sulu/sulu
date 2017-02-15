@@ -2,9 +2,6 @@ imports:
     - { resource: sulu.yml }
 
 security:
-    acl:
-        connection: default
-
     access_decision_manager:
         strategy: affirmative
 

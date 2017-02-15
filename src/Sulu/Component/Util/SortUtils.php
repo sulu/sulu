@@ -53,7 +53,7 @@ final class SortUtils
      *
      * The path is any path accepted by the property access component:
      *
-     * @link http://symfony.com/doc/current/components/property_access/introduction.html
+     * @see http://symfony.com/doc/current/components/property_access/introduction.html
      *
      * @param array        $values
      * @param string|array $path      Path or paths on which to sort on

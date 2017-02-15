@@ -207,10 +207,15 @@ class ContentRouteProvider implements RouteProviderInterface
                     return $collection;
                 } else {
                     // convert the page to a StructureBridge because of BC
+                    $metadata = $this->documentInspector->getStructureMetadata($document);
+                    if (!$metadata) {
+                        return $collection;
+                    }
+
                     /** @var PageBridge $structure */
                     $structure = $this->structureManager->wrapStructure(
                         $this->documentInspector->getMetadata($document)->getAlias(),
-                        $this->documentInspector->getStructureMetadata($document)
+                        $metadata
                     );
                     $structure->setDocument($document);
 

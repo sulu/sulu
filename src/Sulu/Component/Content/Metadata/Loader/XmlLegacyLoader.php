@@ -95,6 +95,10 @@ class XmlLegacyLoader implements LoaderInterface
 
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
+        $cwd = getcwd();
+        // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
+        @chdir(dirname($resource));
+
         // read file
         $xmlDocument = XmlUtils::loadFile(
             $resource,
@@ -105,6 +109,9 @@ class XmlLegacyLoader implements LoaderInterface
                 return @$dom->schemaValidate($schemaPath);
             }
         );
+
+        // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
+        @chdir($cwd);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);

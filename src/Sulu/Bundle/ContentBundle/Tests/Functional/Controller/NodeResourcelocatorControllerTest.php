@@ -205,6 +205,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&action=publish',
             $newsData
         );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $newsData = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
@@ -229,6 +230,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&action=publish',
             $newsData
         );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $newsData = (array) json_decode($this->client->getResponse()->getContent());
 
         $this->client->request(

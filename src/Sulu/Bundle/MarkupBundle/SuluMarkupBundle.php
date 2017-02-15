@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle;
 
 use Sulu\Bundle\MarkupBundle\DependencyInjection\CompilerPass\ParserCompilerPass;
 use Sulu\Bundle\MarkupBundle\DependencyInjection\CompilerPass\TagCompilerPass;
+use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -27,5 +28,11 @@ class SuluMarkupBundle extends Bundle
 
         $container->addCompilerPass(new ParserCompilerPass());
         $container->addCompilerPass(new TagCompilerPass());
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass(
+                'sulu_markup.parser.delegating_html_extractor',
+                'sulu_markup.parser.html_extractor'
+            )
+        );
     }
 }

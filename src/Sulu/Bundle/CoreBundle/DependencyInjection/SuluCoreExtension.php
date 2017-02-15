@@ -58,7 +58,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 'doctrine_phpcr',
                 [
                     'session' => $phpcrConfig,
-                    'odm' => [],
                 ]
             );
         }
@@ -144,10 +143,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasExtension('jms_serializer')) {
             $container->prependExtensionConfig('jms_serializer', ['metadata' => ['debug' => '%kernel.debug%']]);
-        }
-
-        if ($container->hasExtension('cmf_core')) {
-            $container->prependExtensionConfig('cmf_core', ['publish_workflow' => ['enabled' => false]]);
         }
 
         if ($container->hasExtension('fos_rest')) {
@@ -253,6 +248,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('localization.xml');
         $loader->load('serializer.xml');
         $loader->load('request_analyzer.xml');
+        $loader->load('doctrine.xml');
     }
 
     /**

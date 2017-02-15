@@ -153,6 +153,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
             WorkflowStage::PUBLISHED,
             $redirectTarget,
             false,
+            'default',
             ['seo-hideInSitemap' => $hideInSitemap, 'changed' => new \DateTime()],
             []
         );

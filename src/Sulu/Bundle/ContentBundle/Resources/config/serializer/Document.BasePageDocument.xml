@@ -23,6 +23,10 @@
         <property name="creator" type="integer" groups="defaultPage,preview"/>
         <property name="changer" type="integer" groups="defaultPage,preview"/>
         <property name="created" type="DateTime" groups="defaultPage,preview"/>
+        <property name="authored" groups="defaultPage,preview">
+            <type><![CDATA[DateTime<'Y-m-d'>]]></type>
+        </property>
+        <property name="author" type="integer" groups="defaultPage,preview"/>
         <property name="published" type="DateTime" groups="defaultPage,smallPage,preview"/>
         <property name="changed" type="DateTime" groups="defaultPage,preview"/>
         <property name="resourceSegment" exclude="true"/>
@@ -45,6 +49,7 @@
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection"/>
         <property name="suluOrder" type="integer" serialized-name="order" groups="defaultPage,smallPage"/>
         <property name="permissions" exclude="true"/>
+        <property name="versions" type="array"/>
 
         <virtual-property method="getResourceSegment" name="url" serialized-name="url" groups="defaultPage,smallPage"/>
     </class>

@@ -81,11 +81,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
                 'load_shadow_content' => true,
             ]
         );
-        $options->setAllowedTypes(
-            [
-                'load_shadow_content' => 'bool',
-            ]
-        );
+        $options->setAllowedTypes('load_shadow_content', 'bool');
     }
 
     public function handleMetadataLoad(MetadataLoadEvent $event)

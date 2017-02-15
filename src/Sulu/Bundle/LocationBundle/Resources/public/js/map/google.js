@@ -20,7 +20,7 @@ define([], function() {
         this.map = null;
         this.marker = null;
 
-        var gmapApiUrl = 'http://maps.google.com/maps/api/js?sensor=false';
+        var gmapApiUrl = 'https://maps.google.com/maps/api/js?sensor=false';
 
         if (providerOptions.api_key) {
             gmapApiUrl = gmapApiUrl + '&key=' + providerOptions.api_key;
@@ -42,7 +42,7 @@ define([], function() {
             // register position update callback
             if (options.positionUpdateCallback) {
                 google.maps.event.addListener(this.marker, 'position_changed', function () {
-                        options.positionUpdateCallback(this.marker.position.B, this.marker.position.k);
+                        options.positionUpdateCallback(this.marker.position.lng(), this.marker.position.lat());
                 }.bind(this));
             }
 
