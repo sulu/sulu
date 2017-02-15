@@ -50,7 +50,7 @@ class RequestListener
                 $context->setParameter('prefix', $portalInformation->getPrefix());
             }
             if (!$context->hasParameter('host')) {
-                $context->setParameter('host', $portalInformation->getHost());
+                $context->setParameter('host', explode(':', $portalInformation->getHost())[0]);
             }
         }
     }
