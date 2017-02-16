@@ -1,5 +1,7 @@
 CHANGELOG for Sulu
 ==================
+* dev-develop
+    * HOTFIX      #3214 [AdminBundle]         Fixed save button of form-tab when validation fails.
 
 * 1.3.9 (2017-02-03)
     * HOTFIX      #3173 [ContentBundle]       Fixed generating of resource locator with missing parents
