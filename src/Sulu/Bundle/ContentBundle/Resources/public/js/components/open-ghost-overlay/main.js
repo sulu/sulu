@@ -11,13 +11,22 @@ define(function() {
 
     'use strict';
 
-    var templates = {
+    var translations = {
+            info: 'content.contents.settings.copy-locale.info',
+            title: 'content.contents.settings.copy-locales.title',
+            selectDefault: 'content.contents.settings.copy-locale.select-default',
+            new: 'content.contents.settings.copy-locale.new',
+            copy: 'content.contents.settings.copy-locale.copy',
+            ok: 'content.contents.settings.copy-locale-overlay.ok'
+        },
+
+        templates = {
             openGhost: function() {
                 return [
                     '<div class="copy-locale-overlay-content grid">',
                     '   <div class="grid-row">',
                     '       <p class="info">',
-                    this.sandbox.translate('content.contents.settings.copy-locale.info'),
+                    getTranslation.call(this, 'info'),
                     '       </p>',
                     '   </div>',
                     '   <div class="grid-row">',
@@ -26,7 +35,7 @@ define(function() {
                     '           <span class="icon"></span>',
                     '       </div>',
                     '       <label for="copy-locale-new">',
-                    this.sandbox.translate('content.contents.settings.copy-locale.new'),
+                    getTranslation.call(this, 'new'),
                     '       </label>',
                     '   </div>',
                     '   <div class="grid-row">',
@@ -35,7 +44,7 @@ define(function() {
                     '           <span class="icon"></span>',
                     '       </div>',
                     '       <label for="copy-locale-copy">',
-                    this.sandbox.translate('content.contents.settings.copy-locale.copy'),
+                    getTranslation.call(this, 'copy'),
                     '       </label>',
                     '       <div id="copy-locale-overlay-select" />',
                     '   </div>',
@@ -45,15 +54,36 @@ define(function() {
         },
 
         /**
+         * Retrieves translation for given identifier.
+         * First look if it exists in `this.translations.openGhostOverlay`.
+         * Otherwise use the default translation.
+         *
+         * @param {String} id
+         *
+         * @return {String}
+         */
+        getTranslation = function(id) {
+            var translationKey = translations[id];
+            if (this.translations
+                && this.translations.openGhostOverlay
+                && this.translations.openGhostOverlay[id]
+            ) {
+                translationKey = this.translations.openGhostOverlay[id];
+            }
+
+            return this.sandbox.translate(translationKey);
+        },
+
+        /**
          * start a new overlay
-         * @param {String} titleKey translation key
+         * @param {String} title the title of the overlay
          * @param {String} template template for the content
          * @param {Boolean} okButton
          * @param {undefined|String} instanceName
          * @param {undefined|function} okCallback
          * @param {undefined|function} cancelCallback
          */
-        startOverlay = function(titleKey, template, okButton, instanceName, okCallback, cancelCallback) {
+        startOverlay = function(title, template, okButton, instanceName, okCallback, cancelCallback) {
             if (!instanceName) {
                 instanceName = 'node';
             }
@@ -71,7 +101,7 @@ define(function() {
                 buttons.push({
                     type: 'ok',
                     align: 'right',
-                    text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
+                    text: getTranslation.call(this, 'ok')
                 });
             }
 
@@ -88,7 +118,7 @@ define(function() {
                         skin: 'medium',
                         slides: [
                             {
-                                title: this.sandbox.translate(titleKey),
+                                title: title,
                                 data: template,
                                 buttons: buttons,
                                 okCallback: okCallback,
@@ -111,8 +141,10 @@ define(function() {
 
             startOverlay.call(
                 this,
-                'content.contents.settings.copy-locale.title',
-                templates.openGhost.call(this), true, 'copy-locale-overlay',
+                getTranslation.call(this, 'title'),
+                templates.openGhost.call(this),
+                true,
+                'copy-locale-overlay',
                 function() {
                     var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
                         src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues');
@@ -138,7 +170,7 @@ define(function() {
                     options: {
                         el: '#copy-locale-overlay-select',
                         instanceName: 'copy-locale-to',
-                        defaultLabel: this.sandbox.translate('content.contents.settings.copy-locale.select-default'),
+                        defaultLabel: getTranslation.call(this, 'selectDefault'),
                         data: item.concreteLanguages
                     }
                 }
