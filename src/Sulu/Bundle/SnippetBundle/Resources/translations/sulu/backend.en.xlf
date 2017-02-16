@@ -82,6 +82,26 @@
                 <source>snippet.changed-warning.ok-button</source>
                 <target>Save snippet</target>
             </trans-unit>
+            <trans-unit id="22" resname="snippet.settings.open-ghost-overlay.info">
+                <source>snippet.settings.open-ghost-overlay.info</source>
+                <target><![CDATA[This snippet does not exists in this language.<br/>Please select one of the following options:]]></target>
+            </trans-unit>
+            <trans-unit id="23" resname="snippet.settings.open-ghost-overlay.new">
+                <source>snippet.settings.open-ghost-overlay.new</source>
+                <target><![CDATA[Create a new <b>empty snippet</b> in this language]]></target>
+            </trans-unit>
+            <trans-unit id="24" resname="snippet.settings.open-ghost-overlay.copy">
+                <source>snippet.settings.open-ghost-overlay.copy</source>
+                <target><![CDATA[Create a new snippet in this language and <b>copy content from</b>:]]></target>
+            </trans-unit>
+            <trans-unit id="25" resname="snippet.settings.open-ghost-overlay.ok">
+                <source>snippet.settings.open-ghost-overlay.ok</source>
+                <target>Create snippet</target>
+            </trans-unit>
+            <trans-unit id="26" resname="snippet.settings.copy-locale-overlay.info">
+                <source>snippet.settings.copy-locale-overlay.info</source>
+                <target>New snippet will be created</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
