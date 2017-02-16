@@ -85,9 +85,9 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
 
         $fileFormats = $loader->load($file);
         foreach ($fileFormats as $format) {
-            if (array_key_exists($format['key'], $formats)) {
+            if (array_key_exists($format['key'], $formats) && $formats[$format['key']] !== $format) {
                 throw new InvalidArgumentException(
-                    sprintf('Media format with key "%x" already exists!', $format['key'])
+                    sprintf('Media format with key "%s" already exists!', $format['key'])
                 );
             }
 
