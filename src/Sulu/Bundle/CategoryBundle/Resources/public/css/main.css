@@ -9,3 +9,9 @@
   max-height: 350px;
   overflow: auto;
 }
+
+/* line 2, ../scss/modules/move-overlay.scss */
+.move-categories .move-categories-container {
+  height: calc(100vh - 250px);
+  overflow: scroll;
+}

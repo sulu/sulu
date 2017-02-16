@@ -444,6 +444,26 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function move($id, $parent)
+    {
+        if (!$entity = $this->categoryRepository->findCategoryById($id)) {
+            throw new CategoryIdNotFoundException($id);
+        }
+
+        $parentEntity = null;
+        if ($parent && !$parentEntity = $this->categoryRepository->findCategoryById($parent)) {
+            throw new CategoryIdNotFoundException($parent);
+        }
+
+        $entity->setParent($parentEntity);
+        $this->em->flush();
+
+        return $entity;
+    }
+
+    /**
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
      * and provides neat getters and setters. If the given object is already an API-object,
      * the associated entity is used for wrapping.

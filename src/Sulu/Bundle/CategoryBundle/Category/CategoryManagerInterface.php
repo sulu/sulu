@@ -174,4 +174,14 @@ interface CategoryManagerInterface
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($locale, $key);
+
+    /**
+     * Move category to new parent.
+     *
+     * @param int $id
+     * @param int|null $parent
+     *
+     * @return CategoryInterface
+     */
+    public function move($id, $parent);
 }

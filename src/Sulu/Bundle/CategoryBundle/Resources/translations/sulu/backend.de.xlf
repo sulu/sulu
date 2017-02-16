@@ -82,6 +82,18 @@
                 <source>sulu.category.medias</source>
                 <target>Medien</target>
             </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f12222" resname="sulu.category.move">
+                <source>sulu.category.move</source>
+                <target>Ausgewählte verschieben</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f12212" resname="sulu.category.move-title">
+                <source>sulu.category.move-title</source>
+                <target>Kategorien verschieben</target>
+            </trans-unit>
+            <trans-unit id="143d99fa2864553633a5ca2169f12232" resname="sulu.category.move-to-root">
+                <source>sulu.category.move-to-root</source>
+                <target>Auf oberste Ebene verschieben</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
