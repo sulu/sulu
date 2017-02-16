@@ -91,23 +91,13 @@ define(function() {
 
         /**
          * Retrieves translation for given identifier.
-         * First look if it exists in `this.translations.copyLocaleOverlay`.
-         * Otherwise use the default translation.
          *
          * @param {String} id
          *
          * @return {String}
          */
         getTranslation = function(id) {
-            var translationKey = translations[id];
-            if (this.translations
-                && this.translations.copyLocaleOverlay
-                && this.translations.copyLocaleOverlay[id]
-            ) {
-                translationKey = this.translations.copyLocaleOverlay[id];
-            }
-
-            return this.sandbox.translate(translationKey);
+            return this.sandbox.translate(translations[id]);
         },
 
         /**
@@ -258,9 +248,16 @@ define(function() {
         },
 
         /**
-         * start overlay with selects to choose src and dest languages
+         * Start overlay with selects to choose src and dest languages.
+         *
+         * @param {Object} newTranslations
+         *
+         * @return {*}
          */
-        startCopyLocalesOverlay: function() {
+        startCopyLocalesOverlay: function(newTranslations) {
+            // overwrite translations
+            translations = this.sandbox.util.extend(true, {}, translations, newTranslations);
+
             var def = this.sandbox.data.deferred(),
                 $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 languages = [],

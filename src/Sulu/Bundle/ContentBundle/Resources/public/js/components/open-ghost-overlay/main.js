@@ -55,23 +55,13 @@ define(function() {
 
         /**
          * Retrieves translation for given identifier.
-         * First look if it exists in `this.translations.openGhostOverlay`.
-         * Otherwise use the default translation.
          *
          * @param {String} id
          *
          * @return {String}
          */
         getTranslation = function(id) {
-            var translationKey = translations[id];
-            if (this.translations
-                && this.translations.openGhostOverlay
-                && this.translations.openGhostOverlay[id]
-            ) {
-                translationKey = this.translations.openGhostOverlay[id];
-            }
-
-            return this.sandbox.translate(translationKey);
+            return this.sandbox.translate(translations[id]);
         },
 
         /**
@@ -132,12 +122,18 @@ define(function() {
 
     return {
         /**
-         * starts a copy ghost overlay
+         * Starts a copy ghost overlay.
+         *
          * @param {Object} item
+         * @param {Object} newTranslations
+         *
          * @returns {Object}
          */
-        openGhost: function(item) {
+        openGhost: function(item, newTranslations) {
             var def = this.sandbox.data.deferred();
+
+            // overwrite translations
+            translations = this.sandbox.util.extend(true, {}, translations, newTranslations);
 
             startOverlay.call(
                 this,
