@@ -12,7 +12,6 @@ define(function() {
     'use strict';
 
     var translations = {},
-
         defaultTranslations = {
             info: 'content.contents.settings.copy-locale.info',
             title: 'content.contents.settings.copy-locales.title',
