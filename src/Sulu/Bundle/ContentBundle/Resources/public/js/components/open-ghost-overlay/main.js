@@ -11,7 +11,9 @@ define(function() {
 
     'use strict';
 
-    var translations = {
+    var translations = {},
+
+        defaultTranslations = {
             info: 'content.contents.settings.copy-locale.info',
             title: 'content.contents.settings.copy-locales.title',
             selectDefault: 'content.contents.settings.copy-locale.select-default',
@@ -133,7 +135,7 @@ define(function() {
             var def = this.sandbox.data.deferred();
 
             // overwrite translations
-            translations = this.sandbox.util.extend(true, {}, translations, newTranslations);
+            translations = this.sandbox.util.extend(true, {}, defaultTranslations, newTranslations);
 
             startOverlay.call(
                 this,

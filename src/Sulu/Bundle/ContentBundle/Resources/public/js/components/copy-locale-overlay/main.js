@@ -11,7 +11,8 @@ define(function() {
 
     'use strict';
 
-    var translations = {
+    var translations = {},
+        defaultTranslations = {
             copyFrom: 'content.contents.settings.copy-locales.copy-from',
             target: 'content.contents.settings.copy-locales.target',
             info: 'content.contents.settings.copy-locales.info',
@@ -256,7 +257,7 @@ define(function() {
          */
         startCopyLocalesOverlay: function(newTranslations) {
             // overwrite translations
-            translations = this.sandbox.util.extend(true, {}, translations, newTranslations);
+            translations = this.sandbox.util.extend(true, {}, defaultTranslations, newTranslations);
 
             var def = this.sandbox.data.deferred(),
                 $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
