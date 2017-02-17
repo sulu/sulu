@@ -18,4 +18,34 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupWebspaceRepository extends EntityRepository implements TargetGroupWebspaceRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function findOrCreate(TargetGroupInterface $targetGroup, $webspaceKey)
+    {
+        $targetGroupWebspace = null;
+
+        if ($targetGroup->getId()) {
+            $targetGroupWebspace = $this->findOneBy(
+                [
+                    'targetGroup' => $targetGroup,
+                    'webspaceKey' => $webspaceKey,
+                ]
+            );
+        }
+
+        if (!$targetGroupWebspace) {
+            $targetGroupWebspace = $this->createNew();
+        }
+
+        return $targetGroupWebspace;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove(TargetGroupWebspaceInterface $targetGroupWebspace)
+    {
+        $this->getEntityManager()->remove($targetGroupWebspace);
+    }
 }

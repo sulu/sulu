@@ -3,4 +3,25 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!--ADMIN-->
+        <service id="sulu_audience_targeting.admin"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument>%sulu_admin.name%</argument>
+
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="sulu_comment.admin.comment_navigation_provider"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Admin\TargetGroupContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="target-group"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <!--MAPPER-->
+        <service id="sulu_audience_targeting.target_group_mapper"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Mapper\TargetGroupMapper">
+            <argument type="service" id="sulu.repository.target_group_webspace"/>
+        </service>
+    </services>
 </container>

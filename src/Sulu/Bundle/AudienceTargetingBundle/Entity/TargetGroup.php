@@ -42,12 +42,12 @@ class TargetGroup implements TargetGroupInterface
     /**
      * @var bool
      */
-    private $allWebspaces;
+    private $allWebspaces = false;
 
     /**
      * @var bool
      */
-    private $active;
+    private $active = false;
 
     /**
      * @var Collection
