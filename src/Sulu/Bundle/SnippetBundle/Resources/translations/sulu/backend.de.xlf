@@ -88,7 +88,7 @@
             </trans-unit>
             <trans-unit id="23" resname="snippet.settings.open-ghost-overlay.new">
                 <source>snippet.settings.open-ghost-overlay.new</source>
-                <target><![CDATA[Erstellen Sie ein neuees <b>leeres Schnipsel</b> in dieser Sprache]]></target>
+                <target><![CDATA[Erstellen Sie ein neues <b>leeres Schnipsel</b> in dieser Sprache]]></target>
             </trans-unit>
             <trans-unit id="24" resname="snippet.settings.open-ghost-overlay.copy">
                 <source>snippet.settings.open-ghost-overlay.copy</source>
