@@ -25,7 +25,23 @@ format on your own:
 
 ### Page author
 
-The page has a new property `author` and `authored` which will be prefilled with values from `creator`/`created`.
+The page has a new property `author` and `authored` which will be prefilled
+with values from `creator`/`created`.
+
+If you have used one of these names before for some properties in your page or
+snippet templates, then you have to change the name. Rename the field in the
+XML definition and in the twig template, and execute the following command with
+the filled in placeholders wrapped in `<>`:
+
+```
+app/console doctrine:phpcr:nodes:update --query "SELECT * FROM [nt:base] AS n WHERE [i18n:<localization>-author] IS NOT NULL AND ISDESCENDANTNODE(n, '/cmf')" --apply-closure="\$node->setProperty('i18n:<localization>-<new-field-name>', \$node->getPropertyValue('i18n:<localization>-author')); \$node->getProperty('i18n:<localization>-author')->remove();"
+```
+
+This command should be executed for every registered localization and for both
+sessions (once without parameter and once with `--session=live`).
+
+Afterwards you can safely migrate the data to use `creator` and `created` as
+start values for `author` and `authored`.
 
 ```
 app/console phpcr:migrations:migrate
