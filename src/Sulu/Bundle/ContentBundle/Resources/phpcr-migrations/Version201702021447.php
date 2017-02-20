@@ -15,6 +15,7 @@ use Jackalope\Query\Row;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -26,11 +27,17 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
     use ContainerAwareTrait;
 
     /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
      * {@inheritdoc}
      */
     public function up(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
+        $this->userRepository = $this->container->get('sulu.repository.user');
 
         $this->upgrade($liveSession);
         $this->upgrade($session);
@@ -45,6 +52,7 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
     public function down(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
+        $this->userRepository = $this->container->get('sulu.repository.user');
 
         $this->downgrade($liveSession);
         $this->downgrade($session);
@@ -82,9 +90,10 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
                 $creatorPropertyName = sprintf('i18n:%s-creator', $localization->getLocale());
                 if ($node->hasProperty($creatorPropertyName)) {
+                    $user = $this->userRepository->findUserById($node->getPropertyValue($creatorPropertyName));
                     $node->setProperty(
                         sprintf('i18n:%s-author', $localization->getLocale()),
-                        $node->getPropertyValue($creatorPropertyName)
+                        $user->getContact()->getId()
                     );
                 }
             }

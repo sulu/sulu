@@ -70,6 +70,8 @@ class XmlLegacyLoader implements LoaderInterface
         'navContexts',
         'shadow-on',
         'shadow-base',
+        'author',
+        'authored',
     ];
 
     /**
