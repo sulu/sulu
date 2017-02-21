@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #3217 [WebsiteBundle]       Use RedirectController for route redirects (Fix for #2107)
+    * BUGFIX      #3217 [WebsiteBundle]       Use RedirectController for route redirects
     
 * 1.5.0-RC2 (2017-02-20)
     * BUGFIX      #3216 [ContentBundle]       Added author and authored to reserved-property-names
