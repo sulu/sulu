@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\HttpCache\Tests\Unit\Handler;
 
-use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
+use FOS\HttpCache\ProxyClient\Invalidation\BanCapable;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
@@ -29,7 +29,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     private $structure;
 
     /**
-     * @var BanInterface
+     * @var BanCapable
      */
     private $proxyCache;
 
@@ -56,7 +56,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->structure = $this->prophesize(StructureInterface::class);
-        $this->proxyCache = $this->prophesize(BanInterface::class);
+        $this->proxyCache = $this->prophesize(BanCapable::class);
         $this->parameterBag = $this->prophesize(ParameterBag::class);
         $this->response = $this->prophesize(Response::class);
         $this->response->headers = $this->parameterBag->reveal();

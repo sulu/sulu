@@ -15,8 +15,8 @@ use FOS\HttpCache\Exception\ExceptionCollection;
 use FOS\HttpCache\Exception\InvalidUrlException;
 use FOS\HttpCache\Exception\ProxyResponseException;
 use FOS\HttpCache\Exception\ProxyUnreachableException;
-use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use FOS\HttpCache\ProxyClient\Invalidation\PurgeCapable;
+use FOS\HttpCache\ProxyClient\ProxyClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -28,7 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Symfony HTTP cache invalidator.
  */
-class Symfony implements ProxyClientInterface, PurgeInterface
+class Symfony implements ProxyClient, PurgeCapable
 {
     const HTTP_METHOD_PURGE = 'PURGE';
 
