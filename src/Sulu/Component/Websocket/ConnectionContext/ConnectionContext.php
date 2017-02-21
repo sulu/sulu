@@ -11,8 +11,7 @@
 
 namespace Sulu\Component\Websocket\ConnectionContext;
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\QueryString;
+use Psr\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -28,7 +27,7 @@ class ConnectionContext implements ConnectionContextInterface
     private $request = null;
 
     /**
-     * @var QueryString
+     * @var string
      */
     private $query = null;
 
@@ -51,7 +50,7 @@ class ConnectionContext implements ConnectionContextInterface
     {
         if (isset($conn->WebSocket)) {
             $this->request = $conn->WebSocket->request;
-            $this->query = $this->request->getUrl(true)->getQuery();
+            $this->query = $this->request->getUri()->getQuery();
         }
 
         if (isset($conn->Session)) {

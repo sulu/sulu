@@ -15,8 +15,6 @@
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/content-bundle": "dev-develop",
-        "guzzle/http": "3.*",
-        "guzzle/plugin-log": "3.9.*",
 
         "sulu/contact-bundle": "@dev",
         "sulu/security-bundle": "@dev",
@@ -30,7 +28,6 @@
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "4.1.*",
         "sulu/test-bundle": "dev-develop",
-        "guzzle/plugin-mock": "3.9.*",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
         "matthiasnoback/symfony-config-test": "^1.0"
     },

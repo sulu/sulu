@@ -11,8 +11,7 @@
 
 namespace Sulu\Component\Websocket\ConnectionContext;
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\QueryString;
+use Psr\Http\Message\RequestInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -25,7 +24,7 @@ interface ConnectionContextInterface
     /**
      * Returns query of the upgrade request.
      *
-     * @return QueryString
+     * @return string
      */
     public function getQuery();
 
