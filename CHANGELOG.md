@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #3224 [ContentBundle]       Added search-fields to author overlay
+
 * 1.5.0-RC2 (2017-02-20)
     * BUGFIX      #3216 [ContentBundle]       Added author and authored to reserved-property-names
     * BUGFIX      #3210 [MediaBundle]         Allow same image format key if formats are identical

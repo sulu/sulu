@@ -79,6 +79,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                         sortable: false,
                         selectedCounter: false,
                         searchInstanceName: 'author-selection-search',
+                        searchFields: ['fullName', 'mainEmail'],
                         preselected: !!this.options.data.author ? [this.options.data.author] : [],
                         paginationOptions: {
                             dropdown: {
