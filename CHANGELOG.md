@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3224 [ContentBundle]       Added search-fields to author overlay
     * BUGFIX      #3217 [WebsiteBundle]       Use RedirectController for route redirects
     
 * 1.5.0-RC2 (2017-02-20)
