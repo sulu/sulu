@@ -127,7 +127,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         if ($history) {
             $this->assertEquals(
                 [
-                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                    '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                     '_finalized' => true,
                     'url' => 'http://' . $route . '-1',
                 ],
