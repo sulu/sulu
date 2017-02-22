@@ -39,7 +39,7 @@ class TrailingHTMLEnhancerTest extends \PHPUnit_Framework_TestCase
                 '_custom_url' => $customUrl->reveal(),
                 '_webspace' => $webspace->reveal(),
                 '_finalized' => true,
-                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                 'url' => 'sulu.io/test',
             ],
             $defaults

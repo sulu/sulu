@@ -35,7 +35,7 @@ class TrailingSlashEnhancer extends AbstractEnhancer
 
         return [
             '_finalized' => true,
-            '_controller' => 'SuluWebsiteBundle:Default:redirect',
+            '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
             'url' => substr($request->getUri(), 0, -1),
         ];
     }

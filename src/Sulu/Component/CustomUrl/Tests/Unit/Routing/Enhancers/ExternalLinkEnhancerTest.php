@@ -31,7 +31,7 @@ class ExternalLinkEnhancerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 '_structure' => $structure->reveal(),
-                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                 'url' => '/test',
             ],
             $defaults
