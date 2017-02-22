@@ -178,6 +178,10 @@
                 <source>smart-content.changed</source>
                 <target>Geändert am (Datum)</target>
             </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb1111" resname="smart-content.authored">
+                <source>smart-content.authored</source>
+                <target>Verfasst am (Datum)</target>
+            </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b9f991db8317" resname="smart-content.apply">
                 <source>smart-content.apply</source>
                 <target>Übernehmen</target>
