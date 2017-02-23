@@ -82,6 +82,26 @@
                 <source>snippet.changed-warning.ok-button</source>
                 <target>Bewaar fragment</target>
             </trans-unit>
+            <trans-unit id="22" resname="snippet.settings.open-ghost-overlay.info">
+                <source>snippet.settings.open-ghost-overlay.info</source>
+                <target><![CDATA[Dit fragment bestaat niet in deze taal.<br/>Kies een van de volgende opties:]]></target>
+            </trans-unit>
+            <trans-unit id="23" resname="snippet.settings.open-ghost-overlay.new">
+                <source>snippet.settings.open-ghost-overlay.new</source>
+                <target><![CDATA[Maak een nieuw <b>leeg fragment</b> in deze taal]]></target>
+            </trans-unit>
+            <trans-unit id="24" resname="snippet.settings.open-ghost-overlay.copy">
+                <source>snippet.settings.open-ghost-overlay.copy</source>
+                <target><![CDATA[Maak een nieuw fragment in deze taal en <b>kopieer de inhoud van</b>:]]></target>
+            </trans-unit>
+            <trans-unit id="25" resname="snippet.settings.open-ghost-overlay.ok">
+                <source>snippet.settings.open-ghost-overlay.ok</source>
+                <target>Fragment aanmaken</target>
+            </trans-unit>
+            <trans-unit id="26" resname="snippet.settings.copy-locale-overlay.info">
+                <source>snippet.settings.copy-locale-overlay.info</source>
+                <target>Een nieuw fragment zal worden aangemaakt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

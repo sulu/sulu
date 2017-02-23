@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3206 [SnippetBundle]       Corrected translations in copy locale and open ghost overlay
+    * ENHANCEMENT #3206 [ContentBundle]       Made translations for copy locale and open ghost overlay changeable
     * BUGFIX      #3228 [ContentBundle]       Added authored translation for smart-content
     * BUGFIX      #3231 [MediaBundle]         Show area selection in focus point slide
     * BUGFIX      #3224 [ContentBundle]       Added search-fields to author overlay

@@ -59,6 +59,18 @@ define([
         };
 
     BaseSnippet.prototype = {
+        translations: {
+            openGhostOverlay: {
+                info: 'snippet.settings.open-ghost-overlay.info',
+                new: 'snippet.settings.open-ghost-overlay.new',
+                copy: 'snippet.settings.open-ghost-overlay.copy',
+                ok: 'snippet.settings.open-ghost-overlay.ok'
+            },
+            copyLocaleOverlay: {
+                info: 'snippet.settings.copy-locale-overlay.info'
+            }
+        },
+
         bindModelEvents: function() {
             // delete current
             this.sandbox.on('sulu.snippets.snippet.delete', this.del, this);
