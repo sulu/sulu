@@ -58,6 +58,23 @@ define(['services/sulumedia/media-manager', 'text!./toolbar-slide.html'], functi
                     tileRow: this.media.focusPointY
                 }
             }]);
+
+            this.sandbox.once(
+                'sulu.area-selection.focus-point-' + this.media.id + '.initialized',
+                function(imageWidth, imageHeight) {
+                    this.sandbox.emit(
+                        'sulu.area-selection.focus-point-' + this.media.id + '.set-area-guide-dimensions',
+                        imageWidth,
+                        imageHeight,
+                        {
+                            width: imageWidth,
+                            height: imageHeight,
+                            x: 0,
+                            y: 0
+                        }
+                    );
+                }.bind(this)
+            );
         },
 
         /**
