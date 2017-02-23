@@ -60,14 +60,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $title;
 
     /**
-     * @Accessor(getter="getPosition")
-     * @Groups({"fullContact"})
-     *
-     * @var string
-     */
-    protected $position;
-
-    /**
      * @var \DateTime
      */
     protected $birthday;
@@ -362,23 +354,15 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $mainAccountContact = $this->getMainAccountContact();
         if ($mainAccountContact) {
             $mainAccountContact->setPosition($position);
-            $this->position = $position;
         }
 
         return $this;
     }
 
     /**
-     * Sets position variable.
+     * @VirtualProperty
+     * @Groups({"fullContact"})
      *
-     * @param $position
-     */
-    public function setCurrentPosition($position)
-    {
-        $this->position = $position;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getPosition()

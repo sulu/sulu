@@ -21,6 +21,10 @@ Renamed following Methods:
 
 * Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::count => Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::countCollections
 
+### Contact temporarily position removed
+
+The `setCurrentPosition` function was removed from the contact entity as this position was only used temporarily and was not persisted to the database. Use the `setPosition` to set the contact main account position function instead.
+
 ### Dependency updates
 
 Follow upgrade path of following libraries:
