@@ -11,12 +11,23 @@ define(function() {
 
     'use strict';
 
-    var templates = {
+    var translations = {},
+        defaultTranslations = {
+            copyFrom: 'content.contents.settings.copy-locales.copy-from',
+            target: 'content.contents.settings.copy-locales.target',
+            info: 'content.contents.settings.copy-locales.info',
+            title: 'content.contents.settings.copy-locales.title',
+            ok: 'content.contents.settings.copy-locales.ok',
+            defaultLabel: 'content.contents.settings.copy-locales.default-label',
+            currentLanguage: 'content.contents.settings.copy-locales.current-language'
+        },
+
+        templates = {
             copyLocales: function(item) {
                 var template = [
                     '<div class="copy-locales-overlay-content">',
                     '   <label>',
-                    this.sandbox.translate('content.contents.settings.copy-locales.copy-from'),
+                    getTranslation.call(this, 'copyFrom'),
                     '   </label>',
                     '   <div class="grid m-top-10">',
                     '       <div class="grid-row">',
@@ -24,10 +35,10 @@ define(function() {
                     '   </div>',
                     '</div>',
                     '<h2 class="divider m-top-20">',
-                    this.sandbox.translate('content.contents.settings.copy-locales.target'),
+                    getTranslation.call(this, 'target'),
                     '</h2>',
                     '<p class="info">',
-                    '   * ', this.sandbox.translate('content.contents.settings.copy-locales.info'),
+                    '   * ', getTranslation.call(this, 'info'),
                     '</p>',
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
                 ], i = 0;
@@ -77,6 +88,17 @@ define(function() {
                     '</div>'
                 ].join('');
             }
+        },
+
+        /**
+         * Retrieves translation for given identifier.
+         *
+         * @param {String} id
+         *
+         * @return {String}
+         */
+        getTranslation = function(id) {
+            return this.sandbox.translate(translations[id]);
         },
 
         /**
@@ -147,7 +169,7 @@ define(function() {
                         skin: 'medium',
                         slides: [
                             {
-                                title: this.sandbox.translate('content.contents.settings.copy-locales.title'),
+                                title: getTranslation.call(this, 'title'),
                                 data: templates.copyLocales.call(this, this.data),
                                 buttons: [
                                     {
@@ -156,7 +178,7 @@ define(function() {
                                     },
                                     {
                                         type: 'ok',
-                                        text: this.sandbox.translate('content.contents.settings.copy-locales.ok'),
+                                        text: getTranslation.call(this, 'ok'),
                                         align: 'right'
                                     }
                                 ],
@@ -181,7 +203,7 @@ define(function() {
                     options: {
                         el: '#copy-locales-select',
                         instanceName: 'copy-locale-to',
-                        defaultLabel: this.sandbox.translate('content.contents.settings.copy-locales.default-label'),
+                        defaultLabel: getTranslation.call(this, 'defaultLabel'),
                         preSelectedElements: [this.options.language],
                         data: languages
                     }
@@ -227,13 +249,20 @@ define(function() {
         },
 
         /**
-         * start overlay with selects to choose src and dest languages
+         * Start overlay with selects to choose src and dest languages.
+         *
+         * @param {Object} newTranslations
+         *
+         * @return {*}
          */
-        startCopyLocalesOverlay: function() {
+        startCopyLocalesOverlay: function(newTranslations) {
+            // overwrite translations
+            translations = this.sandbox.util.extend(true, {}, defaultTranslations, newTranslations);
+
             var def = this.sandbox.data.deferred(),
                 $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 languages = [],
-                currentLocaleText = this.sandbox.translate('content.contents.settings.copy-locales.current-language');
+                currentLocaleText = getTranslation.call(this, 'currentLanguage');
 
             this.sandbox.dom.append(this.$el, $element);
 

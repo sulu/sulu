@@ -88,7 +88,10 @@ define([
                                     options: {
                                         title: this.sandbox.translate('toolbar.copy-locale'),
                                         callback: function() {
-                                            CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                            CopyLocale.startCopyLocalesOverlay.call(
+                                                this,
+                                                this.translations.copyLocaleOverlay
+                                            ).then(function() {
                                                 this.load(this.data.id, this.options.language, true);
                                             }.bind(this));
                                         }.bind(this)
