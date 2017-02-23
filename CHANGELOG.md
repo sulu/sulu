@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+
+    * BUGFIX      #3228 [ContentBundle]       Added authored translation for smart-content
     * BUGFIX      #3224 [ContentBundle]       Added search-fields to author overlay
     * BUGFIX      #3217 [WebsiteBundle]       Use RedirectController for route redirects
     
