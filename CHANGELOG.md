@@ -5,9 +5,10 @@ CHANGELOG for Sulu
     * BUGFIX      #3206 [SnippetBundle]       Corrected translations in copy locale and open ghost overlay
     * ENHANCEMENT #3206 [ContentBundle]       Made translations for copy locale and open ghost overlay changeable
     * BUGFIX      #3228 [ContentBundle]       Added authored translation for smart-content
+    * BUGFIX      #3231 [MediaBundle]         Show area selection in focus point slide
     * BUGFIX      #3224 [ContentBundle]       Added search-fields to author overlay
     * BUGFIX      #3217 [WebsiteBundle]       Use RedirectController for route redirects
-    
+
 * 1.5.0-RC2 (2017-02-20)
     * BUGFIX      #3216 [ContentBundle]       Added author and authored to reserved-property-names
     * BUGFIX      #3210 [MediaBundle]         Allow same image format key if formats are identical
