@@ -12,8 +12,8 @@
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
 use Sulu\Component\HttpCache\HandlerFlushInterface;
+use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -41,15 +41,14 @@ class FlushSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::TERMINATE => 'onTerminate',
+            ConsoleEvents::TERMINATE => 'onTerminate',
         ];
     }
 
     /**
      * Flush the cache on kernel terminate.
-     *
-     * @param PostResponseEvent $event
      */
-    public function onTerminate(PostResponseEvent $event)
+    public function onTerminate()
     {
         $this->handler->flush();
     }
