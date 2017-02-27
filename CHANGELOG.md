@@ -1,5 +1,7 @@
 CHANGELOG for Sulu
 ==================
+* dev-develop
+    * HOTFIX      #3214 [AdminBundle]         Fixed save button of form-tab when validation fails.
 
 * dev-master
     * BUGFIX      #3231 [MediaBundle]         Show area selection in focus point slide
