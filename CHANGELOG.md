@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3234 [HttpCacheBundle]     Added console terminate to flush-subscriber
     * BUGFIX      #3206 [SnippetBundle]       Corrected translations in copy locale and open ghost overlay
     * ENHANCEMENT #3206 [ContentBundle]       Made translations for copy locale and open ghost overlay changeable
     * BUGFIX      #3228 [ContentBundle]       Added authored translation for smart-content
