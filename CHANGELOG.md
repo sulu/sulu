@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3241 [SecurityBundle]        Fixed permission edit for newly added security contexts
+
 * 1.4.8 (2017-02-28)
     * HOTFIX      #3214 [AdminBundle]           Fixed save button of form-tab when validation fails.
     * BUGFIX      #3231 [MediaBundle]           Show area selection in focus point slide
