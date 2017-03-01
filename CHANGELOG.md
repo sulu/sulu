@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #XXXX [ListBuilder]         GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
+    * ENHANCEMENT #3243 [ListBuilder]         GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
 
 * 1.3.8 (2017-01-30)
     * BUGFIX      #3167 [SnippetBundle]       Fixed error when snippet template has a category field.

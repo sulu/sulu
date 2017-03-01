@@ -91,8 +91,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Extracts type from property-node.
-
-    /**
+     *
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      * @return null|CaseTypeMetadata|ConcatenationTypeMetadata|CountTypeMetadata|GroupConcatTypeMetadata|IdentityTypeMetadata|SingleTypeMetadata
