@@ -28,10 +28,21 @@ class GroupConcatTypeMetadata
      */
     private $glue;
 
-    public function __construct(FieldMetadata $field, $glue)
+    /**
+     * @var bool
+     */
+    private $distinct;
+
+    /**
+     * @param FieldMetadata $field
+     * @param string $glue
+     * @param bool $distinct
+     */
+    public function __construct(FieldMetadata $field, $glue, $distinct)
     {
         $this->field = $field;
         $this->glue = $glue;
+        $this->distinct = $distinct;
     }
 
     /**
@@ -52,5 +63,15 @@ class GroupConcatTypeMetadata
     public function getGlue()
     {
         return $this->glue;
+    }
+
+    /**
+     * Returns bool if distinct should be used or not.
+     *
+     * @return bool
+     */
+    public function getDistinct()
+    {
+        return $this->distinct;
     }
 }

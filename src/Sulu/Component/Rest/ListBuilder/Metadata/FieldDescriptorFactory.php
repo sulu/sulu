@@ -287,6 +287,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $this->resolveOptions($generalMetadata->getName(), $options),
             $this->resolveOptions($generalMetadata->getTranslation(), $options),
             $this->resolveOptions($type->getGlue(), $options),
+            $this->resolveOptions($type->getDistinct(), $options),
             $this->isDisabled($generalMetadata),
             $this->isDefault($generalMetadata),
             $generalMetadata->getType(),

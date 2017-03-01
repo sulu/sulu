@@ -38,4 +38,5 @@
     <xs:element type="fieldType" name="field"/>
 
     <xs:attribute name="glue" type="xs:string"/>
+    <xs:attribute name="distinct" type="xs:boolean"/>
 </xs:schema>
