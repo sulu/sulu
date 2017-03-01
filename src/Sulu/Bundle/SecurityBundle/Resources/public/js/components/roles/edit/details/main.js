@@ -101,6 +101,8 @@ define([
                 rowPermissionTypes;
 
             for (var context in moduleConfiguration) {
+                matched = false;
+
                 if (!moduleConfiguration.hasOwnProperty(context)) {
                     continue;
                 }
@@ -123,6 +125,7 @@ define([
                     if (contextData.context === context) {
                         matched = true;
                         contextDataKey = matrixData.push([]) - 1;
+
                         moduleConfiguration[context].forEach(function(permission) {
                             matrixData[contextDataKey].push(contextData.permissions[permission]);
                         });
