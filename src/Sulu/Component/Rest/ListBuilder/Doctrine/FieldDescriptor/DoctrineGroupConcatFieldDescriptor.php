@@ -32,6 +32,11 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     private $glue;
 
+    /**
+     * @var bool
+     */
+    private $distinct;
+
     public function __construct(
         DoctrineFieldDescriptorInterface $fieldDescriptor,
         $name,
@@ -44,7 +49,8 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $minWidth = '',
         $sortable = true,
         $editable = false,
-        $cssClass = ''
+        $cssClass = '',
+        $distinct = false
     ) {
         parent::__construct(
             $name,
@@ -61,6 +67,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
 
         $this->fieldDescriptor = $fieldDescriptor;
         $this->glue = $glue;
+        $this->distinct = $distinct;
     }
 
     /**
@@ -68,7 +75,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     public function getSelect()
     {
-        return 'GROUP_CONCAT(' . $this->fieldDescriptor->getSelect() . ' SEPARATOR \'' . $this->glue . '\')';
+        return 'GROUP_CONCAT(' . ($this->distinct ? 'DISTINCT ' : '') . $this->fieldDescriptor->getSelect() . ' SEPARATOR \'' . $this->glue . '\')';
     }
 
     /**

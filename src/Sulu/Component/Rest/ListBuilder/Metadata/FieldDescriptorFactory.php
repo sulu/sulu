@@ -294,7 +294,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->getMinWidth(),
             $generalMetadata->isSortable(),
             $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $generalMetadata->getCssClass(),
+            $this->resolveOptions($type->getDistinct(), $options)
         );
     }
 
