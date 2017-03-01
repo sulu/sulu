@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #3241 [SecurityBundle]        Fixed permission edit for newly added security contexts
+    * ENHANCEMENT #3243 [ListBuilder]           GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
 
 * 1.4.8 (2017-02-28)
     * HOTFIX      #3214 [AdminBundle]           Fixed save button of form-tab when validation fails.
