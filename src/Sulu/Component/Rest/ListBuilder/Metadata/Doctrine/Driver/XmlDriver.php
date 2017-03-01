@@ -94,6 +94,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      *
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
+     *
      * @return null|CaseTypeMetadata|ConcatenationTypeMetadata|CountTypeMetadata|GroupConcatTypeMetadata|IdentityTypeMetadata|SingleTypeMetadata
      */
     protected function getType(\DOMXPath $xpath, \DOMElement $propertyNode)
