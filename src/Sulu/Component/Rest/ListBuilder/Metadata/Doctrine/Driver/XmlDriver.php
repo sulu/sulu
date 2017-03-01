@@ -160,7 +160,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return GroupConcatTypeMetadata|null
+     * @return GroupConcatTypeMetadata
      */
     protected function getGroupConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
