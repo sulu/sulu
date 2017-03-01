@@ -78,12 +78,12 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMElement $propertyNode
      * @param string $className
      *
-     * @return PropertyMetadata|null
+     * @return PropertyMetadata
      */
     protected function getPropertyMetadata(\DOMXPath $xpath, \DOMElement $propertyNode, $className)
     {
         if (null === $type = $this->getType($xpath, $propertyNode)) {
-            return null;
+            return;
         }
 
         return new PropertyMetadata($className, XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode), $type);
@@ -121,12 +121,12 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return SingleTypeMetadata|null
+     * @return SingleTypeMetadata
      */
     protected function getSingleType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         if (null === $field = $this->getField($xpath, $propertyNode)) {
-            return null;
+            return;
         }
 
         return new SingleTypeMetadata($field);
@@ -165,7 +165,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     protected function getGroupConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         if (null === $field = $this->getField($xpath, $propertyNode)) {
-            return null;
+            return;
         }
 
         return new GroupConcatTypeMetadata(
@@ -181,12 +181,12 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return IdentityTypeMetadata|null
+     * @return IdentityTypeMetadata
      */
     protected function getIdentityType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         if (null === $field = $this->getField($xpath, $propertyNode)) {
-            return null;
+            return;
         }
 
         return new IdentityTypeMetadata($field);
@@ -220,12 +220,12 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return CountTypeMetadata|null
+     * @return CountTypeMetadata
      */
     protected function getCountType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         if (null === $field = $this->getField($xpath, $propertyNode)) {
-            return null;
+            return;
         }
 
         return new CountTypeMetadata($field);
@@ -237,7 +237,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $fieldNode
      *
-     * @return FieldMetadata|null
+     * @return FieldMetadata
      */
     protected function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
     {
@@ -245,7 +245,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
 
             if ($nodeList->length === 0) {
-                return null;
+                return;
             }
 
             return $this->getField($xpath, $nodeList->item(0));
@@ -254,7 +254,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         if (null === ($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $fieldNode))
             || null === ($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $fieldNode))
         ) {
-            return null;
+            return;
         }
 
         $field = new FieldMetadata($this->resolveParameter($fieldName), $this->resolveParameter($entityName));

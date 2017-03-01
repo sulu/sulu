@@ -42,7 +42,6 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $name,
         $translation = null,
         $glue = ',',
-        $distinct = false,
         $disabled = false,
         $default = false,
         $type = '',
@@ -50,7 +49,8 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $minWidth = '',
         $sortable = true,
         $editable = false,
-        $cssClass = ''
+        $cssClass = '',
+        $distinct = false
     ) {
         parent::__construct(
             $name,
