@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3247 [MediaBundle]           Fixed focus point calculation with double rounding error
     * HOTFIX      #3244 [SecurityBundle]        Fixed breaking change in swiftmailer for tests
     * HOTFIX      #3241 [SecurityBundle]        Fixed permission edit for newly added security contexts
     * ENHANCEMENT #3243 [ListBuilder]           GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`

@@ -130,9 +130,7 @@ class ImagineImageConverter implements ImageConverterInterface
         );
         if (isset($cropParameters)) {
             $image = $this->applyFormatCrop($image, $cropParameters);
-        }
-
-        if (isset($format['scale']) && $format['scale']['mode'] !== ImageInterface::THUMBNAIL_INSET) {
+        } elseif (isset($format['scale']) && $format['scale']['mode'] !== ImageInterface::THUMBNAIL_INSET) {
             $image = $this->applyFocus($image, $fileVersion, $format['scale']);
         }
 
