@@ -6,6 +6,8 @@ CHANGELOG for Sulu
     * HOTFIX      #3244 [SecurityBundle]        Fixed breaking change in swiftmailer for tests
     * HOTFIX      #3241 [SecurityBundle]        Fixed permission edit for newly added security contexts
     * ENHANCEMENT #3243 [ListBuilder]           GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
+    * ENHANCEMENT #3246 [ListBuilder]         FieldDescriptor: Corrected implementation of attribute `display` with value `yes`
+    * ENHANCEMENT #3243 [ListBuilder]         GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
 
 * 1.4.8 (2017-02-28)
     * HOTFIX      #3214 [AdminBundle]           Fixed save button of form-tab when validation fails.
@@ -165,6 +167,9 @@ CHANGELOG for Sulu
     * FEATURE     #2749 [Webspace]            Added resource-locator strategy tree_full_edit
     * BUGFIX      #2885 [ContactBundle]       Fixed toArray-Function
     * BUGFIX      #2896 [SearchBundle]        Fixed limit in query
+
+* 1.3.10 (2017-02-28)
+    * HOTFIX      #3214 [AdminBundle]         Fixed save button of form-tab when validation fails.
 
 * 1.3.8 (2017-01-30)
     * BUGFIX      #3167 [SnippetBundle]       Fixed error when snippet template has a category field.
