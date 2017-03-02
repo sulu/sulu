@@ -84,7 +84,7 @@ class Focus implements FocusInterface
             }
         } else {
             $width = $imageSize->getWidth();
-            $height = $width / $targetRatio;
+            $height = (int) ($width / $targetRatio);
 
             $cropX = 0;
 
