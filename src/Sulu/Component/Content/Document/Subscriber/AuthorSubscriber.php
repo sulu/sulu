@@ -17,6 +17,7 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -33,11 +34,18 @@ class AuthorSubscriber implements EventSubscriberInterface
     private $propertyEncoder;
 
     /**
-     * @param PropertyEncoder $propertyEncoder
+     * @var UserRepositoryInterface
      */
-    public function __construct(PropertyEncoder $propertyEncoder)
+    private $userRepository;
+
+    /**
+     * @param PropertyEncoder $propertyEncoder
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function __construct(PropertyEncoder $propertyEncoder, UserRepositoryInterface $userRepository)
     {
         $this->propertyEncoder = $propertyEncoder;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -104,8 +112,12 @@ class AuthorSubscriber implements EventSubscriberInterface
         }
 
         // Set default value if author is not set.
-        if ($document->getAuthor() === null) {
-            $document->setAuthor($document->getCreator());
+        if (null === $document->getAuthor() && null !== $document->getCreator()) {
+            $user = $this->userRepository->findUserById($document->getCreator());
+
+            if ($user && $user->getContact()) {
+                $document->setAuthor($user->getContact()->getId());
+            }
         }
 
         $encoding = 'system_localized';
