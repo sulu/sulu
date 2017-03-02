@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #3242 [ContentBundle]       Fixed set default author to creator contact-id
+
 * 1.5.0-RC3(2017-02-28)
     * BUGFIX      #3234 [HttpCacheBundle]     Added console terminate to flush-subscriber
     * BUGFIX      #3206 [SnippetBundle]       Corrected translations in copy locale and open ghost overlay

@@ -36,6 +36,7 @@
         <service id="sulu_document_manager.suscriber.behavior.author"
                  class="Sulu\Component\Content\Document\Subscriber\AuthorSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu.repository.user" />
 
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
