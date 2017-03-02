@@ -462,9 +462,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     private function isDefault(GeneralPropertyMetadata $generalMetadata)
     {
-        return in_array(
-            $generalMetadata->getDisplay(),
-            [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
-        );
+        return GeneralPropertyMetadata::DISPLAY_ALWAYS === $generalMetadata->getDisplay();
     }
 }
