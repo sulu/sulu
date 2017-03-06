@@ -1,13 +1,13 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.4.9 (2017-03-06)
     * HOTFIX      #3247 [MediaBundle]           Fixed focus point calculation with double rounding error
     * HOTFIX      #3244 [SecurityBundle]        Fixed breaking change in swiftmailer for tests
     * HOTFIX      #3241 [SecurityBundle]        Fixed permission edit for newly added security contexts
     * ENHANCEMENT #3243 [ListBuilder]           GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
-    * ENHANCEMENT #3246 [ListBuilder]         FieldDescriptor: Corrected implementation of attribute `display` with value `yes`
-    * ENHANCEMENT #3243 [ListBuilder]         GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
+    * ENHANCEMENT #3246 [ListBuilder]           FieldDescriptor: Corrected implementation of attribute `display` with value `yes`
+    * ENHANCEMENT #3243 [ListBuilder]           GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
 
 * 1.4.8 (2017-02-28)
     * HOTFIX      #3214 [AdminBundle]           Fixed save button of form-tab when validation fails.
