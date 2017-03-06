@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
@@ -82,6 +83,13 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $structure->getUrls()->willReturn(['en' => '/description', 'de' => '/beschreibung', 'es' => null]);
         $structure->getShadowBaseLanguage()->willReturn('en');
 
+        $authored = new \DateTime();
+
+        $document = $this->prophesize()->willImplement(LocalizedAuthorBehavior::class);
+        $structure->getDocument()->willReturn($document->reveal());
+        $document->getAuthored()->willReturn($authored);
+        $document->getAuthor()->willReturn(1);
+
         $expected = [
             'extension' => [
                 'excerpt' => ['test1' => 'test1'],
@@ -102,6 +110,8 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
             'urls' => ['en' => '/description', 'de' => '/beschreibung', 'es' => null],
             'path' => 'test-path',
             'shadowBaseLocale' => 'en',
+            'authored' => $authored,
+            'author' => 1,
         ];
 
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));

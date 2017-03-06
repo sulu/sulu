@@ -28,12 +28,15 @@ class Role extends BaseRole
 
     /**
      * @var Collection
+     *
      * @Exclude
      */
     private $userRoles;
 
     /**
      * @var Collection
+     *
+     * @Exclude
      */
     private $groups;
 

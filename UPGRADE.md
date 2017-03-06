@@ -1,5 +1,94 @@
 # Upgrade
 
+## 1.5.0-RC1
+
+### Media formats uniqueness
+
+The uniqueness of media formats is now checked, and an exception is thrown in
+case duplicated format keys exist.
+
+In addition to that the existing formats have been prefixed with `sulu-`,
+so that they are less likely to conflict. If you have relied on these formats,
+which you shouldn't have, then you have to create them now in your own theme.
+
+The following formats do not exist anymore, and should therefore be deleted
+from the `web/uploads/media`-folder, except you decide to create the image
+format on your own:
+
+* 400x400
+* 400x400-inset
+* 260x
+* 170x170
+* 100x100
+* 100x100-inset
+* 50x50
+
+### Page author
+
+The page has a new property `author` and `authored` which will be prefilled
+with values from `creator`/`created`.
+
+If you have used one of these names before for some properties in your page or
+snippet templates, then you have to change the name. Rename the field in the
+XML definition and in the twig template, and execute the following command with
+the filled in placeholders wrapped in `<>`:
+
+```
+app/console doctrine:phpcr:nodes:update --query "SELECT * FROM [nt:base] AS n WHERE [i18n:<localization>-author] IS NOT NULL AND ISDESCENDANTNODE(n, '/cmf')" --apply-closure="\$node->setProperty('i18n:<localization>-<new-field-name>', \$node->getPropertyValue('i18n:<localization>-author')); \$node->getProperty('i18n:<localization>-author')->remove();"
+```
+
+This command should be executed for every registered localization and for both
+sessions (once without parameter and once with `--session=live`).
+
+Afterwards you can safely migrate the data to use `creator` and `created` as
+start values for `author` and `authored`.
+
+```
+app/console phpcr:migrations:migrate
+```
+
+### Twig 2
+
+If you upgrade twig to version 2 please read follow
+[this instructions](http://twig.sensiolabs.org/doc/1.x/deprecated.html).
+
+The most important change is ``_self`` for calling macros. You have to import it before using.
+
+__Before:__
+```twig
+{ _self.macro_name() }}
+```
+
+__After:__
+```twig
+{% import _self as self %}
+{ self.macro_name() }}
+```
+
+If you dont want to use twig2 please add following line to your ``composer.json``:
+
+```json
+"require": {
+    ...
+    "twig/twig": "^1.11"
+}
+```
+
+### Deprecations
+
+Following classes and methods were removed because of deprecations:
+
+* Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlVoter
+* Sulu\Component\Rest\RestController::responsePersistSettings
+* Sulu\Component\Rest\RestController::responseList
+* Sulu\Component\Rest\RestController::createHalResponse
+* Sulu\Component\Rest\RestController::getHalLinks
+* Sulu\Bundle\WebsiteBundle\DefaultController::redirectAction
+* Sulu\Bundle\WebsiteBundle\DefaultController::redirectWebspaceAction
+
+Additionally the GeneratorBundle was removed because it was not maintained since a while.
+You have to remove the Bundle from you Kernels.
+
 ## 1.4.3
 
 ### Multiple properties in template
@@ -106,7 +195,7 @@ __NOW:__
     <view>page.html.twig</view>
     <controller>SuluContentBundle:Default:index</controller>
 
-    <!-- releases cache each day at mitnight -->
+    <!-- releases cache each day at midnight -->
     <cacheLifetime type="expression">@daily</cacheLifetime>
     
     ...

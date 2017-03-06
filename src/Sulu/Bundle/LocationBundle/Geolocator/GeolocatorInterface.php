@@ -16,5 +16,12 @@ namespace Sulu\Bundle\LocationBundle\Geolocator;
  */
 interface GeolocatorInterface
 {
+    /**
+     * Locates given query.
+     *
+     * @param string $query
+     *
+     * @return GeolocatorResponse
+     */
     public function locate($query);
 }

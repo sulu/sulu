@@ -21,7 +21,6 @@ define([], function() {
             visibleItems: 999,
             instanceName: null,
             url: '',
-            columnNavigationUrl: '',
             idsParameter: 'ids',
             preselected: null,
             idKey: 'id',
@@ -68,7 +67,7 @@ define([], function() {
 
             data: function(options) {
                 return[
-                    '<div id="', options.ids.columnNavigation, '"/>',
+                    '<div id="', options.ids.columnNavigation, '" class="data-source-content"/>'
                 ].join('');
             }
         },
@@ -168,10 +167,11 @@ define([], function() {
                         container: this.$el,
                         removeOnClose: false,
                         instanceName: 'single-internal-link.' + this.options.instanceName,
-                        skin: 'responsive-width',
+                        skin: 'large',
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.overlayTitle),
+                                cssClass: 'data-source-slide',
                                 data: templates.data(this.options),
                                 contentSpacing: false,
                                 okCallback: overlayOkCallback.bind(this)
@@ -206,7 +206,10 @@ define([], function() {
          * initialize column navigation
          */
         initColumnNavigation = function() {
-            var url = getSelectUrl(this.options.columnNavigationUrl, this.data);
+            var url = this.options.columnNavigationUrl;
+            if (!!this.data) {
+                url = this.options.selectedUrl.replace('{uuid}', this.data);
+            }
 
             this.sandbox.start(
                 [
@@ -221,6 +224,7 @@ define([], function() {
                             showOptions: false,
                             responsive: false,
                             sortable: false,
+                            hasSubName: 'hasChildren',
                             skin: 'fixed-height-small',
                             disableIds: this.options.disabledIds,
                             markable: true,
@@ -235,10 +239,6 @@ define([], function() {
             this.sandbox.util.load(getSingleUrl(this.options.url, this.data)).then(function(data) {
                 this.$input.val((data.title || this.sandbox.translate(this.options.translations.noTitle)) + ' (' + data.url + ')');
             }.bind(this));
-        },
-
-        getSelectUrl = function(url, data) {
-            return url.replace('{id=uuid&}', (!!data ? 'id=' + data + '&' : ''));
         },
 
         getSingleUrl = function(url, data) {

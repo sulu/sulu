@@ -43,18 +43,18 @@
         </service>
 
         <service id="sulu_websocket.admin.message_builder" class="Sulu\Component\Websocket\MessageDispatcher\MessageBuilder"/>
-        <service id="sulu_websocket.admin.message_dispatcher.app.cache" class="%sulu_websocket.admin.message_dispatcher.app.cache.class%" public="false">
-            <argument type="string">%sulu.cache_dir%/preview/context</argument>
-        </service>
+
         <service id="sulu_websocket.admin.message_dispatcher" class="%sulu_websocket.admin.message_dispatcher.class%" public="false">
             <argument type="service" id="sulu_websocket.admin.message_builder"/>
+
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.message.dispatcher" alias="admin"/>
         </service>
+
         <service id="sulu_websocket.admin.message_dispatcher.app" class="%sulu_websocket.admin.message_dispatcher.app.class%">
             <argument type="string">admin</argument>
             <argument type="service" id="sulu_websocket.admin.message_dispatcher"/>
-            <argument type="service" id="sulu_websocket.admin.message_dispatcher.app.cache"/>
+            <argument type="service" id="sulu_websocket.websocket.cache"/>
 
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.app" route="/admin" />

@@ -141,6 +141,29 @@ class UserRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
+    public function testFindUsersById()
+    {
+        $user1 = $this->prepareUser('Sulu1', 'max', 'max');
+        $user2 = $this->prepareUser('Sulu2', 'erika', 'erika');
+        $user3 = $this->prepareUser('Sulu3', 'john', 'john');
+
+        $client = $this->createAuthenticatedClient();
+
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+
+        $users = $userRepository->findUsersById([$user1->getId(), $user2->getId()]);
+
+        $this->assertCount(2, $users);
+
+        $userIds = array_map(function($user) {
+            return $user->getId();
+        }, $users);
+
+        $this->assertContains($user1->getId(), $userIds);
+        $this->assertContains($user2->getId(), $userIds);
+        $this->assertNotContains($user3->getId(), $userIds);
+    }
+
     public function testFindUserByEmail()
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');

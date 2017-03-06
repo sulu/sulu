@@ -313,6 +313,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             WorkflowStage::PUBLISHED,
             1,
             false,
+            'simple',
             [
                 'title' => $title,
                 'published' => $published,

@@ -28,8 +28,8 @@ class WebspaceImportCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:webspaces:import')
             ->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
-            ->addArgument('webspace', InputOption::VALUE_REQUIRED)
-            ->addArgument('locale', InputOption::VALUE_REQUIRED)
+            ->addArgument('webspace', InputArgument::REQUIRED)
+            ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
             ->addOption('exportSuluVersion', '', InputOption::VALUE_OPTIONAL, '1.2 or 1.3', '1.3')
@@ -94,7 +94,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             $output->writeln(sprintf('<info>Imported %s/%s</info>', $import->successes, $import->count));
         }
 
-        $this->printExceptions($output, $import);
+        $this->printExceptions($import, $output);
 
         return $import->fails;
     }
@@ -102,10 +102,10 @@ class WebspaceImportCommand extends ContainerAwareCommand
     /**
      * Print the completion message after import is done.
      *
-     * @param OutputInterface $output
      * @param stdClass $import
+     * @param OutputInterface $output
      */
-    protected function printExceptions($output, $import)
+    protected function printExceptions($import, $output = null)
     {
         /** @var $logger LoggerInterface */
         $logger = $this->getContainer()->get('logger');

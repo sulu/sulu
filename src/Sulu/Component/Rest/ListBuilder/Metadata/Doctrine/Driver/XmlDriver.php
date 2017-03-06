@@ -238,6 +238,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMElement $fieldNode
      *
      * @return FieldMetadata
+     *
+     * @throws \Exception
      */
     protected function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
     {
@@ -245,7 +247,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
 
             if ($nodeList->length === 0) {
-                return;
+                throw new \Exception(sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
             }
 
             return $this->getField($xpath, $nodeList->item(0));
@@ -273,6 +275,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $joinsNode
      * @param FieldMetadata $field
+     *
+     * @throws \Exception
      */
     protected function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
     {
@@ -280,7 +284,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $nodeList = $xpath->query(sprintf('/x:class/orm:joins[@name="%s"]', $reference));
 
             if ($nodeList->length === 0) {
-                return;
+                throw new \Exception(sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));
             }
 
             $this->getJoinsMetadata($xpath, $nodeList->item(0), $field);

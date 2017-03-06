@@ -107,6 +107,9 @@
             <argument type="string">sulu-content</argument>
             <argument type="collection">
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalesByWebspaces()</argument>
+                <argument key="versioning" type="collection">
+                    <argument key="enabled">%sulu_document_manager.versioning.enabled%</argument>
+                </argument>
             </argument>
 
             <tag name="sulu.js_config"/>

@@ -178,6 +178,10 @@
                 <source>smart-content.changed</source>
                 <target>Veranderd (datum)</target>
             </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb1111" resname="smart-content.authored">
+                <source>smart-content.authored</source>
+                <target>Geschreven (datum)</target>
+            </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.apply">
                 <source>smart-content.apply</source>
                 <target>Toepassen</target>
@@ -445,15 +449,27 @@
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.changed">
                 <source>sulu.content.form.settings.changelog.changed</source>
-                <target>Veranderd door:</target>
+                <target>Laatste wijziging van %(changer)s op %(changed)s</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.created">
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.changed-only">
+                <source>sulu.content.form.settings.changelog.changed-only</source>
+                <target>Laatste wijziging op %(changed)s</target>
+            </trans-unit>
+            <trans-unit id="abbaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.authored">
+                <source>sulu.content.form.settings.changelog.authored</source>
+                <target>Geschreven door %(author)s op %(authored)s</target>
+            </trans-unit>
+            <trans-unit id="abcaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.authored-only">
+                <source>sulu.content.form.settings.changelog.authored-only</source>
+                <target>Geschreven op %(authored)s</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.created">
                 <source>sulu.content.form.settings.changelog.created</source>
-                <target>Gecreëerd door:</target>
+                <target>Gemaakt door %(creator)s op %(created)s</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.user-not-found">
-                <source>sulu.content.form.settings.changelog.user-not-found</source>
-                <target>Gebruiker niet gevonden</target>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf034" resname="sulu.content.form.settings.changelog.created-only">
+                <source>sulu.content.form.settings.changelog.created-only</source>
+                <target>Gemaakt op %(created)s</target>
             </trans-unit>
             <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
                 <source>column-navigation.ghost</source>
@@ -799,6 +815,38 @@
                 <source>content.ckeditor.internal-link.remove-drop-down</source>
                 <target>Verwijder</target>
             </trans-unit>
+            <trans-unit id="73" resname="sulu_content.task_handler.publish">
+                 <source>sulu_content.task_handler.publish</source>
+                 <target>Publiceren</target>
+             </trans-unit>
+            <trans-unit id="74" resname="sulu_content.task_handler.unpublish">
+                 <source>sulu_content.task_handler.unpublish</source>
+                 <target>Depubliceer</target>
+             </trans-unit>
+            <trans-unit id="75" resname="sulu_content.broken-template.title">
+                 <source>sulu_content.broken-template.title</source>
+                 <target>Le gabarit de page est cassé</target>
+             </trans-unit>
+            <trans-unit id="76" resname="sulu_content.broken-template.message">
+                 <source>sulu_content.broken-template.message</source>
+                 <target>Veuillez contacter l'administrateur système.</target>
+             </trans-unit>
+            <trans-unit id="77" resname="sulu_content.broken-template.message.template-name">
+                 <source>sulu_content.broken-template.message.template-name</source>
+                 <target>Nom du gabarit</target>
+             </trans-unit>
+            <trans-unit id="78" resname="sulu_content.broken-template.message.uuid">
+                 <source>sulu_content.broken-template.message.template-name</source>
+                 <target>UUID</target>
+             </trans-unit>
+            <trans-unit id="79" resname="sulu.content.form.settings.author">
+                 <source>sulu.content.form.settings.author</source>
+                 <target>Auteur</target>
+             </trans-unit>
+            <trans-unit id="80" resname="sulu.content.form.settings.authored">
+                 <source>sulu.content.form.settings.authored</source>
+                 <target>Auteur Datum</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

@@ -71,7 +71,6 @@ class TemplateController extends Controller
             }
         }
 
-
         usort($templates, function($a, $b) {
             return strcmp($a['title'], $b['title']);
         });
@@ -239,6 +238,7 @@ class TemplateController extends Controller
                 'webspaceKey' => $webspaceKey,
                 'navContexts' => $navContexts,
                 'languages' => $languages,
+                'versioning' => $this->getParameter('sulu_document_manager.versioning.enabled'),
             ]
         );
     }

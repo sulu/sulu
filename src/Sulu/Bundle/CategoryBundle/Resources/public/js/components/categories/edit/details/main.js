@@ -172,6 +172,7 @@ define(['jquery', 'services/sulucategory/category-manager', 'text!./form.html'],
                 {
                     el: this.$find('#keywords-list'),
                     url: this.templates.keywordsUrl({category: this.data.id, locale: this.options.locale}),
+                    storageName: 'category-' + this.data.id + '-keywords',
                     resultKey: 'keywords',
                     searchFields: ['keyword'],
                     saveParams: {locale: this.options.locale},

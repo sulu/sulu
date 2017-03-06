@@ -36,7 +36,7 @@ define([
             unselectOnBackgroundClick: true,
             selectable: true,
             selectOnAction: false,
-            imageFormat: '260x',
+            imageFormat: 'sulu-260x',
             emptyListTranslation: 'public.empty-list',
             fields: {
                 image: 'thumbnails',

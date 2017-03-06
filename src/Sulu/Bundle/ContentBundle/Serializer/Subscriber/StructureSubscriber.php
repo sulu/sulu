@@ -83,23 +83,25 @@ class StructureSubscriber implements EventSubscriberInterface
         $visitor = $event->getVisitor();
         $structureMetadata = $this->inspector->getStructureMetadata($document);
 
-        $visitor->addData('template', $document->getStructureType());
-        $visitor->addData('originTemplate', $document->getStructureType());
-        $visitor->addData('internal', false);
-        $visitor->addData(
-            'localizedTemplate',
-            $structureMetadata->getTitle(
-                $this->inspector->getLocale($document)
-            )
-        );
+        if ($structureMetadata) {
+            $visitor->addData('template', $document->getStructureType());
+            $visitor->addData('originTemplate', $document->getStructureType());
+            $visitor->addData('internal', false);
+            $visitor->addData(
+                'localizedTemplate',
+                $structureMetadata->getTitle(
+                    $this->inspector->getLocale($document)
+                )
+            );
 
-        if (array_search('defaultPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
-            $this->addStructureProperties($structureMetadata, $document, $visitor);
-        }
+            if (array_search('defaultPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
+                $this->addStructureProperties($structureMetadata, $document, $visitor);
+            }
 
-        // create bread crumbs
-        if (array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
-            $this->addBreadcrumb($document, $visitor);
+            // create bread crumbs
+            if (array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
+                $this->addBreadcrumb($document, $visitor);
+            }
         }
     }
 
@@ -109,8 +111,11 @@ class StructureSubscriber implements EventSubscriberInterface
      * @param StructureBehavior $document
      * @param VisitorInterface $visitor
      */
-    private function addStructureProperties(StructureMetadata $structureMetadata, StructureBehavior $document, VisitorInterface $visitor)
-    {
+    private function addStructureProperties(
+        StructureMetadata $structureMetadata,
+        StructureBehavior $document,
+        VisitorInterface $visitor
+    ) {
         /** @var ManagedStructure $structure */
         $structure = $document->getStructure();
         $data = $structure->toArray();
@@ -148,9 +153,12 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $items = array_reverse($items);
 
-        array_walk($items, function (&$item, $index) {
-            $item['depth'] = $index;
-        });
+        array_walk(
+            $items,
+            function (&$item, $index) {
+                $item['depth'] = $index;
+            }
+        );
 
         $visitor->addData('breadcrumb', $items);
     }

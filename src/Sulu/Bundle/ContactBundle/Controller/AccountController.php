@@ -134,7 +134,6 @@ class AccountController extends RestController implements ClassResourceInterface
     public function getContactsAction($id, Request $request)
     {
         if ($request->get('flat') == 'true') {
-
             /* @var AccountInterface $account */
             $account = $this->getDoctrine()
                 ->getRepository($this->getAccountEntityName())
@@ -202,7 +201,6 @@ class AccountController extends RestController implements ClassResourceInterface
     public function getAddressesAction($id, Request $request)
     {
         if ($request->get('flat') == 'true') {
-
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->getRestHelper();
 

@@ -38,8 +38,8 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
             '/uploads/media/{slug}',
             $this->segments,
             [
-                '50x50' => [
-                    'name' => '50x50',
+                'sulu-50x50' => [
+                    'name' => 'sulu-50x50',
                 ],
             ]
         );
@@ -54,13 +54,13 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
         $subVersion = 3;
         $fileId = 1;
         $segment = ($fileId % $this->segments);
-        $format = '50x50';
+        $format = 'sulu-50x50';
         $fileName = 'Test With Spaces & Co.jpg';
         $filePath = $this->localStorage->getMediaUrl($fileId, $fileName, [], $format, $version, $subVersion);
         $encodedFileName = 'Test%20With%20Spaces%20%26%20Co.jpg';
 
         $this->assertSame(
-            '/uploads/media/50x50/01/1-Test%20With%20Spaces%20%26%20Co.jpg?v=2-3',
+            '/uploads/media/sulu-50x50/01/1-Test%20With%20Spaces%20%26%20Co.jpg?v=2-3',
             $filePath
         );
     }

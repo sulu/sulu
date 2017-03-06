@@ -104,16 +104,18 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     protected function templateExists($template)
     {
         $loader = $this->twig->getLoader();
-        if ($loader instanceof \Twig_ExistsLoaderInterface) {
+        if (method_exists($loader, 'exists')) {
             return $loader->exists($template);
         }
 
         try {
-            $loader->getSource($template);
-
-            return true;
+            // cast possible TemplateReferenceInterface to string because the
+            // EngineInterface supports them but Twig_LoaderInterface does not
+            $loader->getSource($template)->getCode();
         } catch (\Twig_Error_Loader $e) {
             return false;
         }
+
+        return true;
     }
 }

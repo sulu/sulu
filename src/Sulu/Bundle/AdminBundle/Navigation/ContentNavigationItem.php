@@ -90,6 +90,14 @@ class ContentNavigationItem
      */
     private $displayConditions;
 
+    /**
+     * @var int
+     */
+    private $notificationBadge;
+
+    /**
+     * @param string $name
+     */
     public function __construct($name)
     {
         $this->name = $name;
@@ -98,6 +106,8 @@ class ContentNavigationItem
     }
 
     /**
+     * Returns id.
+     *
      * @return string
      */
     public function getId()
@@ -106,62 +116,22 @@ class ContentNavigationItem
     }
 
     /**
+     * Set id.
+     *
      * @param string $id
+     *
+     * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    /**
-     * @param string $action
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * @return string
-     */
-    public function getComponent()
-    {
-        return $this->component;
-    }
-
-    /**
-     * @param string $component
-     */
-    public function setComponent($component)
-    {
-        $this->component = $component;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDisplay()
-    {
-        return $this->display;
-    }
-
-    /**
-     * @param array $display
-     */
-    public function setDisplay($display)
-    {
-        $this->display = $display;
-    }
-
-    /**
+     * Returns name.
+     *
      * @return string
      */
     public function getName()
@@ -170,14 +140,56 @@ class ContentNavigationItem
     }
 
     /**
-     * @param string $name
+     * Returns action.
+     *
+     * @return string
      */
-    public function setName($name)
+    public function getAction()
     {
-        $this->name = $name;
+        return $this->action;
     }
 
     /**
+     * Set action.
+     *
+     * @param string $action
+     *
+     * @return $this
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
+     * Returns component.
+     *
+     * @return string
+     */
+    public function getComponent()
+    {
+        return $this->component;
+    }
+
+    /**
+     * Set component.
+     *
+     * @param string $component
+     *
+     * @return $this
+     */
+    public function setComponent($component)
+    {
+        $this->component = $component;
+
+        return $this;
+    }
+
+    /**
+     * Returns component-options.
+     *
      * @return array
      */
     public function getComponentOptions()
@@ -186,47 +198,95 @@ class ContentNavigationItem
     }
 
     /**
-     * @param array $options
+     * Set component-options.
+     *
+     * @param array $componentOptions
+     *
+     * @return $this
      */
-    public function setComponentOptions(array $options)
+    public function setComponentOptions($componentOptions)
     {
-        $this->componentOptions = $options;
+        $this->componentOptions = $componentOptions;
+
+        return $this;
     }
 
     /**
+     * Returns display.
+     *
+     * @return array
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * Set display.
+     *
+     * @param array $display
+     *
+     * @return $this
+     */
+    public function setDisplay($display)
+    {
+        $this->display = $display;
+
+        return $this;
+    }
+
+    /**
+     * Returns disabled.
+     *
      * @return bool
      */
-    public function getDisabled()
+    public function isDisabled()
     {
         return $this->disabled;
     }
 
     /**
+     * Set disabled.
+     *
      * @param bool $disabled
+     *
+     * @return $this
      */
     public function setDisabled($disabled)
     {
         $this->disabled = $disabled;
+
+        return $this;
     }
 
     /**
+     * Returns reset-store.
+     *
      * @return bool
      */
-    public function getResetStore()
+    public function isResetStore()
     {
         return $this->resetStore;
     }
 
     /**
+     * Set reset-store.
+     *
      * @param bool $resetStore
+     *
+     * @return $this
      */
     public function setResetStore($resetStore)
     {
         $this->resetStore = $resetStore;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Returns position.
+     *
+     * @return int
      */
     public function getPosition()
     {
@@ -234,14 +294,22 @@ class ContentNavigationItem
     }
 
     /**
-     * @param mixed $position
+     * Set position.
+     *
+     * @param int $position
+     *
+     * @return $this
      */
     public function setPosition($position)
     {
         $this->position = $position;
+
+        return $this;
     }
 
     /**
+     * Returns display-conditions.
+     *
      * @return DisplayCondition[]
      */
     public function getDisplayConditions()
@@ -250,10 +318,40 @@ class ContentNavigationItem
     }
 
     /**
+     * Set display-conditions.
+     *
      * @param DisplayCondition[] $displayConditions
+     *
+     * @return $this
      */
     public function setDisplayConditions(array $displayConditions)
     {
         $this->displayConditions = $displayConditions;
+
+        return $this;
+    }
+
+    /**
+     * Returns notification-badge.
+     *
+     * @return int
+     */
+    public function getNotificationBadge()
+    {
+        return $this->notificationBadge;
+    }
+
+    /**
+     * Set notification-badge.
+     *
+     * @param int $notificationBadge
+     *
+     * @return $this
+     */
+    public function setNotificationBadge($notificationBadge)
+    {
+        $this->notificationBadge = $notificationBadge;
+
+        return $this;
     }
 }

@@ -107,27 +107,30 @@ define([
                 el: this.sandbox.dom.find('#snippet-list', this.$el),
                 url: '/admin/api/snippets?language=' + this.options.language,
                 searchInstanceName: 'snippets',
+                storageName: 'snippets',
                 searchFields: ['title'], // TODO ???
                 resultKey: 'snippets',
                 actionCallback: function(id, item) {
                     if (!item.type || item.type.name !== 'ghost') {
                         this.sandbox.emit('sulu.snippets.snippet.load', id);
                     } else {
-                        OpenGhost.openGhost.call(this, item).then(function(copy, src) {
-                            if (!!copy) {
-                                CopyLocale.copyLocale.call(
-                                    this,
-                                    item.id,
-                                    src,
-                                    [this.options.language],
-                                    function() {
-                                        this.sandbox.emit('sulu.snippets.snippet.load', id);
-                                    }.bind(this)
-                                );
-                            } else {
-                                this.sandbox.emit('sulu.snippets.snippet.load', id);
-                            }
-                        }.bind(this));
+                        OpenGhost.openGhost.call(this, item, this.translations.openGhostOverlay).then(
+                            function(copy, src) {
+                                if (!!copy) {
+                                    CopyLocale.copyLocale.call(
+                                        this,
+                                        item.id,
+                                        src,
+                                        [this.options.language],
+                                        function() {
+                                            this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                        }.bind(this)
+                                    );
+                                } else {
+                                    this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                }
+                            }.bind(this)
+                        );
                     }
                 }.bind(this),
                 viewOptions: {

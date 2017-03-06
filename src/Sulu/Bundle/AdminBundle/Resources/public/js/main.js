@@ -20,6 +20,7 @@ require.config({
         'cultures': 'vendor/globalize/cultures',
         'husky': 'vendor/husky/husky',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
+        'aura_extensions/csv-export': 'aura_extensions/csv-export',
         'aura_extensions/sulu-content': 'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
         'aura_extensions/sulu-buttons': 'aura_extensions/sulu-buttons',
@@ -44,6 +45,7 @@ require.config({
         'app-config',
         'config',
         'aura_extensions/backbone-relational',
+        'aura_extensions/csv-export',
         'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension',
         'aura_extensions/sulu-buttons',
@@ -115,6 +117,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         app.use('aura_extensions/default-extension');
         app.use('aura_extensions/url-manager');
         app.use('aura_extensions/backbone-relational');
+        app.use('aura_extensions/csv-export');
         app.use('aura_extensions/sulu-content');
         app.use('aura_extensions/sulu-extension');
         app.use('aura_extensions/sulu-buttons');

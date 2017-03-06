@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content;
 
+use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Symfony\Component\HttpKernel\Log\NullLogger;
 
 class InternalLinksContainerTest extends \PHPUnit_Framework_TestCase
 {

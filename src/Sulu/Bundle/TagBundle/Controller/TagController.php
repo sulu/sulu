@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
@@ -99,16 +98,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
     public function getFieldsAction()
     {
         return $this->handleView($this->view(array_values($this->getManager()->getFieldDescriptors())));
-    }
-
-    /**
-     * persists a setting.
-     *
-     * @Put("tags/fields")
-     */
-    public function putFieldsAction()
-    {
-        return $this->responsePersistSettings();
     }
 
     /**

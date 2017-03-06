@@ -134,7 +134,7 @@
                 <orm:field-name>firstName</orm:field-name>
                 <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
 
-                <orm:joins ref="accountContact"/>
+                <orm:joins ref="mainContact"/>
             </orm:field>
 
             <orm:field>

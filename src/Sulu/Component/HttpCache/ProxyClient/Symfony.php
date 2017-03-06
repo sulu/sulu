@@ -17,12 +17,13 @@ use FOS\HttpCache\Exception\ProxyResponseException;
 use FOS\HttpCache\Exception\ProxyUnreachableException;
 use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
-use Guzzle\Http\Client;
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Exception\CurlException;
-use Guzzle\Http\Exception\MultiTransferException;
-use Guzzle\Http\Exception\RequestException;
-use Guzzle\Http\Message\RequestInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Promise;
+use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Symfony HTTP cache invalidator.
@@ -41,7 +42,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * Request queue.
      *
-     * @var array|RequestInterface[]
+     * @var Request[]
      */
     private $queue;
 
@@ -102,11 +103,11 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      * @param string $url     URL
      * @param array  $headers HTTP headers
      *
-     * @return RequestInterface
+     * @return Request
      */
     protected function createRequest($method, $url, array $headers = [])
     {
-        return $this->client->createRequest($method, $url, $headers);
+        return new Request($method, $url, $headers);
     }
 
     /**
@@ -114,67 +115,49 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      *
      * Requests are sent in parallel to minimise impact on performance.
      *
-     * @param RequestInterface[] $requests Requests
+     * @param Request[] $requests Requests
      *
      * @throws ExceptionCollection
      */
     private function sendRequests(array $requests)
     {
-        $allRequests = [];
-
-        foreach ($requests as $request) {
-            /* @var RequestInterface $request */
-            $proxyRequest = $this->client->createRequest(
-                $request->getMethod(),
-                $request->getUrl(),
-                $request->getHeaders()
-            );
-            $allRequests[] = $proxyRequest;
-        }
-
-        try {
-            $this->client->send($allRequests);
-        } catch (MultiTransferException $e) {
-            $this->handleException($e);
-        }
-    }
-
-    /**
-     * Handle request exception.
-     *
-     * @param MultiTransferException $exceptions
-     *
-     * @throws ExceptionCollection
-     */
-    protected function handleException(MultiTransferException $exceptions)
-    {
+        $promises = [];
         $collection = new ExceptionCollection();
-
-        foreach ($exceptions as $exception) {
-            if ($exception instanceof CurlException) {
-                // Caching proxy unreachable
-                $e = ProxyUnreachableException::proxyUnreachable(
-                    $exception->getRequest()->getHost(),
-                    $exception->getMessage(),
-                    $exception
-                );
-            } elseif ($exception instanceof RequestException) {
-                // Other error
-                $e = ProxyResponseException::proxyResponse(
-                    $exception->getRequest()->getHost(),
-                    $exception->getCode(),
-                    $exception->getMessage(),
-                    $exception
-                );
-            } else {
-                // Unexpected exception type
-                $e = $exception;
-            }
-
-            $collection->add($e);
+        foreach ($requests as $request) {
+            $promises[] = $promise = $this->client->sendAsync($request);
+            $promise->then(
+                function (ResponseInterface $res) {
+                },
+                function (RequestException $exception) use ($collection) {
+                    if ($exception instanceof ConnectException) {
+                        // Caching proxy unreachable
+                        $collection->add(
+                            ProxyUnreachableException::proxyUnreachable(
+                                $exception->getRequest()->getUri()->getHost(),
+                                $exception->getMessage(),
+                                $exception
+                            )
+                        );
+                    } elseif ($exception instanceof RequestException) {
+                        // Other error
+                        $collection->add(
+                            ProxyResponseException::proxyResponse(
+                                $exception->getRequest()->getUri()->getHost(),
+                                $exception->getCode(),
+                                $exception->getMessage(),
+                                $exception
+                            )
+                        );
+                    } else {
+                        // Unexpected exception type
+                        $collection->add($exception);
+                    }
+                }
+            );
         }
 
-        throw $collection;
+        $combinedPromise = Promise\settle($promises);
+        $combinedPromise->wait();
     }
 
     /**

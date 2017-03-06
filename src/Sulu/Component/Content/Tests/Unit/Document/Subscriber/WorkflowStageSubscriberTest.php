@@ -24,6 +24,7 @@ use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
@@ -313,6 +314,36 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
         $defaultEnglishChildPublishedProperty->setValue(null)->shouldBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToTestForCopy($event->reveal());
+    }
+
+    public function testSetWorkflowStageToTestForRestore()
+    {
+        $event = $this->prophesize(RestoreEvent::class);
+        $event->getLocale()->willReturn('de');
+
+        $document = $this->prophesize(WorkflowStageBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $node = $this->prophesize(NodeInterface::class);
+        $event->getNode()->willReturn($node);
+
+        $node->setProperty('i18n:de-state', WorkflowStage::TEST)->shouldBeCalled();
+
+        $this->workflowStageSubscriber->setWorkflowStageToTestForRestore($event->reveal());
+    }
+
+    public function testSetWorkflowStageToTestForRestoreWithoutWorkflowStageBehavior()
+    {
+        $event = $this->prophesize(RestoreEvent::class);
+        $event->getLocale()->willReturn('de');
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty(Argument::any())->shouldNotBeCalled();
+        $event->getNode()->willReturn($node->reveal());
+
+        $document = new \stdClass();
+        $event->getDocument()->willReturn($document);
+        $this->workflowStageSubscriber->setWorkflowStageToTestForRestore($event->reveal());
     }
 
     /**

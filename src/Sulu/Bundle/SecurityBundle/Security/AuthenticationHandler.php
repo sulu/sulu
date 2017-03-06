@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
@@ -57,8 +57,8 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         // get url to redirect (or return in the JSON-response)
-        if ($this->session->get('_security.admin.target_path') &&
-            strpos($this->session->get('_security.admin.target_path'), '#') !== false
+        if ($this->session->get('_security.admin.target_path')
+            && strpos($this->session->get('_security.admin.target_path'), '#') !== false
         ) {
             $url = $this->session->get('_security.admin.target_path');
         } else {
@@ -95,7 +95,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         } else {
             // if form login
             // set authentication exception to session
-            $this->session->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);
+            $this->session->set(Security::AUTHENTICATION_ERROR, $exception);
             $response = new RedirectResponse($this->router->generate('sulu_admin.login'));
         }
 

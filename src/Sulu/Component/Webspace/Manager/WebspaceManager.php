@@ -257,7 +257,7 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($this->getWebspaceCollection() as $webspace) {
             /** @var Webspace $webspace */
             foreach ($webspace->getAllLocalizations() as $localization) {
-                $localizations[$localization->getLocalization()] = $localization;
+                $localizations[$localization->getLocale()] = $localization;
             }
         }
 

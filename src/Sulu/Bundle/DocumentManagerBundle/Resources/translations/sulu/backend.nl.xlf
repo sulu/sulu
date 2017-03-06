@@ -22,6 +22,22 @@
                 <source>sulu-document-manager.unpublish</source>
                 <target>Depubliceer</target>
             </trans-unit>
+            <trans-unit id="7" resname="sulu-document-manager.version.author">
+                <source>sulu-document-manager.version.author</source>
+                <target>Aangemaakt door</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu-document-manager.version.authored">
+                <source>sulu-document-manager.version.authored</source>
+                <target>Datum</target>
+            </trans-unit>
+            <trans-unit id="9" resname="sulu-document-manager.restore-confirmation-title">
+                <source>sulu-document-manager.restore-confirmation-title</source>
+                <target>Versie herstellen?</target>
+            </trans-unit>
+            <trans-unit id="10" resname="sulu-document-manager.restore-confirmation-description">
+                <source>sulu-document-manager.restore-confirmation-description</source>
+                <target>Er wordt een nieuw concept gemaakt. Bestaande concepten zullen worden overschreven.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

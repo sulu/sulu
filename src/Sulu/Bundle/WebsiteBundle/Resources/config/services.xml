@@ -177,11 +177,28 @@
         </service>
 
         <!-- exception controller -->
-        <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
+        <service id="sulu_website.exception_controller"
+                 decorates="twig.controller.exception"
+                 class="Sulu\Bundle\WebsiteBundle\Controller\ExceptionController">
+            <argument type="service" id="sulu_website.exception_controller.inner"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.parameter" />
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
-            <argument type="service" id="sulu_website.resolver.parameter" />
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.exception.controller" alias="twig.controller.exception">
+            <deprecated>The "%service_id%" service is deprecated since 1.5. Use "twig.controller.exception" instead</deprecated>
+
+            <argument type="service" id="twig.controller.exception"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+            <argument type="service" id="sulu_website.resolver.parameter"/>
+            <argument type="service" id="twig"/>
+            <argument>%kernel.debug%</argument>
+
+            <tag name="sulu.context" context="website"/>
         </service>
 
         <!-- cache clearer -->

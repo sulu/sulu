@@ -134,7 +134,6 @@ class XmlSitemapDumperTest extends \PHPUnit_Framework_TestCase
 
         $this->renderer->renderIndex('sulu.io', 'http')->willReturn(null);
 
-
         $provider = $this->prophesize(SitemapProviderInterface::class);
 
         $this->renderer
