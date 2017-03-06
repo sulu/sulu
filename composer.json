@@ -49,7 +49,7 @@
         "phpcr/phpcr-shell": "~1.0",
         "jackalope/jackalope-doctrine-dbal": "^1.2.5",
         "guzzle/plugin-mock": "3.9.*",
-        "massive/build-bundle": "dev-master",
+        "massive/build-bundle": "~0.3.0",
         "matthiasnoback/symfony-config-test": "^1.1",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
         "phpunit/phpunit": "^4.8.31",
