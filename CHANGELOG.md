@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.3
+* 1.3.11 (2017-03-06)
     * ENHANCEMENT #3246 [ListBuilder]         FieldDescriptor: Corrected implementation of attribute `display` with value `yes`
     * ENHANCEMENT #3243 [ListBuilder]         GroupConcatFieldDescriptor: Added possibility to set `DISTINCT` via attribute `orm:distinct`
 
