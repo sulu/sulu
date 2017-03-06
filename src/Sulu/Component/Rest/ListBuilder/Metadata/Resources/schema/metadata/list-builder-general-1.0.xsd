@@ -89,7 +89,7 @@
                     <xs:enumeration value="yes" />
                     <xs:enumeration value="no" />
                     <xs:enumeration value="always" />
-                    <xs:enumeration value="none" />
+                    <xs:enumeration value="never" />
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

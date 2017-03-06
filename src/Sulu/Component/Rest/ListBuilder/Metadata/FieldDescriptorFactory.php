@@ -294,7 +294,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->getMinWidth(),
             $generalMetadata->isSortable(),
             $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $generalMetadata->getCssClass(),
+            $this->resolveOptions($type->getDistinct(), $options)
         );
     }
 
@@ -461,9 +462,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     private function isDefault(GeneralPropertyMetadata $generalMetadata)
     {
-        return in_array(
-            $generalMetadata->getDisplay(),
-            [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
-        );
+        return GeneralPropertyMetadata::DISPLAY_ALWAYS === $generalMetadata->getDisplay();
     }
 }

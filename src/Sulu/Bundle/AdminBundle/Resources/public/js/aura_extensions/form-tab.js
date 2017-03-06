@@ -37,8 +37,24 @@ define(['underscore', 'jquery'], function(_, $) {
             this.sandbox.on('sulu.tab.save', this.submit.bind(this));
         },
 
-        submit: function() {
+        /**
+         * Validates form and returns if it's valid.
+         *
+         * @returns {bool}
+         */
+        validate: function() {
             if (!this.sandbox.form.validate(this.formId)) {
+                return false;
+            }
+
+            return true;
+        },
+
+        submit: function() {
+            if (!this.validate()) {
+                // Resets save button.
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+
                 return;
             }
 

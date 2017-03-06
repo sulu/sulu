@@ -95,7 +95,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return ConcatenationTypeMetadata|SingleTypeMetadata
+     * @return null|CaseTypeMetadata|ConcatenationTypeMetadata|CountTypeMetadata|GroupConcatTypeMetadata|IdentityTypeMetadata|SingleTypeMetadata
      */
     protected function getType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
@@ -168,7 +168,11 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             return;
         }
 
-        return new GroupConcatTypeMetadata($field, XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
+        return new GroupConcatTypeMetadata(
+            $field,
+            XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '),
+            XmlUtil::getBooleanValueFromXPath('@orm:distinct', $xpath, $propertyNode, false)
+        );
     }
 
     /**
@@ -177,7 +181,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return GroupConcatTypeMetadata
+     * @return IdentityTypeMetadata
      */
     protected function getIdentityType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
@@ -216,7 +220,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return GroupConcatTypeMetadata
+     * @return CountTypeMetadata
      */
     protected function getCountType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
