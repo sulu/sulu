@@ -410,7 +410,7 @@ define([], function() {
             this.removeTitle();
             if (!!title) {
                 $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement, {
-                    title: this.sandbox.translate(title),
+                    title: this.sandbox.util.escapeHtml(this.sandbox.translate(title)),
                     underline: this.options.underline
                 }));
                 $('.page').prepend($element);
