@@ -47,12 +47,13 @@ class AdminRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->get('locale', $language)->willReturn($locale ?: $language);
         $request->get('language')->willReturn($language);
 
-        $localization = $this->prophesize(Localization::class);
-
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn($webspaceKey);
+
+        $localization = null;
         if ($locale || $language) {
-            $webspace->getLocalization($locale ?: $language)->willReturn($localization->reveal());
+            $localization = Localization::createFromString($locale ?: $language);
+            $webspace->getLocalization($locale ?: $language)->willReturn($localization);
         }
         $webspaceManager->findWebspaceByKey($webspaceKey)->willReturn($webspaceKey ? $webspace->reveal() : null);
 
@@ -63,10 +64,7 @@ class AdminRequestProcessorTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals($webspaceKey ? $webspace->reveal() : null, $result->getAttribute('webspace'));
-        $this->assertEquals(
-            $webspaceKey && ($locale || $language) ? $localization->reveal() : null,
-            $result->getAttribute('localization')
-        );
+        $this->assertEquals($localization, $result->getAttribute('localization'));
     }
 
     public function testValidate()

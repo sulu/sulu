@@ -49,4 +49,24 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de-AT', $this->localization->getLocale(Localization::ISO6391));
         $this->assertEquals('de_AT', $this->localization->getLocale(Localization::LCID));
     }
+
+    public function formatProvider()
+    {
+        return [
+            [Localization::UNDERSCORE],
+            [Localization::DASH],
+            [Localization::ISO6391],
+            [Localization::LCID],
+        ];
+    }
+
+    /**
+     * @dataProvider formatProvider
+     */
+    public function testCreateFromString($format)
+    {
+        $localization = Localization::createFromString($format, $format);
+
+        $this->assertEquals('de_at', $localization->getLocale());
+    }
 }

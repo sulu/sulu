@@ -110,7 +110,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
      * @param PortalInformation $portalInformation
      * @param Request $request
      *
-     * @return RequestAttributes|void
+     * @return array
      */
     private function matchCustomUrl($url, PortalInformation $portalInformation, Request $request)
     {
@@ -142,11 +142,11 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
             return ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument];
         }
 
-        $localization = $this->parse($customUrlDocument->getTargetLocale());
+        $localization = Localization::createFromString($customUrlDocument->getTargetLocale());
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $portalInformation->getWebspace()->getKey(),
-            $localization->getLocalization(),
+            $localization->getLocale(),
             $this->environment
         );
 
@@ -157,6 +157,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         return [
             'portalInformation' => $portalInformation,
             'localization' => $localization,
+            'locale' => $localization->getLocale(),
             'customUrlRoute' => $routeDocument,
             'customUrl' => $customUrlDocument,
             'urlExpression' => $this->generator->generate(
@@ -164,25 +165,5 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
                 $customUrlDocument->getDomainParts()
             ),
         ];
-    }
-
-    /**
-     * Converts locale string to localization object.
-     *
-     * @param string $locale E.g. de_at or de
-     *
-     * @return Localization
-     */
-    private function parse($locale)
-    {
-        $parts = explode('_', $locale);
-
-        $localization = new Localization();
-        $localization->setLanguage($parts[0]);
-        if (count($parts) > 1) {
-            $localization->setCountry($parts[1]);
-        }
-
-        return $localization;
     }
 }
