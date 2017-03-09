@@ -101,6 +101,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
                     'exception' => [
                         'codes' => [
                             'Sulu\Component\DocumentManager\Exception\DocumentNotFoundException' => 404,
+                            'Sulu\Component\DocumentManager\Exception\VersionNotFoundException' => 404,
                             'Sulu\Component\Content\Exception\MandatoryPropertyException' => 400,
                         ],
                     ],

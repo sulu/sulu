@@ -53,6 +53,27 @@ class VersionControllerTest extends SuluTestCase
         $this->assertEquals('first title', $response['title']);
     }
 
+    public function testPostRestoreInvalidVersion()
+    {
+        $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $document = $documentManager->create('page');
+        $document->setTitle('first title');
+        $document->setStructureType('default');
+        $document->setResourceSegment('/first-title');
+        $documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $documentManager->publish($document, 'de');
+        $documentManager->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $document->getUuid() . '/versions/2_0?action=restore&language=de&webspace=sulu_io'
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
+    }
+
     public function testCGet()
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
