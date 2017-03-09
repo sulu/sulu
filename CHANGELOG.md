@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #3255 [DocumentManagerBundle] Added VersionNotFoundException to fos_rest configuration
+
 * 1.5.0 (2017-03-06)
     * BUGFIX      #3242 [ContentBundle]       Fixed set default author to creator contact-id
 
