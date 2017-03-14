@@ -1,10 +1,11 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* dev-master
     * ENHANCEMENT #3256 [DocumentManagerBundle] Added VersionNotFoundException to fos_rest configuration
     * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
     * HOTFIX      #3262 [WebsiteBundle]         Fixed seo caninical tag with shadow.
+    * HOTFIX      #3254 [RouteBundle]           Fixed detect localization in admin
 
 * 1.5.0 (2017-03-06)
     * BUGFIX      #3242 [ContentBundle]       Fixed set default author to creator contact-id
