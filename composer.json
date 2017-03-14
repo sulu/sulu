@@ -33,7 +33,6 @@
         "gedmo/doctrine-extensions": "~2.4",
         "symfony-cmf/routing-bundle": "^1.2 || ^2.0",
         "symfony/symfony": "^2.8.7 || ^3.0",
-        "symfony/security-acl": "^2.8.7 || ^3.0",
         "willdurand/hateoas-bundle": "^1.1",
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "^1.0.4",
@@ -66,7 +65,6 @@
     "conflicts": {
         "symfony/symfony": "2.8.10",
         "symfony/phpunit-bridge": "2.8.10",
-        "symfony/security-acl": "2.8.10",
         "symfony/monolog-bundle": "2.8.10"
     },
     "replace": {

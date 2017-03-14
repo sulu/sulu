@@ -24,7 +24,6 @@
         <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
         <parameter key="sulu_security.contacts_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\ContactsContentNavigationProvider</parameter>
         <parameter key="sulu_security.roles_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\RolesContentNavigationProvider</parameter>
-        <parameter key="sulu_security.permission_map.class">Sulu\Component\Security\Authorization\AccessControl\PermissionMap</parameter>
         <parameter key="sulu_security.security_context_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
         <parameter key="sulu_security.access_control_manager.class">Sulu\Component\Security\Authorization\AccessControl\AccessControlManager</parameter>
         <parameter key="sulu_security.phpcr_access_control_provider.class">Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider</parameter>
@@ -77,10 +76,6 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu_admin.content_navigation" alias="contact"/>
             <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_security.permission_map" class="%sulu_security.permission_map.class%" public="false">
-            <argument>%permissions%</argument>
         </service>
 
         <service id="sulu_security.security_context_voter" class="%sulu_security.security_context_voter.class%" public="false">
