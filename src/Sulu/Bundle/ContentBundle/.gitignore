@@ -17,6 +17,7 @@
 # test cache
 /Tests/app/cache/*
 /Tests/app/logs/*
+/Tests/app/Resources/import/export.xliff
 
 # custom phpunit xml
 phpunit.xml

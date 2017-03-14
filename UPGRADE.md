@@ -1,5 +1,16 @@
 # Upgrade
 
+## dev-develop
+
+### Removed symfony/security-acl dependency
+
+The following deprecated classes was removed:
+
+* `Sulu\Component\Security\Authorization\AccessControl\PermissionMap`
+* `Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlManager`
+
+Therefor the dependency `symfony/security-acl` was useless and removed.
+
 ## 1.5.0-RC1
 
 ### Media formats uniqueness
