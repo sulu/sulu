@@ -245,8 +245,8 @@ class Url implements ArrayableInterface
      */
     public function isValidLocale($language, $country)
     {
-        return (empty($this->getLanguage()) || $this->getLanguage() === $language)
-            && (empty($this->getCountry()) || $this->getCountry() === $country);
+        return ($this->getLanguage() === $language && $this->getCountry() === $country)
+            || (empty($this->getLanguage()) && empty($this->getCountry()));
     }
 
     /**
