@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.4.10
+    * HOTFIX      #3262 [WebsiteBundle]         Fixed seo caninical tag with shadow.
+
 * 1.4.9 (2017-03-06)
     * HOTFIX      #3247 [MediaBundle]           Fixed focus point calculation with double rounding error
     * HOTFIX      #3244 [SecurityBundle]        Fixed breaking change in swiftmailer for tests
