@@ -190,6 +190,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $environment = $this->prophesize(Environment::class);
         $url = new Url('sulu.lo', 'prod');
         $url->setLanguage('de');
+        $url->setCountry('');
         $environment->getUrls()->willReturn([$url]);
         $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
         $this->webspace->addPortal($this->portal->reveal());
@@ -212,6 +213,27 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
         $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod', 'de_at'));
         $this->assertFalse($this->webspace->hasDomain('sulu.lo', 'prod', 'de'));
+    }
+
+    public function testHasDomainWithLocationAndCountry()
+    {
+        $environment = $this->prophesize(Environment::class);
+        $url = new Url('sulu.de', 'prod');
+        $url->setLanguage('de');
+        $url->setCountry('');
+        $urlAt = new Url('sulu.at', 'prod');
+        $urlAt->setLanguage('de');
+        $urlAt->setCountry('at');
+        $environment->getUrls()->willReturn([$url, $urlAt]);
+        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
+        $this->webspace->addPortal($this->portal->reveal());
+
+        $this->assertTrue($this->webspace->hasDomain('sulu.de', 'prod'));
+        $this->assertTrue($this->webspace->hasDomain('sulu.at', 'prod'));
+        $this->assertFalse($this->webspace->hasDomain('sulu.at', 'prod', 'de'));
+        $this->assertFalse($this->webspace->hasDomain('sulu.de', 'prod', 'de_at'));
+        $this->assertTrue($this->webspace->hasDomain('sulu.de', 'prod', 'de'));
+        $this->assertTrue($this->webspace->hasDomain('sulu.at', 'prod', 'de_at'));
     }
 
     public function testAddTemplate()
