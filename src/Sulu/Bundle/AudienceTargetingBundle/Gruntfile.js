@@ -16,37 +16,6 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        copy: {
-            bower: {
-                files: [
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: [
-                            'bower_components/leaflet/dist/leaflet.js',
-                            'bower_components/leaflet/dist/leaflet.css',
-                        ], 
-                        dest: 'Resources/public/js/vendor/leaflet'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: [
-                            'bower_components/leaflet/dist/images/*',
-                        ], 
-                        dest: 'Resources/public/js/vendor/leaflet/images'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: [
-                            'bower_components/requirejs-plugins/src/async.js'
-                        ], 
-                        dest: 'Resources/public/js/vendor/requirejs-plugins'
-                    }
-                ]
-            }
-        },
         clean: {
             options: { force: true }
         },
@@ -103,7 +72,6 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'uglify',
         'compass:dev',
-        'cssmin',
-        'copy:bower'
+        'cssmin'
     ]);
 };

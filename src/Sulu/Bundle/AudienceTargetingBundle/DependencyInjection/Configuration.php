@@ -28,6 +28,13 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_audience_targeting');
 
+        $rootNode
+            ->children()
+                ->scalarNode('number_of_priorities')
+                    ->defaultValue(5)
+                ->end()
+            ->end();
+
         $this->addObjectsSection($rootNode);
 
         return $treeBuilder;

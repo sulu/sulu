@@ -17,7 +17,7 @@
                      mapped-by="rule"
                      target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition">
             <cascade>
-                <cascade-all/>
+                <cascade-persist/>
             </cascade>
         </one-to-many>
 
@@ -25,7 +25,7 @@
                      inversed-by="rules"
                      target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup">
             <join-columns>
-                <join-column name="idTargetGroups" referenced-column-name="id"/>
+                <join-column name="idTargetGroups" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
     </mapped-superclass>

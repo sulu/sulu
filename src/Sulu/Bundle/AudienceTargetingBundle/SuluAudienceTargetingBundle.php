@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -27,10 +31,10 @@ class SuluAudienceTargetingBundle extends Bundle
     {
         $this->buildPersistence(
             [
-                'Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface' => 'sulu.model.target_group.class',
-                'Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface' => 'sulu.model.target_group_condition.class',
-                'Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface' => 'sulu.model.target_group_rule.class',
-                'Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface' => 'sulu.model.target_group_webspace.class',
+                TargetGroupInterface::class => 'sulu.model.target_group.class',
+                TargetGroupConditionInterface::class => 'sulu.model.target_group_condition.class',
+                TargetGroupRuleInterface::class => 'sulu.model.target_group_rule.class',
+                TargetGroupWebspaceInterface::class => 'sulu.model.target_group_webspace.class',
             ],
             $container
         );

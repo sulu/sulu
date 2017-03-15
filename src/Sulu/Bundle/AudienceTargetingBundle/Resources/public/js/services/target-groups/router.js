@@ -2,25 +2,11 @@ define(['services/husky/util', 'services/husky/mediator'], function(Util, Mediat
 
     'use strict';
 
-    var instance = null,
-
-        getInstance = function() {
-            if (instance === null) {
-                instance = new TargetGroupRouter();
-            }
-
-            return instance;
-        },
-
-        navigate = function(route) {
+    var navigate = function(route) {
             Mediator.emit('sulu.router.navigate', route, true, true);
         };
 
-    /** @constructor **/
-    function TargetGroupRouter() {
-    }
-
-    TargetGroupRouter.prototype = {
+    return {
         toList: function() {
             navigate('settings/target-groups');
         },
@@ -31,6 +17,4 @@ define(['services/husky/util', 'services/husky/mediator'], function(Util, Mediat
             navigate('settings/target-groups/add');
         }
     };
-
-    return getInstance();
 });

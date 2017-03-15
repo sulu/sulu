@@ -145,8 +145,8 @@ define([
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'deleteSelected');
 
             Manager.deleteMultiple(ids).then(function() {
-                for (var i in ids) {
-                    this.sandbox.emit('husky.datagrid.target-groups.record.remove', ids[i]);
+                for (var key in ids) {
+                    this.sandbox.emit('husky.datagrid.target-groups.record.remove', ids[key]);
                 }
 
                 this.sandbox.emit('sulu.header.toolbar.item.disable', 'deleteSelected');
@@ -161,10 +161,6 @@ define([
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
             }.bind(this));
-
-            this.sandbox.on('sulu.toolbar.add', function() {
-                this.sandbox.emit('sulu.salesorder.order.new');
-            }, this);
         }
     };
 });

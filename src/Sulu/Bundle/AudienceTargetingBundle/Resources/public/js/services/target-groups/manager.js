@@ -2,22 +2,9 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, Util) {
 
     'use strict';
 
-    var instance = null,
+    var url = _.template('/admin/api/target-groups<% if (typeof id !== "undefined") { %>/<%= id %><% } %>');
 
-        getInstance = function() {
-            if (instance === null) {
-                instance = new TargetGroupManager();
-            }
-            return instance;
-        },
-
-        url = _.template('/admin/api/target-groups<% if (typeof id !== "undefined") { %>/<%= id %><% } %>');
-
-    /** @constructor **/
-    function TargetGroupManager() {
-    }
-
-    TargetGroupManager.prototype = {
+    return {
         load: function(id) {
             return Util.load(url({id: id}));
         },
@@ -32,6 +19,4 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, Util) {
         },
         url: url
     };
-
-    return getInstance();
 });

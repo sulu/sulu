@@ -13,7 +13,8 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Mapper\TargetGroupMapperInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TargetGroupControllerTest extends SuluTestCase
@@ -31,6 +32,13 @@ class TargetGroupControllerTest extends SuluTestCase
     private $targetGroup2;
 
     /**
+     * Data used for setup initial target groups.
+     *
+     * @var array
+     */
+    private $setupData;
+
+    /**
      * {@inheritdoc}
      */
     public function setUp()
@@ -45,15 +53,24 @@ class TargetGroupControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        // Create first target group.
-        $this->targetGroup = $this->getTargetGroupRepository()->createNew();
-        $this->getTargetGroupMapper()->mapDataToTargetGroup($this->targetGroup, $this->getSampleData());
-        $this->getEntityManager()->persist($this->targetGroup);
+        $this->setupData = [
+            'title' => 'Target Group Title',
+            'description' => 'Target group description number 1',
+            'priority' => 3,
+            'active' => true,
+            'webspaces' => [
+                [
+                    'webspaceKey' => 'my-webspace-1',
+                ],
+                [
+                    'webspaceKey' => 'my-webspace-2',
+                ],
+            ],
+        ];
 
-        // Create a second target group.
-        $this->targetGroup2 = $this->getTargetGroupRepository()->createNew();
-        $this->getTargetGroupMapper()->mapDataToTargetGroup($this->targetGroup2, $this->getSampleData());
-        $this->getEntityManager()->persist($this->targetGroup2);
+        // Create first target group.
+        $this->targetGroup = $this->createTargetGroup($this->setupData);
+        $this->targetGroup2 = $this->createTargetGroup($this->setupData);
 
         // Flush.
         $this->getEntityManager()->flush();
@@ -71,7 +88,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $sampleData = $this->getSampleData();
+        $sampleData = $this->setupData;
 
         $this->assertEquals($sampleData['title'], $response['title']);
         $this->assertEquals($sampleData['description'], $response['description']);
@@ -103,18 +120,31 @@ class TargetGroupControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $sampleData = $this->getSampleData();
+        $data = [
+            'title' => 'Target Group Title',
+            'description' => 'Target group description number 1',
+            'priority' => 3,
+            'active' => true,
+            'webspaces' => [
+                [
+                    'webspaceKey' => 'my-webspace-1',
+                ],
+                [
+                    'webspaceKey' => 'my-webspace-2',
+                ],
+            ],
+        ];
 
-        $client->request('POST', self::BASE_URL, $sampleData);
+        $client->request('POST', self::BASE_URL, [], [], [], json_encode($data));
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($sampleData['title'], $response['title']);
-        $this->assertEquals($sampleData['description'], $response['description']);
-        $this->assertEquals($sampleData['priority'], $response['priority']);
-        $this->assertEquals($sampleData['active'], $response['active']);
-        $this->assertCount(count($sampleData['webspaces']), $response['webspaces']);
+        $this->assertEquals($data['title'], $response['title']);
+        $this->assertEquals($data['description'], $response['description']);
+        $this->assertEquals($data['priority'], $response['priority']);
+        $this->assertEquals($data['active'], $response['active']);
+        $this->assertCount(count($data['webspaces']), $response['webspaces']);
 
         $this->assertNotNull($this->getTargetGroupRepository()->find($response['id']));
     }
@@ -126,19 +156,29 @@ class TargetGroupControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $sampleData = $this->getAlternativeSampleData();
+        $data = [
+            'title' => 'Target Group Title 2',
+            'description' => 'Target group description number 2',
+            'priority' => 4,
+            'active' => false,
+            'webspaces' => [
+                [
+                    'webspaceKey' => 'my-webspace-1',
+                ],
+            ],
+        ];
 
-        $client->request('PUT', self::BASE_URL . '/' . $this->targetGroup->getId(), $sampleData);
+        $client->request('PUT', self::BASE_URL . '/' . $this->targetGroup->getId(), [], [], [], json_encode($data));
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($sampleData['title'], $response['title']);
-        $this->assertEquals($sampleData['description'], $response['description']);
-        $this->assertEquals($sampleData['priority'], $response['priority']);
-        $this->assertEquals($sampleData['active'], $response['active']);
-        $this->assertCount(count($sampleData['webspaces']), $response['webspaces']);
-        $this->assertEquals($sampleData['webspaces'][0]['webspaceKey'], $response['webspaces'][0]['webspaceKey']);
+        $this->assertEquals($data['title'], $response['title']);
+        $this->assertEquals($data['description'], $response['description']);
+        $this->assertEquals($data['priority'], $response['priority']);
+        $this->assertEquals($data['active'], $response['active']);
+        $this->assertCount(count($data['webspaces']), $response['webspaces']);
+        $this->assertEquals($data['webspaces'][0]['webspaceKey'], $response['webspaces'][0]['webspaceKey']);
 
         $this->assertNotNull($this->getTargetGroupRepository()->find($response['id']));
     }
@@ -185,54 +225,67 @@ class TargetGroupControllerTest extends SuluTestCase
     }
 
     /**
-     * Returns sample data for target group creation as array.
+     * Create a new Target Group.
      *
-     * @return array
+     * @param array $data
+     *
+     * @return TargetGroupInterface
      */
-    private function getSampleData()
+    private function createTargetGroup($data)
     {
-        return [
-            'title' => 'Target Group Title',
-            'description' => 'Target group description number 1',
-            'priority' => 3,
-            'active' => true,
-            'webspaces' => [
-                [
-                    'webspaceKey' => 'my-webspace-1',
-                ],
-                [
-                    'webspaceKey' => 'my-webspace-2',
-                ],
-            ],
-        ];
+        /** @var TargetGroupInterface $targetGroup */
+        $targetGroup = $this->getTargetGroupRepository()->createNew();
+        $this->getEntityManager()->persist($targetGroup);
+        $targetGroup->setTitle($this->getProperty($data, 'title', 'Target Group'));
+        $targetGroup->setDescription($this->getProperty($data, 'description', 'Target Group Description'));
+        $targetGroup->setPriority($this->getProperty($data, 'priority', 1));
+        $targetGroup->setAllWebspaces($this->getProperty($data, 'allWebspaces', false));
+        $targetGroup->setActive($this->getProperty($data, 'active', true));
+
+        $webspaces = $this->getProperty($data, 'webspaces', []);
+        foreach ($webspaces as $index => $webspaceData) {
+            $this->createTargetGroupWebspace($webspaceData, $targetGroup);
+        }
+
+        return $targetGroup;
     }
 
     /**
-     * Returns alternative sample data for target group changes.
+     * Creates a target group webspace entity.
      *
-     * @return array
+     * @param array $data
+     * @param TargetGroupInterface $targetGroup
+     *
+     * @return TargetGroupWebspaceInterface
      */
-    private function getAlternativeSampleData()
+    private function createTargetGroupWebspace($data, TargetGroupInterface $targetGroup)
     {
-        return [
-            'title' => 'Target Group Title 2',
-            'description' => 'Target group description number 2',
-            'priority' => 4,
-            'active' => false,
-            'webspaces' => [
-                [
-                    'webspaceKey' => 'my-webspace-1',
-                ],
-            ],
-        ];
+        /** @var TargetGroupWebspaceInterface $webspace */
+        $webspace = $this->getTargetGroupWebspaceRepository()->createNew();
+        $this->getEntityManager()->persist($targetGroup);
+        $webspace->setTargetGroup($targetGroup);
+        $webspace->setWebspaceKey($this->getProperty($data, 'webspaceKey', 'webspacekey-' . uniqid()));
+        $targetGroup->addWebspace($webspace);
+
+        return $webspace;
     }
 
     /**
-     * @return TargetGroupMapperInterface
+     * Returns value from data array with given key. If none found, given default is returned.
+     *
+     * @param array $data
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
      */
-    private function getTargetGroupMapper()
+    private function getProperty($data, $key, $default)
     {
-        return $this->getContainer()->get('sulu_audience_targeting.target_group_mapper');
+        if (array_key_exists($key, $data)) {
+            return $data[$key];
+        }
+
+        return $default;
     }
 
     /**
@@ -241,5 +294,13 @@ class TargetGroupControllerTest extends SuluTestCase
     private function getTargetGroupRepository()
     {
         return $this->getContainer()->get('sulu.repository.target_group');
+    }
+
+    /**
+     * @return TargetGroupWebspaceRepositoryInterface
+     */
+    private function getTargetGroupWebspaceRepository()
+    {
+        return $this->getContainer()->get('sulu.repository.target_group_webspace');
     }
 }

@@ -15,7 +15,7 @@
                      inversed-by="webspaces"
                      target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup">
             <join-columns>
-                <join-column name="idTargetGroups" referenced-column-name="id"/>
+                <join-column name="idTargetGroups" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
     </mapped-superclass>

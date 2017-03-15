@@ -15,7 +15,9 @@ define([
 
         header: function() {
             var buttons = {
-                save: {}
+                save: {
+                    parent: 'saveWithOptions'
+                }
             };
 
             if (this.options.id) {
@@ -60,13 +62,23 @@ define([
             var promise = $.Deferred();
 
             if (!this.options.id) {
-                promise.resolve({});
+                promise.resolve({
+                    title: '',
+                    description: '',
+                    priority: null,
+                    webspaces: [],
+                    active: false
+                });
 
                 return promise;
             }
+
             TargetGroupManager.load(this.options.id).done(function(data) {
                 promise.resolve(data);
-            });
+            }).fail(function() {
+                this.sandbox.emit('sulu.labels.error.show', 'sulu_audience_targeting.target-group-not-found');
+                TargetGroupRouter.toList();
+            }.bind(this));
 
             return promise;
         },
@@ -182,6 +194,15 @@ define([
         afterSave: function(action, data) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
             this.sandbox.emit('sulu.header.saved', data);
+            console.error(action);
+
+            if (action === 'back') {
+                TargetGroupRouter.toList();
+            } else if (action === 'new') {
+                TargetGroupRouter.toAdd();
+            } else if (!this.options.id) {
+                TargetGroupRouter.toEdit(data.id);
+            }
         }
     };
 });

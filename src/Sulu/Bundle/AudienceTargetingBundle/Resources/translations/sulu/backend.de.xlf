@@ -26,6 +26,10 @@
                 <source>sulu_audience_targeting.priority</source>
                 <target>Priorität</target>
             </trans-unit>
+            <trans-unit id="target-group-7">
+                <source>sulu_audience_targeting.target-group-not-found</source>
+                <target>Zielgruppe konnte nicht gefunden werden.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

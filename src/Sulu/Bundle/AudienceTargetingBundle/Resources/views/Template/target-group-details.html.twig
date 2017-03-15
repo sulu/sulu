@@ -3,11 +3,12 @@
         <div class="grid-row content m-top-20">
             <div class="grid-row">
                 <div class="form-group grid-col-12 floating">
-                    <label for="title" class="pointer "><%= translations.title %></label>
+                    <label for="title" class="pointer required"><%= translations.title %></label>
                     <input id="title"
                            class="form-element input-bold"
                            type="text"
                            data-mapper-property="title"
+                           data-validation-required="true"
                            data-validation-max-length="255"/>
                 </div>
                 <div class="form-group grid-col-12 floating">
@@ -21,7 +22,7 @@
             <div class="grid-row">
                 <div class="form-group grid-col-6 floating">
                     <div class="form-group">
-                        <label for="webspaces" class="required"><%= translations.webspaces %></label>
+                        <label for="webspaces"><%= translations.webspaces %></label>
                         <div id="webspaces"
                              data-type="husky-select"
                              data-form="true"

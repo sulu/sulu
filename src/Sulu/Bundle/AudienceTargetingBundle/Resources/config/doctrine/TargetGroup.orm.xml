@@ -20,14 +20,14 @@
                      mapped-by="targetGroup"
                      target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace">
             <cascade>
-                <cascade-all/>
+                <cascade-persist/>
             </cascade>
         </one-to-many>
         <one-to-many field="rules"
                      mapped-by="targetGroup"
                      target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule">
             <cascade>
-                <cascade-all/>
+                <cascade-persist/>
             </cascade>
         </one-to-many>
     </mapped-superclass>

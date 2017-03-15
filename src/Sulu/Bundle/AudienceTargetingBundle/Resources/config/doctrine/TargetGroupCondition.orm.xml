@@ -17,7 +17,7 @@
                      inversed-by="conditions"
                      target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule">
             <join-columns>
-                <join-column name="idTargetGroupRules" referenced-column-name="id"/>
+                <join-column name="idTargetGroupRules" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
     </mapped-superclass>

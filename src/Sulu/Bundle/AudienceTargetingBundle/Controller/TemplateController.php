@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TemplateController extends Controller
 {
-    const NUMBER_OF_PRIORITIES = 5;
-
     /**
      * Returns details template for editing page of a target group.
      *
@@ -65,7 +63,7 @@ class TemplateController extends Controller
     private function retrievePrioritiesForSelect()
     {
         $result = [];
-        for ($i = 1; $i <= static::NUMBER_OF_PRIORITIES; ++$i) {
+        for ($i = 1; $i <= $this->getNumberOfPriorities(); ++$i) {
             $result[] = [
                 'id' => $i,
                 'name' => $i,
@@ -73,5 +71,15 @@ class TemplateController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * Returns the number of priorities.
+     *
+     * @return int
+     */
+    private function getNumberOfPriorities()
+    {
+        return $this->container->getParameter('sulu_audience_targeting.number_of_priorities');
     }
 }

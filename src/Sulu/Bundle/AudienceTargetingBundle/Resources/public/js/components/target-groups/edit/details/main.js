@@ -13,6 +13,7 @@ define([
             },
             translations: {
                 all: 'public.all',
+                active: 'sulu_audience_targeting.is-active',
                 description: 'public.description',
                 pleaseChoose: 'public.please-choose',
                 priority: 'sulu_audience_targeting.priority',
@@ -23,8 +24,6 @@ define([
 
         layout: function() {
             return {
-                extendExisting: true,
-
                 content: {
                     width: (!!this.options.preview) ? 'fixed' : 'max',
                     rightSpace: false,
@@ -49,7 +48,7 @@ define([
          * @returns {object}
          */
         parseData: function(data) {
-            this.options.parsedData = data;
+            this.parsedData = data;
             data.webspaces = this.parseWebspaceForSelect(data.webspaces);
 
             return data;
@@ -62,10 +61,10 @@ define([
          */
         save: function(data) {
             // Extend data with webspaces.
-            data.webspaces = this.parseWebspaceSelection(this.retrieveSelectionOfSelect('#webspaces'));
+            data.webspaces = this.parseWebspaceSelection(this.retrieveSelectValue('#webspaces'));
 
-            TargetGroupManager.save(data).then(function(data) {
-                this.saved(data);
+            TargetGroupManager.save(data).then(function(responseData) {
+                this.saved(responseData);
             }.bind(this));
         },
 
@@ -96,13 +95,14 @@ define([
          * Parses webspace data to be displayed in select.
          *
          * @param webspaces
+         *
          * @returns {Array}
          */
         parseWebspaceForSelect: function(webspaces) {
             var result = [];
 
             if (!webspaces) {
-                return webspaces;
+                return result;
             }
 
             for (var i = 0; i < webspaces.length; i++) {
@@ -119,7 +119,7 @@ define([
          */
         getTemplate: function() {
             return this.templates.form({
-                data: this.options.parsedData,
+                data: this.parsedData,
                 translations: this.translations,
                 translate: this.sandbox.translate
             });
@@ -141,7 +141,7 @@ define([
          *
          * @returns {Array}
          */
-        retrieveSelectionOfSelect: function(selectId) {
+        retrieveSelectValue: function(selectId) {
             var selection = [];
             var $select = $(selectId);
 

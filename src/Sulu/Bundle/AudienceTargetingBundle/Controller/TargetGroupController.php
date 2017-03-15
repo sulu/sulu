@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use JMS\Serializer\DeserializationContext;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Mapper\TargetGroupMapperInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -61,6 +61,18 @@ class TargetGroupController extends RestController implements ClassResourceInter
     }
 
     /**
+     * Returns all fields for rules that can be used by list.
+     *
+     * @Get("target-groups/rule-fields")
+     *
+     * @return Response
+     */
+    public function getRuleFieldsAction()
+    {
+        return $this->handleView($this->view($this->getRuleFieldDescriptors()));
+    }
+
+    /**
      * Returns list of target-groups.
      *
      * @param Request $request
@@ -76,9 +88,11 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $fieldDescriptors = $this->getFieldDescriptors();
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        // If webspaces are concatinated we need to group by id. This happens
+        // when no fields are supplied at all OR webspaces are requested as field.
         $fieldsParam = $request->get('fields');
         $fields = explode(',', $fieldsParam);
-        if (!$fieldsParam || false !== array_search('webspaceKeys', $fields)) {
+        if ($fieldsParam === null || array_search('webspaceKeys', $fields) !== false) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
         }
 
@@ -125,11 +139,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function postAction(Request $request)
     {
-        $data = $request->request->all();
-        $targetGroup = $this->getTargetGroupRepository()->createNew();
+        $targetGroup = $this->deserializeData($request->getContent());
         $this->getEntityManager()->persist($targetGroup);
-
-        $this->getTargetGroupMapper()->mapDataToTargetGroup($targetGroup, $data, true);
 
         $this->getEntityManager()->flush();
 
@@ -146,10 +157,14 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function putAction(Request $request, $id)
     {
-        $data = $request->request->all();
-        $targetGroup = $this->retrieveTargetGroupById($id);
+        $jsonData = $request->getContent();
+        $data = json_decode($jsonData, true);
 
-        $this->getTargetGroupMapper()->mapDataToTargetGroup($targetGroup, $data, false);
+        // Id should be taken of request uri.
+        $data['id'] = $id;
+
+        $targetGroup = $this->deserializeData(json_encode($data));
+        $this->getEntityManager()->merge($targetGroup);
 
         $this->getEntityManager()->flush();
 
@@ -176,15 +191,13 @@ class TargetGroupController extends RestController implements ClassResourceInter
     /**
      * Handle multiple delete requests for target groups.
      *
-     * @Delete("target-groups")
-     *
      * @param Request $request
      *
      * @throws MissingParameterException
      *
      * @return Response
      */
-    public function multipleDeleteAction(Request $request)
+    public function cdeleteAction(Request $request)
     {
         $idsData = $request->get('ids');
         $ids = explode(',', $idsData);
@@ -205,6 +218,26 @@ class TargetGroupController extends RestController implements ClassResourceInter
     }
 
     /**
+     * Deserializes string into TargetGroup object.
+     *
+     * @param string $data
+     *
+     * @return TargetGroupInterface
+     */
+    private function deserializeData($data)
+    {
+        $result = $this->get('jms_serializer')->deserialize(
+            $data,
+            $this->getTargetGroupRepository()->getClassName(),
+            'json',
+            DeserializationContext::create()
+                ->setSerializeNull(true)
+        );
+
+        return $result;
+    }
+
+    /**
      * Returns array of field-descriptors.
      *
      * @return FieldDescriptorInterface[]
@@ -213,6 +246,18 @@ class TargetGroupController extends RestController implements ClassResourceInter
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(
             $this->getTargetGroupRepository()->getClassName()
+        );
+    }
+
+    /**
+     * Returns array of field-descriptors for rules.
+     *
+     * @return FieldDescriptorInterface[]
+     */
+    private function getRuleFieldDescriptors()
+    {
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(
+            $this->getTargetGroupRuleRepository()->getClassName()
         );
     }
 
@@ -238,19 +283,19 @@ class TargetGroupController extends RestController implements ClassResourceInter
     }
 
     /**
-     * @return TargetGroupMapperInterface
-     */
-    private function getTargetGroupMapper()
-    {
-        return $this->get('sulu_audience_targeting.target_group_mapper');
-    }
-
-    /**
      * @return TargetGroupRepositoryInterface
      */
     private function getTargetGroupRepository()
     {
         return $this->get('sulu.repository.target_group');
+    }
+
+    /**
+     * @return TargetGroupRuleRepositoryInterface
+     */
+    private function getTargetGroupRuleRepository()
+    {
+        return $this->get('sulu.repository.target_group_rule');
     }
 
     /**
