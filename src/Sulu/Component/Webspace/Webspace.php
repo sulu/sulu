@@ -431,7 +431,7 @@ class Webspace implements ArrayableInterface
     {
         $localizationParts = explode('_', $locale);
         $language = $localizationParts[0];
-        $country = isset($localizationParts[1]) ? $localizationParts[1] : null;
+        $country = isset($localizationParts[1]) ? $localizationParts[1] : '';
 
         foreach ($this->getPortals() as $portal) {
             foreach ($portal->getEnvironment($environment)->getUrls() as $url) {
