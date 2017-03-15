@@ -29,7 +29,7 @@
 {% set seoCanonical = seo.canonicalUrl|default() %}
 
 {%- if not seoCanonical and shadowBaseLocale and urls[shadowBaseLocale]|default() %}
-    {% set seoCanonical = sulu_content_path(urls[shadowBaseLocale], null, locale) %}
+    {% set seoCanonical = sulu_content_path(urls[shadowBaseLocale], null, shadowBaseLocale) %}
 {%- endif -%}
 
 {#- render blocks -#}
