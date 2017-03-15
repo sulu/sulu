@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.4.10
+* 1.4.10 (2017-03-15)
     * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
     * HOTFIX      #3262 [WebsiteBundle]         Fixed seo caninical tag with shadow.
 
