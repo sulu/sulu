@@ -32,6 +32,7 @@ class UpdateRouteCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:route:update')
             ->addArgument('entity', InputArgument::REQUIRED)
+            ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, '', 1000)
             ->setDescription('Update the routes for all entities.')
             ->setHelp(
@@ -48,6 +49,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->getContainer()->get('translator')->setLocale($input->getArgument('locale'));
+
         $batchSize = $input->getOption('batch-size');
 
         /** @var EntityManagerInterface $entityManager */
