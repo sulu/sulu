@@ -25,6 +25,32 @@ class Localization implements \JsonSerializable, ArrayableInterface
     const LCID = 'de_AT';
 
     /**
+     * Create an instance of localization for given locale.
+     *
+     * @param string $locale
+     * @param string $format
+     *
+     * @return Localization
+     */
+    public static function createFromString($locale, $format = self::UNDERSCORE)
+    {
+        $delimiter = '-';
+        if (in_array($format, [self::UNDERSCORE, self::LCID])) {
+            $delimiter = '_';
+        }
+
+        $parts = explode($delimiter, $locale);
+
+        $localization = new self();
+        $localization->setLanguage(strtolower($parts[0]));
+        if (count($parts) > 1) {
+            $localization->setCountry(strtolower($parts[1]));
+        }
+
+        return $localization;
+    }
+
+    /**
      * The language of the localization.
      *
      * @var string
@@ -334,7 +360,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function __toString()
     {
-        return $this->getLocalization();
+        return $this->getLocale();
     }
 
     /**
@@ -343,8 +369,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function jsonSerialize()
     {
         return [
-            'localization' => $this->getLocalization(),
-            'name' => $this->getLocalization(),
+            'localization' => $this->getLocale(),
+            'name' => $this->getLocale(),
         ];
     }
 

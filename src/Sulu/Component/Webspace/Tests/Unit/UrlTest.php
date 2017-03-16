@@ -19,7 +19,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['de', 'at', 'de', 'at', true],
-            ['de', '', 'de', null, true],
+            ['de', '', 'de', '', true],
             ['de', null, 'de', null, true],
             [null, null, 'en', 'gb', true],
             ['en', null, 'de', null, false],

@@ -4,6 +4,12 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #3154 [All]                 Upgrade symfony to ^3.0
 
+* 1.5.1 (2017-03-16)
+    * ENHANCEMENT #3256 [DocumentManagerBundle] Added VersionNotFoundException to fos_rest configuration
+    * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
+    * HOTFIX      #3262 [WebsiteBundle]         Fixed seo caninical tag with shadow.
+    * HOTFIX      #3254 [RouteBundle]           Fixed detect localization in admin
+
 * 1.5.0 (2017-03-06)
     * BUGFIX      #3242 [ContentBundle]       Fixed set default author to creator contact-id
 
@@ -72,6 +78,10 @@ CHANGELOG for Sulu
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
     * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
+
+* 1.4.10 (2017-03-15)
+    * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
+    * HOTFIX      #3262 [WebsiteBundle]         Fixed seo caninical tag with shadow.
 
 * 1.4.9 (2017-03-06)
     * HOTFIX      #3247 [MediaBundle]           Fixed focus point calculation with double rounding error

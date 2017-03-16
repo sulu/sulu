@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Analyzer\Attributes;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,6 +44,10 @@ class AdminRequestProcessor implements RequestProcessorInterface
         $attributes = [];
         $attributes['webspaceKey'] = $request->get('webspace');
         $attributes['locale'] = $request->get('locale', $request->get('language'));
+
+        if ($attributes['locale']) {
+            $attributes['localization'] = Localization::createFromString($attributes['locale']);
+        }
 
         if (empty($attributes['webspaceKey'])) {
             return new RequestAttributes($attributes);
