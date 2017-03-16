@@ -50,10 +50,12 @@ class AdminRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn($webspaceKey);
 
+        $expectedLocale = $locale ?: $language;
+
         $localization = null;
-        if ($locale || $language) {
-            $localization = Localization::createFromString($locale ?: $language);
-            $webspace->getLocalization($locale ?: $language)->willReturn($localization);
+        if ($expectedLocale) {
+            $localization = Localization::createFromString($expectedLocale);
+            $webspace->getLocalization($expectedLocale)->willReturn($localization);
         }
         $webspaceManager->findWebspaceByKey($webspaceKey)->willReturn($webspaceKey ? $webspace->reveal() : null);
 
