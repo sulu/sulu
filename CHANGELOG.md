@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * unreleased
-    * HOTFIX      #3261 [WebsiteBundle]         Escape search terms
+    * HOTFIX      #3263 [WebsiteBundle]         Escape search terms
 
 * 1.4.10 (2017-03-15)
     * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
