@@ -79,7 +79,9 @@ class WebsiteSearchControllerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $searchQueryBuilder = $this->prophesize(SearchQueryBuilder::class);
-        $this->searchManager->createSearch('+("Test" OR Test* OR Test~) ')->willReturn($searchQueryBuilder->reveal());
+        $this->searchManager->createSearch('+("Test" OR "Test*" OR "Test~") ')->willReturn(
+            $searchQueryBuilder->reveal()
+        );
         $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());
         $searchQueryBuilder->index('page_sulu_published')->willReturn($searchQueryBuilder->reveal());
         $searchQueryBuilder->execute()->willReturn([]);

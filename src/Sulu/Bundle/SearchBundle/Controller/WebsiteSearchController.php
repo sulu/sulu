@@ -86,8 +86,8 @@ class WebsiteSearchController
             foreach ($queryValues as $queryValue) {
                 if (strlen($queryValue) > 2) {
                     $queryString .= '+("' . self::escapeDoubleQuotes($queryValue) . '" OR ' .
-                        preg_replace('/([^\pL\s\d])/u', '?', $queryValue) . '* OR ' .
-                        preg_replace('/([^\pL\s\d])/u', '', $queryValue) . '~) ';
+                        '"' . preg_replace('/([^\pL\s\d])/u', '?', $queryValue) . '*" OR ' .
+                        '"' . preg_replace('/([^\pL\s\d])/u', '', $queryValue) . '~") ';
                 } else {
                     $queryString .= '+("' . self::escapeDoubleQuotes($queryValue) . '") ';
                 }
