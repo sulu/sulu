@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3265 [ContentBundle]         Fixed internal-link selection for pages
+
 * 1.5.1 (2017-03-16)
     * ENHANCEMENT #3256 [DocumentManagerBundle] Added VersionNotFoundException to fos_rest configuration
     * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
