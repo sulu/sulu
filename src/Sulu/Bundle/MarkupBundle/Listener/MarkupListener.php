@@ -39,7 +39,7 @@ class MarkupListener
      */
     public function replaceMarkup(FilterResponseEvent $event)
     {
-        $format = $event->getRequest()->getRequestFormat(null);
+        $format = $event->getRequest()->getRequestFormat();
         if (!array_key_exists($format, $this->markupParser)) {
             return;
         }
