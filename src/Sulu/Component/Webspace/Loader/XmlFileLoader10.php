@@ -164,7 +164,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         $this->validateWebspaceDefaultLocalization();
         $this->validateDefaultPortalLocalization();
         $this->validateWebspaceDefaultSegment();
-        $this->validateLocalizations();
     }
 
     /**
@@ -648,43 +647,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             } catch (InvalidDefaultLocalizationException $ex) {
                 throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
             }
-        }
-    }
-
-    /**
-     * Validate that all localizations are used in the portals.
-     *
-     * @throws Exception\PortalDefaultLocalizationNotFoundException
-     * @throws Exception\InvalidPortalDefaultLocalizationException
-     */
-    protected function validateLocalizations()
-    {
-        $locales = array_unique(
-            array_map(
-                function (Localization $localization) {
-                    return $localization->getLocale(Localization::UNDERSCORE);
-                },
-                $this->webspace->getAllLocalizations()
-            )
-        );
-
-        $portalLocales = [];
-        foreach ($this->webspace->getPortals() as $portal) {
-            $portalLocales = array_merge(
-                $portalLocales,
-                array_map(
-                    function (Localization $localization) {
-                        return $localization->getLocale(Localization::UNDERSCORE);
-                    },
-                    $portal->getLocalizations()
-                )
-            );
-        }
-
-        $portalLocales = array_unique($portalLocales);
-
-        if (array_diff($locales, $portalLocales) || array_diff($portalLocales, $locales)) {
-            throw new WebspaceLocalizationNotUsedException($this->webspace);
         }
     }
 
