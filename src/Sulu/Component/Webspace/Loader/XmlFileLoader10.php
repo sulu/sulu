@@ -27,7 +27,6 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationE
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
-use Sulu\Component\Webspace\Loader\Exception\WebspaceLocalizationNotUsedException;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
