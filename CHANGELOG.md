@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * unreleased
+    * HOTFIX      #3270 [Webspace]              Removed localization usage check in webspace's xml files
     * HOTFIX      #3263 [SearchBundle]          Escape search terms
 
 * 1.4.10 (2017-03-15)
