@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * unreleased
     * HOTFIX      #3270 [Webspace]              Removed localization usage check in webspace's xml files
     * HOTFIX      #3263 [SearchBundle]          Escape search terms
+    * HOTFIX      #3271 [MarkupBundle]          Fix request format in MarkupBundle listener
 
 * 1.4.10 (2017-03-15)
     * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains

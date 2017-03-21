@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Listener;
 
+use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
@@ -78,6 +79,18 @@ class MarkupListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->response->setContent('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
 
+        $this->listener->replaceMarkup($this->event->reveal());
+    }
+
+    public function testReplaceMarkupWithEmptyContent()
+    {
+        $this->request->getRequestFormat()->willReturn('html');
+        $this->request->getLocale()->willReturn('de');
+        $this->response->getContent()->willReturn(false);
+
+        $this->markupParser->parse(false, 'de')->willReturn(false);
+
+        $this->response->setContent(Argument::any())->shouldNotBeCalled();
         $this->listener->replaceMarkup($this->event->reveal());
     }
 }
