@@ -1,0 +1,97 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:flowtype/recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "flowtype",
+        "class-property"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "max-len": [
+            "error",
+            120
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "comma-dangle": [
+            "error",
+            "always-multiline"
+        ],
+        "no-alert": "error",
+        "react/jsx-curly-spacing": [
+            "error",
+            "never"
+        ],
+        "react/jsx-closing-bracket-location": [
+            "error",
+            "after-props"
+        ],
+        "react/jsx-wrap-multilines": "error",
+        "react/jsx-pascal-case": "error",
+        "react/jsx-space-before-closing": [
+            "error",
+            "always"
+        ],
+        "react/jsx-key": "error",
+        "react/jsx-indent": "error",
+        "react/jsx-no-bind": "error",
+        "react/jsx-indent-props": "error",
+        "react/jsx-equals-spacing": "error",
+        "react/jsx-handler-names": "error",
+        "react/jsx-first-prop-new-line": [
+            "error",
+            "multiline-multiprop"
+        ],
+        "flowtype/require-valid-file-annotation": [
+            "error",
+            "always",
+            {
+                "annotationStyle": "line"
+            }
+        ],
+        "flowtype/space-after-type-colon": [
+            "error",
+            "always"
+        ],
+        "flowtype/object-type-delimiter": [
+            "error",
+            "comma"
+        ],
+        "flowtype/no-dupe-keys": "error",
+        "flowtype/delimiter-dangle": [
+            "error",
+            "always-multiline"
+        ],
+        "class-property/class-property-semicolon": "error"
+    }
+}

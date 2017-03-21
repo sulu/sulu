@@ -1,5 +1,5 @@
-/node_modules/
 /vendor/
+**/node_modules/
 /composer.phar
 /composer.lock
 /tests/Resources/cache/*
@@ -16,6 +16,7 @@
 *~
 
 npm-debug.log
+**/yarn.lock
 
 # .DS_Store
 .DS_Store
