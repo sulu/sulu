@@ -68,7 +68,7 @@ class HtmlTagExtractorTest extends \PHPUnit_Framework_TestCase
             '<sulu:tag id="2">everything but <tags/> are allowed</sulu:tag>',
             // media cannot be detected with current regex. will be solved with recursion.
             '<sulu:link target="1-1-1-1-1"><sulu:media id="123" /></sulu:link>',
-            "<sulu:link target=\"1-1-1-1-1\">\n<sulu:media id=\"123\" />\n</sulu:link>"
+            "<sulu:link target=\"1-1-1-1-1\">\n<sulu:media id=\"123\" />\n</sulu:link>",
         ];
 
         return [
