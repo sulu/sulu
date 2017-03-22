@@ -39,14 +39,17 @@ class MarkupListener
      */
     public function replaceMarkup(FilterResponseEvent $event)
     {
-        $format = $event->getRequest()->getRequestFormat(null);
-        if (!array_key_exists($format, $this->markupParser)) {
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+        $format = $request->getRequestFormat();
+        $content = $response->getContent();
+
+        if (!$content || !array_key_exists($format, $this->markupParser)) {
             return;
         }
 
-        $response = $event->getResponse();
         $response->setContent(
-            $this->markupParser[$format]->parse($response->getContent(), $event->getRequest()->getLocale())
+            $this->markupParser[$format]->parse($content, $request->getLocale())
         );
     }
 }
