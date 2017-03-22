@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.5.2 (2017-03-22)
     * HOTFIX      #3265 [ContentBundle]         Fixed internal-link selection for pages
     * HOTFIX      #3273 [MarkupBundle]          Fixed multiline mismatch in HtmlExtractor
     * ENHANCEMENT #3266 [ContentBundle]         Added locale parameter to teaser-selection-list
