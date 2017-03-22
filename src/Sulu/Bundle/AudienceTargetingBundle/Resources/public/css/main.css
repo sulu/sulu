@@ -1,0 +1,6 @@
+/*----------------------------------------*/
+/* line 2, ../scss/views/target-group-details.scss */
+#target-group-form textarea.small {
+  min-height: 3.5em;
+  height: 3.5em;
+}

@@ -1,0 +1,44 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine"
+       xmlns:list="http://schemas.sulu.io/class/list">
+    <properties>
+        <property name="id" filter-type="integer" list:translation="public.id" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.target_group.class%</orm:entity-name>
+        </property>
+        <property name="title" filter-type="string" list:translation="public.title" display="always">
+            <orm:field-name>title</orm:field-name>
+            <orm:entity-name>%sulu.model.target_group.class%</orm:entity-name>
+        </property>
+        <property name="active"
+                  filter-type="boolean"
+                  display="yes"
+                  list:type="checkbox_readonly"
+                  list:translation="sulu_audience_targeting.is-active">
+            <orm:field-name>active</orm:field-name>
+            <orm:entity-name>%sulu.model.target_group.class%</orm:entity-name>
+        </property>
+        <property name="priority"
+                  filter-type="integer"
+                  list:translation="sulu_audience_targeting.priority"
+                  display="yes">
+            <orm:field-name>priority</orm:field-name>
+            <orm:entity-name>%sulu.model.target_group.class%</orm:entity-name>
+        </property>
+        <group-concat-property name="webspaceKeys"
+                               display="no"
+                               filter-type="tags"
+                               list:translation="sulu_audience_targeting.webspaces"
+                               orm:glue=", ">
+            <orm:field-name>webspaceKey</orm:field-name>
+            <orm:entity-name>%sulu.model.target_group_webspace.class%</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>%sulu.model.target_group_webspace.class%</orm:entity-name>
+                    <orm:field-name>%sulu.model.target_group.class%.webspaces</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </group-concat-property>
+    </properties>
+</class>
