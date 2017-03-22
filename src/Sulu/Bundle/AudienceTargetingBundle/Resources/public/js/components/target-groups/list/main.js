@@ -2,7 +2,7 @@ define([
     'services/suluaudiencetargeting/target-group-manager',
     'services/suluaudiencetargeting/target-group-router',
     'text!./list.html'
-], function(Manager, Router, list) {
+], function(TargetGroupManager, TargetGroupRouter, list) {
     var defaults = {
         templates: {
             list: list
@@ -33,7 +33,7 @@ define([
                         add: {
                             options: {
                                 callback: function() {
-                                    Router.toAdd();
+                                    TargetGroupRouter.toAdd();
                                 }
                             }
                         },
@@ -75,7 +75,7 @@ define([
 
             this.sandbox.sulu.initListToolbarAndList.call(this,
                 'target-groups',
-                Manager.url() + '/fields',
+                TargetGroupManager.getUrl() + '/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'target-groups',
@@ -93,13 +93,13 @@ define([
                 },
                 {
                     el: this.sandbox.dom.find('#target-groups-list'),
-                    url: Manager.url() + '?sortBy=id&sortOrder=desc',
+                    url: TargetGroupManager.getUrl() + '?sortBy=id&sortOrder=desc',
                     searchInstanceName: 'target-groups',
                     searchFields: ['title'],
                     resultKey: 'target-groups',
                     instanceName: 'target-groups',
                     actionCallback: function(id) {
-                        Router.toEdit(id);
+                        TargetGroupRouter.toEdit(id);
                     },
                     contentFilters: {
                         message: function(content) {
@@ -144,7 +144,7 @@ define([
         deleteItems: function(ids) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'deleteSelected');
 
-            Manager.deleteMultiple(ids).then(function() {
+            TargetGroupManager.deleteMultiple(ids).then(function() {
                 for (var key in ids) {
                     this.sandbox.emit('husky.datagrid.target-groups.record.remove', ids[key]);
                 }

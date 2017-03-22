@@ -17,6 +17,6 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, Util) {
         deleteMultiple: function(ids) {
             return Util.save(url() + '?ids=' + ids.join(','), 'DELETE');
         },
-        url: url
+        getUrl: url
     };
 });

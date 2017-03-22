@@ -11,6 +11,14 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepository;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepository;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepository;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -56,10 +64,10 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup')
+                                    ->defaultValue(TargetGroup::class)
                                 ->end()
                                 ->scalarNode('repository')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepository')
+                                    ->defaultValue(TargetGroupRepository::class)
                                 ->end()
                             ->end()
                         ->end()
@@ -67,10 +75,10 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition')
+                                    ->defaultValue(TargetGroupCondition::class)
                                 ->end()
                                 ->scalarNode('repository')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepository')
+                                    ->defaultValue(TargetGroupConditionRepository::class)
                                 ->end()
                             ->end()
                         ->end()
@@ -78,10 +86,10 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule')
+                                    ->defaultValue(TargetGroupRule::class)
                                 ->end()
                                 ->scalarNode('repository')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepository')
+                                    ->defaultValue(TargetGroupRuleRepository::class)
                                 ->end()
                             ->end()
                         ->end()
@@ -89,10 +97,10 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace')
+                                    ->defaultValue(TargetGroupWebspace::class)
                                 ->end()
                                 ->scalarNode('repository')
-                                    ->defaultValue('Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepository')
+                                    ->defaultValue(TargetGroupWebspaceRepository::class)
                                 ->end()
                             ->end()
                         ->end()

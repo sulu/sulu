@@ -194,7 +194,6 @@ define([
         afterSave: function(action, data) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
             this.sandbox.emit('sulu.header.saved', data);
-            console.error(action);
 
             if (action === 'back') {
                 TargetGroupRouter.toList();
