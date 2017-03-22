@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="target-group-1">
+                <source>navigation.settings.target-groups</source>
+                <target>Zielgruppen</target>
+            </trans-unit>
+            <trans-unit id="target-group-2">
+                <source>sulu_audience_targeting.target-groups</source>
+                <target>Zielgruppen</target>
+            </trans-unit>
+            <trans-unit id="target-group-3">
+                <source>sulu_audience_targeting.is-active</source>
+                <target>Aktiv</target>
+            </trans-unit>
+            <trans-unit id="target-group-4">
+                <source>sulu_audience_targeting.title</source>
+                <target>Zielgruppen Titel</target>
+            </trans-unit>
+            <trans-unit id="target-group-5">
+                <source>sulu_audience_targeting.webspaces</source>
+                <target>Webspaces</target>
+            </trans-unit>
+            <trans-unit id="target-group-6">
+                <source>sulu_audience_targeting.priority</source>
+                <target>Priorität</target>
+            </trans-unit>
+            <trans-unit id="target-group-7">
+                <source>sulu_audience_targeting.target-group-not-found</source>
+                <target>Zielgruppe konnte nicht gefunden werden.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
