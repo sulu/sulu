@@ -334,9 +334,15 @@ define([
                                 '&webspace-node=true'
                             ].join(''),
                             columnNavigationUrl: [
-                                '/admin/api/nodes?{id=uuid&}tree=true&webspace=', this.options.webspace,
+                                '/admin/api/nodes?fields=title,order,published&webspace=', this.options.webspace,
                                 '&language=', this.options.language,
-                                '&webspace-node=true'
+                                '&webspace-nodes=single'
+                            ].join(''),
+                            selectedUrl: [
+                                '/admin/api/nodes/{uuid}?tree=true',
+                                '&webspace=', this.options.webspace,
+                                '&language=', this.options.language,
+                                '&fields=title,order,published&webspace-nodes=single'
                             ].join(''),
                             disabledIds: [this.data.id]
                         }
