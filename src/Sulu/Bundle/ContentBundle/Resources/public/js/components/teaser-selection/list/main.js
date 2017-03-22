@@ -63,7 +63,7 @@ define(['underscore'], function(_) {
                     options: {
                         el: '.teaser-selection-list',
                         instanceName: 'teaser-selection',
-                        url: this.options.url,
+                        url: this.getUrl(),
                         preselected: _.map(this.options.data, function(item) {
                             return item.id;
                         }),
@@ -96,6 +96,10 @@ define(['underscore'], function(_) {
             this.sandbox.on('husky.datagrid.teaser-selection.item.deselect', function(id) {
                 this.options.deselectCallback({type: this.options.type, id: id});
             }.bind(this));
+        },
+
+        getUrl: function() {
+            return this.options.url.replace('{locale}', this.options.locale);
         }
     };
 });
