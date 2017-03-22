@@ -1,0 +1,1 @@
+define(["services/husky/util","services/husky/mediator"],function(a,b){"use strict";var c=function(a){b.emit("sulu.router.navigate",a,!0,!0)};return{toList:function(){c("settings/target-groups")},toEdit:function(a){c("settings/target-groups/edit:"+a)},toAdd:function(){c("settings/target-groups/add")}}});
