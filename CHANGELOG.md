@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * HOTFIX      #3273 [MarkupBundle]          Fixed multiline mismatch in HtmlExtractor
+    
 * 1.5.1 (2017-03-16)
     * ENHANCEMENT #3256 [DocumentManagerBundle] Added VersionNotFoundException to fos_rest configuration
     * HOTFIX      #3261 [Webspace]              Fixed domain match for country specific domains
