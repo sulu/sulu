@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Import;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -26,15 +25,14 @@ class WebspaceImportTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
-
     /**
      * @var object
      */
     private $parent;
     private $pages = [];
     private $webspaceImporter;
-    protected $distPath = '/../../app/Resources/import/export.xliff.dist';
-    protected $path = '/../../app/Resources/import/export.xliff';
+    protected $distPath = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff.dist';
+    protected $path = './src/Sulu/Bundle/ContentBundle/Tests/app/Resources/import/export.xliff';
 
     /**
      * Setup data for import.
@@ -71,7 +69,7 @@ class WebspaceImportTest extends SuluTestCase
             'webspaceKey' => 'sulu_io',
             'locale' => 'en',
             'format' => '1.2.xliff',
-            'filePath' => __DIR__ . $this->path,
+            'filePath' => $this->path,
         ];
 
         $import = $this->webspaceImporter->import(
@@ -135,7 +133,7 @@ class WebspaceImportTest extends SuluTestCase
         try {
             $fs = new Filesystem();
 
-            $fs->remove(__DIR__ . $this->path);
+            $fs->remove($this->path);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
@@ -149,9 +147,9 @@ class WebspaceImportTest extends SuluTestCase
         $fs = new Filesystem();
 
         try {
-            $fs->copy(__DIR__ . $this->distPath, __DIR__ . $this->path);
+            $fs->copy($this->distPath, $this->path);
 
-            $distContent = file_get_contents(__DIR__ . $this->path, true);
+            $distContent = file_get_contents($this->path, true);
             $newContent = str_replace([
                 '%uuid_page_0%',
                 '%uuid_page_1%',
@@ -160,7 +158,7 @@ class WebspaceImportTest extends SuluTestCase
                 $this->pages[1]->getUuid(),
             ], $distContent);
 
-            file_put_contents(__DIR__ . $this->path, $newContent);
+            file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
