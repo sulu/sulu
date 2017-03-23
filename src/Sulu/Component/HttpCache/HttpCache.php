@@ -11,18 +11,45 @@
 
 namespace Sulu\Component\HttpCache;
 
-use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache as HttpCacheAbstract;
+use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
+use FOS\HttpCache\SymfonyCache\UserContextSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\Esi;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Sulu HttpCache - Lookups a valid Response from the cache for the given request
  * or forwards the Request to the backend and stores the Response in the cache.
  */
-class HttpCache extends HttpCacheAbstract
+class HttpCache extends EventDispatchingHttpCache
 {
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
+
+    const USER_HASH_URI = '/_user_context';
+
+    const USER_HASH_HEADER = 'X-User-Context-Hash';
+
+    const SESSION_NAME_PREFIX = 'user-context';
+
+    public function __construct(HttpKernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
+    {
+        parent::__construct(
+            $kernel,
+            new Store($cacheDir ?: $kernel->getCacheDir() . '/http_cache'),
+            new Esi(),
+            ['debug' => $kernel->isDebug()]
+        );
+
+        if ($hasUserContext) {
+            $this->addSubscriber(new UserContextSubscriber([
+                'user_hash_header' => static::USER_HASH_HEADER,
+                'user_hash_uri' => static::USER_HASH_URI,
+                'session_name_prefix' => static::SESSION_NAME_PREFIX,
+            ]));
+        }
+    }
 
     /**
      * {@inheritdoc}
@@ -31,7 +58,7 @@ class HttpCache extends HttpCacheAbstract
     {
         $response = parent::handle($request, $type, $catch);
 
-        if (!$this->kernel->isDebug()) {
+        if (!$this->getKernel()->isDebug()) {
             $response->headers->remove(self::HEADER_REVERSE_PROXY_TTL);
         }
 
