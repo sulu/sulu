@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-release/1.4
     * HOTFIX      #3279 [CategoryBundle]        Add missing return statement.
+    * HOTFIX      #3277 [PreviewBundle]         Added fake portal for preview when nothing matches
 
 * 1.4.11 (2017-03-22)
     * HOTFIX      #3270 [Webspace]              Removed localization usage check in webspace's xml files
