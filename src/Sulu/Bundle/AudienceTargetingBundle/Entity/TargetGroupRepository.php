@@ -30,7 +30,7 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
             ->join('targetGroupRules.conditions', 'targetGroupConditions')
             ->leftJoin('targetGroup.webspaces', 'targetGroupWebspaces')
             ->where('targetGroup.active = true')
-            ->andWhere('(targetGroupWebspaces.webspaceKey = :webspace OR targetGroup.allWebspaces = true)')
+            ->andWhere('(targetGroup.allWebspaces = true OR targetGroupWebspaces.webspaceKey = :webspace)')
             ->orderBy('targetGroup.priority', 'desc')
             ->getQuery();
 

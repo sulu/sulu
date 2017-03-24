@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #3154 [All]                 Upgrade symfony to ^3.0
+    * ENHANCEMENT #3280 [AudienceTargetBundle]  Added rule evaluation
+    * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
     * ENHANCEMENT #3266 [ContentBundle]         Added locale parameter to teaser-selection-list
 
 * 1.5.2 (2017-03-22)
