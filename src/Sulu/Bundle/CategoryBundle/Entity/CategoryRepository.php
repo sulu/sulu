@@ -207,7 +207,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     {
         @trigger_error(__method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findCategoriesByIds() instead.', E_USER_DEPRECATED);
 
-        $this->findCategoriesByIds($ids);
+        return $this->findCategoriesByIds($ids);
     }
 
     /**
