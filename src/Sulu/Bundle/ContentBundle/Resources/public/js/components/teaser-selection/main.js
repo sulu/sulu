@@ -37,7 +37,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 }
             },
             templates: {
-                url: '/admin/api/teasers?ids=<%= ids.join(",") %>',
+                url: '/admin/api/teasers?ids=<%= ids.join(",") %>&locale=<%= locale %>',
                 item: item,
                 itemForm: itemForm,
                 presentAsButton: '<span class="fa-eye present-as icon right border"><span class="selected-text"></span><span class="dropdown-toggle"></span></span>'
@@ -371,7 +371,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
                 return item.type + ';' + item.id;
             });
 
-            return this.templates.url({ids: ids});
+            return this.templates.url({ids: ids, locale: this.options.locale});
         },
 
         cleanupText: function(text) {
