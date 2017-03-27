@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -37,11 +38,17 @@ class HitListener
      */
     public function onHit(HitEvent $event)
     {
-        if (false === $event->getMetadata()->reflection->isSubclassOf('Sulu\Bundle\ContentBundle\Document\BasePageDocument')) {
+        if (false === $event->getMetadata()->reflection->isSubclassOf(BasePageDocument::class)) {
             return;
         }
 
         $document = $event->getHit()->getDocument();
+        if ($document->getUrl()[0] !== '/') {
+            // is absolute URL
+
+            return;
+        }
+
         $url = sprintf(
             '%s/%s',
             rtrim($this->requestAnalyzer->getResourceLocatorPrefix(), '/'),
