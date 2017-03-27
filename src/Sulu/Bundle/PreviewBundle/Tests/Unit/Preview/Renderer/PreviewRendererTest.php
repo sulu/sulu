@@ -14,11 +14,12 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Renderer;
 use Prophecy\Argument;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
-use Sulu\Bundle\PreviewBundle\Preview\Exception\PortalNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TemplateNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TwigException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\UnexpectedException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceLocalizationNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
@@ -178,27 +179,69 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderPortalNotFound()
     {
-        $this->setExpectedException(PortalNotFoundException::class, '', 9901);
-
         $object = $this->prophesize(\stdClass::class);
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->shouldNotBeCalled();
+        $webspace = new Webspace();
+        $localization = new Localization('de');
+        $webspace->addLocalization($localization);
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->shouldNotBeCalled();
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
-            ->shouldNotBeCalled();
+            ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
-            ->shouldNotBeCalled();
+            ->willReturn(new Response('<title>Hallo</title>'));
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+
+        $this->assertEquals('<title>Hallo</title>', $response);
+    }
+
+    public function testRenderWebspaceNotFound()
+    {
+        $this->setExpectedException(WebspaceNotFoundException::class);
+        $object = new \stdClass();
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->routeDefaultsProvider->supports(get_class($object))->willReturn(true);
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('not_existing', 'de', $this->environment)
+            ->willReturn([]);
+
+        $this->webspaceManager->findWebspaceByKey('not_existing')->willReturn(null);
+
+        $this->renderer->render($object, 1, 'not_existing', 'de', true);
+    }
+
+    public function testRenderWebspaceLocalizationNotFound()
+    {
+        $this->setExpectedException(WebspaceLocalizationNotFoundException::class);
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $object = new \stdClass();
+        $this->routeDefaultsProvider->supports(get_class($object))->willReturn(true);
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([]);
+
+        $webspace = new Webspace();
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
+
+        $this->renderer->render($object, 1, 'sulu_io', 'de', true);
     }
 
     public function testRenderRouteDefaultsProviderNotFound()
