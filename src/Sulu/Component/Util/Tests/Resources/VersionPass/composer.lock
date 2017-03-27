@@ -1,0 +1,124 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "5cf1d56888f674c15bc54bdbcc421e3a",
+    "packages": [
+        {
+            "name": "sulu/sulu",
+            "version": "1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sulu/sulu.git",
+                "reference": "82a7a2de143329d227e5e09ed4cc5250b1617dab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sulu/sulu/zipball/82a7a2de143329d227e5e09ed4cc5250b1617dab",
+                "reference": "82a7a2de143329d227e5e09ed4cc5250b1617dab",
+                "shasum": ""
+            },
+            "require": {
+                "cboden/ratchet": "0.3.*",
+                "doctrine/annotations": "^1.2",
+                "doctrine/data-fixtures": "1.1.*",
+                "doctrine/doctrine-bundle": "~1.0",
+                "doctrine/doctrine-cache-bundle": "~1.1",
+                "doctrine/orm": "^2.5.3",
+                "doctrine/phpcr-bundle": "^1.3.5",
+                "friendsofsymfony/http-cache": "~1.4",
+                "friendsofsymfony/rest-bundle": "^1.6",
+                "gedmo/doctrine-extensions": "~2.4",
+                "goodby/csv": "^1.3",
+                "guzzlehttp/guzzle": "^6.2",
+                "imagine/imagine": "~0.6.1",
+                "jms/serializer-bundle": "^1.1",
+                "layershifter/tld-extract": "^1.1",
+                "massive/search-bundle": "0.16.*",
+                "mtdowling/cron-expression": "^1.1",
+                "oro/doctrine-extensions": "^1.0",
+                "pagerfanta/pagerfanta": "^1.0.4",
+                "php": "^5.5 || ^7.0",
+                "pulse00/ffmpeg-bundle": "^0.6",
+                "ramsey/uuid": "^3.1",
+                "sensio/framework-extra-bundle": "^3.0",
+                "stof/doctrine-extensions-bundle": "^1.2.2",
+                "sulu/document-manager": "~0.9.1",
+                "symfony-cmf/routing-bundle": "^1.2 || ^2.0",
+                "symfony/swiftmailer-bundle": "~2.3",
+                "symfony/symfony": "^2.8.7 || ^3.0",
+                "twig/twig": "^1.11 || ^2.0",
+                "willdurand/hateoas-bundle": "^1.1"
+            },
+            "replace": {
+                "sulu/admin-bundle": "self.version",
+                "sulu/category-bundle": "self.version",
+                "sulu/contact-bundle": "self.version",
+                "sulu/content-bundle": "self.version",
+                "sulu/generator-bundle": "self.version",
+                "sulu/location-bundle": "self.version",
+                "sulu/media-bundle": "self.version",
+                "sulu/search-bundle": "self.version",
+                "sulu/security-bundle": "self.version",
+                "sulu/snippet-bundle": "self.version",
+                "sulu/tag-bundle": "self.version",
+                "sulu/test-bundle": "self.version",
+                "sulu/translate-bundle": "self.version",
+                "sulu/website-bundle": "self.version"
+            },
+            "require-dev": {
+                "doctrine/doctrine-fixtures-bundle": "~2.3",
+                "jackalope/jackalope-doctrine-dbal": "^1.2.5",
+                "massive/build-bundle": "~0.3.0",
+                "matthiasnoback/symfony-config-test": "^1.1",
+                "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
+                "phpcr/phpcr-shell": "~1.0",
+                "phpdocumentor/reflection-docblock": "~3.1",
+                "phpspec/prophecy": "^1.4",
+                "phpunit/phpunit": "^4.8.31",
+                "sensio/framework-extra-bundle": "~3.0",
+                "symfony/monolog-bundle": "^2.8.7 || ^3.0",
+                "symfony/phpunit-bridge": "^2.8.7 || ^3.0",
+                "twig/twig": "~1.11",
+                "zendframework/zend-stdlib": "~2.3",
+                "zendframework/zendsearch": "@dev"
+            },
+            "suggest": {
+                "doctrine/doctrine-bundle": "~1.6",
+                "massive/build-bundle": "^0.3",
+                "sensio/framework-extra-bundle": "~3.0",
+                "symfony/monolog-bundle": "~2.8 || ~3.0",
+                "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
+                "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sulu\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "src/Sulu/Component/*/Tests/",
+                    "src/Sulu/Bundle/*/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sulu Community",
+                    "homepage": "https://github.com/sulu-io/sulu/contributors"
+                }
+            ],
+            "description": "Sulu core distribution",
+            "keywords": [
+                "core",
+                "sulu"
+            ],
+            "time": "2017-03-16 10:06:54"
+        }
+    ]
+}
