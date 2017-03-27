@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #3282 [ContentBundle]         Fixed teaser-selection locale
+    * HOTFIX      #3281 [ContentBundle]         Fixed index pages with redirect-behavior
 
 * 1.5.2 (2017-03-22)
     * HOTFIX      #3265 [ContentBundle]         Fixed internal-link selection for pages

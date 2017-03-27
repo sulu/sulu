@@ -20,10 +20,12 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
@@ -198,7 +200,28 @@ class StructureProvider implements ProviderInterface
         }
 
         if ($class->isSubclassOf(ResourceSegmentBehavior::class)) {
-            $indexMeta->setUrlField($this->factory->createMetadataField('resourceSegment'));
+            $field = $this->factory->createMetadataField('resourceSegment');
+            if ($class->isSubclassOf(RedirectTypeBehavior::class)) {
+                $expression = <<<'EOT'
+                    (object.getRedirectType() === %s
+                        ? (object.getRedirectTarget() ? object.getRedirectTarget().getResourceSegment()) 
+                        : (object.getRedirectType() === %s 
+                            ? object.getRedirectExternal() 
+                            : object.getResourceSegment()
+                        )
+                    )
+EOT;
+
+                $field = new Expression(
+                    sprintf(
+                        $expression,
+                        RedirectType::INTERNAL,
+                        RedirectType::EXTERNAL
+                    )
+                );
+            }
+
+            $indexMeta->setUrlField($field);
         }
 
         if (!$indexMeta->getTitleField()) {
