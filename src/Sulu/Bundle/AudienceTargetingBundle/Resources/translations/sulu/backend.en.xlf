@@ -30,6 +30,22 @@
                 <source>sulu_audience_targeting.target-group-not-found</source>
                 <target>Target group was not found.</target>
             </trans-unit>
+            <trans-unit id="target-group-8">
+                <source>sulu_audience_targeting.rule-sets</source>
+                <target>Rule sets</target>
+            </trans-unit>
+            <trans-unit id="target-group-9">
+                <source>sulu_audience_targeting.rule-sets-descriptions</source>
+                <target>Users matching ANY of these rules will be added to the target group.</target>
+            </trans-unit>
+            <trans-unit id="target-group-10">
+                <source>sulu_audience_targeting.frequency</source>
+                <target>Frequency</target>
+            </trans-unit>
+            <trans-unit id="target-group-11">
+                <source>sulu_audience_targeting.conditions</source>
+                <target>Conditions</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

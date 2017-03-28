@@ -14,9 +14,13 @@ define([
             translations: {
                 all: 'public.all',
                 active: 'sulu_audience_targeting.is-active',
+                condition: 'sulu_audience_targeting.conditions',
                 description: 'public.description',
+                frequency: 'sulu_audience_targeting.frequency',
                 pleaseChoose: 'public.please-choose',
                 priority: 'sulu_audience_targeting.priority',
+                ruleSets: 'sulu_audience_targeting.rule-sets',
+                ruleSetsDescription: 'sulu_audience_targeting.rule-sets-descriptions',
                 title: 'public.title',
                 webspaces: 'sulu_audience_targeting.webspaces'
             }
@@ -25,9 +29,9 @@ define([
         layout: function() {
             return {
                 content: {
-                    width: (!!this.options.preview) ? 'fixed' : 'max',
-                    rightSpace: false,
-                    leftSpace: false
+                    width: 'max',
+                    leftSpace: false,
+                    rightSpace: false
                 }
             };
         },
@@ -150,6 +154,66 @@ define([
             }
 
             return selection;
+        },
+
+        rendered: function() {
+            this.startRulesList();
+        },
+
+        startRulesList: function() {
+            var rulesData = [];
+            if (!!this.parsedData.rules) {
+                rulesData = this.parsedData.rules.map(function(rule) {
+                    return {
+                        title: rule.title,
+                        frequency: rule.frequency,
+                        conditions: rule.conditions.map(function(condition) {
+                            return condition.type;
+                        }).join(' & ')
+                    }
+                });
+            }
+
+            this.sandbox.sulu.initListToolbarAndList.call(
+                this,
+                'rules',
+                null,
+                {
+                    el: this.$find('#rules-list-toolbar'),
+                    template: this.sandbox.sulu.buttons.get({
+                        add: {
+                            options: {
+                                position: 0
+                            }
+                        },
+                        deleteSelected: {
+                            options: {
+                                position: 1
+                            }
+                        }
+                    }),
+                    hasSearch: false
+                },
+                {
+                    el: this.$find('#rules-list'),
+                    data: rulesData,
+                    matchings: [
+                        {
+                            name: 'title',
+                            content: this.translations.title
+                        },
+                        {
+                            name: 'frequency',
+                            content: this.translations.frequency
+                        },
+                        {
+                            name: 'conditions',
+                            content: this.translations.condition
+                        }
+                    ]
+                },
+                'rules'
+            );
         }
     };
 });
