@@ -103,7 +103,7 @@ interface TargetGroupInterface
     public function removeWebspace(TargetGroupWebspaceInterface $webspace);
 
     /**
-     * @return Collection
+     * @return TargetGroupRuleInterface[]
      */
     public function getRules();
 

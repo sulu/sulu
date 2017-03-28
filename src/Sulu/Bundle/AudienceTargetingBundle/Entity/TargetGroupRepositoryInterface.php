@@ -18,4 +18,12 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
  */
 interface TargetGroupRepositoryInterface extends RepositoryInterface
 {
+    /**
+     * Returns all active TargetGroups from the given webspace ordered by their priority.
+     *
+     * @param string $webspace
+     *
+     * @return TargetGroupInterface[]
+     */
+    public function findAllActiveForWebspaceOrderedByPriority($webspace);
 }
