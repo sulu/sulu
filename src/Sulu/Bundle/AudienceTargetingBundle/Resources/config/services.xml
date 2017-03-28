@@ -24,5 +24,21 @@
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
+        <!--RULES-->
+        <service id="sulu_audience_targeting.target_group_evaluator"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluator">
+            <argument type="service" id="sulu_audience_targeting.rules_collection"/>
+            <argument type="service" id="sulu.repository.target_group"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+        <service id="sulu_audience_targeting.rules_collection"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollection">
+            <argument type="collection"></argument>
+        </service>
+        <service id="sulu_audience_targeting.rules.locale"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\LocaleRule">
+            <argument type="service" id="request_stack"/>
+            <tag name="sulu.audience_target_rule" alias="locale"/>
+        </service>
     </services>
 </container>

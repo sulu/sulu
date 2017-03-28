@@ -10,8 +10,8 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="type" column="type" type="string" length="255" nullable="false"/>
-        <field name="condition" column="condition" type="text" nullable="false"/>
+        <field name="type" column="`type`" type="string" length="255" nullable="false"/>
+        <field name="condition" column="`condition`" type="json_array" nullable="false"/>
 
         <many-to-one field="rule"
                      inversed-by="conditions"
