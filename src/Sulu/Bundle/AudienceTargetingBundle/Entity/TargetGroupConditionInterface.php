@@ -34,7 +34,7 @@ interface TargetGroupConditionInterface
     public function setType($type);
 
     /**
-     * @return string
+     * @return array
      */
     public function getCondition();
 
