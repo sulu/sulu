@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle;
 
+use Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
@@ -38,5 +39,7 @@ class SuluAudienceTargetingBundle extends Bundle
             ],
             $container
         );
+
+        $container->addCompilerPass(new AddRulesPass());
     }
 }
