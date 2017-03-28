@@ -18,4 +18,22 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRepository extends EntityRepository implements TargetGroupRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllActiveForWebspaceOrderedByPriority($webspace)
+    {
+        $query = $this->createQueryBuilder('targetGroup')
+            ->addSelect('targetGroupRules')
+            ->addSelect('targetGroupConditions')
+            ->join('targetGroup.rules', 'targetGroupRules')
+            ->join('targetGroupRules.conditions', 'targetGroupConditions')
+            ->leftJoin('targetGroup.webspaces', 'targetGroupWebspaces')
+            ->where('targetGroup.active = true')
+            ->andWhere('(targetGroup.allWebspaces = true OR targetGroupWebspaces.webspaceKey = :webspace)')
+            ->orderBy('targetGroup.priority', 'desc')
+            ->getQuery();
+
+        return $query->setParameter('webspace', $webspace)->getResult();
+    }
 }

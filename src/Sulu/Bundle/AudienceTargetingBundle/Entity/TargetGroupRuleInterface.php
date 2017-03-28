@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
-
 /**
  * Interface for target group rule entity.
  */
@@ -60,7 +58,7 @@ interface TargetGroupRuleInterface
     public function setTargetGroup(TargetGroupInterface $targetGroup);
 
     /**
-     * @return Collection
+     * @return TargetGroupConditionInterface[]
      */
     public function getConditions();
 
