@@ -11,17 +11,33 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPCR\SessionInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TagControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $em;
+
+    /**
+     * @var SessionInterface
+     */
+    protected $session;
+
+    /**
+     * @var TagRepositoryInterface
+     */
+    protected $tagRepository;
 
     protected function setUp()
     {
         $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         $this->initOrm();
     }
@@ -30,12 +46,12 @@ class TagControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        $tag1 = new Tag();
+        $tag1 = $this->tagRepository->createNew();
         $tag1->setName('tag1');
         $this->em->persist($tag1);
         $this->tag1 = $tag1;
 
-        $tag2 = new Tag();
+        $tag2 = $this->tagRepository->createNew();
         $tag2->setName('tag2');
         $this->em->persist($tag2);
         $this->tag2 = $tag2;
@@ -242,11 +258,11 @@ class TagControllerTest extends SuluTestCase
 
     public function testMerge()
     {
-        $tag3 = new Tag();
+        $tag3 = $this->tagRepository->createNew();
         $tag3->setName('tag3');
         $this->em->persist($tag3);
 
-        $tag4 = new Tag();
+        $tag4 = $this->tagRepository->createNew();
         $tag4->setName('tag4');
         $this->em->persist($tag4);
 

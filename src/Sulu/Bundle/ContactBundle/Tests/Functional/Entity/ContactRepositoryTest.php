@@ -102,7 +102,7 @@ class ContactRepositoryTest extends SuluTestCase
 
     private function createTag($name)
     {
-        $tag = new Tag();
+        $tag = $this->getContainer()->get('sulu.repository.tag')->createNew();
         $tag->setName($name);
 
         $this->em->persist($tag);

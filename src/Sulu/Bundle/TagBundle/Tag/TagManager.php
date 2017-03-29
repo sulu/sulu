@@ -156,7 +156,7 @@ class TagManager implements TagManagerInterface
                     throw new TagNotFoundException($id);
                 }
             } else {
-                $tag = new Tag();
+                $tag = $this->tagRepository->createNew();
             }
 
             $user = $this->userRepository->findUserById($userId);

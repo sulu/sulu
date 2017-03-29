@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
@@ -64,6 +65,11 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     private $languageNamespace;
 
     /**
+     * @var TagRepositoryInterface
+     */
+    private $tagRepository;
+
+    /**
      * @var TagInterface
      */
     private $tag1;
@@ -90,25 +96,26 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->contentQuery = $this->getContainer()->get('sulu.content.query_executor');
+        $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
 
-        $this->tag1 = new Tag();
+        $this->tag1 = $this->tagRepository->createNew();
         $this->tag1->setName('test1');
         $this->tag1->setCreator($user);
         $this->tag1->setChanger($user);
         $em->persist($this->tag1);
 
-        $this->tag2 = new Tag();
+        $this->tag2 = $this->tagRepository->createNew();
         $this->tag2->setName('test2');
         $this->tag2->setCreator($user);
         $this->tag2->setChanger($user);
         $em->persist($this->tag2);
 
-        $this->tag3 = new Tag();
+        $this->tag3 = $this->tagRepository->createNew();
         $this->tag3->setName('test3');
         $this->tag3->setCreator($user);
         $this->tag3->setChanger($user);

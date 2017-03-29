@@ -154,7 +154,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->em->persist($permission1);
         $this->em->flush();
 
-        $this->tag1 = new Tag();
+        $this->tag1 = $this->getContainer()->get('sulu.repository.tag')->createNew();
         $this->tag1->setName('tag1');
         $this->em->persist($this->tag1);
         $this->em->flush();
