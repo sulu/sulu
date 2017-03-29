@@ -26,7 +26,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -624,11 +624,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param Tag $tagEntity
+     * @param TagInterface $tagEntity
      *
      * @return $this
      */
-    public function addTag(Tag $tagEntity)
+    public function addTag(TagInterface $tagEntity)
     {
         $fileVersion = $this->getFileVersion();
         if (!$fileVersion->getTags()->contains($tagEntity)) {
@@ -648,7 +648,7 @@ class Media extends ApiWrapper
     {
         $tags = [];
         foreach ($this->getFileVersion()->getTags() as $tag) {
-            /* @var Tag $tag */
+            /* @var TagInterface $tag */
             array_push($tags, $tag->getName());
         }
 

@@ -11,19 +11,19 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Defines the method for the doctrine repository.
  */
-interface TagRepositoryInterface
+interface TagRepositoryInterface extends RepositoryInterface
 {
     /**
      * Finds the tag with the given ID.
      *
      * @param int $id
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function findTagById($id);
 

@@ -96,7 +96,7 @@ class TagManager implements TagManagerInterface
     /**
      * Loads all the tags managed in this system.
      *
-     * @return Tag[]
+     * @return TagInterface[]
      */
     public function findAll()
     {
@@ -108,7 +108,7 @@ class TagManager implements TagManagerInterface
      *
      * @param $id number The id of the tag
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function findById($id)
     {
@@ -120,7 +120,7 @@ class TagManager implements TagManagerInterface
      *
      * @param $name
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function findByName($name)
     {
@@ -209,7 +209,7 @@ class TagManager implements TagManagerInterface
      *
      * @throws Exception\TagNotFoundException
      *
-     * @return Tag The new Tag, which is valid for all given tags
+     * @return TagInterface The new Tag, which is valid for all given tags
      */
     public function merge($srcTagIds, $destTagId)
     {

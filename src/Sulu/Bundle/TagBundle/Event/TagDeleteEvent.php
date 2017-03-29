@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Event;
 
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -20,14 +21,14 @@ use Symfony\Component\EventDispatcher\Event;
 class TagDeleteEvent extends Event
 {
     /**
-     * @var Tag
+     * @var TagInterface
      */
     protected $tag;
 
     /**
-     * @param Tag $tag The deleted tag
+     * @param TagInterface $tag The deleted tag
      */
-    public function __construct(Tag $tag)
+    public function __construct(TagInterface $tag)
     {
         $this->tag = $tag;
     }
@@ -35,7 +36,7 @@ class TagDeleteEvent extends Event
     /**
      * Returns the deleted tag.
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function getTag()
     {

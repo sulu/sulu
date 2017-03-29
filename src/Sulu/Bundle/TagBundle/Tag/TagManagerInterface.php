@@ -23,7 +23,7 @@ interface TagManagerInterface
     /**
      * Loads all the tags managed in this system.
      *
-     * @return Tag[]
+     * @return TagInterface[]
      */
     public function findAll();
 
@@ -32,7 +32,7 @@ interface TagManagerInterface
      *
      * @param $id number The id of the tag
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function findById($id);
 
@@ -41,17 +41,17 @@ interface TagManagerInterface
      *
      * @param $name
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function findByName($name);
 
     /**
      * Loads the tag with the given name, or creates it, if it does not exist.
      *
-     * @param string $name   The name to find or create
-     * @param int    $userId The id of the user who tries to find a tag
+     * @param string $name The name to find or create
+     * @param int $userId The id of the user who tries to find a tag
      *
-     * @return Tag
+     * @return TagInterface
      */
     public function findOrCreateByName($name, $userId);
 
@@ -77,12 +77,12 @@ interface TagManagerInterface
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
      *
-     * @param array  $srcTagIds The source tags, which will be removed afterwards
+     * @param array $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      *
      * @throws Exception\TagNotFoundException
      *
-     * @return Tag The new Tag, which is valid for both given tags
+     * @return TagInterface The new Tag, which is valid for both given tags
      */
     public function merge($srcTagIds, $destTagId);
 

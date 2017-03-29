@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -534,11 +535,11 @@ class FileVersion implements AuditableInterface
     /**
      * Add tags.
      *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @param TagInterface $tags
      *
      * @return FileVersion
      */
-    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    public function addTag(TagInterface $tags)
     {
         $this->tags[] = $tags;
 
@@ -548,9 +549,9 @@ class FileVersion implements AuditableInterface
     /**
      * Remove tags.
      *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @param TagInterface $tags
      */
-    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    public function removeTag(TagInterface $tags)
     {
         $this->tags->removeElement($tags);
     }

@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
@@ -63,17 +64,17 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     private $languageNamespace;
 
     /**
-     * @var Tag
+     * @var TagInterface
      */
     private $tag1;
 
     /**
-     * @var Tag
+     * @var TagInterface
      */
     private $tag2;
 
     /**
-     * @var Tag
+     * @var TagInterface
      */
     private $tag3;
 

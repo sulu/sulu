@@ -23,6 +23,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -75,7 +76,7 @@ class SmartContentItemControllerTest extends SuluTestCase
     private $thomas;
 
     /**
-     * @var Tag
+     * @var TagInterface
      */
     private $tag1;
 
