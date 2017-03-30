@@ -50,7 +50,7 @@ install:
 
   # install and start jackrabbit
   - cd %APPVEYOR_BUILD_FOLDER%
-  - ls 
+  - ls
   - if not exist jackrabbit-standalone-%JACKRABBIT_VERSION%.jar appveyor DownloadFile http://archive.apache.org/dist/jackrabbit/%JACKRABBIT_VERSION%/jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
   - ls
   - ps: Start-Process ("jackrabbit-standalone-" + $env:JACKRABBIT_VERSION + ".jar")
