@@ -6,8 +6,8 @@
                 <source>content.collaboration.warning</source>
                 <target>
                     <![CDATA[
-                    Cette page est actuellement utilisée par <strong>%s</strong><br/>
-                    Vos changements risquent de se perdre ou d' être effacés par.
+                    Cette page est actuellement ouverte par <strong>%s</strong><br/>
+                    Vous risquez de perdre vos modifications ou d'effacer celles faites par l'autre utilisateur.
                     ]]>
                 </target>
             </trans-unit>
