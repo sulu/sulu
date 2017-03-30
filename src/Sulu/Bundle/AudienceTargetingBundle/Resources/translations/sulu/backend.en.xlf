@@ -46,6 +46,18 @@
                 <source>sulu_audience_targeting.conditions</source>
                 <target>Conditions</target>
             </trans-unit>
+            <trans-unit id="target-group-12">
+                <source>sulu_audience_targeting.rule-overlay-title</source>
+                <target>Configure rule set</target>
+            </trans-unit>
+            <trans-unit id="target-group-13">
+                <source>sulu_audience_targeting.conditions-description</source>
+                <target>Users matching ALL of these conditions will be added to the target group.</target>
+            </trans-unit>
+            <trans-unit id="target-group-14">
+                <source>sulu_audience_targeting.condition-add</source>
+                <target>Add condition</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

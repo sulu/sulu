@@ -166,6 +166,12 @@ class TargetGroupControllerTest extends SuluTestCase
                     'webspaceKey' => 'my-webspace-1',
                 ],
             ],
+            'rules' => [
+                [
+                    'title' => 'rule-1',
+                    'frequency' => 1,
+                ],
+            ],
         ];
 
         $client->request('PUT', self::BASE_URL . '/' . $this->targetGroup->getId(), [], [], [], json_encode($data));
@@ -178,9 +184,88 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertEquals($data['priority'], $response['priority']);
         $this->assertEquals($data['active'], $response['active']);
         $this->assertCount(count($data['webspaces']), $response['webspaces']);
+        $this->assertCount(count($data['rules']), $response['rules']);
         $this->assertEquals($data['webspaces'][0]['webspaceKey'], $response['webspaces'][0]['webspaceKey']);
 
-        $this->assertNotNull($this->getTargetGroupRepository()->find($response['id']));
+        $this->getEntityManager()->clear();
+
+        $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
+        $this->assertNotNull($targetGroup);
+        $this->assertEquals($data['webspaces'][0]['webspaceKey'], $targetGroup->getWebspaces()[0]->getWebspaceKey());
+        $this->assertEquals($data['rules'][0]['title'], $targetGroup->getRules()[0]->getTitle());
+        $this->assertEquals($data['rules'][0]['frequency'], $targetGroup->getRules()[0]->getFrequency());
+    }
+
+    /**
+     * Test if controller returns correct entity when perform get by id request.
+     */
+    public function testPutWithRemoveRoleAndWebspaces()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $targetGroup = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+            'description' => 'Target group description number 1',
+            'priority' => 3,
+            'active' => true,
+            'webspaces' => [
+                [
+                    'webspaceKey' => 'my-webspace-1',
+                ],
+                [
+                    'webspaceKey' => 'my-webspace-2',
+                ],
+            ],
+            'rules' => [
+                [
+                    'title' => 'rule-1',
+                    'frequency' => 1,
+                ],
+                [
+                    'title' => 'rule-2',
+                    'frequency' => 2,
+                ],
+            ],
+        ]);
+
+        $this->getEntityManager()->flush();
+
+        $data = [
+            'title' => 'Target Group Title',
+            'description' => 'Target group description number 1',
+            'priority' => 3,
+            'active' => true,
+            'webspaces' => [
+                [
+                    'webspaceKey' => 'my-webspace-1',
+                ],
+            ],
+            'rules' => [
+                [
+                    'id' => $targetGroup->getRules()[0]->getId(),
+                    'title' => 'rule-1',
+                    'frequency' => 1,
+                ],
+            ],
+        ];
+
+        $client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], json_encode($data));
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertCount(count($data['webspaces']), $response['webspaces']);
+        $this->assertCount(count($data['rules']), $response['rules']);
+
+        $this->getEntityManager()->clear();
+
+        $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
+        $this->assertNotNull($targetGroup);
+        $this->assertCount(count($data['webspaces']), $targetGroup->getWebspaces());
+        $this->assertEquals($data['webspaces'][0]['webspaceKey'], $targetGroup->getWebspaces()[0]->getWebspaceKey());
+        $this->assertCount(count($data['rules']), $targetGroup->getRules());
+        $this->assertEquals($data['rules'][0]['title'], $targetGroup->getRules()[0]->getTitle());
+        $this->assertEquals($data['rules'][0]['frequency'], $targetGroup->getRules()[0]->getFrequency());
     }
 
     /**
@@ -247,6 +332,11 @@ class TargetGroupControllerTest extends SuluTestCase
             $this->createTargetGroupWebspace($webspaceData, $targetGroup);
         }
 
+        $rules = $this->getProperty($data, 'rules', []);
+        foreach ($rules as $ruleData) {
+            $this->createTargetGroupRule($ruleData, $targetGroup);
+        }
+
         return $targetGroup;
     }
 
@@ -268,6 +358,18 @@ class TargetGroupControllerTest extends SuluTestCase
         $targetGroup->addWebspace($webspace);
 
         return $webspace;
+    }
+
+    private function createTargetGroupRule($data, TargetGroupInterface $targetGroup)
+    {
+        $targetGroupRule = $this->getTargetGroupRuleRepository()->createNew();
+        $this->getEntityManager()->persist($targetGroupRule);
+        $targetGroupRule->setTargetGroup($targetGroup);
+        $targetGroupRule->setTitle($data['title']);
+        $targetGroupRule->setFrequency($data['frequency']);
+        $targetGroup->addRule($targetGroupRule);
+
+        return $targetGroupRule;
     }
 
     /**
@@ -302,5 +404,13 @@ class TargetGroupControllerTest extends SuluTestCase
     private function getTargetGroupWebspaceRepository()
     {
         return $this->getContainer()->get('sulu.repository.target_group_webspace');
+    }
+
+    /**
+     * @return TargetGroupWebspaceRepositoryInterface
+     */
+    private function getTargetGroupRuleRepository()
+    {
+        return $this->getContainer()->get('sulu.repository.target_group_rule');
     }
 }

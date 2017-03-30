@@ -21,6 +21,44 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
     /**
      * {@inheritdoc}
      */
+    public function save($targetGroup)
+    {
+        $newWebspaces = $targetGroup->getWebspaces()->toArray();
+        $newRules = $targetGroup->getRules()->toArray();
+        $targetGroup = $this->getEntityManager()->merge($targetGroup);
+
+        $oldRules = $targetGroup->getRules()->toArray();
+        $newRuleIds = [];
+        $targetGroup->clearRules();
+        foreach ($newRules as $rule) {
+            $targetGroup->addRule($this->getEntityManager()->merge($rule));
+            $newRuleIds[] = $rule->getId();
+        }
+
+        foreach ($oldRules as $rule) {
+            if (!in_array($rule->getId(), $newRuleIds)) {
+                $this->getEntityManager()->remove($rule);
+            }
+        }
+
+        $oldWebspaces = $targetGroup->getWebspaces()->toArray();
+        $newWebspaceIds = [];
+        $targetGroup->clearWebspaces();
+        foreach ($newWebspaces as $webspace) {
+            $targetGroup->addWebspace($this->getEntityManager()->merge($webspace));
+            $newWebspaceIds[] = $webspace->getId();
+        }
+
+        foreach ($oldWebspaces as $webspace) {
+            if (!in_array($webspace->getId(), $newWebspaceIds)) {
+                $this->getEntityManager()->remove($webspace);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findAllActiveForWebspaceOrderedByPriority($webspace)
     {
         $query = $this->createQueryBuilder('targetGroup')

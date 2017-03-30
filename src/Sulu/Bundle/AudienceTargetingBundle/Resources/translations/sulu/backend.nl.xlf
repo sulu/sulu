@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="target-group-8">
+                <source>sulu_audience_targeting.rule-sets</source>
+                <target>Regelset</target>
+            </trans-unit>
+            <trans-unit id="target-group-9">
+                <source>sulu_audience_targeting.rule-sets-descriptions</source>
+                <target>Gebruikers die overeenkomen met EEN van deze regels zullen aan de doelgroep worden toegevoegd.</target>
+            </trans-unit>
+            <trans-unit id="target-group-10">
+                <source>sulu_audience_targeting.frequency</source>
+                <target>Frequentie</target>
+            </trans-unit>
+            <trans-unit id="target-group-11">
+                <source>sulu_audience_targeting.conditions</source>
+                <target>Condities</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

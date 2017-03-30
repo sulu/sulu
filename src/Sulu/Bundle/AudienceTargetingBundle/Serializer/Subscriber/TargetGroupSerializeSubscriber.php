@@ -56,5 +56,11 @@ class TargetGroupSerializeSubscriber implements EventSubscriberInterface
                 $webspace->setTargetGroup($targetGroup);
             }
         }
+
+        if ($targetGroup->getRules()) {
+            foreach ($targetGroup->getRules() as $rule) {
+                $rule->setTargetGroup($targetGroup);
+            }
+        }
     }
 }

@@ -36,6 +36,16 @@ class TemplateController extends Controller
     }
 
     /**
+     * Returns the overlay for editing the rules in the target group editing page.
+     *
+     * @return Response
+     */
+    public function ruleOverlayAction()
+    {
+        return $this->render('SuluAudienceTargetingBundle:Template:rule-overlay.html.twig');
+    }
+
+    /**
      * Returns all webspaces in a format that can be displayed by a select.
      *
      * @return array

@@ -1,0 +1,22 @@
+<form id="rule-form">
+    <input type="hidden" id="id" data-mapper-property="id"/>
+    <div class="form-horizontal">
+        <div class="grid-row">
+            <label for="title" class="required"><%= translations.title %></label>
+
+            <div>
+                <input class="form-element" type="text" id="title"
+                       data-validation-required="true"
+                       data-mapper-property="title"/>
+            </div>
+        </div>
+        <div class="grid-row form-group-vertical">
+            <label><%= translations.conditions %></label>
+            <div class="input-description"><%= translations.conditionsDescription %></div>
+        </div>
+
+        <div class="addButton">
+            <span class="control-label"><%= translations.conditionAdd %></span>
+        </div>
+    </div>
+</form>
