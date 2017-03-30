@@ -83,7 +83,6 @@ define([
             this.sandbox.emit('husky.datagrid.records.get', function(records) {
                 data.rules = records.map(function(record) {
                     var rule = this.sandbox.util.deepCopy(record);
-                    rule.frequency = 1; // TODO actually set in a dropdown
                     delete rule.conditions; // TODO read value correctly instead of simply deleting it
                     if (typeof rule.id === 'string' && rule.id.startsWith(constants.newRecordPrefix)) {
                         delete rule.id;
@@ -257,6 +256,10 @@ define([
          * Add the new rule data to the datagrid.
          */
         editRule: function() {
+            if (!this.sandbox.form.validate(constants.ruleFormSelector)) {
+                return false;
+            }
+
             var ruleData = this.sandbox.form.getData(constants.ruleFormSelector);
 
             if (!ruleData.id) {
@@ -322,7 +325,9 @@ define([
                 selectedRecord = record;
             }.bind(this));
 
-            this.sandbox.form.setData(constants.ruleFormSelector, selectedRecord);
+            this.sandbox.form.setData(constants.ruleFormSelector, selectedRecord).then(function() {
+                this.sandbox.start(constants.ruleFormSelector);
+            }.bind(this));
         },
 
         /**

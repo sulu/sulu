@@ -42,7 +42,17 @@ class TemplateController extends Controller
      */
     public function ruleOverlayAction()
     {
-        return $this->render('SuluAudienceTargetingBundle:Template:rule-overlay.html.twig');
+        $frequencies = [];
+        foreach ($this->getParameter('sulu_audience_targeting.frequencies') as $name => $value) {
+            $frequencies[] = [
+                'id' => $value,
+                'name' => $name,
+            ];
+        }
+
+        return $this->render('SuluAudienceTargetingBundle:Template:rule-overlay.html.twig', [
+            'frequencies' => $frequencies,
+        ]);
     }
 
     /**
