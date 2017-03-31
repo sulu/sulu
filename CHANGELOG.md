@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3289 [ContentBundle]         Fixed smart-content to use it without webspace
     * HOTFIX      #3282 [ContentBundle]         Fixed teaser-selection locale
     * HOTFIX      #3281 [ContentBundle]         Fixed index pages with redirect-behavior
 
