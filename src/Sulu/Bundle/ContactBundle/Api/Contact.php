@@ -29,7 +29,7 @@ use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -687,11 +687,11 @@ class Contact extends ApiWrapper
     /**
      * Add tag.
      *
-     * @param TagEntity $tag
+     * @param TagInterface $tag
      *
      * @return Contact
      */
-    public function addTag(TagEntity $tag)
+    public function addTag(TagInterface $tag)
     {
         $this->entity->addTag($tag);
 
@@ -701,9 +701,9 @@ class Contact extends ApiWrapper
     /**
      * Remove tag.
      *
-     * @param TagEntity $tag
+     * @param TagInterface $tag
      */
-    public function removeTag(TagEntity $tag)
+    public function removeTag(TagInterface $tag)
     {
         $this->entity->removeTag($tag);
     }

@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -472,11 +473,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add tags.
      *
-     * @param Tag $tags
+     * @param TagInterface $tags
      *
      * @return Account
      */
-    public function addTag(Tag $tag)
+    public function addTag(TagInterface $tag)
     {
         $this->tags[] = $tag;
 
@@ -486,9 +487,9 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove tag.
      *
-     * @param Tag $tag
+     * @param TagInterface $tag
      */
-    public function removeTag(Tag $tag)
+    public function removeTag(TagInterface $tag)
     {
         $this->tags->removeElement($tag);
     }

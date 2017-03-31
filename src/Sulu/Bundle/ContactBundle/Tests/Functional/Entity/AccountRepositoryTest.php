@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountRepositoryTest extends SuluTestCase
@@ -30,7 +31,7 @@ class AccountRepositoryTest extends SuluTestCase
     private $accounts = [];
 
     /**
-     * @var Tag[]
+     * @var TagInterface[]
      */
     private $tags = [];
 
@@ -101,7 +102,7 @@ class AccountRepositoryTest extends SuluTestCase
 
     private function createTag($name)
     {
-        $tag = new Tag();
+        $tag = $this->getContainer()->get('sulu.repository.tag')->createNew();
         $tag->setName($name);
 
         $this->em->persist($tag);

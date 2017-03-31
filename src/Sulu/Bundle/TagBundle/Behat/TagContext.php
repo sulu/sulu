@@ -27,7 +27,7 @@ class TagContext extends BaseContext implements SnippetAcceptingContext
     public function givenTheFollowingTagsExist(TableNode $node)
     {
         foreach ($node as $row) {
-            $tag = new Tag();
+            $tag = $this->getContainer()->get('sulu.repository.tag')->createNew();
             $tag->setName($row['name']);
             $this->getEntityManager()->persist($tag);
         }

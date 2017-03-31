@@ -78,11 +78,13 @@ class MediaRepositoryTest extends SuluTestCase
         $this->mediaTypes['image'] = $imageType;
         $this->mediaTypes['video'] = $videoType;
 
+        $tagRepository = $this->getContainer()->get('sulu.repository.tag');
+
         // create some tags
-        $tag1 = new Tag();
+        $tag1 = $tagRepository->createNew();
         $tag1->setName('Tag 1');
 
-        $tag2 = new Tag();
+        $tag2 = $tagRepository->createNew();
         $tag2->setName('Tag 2');
 
         $this->em->persist($tag1);

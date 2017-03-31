@@ -26,6 +26,7 @@ use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 /**
  * Contact interface.
@@ -292,18 +293,18 @@ interface ContactInterface
     /**
      * Add tag.
      *
-     * @param Tag $tag
+     * @param TagInterface $tag
      *
      * @return ContactInterface
      */
-    public function addTag(Tag $tag);
+    public function addTag(TagInterface $tag);
 
     /**
      * Remove tag.
      *
-     * @param Tag $tag
+     * @param TagInterface $tag
      */
-    public function removeTag(Tag $tag);
+    public function removeTag(TagInterface $tag);
 
     /**
      * Get tags.

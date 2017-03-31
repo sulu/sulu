@@ -31,7 +31,7 @@ use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Rest\ApiWrapper;
 
 /**
@@ -587,11 +587,11 @@ class Account extends ApiWrapper
     /**
      * Add tags.
      *
-     * @param TagEntity $tag
+     * @param TagInterface $tag
      *
      * @return Account
      */
-    public function addTag(TagEntity $tag)
+    public function addTag(TagInterface $tag)
     {
         $this->entity->addTag($tag);
 
@@ -601,9 +601,9 @@ class Account extends ApiWrapper
     /**
      * Remove tags.
      *
-     * @param TagEntity $tag
+     * @param TagInterface $tag
      */
-    public function removeTag(TagEntity $tag)
+    public function removeTag(TagInterface $tag)
     {
         $this->entity->removeTag($tag);
     }
@@ -611,7 +611,7 @@ class Account extends ApiWrapper
     /**
      * Get tags.
      *
-     * @return TagEntity[]
+     * @return TagInterface[]
      * @VirtualProperty
      * @SerializedName("tags")
      * @Groups({"fullAccount"})

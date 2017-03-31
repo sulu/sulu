@@ -63,7 +63,9 @@ class NodeControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        $tag1 = new Tag();
+        $tagRepository = $this->getContainer()->get('sulu.repository.tag');
+
+        $tag1 = $tagRepository->createNew();
 
         $metadata = $this->em->getClassMetaData(get_class($tag1));
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
@@ -74,19 +76,19 @@ class NodeControllerTest extends SuluTestCase
         $this->em->persist($tag1);
         $this->em->flush();
 
-        $tag2 = new Tag();
+        $tag2 = $tagRepository->createNew();
         $tag2->setId(2);
         $tag2->setName('tag2');
         $this->em->persist($tag2);
         $this->em->flush();
 
-        $tag3 = new Tag();
+        $tag3 = $tagRepository->createNew();
         $tag3->setId(3);
         $tag3->setName('tag3');
         $this->em->persist($tag3);
         $this->em->flush();
 
-        $tag4 = new Tag();
+        $tag4 = $tagRepository->createNew();
         $tag4->setId(4);
         $tag4->setName('tag4');
         $this->em->persist($tag4);

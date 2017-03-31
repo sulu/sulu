@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class MediaDataProviderRepositoryTest extends SuluTestCase
@@ -31,7 +32,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var Tag[]
+     * @var TagInterface[]
      */
     private $tags = [];
 
@@ -157,7 +158,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
     private function createTag($name)
     {
-        $tag = new Tag();
+        $tag = $this->em->getRepository('SuluTagBundle:Tag')->createNew();
         $tag->setName($name);
 
         $this->em->persist($tag);

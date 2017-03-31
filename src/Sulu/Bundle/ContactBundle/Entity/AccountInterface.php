@@ -14,7 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 /**
  * interface for accounts.
@@ -482,18 +482,18 @@ interface AccountInterface
     /**
      * Add tags.
      *
-     * @param Tag $tags
+     * @param TagInterface $tags
      *
      * @return Account
      */
-    public function addTag(Tag $tags);
+    public function addTag(TagInterface $tags);
 
     /**
      * Remove tags.
      *
-     * @param Tag $tags
+     * @param TagInterface $tags
      */
-    public function removeTag(Tag $tags);
+    public function removeTag(TagInterface $tags);
 
     /**
      * Get tags.
