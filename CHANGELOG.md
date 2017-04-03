@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3291 [TagBundle]             Added all parameters to tag manager
     * BUGFIX      #3290 [TagBundle]             Fixed tag persistence with tag manager
     * ENHANCEMENT #3284 [TagBundle]             Added persistence to tag-bundle
     * ENHANCEMENT #3266 [ContentBundle]         Added locale parameter to teaser-selection-list
