@@ -140,7 +140,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
     public function postAction(Request $request)
     {
         $targetGroup = $this->deserializeData($request->getContent());
-        $this->getEntityManager()->persist($targetGroup);
+        $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
 
         $this->getEntityManager()->flush();
 
@@ -164,7 +164,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $data['id'] = $id;
 
         $targetGroup = $this->deserializeData(json_encode($data));
-        $this->getTargetGroupRepository()->save($targetGroup);
+        $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
         $this->getEntityManager()->flush();
 
         return $this->handleView($this->view($targetGroup));

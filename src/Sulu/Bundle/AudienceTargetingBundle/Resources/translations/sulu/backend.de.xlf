@@ -2,10 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="de" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="target-group-1">
-                <source>navigation.settings.target-groups</source>
-                <target>Zielgruppen</target>
-            </trans-unit>
             <trans-unit id="target-group-2">
                 <source>sulu_audience_targeting.target-groups</source>
                 <target>Zielgruppen</target>
@@ -29,6 +25,34 @@
             <trans-unit id="target-group-7">
                 <source>sulu_audience_targeting.target-group-not-found</source>
                 <target>Zielgruppe konnte nicht gefunden werden.</target>
+            </trans-unit>
+            <trans-unit id="target-group-8">
+                <source>sulu_audience_targeting.rule-sets</source>
+                <target>Regeln</target>
+            </trans-unit>
+            <trans-unit id="target-group-9">
+                <source>sulu_audience_targeting.rule-sets-descriptions</source>
+                <target>Benutzer die zumindest EINER dieser Regeln entsprechen werden der Zielgruppe hinzugefügt.</target>
+            </trans-unit>
+            <trans-unit id="target-group-10">
+                <source>sulu_audience_targeting.frequency</source>
+                <target>Häufigkeit</target>
+            </trans-unit>
+            <trans-unit id="target-group-11">
+                <source>sulu_audience_targeting.conditions</source>
+                <target>Voraussetzung</target>
+            </trans-unit>
+            <trans-unit id="target-group-12">
+                <source>sulu_audience_targeting.rule-overlay-title</source>
+                <target>Regel konfigurieren</target>
+            </trans-unit>
+            <trans-unit id="target-group-13">
+                <source>sulu_audience_targeting.conditions-description</source>
+                <target>Benutzer die ALLE diese Voraussetzungen erfüllen werden der Zielgruppe hinzugefügt</target>
+            </trans-unit>
+            <trans-unit id="target-group-14">
+                <source>sulu_audience_targeting.condition-add</source>
+                <target>Voraussetzung hinzufügen</target>
             </trans-unit>
         </body>
     </file>

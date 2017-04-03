@@ -6,7 +6,9 @@ define([
 ], function($, TargetGroupManager, FormTemplate, RuleOverlayTemplate) {
     var constants = {
             ruleFormSelector: '#rule-form',
-            newRecordPrefix: 'newrecord'
+            newRecordPrefix: 'newrecord',
+            conditionType: 'type',
+            conditionKey: 'condition'
         },
         newRecordId = 1;
 
@@ -36,6 +38,8 @@ define([
                 webspaces: 'sulu_audience_targeting.webspaces'
             }
         },
+
+        rulesData: [],
 
         layout: function() {
             return {
@@ -68,6 +72,8 @@ define([
             this.parsedData = data;
             data.webspaces = this.parseWebspaceForSelect(data.webspaces);
 
+            this.rulesData = data.rules;
+
             return data;
         },
 
@@ -80,22 +86,26 @@ define([
             // Extend data with webspaces.
             data.webspaces = this.parseWebspaceSelection(this.retrieveSelectValue('#webspaces'));
 
-            this.sandbox.emit('husky.datagrid.records.get', function(records) {
-                data.rules = records.map(function(record) {
-                    var rule = this.sandbox.util.deepCopy(record);
-                    delete rule.conditions; // TODO read value correctly instead of simply deleting it
-                    if (typeof rule.id === 'string' && rule.id.startsWith(constants.newRecordPrefix)) {
-                        delete rule.id;
-                    }
+            data.rules = this.rulesData.map(function(ruleData) {
+                var rule = this.sandbox.util.deepCopy(ruleData);
+                if (typeof rule.id === 'string' && rule.id.startsWith(constants.newRecordPrefix)) {
+                    delete rule.id;
+                }
 
-                    return rule;
-                }.bind(this));
-
-                TargetGroupManager.save(data).then(function(responseData) {
-                    this.sandbox.emit('husky.datagrid.records.set', responseData.rules);
-                    this.saved(responseData);
-                }.bind(this));
+                return rule;
             }.bind(this));
+
+            TargetGroupManager.save(data).then(function(responseData) {
+                this.rulesData = responseData.rules;
+                this.updateRulesDatagrid();
+                this.saved(responseData);
+            }.bind(this));
+        },
+
+        updateRulesDatagrid: function() {
+            this.sandbox.emit('husky.datagrid.records.set', this.rulesData.map(function(rule) {
+                return this.parseRuleForDatagrid(rule);
+            }.bind(this)));
         },
 
         /**
@@ -193,19 +203,9 @@ define([
          * Start the datagrid for rules.
          */
         startRulesList: function() {
-            var rulesData = [];
-            if (!!this.parsedData.rules) {
-                rulesData = this.parsedData.rules.map(function(rule) {
-                    return {
-                        id: rule.id,
-                        title: rule.title,
-                        frequency: rule.frequency,
-                        conditions: rule.conditions.map(function(condition) {
-                            return condition.type;
-                        }).join(' & ')
-                    }
-                });
-            }
+            var parsedRules = this.rulesData.map(function(ruleData) {
+                return this.parseRuleForDatagrid(ruleData);
+            }.bind(this));
 
             this.sandbox.sulu.initListToolbarAndList.call(
                 this,
@@ -231,7 +231,7 @@ define([
                 },
                 {
                     el: this.$find('#rules-list'),
-                    data: rulesData,
+                    data: parsedRules,
                     actionCallback: this.startRuleOverlay.bind(this),
                     matchings: [
                         {
@@ -256,22 +256,28 @@ define([
          * Add the new rule data to the datagrid.
          */
         editRule: function() {
+            var ruleData, replacedRule, replacedIndex;
+
             if (!this.sandbox.form.validate(constants.ruleFormSelector)) {
                 return false;
             }
 
-            var ruleData = this.sandbox.form.getData(constants.ruleFormSelector);
+            ruleData = this.unflattenRuleConditions(this.sandbox.form.getData(constants.ruleFormSelector));
 
             if (!ruleData.id) {
                 ruleData.id = constants.newRecordPrefix + newRecordId++;
-                this.sandbox.emit('husky.datagrid.record.add', ruleData);
+                this.rulesData.push(ruleData);
+                this.sandbox.emit('husky.datagrid.record.add', this.parseRuleForDatagrid(ruleData));
             }
 
             if (typeof ruleData.id === 'string' && !ruleData.id.startsWith(constants.newRecordPrefix)) {
                 ruleData.id = parseInt(ruleData.id);
+                replacedRule = this.findRule(ruleData.id);
+                replacedIndex = this.rulesData.indexOf(replacedRule);
+                this.rulesData[replacedIndex] = ruleData;
             }
 
-            this.sandbox.emit('husky.datagrid.records.change', ruleData);
+            this.sandbox.emit('husky.datagrid.records.change', this.parseRuleForDatagrid(ruleData));
         },
 
         /**
@@ -282,6 +288,7 @@ define([
             this.sandbox.dom.append(this.$el, $container);
 
             this.sandbox.once('husky.overlay.rule.opened', this.createRuleForm.bind(this, id));
+            this.sandbox.once('husky.overlay.rule.opened', this.bindRuleFormListener.bind(this, id));
 
             this.sandbox.start([
                 {
@@ -306,27 +313,27 @@ define([
          * Create a new rule form when the overlay will be opened.
          */
         createRuleForm: function(id) {
-            var selectedRecord = null;
-            this.sandbox.form.create(constants.ruleFormSelector);
+            var selectedRule = {};
+            if (!!id) {
+                selectedRule = this.flattenRuleConditions(this.findRule(id));
+            }
 
-            this.sandbox.emit('husky.datagrid.records.get', function(records) {
-                if (!!selectedRecord) {
-                    return;
-                }
-
-                var record = records.find(function(record) {
-                    return record.id === id;
-                });
-
-                if (!record) {
-                    record = {};
-                }
-
-                selectedRecord = record;
+            this.sandbox.form.create(constants.ruleFormSelector).initialized.then(function() {
+                this.sandbox.form.setData(constants.ruleFormSelector, selectedRule).then(function () {
+                    this.sandbox.start(constants.ruleFormSelector);
+                }.bind(this));
             }.bind(this));
+        },
 
-            this.sandbox.form.setData(constants.ruleFormSelector, selectedRecord).then(function() {
-                this.sandbox.start(constants.ruleFormSelector);
+        /**
+         * Binds listeners in the overlay form.
+         */
+        bindRuleFormListener: function() {
+            this.sandbox.dom.on(constants.ruleFormSelector, 'form-add', function(e, propertyName, data, index) {
+                var $elements = this.sandbox.dom.children(this.$find('#' + propertyName)),
+                    $element = (index !== undefined && $elements.length > index) ? $elements[index] : this.sandbox.dom.last($elements);
+
+                this.sandbox.start($element);
             }.bind(this));
         },
 
@@ -336,7 +343,97 @@ define([
         deleteRules: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('husky.datagrid.records.remove', ids);
+
+                var indexesToDelete = [];
+                this.rulesData.forEach(function(rule, index) {
+                    if (ids.indexOf(rule.id) > -1) {
+                        indexesToDelete.push(index);
+                    }
+                }.bind(this));
+
+                indexesToDelete.forEach(function(index) {
+                    this.rulesData.splice(index, 1);
+                }.bind(this));
             }.bind(this));
+        },
+
+        /**
+         * Transfers data into a flat format for the datagrid.
+         *
+         * @param ruleData
+         */
+        parseRuleForDatagrid: function(ruleData) {
+            var parsedRule = this.flattenRuleConditions(this.sandbox.util.deepCopy(ruleData));
+            parsedRule.conditions = parsedRule.conditions.map(function(conditionData) {
+                return conditionData[constants.conditionType];
+            }).join(' & ');
+
+            return parsedRule;
+        },
+
+        /**
+         * Flattens the rules for the representation in the datagrid.
+         *
+         * @param ruleData
+         */
+        flattenRuleConditions: function(ruleData) {
+            var rule = this.sandbox.util.deepCopy(ruleData);
+
+            rule.conditions = rule.conditions.map(function(condition) {
+                var flatCondition = {
+                    id: condition.id,
+                    type: condition[constants.conditionType]
+                };
+
+                for (var key in condition.condition) {
+                    if (condition.condition.hasOwnProperty(key) && key !== constants.conditionType) {
+                        flatCondition[key] = condition.condition[key];
+                    }
+                }
+
+                return flatCondition;
+            });
+
+            return rule;
+        },
+
+        /**
+         * Reverses changes done in flattenRuleConditions.
+         *
+         * @param ruleData
+         */
+        unflattenRuleConditions: function(ruleData) {
+            var rule = this.sandbox.util.deepCopy(ruleData);
+
+            rule.conditions = rule.conditions.map(function(condition) {
+                var unflatCondition = {
+                    id: condition.id,
+                    type: condition[constants.conditionType],
+                    condition: {}
+                };
+
+                for (var key in condition) {
+                    if (condition.hasOwnProperty(key) && key !== constants.conditionType && key !== 'id') {
+                        unflatCondition.condition[key] = condition[key];
+                    }
+                }
+
+                return unflatCondition;
+            });
+
+            return rule;
+        },
+
+        /**
+         * Finds the rule with the given ID from the internal state.
+         *
+         * @param {integer} id
+         * @returns {Object}
+         */
+        findRule: function(id) {
+            return this.rulesData.filter(function(ruleData) {
+                return ruleData.id === id;
+            })[0];
         }
     };
 });

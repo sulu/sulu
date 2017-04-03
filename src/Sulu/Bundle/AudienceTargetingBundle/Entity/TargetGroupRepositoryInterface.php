@@ -22,8 +22,10 @@ interface TargetGroupRepositoryInterface extends RepositoryInterface
      * Saves the given target group to the repository.
      *
      * @param TargetGroupInterface $targetGroup
+     *
+     * @return TargetGroupInterface
      */
-    public function save($targetGroup);
+    public function save(TargetGroupInterface $targetGroup);
 
     /**
      * Returns all active TargetGroups from the given webspace ordered by their priority.

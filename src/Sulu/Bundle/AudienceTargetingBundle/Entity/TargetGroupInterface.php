@@ -106,7 +106,7 @@ interface TargetGroupInterface
     /**
      * Returns all Webspaces the TargetGroup is valid for.
      *
-     * @return TargetGroupWebspace
+     * @return TargetGroupWebspace[]
      */
     public function getWebspaces();
 

@@ -81,4 +81,9 @@ interface TargetGroupRuleInterface
      * @return $this
      */
     public function removeCondition(TargetGroupConditionInterface $condition);
+
+    /**
+     * Clears the rule from its conditions.
+     */
+    public function clearConditions();
 }
