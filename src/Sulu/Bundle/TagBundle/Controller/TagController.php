@@ -191,7 +191,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save(['name' => $name], $this->getUser()->getId());
+            $tag = $this->getManager()->save($this->getData($request), $this->getUser()->getId());
 
             $view = $this->view($tag, 200);
             $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
@@ -229,7 +229,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save(['name' => $name], $this->getUser()->getId(), $id);
+            $tag = $this->getManager()->save($this->getData($request), $this->getUser()->getId(), $id);
 
             $view = $this->view($tag, 200);
             $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
@@ -344,5 +344,17 @@ class TagController extends RestController implements ClassResourceInterface, Se
     public function getSecurityContext()
     {
         return 'sulu.settings.tags';
+    }
+
+    /**
+     * Get data.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function getData(Request $request)
+    {
+        return $request->request->all();
     }
 }
