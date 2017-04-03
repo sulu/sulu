@@ -165,7 +165,7 @@
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
         </many-to-many>
-        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Tag\TagInterface">
             <join-table name="co_account_tags">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
