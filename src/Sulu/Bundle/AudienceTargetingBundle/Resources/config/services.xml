@@ -24,6 +24,11 @@
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
+        <service id="sulu_audience_targeting.serializer.target_group_rule_serializer"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupRuleSerializeSubscriber">
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
         <!--RULES-->
         <service id="sulu_audience_targeting.target_group_evaluator"
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluator">

@@ -14,13 +14,9 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 
-/**
- * Extends target group serialization process.
- */
-class TargetGroupSerializeSubscriber implements EventSubscriberInterface
+class TargetGroupRuleSerializeSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -37,29 +33,22 @@ class TargetGroupSerializeSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Called after a target group was deserialized.
+     * Called after a target group rule was deserialized.
      *
      * @param ObjectEvent $event
      */
     public function onPostDeserialize(ObjectEvent $event)
     {
-        /** @var TargetGroupInterface $targetGroup */
-        $targetGroup = $event->getObject();
+        /** @var TargetGroupRuleInterface $targetGroupRule */
+        $targetGroupRule = $event->getObject();
 
-        if (!$targetGroup instanceof TargetGroupInterface) {
+        if (!$targetGroupRule instanceof TargetGroupRuleInterface) {
             return;
         }
 
-        /** @var TargetGroupWebspaceInterface $webspace */
-        if ($targetGroup->getWebspaces()) {
-            foreach ($targetGroup->getWebspaces() as $webspace) {
-                $webspace->setTargetGroup($targetGroup);
-            }
-        }
-
-        if ($targetGroup->getRules()) {
-            foreach ($targetGroup->getRules() as $rule) {
-                $rule->setTargetGroup($targetGroup);
+        if ($targetGroupRule->getConditions()) {
+            foreach ($targetGroupRule->getConditions() as $condition) {
+                $condition->setRule($targetGroupRule);
             }
         }
     }

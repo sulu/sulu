@@ -19,6 +19,15 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 interface TargetGroupRepositoryInterface extends RepositoryInterface
 {
     /**
+     * Saves the given target group to the repository.
+     *
+     * @param TargetGroupInterface $targetGroup
+     *
+     * @return TargetGroupInterface
+     */
+    public function save(TargetGroupInterface $targetGroup);
+
+    /**
      * Returns all active TargetGroups from the given webspace ordered by their priority.
      *
      * @param string $webspace

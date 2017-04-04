@@ -36,6 +36,26 @@ class TemplateController extends Controller
     }
 
     /**
+     * Returns the overlay for editing the rules in the target group editing page.
+     *
+     * @return Response
+     */
+    public function ruleOverlayAction()
+    {
+        $frequencies = [];
+        foreach ($this->getParameter('sulu_audience_targeting.frequencies') as $name => $value) {
+            $frequencies[] = [
+                'id' => $value,
+                'name' => $name,
+            ];
+        }
+
+        return $this->render('SuluAudienceTargetingBundle:Template:rule-overlay.html.twig', [
+            'frequencies' => $frequencies,
+        ]);
+    }
+
+    /**
      * Returns all webspaces in a format that can be displayed by a select.
      *
      * @return array
