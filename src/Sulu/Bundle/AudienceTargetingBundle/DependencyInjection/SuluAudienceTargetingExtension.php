@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,6 +34,10 @@ class SuluAudienceTargetingExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('sulu_audience_targeting.number_of_priorities', $config['number_of_priorities']);
+        $container->setParameter('sulu_audience_targeting.frequencies', [
+            TargetGroupRuleInterface::FREQUENCY_HIT_NAME => TargetGroupRuleInterface::FREQUENCY_HIT,
+            TargetGroupRuleInterface::FREQUENCY_SESSION_NAME => TargetGroupRuleInterface::FREQUENCY_SESSION,
+        ]);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

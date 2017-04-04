@@ -45,7 +45,7 @@ class AudienceTargetingAdmin extends Admin
         $settings->setPosition(40);
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $targetGroups = new NavigationItem('navigation.settings.target-groups');
+            $targetGroups = new NavigationItem('sulu_audience_targeting.target-groups');
             $targetGroups->setPosition(10);
             $targetGroups->setAction('settings/target-groups');
             $settings->addChild($targetGroups);

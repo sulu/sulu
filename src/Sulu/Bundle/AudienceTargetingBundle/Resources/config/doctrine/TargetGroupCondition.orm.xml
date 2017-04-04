@@ -19,6 +19,9 @@
             <join-columns>
                 <join-column name="idTargetGroupRules" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
+            <cascade>
+                <cascade-persist/>
+            </cascade>
         </many-to-one>
     </mapped-superclass>
 </doctrine-mapping>
