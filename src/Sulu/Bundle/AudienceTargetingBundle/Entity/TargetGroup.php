@@ -197,6 +197,14 @@ class TargetGroup implements TargetGroupInterface
     /**
      * {@inheritdoc}
      */
+    public function clearWebspaces()
+    {
+        $this->webspaces->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRules()
     {
         return $this->rules;
@@ -220,5 +228,13 @@ class TargetGroup implements TargetGroupInterface
         $this->rules->removeElement($rule);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearRules()
+    {
+        $this->rules->clear();
     }
 }

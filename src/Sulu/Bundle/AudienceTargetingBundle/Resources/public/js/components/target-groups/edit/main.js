@@ -67,6 +67,7 @@ define([
                     description: '',
                     priority: null,
                     webspaces: [],
+                    rules: [],
                     active: false
                 });
 

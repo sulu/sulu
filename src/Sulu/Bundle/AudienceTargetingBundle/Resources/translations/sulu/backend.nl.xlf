@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-    <file source-language="de" datatype="plaintext" original="file.ext">
+    <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="target-group-2">
                 <source>sulu_audience_targeting.target-groups</source>
-                <target>Zielgruppen</target>
+                <target>Doelgroepen</target>
             </trans-unit>
             <trans-unit id="target-group-3">
                 <source>sulu_audience_targeting.is-active</source>
-                <target>Aktiv</target>
+                <target>Actief</target>
             </trans-unit>
             <trans-unit id="target-group-4">
                 <source>sulu_audience_targeting.title</source>
-                <target>Zielgruppen Titel</target>
+                <target>Doelgroeptitel</target>
             </trans-unit>
             <trans-unit id="target-group-5">
                 <source>sulu_audience_targeting.webspaces</source>
@@ -20,39 +20,39 @@
             </trans-unit>
             <trans-unit id="target-group-6">
                 <source>sulu_audience_targeting.priority</source>
-                <target>Priorität</target>
+                <target>Prioriteit</target>
             </trans-unit>
             <trans-unit id="target-group-7">
                 <source>sulu_audience_targeting.target-group-not-found</source>
-                <target>Zielgruppe konnte nicht gefunden werden.</target>
+                <target>De doelgroep kon niet worden gevonden.</target>
             </trans-unit>
             <trans-unit id="target-group-8">
                 <source>sulu_audience_targeting.rule-sets</source>
-                <target>Regeln</target>
+                <target>Regelset</target>
             </trans-unit>
             <trans-unit id="target-group-9">
                 <source>sulu_audience_targeting.rule-sets-descriptions</source>
-                <target>Benutzer die zumindest EINER dieser Regeln entsprechen werden der Zielgruppe hinzugefügt.</target>
+                <target>Gebruikers die overeenkomen met EEN van deze regels zullen aan de doelgroep worden toegevoegd.</target>
             </trans-unit>
             <trans-unit id="target-group-10">
                 <source>sulu_audience_targeting.frequency</source>
-                <target>Häufigkeit</target>
+                <target>Frequentie</target>
             </trans-unit>
             <trans-unit id="target-group-11">
                 <source>sulu_audience_targeting.conditions</source>
-                <target>Voraussetzung</target>
+                <target>Condities</target>
             </trans-unit>
             <trans-unit id="target-group-12">
                 <source>sulu_audience_targeting.rule-overlay-title</source>
-                <target>Regel konfigurieren</target>
+                <target>Regelset configureren</target>
             </trans-unit>
             <trans-unit id="target-group-13">
                 <source>sulu_audience_targeting.conditions-description</source>
-                <target>Benutzer die ALLE diese Voraussetzungen erfüllen werden der Zielgruppe hinzugefügt</target>
+                <target>Gebruikers die overeenkomen met ALLE regels zullen aan de doelgroep worden toegevoegd.</target>
             </trans-unit>
             <trans-unit id="target-group-14">
                 <source>sulu_audience_targeting.condition-add</source>
-                <target>Voraussetzung hinzufügen</target>
+                <target>Conditie toevoegen</target>
             </trans-unit>
         </body>
     </file>

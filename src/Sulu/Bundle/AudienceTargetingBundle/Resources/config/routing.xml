@@ -6,4 +6,8 @@
     <route id="sulu_audience_targeting.target_group_details" path="/template/target-group-details.html">
         <default key="_controller">SuluAudienceTargetingBundle:Template:targetGroupDetails</default>
     </route>
+
+    <route id="sulu_audience_targeting.rule_overlay" path="/template/rule-overlay.html">
+        <default key="_controller">SuluAudienceTargetingBundle:Template:ruleOverlay</default>
+    </route>
 </routes>
