@@ -21,7 +21,7 @@ define(['services/husky/util', 'services/sulucontent/user-settings-manager'], fu
                 preselectedOperator: 'or',
                 preselectedCategories: [],
                 root: null,
-                webspace: null
+                locale: null
             },
             translations: {
                 operatorLabel: 'smart-content.categories.operator-label',
@@ -138,7 +138,7 @@ define(['services/husky/util', 'services/sulucontent/user-settings-manager'], fu
                             instanceName: this.options.instanceName,
                             url: [
                                 '/admin/api/categories',
-                                '?locale=' + UserSettingsManager.getContentLocale(this.options.webspace),
+                                '?locale=', this.options.locale,
                                 (!!this.options.root ? '&rootKey=' + this.options.root : ''),
                                 '&flat=true&sortBy=name&sortOrder=asc'
                             ].join(''),
