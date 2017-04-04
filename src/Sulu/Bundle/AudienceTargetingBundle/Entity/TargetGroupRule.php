@@ -141,4 +141,12 @@ class TargetGroupRule implements TargetGroupRuleInterface
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearConditions()
+    {
+        $this->conditions->clear();
+    }
 }
