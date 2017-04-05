@@ -56,6 +56,26 @@ class TemplateController extends Controller
     }
 
     /**
+     * Returns a single row for the condition.
+     *
+     * @return Response
+     */
+    public function conditionRowAction()
+    {
+        $rules = [];
+        foreach ($this->get('sulu_audience_targeting.rules_collection')->getRules() as $alias => $rule) {
+            $rules[] = [
+                'id' => $alias,
+                'name' => $rule->getName(),
+            ];
+        }
+
+        return $this->render('SuluAudienceTargetingBundle:Template:condition-row.html.twig', [
+            'rules' => $rules,
+        ]);
+    }
+
+    /**
      * Returns all webspaces in a format that can be displayed by a select.
      *
      * @return array

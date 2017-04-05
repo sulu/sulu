@@ -10,4 +10,8 @@
     <route id="sulu_audience_targeting.rule_overlay" path="/template/rule-overlay.html">
         <default key="_controller">SuluAudienceTargetingBundle:Template:ruleOverlay</default>
     </route>
+
+    <route id="sulu_audience_targeting.condition_row" path="/template/condition-row.html">
+        <default key="_controller">SuluAudienceTargetingBundle:Template:conditionRow</default>
+    </route>
 </routes>

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This rule determines if the request has been sent in the desired language.
@@ -23,9 +24,15 @@ class LocaleRule implements RuleInterface
      */
     private $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
     {
         $this->requestStack = $requestStack;
+        $this->translator = $translator;
     }
 
     /**
@@ -43,5 +50,13 @@ class LocaleRule implements RuleInterface
         }
 
         return substr($languages[0], 0, 2) === $options['locale'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->translator->trans('sulu_audience_targeting.rules.locale', [], 'backend');
     }
 }

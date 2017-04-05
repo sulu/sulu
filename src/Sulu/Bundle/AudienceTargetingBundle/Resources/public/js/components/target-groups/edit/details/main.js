@@ -24,7 +24,6 @@ define([
             translations: {
                 all: 'public.all',
                 active: 'sulu_audience_targeting.is-active',
-                conditionAdd: 'sulu_audience_targeting.condition-add',
                 conditions: 'sulu_audience_targeting.conditions',
                 conditionsDescription: 'sulu_audience_targeting.conditions-description',
                 description: 'public.description',
@@ -102,6 +101,9 @@ define([
             }.bind(this));
         },
 
+        /**
+         * Updates the current rules in the datagrid to match the ones in the internal map.
+         */
         updateRulesDatagrid: function() {
             this.sandbox.emit('husky.datagrid.records.set', this.rulesData.map(function(rule) {
                 return this.parseRuleForDatagrid(rule);
@@ -262,7 +264,7 @@ define([
                 return false;
             }
 
-            ruleData = this.unflattenRuleConditions(this.sandbox.form.getData(constants.ruleFormSelector));
+            ruleData = this.sandbox.form.getData(constants.ruleFormSelector);
 
             if (!ruleData.id) {
                 ruleData.id = constants.newRecordPrefix + newRecordId++;
@@ -315,12 +317,18 @@ define([
         createRuleForm: function(id) {
             var selectedRule = {};
             if (!!id) {
-                selectedRule = this.flattenRuleConditions(this.findRule(id));
+                selectedRule = this.findRule(id);
             }
 
             this.sandbox.form.create(constants.ruleFormSelector).initialized.then(function() {
                 this.sandbox.form.setData(constants.ruleFormSelector, selectedRule).then(function () {
                     this.sandbox.start(constants.ruleFormSelector);
+                    this.sandbox.start([{
+                        name: 'target-groups/edit/details/conditions@suluaudiencetargeting',
+                        options: {
+                            el: constants.ruleFormSelector + ' #conditions'
+                        }
+                    }]);
                 }.bind(this));
             }.bind(this));
         },
@@ -363,65 +371,12 @@ define([
          * @param ruleData
          */
         parseRuleForDatagrid: function(ruleData) {
-            var parsedRule = this.flattenRuleConditions(this.sandbox.util.deepCopy(ruleData));
+            var parsedRule = this.sandbox.util.deepCopy(ruleData);
             parsedRule.conditions = parsedRule.conditions.map(function(conditionData) {
                 return conditionData[constants.conditionType];
             }).join(' & ');
 
             return parsedRule;
-        },
-
-        /**
-         * Flattens the rules for the representation in the datagrid.
-         *
-         * @param ruleData
-         */
-        flattenRuleConditions: function(ruleData) {
-            var rule = this.sandbox.util.deepCopy(ruleData);
-
-            rule.conditions = rule.conditions.map(function(condition) {
-                var flatCondition = {
-                    id: condition.id,
-                    type: condition[constants.conditionType]
-                };
-
-                for (var key in condition.condition) {
-                    if (condition.condition.hasOwnProperty(key) && key !== constants.conditionType) {
-                        flatCondition[key] = condition.condition[key];
-                    }
-                }
-
-                return flatCondition;
-            });
-
-            return rule;
-        },
-
-        /**
-         * Reverses changes done in flattenRuleConditions.
-         *
-         * @param ruleData
-         */
-        unflattenRuleConditions: function(ruleData) {
-            var rule = this.sandbox.util.deepCopy(ruleData);
-
-            rule.conditions = rule.conditions.map(function(condition) {
-                var unflatCondition = {
-                    id: condition.id,
-                    type: condition[constants.conditionType],
-                    condition: {}
-                };
-
-                for (var key in condition) {
-                    if (condition.hasOwnProperty(key) && key !== constants.conditionType && key !== 'id') {
-                        unflatCondition.condition[key] = condition[key];
-                    }
-                }
-
-                return unflatCondition;
-            });
-
-            return rule;
         },
 
         /**

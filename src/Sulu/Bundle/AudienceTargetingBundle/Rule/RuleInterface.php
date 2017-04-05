@@ -24,4 +24,11 @@ interface RuleInterface
      * @return bool
      */
     public function evaluate(array $options);
+
+    /**
+     * Returns the translated name for the given Rule.
+     *
+     * @return string
+     */
+    public function getName();
 }
