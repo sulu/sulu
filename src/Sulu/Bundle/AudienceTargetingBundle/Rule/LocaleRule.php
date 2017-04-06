@@ -59,4 +59,14 @@ class LocaleRule implements RuleInterface
     {
         return $this->translator->trans('sulu_audience_targeting.rules.locale', [], 'backend');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplate()
+    {
+        return '<div class="grid-col-12">
+                <input class="form-element" type="text" data-condition-name="locale" />
+            </div>';
+    }
 }

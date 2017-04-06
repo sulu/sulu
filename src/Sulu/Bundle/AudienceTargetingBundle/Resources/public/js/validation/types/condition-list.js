@@ -4,28 +4,41 @@ define([
 
     'use strict';
 
+    var getRows = function ($el) {
+        return App.dom.find('.condition-row', $el);
+    };
+
     return function($el, options) {
         var defaults = {},
 
             typeInterface = {
-                setValue: function(condition) {
-
+                setValue: function(conditions) {
+                    // this is handled in the component itself
                 },
 
                 getValue: function() {
-                    var rows = App.dom.find('.condition-row', $el),
+                    var rows = getRows($el),
                         value = [];
 
-                     rows.each(function() {
+                    rows.each(function() {
                         var $row = $(this),
-                            id = $row.find('[data-condition-id]').val();
+                            id = $row.find('[data-condition-id]').val(),
+                            type = $row.find('[data-condition-type]').data('selection')[0],
+                            condition = {};
+
+                        if (!type) {
+                            return;
+                        }
+
+                        $row.find('[data-condition-name]').each(function(index, element) {
+                            var $element = $(element);
+                            condition[$element.attr('data-condition-name')] = $element.val();
+                        });
 
                         value.push({
                             id: id || null,
-                            type: $row.find('[data-condition-type]').data('selection')[0],
-                            condition: {
-                                locale: $row.find('[data-condition-name="locale"]').val()
-                            }
+                            type: type,
+                            condition: condition
                         });
                     });
 

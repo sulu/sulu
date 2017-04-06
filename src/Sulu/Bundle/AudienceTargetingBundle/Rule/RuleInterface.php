@@ -31,4 +31,11 @@ interface RuleInterface
      * @return string
      */
     public function getName();
+
+    /**
+     * Returns the path for the twig template to render. The result of the twig template will be.
+     *
+     * @return string
+     */
+    public function getTemplate();
 }

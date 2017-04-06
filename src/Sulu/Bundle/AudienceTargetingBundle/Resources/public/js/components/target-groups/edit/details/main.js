@@ -2,8 +2,10 @@ define([
     'jquery',
     'services/suluaudiencetargeting/target-group-manager',
     'text!/admin/target-groups/template/target-group-details.html',
-    'text!/admin/target-groups/template/rule-overlay.html'
-], function($, TargetGroupManager, FormTemplate, RuleOverlayTemplate) {
+    'text!/admin/target-groups/template/rule-overlay.html',
+    'text!/admin/target-groups/template/condition-row.html',
+    'text!/admin/target-groups/template/condition-types.html'
+], function($, TargetGroupManager, FormTemplate, RuleOverlayTemplate, ConditionRowTemplate, ConditionTypesTemplate) {
     var constants = {
             ruleFormSelector: '#rule-form',
             newRecordPrefix: 'newrecord',
@@ -19,7 +21,8 @@ define([
         defaults: {
             templates: {
                 form: FormTemplate,
-                ruleOverlay: RuleOverlayTemplate
+                ruleOverlay: RuleOverlayTemplate,
+                conditionRow: ConditionRowTemplate
             },
             translations: {
                 all: 'public.all',
@@ -326,7 +329,10 @@ define([
                     this.sandbox.start([{
                         name: 'target-groups/edit/details/conditions@suluaudiencetargeting',
                         options: {
-                            el: constants.ruleFormSelector + ' #conditions'
+                            el: constants.ruleFormSelector + ' #conditions',
+                            data: selectedRule.conditions,
+                            conditionTypesTemplate: $(ConditionTypesTemplate),
+                            conditionRowTemplate: this.templates.conditionRow
                         }
                     }]);
                 }.bind(this));

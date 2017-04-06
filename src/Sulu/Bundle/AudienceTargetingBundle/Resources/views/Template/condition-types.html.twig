@@ -1,0 +1,7 @@
+<div>
+{% for rule, ruleTemplate in ruleTemplates %}
+    <div id="{{ rule }}">
+        {{ ruleTemplate|raw }}
+    </div>
+{% endfor %}
+</div>
