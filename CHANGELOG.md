@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3297 [WebsiteBundle]         Fixed allDomains option for Analytics
     * HOTFIX      #3295 [WebsiteBundle]         Removed analytics code from preview
     * HOTFIX      #3289 [ContentBundle]         Fixed smart-content to use it without webspace
     * HOTFIX      #3282 [ContentBundle]         Fixed teaser-selection locale

@@ -14,7 +14,6 @@ namespace Sulu\Bundle\WebsiteBundle\EventSubscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\Metadata\PropertyMetadata;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 
 /**
@@ -44,12 +43,14 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // domains can be an array or a boolean, this difference is necessary for the datagrid to recognize if it is
+        // valid for all domains or only a single one
+        $domains = $analytics->getDomains();
         if ($analytics->isAllDomains()) {
-            $metadata = new PropertyMetadata($event->getType()['name'], 'domains');
-            $value = new \stdClass();
-            $value->domains = true;
-            $event->getVisitor()->visitProperty($metadata, $value, $event->getContext());
+            $domains = true;
         }
+
+        $event->getVisitor()->addData('domains', $event->getContext()->accept($domains));
 
         // the content will be appended dynamically because the metadata changes from string to array
         // depended on the type of analytics.
