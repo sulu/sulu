@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.4
+* 1.4.12 (2017-04-06)
     * HOTFIX      #3279 [CategoryBundle]        Add missing return statement.
     * HOTFIX      #3277 [PreviewBundle]         Added fake portal for preview when nothing matches
     * HOTFIX      #3281 [ContentBundle]         Fixed index pages with redirect-behavior
