@@ -43,8 +43,8 @@ define([
                 error: errorTemplate,
                 defaultError: '<h2><%= message %></h2>',
                 9900: '<h2><%= translations.objectProviderLabel %></h2>',
-                9901: '<h2><%= translations.changeWebspaceLabel %></h2>',
-                9902: '<h2><%= translations.defaultsProviderLabel %></h2>'
+                9902: '<h2><%= translations.defaultsProviderLabel %></h2>',
+                9907: '<h2><%= translations.changeWebspaceLabel %></h2>'
             }
         };
 

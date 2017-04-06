@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3279 [CategoryBundle]        Add missing return statement.
+    * HOTFIX      #3277 [PreviewBundle]         Added fake portal for preview when nothing matches
+    * HOTFIX      #3281 [ContentBundle]         Fixed index pages with redirect-behavior
     * HOTFIX      #3297 [WebsiteBundle]         Fixed allDomains option for Analytics
     * HOTFIX      #3295 [WebsiteBundle]         Removed analytics code from preview
     * HOTFIX      #3289 [ContentBundle]         Fixed smart-content to use it without webspace
@@ -90,6 +93,11 @@ CHANGELOG for Sulu
     * BUGFIX      #3031 [AdminBundle]         Fixed defaultDisplayOption in media selectio content type
     * BUGFIX      #3075 [ContentComponent]    Fixed missing referenced UUIDs for contentTypes nested in a block
     * ENHANCEMENT #1686 [SnippetBundle]       Added XLIFF-Import/Export for Snippet-Documents.
+
+* 1.4.12 (2017-04-06)
+    * HOTFIX      #3279 [CategoryBundle]        Add missing return statement.
+    * HOTFIX      #3277 [PreviewBundle]         Added fake portal for preview when nothing matches
+    * HOTFIX      #3281 [ContentBundle]         Fixed index pages with redirect-behavior
 
 * 1.4.11 (2017-03-22)
     * HOTFIX      #3270 [Webspace]              Removed localization usage check in webspace's xml files
