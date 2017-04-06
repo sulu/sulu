@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3298 [WebsiteBundle]         Fixed sitemap index provider without items
     * ENHANCEMENT #2944 [ContentBundle]         Added general class for sulu form highlight section
     * BUGFIX      #3292 [WebsiteBundle]         Fixed visibility of our logo in the web developer toolbar
     * ENHANCEMENT #3291 [TagBundle]             Added all parameters to tag manager
