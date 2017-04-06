@@ -1005,7 +1005,7 @@ define(['services/husky/util'], function(util) {
                             preselectedOperator: this.overlayData.categoryOperator,
                             preselectedCategories: this.overlayData.categories,
                             root: this.options.categoryRoot,
-                            webspace: this.options.webspace
+                            locale: this.options.locale
                         }
                     }
                 ]

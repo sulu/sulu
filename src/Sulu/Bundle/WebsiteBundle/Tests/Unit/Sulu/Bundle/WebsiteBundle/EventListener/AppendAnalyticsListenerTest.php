@@ -137,4 +137,26 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
         $listener->onResponse($event->reveal());
     }
+
+    public function testAppendPreview()
+    {
+        $engine = $this->prophesize(EngineInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+
+        $analyticsRepository->findByUrl('1.sulu.lo/2', 'sulu_io', 'prod')->willReturn(['test' => 1]);
+        $listener = new AppendAnalyticsListener(
+            $engine->reveal(),
+            $requestAnalyzer->reveal(),
+            $analyticsRepository->reveal(),
+            'prod',
+            true
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+        $event->getRequest()->shouldNotBeCalled();
+        $event->getResponse()->shouldNotBeCalled();
+
+        $listener->onResponse($event->reveal());
+    }
 }

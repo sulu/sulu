@@ -68,6 +68,9 @@
         "symfony/monolog-bundle": "2.8.10",
         "jackalope/jackalope": "1.2.8"
     },
+    "conflict": {
+        "jackalope/jackalope": "1.2.8"
+    },
     "replace": {
         "sulu/media-bundle": "self.version",
         "sulu/tag-bundle": "self.version",
@@ -83,6 +86,9 @@
         "sulu/location-bundle": "self.version",
         "sulu/translate-bundle": "self.version",
         "sulu/content-bundle": "self.version"
+    },
+    "conflict": {
+        "jackalope/jackalope": "1.2.8"
     },
     "suggest": {
         "sensio/framework-extra-bundle": "~3.0",

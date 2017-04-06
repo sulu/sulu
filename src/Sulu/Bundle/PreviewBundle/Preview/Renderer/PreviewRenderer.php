@@ -13,15 +13,20 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
-use Sulu\Bundle\PreviewBundle\Preview\Exception\PortalNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TemplateNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TwigException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\UnexpectedException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceLocalizationNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceNotFoundException;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -101,22 +106,23 @@ class PreviewRenderer implements PreviewRendererInterface
      */
     public function render($object, $id, $webspaceKey, $locale, $partial = false)
     {
+        if (!$this->routeDefaultsProvider->supports(get_class($object))) {
+            throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
+        }
+
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $webspaceKey,
             $locale,
             $this->environment
         );
 
-        if (count($portalInformations) === 0) {
-            throw new PortalNotFoundException($object, $id, $webspaceKey, $locale);
-        }
-
-        if (!$this->routeDefaultsProvider->supports(get_class($object))) {
-            throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
-        }
-
         /** @var PortalInformation $portalInformation */
         $portalInformation = reset($portalInformations);
+
+        if (!$portalInformation) {
+            $portalInformation = $this->createPortalInformation($object, $id, $webspaceKey, $locale);
+        }
+
         $webspace = $portalInformation->getWebspace();
         $localization = $webspace->getLocalization($locale);
 
@@ -193,5 +199,54 @@ class PreviewRenderer implements PreviewRendererInterface
 
             throw $e;
         }
+    }
+
+    /**
+     * This creates a new portal information based on the given information. This is necessary because it is possible
+     * that a webspace defines a language, which is not used in any portal. For this case we have to define our own
+     * fake PortalInformation object.
+     *
+     * @param object $object
+     * @param int $id
+     * @param string $webspaceKey
+     * @param string $locale
+     *
+     * @return PortalInformation
+     *
+     * @throws WebspaceLocalizationNotFoundException
+     * @throws WebspaceNotFoundException
+     */
+    private function createPortalInformation($object, $id, $webspaceKey, $locale)
+    {
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $domain = $this->requestStack->getCurrentRequest()->getHost();
+
+        if (!$webspace) {
+            throw new WebspaceNotFoundException($object, $id, $webspaceKey, $locale);
+        }
+
+        $webspace = clone $webspace;
+        $localization = $webspace->getLocalization($locale);
+
+        if (!$localization) {
+            throw new WebspaceLocalizationNotFoundException($object, $id, $webspaceKey, $locale);
+        }
+
+        $localization = clone $localization;
+        $localization->setXDefault(true);
+        $portal = new Portal();
+        $portal->setName($webspace->getName());
+        $portal->setKey($webspace->getKey());
+        $portal->setWebspace($webspace);
+        $portal->setXDefaultLocalization($localization);
+        $portal->setLocalizations([$localization]);
+        $portal->setDefaultLocalization($localization);
+        $environment = new Environment();
+        $url = new Url($domain, $this->environment);
+        $environment->setUrls([$url]);
+        $portal->setEnvironments([$environment]);
+        $webspace->setPortals([$portal]);
+
+        return new PortalInformation(RequestAnalyzer::MATCH_TYPE_FULL, $webspace, $portal, $localization, $domain);
     }
 }

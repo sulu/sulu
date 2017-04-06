@@ -54,6 +54,8 @@ class Analytics
 
     /**
      * @var Collection
+     *
+     * @Exclude
      */
     private $domains;
 
