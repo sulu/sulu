@@ -47,6 +47,23 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEmpty($response['_embedded']['analytics']);
     }
 
+    public function testListWithAllDomains()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/webspaces/blog_sulu_io/analytics');
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $items = $response['_embedded']['analytics'];
+        $this->assertCount(1, $items);
+        $this->assertEquals('test piwik', $items[0]['title']);
+        $this->assertEquals('piwik', $items[0]['type']);
+        $this->assertEquals('123', $items[0]['content']);
+        $this->assertEquals(true, $items[0]['domains']);
+    }
+
     public function testList()
     {
         $client = $this->createAuthenticatedClient();
@@ -256,6 +273,16 @@ class AnalyticsControllerTest extends SuluTestCase
                     ['url' => 'www.test.io', 'environment' => 'dev'],
                     ['url' => '{country}.test.io', 'environment' => 'prod'],
                 ],
+            ]
+        );
+        $this->entities[] = $this->analyticsManager->create(
+            'blog_sulu_io',
+            [
+                'title' => 'test piwik',
+                'type' => 'piwik',
+                'content' => '123',
+                'allDomains' => true,
+                'domains' => [],
             ]
         );
 
