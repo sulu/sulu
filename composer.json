@@ -57,6 +57,9 @@
         "zendframework/zendsearch": "@dev",
         "doctrine/doctrine-fixtures-bundle": "2.2.*"
     },
+    "conflict": {
+        "jackalope/jackalope": "1.2.8"
+    },
     "replace": {
         "sulu/media-bundle": "self.version",
         "sulu/tag-bundle": "self.version",
