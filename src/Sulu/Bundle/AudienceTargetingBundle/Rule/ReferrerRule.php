@@ -11,17 +11,24 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ReferrerRule implements RuleInterface
 {
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
     {
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
@@ -34,7 +41,10 @@ class ReferrerRule implements RuleInterface
      */
     public function evaluate(array $options)
     {
-        return false;
+        return (bool) preg_match(
+            '/^' . str_replace('*', '(.*)', $options['referrer']) . '$/',
+            $this->requestStack->getCurrentRequest()->headers->get('referer')
+        );
     }
 
     /**

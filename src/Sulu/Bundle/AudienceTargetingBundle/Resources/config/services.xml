@@ -48,6 +48,7 @@
         </service>
         <service id="sulu_audience_targeting.rules.referrer"
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\ReferrerRule">
+            <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
             <tag name="sulu.audience_target_rule" alias="referrer"/>
         </service>
