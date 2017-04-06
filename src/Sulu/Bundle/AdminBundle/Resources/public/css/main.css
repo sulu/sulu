@@ -82,6 +82,8 @@ input, select {
 .highlight-section .content {
   width: calc(100% - 310px);
   float: left;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 /* line 33, ../js/vendor/husky/scss/mixins.scss */
 .highlight-section .content:after {
@@ -89,7 +91,7 @@ input, select {
   content: ' ';
   display: block;
 }
-/* line 82, ../scss/modules/base.scss */
+/* line 84, ../scss/modules/base.scss */
 .highlight-section .content:only-child {
   width: 100%;
 }
