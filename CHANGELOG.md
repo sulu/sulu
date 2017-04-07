@@ -1,7 +1,6 @@
 CHANGELOG for Sulu
 ==================
 
-<<<<<<< HEAD
 * dev-develop
     * ENHANCEMENT #2944 [ContentBundle]         Added general class for sulu form highlight section
     * BUGFIX      #3292 [WebsiteBundle]         Fixed visibility of our logo in the web developer toolbar
@@ -12,7 +11,7 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
-=======
+
 * 1.5.3 (2017-04-06)
     * HOTFIX      #3279 [CategoryBundle]        Add missing return statement.
     * HOTFIX      #3277 [PreviewBundle]         Added fake portal for preview when nothing matches
@@ -22,7 +21,6 @@ CHANGELOG for Sulu
     * HOTFIX      #3289 [ContentBundle]         Fixed smart-content to use it without webspace
     * HOTFIX      #3282 [ContentBundle]         Fixed teaser-selection locale
     * HOTFIX      #3281 [ContentBundle]         Fixed index pages with redirect-behavior
->>>>>>> master
 
 * 1.5.2 (2017-03-22)
     * HOTFIX      #3265 [ContentBundle]         Fixed internal-link selection for pages
