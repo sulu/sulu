@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\RouteBundle\Model;
 
-use Sulu\Bundle\RouteBundle\Entity\Route;
-
 /**
  * This interface indicates a routable model.
  */

@@ -15,5 +15,10 @@
                  class="Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider">
             <argument type="service" id="translator"/>
         </service>
+
+        <service id="sulu_route.generator_pool" class="Sulu\Bundle\RouteBundle\Generator\RouteGeneratorPool">
+            <argument>%sulu_route.mappings%</argument>
+            <argument type="collection"/>
+        </service>
     </services>
 </container>

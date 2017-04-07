@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
-use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
+use Sulu\Bundle\RouteBundle\Generator\GeneratedRoute;
+use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorPoolInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Bundle\RouteBundle\Manager\RouteAlreadyCreatedException;
 use Sulu\Bundle\RouteBundle\Manager\RouteManager;
@@ -24,14 +24,9 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 class RouteManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var array
+     * @var RouteGeneratorPoolInterface
      */
-    private $mappings;
-
-    /**
-     * @var RouteGeneratorInterface
-     */
-    private $routeGenerator;
+    private $routeGeneratorPool;
 
     /**
      * @var RouteRepositoryInterface
@@ -56,30 +51,14 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->entity = $this->prophesize(RoutableInterface::class);
-        $this->mappings = [
-            get_class($this->entity->reveal()) => [
-                'generator' => 'route_generator',
-                'options' => [
-                    'route_schema' => '/{title}',
-                ],
-            ],
-            TestRoutable::class => [
-                'generator' => 'route_generator',
-                'options' => [
-                    'route_schema' => '/{title}',
-                ],
-            ],
-        ];
-
-        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
+        $this->routeGeneratorPool = $this->prophesize(RouteGeneratorPoolInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->conflictResolver = $this->prophesize(ConflictResolverInterface::class);
 
         $this->manager = new RouteManager(
-            ['route_generator' => $this->routeGenerator->reveal()],
+            $this->routeGeneratorPool->reveal(),
             $this->routeRepository->reveal(),
-            $this->conflictResolver->reveal(),
-            $this->mappings
+            $this->conflictResolver->reveal()
         );
     }
 
@@ -96,19 +75,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->entity->getRoute()->willReturn(null);
         $this->entity->setRoute($route->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test');
+        $this->routeGeneratorPool->generate($this->entity->reveal(), null)
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test'));
         $this->routeRepository->createNew()->willReturn($route->reveal());
         $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
 
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal()));
-    }
-
-    public function testCreateNoMapping()
-    {
-        $this->setExpectedException(MissingClassMappingConfigurationException::class);
-        $entity = $this->prophesize(RoutableInterface::class);
-
-        $this->manager->create($entity->reveal());
     }
 
     public function testCreateInheritMapping()
@@ -117,11 +89,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $route = $this->prophesize(RouteInterface::class);
         $route->setPath('/test')->shouldBeCalled()->willReturn($route->reveal());
-        $route->setEntityClass(get_class($entity))->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityClass(TestRoutable::class)->shouldBeCalled()->willReturn($route->reveal());
         $route->setEntityId('1')->shouldBeCalled()->willReturn($route->reveal());
         $route->setLocale('de')->shouldBeCalled()->willReturn($route->reveal());
 
-        $this->routeGenerator->generate($entity, ['route_schema' => '/{title}'])->willReturn('/test');
+        $this->routeGeneratorPool->generate($entity, null)
+            ->willReturn(new GeneratedRoute($entity, '/test', TestRoutable::class));
         $this->routeRepository->createNew()->willReturn($route->reveal());
         $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
 
@@ -142,7 +115,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->entity->getRoute()->willReturn(null);
         $this->entity->setRoute($route->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->shouldNotBeCalled();
+        $this->routeGeneratorPool->generate($this->entity->reveal(), '/test')
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test'));
         $this->routeRepository->createNew()->willReturn($route->reveal());
         $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
 
@@ -175,7 +149,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->entity->getRoute()->willReturn(null);
         $this->entity->setRoute($conflict->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test');
+        $this->routeGeneratorPool->generate($this->entity->reveal(), null)
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test'));
         $this->routeRepository->createNew()->willReturn($route->reveal());
         $this->conflictResolver->resolve($route->reveal())->willReturn($conflict->reveal());
 
@@ -211,7 +186,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->entity->setRoute($newRoute->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->shouldNotBeCalled();
+        $this->routeGeneratorPool->generate($this->entity->reveal(), '/test-2')
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test-2'));
         $this->routeRepository->createNew()->willReturn($newRoute->reveal());
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
 
@@ -227,8 +203,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $entity = new TestRoutableProxy($route->reveal());
 
         $newRoute = $this->prophesize(RouteInterface::class);
-        $newRoute->setEntityClass(get_class($entity))->shouldBeCalled()
-            ->willReturn($newRoute->reveal());
+        $newRoute->setEntityClass(TestRoutable::class)->shouldBeCalled()->willReturn($newRoute->reveal());
         $newRoute->setPath('/test-2')->shouldBeCalled()->will(
             function () use ($newRoute) {
                 $newRoute->getPath()->willReturn('/test-2');
@@ -243,11 +218,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $route->setTarget($newRoute->reveal())->shouldBeCalled()->willReturn($route->reveal());
         $route->getHistories()->willReturn([]);
 
-        $this->routeGenerator->generate($entity, ['route_schema' => '/{title}'])->shouldNotBeCalled();
+        $this->routeGeneratorPool->generate($entity, null)
+            ->willReturn(new GeneratedRoute($entity, '/test-2', TestRoutable::class));
         $this->routeRepository->createNew()->willReturn($newRoute->reveal());
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
 
-        $this->assertEquals($newRoute->reveal(), $this->manager->update($entity, '/test-2'));
+        $this->assertEquals($newRoute->reveal(), $this->manager->update($entity));
         $this->assertEquals($newRoute->reveal(), $entity->getRoute());
     }
 
@@ -283,7 +259,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->entity->setRoute($conflict->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test-2');
+        $this->routeGeneratorPool->generate($this->entity->reveal(), null)
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test-2'));
         $this->routeRepository->createNew()->willReturn($newRoute->reveal());
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($conflict->reveal());
 
@@ -329,7 +306,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->entity->setRoute($newRoute->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test-2');
+        $this->routeGeneratorPool->generate($this->entity->reveal(), null)
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test-2'));
         $this->routeRepository->createNew()->willReturn($newRoute->reveal());
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
 
@@ -370,8 +348,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->entity->setRoute($historyRoute1->reveal())->shouldBeCalled();
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])
-            ->willReturn('/test-2');
+        $this->routeGeneratorPool->generate($this->entity->reveal(), null)
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test-2'));
         $this->routeRepository->createNew()->willReturn($newRoute->reveal());
         $this->conflictResolver->resolve($newRoute->reveal())->shouldBeCalled()->willReturn($historyRoute1->reveal());
 
@@ -385,7 +363,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->entity->getRoute()->willReturn($route->reveal());
 
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test');
+        $this->routeGeneratorPool->generate($this->entity->reveal(), null)
+            ->willReturn(new GeneratedRoute($this->entity->reveal(), '/test'));
 
         $this->assertEquals($route->reveal(), $this->manager->update($this->entity->reveal()));
     }
@@ -397,18 +376,9 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->entity->getRoute()->willReturn(null);
         $this->entity->getId()->willReturn('1');
 
-        $this->routeGenerator->generate($this->entity->reveal(), '/{title}')->willReturn('/test');
+        $this->routeGeneratorPool->generate($this->entity->reveal())->willReturn('/test');
 
         $this->manager->update($this->entity->reveal());
-    }
-
-    public function testUpdateNoMapping()
-    {
-        $this->setExpectedException(MissingClassMappingConfigurationException::class);
-        $entity = $this->prophesize(RoutableInterface::class);
-        $entity->getRoute()->willReturn($this->prophesize(RouteInterface::class)->reveal());
-
-        $this->manager->update($entity->reveal());
     }
 }
 
