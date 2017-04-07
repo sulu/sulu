@@ -11,6 +11,7 @@
         <!-- structure manager -->
         <service id="sulu_content.structure.loader.xml" class="%sulu_content.structure.loader.xml.class%"
                  public="false">
+            <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
         </service>
 
