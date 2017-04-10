@@ -11,11 +11,13 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
@@ -24,6 +26,20 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
  */
 class XmlLoader extends XmlLegacyLoader
 {
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    public function __construct(
+        ContentTypeManagerInterface $contentTypeManager,
+        CacheLifetimeResolverInterface $cacheLifetimeResolver
+    ) {
+        parent::__construct($cacheLifetimeResolver);
+
+        $this->contentTypeManager = $contentTypeManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,7 +60,11 @@ class XmlLoader extends XmlLegacyLoader
         $this->mapMeta($structure, $data['meta']);
 
         foreach ($data['properties'] as $propertyName => $dataProperty) {
-            $structure->children[$propertyName] = $this->createProperty($propertyName, $dataProperty);
+            $property = $this->createProperty($propertyName, $dataProperty);
+
+            if ($property) {
+                $structure->children[$propertyName] = $property;
+            }
         }
 
         $structure->burnProperties();
@@ -60,6 +80,18 @@ class XmlLoader extends XmlLegacyLoader
 
         if ($propertyData['type'] === 'section') {
             return $this->createSection($propertyName, $propertyData);
+        }
+
+        if (!$this->contentTypeManager->has($propertyData['type'])) {
+            if ($propertyData['onInvalid'] !== 'ignore') {
+                throw new \InvalidArgumentException(sprintf(
+                    'Content type with alias "%s" has not been registered. Known content types are: "%s"',
+                    $propertyData['type'],
+                    implode('", "', array_keys($this->contentTypeManager->getAll()))
+                ));
+            }
+
+            return null;
         }
 
         $property = new PropertyMetadata();
