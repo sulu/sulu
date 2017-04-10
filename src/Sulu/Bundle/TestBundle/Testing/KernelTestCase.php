@@ -201,7 +201,7 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
      * @param Response $response
      * @param int $debugLength
      */
-    protected function assertHttpStatusCode($code, Response $response, $debugLength = 10)
+    protected function assertHttpStatusCode($code, Response $response, $debugLength = 20)
     {
         $httpCode = $response->getStatusCode();
 
