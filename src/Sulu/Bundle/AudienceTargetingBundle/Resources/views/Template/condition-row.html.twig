@@ -1,0 +1,13 @@
+<div class="grid-row condition-row">
+    <div class="grid-col-1">
+        <div class="fa-minus-circle remove"></div>
+        <input type="hidden" data-condition-id />
+    </div>
+    <div class="grid-col-4"
+         data-condition-type
+         data-aura-component="select@husky"
+         data-aura-default-label="<%= translations.pleaseChoose %>"
+         data-aura-data='{{ rules|json_encode }}'></div>
+
+    <div class="grid-col-7" data-condition></div>
+</div>
