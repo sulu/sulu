@@ -29,7 +29,7 @@ class ScriptHandler
         }
 
         $gitignore = file_get_contents(static::GIT_IGNORE_FILE);
-        $gitignore = str_replace('composer.lock' . PHP_EOL, '', $gitignore);
+        $gitignore = str_replace("composer.lock\n", '', $gitignore);
         file_put_contents(static::GIT_IGNORE_FILE, $gitignore);
     }
 }
