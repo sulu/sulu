@@ -603,7 +603,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(2, count((array) $response->ext));
 
         $this->assertEquals(7, count((array) $response->ext->seo));
-        $this->assertEquals(7, count((array) $response->ext->excerpt));
+        $this->assertEquals(8, count((array) $response->ext->excerpt));
 
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?language=en');
 

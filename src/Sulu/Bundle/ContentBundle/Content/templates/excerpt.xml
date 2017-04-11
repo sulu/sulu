@@ -48,6 +48,13 @@
             <tag name="sulu.search.field" type="array"/>
         </property>
 
+        <property name="audience_targeting_groups" type="audience_targeting_groups" onInvalid="ignore">
+            <meta>
+                <title lang="de">Zielgruppen</title>
+                <title lang="en">Audience targeting groups</title>
+            </meta>
+        </property>
+
         <property name="tags" type="tag_list">
             <meta>
                 <title lang="de">Tags</title>

@@ -28,6 +28,15 @@ interface TargetGroupRepositoryInterface extends RepositoryInterface
     public function save(TargetGroupInterface $targetGroup);
 
     /**
+     * Find the target groups with the given IDs.
+     *
+     * @param int[] $ids
+     *
+     * @return TargetGroupInterface[]
+     */
+    public function findByIds($ids);
+
+    /**
      * Returns all active TargetGroups from the given webspace ordered by their priority.
      *
      * @param string $webspace
