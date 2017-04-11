@@ -1,0 +1,16 @@
+<div class="audience-targeting-groups-container"
+     data-aura-component="datagrid@husky"
+     data-property="{{ property|json_encode }}"
+     data-mapper-property="{{ property.name }}"
+     data-aura-url="/admin/api/target-groups?flat=true&sortBy=title&sortOrder=asc"
+     data-aura-result-key="target-groups"
+     data-form="true"
+     data-type="audienceTargetingGroups"
+     data-type-instance-name="{{ id|raw }}"
+     data-aura-instance-name="{{ id|raw }}"
+     data-aura-pagination="false"
+     data-aura-resize-listeners="false"
+     data-aura-selected-counter="true"
+     data-aura-view-options='{"table":{"cropContents":false,"noItemsText":"sulu_audience_targeting.no-target-groups-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
+     data-aura-matchings='[{"name":"title","content":"Title"},{"name":"id","disabled":true}]'>
+</div>
