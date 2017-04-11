@@ -23,4 +23,11 @@ interface RuleCollectionInterface
      * @throws RuleNotFoundException
      */
     public function getRule($name);
+
+    /**
+     * Returns all available rules.
+     *
+     * @return RuleInterface[]
+     */
+    public function getRules();
 }

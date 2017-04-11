@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\LocaleRule;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class LocaleRuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,6 +29,11 @@ class LocaleRuleTest extends \PHPUnit_Framework_TestCase
     private $requestStack;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var LocaleRule
      */
     private $localeRule;
@@ -37,8 +43,9 @@ class LocaleRuleTest extends \PHPUnit_Framework_TestCase
         $this->request = $this->prophesize(Request::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->translator = $this->prophesize(TranslatorInterface::class);
 
-        $this->localeRule = new LocaleRule($this->requestStack->reveal());
+        $this->localeRule = new LocaleRule($this->requestStack->reveal(), $this->translator->reveal());
     }
 
     /**

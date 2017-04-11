@@ -4,7 +4,9 @@ require.config({
         suluaudiencetargetingcss: '../../suluaudiencetargeting/css',
 
         'services/suluaudiencetargeting/target-group-manager': '../../suluaudiencetargeting/js/services/target-groups/manager',
-        'services/suluaudiencetargeting/target-group-router': '../../suluaudiencetargeting/js/services/target-groups/router'
+        'services/suluaudiencetargeting/target-group-router': '../../suluaudiencetargeting/js/services/target-groups/router',
+
+        'type/conditionList': '../../suluaudiencetargeting/js/validation/types/condition-list'
     }
 });
 

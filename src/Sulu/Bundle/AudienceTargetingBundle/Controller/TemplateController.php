@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,6 +53,42 @@ class TemplateController extends Controller
 
         return $this->render('SuluAudienceTargetingBundle:Template:rule-overlay.html.twig', [
             'frequencies' => $frequencies,
+        ]);
+    }
+
+    /**
+     * Returns a single row for the condition.
+     *
+     * @return Response
+     */
+    public function conditionRowAction()
+    {
+        $rules = [];
+        foreach ($this->get('sulu_audience_targeting.rules_collection')->getRules() as $alias => $rule) {
+            $rules[] = [
+                'id' => $alias,
+                'name' => $rule->getName(),
+            ];
+        }
+
+        return $this->render('SuluAudienceTargetingBundle:Template:condition-row.html.twig', [
+            'rules' => $rules,
+        ]);
+    }
+
+    /**
+     * Returns all available condition types in containers with their alias as an id.
+     *
+     * @return Response
+     */
+    public function conditionTypesAction()
+    {
+        $ruleTemplates = array_map(function(RuleInterface $rule) {
+            return $rule->getTemplate();
+        }, $this->get('sulu_audience_targeting.rules_collection')->getRules());
+
+        return $this->render('SuluAudienceTargetingBundle:Template:condition-types.html.twig', [
+            'ruleTemplates' => $ruleTemplates,
         ]);
     }
 
