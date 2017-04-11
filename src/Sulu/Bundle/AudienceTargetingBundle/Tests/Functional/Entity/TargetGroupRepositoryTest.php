@@ -60,6 +60,21 @@ class TargetGroupRepositoryTest extends SuluTestCase
         $this->assertEquals('Target Group 2', $targetGroups[1]->getTitle());
     }
 
+    public function testFindByIds()
+    {
+        $targetGroup1 = $this->createTargetGroup('Target Group 1', true, true, 5);
+        $targetGroup2 = $this->createTargetGroup('Target Group 2', true, true, 5);
+        $targetGroup3 = $this->createTargetGroup('Target Group 3', true, true, 5);
+
+        $this->getEntityManager()->flush();
+
+        $targetGroups = $this->targetGroupRepository->findByIds([$targetGroup2->getId(), $targetGroup3->getid()]);
+
+        $this->assertCount(2, $targetGroups);
+        $this->assertEquals('Target Group 2', $targetGroups[0]->getTitle());
+        $this->assertEquals('Target Group 3', $targetGroups[1]->getTitle());
+    }
+
     /**
      * @return TargetGroup
      */

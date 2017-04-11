@@ -73,6 +73,18 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
     /**
      * {@inheritdoc}
      */
+    public function findByIds($ids)
+    {
+        $query = $this->createQueryBuilder('targetGroup')
+            ->where('targetGroup.id IN (:ids)')
+            ->getQuery();
+
+        return $query->setParameter('ids', $ids)->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findAllActiveForWebspaceOrderedByPriority($webspace)
     {
         $query = $this->createQueryBuilder('targetGroup')

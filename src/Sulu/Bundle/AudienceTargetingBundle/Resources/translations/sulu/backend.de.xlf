@@ -54,6 +54,10 @@
                 <source>sulu_audience_targeting.condition-add</source>
                 <target>Voraussetzung hinzufügen</target>
             </trans-unit>
+            <trans-unit id="target-group-17">
+                <source>sulu_audience_targeting.no-target-groups-available</source>
+                <target>Keine Zielgruppen verfügbar</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

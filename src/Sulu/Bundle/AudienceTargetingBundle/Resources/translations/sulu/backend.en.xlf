@@ -62,6 +62,10 @@
                 <source>sulu_audience_targeting.rules.referrer</source>
                 <target>Referrer</target>
             </trans-unit>
+            <trans-unit id="target-group-17">
+                <source>sulu_audience_targeting.no-target-groups-available</source>
+                <target>No target groups available</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
