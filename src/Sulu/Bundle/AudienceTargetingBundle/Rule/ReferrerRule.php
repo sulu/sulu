@@ -14,10 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * This rule determines if the request has been sent in the desired language.
- */
-class LocaleRule implements RuleInterface
+class ReferrerRule implements RuleInterface
 {
     /**
      * @var RequestStack
@@ -36,28 +33,28 @@ class LocaleRule implements RuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns a string representation of the evaluation of the rule for the current context.
+     *
+     * @param array $options The options to evaluate against
+     *
+     * @return bool
      */
     public function evaluate(array $options)
     {
-        if (!isset($options['locale'])) {
-            return false;
-        }
-
-        $languages = $this->requestStack->getCurrentRequest()->getLanguages();
-        if (!$languages) {
-            return false;
-        }
-
-        return substr($languages[0], 0, 2) === $options['locale'];
+        return (bool) preg_match(
+            '/^' . str_replace('*', '(.*)', $options['referrer']) . '$/',
+            $this->requestStack->getCurrentRequest()->headers->get('referer')
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the translated name for the given Rule.
+     *
+     * @return string
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.locale', [], 'backend');
+        return $this->translator->trans('sulu_audience_targeting.rules.referrer', [], 'backend');
     }
 
     /**
@@ -66,7 +63,7 @@ class LocaleRule implements RuleInterface
     public function getTemplate()
     {
         return '<div class="grid-col-12">
-                <input class="form-element" type="text" data-condition-name="locale" />
+                <input class="form-element" type="text" data-condition-name="referrer" />
             </div>';
     }
 }

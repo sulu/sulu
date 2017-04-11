@@ -24,4 +24,18 @@ interface RuleInterface
      * @return bool
      */
     public function evaluate(array $options);
+
+    /**
+     * Returns the translated name for the given Rule.
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Returns the path for the twig template to render. The result of the twig template will be.
+     *
+     * @return string
+     */
+    public function getTemplate();
 }
