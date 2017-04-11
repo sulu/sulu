@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+/**
+ * Contains all the available audience targeting rules in this system.
+ */
 class RuleCollection implements RuleCollectionInterface
 {
     /**
@@ -36,5 +39,13 @@ class RuleCollection implements RuleCollectionInterface
         }
 
         return $this->rules[$name];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRules()
+    {
+        return $this->rules;
     }
 }

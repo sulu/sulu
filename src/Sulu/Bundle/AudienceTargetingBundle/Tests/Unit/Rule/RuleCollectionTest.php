@@ -35,4 +35,16 @@ class RuleCollectionTest extends \PHPUnit_Framework_TestCase
 
         $ruleCollection->getRule('rule');
     }
+
+    public function testGetRules()
+    {
+        $rule1 = $this->prophesize(RuleInterface::class);
+        $rule2 = $this->prophesize(RuleInterface::class);
+
+        $ruleCollection = new RuleCollection(['rule1' => $rule1->reveal(), 'rule2' => $rule2->reveal()]);
+        $rules = $ruleCollection->getRules();
+
+        $this->assertSame($rule1->reveal(), $rules['rule1']);
+        $this->assertSame($rule2->reveal(), $rules['rule2']);
+    }
 }
