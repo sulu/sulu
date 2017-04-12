@@ -157,24 +157,24 @@ class WebspaceTest extends SuluTestCase
                 'block' => [
                     [
                         'type' => [
-                            'name' => "type",
-                            'type' => "block_type",
+                            'name' => 'type',
+                            'type' => 'block_type',
                             'options' => [
                                 'translate' => false,
                             ],
                             'value' => 'type1',
                         ],
                         'title' => [
-                            'name' => "title",
-                            'type' => "text_line",
+                            'name' => 'title',
+                            'type' => 'text_line',
                             'options' => [
                                 'translate' => true,
                             ],
                             'value' => 'Block-Title-1',
                         ],
                         'article' => [
-                            'name' => "article",
-                            'type' => "text_line",
+                            'name' => 'article',
+                            'type' => 'text_line',
                             'options' => [
                                 'translate' => true,
                             ],
@@ -183,24 +183,24 @@ class WebspaceTest extends SuluTestCase
                     ],
                     [
                         'type' => [
-                            'name' => "type",
-                            'type' => "block_type",
+                            'name' => 'type',
+                            'type' => 'block_type',
                             'options' => [
                                 'translate' => false,
                             ],
                             'value' => 'type1',
                         ],
                         'title' => [
-                            'name' => "title",
-                            'type' => "text_line",
+                            'name' => 'title',
+                            'type' => 'text_line',
                             'options' => [
                                 'translate' => true,
                             ],
                             'value' => 'Block-Title-1',
                         ],
                         'article' => [
-                            'name' => "article",
-                            'type' => "text_line",
+                            'name' => 'article',
+                            'type' => 'text_line',
                             'options' => [
                                 'translate' => true,
                             ],
@@ -217,24 +217,24 @@ class WebspaceTest extends SuluTestCase
                 'block' => [
                     [
                         'type' => [
-                            'name' => "type",
-                            'type' => "block_type",
+                            'name' => 'type',
+                            'type' => 'block_type',
                             'options' => [
                                 'translate' => false,
                             ],
                             'value' => 'type1',
                         ],
                         'title' => [
-                            'name' => "title",
-                            'type' => "text_line",
+                            'name' => 'title',
+                            'type' => 'text_line',
                             'options' => [
                                 'translate' => true,
                             ],
                             'value' => 'Block-Title-2',
                         ],
                         'article' => [
-                            'name' => "article",
-                            'type' => "text_line",
+                            'name' => 'article',
+                            'type' => 'text_line',
                             'options' => [
                                 'translate' => true,
                             ],

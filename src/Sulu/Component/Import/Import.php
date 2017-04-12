@@ -42,9 +42,6 @@ class Import
      */
     protected $exceptionStore = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($service, $format)
     {
         $this->formatFilePaths[$format] = $service;
@@ -56,6 +53,7 @@ class Import
      * @param $format
      *
      * @return WebspaceFormatImportInterface
+     * 
      * @throws FormatImporterNotFoundException
      */
     protected function getParser($format)
