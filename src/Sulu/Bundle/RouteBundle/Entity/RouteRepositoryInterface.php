@@ -43,4 +43,15 @@ interface RouteRepositoryInterface
      * @return RouteInterface
      */
     public function find($id);
+
+    /**
+     * Return route for given entity information.
+     *
+     * @param string $entityClass
+     * @param string $entityId
+     * @param string $locale
+     *
+     * @return RouteInterface
+     */
+    public function findByEntity($entityClass, $entityId, $locale);
 }
