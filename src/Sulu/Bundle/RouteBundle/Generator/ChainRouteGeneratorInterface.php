@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\RouteBundle\Generator;
 
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
+use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
 /**
- * Interface for route-generation pool.
+ * Interface for chain-route-generator.
  */
-interface RouteGeneratorPoolInterface
+interface ChainRouteGeneratorInterface
 {
     /**
      * Using configuration for entity to generate a route.
@@ -24,7 +25,7 @@ interface RouteGeneratorPoolInterface
      * @param RoutableInterface $entity
      * @param string $path
      *
-     * @return GeneratedRoute
+     * @return RouteInterface
      */
     public function generate(RoutableInterface $entity, $path = null);
 }

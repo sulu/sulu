@@ -59,6 +59,20 @@ abstract class BaseRoute implements RouteInterface
     protected $histories;
 
     /**
+     * @param string $path
+     * @param string $entityId
+     * @param string $entityClass
+     * @param string $locale
+     */
+    public function __construct($path = null, $entityId = null, $entityClass = null, $locale = null)
+    {
+        $this->path = $path;
+        $this->entityId = $entityId;
+        $this->entityClass = $entityClass;
+        $this->locale = $locale;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getId()

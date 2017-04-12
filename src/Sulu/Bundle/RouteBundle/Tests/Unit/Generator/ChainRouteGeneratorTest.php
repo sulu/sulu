@@ -12,15 +12,16 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use Prophecy\Argument;
+use Sulu\Bundle\RouteBundle\Entity\Route;
+use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
-use Sulu\Bundle\RouteBundle\Generator\GeneratedRoute;
+use Sulu\Bundle\RouteBundle\Generator\ChainRouteGenerator;
+use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorPool;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorPoolInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
-class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
+class ChainRouteGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var array
@@ -33,9 +34,14 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
     private $routeGenerator;
 
     /**
-     * @var RouteGeneratorPoolInterface
+     * @var RouteRepositoryInterface
      */
-    private $routeGeneratorPool;
+    private $routeRepository;
+
+    /**
+     * @var ChainRouteGeneratorInterface
+     */
+    private $chainRouteGenerator;
 
     /**
      * @var RoutableInterface
@@ -46,6 +52,7 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
     {
         $this->entity = $this->prophesize(RoutableInterface::class);
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
+        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->mappings = [
             get_class($this->entity->reveal()) => [
@@ -62,9 +69,12 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->routeGeneratorPool = new RouteGeneratorPool(
+        $this->routeRepository->createNew()->willReturn(new Route());
+
+        $this->chainRouteGenerator = new ChainRouteGenerator(
             $this->mappings,
-            ['route_generator' => $this->routeGenerator->reveal()]
+            ['route_generator' => $this->routeGenerator->reveal()],
+            $this->routeRepository->reveal()
         );
     }
 
@@ -72,8 +82,8 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
     {
         $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test');
 
-        $result = $this->routeGeneratorPool->generate($this->entity->reveal());
-        $this->assertInstanceOf(GeneratedRoute::class, $result);
+        $result = $this->chainRouteGenerator->generate($this->entity->reveal());
+        $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
         $this->assertEquals(get_class($this->entity->reveal()), $result->getEntityClass());
     }
@@ -82,8 +92,8 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
     {
         $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
 
-        $result = $this->routeGeneratorPool->generate($this->entity->reveal(), '/test');
-        $this->assertInstanceOf(GeneratedRoute::class, $result);
+        $result = $this->chainRouteGenerator->generate($this->entity->reveal(), '/test');
+        $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
         $this->assertEquals(get_class($this->entity->reveal()), $result->getEntityClass());
     }
@@ -93,8 +103,8 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
         $entity = new TestRoutableProxy();
         $this->routeGenerator->generate($entity, ['route_schema' => '/{title}'])->willReturn('/test');
 
-        $result = $this->routeGeneratorPool->generate($entity);
-        $this->assertInstanceOf(GeneratedRoute::class, $result);
+        $result = $this->chainRouteGenerator->generate($entity);
+        $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
         $this->assertEquals(TestRoutable::class, $result->getEntityClass());
     }
@@ -104,8 +114,8 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
         $entity = new TestRoutableProxy();
         $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
 
-        $result = $this->routeGeneratorPool->generate($entity, '/test');
-        $this->assertInstanceOf(GeneratedRoute::class, $result);
+        $result = $this->chainRouteGenerator->generate($entity, '/test');
+        $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
         $this->assertEquals(TestRoutable::class, $result->getEntityClass());
     }
@@ -115,7 +125,7 @@ class RouteGeneratorPoolTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(MissingClassMappingConfigurationException::class);
         $entity = $this->prophesize(RoutableInterface::class);
 
-        $this->routeGeneratorPool->generate($entity->reveal());
+        $this->chainRouteGenerator->generate($entity->reveal());
     }
 }
 

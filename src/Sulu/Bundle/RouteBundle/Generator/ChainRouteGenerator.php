@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
+use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 
 /**
  * Using route-generators and configuration to generate route.
  */
-class RouteGeneratorPool implements RouteGeneratorPoolInterface
+class ChainRouteGenerator implements ChainRouteGeneratorInterface
 {
     /**
      * @var array
@@ -30,13 +31,20 @@ class RouteGeneratorPool implements RouteGeneratorPoolInterface
     private $routeGenerators;
 
     /**
+     * @var RouteRepositoryInterface
+     */
+    private $routeRepository;
+
+    /**
      * @param array $mappings
      * @param RouteGeneratorInterface[] $routeGenerators
+     * @param RouteRepositoryInterface $routeRepository
      */
-    public function __construct(array $mappings, array $routeGenerators)
+    public function __construct(array $mappings, array $routeGenerators, RouteRepositoryInterface $routeRepository)
     {
         $this->mappings = $mappings;
         $this->routeGenerators = $routeGenerators;
+        $this->routeRepository = $routeRepository;
     }
 
     /**
@@ -51,7 +59,11 @@ class RouteGeneratorPool implements RouteGeneratorPoolInterface
             $path = $generator->generate($entity, $config['mapping']['options']);
         }
 
-        return new GeneratedRoute($entity, $path, $config['className']);
+        return $this->routeRepository->createNew()
+            ->setEntityClass($config['className'])
+            ->setEntityId($entity->getId())
+            ->setLocale($entity->getLocale())
+            ->setPath($path);
     }
 
     /**

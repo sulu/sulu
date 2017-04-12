@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\RouteBundle\Manager;
 
-use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorPoolInterface;
+use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 
 /**
@@ -21,14 +20,9 @@ use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 class RouteManager implements RouteManagerInterface
 {
     /**
-     * @var RouteGeneratorPoolInterface
+     * @var ChainRouteGeneratorInterface
      */
-    private $routeGeneratorPool;
-
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
+    private $chainRouteGenerator;
 
     /**
      * @var ConflictResolverInterface
@@ -36,20 +30,14 @@ class RouteManager implements RouteManagerInterface
     private $conflictResolver;
 
     /**
-     * @param RouteGeneratorPoolInterface $routeGenerator
-     * @param RouteRepositoryInterface $routeRepository
+     * @param ChainRouteGeneratorInterface $chainRouteGenerator
      * @param ConflictResolverInterface $conflictResolver
-     *
-     * @internal param RouteGeneratorInterface[] $routeGenerators
-     * @internal param array $mappings
      */
     public function __construct(
-        RouteGeneratorPoolInterface $routeGenerator,
-        RouteRepositoryInterface $routeRepository,
+        ChainRouteGeneratorInterface $chainRouteGenerator,
         ConflictResolverInterface $conflictResolver
     ) {
-        $this->routeGeneratorPool = $routeGenerator;
-        $this->routeRepository = $routeRepository;
+        $this->chainRouteGenerator = $chainRouteGenerator;
         $this->conflictResolver = $conflictResolver;
     }
 
@@ -62,15 +50,7 @@ class RouteManager implements RouteManagerInterface
             throw new RouteAlreadyCreatedException($entity);
         }
 
-        $generatedRoute = $this->routeGeneratorPool->generate($entity, $path);
-        $path = $generatedRoute->getPath();
-
-        $route = $this->routeRepository->createNew()
-            ->setPath($path)
-            ->setEntityClass($generatedRoute->getEntityClass())
-            ->setEntityId($entity->getId())
-            ->setLocale($entity->getLocale());
-
+        $route = $this->chainRouteGenerator->generate($entity, $path);
         $route = $this->conflictResolver->resolve($route);
         $entity->setRoute($route);
 
@@ -86,17 +66,11 @@ class RouteManager implements RouteManagerInterface
             throw new RouteNotCreatedException($entity);
         }
 
-        $generatedRoute = $this->routeGeneratorPool->generate($entity, $path);
-        $path = $generatedRoute->getPath();
-
-        if ($path === $entity->getRoute()->getPath()) {
+        $route = $this->chainRouteGenerator->generate($entity, $path);
+        if ($route->getPath() === $entity->getRoute()->getPath()) {
             return $entity->getRoute();
         }
 
-        $route = $this->routeRepository->createNew()
-            ->setPath($path)->setEntityClass($generatedRoute->getEntityClass())
-            ->setEntityId($entity->getId())
-            ->setLocale($entity->getLocale());
         $route = $this->conflictResolver->resolve($route);
 
         // path haven't changed after conflict resolving
