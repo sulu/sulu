@@ -11,7 +11,13 @@
 
 namespace Sulu\Component\Export;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Base export for sulu documents.

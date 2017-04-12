@@ -90,7 +90,7 @@ class WebspaceTest extends SuluTestCase
     private function prepareData()
     {
         /** @var \Sulu\Component\Content\Compat\Structure\PageBridge[] $data */
-        $data = $this->getDataArray();
+        $data = $this->getDataRaw();
         $extensionDataList = $this->getExtensionDataArray();
         $data[0]['ext'] = $extensionDataList[0];
         $data[1]['ext'] = $extensionDataList[1];
@@ -106,6 +106,46 @@ class WebspaceTest extends SuluTestCase
     /**
      * @return array
      */
+    private function getDataRaw()
+    {
+        return [
+            [
+                'title' => $this->getDataArray()[0]['title'],
+                'subtitle' => $this->getDataArray()[0]['subtitle'],
+                'url' => $this->getDataArray()[0]['url'],
+                'article' => $this->getDataArray()[0]['article'],
+                'block' => [
+                    [
+                        'type' => $this->getDataArray()[0]['block'][0]['type']['value'],
+                        'title' => $this->getDataArray()[0]['block'][0]['title']['value'],
+                        'article' => $this->getDataArray()[0]['block'][0]['article']['value'],
+                    ],
+                    [
+                        'type' => $this->getDataArray()[0]['block'][1]['type']['value'],
+                        'title' => $this->getDataArray()[0]['block'][1]['title']['value'],
+                        'article' => $this->getDataArray()[0]['block'][1]['article']['value'],
+                    ],
+                ],
+            ],
+            [
+                'title' => $this->getDataArray()[1]['title'],
+                'subtitle' => $this->getDataArray()[1]['subtitle'],
+                'url' => $this->getDataArray()[1]['url'],
+                'article' => $this->getDataArray()[1]['article'],
+                'block' => [
+                    [
+                        'type' => $this->getDataArray()[1]['block'][0]['type']['value'],
+                        'title' => $this->getDataArray()[1]['block'][0]['title']['value'],
+                        'article' => $this->getDataArray()[1]['block'][0]['article']['value'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     private function getDataArray()
     {
         return [
@@ -116,14 +156,56 @@ class WebspaceTest extends SuluTestCase
                 'article' => 'Lorem Ipsum dolorem apsum',
                 'block' => [
                     [
-                        'type' => 'type1',
-                        'title' => 'Block-Title-1',
-                        'article' => 'Block-Article-1-1',
+                        'type' => [
+                            'name' => "type",
+                            'type' => "block_type",
+                            'options' => [
+                                'translate' => false,
+                            ],
+                            'value' => 'type1',
+                        ],
+                        'title' => [
+                            'name' => "title",
+                            'type' => "text_line",
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Title-1',
+                        ],
+                        'article' => [
+                            'name' => "article",
+                            'type' => "text_line",
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Article-1-1',
+                        ],
                     ],
                     [
-                        'type' => 'type1',
-                        'title' => 'Block-Title-1',
-                        'article' => 'Block-Article-1-2',
+                        'type' => [
+                            'name' => "type",
+                            'type' => "block_type",
+                            'options' => [
+                                'translate' => false,
+                            ],
+                            'value' => 'type1',
+                        ],
+                        'title' => [
+                            'name' => "title",
+                            'type' => "text_line",
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Title-1',
+                        ],
+                        'article' => [
+                            'name' => "article",
+                            'type' => "text_line",
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Article-1-2',
+                        ],
                     ],
                 ],
             ],
@@ -134,9 +216,30 @@ class WebspaceTest extends SuluTestCase
                 'article' => 'asdfasdf',
                 'block' => [
                     [
-                        'type' => 'type1',
-                        'title' => 'Block-Title-2',
-                        'article' => 'Block-Article-2-1',
+                        'type' => [
+                            'name' => "type",
+                            'type' => "block_type",
+                            'options' => [
+                                'translate' => false,
+                            ],
+                            'value' => 'type1',
+                        ],
+                        'title' => [
+                            'name' => "title",
+                            'type' => "text_line",
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Title-2',
+                        ],
+                        'article' => [
+                            'name' => "article",
+                            'type' => "text_line",
+                            'options' => [
+                                'translate' => true,
+                            ],
+                            'value' => 'Block-Article-2-1',
+                        ],
                     ],
                 ],
             ],
@@ -432,7 +535,7 @@ class WebspaceTest extends SuluTestCase
         }
 
         if ($children !== null) {
-            $data['value'] = $children;
+            $data['children'] = $children;
         }
 
         return $data;
