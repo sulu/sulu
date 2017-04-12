@@ -108,6 +108,7 @@ class ContentDataProvider implements DataProviderInterface
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableAudienceTargeting()
             ->enableDatasource(
                 'content-datasource@sulucontent',
                 [
