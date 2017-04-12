@@ -53,7 +53,7 @@ class Import
      * @param $format
      *
      * @return WebspaceFormatImportInterface
-     * 
+     *
      * @throws FormatImporterNotFoundException
      */
     protected function getParser($format)
