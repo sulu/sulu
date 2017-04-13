@@ -59,15 +59,6 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu.repository.target_group"/>
         </service>
-        <service id="sulu_audience_targeting.content_data_provider.content_query_builder"
-                 class="Sulu\Bundle\AudienceTargetingBundle\SmartContent\QueryBuilder"
-                 decorates="sulu_content.smart_content.data_provider.content.query_builder"
-                 public="false">
-            <argument type="service" id="sulu_audience_targeting.content_data_provider.content_query_builder.inner"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
-            <argument>%sulu.content.language.namespace%</argument>
-        </service>
         <!--JS CONFIG-->
         <service id="sulu_audience_targeting.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument>sulu_audience_targeting</argument>
