@@ -259,7 +259,7 @@ define(['config', 'services/husky/util'], function(config, util) {
                 ].join(''),
 
                 audienceTargeting: [
-                    '<div class="grid-row">',
+                    '<div class="grid-col-6 check">',
                     '    <label>',
                     '        <div class="custom-checkbox">',
                     '            <input type="checkbox" class="audienceTargeting form-element"<%= value %>/>',
@@ -1095,13 +1095,6 @@ define(['config', 'services/husky/util'], function(config, util) {
                 $container.append('<div class="clear"></div>');
             }
 
-            if (config.has('sulu_audience_targeting') && this.options.has.audienceTargeting) {
-                $container.append(_.template(templates.overlayContent.audienceTargeting)({
-                    label: this.sandbox.translate(this.translations.audienceTargeting),
-                    value: (!!data.audienceTargeting) ? ' checked' : ''
-                }));
-            }
-
             if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
                 $container.append(_.template(templates.overlayContent.categories)({
                     categoriesLabelStr: this.sandbox.translate(this.translations.categoryLabel),
@@ -1142,7 +1135,19 @@ define(['config', 'services/husky/util'], function(config, util) {
                 }));
             }
 
-            if ($subContainer.find('> *').length > 0 ) {
+            if ($subContainer.find('> *').length >= 2) {
+                $container.append($subContainer);
+                $subContainer = $('<div class="grid-row"/>');
+            }
+
+            if (config.has('sulu_audience_targeting') && this.options.has.audienceTargeting) {
+                $subContainer.append(_.template(templates.overlayContent.audienceTargeting)({
+                    label: this.sandbox.translate(this.translations.audienceTargeting),
+                    value: (!!data.audienceTargeting) ? ' checked' : ''
+                }));
+            }
+
+            if ($subContainer.find('> *').length >= 0) {
                 $container.append($subContainer);
             }
 
