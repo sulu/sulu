@@ -106,6 +106,7 @@ define(['config', 'services/husky/util'], function(config, util) {
             instanceName: 'undefined',
             url: '',
             dataSourceParameter: 'dataSource',
+            audienceTargetingParameter: 'audienceTargeting',
             includeSubFolders: false,
             includeSubFoldersParameter: 'includeSubFolders',
             categoriesParameter: 'categories',
@@ -1238,6 +1239,7 @@ define(['config', 'services/husky/util'], function(config, util) {
             var data = {};
 
             data[this.options.dataSourceParameter] = this.overlayData.dataSource;
+            data[this.options.audienceTargetingParameter] = this.overlayData.audienceTargeting;
             data[this.options.includeSubFoldersParameter] = this.overlayData.includeSubFolders;
             data[this.options.tagsParameter] = this.overlayData.tags;
             data[this.options.tagOperatorParameter] = this.overlayData.tagOperator;
@@ -1268,13 +1270,17 @@ define(['config', 'services/husky/util'], function(config, util) {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
+                var data = this.sandbox.util.deepCopy(this.URI.data);
+                delete data[this.options.audienceTargetingParameter];
+
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
+
                 this.sandbox.util.ajax({
                     method: 'GET',
                     url: this.URI.str,
-                    data: this.URI.data,
+                    data: data,
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
