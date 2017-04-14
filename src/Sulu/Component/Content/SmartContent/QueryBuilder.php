@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -63,15 +64,22 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private $sessionManager;
 
+    /**
+     * @var TargetGroupEvaluatorInterface
+     */
+    private $targetGroupEvaluator;
+
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         SessionManagerInterface $sessionManager,
+        TargetGroupEvaluatorInterface $targetGroupEvaluator = null,
         $languageNamespace
     ) {
         parent::__construct($structureManager, $extensionManager, $languageNamespace);
 
         $this->sessionManager = $sessionManager;
+        $this->targetGroupEvaluator = $targetGroupEvaluator;
     }
 
     /**
@@ -88,6 +96,17 @@ class QueryBuilder extends ContentQueryBuilder
                 'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
                 $webspaceKey
             );
+        }
+
+        if ($this->targetGroupEvaluator
+            && $this->hasConfig('audienceTargeting')
+            && $this->getConfig('audienceTargeting', false)
+        ) {
+            $result = $this->buildAudienceTargeting($locale);
+
+            if ($result) {
+                $sql2Where[] = $result;
+            }
         }
 
         // build where clause for tags
@@ -255,6 +274,33 @@ class QueryBuilder extends ContentQueryBuilder
         $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
 
         return $sqlFunction . '(page, \'' . $node->getPath() . '\')';
+    }
+
+    /**
+     * Returns the where part for the audience targeting.
+     *
+     * @param string $locale
+     *
+     * @return string|void
+     */
+    private function buildAudienceTargeting($locale)
+    {
+        $targetGroup = $this->targetGroupEvaluator->evaluate();
+
+        if (!$targetGroup) {
+            return;
+        }
+
+        $structure = $this->structureManager->getStructure('excerpt');
+
+        $property = new TranslatedProperty(
+            $structure->getProperty('audience_targeting_groups'),
+            $locale,
+            $this->languageNamespace,
+            'excerpt'
+        );
+
+        return 'page.[' . $property->getName() . '] = ' . $targetGroup->getId();
     }
 
     /**

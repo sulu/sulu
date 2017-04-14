@@ -35,6 +35,13 @@ interface ProviderConfigurationInterface
     public function getDatasource();
 
     /**
+     * Returns true if the provider can handle audience targeting.
+     *
+     * @return bool
+     */
+    public function hasAudienceTargeting();
+
+    /**
      * Returns TRUE if tags should be displayed.
      *
      * @return bool

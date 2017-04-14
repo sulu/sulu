@@ -101,6 +101,16 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
+    public function enableAudienceTargeting($enable = true)
+    {
+        $this->configuration->setAudienceTargeting($enable);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function enableSorting(array $sorting)
     {
         $this->configuration->setSorting(
