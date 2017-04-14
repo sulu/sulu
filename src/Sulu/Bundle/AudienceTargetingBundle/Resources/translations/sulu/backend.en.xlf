@@ -66,6 +66,10 @@
                 <source>sulu_audience_targeting.no-target-groups-available</source>
                 <target>No target groups available</target>
             </trans-unit>
+            <trans-unit id="target-group-18">
+                <source>smart-content.audience-targeting</source>
+                <target>Use target groups</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
