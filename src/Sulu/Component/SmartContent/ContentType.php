@@ -185,6 +185,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 'sorting' => $configuration->hasSorting(),
                 'limit' => $configuration->hasLimit(),
                 'presentAs' => $configuration->hasPresentAs(),
+                'audienceTargeting' => $configuration->hasAudienceTargeting(),
             ],
             'datasource' => $configuration->getDatasource(),
             'deep_link' => new PropertyParameter('deep_link', $configuration->getDeepLink()),
