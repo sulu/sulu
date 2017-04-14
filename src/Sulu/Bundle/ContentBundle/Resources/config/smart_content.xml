@@ -29,6 +29,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_content.extension.manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_evaluator" on-invalid="null"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_content.smart_content.data_provider.content"
