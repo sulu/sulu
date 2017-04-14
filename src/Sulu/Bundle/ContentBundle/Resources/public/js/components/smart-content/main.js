@@ -84,7 +84,7 @@
  * @params {String} [options.translations.chooseCategoriesOk] translation key
  * @params {String} [options.translations.chooseCategoriesCancel] translation key
  */
-define(['services/husky/util'], function(util) {
+define(['config', 'services/husky/util'], function(config, util) {
 
     'use strict';
 
@@ -106,6 +106,7 @@ define(['services/husky/util'], function(util) {
             instanceName: 'undefined',
             url: '',
             dataSourceParameter: 'dataSource',
+            audienceTargetingParameter: 'audienceTargeting',
             includeSubFolders: false,
             includeSubFoldersParameter: 'includeSubFolders',
             categoriesParameter: 'categories',
@@ -167,6 +168,7 @@ define(['services/husky/util'], function(util) {
             sourceSelector: '.source',
             buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
+            audienceTargetingSelector: '.audienceTargeting',
             tagListClass: 'tag-list',
             tagOperatorClass: 'tag-list-operator-dropdown',
             sortByDropdownClass: 'sort-by-dropdown',
@@ -254,6 +256,18 @@ define(['services/husky/util'], function(util) {
                     '            </label>',
                     '        </div>',
                     '    </div>',
+                    '</div>'
+                ].join(''),
+
+                audienceTargeting: [
+                    '<div class="grid-col-6 check">',
+                    '    <label>',
+                    '        <div class="custom-checkbox">',
+                    '            <input type="checkbox" class="audienceTargeting form-element"<%= value %>/>',
+                    '            <span class="icon"></span>',
+                    '        </div>',
+                    '        <span class="description"><%= label %></span>',
+                    '    </label>',
                     '</div>'
                 ].join(''),
 
@@ -468,6 +482,7 @@ define(['services/husky/util'], function(util) {
                 categoryButton: 'smart-content.categories.button',
                 categories: 'smart-content.categories',
                 includeSubFolders: 'smart-content.include-sub-folders',
+                audienceTargeting: 'smart-content.audience-targeting',
                 filterByTags: 'smart-content.filter-by-tags',
                 useAnyTag: 'smart-content.use-any-tag',
                 useAllTags: 'smart-content.use-all-tags',
@@ -506,6 +521,7 @@ define(['services/husky/util'], function(util) {
             this.$overlayContent = null;
             this.overlayData = {
                 dataSource: this.options.dataSource,
+                audienceTargeting: this.options.audienceTargeting,
                 includeSubFolders: this.options.includeSubFolders,
                 categories: this.options.categories || [],
                 categoryOperator: this.options.preSelectedCategoryOperator || [],
@@ -1120,7 +1136,19 @@ define(['services/husky/util'], function(util) {
                 }));
             }
 
-            if ($subContainer.find('> *').length > 0 ) {
+            if ($subContainer.find('> *').length >= 2) {
+                $container.append($subContainer);
+                $subContainer = $('<div class="grid-row"/>');
+            }
+
+            if (config.has('sulu_audience_targeting') && this.options.has.audienceTargeting) {
+                $subContainer.append(_.template(templates.overlayContent.audienceTargeting)({
+                    label: this.sandbox.translate(this.translations.audienceTargeting),
+                    value: (!!data.audienceTargeting) ? ' checked' : ''
+                }));
+            }
+
+            if ($subContainer.find('> *').length >= 0) {
                 $container.append($subContainer);
             }
 
@@ -1211,6 +1239,7 @@ define(['services/husky/util'], function(util) {
             var data = {};
 
             data[this.options.dataSourceParameter] = this.overlayData.dataSource;
+            data[this.options.audienceTargetingParameter] = this.overlayData.audienceTargeting;
             data[this.options.includeSubFoldersParameter] = this.overlayData.includeSubFolders;
             data[this.options.tagsParameter] = this.overlayData.tags;
             data[this.options.tagOperatorParameter] = this.overlayData.tagOperator;
@@ -1241,13 +1270,17 @@ define(['services/husky/util'], function(util) {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
+                var data = this.sandbox.util.deepCopy(this.URI.data);
+                delete data[this.options.audienceTargetingParameter];
+
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
+
                 this.sandbox.util.ajax({
                     method: 'GET',
                     url: this.URI.str,
-                    data: this.URI.data,
+                    data: data,
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
@@ -1285,6 +1318,12 @@ define(['services/husky/util'], function(util) {
         getOverlayData: function() {
             var tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
             tagsDef = tagOperatorDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
+
+            // audience targeting
+            this.overlayData.audienceTargeting = this.sandbox.dom.prop(
+                this.sandbox.dom.find(constants.audienceTargetingSelector, this.$overlayContent),
+                'checked'
+            );
 
             //include sub folders
             this.overlayData.includeSubFolders = this.sandbox.dom.prop(
@@ -1363,6 +1402,7 @@ define(['services/husky/util'], function(util) {
             this.overlayData = {
                 dataSource: '',
                 includeSubFolders: false,
+                audienceTargeting: false,
                 limitResult: null,
                 presentAs: null,
                 sortBy: [],

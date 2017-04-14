@@ -26,6 +26,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @var bool
      */
+    private $audienceTargeting = false;
+
+    /**
+     * @var bool
+     */
     private $tags = false;
 
     /**
@@ -80,6 +85,22 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setDatasource($datasource)
     {
         $this->datasource = $datasource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasAudienceTargeting()
+    {
+        return $this->audienceTargeting;
+    }
+
+    /**
+     * @param string $audienceTargeting
+     */
+    public function setAudienceTargeting($audienceTargeting)
+    {
+        $this->audienceTargeting = $audienceTargeting;
     }
 
     /**

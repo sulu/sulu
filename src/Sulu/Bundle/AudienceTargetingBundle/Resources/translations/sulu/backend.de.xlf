@@ -54,9 +54,21 @@
                 <source>sulu_audience_targeting.condition-add</source>
                 <target>Voraussetzung hinzufügen</target>
             </trans-unit>
+            <trans-unit id="target-group-15" resname="sulu_audience_targeting.rules.locale">
+                <source>sulu_audience_targeting.rules.locale</source>
+                <target>Sprache</target>
+            </trans-unit>
+            <trans-unit id="target-group-16" resname="sulu_audience_targeting.rules.referrer">
+                <source>sulu_audience_targeting.rules.referrer</source>
+                <target>Referrer</target>
+            </trans-unit>
             <trans-unit id="target-group-17">
                 <source>sulu_audience_targeting.no-target-groups-available</source>
                 <target>Keine Zielgruppen verfügbar</target>
+            </trans-unit>
+            <trans-unit id="target-group-18">
+                <source>smart-content.audience-targeting</source>
+                <target>Zielgruppen berücksichtigen</target>
             </trans-unit>
         </body>
     </file>
