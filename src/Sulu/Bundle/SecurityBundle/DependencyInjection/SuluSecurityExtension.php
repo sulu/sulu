@@ -37,6 +37,10 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $container->setParameter('sulu_security.system', $config['system']);
         $container->setParameter('sulu_security.security_types.fixture', $config['security_types']['fixture']);
 
+        foreach ($config['reset_password']['mail'] as $option => $value) {
+            $container->setParameter('sulu_security.reset_password.mail.' . $option, $value);
+        }
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 

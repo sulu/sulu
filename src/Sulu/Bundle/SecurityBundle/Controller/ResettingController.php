@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\EmailTemplateException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
@@ -22,21 +23,19 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 /**
  * Class ResettingController.
  */
 class ResettingController extends Controller
 {
-    protected static $emailSubjectKey = 'security.reset.mail-subject';
-    protected static $emailMessageKey = 'security.reset.mail-message';
-    protected static $translationDomain = 'backend';
     protected static $resetRouteId = 'sulu_admin.reset';
-    const MAX_NUMBER_EMAILS = 3;
 
     /**
      * The interval in which the token is valid.
@@ -86,6 +85,8 @@ class ResettingController extends Controller
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (TokenEmailsLimitReachedException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
+        } catch (EmailTemplateException $ex) {
+            $response = new JsonResponse($ex->toArray(), 400);
         }
 
         return $response;
@@ -126,7 +127,26 @@ class ResettingController extends Controller
      */
     protected function getSenderAddress(Request $request)
     {
-        return 'no-reply@' . $request->getHost();
+        $sender = $this->getParameter('sulu_security.reset_password.mail.sender');
+
+        if (!$sender || !$this->isEmailValid($sender)) {
+            $sender = 'no-reply@' . $request->getHost();
+        }
+
+        return $sender;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return bool
+     */
+    protected function isEmailValid($email)
+    {
+        $constraint = new EmailConstraint();
+        $result = $this->get('validator')->validate($email, $constraint);
+
+        return count($result) === 0;
     }
 
     /**
@@ -143,9 +163,9 @@ class ResettingController extends Controller
     protected function getSubject()
     {
         return $this->getTranslator()->trans(
-            static::$emailSubjectKey,
+            $this->getParameter('sulu_security.reset_password.mail.subject'),
             [],
-            static::$translationDomain
+            $this->getParameter('sulu_security.reset_password.mail.translation_domain')
         );
     }
 
@@ -153,24 +173,27 @@ class ResettingController extends Controller
      * @param UserInterface $user
      *
      * @return string
+     *
+     * @throws EmailTemplateException
      */
     protected function getMessage($user)
     {
-        $message = $this->getTranslator()->trans(
-            static::$emailMessageKey,
-            [],
-            static::$translationDomain
-        );
-
-        $message .= PHP_EOL;
-
-        $message .= $this->generateUrl(
+        $resetUrl = $this->generateUrl(
             static::$resetRouteId,
             ['token' => $user->getPasswordResetToken()],
-            true
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $template = $this->getParameter('sulu_security.reset_password.mail.template');
 
-        return $message;
+        if (!$this->get('templating')->exists($template)) {
+            throw new EmailTemplateException($template);
+        }
+
+        return trim($this->renderView($template, [
+            'user' => $user,
+            'reset_url' => $resetUrl,
+            'translation_domain' => $this->getParameter('sulu_security.reset_password.mail.translation_domain')
+        ]));
     }
 
     /**
@@ -285,8 +308,11 @@ class ResettingController extends Controller
         if ($user->getPasswordResetToken() === null) {
             throw new NoTokenFoundException($user);
         }
-        if ($user->getPasswordResetTokenEmailsSent() === self::MAX_NUMBER_EMAILS) {
-            throw new TokenEmailsLimitReachedException(self::MAX_NUMBER_EMAILS, $user);
+
+        $maxNumberEmails = $this->getParameter('sulu_security.reset_password.mail.token_send_limit');
+
+        if ($user->getPasswordResetTokenEmailsSent() === $maxNumberEmails) {
+            throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
         $mailer = $this->get('mailer');
         $em = $this->getDoctrine()->getManager();
