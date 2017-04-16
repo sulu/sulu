@@ -1,0 +1,1 @@
+define(function(){"use strict";return{header:function(){return{tabs:{url:"/admin/category/navigation/category"},toolbar:{template:"default",languageChanger:!0}}}}});

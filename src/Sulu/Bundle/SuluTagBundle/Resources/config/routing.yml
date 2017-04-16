@@ -1,0 +1,7 @@
+tag_list:
+    pattern: /template/tag/list.html
+    defaults: { _controller: SuluTagBundle:Template:tagList }
+
+sulu_tag:
+    resource: "@SuluTagBundle/Resources/config/routing_api.yml"
+    prefix: /api

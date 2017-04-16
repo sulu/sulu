@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts"
+            repository-class="Sulu\Bundle\ContactBundle\Entity\AccountRepository">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="lft" type="integer" column="lft">
+            <gedmo:tree-left/>
+        </field>
+        <field name="rgt" type="integer" column="rgt">
+            <gedmo:tree-right/>
+        </field>
+        <field name="depth" type="integer" column="depth">
+            <gedmo:tree-level/>
+        </field>
+        <field name="name" type="string" column="name" length="150"/>
+
+        <field name="externalId" type="string" column="externalId" length="255" nullable="true" />
+        <field name="number" type="string" column="number" length="255" nullable="true"/>
+
+        <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
+
+        <field name="created" type="datetime" column="created"/>
+        <field name="changed" type="datetime" column="changed"/>
+
+        <field name="disabled" type="integer" column="disabled" length="1" nullable="false"/>
+        <field name="type" type="integer" column="type" nullable="false" />
+
+        <!-- financial infos -->
+        <field name="uid" type="string" column="uid" length="50" nullable="true" />
+        <field name="registerNumber" type="string" column="registerNumber" nullable="true" />
+        <field name="placeOfJurisdiction" type="string" column="placeOfJurisdiction" nullable="true" />
+
+        <!-- relational data flattened -->
+        <field name="mainEmail" type="string" column="mainEmail" nullable="true"/>
+        <field name="mainPhone" type="string" column="mainPhone" nullable="true"/>
+        <field name="mainFax" type="string" column="mainFax" nullable="true"/>
+        <field name="mainUrl" type="string" column="mainUrl" nullable="true"/>
+
+        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
+
+        <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account"/>
+
+        <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
+        <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="parent"
+                     fetch="EXTRA_LAZY"/>
+
+        <one-to-many field="activities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="account"/>
+
+        <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+            <join-columns>
+                <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
+            <join-columns>
+                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
+            <join-columns>
+                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="children">
+            <join-columns>
+                <join-column name="idAccountsParent" referenced-column-name="id"/>
+            </join-columns>
+            <gedmo:tree-parent/>
+        </many-to-one>
+
+        <many-to-one field="accountCategory" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountCategory">
+            <join-columns>
+                <join-column name="idAccountCategory" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="responsiblePerson" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+            <join-columns>
+                <join-column name="idResponsiblePerson" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="termsOfPayment" target-entity="Sulu\Bundle\ContactBundle\Entity\TermsOfPayment">
+            <join-columns>
+                <join-column name="idTermsOfPayment" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="termsOfDelivery" target-entity="Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery">
+            <join-columns>
+                <join-column name="idTermsOfDelivery" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+            <join-table name="co_account_medias">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idMedias" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+
+        <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="accounts">
+            <join-table name="co_account_urls">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idUrls" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="phones" target-entity="Sulu\Bundle\ContactBundle\Entity\Phone" inversed-by="accounts">
+            <join-table name="co_account_phones">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idPhones" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="emails" target-entity="Sulu\Bundle\ContactBundle\Entity\Email" inversed-by="accounts">
+            <join-table name="co_account_emails">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idEmails" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="notes" target-entity="Sulu\Bundle\ContactBundle\Entity\Note" inversed-by="accounts">
+            <join-table name="co_account_notes">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idNotes" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="faxes" target-entity="Sulu\Bundle\ContactBundle\Entity\Fax" inversed-by="accounts">
+            <join-table name="co_account_faxes">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idFaxes" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount" inversed-by="accounts">
+            <join-table name="co_account_bank_accounts">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idBankAccounts" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
+            <join-table name="co_account_tags">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idTags" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="name" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <gedmo:tree type="nested"/>
+    </entity>
+</doctrine-mapping>

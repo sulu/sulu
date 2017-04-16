@@ -1,0 +1,14 @@
+<form id="collection-new">
+    <div class="grid">
+        <div class="grid-row">
+            <label for="change-title"><%= translate('public.title') %></label>
+            <input class="form-element" type="text" id="change-title" placeholder="<%= translate('sulu.media.new-collection') %>"
+                   data-validation-required="true"
+                   data-mapper-property="title"/>
+        </div>
+        <div class="grid-row">
+            <label for="change-description"><%= translate('public.description') %></label>
+            <textarea class="form-element" id="change-description" data-mapper-property="description"></textarea>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,3 @@
+sulu_category.categories:
+    type: rest
+    resource: Sulu\Bundle\CategoryBundle\Controller\CategoryController

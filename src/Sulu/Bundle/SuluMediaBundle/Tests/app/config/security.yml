@@ -1,0 +1,18 @@
+# Configuration file for security in the test environment
+# Grants access to every User
+# DO NOT USE IN PRODUCTION ENVIRONMENT
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:

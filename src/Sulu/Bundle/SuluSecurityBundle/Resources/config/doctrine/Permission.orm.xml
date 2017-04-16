@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\Permission" table="se_permissions">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="context" type="string" column="context" length="60"/>
+        <field name="module" type="string" column="module" nullable="true" length="60"/>
+        <field name="permissions" type="smallint" column="permissions"/>
+
+        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" inversed-by="permissions">
+            <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

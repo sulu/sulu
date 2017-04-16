@@ -1,0 +1,7 @@
+<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating form-group">
+    <label for="{{ id|raw }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}" title="{{ property.getInfoText(languageCode) }}">
+        {{ property.getTitle(languageCode) }}
+    </label>
+
+    {% include type.template %}
+</div>

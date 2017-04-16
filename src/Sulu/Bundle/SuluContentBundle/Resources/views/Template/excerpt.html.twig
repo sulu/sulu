@@ -1,0 +1,32 @@
+<form id="excerpt-form" class="grid">
+    <div class="grid-row form-group">
+        <label for="excerpt-title"><%=translate('sulu.content.excerpt.title')%></label>
+        <input type="text" id="excerpt-title" data-mapper-property="title"
+               class="form-element trigger-save-button"/>
+    </div>
+    <div class="grid-row form-group">
+        <label for="excerpt-description"><%=translate('sulu.content.excerpt.description')%></label>
+        <textarea id="excerpt-description"
+                  class="form-element trigger-save-button"
+                  data-type="textEditor"
+                  data-type-instance-name="excerpt-description"
+                  data-aura-component="ckeditor@husky"
+                  data-aura-height="300"
+                  data-aura-god-mode="true"
+                  data-aura-instance-name="excerpt-description"
+                  data-mapper-property="description"></textarea>
+    </div>
+
+    <div class="grid-row form-group">
+        <label for="excerpt-description"><%=translate('sulu.content.excerpt.images')%></label>
+        <div id="excerpt-description"
+             data-mapper-property="images"
+             data-form="true"
+             data-type="mediaSelection"
+             data-type-instance-name="excerpt-description"
+             data-aura-component="media-selection@sulumedia"
+             data-aura-instance-name="excerpt-description"
+             data-aura-url="/admin/api/media">
+        </div>
+    </div>
+</form>

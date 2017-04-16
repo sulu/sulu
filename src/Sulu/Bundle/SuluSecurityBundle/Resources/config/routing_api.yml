@@ -1,0 +1,11 @@
+sulu_security.roles:
+    type: rest
+    resource: Sulu\Bundle\SecurityBundle\Controller\RoleController
+
+sulu_security.groups:
+    type: rest
+    resource: Sulu\Bundle\SecurityBundle\Controller\GroupController
+
+sulu_security.users:
+    type: rest
+    resource: Sulu\Bundle\SecurityBundle\Controller\UserController

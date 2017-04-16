@@ -1,0 +1,8 @@
+sulu_contact:
+    resource: "@SuluContactBundle/Resources/config/routing.yml"
+    prefix: /contact
+
+sulu_contact_api:
+    resource: "@SuluContactBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /api

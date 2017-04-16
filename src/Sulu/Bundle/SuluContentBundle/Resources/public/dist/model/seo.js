@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel"],function(a){"use strict";return new a({urlRoot:"/admin/api/nodes",initialize:function(a){this.options=a||{}},url:function(){return this.urlRoot+"/"+this.get("id")+"/seo?webspace="+this.options.webspaceKey+"&language="+this.options.languageCode},defaults:function(){return{}}})});

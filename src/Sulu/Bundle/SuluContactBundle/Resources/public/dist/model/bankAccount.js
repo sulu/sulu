@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel"],function(a){return a({urlRoot:"",defaults:{id:null,bic:"",iban:"",bankName:"","public":!1}})});

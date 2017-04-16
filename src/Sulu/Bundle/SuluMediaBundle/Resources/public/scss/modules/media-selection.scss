@@ -1,0 +1,18 @@
+//
+// Media Selection
+// --------------------------------------------------
+
+.media-selection-overlay-add {
+    .heading {
+        width: 100%;
+        border-bottom: 2px $grayLighter solid;
+    }
+    h3 {
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .overlay-loader {
+      margin: 20px 0;
+    }
+}

@@ -1,0 +1,68 @@
+.resource-locator {
+    input {
+        width: 200px;
+    }
+    .show {
+        padding-left: 5px;
+
+        .icon {
+            font-size: 14px;
+            padding-right: 2px;
+        }
+    }
+    .loader {
+        display: inline-block;
+        margin-bottom: -3px;
+        margin-left: 5px;
+    }
+}
+
+.resource-locator-history {
+    list-style-type: none;
+    padding: 0 40px 0 30px;
+
+    &::after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+
+    li::after {
+        clear: both;
+    }
+
+    .url,
+    .date,
+    .options-restore,
+    .options-delete {
+        display: block;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .url,
+    .date {
+        float: left;
+        width: 45%;
+    }
+
+    .options-restore {
+        float: left;
+        width: 5%;
+        text-align: center;
+    }
+
+    .options-delete {
+        float: right;
+        width: 5%;
+        text-align: center;
+    }
+
+    .url {
+        text-align: left;
+    }
+    .date {
+        text-align: center;
+    }
+}

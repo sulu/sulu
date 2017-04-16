@@ -1,0 +1,34 @@
+<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
+    <div class="grid">
+        <div class="sortable grid-row"
+             id="{{ id|raw }}"
+             data-type="collection"
+             data-type-min="{{ property.minOccurs }}"
+             data-type-max="{{ property.maxOccurs }}"
+             data-mapper-property='[{"data": "{{ property.name }}", "tpl": "{{ id|raw }}-tpl"}]'
+             data-mapper-full-class="full"
+             data-mapper-empty-class="empty">
+
+            <script id="{{ id|raw }}-tpl" type="text/template">
+                <div class="text-block {{ property.name }}-element">
+                    <div class="head">
+                        <label class="move" title="{{ property.getInfoText(languageCode) }}">
+                            {{ property.getTitle(languageCode) }}
+                        </label>
+
+                        <div data-mapper-remove="{{ property.name }}"
+                             class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
+                    </div>
+
+                    <div class="container">
+                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                    </div>
+                </div>
+            </script>
+        </div>
+
+        {% if needsAddButton(property) %}
+            {% include 'SuluContentBundle:Template:macros/add_button.html.twig' with {'property': property} only %}
+        {% endif %}
+    </div>
+</div>

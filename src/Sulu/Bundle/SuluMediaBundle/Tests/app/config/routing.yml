@@ -1,0 +1,11 @@
+sulu_media:
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
+    prefix: /api
+
+sulu_media:
+    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    prefix:
+
+sulu_media_website:
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
+    prefix:

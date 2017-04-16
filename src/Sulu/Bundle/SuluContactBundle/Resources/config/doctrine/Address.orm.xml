@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Address" table="co_addresses" repository-class="Sulu\Bundle\ContactBundle\Entity\AddressRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="primaryAddress" type="boolean" column="primaryAddress" nullable="true"/>
+        <field name="deliveryAddress" type="boolean" column="deliveryAddress" nullable="true"/>
+        <field name="billingAddress" type="boolean" column="billingAddress" nullable="true"/>
+
+        <field name="street" type="string" column="street" length="60" nullable="true"/>
+        <field name="number" type="string" column="number" length="60"  nullable="true"/>
+        <field name="addition" type="string" column="addition" length="60" nullable="true"/>
+        <field name="zip" type="string" column="zip" length="60" nullable="true"/>
+        <field name="city" type="string" column="city" length="60"/>
+        <field name="state" type="string" column="state" length="60" nullable="true" />
+
+        <field name="postboxNumber" type="string" column="postboxNumber" length="100" nullable="true" />
+        <field name="postboxPostcode" type="string" column="postboxPostcode" length="100" nullable="true" />
+        <field name="postboxCity" type="string" column="postboxCity" length="100" nullable="true" />
+
+        <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="address"/>
+        <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="address"/>
+
+        <many-to-one field="addressType" target-entity="Sulu\Bundle\ContactBundle\Entity\AddressType"
+                     inversed-by="addresses">
+            <join-columns>
+                <join-column name="idAdressTypes" referenced-column-name="id" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="country" target-entity="Sulu\Bundle\ContactBundle\Entity\Country" inversed-by="addresses">
+            <join-columns>
+                <join-column name="idCountries" referenced-column-name="id" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

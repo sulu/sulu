@@ -1,0 +1,24 @@
+imports:
+    - { resource: config.yml }
+    - { resource: security.yml }
+
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     localhost
+        dbname:   sulu_test
+        user:     root
+        password:
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        mappings:
+            gedmo_tree:
+                type: xml
+                prefix: Gedmo\Tree\Entity
+                dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                is_bundle: false
+        resolve_target_entities:
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{ name }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css app.min.css -->
+    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/parsley.css"/>
+    <link rel="stylesheet" type="text/css" href="/bundles/sulutranslate/css/main.css"/>
+    <!-- endbuild -->
+</head>
+<body>
+<div id="main" class="login">
+    <div id="login-wrapper">
+        <div id="login">
+            <div class="icon">
+                <div id="logo"></div>
+            </div>
+            <form name="login" action="{{ path('sulu_admin.login_check') }}" method="post"
+                {% if error %}
+                    class="husky-validate-error"
+                {% endif %}
+            >
+                <div class="grid-row small">
+                    <input class="form-element input-large husky-validate" type="text" id="username" name="_username" placeholder="Email" value="{{ username }}"/>
+                </div>
+                <div class="grid-row small">
+                    <input class="form-element input-large husky-validate" type="password" id="password" placeholder="Password" name="_password"/>
+                </div>
+                {% if error %}
+                    <div class="grid-row small">
+                        <span class="error">Your Email/Password combination appears to be wrong. Please try again.</span>
+                    </div>
+                {% endif %}
+                <div class="grid-row">
+                    <input type="hidden" name="_target_path" value="/admin/"/>
+                    <div class="grid-col-4 no-padding">
+                        <div
+                            {% if error %}
+                                class="btn large action2"
+                            {% else %}
+                                class="btn large grey"
+                            {% endif %}
+                        >
+                            <span class="fa-warning"></span>
+                            <span class="text">Help</span>
+                        </div>
+                    </div>
+                    <div class="grid-col-4 no-padding"></div>
+                    <div class="grid-col-4 no-padding">
+                        <div id="submit" class="btn action large">
+                            <span class="fa-unlock-alt"></span>
+                            <span class="text">Login</span>
+                        </div>
+                        <input id="submitInput" type="submit" style="width:0; height:0; opacity: 0" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    document.getElementById('username').focus();
+
+    document.getElementById('submit').onclick = function() {
+        var clickEvent = document.createEvent('MouseEvents');
+        clickEvent.initEvent('click', true, true);
+        document.getElementById('submitInput').dispatchEvent(clickEvent);
+    }
+</script>
+</body>
+</html>

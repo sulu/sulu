@@ -1,0 +1,60 @@
+{% extends "SuluContactBundle:Template:base.form.html.twig" %}
+
+{% block static %}
+
+    <div class="form-horizontal changeListener">
+        <div class="form-group grid-row small">
+            <label for="name" class="required"><%=translate('contact.accounts.name')%></label>
+            <div>
+                <input class="form-element" type="text" id="name"
+                       data-validation-required="true"
+                       data-validation-min-length="3"
+                       data-mapper-property="name"/>
+            </div>
+        </div>
+        <div class="form-group grid-row small">
+            <label for="corporation"><%=translate('contact.accounts.corporation')%></label>
+            <div>
+                <input class="form-element" type="text" id="corporation" data-mapper-property="corporation"/>
+            </div>
+        </div>
+        <div class="grid-row small">
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="companyInput"><%=translate('contact.accounts.company')%></label>
+                    <div id="company"></div>
+                </div>
+
+                <input type="hidden" id="accountType" data-mapper-property="type" />
+
+            </div>
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="accountCategory"><%=translate('contact.accounts.category')%></label>
+                    <div id="accountCategory" data-type-label="category"  data-mapper-property="accountCategory" data-type="husky-select" data-form="true"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="deactivated"><%=translate('public.locked')%></label>
+                    <div>
+                        <div class="custom-checkbox">
+                            <input class="form-element husky-validate" type="checkbox" id="deactivated" data-mapper-property="disabled">
+                            <span class="icon"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="responsiblePerson"><%=translate('contact.accounts.responsiblePerson')%></label>
+                    <div id="responsiblePerson" data-mapper-property="responsiblePerson" data-type="husky-select" data-form="true"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

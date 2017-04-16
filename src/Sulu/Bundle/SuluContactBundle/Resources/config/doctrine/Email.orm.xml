@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Email" table="co_emails">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="email" type="string" column="email" length="60"/>
+        <many-to-one field="emailType" target-entity="Sulu\Bundle\ContactBundle\Entity\EmailType" inversed-by="emails">
+            <join-columns>
+                <join-column name="idEmailTypes" referenced-column-name="id" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="emails"/>
+        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="emails"/>
+    </entity>
+</doctrine-mapping>

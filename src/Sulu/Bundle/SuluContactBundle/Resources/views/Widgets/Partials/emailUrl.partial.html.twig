@@ -1,0 +1,16 @@
+{% if email or url is not empty %}
+    <div class="grid-row m-bottom-30">
+        <h5 class="label">
+            <%=translate('contacts.sidebar.web-and-mail')%></h5>
+        {% if email is not empty %}
+            <span class="block">
+                 <a class="action" href="mailto:{{ email }}">{{ email }}</a>
+             </span>
+        {% endif %}
+        {% if url is not empty %}
+            <span class="block">
+                 <a class="action" href="http://{{ url }}" target="_blank">{{ url }}</a>
+             </span>
+        {% endif %}
+    </div>
+{% endif %}

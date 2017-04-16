@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\BankAccount" table="co_bank_account">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="bankName" type="string" column="bankName" length="150" nullable="true"/>
+        <field name="bic" type="string" column="bic" length="100" nullable="true"/>
+        <field name="iban" type="string" column="iban" length="100"/>
+        <field name="public" type="boolean" column="public" nullable="false"/>
+
+        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="bankAccounts"/>
+    </entity>
+</doctrine-mapping>

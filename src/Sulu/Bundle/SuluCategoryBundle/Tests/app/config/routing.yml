@@ -1,0 +1,7 @@
+sulu_category:
+    resource: "@SuluCategoryBundle/Resources/config/routing.yml"
+    prefix: /sulu_category
+
+sulu_category_api:
+    resource: "@SuluCategoryBundle/Resources/config/routing_api.yml"
+    prefix: /api

@@ -1,0 +1,301 @@
+<form id="contact-form" class="form-horizontal">
+    <input type="hidden" data-mapper-property="id"/>
+
+    <div class="grid">
+        {% block static %}
+        {% endblock %}
+
+        {% block contact %}
+            <div id="contact-edit-form">
+                <div class="pos-rel">
+                    <h2 class="divider"><%=translate('contact.contacts.details')%></h2>
+                    <span id="contact-options-dropdown" class="options-dropdown-container">
+                        <a class="contact-options-toggle options-toggle"><span class="fa-gear"/></a>
+                    </span>
+                </div>
+
+                <div class="grid-row small" id="addresses" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl","empty-tpl":"address-empty-tpl"}]'>
+
+                    <script type="text/template" id="address-empty-tpl">
+                        <div class="grid-col-12 floating">
+                            <div class="form-group">
+                                <label class="visible"></label>
+                                <label class="hidden">
+                                    <%=translate('contact.address.add.label')%>
+                                </label>
+                                <div class="grid-col-12 m-top-5">
+                                    <span class="fa-plus-circle icon clickable pointer address-add"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+
+                    <script type="text/template" id="address-tpl">
+                        <div class="grid-col-12 floating m-top-0 address-component">
+                            <~ var uid = _.uniqueId('address_'), first = true; ~>
+                            <~ var checkIfFirstField = function(field) { if (typeof field !== 'undefined' && !!field) { if(first) {first = false; return false;} else {return true;} } }~>
+                            <div class="form-group">
+
+                                <label class="visible"></label>
+                                <label class="hidden">
+                                    <~ if(primaryAddress) { ~>
+                                        <%=translate('contact.address.primaryAddress')%>
+                                    <~ } else { ~>
+                                        <%=translate('public.address')%>
+                                    <~ } ~>
+                                    <span class="label-container">
+                                        (<span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}">
+                                            <%= translate('{{ defaultAddressType.name }}') %>
+                                        </span>)
+                                    </span>
+                                </label>
+
+                                <div class="address-row clickable pointer">
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+
+                                    <~ if(city || street || state || zip) { ~>
+                                        <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
+                                        <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
+                                        <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
+                                        <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>>></span>
+
+                                        <div class="hidden">
+                                            <span data-mapper-property="postboxNumber" data-form="true"></span>
+                                            <span data-mapper-property="postboxPostcode" data-form="true"></span>
+                                            <span data-mapper-property="postboxCity" data-form="true"></span>
+                                        </div>
+                                        <~ } else { ~>
+                                        <div class="hidden">
+                                            <span data-mapper-property="street" data-form="true"></span><~ checkIfFirstField(street); ~>
+                                            <span data-mapper-property="number" data-form="true"></span><~ checkIfFirstField(number); ~>
+                                            <span data-mapper-property="addition" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="zip" data-form="true" <~ if (checkIfFirstField(zip)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="city" data-form="true" <~ if (checkIfFirstField(city)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="state" data-form="true" <~ if (checkIfFirstField(state)) { print('class="comma-before"') } ~>></span>
+                                        </div>
+                                            <span data-mapper-property="postboxNumber" data-form="true"></span>
+                                            <span data-mapper-property="postboxPostcode" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="postboxCity" data-form="true" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>></span>
+                                            <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}" <~ if (checkIfFirstField(addition)) { print('class="comma-before"') } ~>>></span>
+                                    <~ } ~>
+
+                                    <~ if(billingAddress && deliveryAddress) { ~>
+                                    <span>(<%=translate('contact.address.billingAddress')%>, <%=translate('contact.address.deliveryAddress')%>)</span>
+                                    <~ } if (deliveryAddress && !billingAddress) { ~>
+                                    <span>(<%=translate('contact.address.deliveryAddress')%>)</span>
+                                    <~ } if (!deliveryAddress && billingAddress) { ~>
+                                    <span>(<%=translate('contact.address.billingAddress')%>)</span>
+                                    <~ }  ~>
+
+                                    <div class="hidden">
+                                        <span data-mapper-property="primaryAddress" data-form="true"></span>
+                                        <span data-mapper-property="billingAddress" data-form="true"></span>
+                                        <span data-mapper-property="deliveryAddress" data-form="true"></span>
+                                    </div>
+
+                                    <span class="fa-times icon address-remove"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                </div>
+
+                <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
+                    <script type="text/template" id="email-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('email_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="visible"></label>
+                                <label for="<~= uid ~>" class="hidden">
+                                    <%=translate('public.email')%>
+                                    <span class="label-container">
+                                        (<span class="type-value" data-form="true" data-mapper-property="emailType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultEmailType.id }}">
+                                            <%=translate('{{ defaultEmailType.name }}')%>
+                                        </span>)
+                                    </span>
+                                </label>
+
+                                <div class="changeListener">
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="email"
+                                         data-aura-instance-name="email"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="email"></div>
+                                    <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="fax-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('fax_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="visible"></label>
+                                <label for="<~= uid ~>" class="hidden">
+                                    <%=translate('public.fax')%>
+                                    <span class="label-container">
+                                        (<span class="type-value" data-form="true" data-mapper-property="faxType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultFaxType.id }}">
+                                            (<%=translate('{{ defaultFaxType.name }}')%>)
+                                        </span>)
+                                    </span>
+                                </label>
+
+                                <div class="changeListener">
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="phone"
+                                         data-aura-front-icon="fax"
+                                         data-aura-instance-name="fax"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="fax"></div>
+                                    <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="phone-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('phone_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="visible"></label>
+                                <label for="<~= uid ~>" class="hidden">
+                                    <%=translate('public.phone')%>
+                                    <span class="label-container">
+                                        (<span class="type-value" data-form="true" data-mapper-property="phoneType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultPhoneType.id }}">
+                                        <%= translate('{{ defaultPhoneType.name }}') %>
+                                        </span>)
+                                    </span>
+                                </label>
+
+                                <div class="changeListener">
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="phone"
+                                         data-aura-instance-name="phone"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="phone"></div>
+                                    <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="url-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('url_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="visible"></label>
+                                <label for="<~= uid ~>" class="hidden">
+                                    <%= translate('contact.accounts.website') %>
+                                    <span class="label-container">
+                                        (<span class="type-value" data-form="true" data-mapper-property="urlType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultUrlType.id }}"><%= translate('{{ defaultUrlType.name }}') %></span>)
+                                    </span>
+                                </label>
+
+                                <div class="changeListener">
+                                    <div data-form="true"
+                                         data-type="husky-input"
+                                         data-aura-component="input@husky"
+                                         data-aura-skin="url"
+                                         data-aura-instance-name="url"
+                                         data-aura-input-id="<~= uid ~>"
+                                         data-aura-input-name="<~= uid ~>"
+                                         data-mapper-property="url"></div>
+                                    <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                </div>
+
+                <div class="grid-row small" data-type="collection" data-mapper-property='{"data":"notes","tpl":"note-tpl"}'>
+                    <script type="text/template" id="note-tpl">
+                        <div class="grid-col-12 floating">
+                            <~ var uid = _.uniqueId('note_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="top visible"></label>
+                                <label class="top hidden" for="<~= uid ~>"><%= translate('public.note') %></label>
+                                <div class="changeListener">
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <textarea id="<~= uid ~>" data-form="true" class="form-element" data-mapper-property="value"> </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                </div>
+            </div>
+        {% endblock %}
+
+    </div>
+
+    {% block tags %}
+        <div class="grid">
+            <div class="grid-row small">
+                <h2 class="divider"><%= translate('contact.contacts.assignment') %></h2>
+            </div>
+            <div class="grid-row form-horizontal changeListener">
+                <div class="form-group">
+                    <label><%= translate('tag.tags.title') %></label>
+                    <div id="tags"></div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+</form>
+
+{% block data %}
+    <script type="text/javascript">
+        (function() {
+            var defaults = {
+                        emailType: {
+                            'id': {{ defaultEmailType.id }},
+                            'name': '{{ defaultEmailType.name }}'
+                        },
+                        phoneType: {
+                            'id': {{ defaultPhoneType.id }},
+                            'name': '{{ defaultPhoneType.name }}'
+                        },
+                        addressType: {
+                            'id': {{ defaultAddressType.id }},
+                            'name': '{{ defaultAddressType.name }}'
+                        },
+                        urlType: {
+                            'id': {{ defaultUrlType.id }},
+                            'name': '{{ defaultUrlType.name }}'
+                        },
+                        faxType: {
+                            'id': {{ defaultFaxType.id }},
+                            'name': '{{ defaultFaxType.name }}'
+                        },
+                        country: {
+                            'id': {{ defaultCountry.id }},
+                            'name': '{{ defaultCountry.name }}'
+                        }
+                    },
+                    types = {
+                        'email': {{ emailTypes|json_encode()|raw }},
+                        'phone': {{ phoneTypes|json_encode()|raw }},
+                        'address': {{ addressTypes|json_encode()|raw }},
+                        'url': {{ urlTypes|json_encode()|raw }},
+                        'fax': {{ faxTypes|json_encode()|raw }},
+                        'countries': {{ countries|json_encode()|raw }}
+                    };
+            App.emit('sulu.contacts.set-types', types);
+            App.emit('sulu.contacts.set-defaults', defaults);
+        })();
+    </script>
+{% endblock %}

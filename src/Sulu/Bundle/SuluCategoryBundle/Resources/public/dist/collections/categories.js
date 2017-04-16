@@ -1,0 +1,1 @@
+define(["mvc/collection","sulucategory/model/category"],function(a,b){return a({model:b,url:function(){return"/admin/api/categories"},parse:function(a){return a._embedded.categories}})});

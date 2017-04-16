@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\ContactAddress" table="co_contact_addresses" repository-class="Sulu\Bundle\ContactBundle\Entity\ContactAddressRepository">
+
+        <unique-constraints>
+            <unique-constraint columns="idAddresses,idContacts"/>
+        </unique-constraints>
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="main" type="boolean" column="main" nullable="false" />
+
+        <many-to-one field="address" target-entity="Sulu\Bundle\ContactBundle\Entity\Address" inversed-by="contactAddresses">
+            <join-columns>
+                <join-column name="idAddresses" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="contactAddresses">
+            <join-columns>
+                <join-column name="idContacts" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
