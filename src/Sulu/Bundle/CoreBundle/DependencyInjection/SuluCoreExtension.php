@@ -245,6 +245,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('phpcr.xml');
         $loader->load('rest.xml');
         $loader->load('build.xml');
+        $loader->load('listener.xml');
         $loader->load('localization.xml');
         $loader->load('serializer.xml');
         $loader->load('request_analyzer.xml');
