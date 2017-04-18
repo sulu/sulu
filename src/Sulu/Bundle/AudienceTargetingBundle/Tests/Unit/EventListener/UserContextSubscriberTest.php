@@ -26,7 +26,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $userContextSubscriber = new UserContextSubscriber($contextUrl, $header, $cookieName);
         $event = $this->prophesize(FilterResponseEvent::class);
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $requestUrl]);
+        $request = new Request([], [], [], [$cookieName => 'some-uuid'], [], ['REQUEST_URI' => $requestUrl]);
         $response = new Response();
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
@@ -35,7 +35,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($varyHeaders, $response->getVary());
         $this->assertEquals($cookieName, $response->headers->getCookies()[0]->getName());
-        $this->assertInstanceOf(Uuid::class, $response->headers->getCookies()[0]->getValue());
+        $this->assertEquals('some-uuid', $response->headers->getCookies()[0]->getValue());
     }
 
     public function provideConfiguration()

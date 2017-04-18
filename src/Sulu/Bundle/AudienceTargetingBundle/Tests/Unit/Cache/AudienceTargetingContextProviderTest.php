@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Cache;
 
+use FOS\HttpCache\UserContext\UserContext;
 use Sulu\Bundle\AudienceTargetingBundle\Cache\AudienceTargetingContextProvider;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 
 class AudienceTargetingContextProviderTest extends \PHPUnit_Framework_TestCase
@@ -33,5 +35,17 @@ class AudienceTargetingContextProviderTest extends \PHPUnit_Framework_TestCase
         $this->audienceTargetingContextProvider = new AudienceTargetingContextProvider(
             $this->targetGroupEvaluator->reveal()
         );
+    }
+
+    public function testAddUserContext()
+    {
+        $userContext = new UserContext();
+
+        $targetGroup = new TargetGroup();
+        $this->targetGroupEvaluator->evaluate()->willReturn($targetGroup);
+
+        $this->audienceTargetingContextProvider->updateUserContext($userContext);
+
+        $this->assertEquals(['audience-targeting' => $targetGroup], $userContext->getParameters());
     }
 }

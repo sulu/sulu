@@ -13,6 +13,8 @@ namespace Sulu\Component\HttpCache;
 
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use FOS\HttpCache\SymfonyCache\UserContextSubscriber;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpCache\Esi;
@@ -33,6 +35,8 @@ class HttpCache extends EventDispatchingHttpCache
 
     const SESSION_NAME_PREFIX = 'user-context';
 
+    private $hasUserContext;
+
     public function __construct(HttpKernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
     {
         parent::__construct(
@@ -41,6 +45,8 @@ class HttpCache extends EventDispatchingHttpCache
             new Esi(),
             ['debug' => $kernel->isDebug()]
         );
+
+        $this->hasUserContext = $hasUserContext;
 
         if ($hasUserContext) {
             $this->addSubscriber(new UserContextSubscriber([
@@ -56,6 +62,15 @@ class HttpCache extends EventDispatchingHttpCache
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
+        $userContext = null;
+        if ($this->hasUserContext) {
+            if (!$request->cookies->has(static::SESSION_NAME_PREFIX)) {
+                // fake the cookie, because the FOSHttpCache will not cache otherwise, because the request is anonymous
+                $userContext = Uuid::uuid4()->toString();
+                $request->cookies->add([static::SESSION_NAME_PREFIX => $userContext]);
+            }
+        }
+
         $response = parent::handle($request, $type, $catch);
 
         if (!$this->getKernel()->isDebug()) {

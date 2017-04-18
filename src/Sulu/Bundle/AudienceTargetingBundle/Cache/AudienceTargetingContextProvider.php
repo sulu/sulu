@@ -14,7 +14,6 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Cache;
 use FOS\HttpCache\UserContext\ContextProviderInterface;
 use FOS\HttpCache\UserContext\UserContext;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * This class provides the audience targeting part of the UserContext for caching.

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\EventListener;
 
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -53,13 +52,15 @@ class UserContextSubscriber implements EventSubscriberInterface
 
     public function addUserContextHeaders(FilterResponseEvent $event)
     {
+        $request = $event->getRequest();
         $response = $event->getResponse();
-        if ($event->getRequest()->getRequestUri() !== $this->contextUrl) {
+
+        if ($request->getRequestUri() !== $this->contextUrl) {
             $response->setVary($this->httpHeader, false);
         }
 
-        if (!$event->getRequest()->cookies->has($this->cookieName)) {
-            $response->headers->setCookie(new Cookie($this->cookieName, Uuid::uuid4()));
-        }
+        // Necessary because the cookie in the request is faked when the request is passed from the Symfony cache
+        // This ensures that the cookie is also set in the browser of the user
+        $response->headers->setCookie(new Cookie($this->cookieName, $request->cookies->get($this->cookieName)));
     }
 }
