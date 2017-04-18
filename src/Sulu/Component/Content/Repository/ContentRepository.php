@@ -149,7 +149,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
-        $queryBuilder->where($this->qomFactory->childNode('node', $path));
+        $queryBuilder->where($this->qomFactory->childNode('node', '"' . $path . '"'));
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
@@ -163,7 +163,7 @@ class ContentRepository implements ContentRepositoryInterface
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
         $queryBuilder->where(
-            $this->qomFactory->childNode('node', $this->sessionManager->getContentPath($webspaceKey))
+            $this->qomFactory->childNode('node', '"' . $this->sessionManager->getContentPath($webspaceKey) . '"')
         );
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
@@ -190,11 +190,11 @@ class ContentRepository implements ContentRepositoryInterface
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
             ->orderBy($this->qomFactory->propertyValue('node', 'jcr:path'))
-            ->where($this->qomFactory->childNode('node', $path));
+            ->where($this->qomFactory->childNode('node', '"' . $path . '"'));
 
         while (PathHelper::getPathDepth($path) > PathHelper::getPathDepth($contentPath)) {
             $path = PathHelper::getParentPath($path);
-            $queryBuilder->orWhere($this->qomFactory->childNode('node', $path));
+            $queryBuilder->orWhere($this->qomFactory->childNode('node', '"' . $path . '"'));
         }
 
         $mapping->addProperties(['order']);
@@ -219,7 +219,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         foreach ($paths as $path) {
             $queryBuilder->orWhere(
-                $this->qomFactory->sameNode('node', $path)
+                $this->qomFactory->sameNode('node', '"' . $path . '"')
             );
         }
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
@@ -266,8 +266,8 @@ class ContentRepository implements ContentRepositoryInterface
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
-            ->where($this->qomFactory->descendantNode('node', $contentPath))
-            ->orWhere($this->qomFactory->sameNode('node', $contentPath));
+            ->where($this->qomFactory->descendantNode('node', '"' . $contentPath . '"'))
+            ->orWhere($this->qomFactory->sameNode('node', '"' . $contentPath . '"'));
 
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
@@ -285,8 +285,8 @@ class ContentRepository implements ContentRepositoryInterface
 
         $locales = $this->getLocalesByPortalKey($portalKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
-            ->where($this->qomFactory->descendantNode('node', $contentPath))
-            ->orWhere($this->qomFactory->sameNode('node', $contentPath));
+            ->where($this->qomFactory->descendantNode('node', '"' . $contentPath . '"'))
+            ->orWhere($this->qomFactory->sameNode('node', '"' . $contentPath . '"'));
 
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
@@ -632,7 +632,7 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         $content = new Content(
-            $originalLocale,
+            $locale,
             $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
@@ -850,7 +850,7 @@ class ContentRepository implements ContentRepositoryInterface
         $queryBuilder
             ->select('node', 'jcr:uuid', 'uuid')
             ->from($this->qomFactory->selector('node', 'nt:unstructured'))
-            ->where($this->qomFactory->childNode('node', $row->getPath()))
+            ->where($this->qomFactory->childNode('node', '"' . $row->getPath() . '"'))
             ->setMaxResults(1);
 
         $result = $queryBuilder->execute();
