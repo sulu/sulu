@@ -49,6 +49,11 @@
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
+        <service id="sulu_document_manager.node_name_slugifier"
+                 class="Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier" public="false">
+            <argument type="service" id="sulu_document_manager.slugifier"/>
+        </service>
+
         <service id="sulu_document_manager.namespace_registry" class="Sulu\Component\DocumentManager\NamespaceRegistry" public="false">
             <argument>%sulu_document_manager.namespace_mapping%</argument>
         </service>

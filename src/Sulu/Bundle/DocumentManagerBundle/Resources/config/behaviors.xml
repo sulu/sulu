@@ -15,7 +15,7 @@
         <service id="sulu_document_manager.subscriber.behavior.auto_name"
                  class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AutoNameSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
-            <argument type="service" id="sulu_document_manager.slugifier" />
+            <argument type="service" id="sulu_document_manager.node_name_slugifier" />
             <argument type="service" id="sulu_document_manager.name_resolver" />
             <argument type="service" id="sulu_document_manager.node_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
