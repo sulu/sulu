@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\SecurityBundle\Controller\ResettingController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -385,18 +384,18 @@ class ResettingControllerTest extends SuluTestCase
         $sender = $this->getContainer()->getParameter('sulu_security.reset_password.mail.sender');
         $template = $this->getContainer()->getParameter('sulu_security.reset_password.mail.template');
         $resetUrl = $this->getContainer()->get('router')->generate('sulu_admin.reset', [
-            'token' => $user->getPasswordResetToken()
+            'token' => $user->getPasswordResetToken(),
         ], \Symfony\Component\Routing\Router::ABSOLUTE_URL);
         $body = $this->getContainer()->get('templating')->render($template, [
             'user' => $user,
             'reset_url' => $resetUrl,
-            'translation_domain' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.translation_domain')
+            'translation_domain' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.translation_domain'),
         ]);
 
         return [
-            'subject' =>  $this->getContainer()->getParameter('sulu_security.reset_password.mail.subject'),
+            'subject' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.subject'),
             'body' => trim($body),
-            'sender' => $sender ? $sender : 'no-reply@' . $client->getRequest()->getHost()
+            'sender' => $sender ? $sender : 'no-reply@' . $client->getRequest()->getHost(),
         ];
     }
 }

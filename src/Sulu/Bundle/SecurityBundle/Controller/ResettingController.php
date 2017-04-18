@@ -192,7 +192,7 @@ class ResettingController extends Controller
         return trim($this->renderView($template, [
             'user' => $user,
             'reset_url' => $resetUrl,
-            'translation_domain' => $this->getParameter('sulu_security.reset_password.mail.translation_domain')
+            'translation_domain' => $this->getParameter('sulu_security.reset_password.mail.translation_domain'),
         ]));
     }
 

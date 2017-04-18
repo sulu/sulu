@@ -22,7 +22,7 @@ class EmailTemplateException extends SecurityException
     private $template;
 
     /**
-     * EmailTemplateException constructor
+     * EmailTemplateException constructor.
      *
      * @param string $template
      */
