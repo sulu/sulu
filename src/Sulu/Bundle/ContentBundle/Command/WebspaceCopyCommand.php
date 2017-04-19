@@ -11,12 +11,20 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
-use function GuzzleHttp\default_ca_bundle;
+use Doctrine\ORM\Query\Expr\Base;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
+use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -24,6 +32,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Validator\Mapping\PropertyMetadataInterface;
 
 /**
  * Copies a given webspace with given locale to a destination webspace with a destination locale.
@@ -44,6 +53,26 @@ class WebspaceCopyCommand extends ContainerAwareCommand
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
+     * @var HtmlTagExtractor
+     */
+    private $htmlTagExtractor;
+
+    /**
+     * @var string
+     */
+    protected $webspaceKeySource;
+
+    /**
+     * @var string
+     */
+    protected $webspaceKeyDestination;
 
 
     protected function configure()
@@ -102,6 +131,11 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
+        $this->htmlTagExtractor = $this->getContainer()->get('sulu_markup.parser.html_extractor');
+
+        $this->webspaceKeySource = $webspaceKeySource;
+        $this->webspaceKeyDestination = $webspaceKeyDestination;
 
         $this->output = $output;
 
@@ -109,7 +143,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             '==============================',
             '1. Clear destination webspace',
         ]);
-        $this->clearWebspace($webspaceKeyDestination);
+        $this->clearDestinationWebspace();
         $this->output->writeln([
             '------------------------------',
             '',
@@ -119,14 +153,20 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             '2. Copy pages to destination webspace',
         ]);
         for ($i = 0; $i < count($localesSource); $i++) {
-            $this->copyWebspace($webspaceKeySource, $localesSource[$i], $webspaceKeyDestination, $localesDestination[$i]);
+            $this->copyWebspace(
+                $localesSource[$i],
+                $localesDestination[$i]
+            );
         }
 
         $this->output->writeln([
             '3. Generate redirects',
         ]);
         for ($i = 0; $i < count($localesSource); $i++) {
-            $this->generateRedirects($webspaceKeySource, $localesSource[$i], $webspaceKeyDestination, $localesDestination[$i]);
+            $this->copyRedirectsAndStructure(
+                $localesSource[$i],
+                $localesDestination[$i]
+            );
         }
 
         $this->output->writeln('<info>Done</info>');
@@ -134,38 +174,36 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
     /**
      * Removes all pages from given webspace.
-     *
-     * @param String $webspaceKey
      */
-    protected function clearWebspace($webspaceKey)
+    protected function clearDestinationWebspace()
     {
-        $homeDocument = $this->documentManager->find($this->sessionManager->getContentPath($webspaceKey));
+        $homeDocument = $this->documentManager->find(
+            $this->sessionManager->getContentPath($this->webspaceKeyDestination)
+        );
         foreach ($homeDocument->getChildren() as $child) {
-            $this->documentManager->remove($child);
             $this->output->writeln('<info>Processing: </info>' . $child->getPath());
+            $this->documentManager->remove($child);
+            $this->documentManager->flush();
         }
-        $this->documentManager->flush();
     }
 
     /**
      * Copies a given webspace with given locale to a destination webspace with a destination locale.
      *
-     * @param string $webspaceKeySource
      * @param string $localeSource
-     * @param string $webspaceKeyDestination
      * @param string $localeDestination
      */
-    protected function copyWebspace($webspaceKeySource, $localeSource, $webspaceKeyDestination, $localeDestination) {
+    protected function copyWebspace($localeSource, $localeDestination) {
         $this->output->writeln([
             '------------------------------',
-            '<info>Webspace: </info>' . $webspaceKeySource . ' => ' . $webspaceKeyDestination,
+            '<info>Webspace: </info>' . $this->webspaceKeySource . ' => ' . $this->webspaceKeyDestination,
             '<info>Locale: </info>' . $localeSource . ' => ' . $localeDestination,
             '------------------------------',
         ]);
 
         /** @var HomeDocument $homeDocumentSource */
         $homeDocumentSource = $this->documentManager->find(
-            $this->sessionManager->getContentPath($webspaceKeySource),
+            $this->sessionManager->getContentPath($this->webspaceKeySource),
             $localeSource
         );
 
@@ -173,8 +211,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $this->recursiveCopy(
             $homeDocumentSource,
             null,
-            $webspaceKeySource,
-            $webspaceKeyDestination,
             $localeDestination
         );
 
@@ -187,30 +223,29 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     /**
      * Copies a given webspace with given locale to a destination webspace with a destination locale.
      *
-     * @param string $webspaceKeySource
      * @param string $localeSource
-     * @param string $webspaceKeyDestination
      * @param string $localeDestination
      */
-    protected function generateRedirects($webspaceKeySource, $localeSource, $webspaceKeyDestination, $localeDestination) {
+    protected function copyRedirectsAndStructure(
+        $localeSource,
+        $localeDestination
+    ) {
         $this->output->writeln([
             '------------------------------',
-            '<info>Webspace: </info>' . $webspaceKeySource . ' => ' . $webspaceKeyDestination,
+            '<info>Webspace: </info>' . $this->webspaceKeySource . ' => ' . $this->webspaceKeyDestination,
             '<info>Locale: </info>' . $localeSource . ' => ' . $localeDestination,
             '------------------------------',
         ]);
 
         /** @var HomeDocument $homeDocumentSource */
         $homeDocumentSource = $this->documentManager->find(
-            $this->sessionManager->getContentPath($webspaceKeySource),
+            $this->sessionManager->getContentPath($this->webspaceKeySource),
             $localeSource
         );
 
-        // Generate links.
-        $this->recursiveSetRedirects(
+        // Generate redirect and structure.
+        $this->recursiveCopyRedirectsAndStructure(
             $homeDocumentSource,
-            $webspaceKeySource,
-            $webspaceKeyDestination,
             $localeDestination
         );
 
@@ -223,26 +258,23 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     /**
      * @param BasePageDocument $documentSource
      * @param BasePageDocument|null $parentDocumentDestination
-     * @param string $webspaceKeySource
-     * @param string $webspaceKeyDestination
      * @param string $localeDestination
      */
     protected function recursiveCopy(
         BasePageDocument $documentSource,
         BasePageDocument $parentDocumentDestination = null,
-        $webspaceKeySource,
-        $webspaceKeyDestination,
         $localeDestination
     ) {
         // Generate new path.
         $newPath = str_replace(
-            $this->sessionManager->getContentPath($webspaceKeySource),
-            $this->sessionManager->getContentPath($webspaceKeyDestination),
+            $this->sessionManager->getContentPath($this->webspaceKeySource),
+            $this->sessionManager->getContentPath($this->webspaceKeyDestination),
             $documentSource->getPath()
         );
 
         $this->output->writeln('<info>Processing: </info>' . $documentSource->getPath() . ' => ' . $newPath);
 
+        /** @var BasePageDocument $documentDestination */
         try {
             $documentDestination = $this->documentManager->find($newPath, $localeDestination);
         } catch (\Exception $exception) {
@@ -253,9 +285,14 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $documentDestination->setTitle($documentSource->getTitle());
         $documentDestination->setStructureType($documentSource->getStructureType());
         $documentDestination->setWorkflowStage(WorkflowStage::TEST);
-        $documentDestination->getStructure()->bind($documentSource->getStructure()->toArray());
         $documentDestination->setExtensionsData($documentSource->getExtensionsData());
         $documentDestination->setResourceSegment($documentSource->getResourceSegment());
+        $documentDestination->setPermissions($documentSource->getPermissions());
+        $documentDestination->setSuluOrder($documentSource->getSuluOrder());
+        $documentDestination->setNavigationContexts($documentSource->getNavigationContexts());
+        $documentDestination->setShadowLocaleEnabled($documentSource->isShadowLocaleEnabled());
+        $documentDestination->setShadowLocale($documentSource->getShadowLocale());
+
         // Set parent.
         if ($documentDestination instanceof PageDocument) {
             $documentDestination->setParent($parentDocumentDestination);
@@ -264,26 +301,26 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $this->saveDocument($documentDestination, $localeDestination);
 
         foreach ($documentSource->getChildren() as $child) {
-            $this->recursiveCopy($child, $documentDestination, $webspaceKeySource, $webspaceKeyDestination, $localeDestination);
+            $this->recursiveCopy(
+                $child,
+                $documentDestination,
+                $localeDestination
+            );
         }
     }
 
     /**
      * @param BasePageDocument $documentSource
-     * @param string $webspaceKeySource
-     * @param string $webspaceKeyDestination
      * @param string $localeDestination
      */
-    protected function recursiveSetRedirects(
+    protected function recursiveCopyRedirectsAndStructure(
         BasePageDocument $documentSource,
-        $webspaceKeySource,
-        $webspaceKeyDestination,
         $localeDestination
     ) {
         // Generate new path.
         $newPath = str_replace(
-            $this->sessionManager->getContentPath($webspaceKeySource),
-            $this->sessionManager->getContentPath($webspaceKeyDestination),
+            $this->sessionManager->getContentPath($this->webspaceKeySource),
+            $this->sessionManager->getContentPath($this->webspaceKeyDestination),
             $documentSource->getPath()
         );
 
@@ -292,34 +329,290 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         /** @var PageDocument $documentDestination */
         $documentDestination = $this->documentManager->find($newPath, $localeDestination);
 
-        // Redirects.
+        // Copy the redirects and correct the target.
         switch ($documentSource->getRedirectType()) {
             case RedirectType::INTERNAL:
                 // Generate new target path.
                 $newPathTarget = str_replace(
-                    $this->sessionManager->getContentPath($webspaceKeySource),
-                    $this->sessionManager->getContentPath($webspaceKeyDestination),
+                    $this->sessionManager->getContentPath($this->webspaceKeySource),
+                    $this->sessionManager->getContentPath($this->webspaceKeyDestination),
                     $documentSource->getRedirectTarget()->getPath()
                 );
 
                 $documentDestination->setRedirectType(RedirectType::INTERNAL);
-                $documentDestination->setRedirectTarget($this->documentManager->find($newPathTarget, $localeDestination));
-
-                $this->saveDocument($documentDestination, $localeDestination);
+                $documentDestination->setRedirectTarget(
+                    $this->documentManager->find($newPathTarget, $localeDestination)
+                );
                 break;
             case RedirectType::EXTERNAL:
                 $documentDestination->setRedirectType(RedirectType::EXTERNAL);
                 $documentDestination->setRedirectExternal($documentDestination->getRedirectExternal());
-
-                $this->saveDocument($documentDestination, $localeDestination);
                 break;
             default:
                 break;
         }
 
-        foreach ($documentSource->getChildren() as $child) {
-            $this->recursiveSetRedirects($child, $webspaceKeySource, $webspaceKeyDestination, $localeDestination);
+        // Copy the structure and correct the targets of references.
+        $newStructure = $documentSource->getStructure()->toArray();
+        $metadata = $this->documentInspector->getStructureMetadata($documentSource);
+        foreach ($metadata->getProperties() as $property) {
+            $this->processContentType(
+                $property,
+                $newStructure,
+                $documentSource,
+                $localeDestination
+            );
         }
+        $documentDestination->getStructure()->bind($newStructure);
+
+        // Save new document.
+        $this->saveDocument($documentDestination, $localeDestination);
+
+        foreach ($documentSource->getChildren() as $child) {
+            $this->recursiveCopyRedirectsAndStructure(
+                $child,
+                $localeDestination
+            );
+        }
+    }
+
+    protected function processContentType(
+        ItemMetadata $property,
+        array &$structureArray,
+        BasePageDocument $documentSource,
+        $localeDestination
+    ) {
+        switch ($property->getType()) {
+            case 'smart_content':
+                $this->updateSmartContentStructure(
+                    $structureArray,
+                    $property,
+                    $documentSource,
+                    $localeDestination
+                );
+                break;
+            case 'text_editor':
+                $this->updateHtmlSuluLinks(
+                    $structureArray,
+                    $property,
+                    $documentSource,
+                    $localeDestination
+                );
+                break;
+            case 'internal_links':
+                $this->updateInternalLinks(
+                    $structureArray,
+                    $property,
+                    $documentSource,
+                    $localeDestination
+                );
+                break;
+            case 'single_internal_link':
+                $this->updateSingleInternalLink(
+                    $structureArray,
+                    $property,
+                    $documentSource,
+                    $localeDestination
+                );
+                break;
+            case 'block':
+                $this->updateBlocksStructure(
+                    $structureArray,
+                    $property,
+                    $documentSource,
+                    $localeDestination
+                );
+                break;
+        }
+    }
+
+    protected function updateBlocksStructure(
+        array &$structureArray,
+        BlockMetadata $property,
+        BasePageDocument $documentSource,
+        $localeDestination
+    ) {
+        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+            return;
+        }
+
+        foreach ($structureArray[$property->getName()] as &$structure) {
+            /** @var ComponentMetadata $component */
+            $component = $property->getComponentByName($structure['type']);
+            /** @var PropertyMetadata $child */
+            foreach ($component->getChildren() as $child) {
+                if ($structure[$child->getName()]) {
+                    $this->processContentType(
+                        $child,
+                        $structure,
+                        $documentSource,
+                        $localeDestination
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the smart content structure when the property `dataSource` is set and the target is in the same webspace.
+     *
+     * @param array $structureArray
+     * @param PropertyMetadata $property
+     * @param BasePageDocument $documentSource
+     * @param string $localeDestination
+     */
+    protected function updateSmartContentStructure(
+        array &$structureArray,
+        PropertyMetadata $property,
+        BasePageDocument $documentSource,
+        $localeDestination
+    ) {
+        /** @var PropertyParameter $parameter */
+        foreach ($property->getParameters() as $parameter) {
+            if (!array_key_exists($property->getName(), $structureArray)) {
+                continue;
+            }
+
+            if ('provider' !== $parameter['name'] || 'content' !== $parameter['value']) {
+                continue;
+            }
+
+            if (!array_key_exists('dataSource', $structureArray[$property->getName()])) {
+                continue;
+            }
+
+            $targetDocumentDestination = $this->getTargetDocumentDestination(
+                $structureArray[$property->getName()]['dataSource'],
+                $documentSource->getLocale(),
+                $localeDestination
+            );
+
+            if (!$targetDocumentDestination) {
+                continue;
+            }
+
+            $structureArray[$property->getName()]['dataSource'] = $targetDocumentDestination->getUuid();
+        }
+    }
+
+    protected function updateHtmlSuluLinks(
+        array &$structureArray,
+        PropertyMetadata $property,
+        BasePageDocument $documentSource,
+        $localeDestination
+    ) {
+        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+            return;
+        }
+
+        if (!strpos($structureArray[$property->getName()], 'sulu:link')) {
+            return;
+        }
+
+        /** @var TagMatchGroup[] $tagMatchGroups */
+        $tagMatchGroups = $this->htmlTagExtractor->extract($structureArray[$property->getName()]);
+
+        foreach ($tagMatchGroups as $tagMatchGroup) {
+            if ('sulu' === $tagMatchGroup->getNamespace() && 'link' === $tagMatchGroup->getTagName()) {
+                foreach ($tagMatchGroup->getTags() as $tag) {
+                    $targetUuid = $tag['href'];
+
+                    $targetDocumentDestination = $this->getTargetDocumentDestination(
+                        $targetUuid,
+                        $documentSource->getLocale(),
+                        $localeDestination
+                    );
+
+                    if (!$targetDocumentDestination) {
+                        continue;
+                    }
+
+                    $structureArray[$property->getName()] = str_replace(
+                        $targetUuid,
+                        $targetDocumentDestination->getUuid(),
+                        $structureArray[$property->getName()]
+                    );
+                }
+            }
+        }
+    }
+
+    protected function updateInternalLinks(
+        array &$structureArray,
+        PropertyMetadata $property,
+        BasePageDocument $documentSource,
+        $localeDestination
+    ) {
+        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+            return;
+        }
+
+        foreach ($structureArray[$property->getName()] as $key => $value) {
+            $targetDocumentDestination = $this->getTargetDocumentDestination(
+                $value,
+                $documentSource->getLocale(),
+                $localeDestination
+            );
+
+            if (!$targetDocumentDestination) {
+                continue;
+            }
+
+            $structureArray[$property->getName()][$key] = $targetDocumentDestination->getUuid();
+        }
+    }
+
+    protected function updateSingleInternalLink(
+        array &$structureArray,
+        PropertyMetadata $property,
+        BasePageDocument $documentSource,
+        $localeDestination
+    ) {
+        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+            return;
+        }
+
+        $targetDocumentDestination = $this->getTargetDocumentDestination(
+            $structureArray[$property->getName()],
+            $documentSource->getLocale(),
+            $localeDestination
+        );
+
+        if (!$targetDocumentDestination) {
+            return;
+        }
+
+        $structureArray[$property->getName()] = $targetDocumentDestination->getUuid();
+    }
+
+    /**
+     * @param string $uuid
+     * @param string $localeSource
+     * @param string $localeDestination
+     *
+     * @return null|BasePageDocument
+     */
+    protected function getTargetDocumentDestination(
+        $uuid,
+        $localeSource,
+        $localeDestination
+    ) {
+        /** @var BasePageDocument $targetDocumentSource */
+        $targetDocumentSource = $this->documentManager->find($uuid, $localeSource);
+
+        if ($this->webspaceKeySource !== $targetDocumentSource->getWebspaceName()) {
+            return null;
+        }
+
+        // Generate new target path.
+        $newPathTarget = str_replace(
+            $this->sessionManager->getContentPath($this->webspaceKeySource),
+            $this->sessionManager->getContentPath($this->webspaceKeyDestination),
+            $targetDocumentSource->getPath()
+        );
+
+        /** @var BasePageDocument $targetDocumentDestination */
+        return $this->documentManager->find($newPathTarget, $localeDestination);
     }
 
     /**
