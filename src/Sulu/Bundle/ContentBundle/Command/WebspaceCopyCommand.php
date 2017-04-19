@@ -352,7 +352,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                 break;
         }
 
-        // Copy the structure and correct the targets of references.
+        // Copy the structure and correct the target of references.
         $newStructure = $documentSource->getStructure()->toArray();
         $metadata = $this->documentInspector->getStructureMetadata($documentSource);
         foreach ($metadata->getProperties() as $property) {
@@ -376,6 +376,12 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param ItemMetadata $property
+     * @param array $structureArray
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
     protected function processContentType(
         ItemMetadata $property,
         array &$structureArray,
@@ -426,6 +432,14 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * Process content type block.
+     *
+     * @param array $structureArray
+     * @param BlockMetadata $property
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
     protected function updateBlocksStructure(
         array &$structureArray,
         BlockMetadata $property,
@@ -495,6 +509,14 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * Updates references in structure for content type `single_internal_link`.
+     *
+     * @param array $structureArray
+     * @param PropertyMetadata $property
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
     protected function updateHtmlSuluLinks(
         array &$structureArray,
         PropertyMetadata $property,
@@ -537,6 +559,14 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * Updates references in structure for content type `internal_links`.
+     *
+     * @param array $structureArray
+     * @param PropertyMetadata $property
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
     protected function updateInternalLinks(
         array &$structureArray,
         PropertyMetadata $property,
@@ -562,6 +592,14 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * Updates references in structure for content type `single_internal_link`.
+     *
+     * @param array $structureArray
+     * @param PropertyMetadata $property
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
     protected function updateSingleInternalLink(
         array &$structureArray,
         PropertyMetadata $property,
