@@ -359,7 +359,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             $this->processContentType(
                 $property,
                 $newStructure,
-                $documentSource,
+                $documentSource->getLocale(),
                 $localeDestination
             );
         }
@@ -379,7 +379,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     protected function processContentType(
         ItemMetadata $property,
         array &$structureArray,
-        BasePageDocument $documentSource,
+        $localeSource,
         $localeDestination
     ) {
         switch ($property->getType()) {
@@ -387,7 +387,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                 $this->updateSmartContentStructure(
                     $structureArray,
                     $property,
-                    $documentSource,
+                    $localeSource,
                     $localeDestination
                 );
                 break;
@@ -395,7 +395,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                 $this->updateHtmlSuluLinks(
                     $structureArray,
                     $property,
-                    $documentSource,
+                    $localeSource,
                     $localeDestination
                 );
                 break;
@@ -403,7 +403,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                 $this->updateInternalLinks(
                     $structureArray,
                     $property,
-                    $documentSource,
+                    $localeSource,
                     $localeDestination
                 );
                 break;
@@ -411,7 +411,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                 $this->updateSingleInternalLink(
                     $structureArray,
                     $property,
-                    $documentSource,
+                    $localeSource,
                     $localeDestination
                 );
                 break;
@@ -419,7 +419,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                 $this->updateBlocksStructure(
                     $structureArray,
                     $property,
-                    $documentSource,
+                    $localeSource,
                     $localeDestination
                 );
                 break;
@@ -429,7 +429,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     protected function updateBlocksStructure(
         array &$structureArray,
         BlockMetadata $property,
-        BasePageDocument $documentSource,
+        $localeSource,
         $localeDestination
     ) {
         if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
@@ -445,7 +445,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                     $this->processContentType(
                         $child,
                         $structure,
-                        $documentSource,
+                        $localeSource,
                         $localeDestination
                     );
                 }
@@ -458,13 +458,13 @@ class WebspaceCopyCommand extends ContainerAwareCommand
      *
      * @param array $structureArray
      * @param PropertyMetadata $property
-     * @param BasePageDocument $documentSource
+     * @param string $localeSource
      * @param string $localeDestination
      */
     protected function updateSmartContentStructure(
         array &$structureArray,
         PropertyMetadata $property,
-        BasePageDocument $documentSource,
+        $localeSource,
         $localeDestination
     ) {
         /** @var PropertyParameter $parameter */
@@ -483,7 +483,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
             $targetDocumentDestination = $this->getTargetDocumentDestination(
                 $structureArray[$property->getName()]['dataSource'],
-                $documentSource->getLocale(),
+                $localeSource,
                 $localeDestination
             );
 
@@ -498,7 +498,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     protected function updateHtmlSuluLinks(
         array &$structureArray,
         PropertyMetadata $property,
-        BasePageDocument $documentSource,
+        $localeSource,
         $localeDestination
     ) {
         if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
@@ -519,7 +519,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
                     $targetDocumentDestination = $this->getTargetDocumentDestination(
                         $targetUuid,
-                        $documentSource->getLocale(),
+                        $localeSource,
                         $localeDestination
                     );
 
@@ -540,7 +540,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     protected function updateInternalLinks(
         array &$structureArray,
         PropertyMetadata $property,
-        BasePageDocument $documentSource,
+        $localeSource,
         $localeDestination
     ) {
         if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
@@ -550,7 +550,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         foreach ($structureArray[$property->getName()] as $key => $value) {
             $targetDocumentDestination = $this->getTargetDocumentDestination(
                 $value,
-                $documentSource->getLocale(),
+                $localeSource,
                 $localeDestination
             );
 
@@ -565,7 +565,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
     protected function updateSingleInternalLink(
         array &$structureArray,
         PropertyMetadata $property,
-        BasePageDocument $documentSource,
+        $localeSource,
         $localeDestination
     ) {
         if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
@@ -574,7 +574,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
         $targetDocumentDestination = $this->getTargetDocumentDestination(
             $structureArray[$property->getName()],
-            $documentSource->getLocale(),
+            $localeSource,
             $localeDestination
         );
 
