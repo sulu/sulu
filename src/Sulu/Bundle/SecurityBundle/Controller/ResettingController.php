@@ -184,16 +184,22 @@ class ResettingController extends Controller
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         $template = $this->getParameter('sulu_security.reset_password.mail.template');
+        $translationDomain = $this->getParameter('sulu_security.reset_password.mail.translation_domain');
 
         if (!$this->get('templating')->exists($template)) {
             throw new EmailTemplateException($template);
         }
 
-        return trim($this->renderView($template, [
-            'user' => $user,
-            'reset_url' => $resetUrl,
-            'translation_domain' => $this->getParameter('sulu_security.reset_password.mail.translation_domain'),
-        ]));
+        return trim(
+            $this->renderView(
+                $template,
+                    [
+                        'user' => $user,
+                        'reset_url' => $resetUrl,
+                        'translation_domain' => $translationDomain,
+                    ]
+            )
+        );
     }
 
     /**

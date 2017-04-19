@@ -28,8 +28,8 @@ class EmailTemplateException extends SecurityException
      */
     public function __construct($template)
     {
-        $this->template = $template;
         parent::__construct(sprintf('Email template "%s" does not exist!', $template), 1008);
+        $this->template = $template;
     }
 
     /**
