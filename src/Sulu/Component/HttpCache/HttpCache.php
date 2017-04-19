@@ -77,6 +77,14 @@ class HttpCache extends EventDispatchingHttpCache
             $response->headers->remove(self::HEADER_REVERSE_PROXY_TTL);
         }
 
+        // Necessary because the cookie in the request is faked if it does not exist yet
+        // This ensures that the cookie is also set in the browser of the user
+        if ($userContext) {
+            $response->headers->setCookie(
+                new Cookie(static::SESSION_NAME_PREFIX, $userContext)
+            );
+        }
+
         return $response;
     }
 

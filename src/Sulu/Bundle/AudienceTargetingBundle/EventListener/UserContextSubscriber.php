@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -28,16 +27,10 @@ class UserContextSubscriber implements EventSubscriberInterface
      */
     private $httpHeader;
 
-    /**
-     * @var string
-     */
-    private $cookieName;
-
-    public function __construct($contextUrl, $httpHeader, $cookieName)
+    public function __construct($contextUrl, $httpHeader)
     {
         $this->contextUrl = $contextUrl;
         $this->httpHeader = $httpHeader;
-        $this->cookieName = $cookieName;
     }
 
     /**
@@ -58,9 +51,5 @@ class UserContextSubscriber implements EventSubscriberInterface
         if ($request->getRequestUri() !== $this->contextUrl) {
             $response->setVary($this->httpHeader, false);
         }
-
-        // Necessary because the cookie in the request is faked when the request is passed from the Symfony cache
-        // This ensures that the cookie is also set in the browser of the user
-        $response->headers->setCookie(new Cookie($this->cookieName, $request->cookies->get($this->cookieName)));
     }
 }

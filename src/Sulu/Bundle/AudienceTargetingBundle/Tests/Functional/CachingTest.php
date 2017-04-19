@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests;
 
 use FOS\HttpCache\SymfonyCache\UserContextSubscriber;
+use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -22,6 +23,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInte
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\CookieJar;
+use Symfony\Component\HttpFoundation\Cookie;
 
 require_once __DIR__ . '/../app/AppCache.php';
 
@@ -94,6 +96,11 @@ class CachingTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertContains('X-User-Context-Hash', $response->getVary());
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(1, $response->headers->getCookies());
+        /** @var Cookie $cookie */
+        $cookie = $response->headers->getCookies()[0];
+        $this->assertEquals('user-context', $cookie->getName());
+        $this->assertTrue(Uuid::isValid($cookie->getValue()));
 
         $cookieNames = array_map(function($cookie) {
             return $cookie->getName();
@@ -105,6 +112,7 @@ class CachingTest extends SuluTestCase
         $this->client->request('GET', '/');
         $response = $this->client->getResponse();
         $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(0, $response->headers->getCookies());
 
         // third request from a different client with a different language should be a cache miss,
         // since a new target group should be selected
@@ -113,6 +121,11 @@ class CachingTest extends SuluTestCase
         $this->client->request('GET', '/', [], [], ['HTTP_ACCEPT_LANGUAGE' => 'de']);
         $response = $this->client->getResponse();
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(1, $response->headers->getCookies());
+        /** @var Cookie $cookie */
+        $cookie = $response->headers->getCookies()[0];
+        $this->assertEquals('user-context', $cookie->getName());
+        $this->assertTrue(Uuid::isValid($cookie->getValue()));
     }
 
     private function resetUserHash()

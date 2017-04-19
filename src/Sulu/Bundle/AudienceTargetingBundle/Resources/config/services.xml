@@ -84,7 +84,6 @@
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
             <argument>%sulu_audience_targeting.user_context.uri%</argument>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
-            <argument>%sulu_audience_targeting.user_context.cookie%</argument>
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>
