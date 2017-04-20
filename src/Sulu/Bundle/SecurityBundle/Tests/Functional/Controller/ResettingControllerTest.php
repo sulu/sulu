@@ -13,9 +13,9 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\SecurityBundle\Controller\ResettingController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 class ResettingControllerTest extends SuluTestCase
 {
@@ -110,14 +110,18 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
 
         // asserting sent mail
+        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
         $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($expectedEmailData['sender'], key($message->getFrom()));
         $this->assertEquals($user->getEmail(), key($message->getTo()));
-        $this->assertContains($user->getPasswordResetToken(), $message->getBody());
+        $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
+        $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
-    public function testSendEmailActionWtihUsername()
+    public function testSendEmailActionWithUsername()
     {
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
@@ -142,11 +146,15 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
+        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
         $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($expectedEmailData['sender'], key($message->getFrom()));
         $this->assertEquals($user->getEmail(), key($message->getTo()));
-        $this->assertContains($user->getPasswordResetToken(), $message->getBody());
+        $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
+        $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
     public function testSendEmailActionWithUserWithoutEmail()
@@ -174,11 +182,15 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
+        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
         $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($expectedEmailData['sender'], key($message->getFrom()));
         $this->assertEquals('installation.email@sulu.test', key($message->getTo()));
-        $this->assertContains($user->getPasswordResetToken(), $message->getBody());
+        $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
+        $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
     public function testResendEmailAction()
@@ -206,11 +218,15 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(2, $user->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
+        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
         $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($expectedEmailData['sender'], key($message->getFrom()));
         $this->assertEquals($user->getEmail(), key($message->getTo()));
-        $this->assertContains($user->getPasswordResetToken(), $message->getBody());
+        $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
+        $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
     public function testResendEmailActionTooMuch()
@@ -220,7 +236,8 @@ class ResettingControllerTest extends SuluTestCase
 
         // these request should all work (starting counter at 1 - because user3 already has one sent email)
         $counter = 1;
-        for (; $counter < ResettingController::MAX_NUMBER_EMAILS; ++$counter) {
+        $maxNumberEmails = $this->getContainer()->getParameter('sulu_security.reset_password.mail.token_send_limit');
+        for (; $counter < $maxNumberEmails; ++$counter) {
             $client->request('GET', '/security/reset/email/resend', [
                 'user' => $this->user3->getEmail(),
             ]);
@@ -360,5 +377,25 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(1005, $response->code);
         $this->assertEquals($passwordBefore, $user->getPassword());
+    }
+
+    protected function getExpectedEmailData(Client $client, User $user)
+    {
+        $sender = $this->getContainer()->getParameter('sulu_security.reset_password.mail.sender');
+        $template = $this->getContainer()->getParameter('sulu_security.reset_password.mail.template');
+        $resetUrl = $this->getContainer()->get('router')->generate('sulu_admin.reset', [
+            'token' => $user->getPasswordResetToken(),
+        ], \Symfony\Component\Routing\Router::ABSOLUTE_URL);
+        $body = $this->getContainer()->get('templating')->render($template, [
+            'user' => $user,
+            'reset_url' => $resetUrl,
+            'translation_domain' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.translation_domain'),
+        ]);
+
+        return [
+            'subject' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.subject'),
+            'body' => trim($body),
+            'sender' => $sender ? $sender : 'no-reply@' . $client->getRequest()->getHost(),
+        ];
     }
 }
