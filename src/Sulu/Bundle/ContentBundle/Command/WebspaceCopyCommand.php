@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
-use Doctrine\ORM\Query\Expr\Base;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
@@ -32,7 +31,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Validator\Mapping\PropertyMetadataInterface;
 
 /**
  * Copies a given webspace with given locale to a destination webspace with a destination locale.
@@ -74,7 +72,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
      */
     protected $webspaceKeyDestination;
 
-
     protected function configure()
     {
         $this->setName('sulu:webspaces:copy')
@@ -111,11 +108,11 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         ]);
 
         $localesPairs = [];
-        for ($i = 0; $i < count($localesSource); $i++) {
+        for ($i = 0; $i < count($localesSource); ++$i) {
             $localesPairs[] = $localesSource[$i] . ' => ' . $localesDestination[$i];
         }
         $output->writeln([
-            'Locales: ' . join(', ' ,$localesPairs),
+            'Locales: ' . implode(', ', $localesPairs),
             '---------------',
             '',
         ]);
@@ -152,7 +149,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $this->output->writeln([
             '2. Copy pages to destination webspace',
         ]);
-        for ($i = 0; $i < count($localesSource); $i++) {
+        for ($i = 0; $i < count($localesSource); ++$i) {
             $this->copyWebspace(
                 $localesSource[$i],
                 $localesDestination[$i]
@@ -162,7 +159,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $this->output->writeln([
             '3. Generate redirects',
         ]);
-        for ($i = 0; $i < count($localesSource); $i++) {
+        for ($i = 0; $i < count($localesSource); ++$i) {
             $this->copyRedirectsAndStructure(
                 $localesSource[$i],
                 $localesDestination[$i]
@@ -193,7 +190,8 @@ class WebspaceCopyCommand extends ContainerAwareCommand
      * @param string $localeSource
      * @param string $localeDestination
      */
-    protected function copyWebspace($localeSource, $localeDestination) {
+    protected function copyWebspace($localeSource, $localeDestination)
+    {
         $this->output->writeln([
             '------------------------------',
             '<info>Webspace: </info>' . $this->webspaceKeySource . ' => ' . $this->webspaceKeyDestination,
