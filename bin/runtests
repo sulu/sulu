@@ -130,6 +130,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
     if ($verbose) {
         $cmd .= ' --verbose';
     }
+
     return exec_cmd(
         'php ' . __DIR__ . '/console ' . $cmd,
         $echo,
@@ -139,6 +140,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
 
 function exec_cmd($cmdLine, $echo = true, $checkForError = true)
 {
+    writeln($cmdLine);
     $process = new Process($cmdLine);
     $process->setTimeout(null);
     $process->run(function ($type, $out) use ($echo) {
@@ -365,11 +367,11 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
         $filesystem->remove($cacheDir);
     }
 
+    putenv('KERNEL_DIR=' . $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname()));
+
     // see if this bundle uses doctrine orm, and update the schema if so..
     // (we assume that the bundle will purge the fixtures etc.)
     init_bundle($phpunitFile->getPathname());
-
-    putenv('KERNEL_DIR=' . $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname()));
 
     write_info('Running tests');
 
@@ -420,7 +422,11 @@ function init_bundle($phpunitPath)
         ' doctrine:schema:update --force'
     ));
 
-    exec_sf_cmd('sulu:document:initialize --ansi', false);
+    exec_cmd(sprintf(
+        'php %s %s',
+        $console,
+        ' sulu:document:initialize --purge --force --ansi'
+    ));
 }
 
 function is_everything_ok()
@@ -470,7 +476,6 @@ if ($input->getOption('initialize')) {
     }
     init_dbal();
     write_info('Initializing the content repository');
-    exec_sf_cmd('sulu:document:initialize --ansi', true);
     if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'doctrine_dbal') {
         init_phpcr_dbal();
     }
@@ -498,6 +503,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     // should explicitly indicate which kernels they are using.
     // https://github.com/sulu-io/sulu/issues/2187
     putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
+    exec_sf_cmd('sulu:document:initialize --purge --ansi --force', true);
     $process = exec_cmd(
         'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
         true,
