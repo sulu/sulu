@@ -535,6 +535,10 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         foreach ($tagMatchGroups as $tagMatchGroup) {
             if ('sulu' === $tagMatchGroup->getNamespace() && 'link' === $tagMatchGroup->getTagName()) {
                 foreach ($tagMatchGroup->getTags() as $tag) {
+                    if ('page' !== $tag['provider']) {
+                        continue;
+                    }
+
                     $targetUuid = $tag['href'];
 
                     $targetDocumentDestination = $this->getTargetDocumentDestination(
