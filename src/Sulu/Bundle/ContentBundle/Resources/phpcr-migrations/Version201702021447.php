@@ -91,10 +91,13 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
                 $creatorPropertyName = sprintf('i18n:%s-creator', $localization->getLocale());
                 if ($node->hasProperty($creatorPropertyName)) {
                     $user = $this->userRepository->findUserById($node->getPropertyValue($creatorPropertyName));
-                    $node->setProperty(
-                        sprintf('i18n:%s-author', $localization->getLocale()),
-                        $user->getContact()->getId()
-                    );
+
+                    if ($user) {
+                        $node->setProperty(
+                            sprintf('i18n:%s-author', $localization->getLocale()),
+                            $user->getContact()->getId()
+                        );
+                    }
                 }
             }
         }
