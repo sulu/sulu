@@ -1974,7 +1974,7 @@ class NodeControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $nodes = $response['_embedded']['nodes'];
-        $this->assertCount(2, $nodes);
+        $this->assertCount(3, $nodes);
 
         $titles = array_map(
             function ($node) {
@@ -1984,6 +1984,7 @@ class NodeControllerTest extends SuluTestCase
         );
         $this->assertContains('Sulu CMF', $titles);
         $this->assertContains('Test CMF', $titles);
+        $this->assertContains('Destination CMF', $titles);
     }
 
     public function testCGetWithAllWebspaceNodesDifferentLocales()
