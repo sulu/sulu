@@ -91,12 +91,12 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $localesDestination = explode(',', $input->getArgument('destination-locale'));
 
         if (count($localesSource) !== count($localesDestination)) {
-            $output->writeln(
-                '<info>Processing aborted: </info>' .
-                '<comment>Provide correct source and destination locales</comment>'
-            );
+            $output->writeln([
+                '<error>Aborted!</error>',
+                '<comment>Provide correct source and destination locales</comment>',
+            ]);
 
-            return;
+            return -1;
         }
 
         $output->writeln([
