@@ -11,50 +11,38 @@
 
 namespace Sulu\Component\HttpCache;
 
-use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
-use FOS\HttpCache\SymfonyCache\UserContextSubscriber;
-use Ramsey\Uuid\Uuid;
+use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache as AbstractHttpCache;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpCache\Esi;
-use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Sulu HttpCache - Lookups a valid Response from the cache for the given request
  * or forwards the Request to the backend and stores the Response in the cache.
  */
-class HttpCache extends EventDispatchingHttpCache
+class HttpCache extends AbstractHttpCache
 {
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
-    const USER_HASH_URI = '/_user_context';
+    const USER_CONTEXT_URI = '/_user_context';
 
-    const USER_HASH_HEADER = 'X-User-Context-Hash';
+    const USER_CONTEXT_HEADER = 'X-User-Context';
 
-    const SESSION_NAME_PREFIX = 'user-context';
+    const USER_CONTEXT_COOKIE = 'user-context';
 
+    const USER_CONTEXT_COOKIE_LIFETIME = 2147483647;
+
+    /**
+     * @var bool
+     */
     private $hasUserContext;
 
     public function __construct(HttpKernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
     {
-        parent::__construct(
-            $kernel,
-            new Store($cacheDir ?: $kernel->getCacheDir() . '/http_cache'),
-            new Esi(),
-            ['debug' => $kernel->isDebug()]
-        );
+        parent::__construct($kernel, $cacheDir);
 
         $this->hasUserContext = $hasUserContext;
-
-        if ($hasUserContext) {
-            $this->addSubscriber(new UserContextSubscriber([
-                'user_hash_header' => static::USER_HASH_HEADER,
-                'user_hash_uri' => static::USER_HASH_URI,
-                'session_name_prefix' => static::SESSION_NAME_PREFIX,
-            ]));
-        }
     }
 
     /**
@@ -62,27 +50,19 @@ class HttpCache extends EventDispatchingHttpCache
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        $userContext = null;
+        $hadUserContextCookie = null;
         if ($this->hasUserContext) {
-            if (!$request->cookies->has(static::SESSION_NAME_PREFIX)) {
-                // fake the cookie, because the FOSHttpCache will not cache otherwise, because the request is anonymous
-                $userContext = Uuid::uuid4()->toString();
-                $request->cookies->add([static::SESSION_NAME_PREFIX => $userContext]);
-            }
+            $hadUserContextCookie = $this->setUserContextHeader($request);
         }
 
         $response = parent::handle($request, $type, $catch);
 
-        if (!$this->getKernel()->isDebug()) {
+        if (!$this->kernel->isDebug()) {
             $response->headers->remove(self::HEADER_REVERSE_PROXY_TTL);
         }
 
-        // Necessary because the cookie in the request is faked if it does not exist yet
-        // This ensures that the cookie is also set in the browser of the user
-        if ($userContext) {
-            $response->headers->setCookie(
-                new Cookie(static::SESSION_NAME_PREFIX, $userContext)
-            );
+        if ($this->hasUserContext && !$hadUserContextCookie) {
+            $this->setUserContextCookie($response, $request);
         }
 
         return $response;
@@ -117,6 +97,75 @@ class HttpCache extends EventDispatchingHttpCache
         }
 
         return true;
+    }
+
+    /**
+     * Sets the user context header based on an existing cookie, so that the application can adapt the content according
+     * to it. If the cookie didn't exist yet, another request is fired in order to set the value for the cookie.
+     *
+     * Returns true if the cookie was already set and false otherwise.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function setUserContextHeader(Request $request)
+    {
+        $hadUserContextCookie = true;
+        $userContext = $request->cookies->get(static::USER_CONTEXT_COOKIE);
+
+        if (null === $userContext) {
+            $hadUserContextCookie = false;
+            $userContext = $this->requestUserContext($request);
+        }
+
+        if ($request->isMethodSafe()) {
+            // add the user context as separate header to vary on it
+            $request->headers->set(static::USER_CONTEXT_HEADER, (string) $userContext);
+        }
+
+        return $hadUserContextCookie;
+    }
+
+    /**
+     * Sends a request to the application to determine the target group of the current user.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    private function requestUserContext(Request $request)
+    {
+        $userContextRequest = Request::create(
+            static::USER_CONTEXT_URI,
+            Request::METHOD_GET,
+            [],
+            [],
+            [],
+            $request->server->all()
+        );
+
+        // use the parent class to avoid user context based caching
+        $userContextResponse = parent::handle($userContextRequest);
+
+        return $userContextResponse->headers->get(static::USER_CONTEXT_HEADER);
+    }
+
+    /**
+     * Set the cookie for the user context from the request. Should only be set in case the cookie was not set before.
+     *
+     * @param Response $response
+     * @param Request $request
+     */
+    private function setUserContextCookie(Response $response, Request $request)
+    {
+        $response->headers->setCookie(
+            new Cookie(
+                static::USER_CONTEXT_COOKIE,
+                $request->headers->get(static::USER_CONTEXT_HEADER),
+                static::USER_CONTEXT_COOKIE_LIFETIME
+            )
+        );
     }
 
     /**

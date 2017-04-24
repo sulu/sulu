@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
-use FOS\HttpCache\UserContext\HashGenerator;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,39 +21,31 @@ use Symfony\Component\HttpFoundation\Response;
 class UserContextController
 {
     /**
-     * @var HashGenerator
+     * @var TargetGroupEvaluatorInterface
      */
-    private $hashGenerator;
+    private $targetGroupEvaluator;
 
     /**
      * @var string
      */
     private $hashHeader;
 
-    /**
-     * @var int
-     */
-    private $cacheLifeTime;
-
-    public function __construct(HashGenerator $hashGenerator, $hashHeader, $cacheLifeTime)
+    public function __construct(TargetGroupEvaluatorInterface $targetGroupEvaluator, $hashHeader)
     {
-        $this->hashGenerator = $hashGenerator;
+        $this->targetGroupEvaluator = $targetGroupEvaluator;
         $this->hashHeader = $hashHeader;
-        $this->cacheLifeTime = $cacheLifeTime;
     }
 
     /**
      * Takes the request and calculates a user context hash based on the user.
      */
-    public function hashAction()
+    public function targetGroupAction()
     {
-        $response = new Response(null, 200, [
-            $this->hashHeader => $this->hashGenerator->generateHash(),
-            'Content-Type' => 'application/vnd.fos.user-context-hash',
-        ]);
+        $targetGroup = $this->targetGroupEvaluator->evaluate();
 
-        $response->setVary('cookie');
-        $response->setSharedMaxAge($this->cacheLifeTime);
+        $response = new Response(null, 200, [
+            $this->hashHeader => $targetGroup ? $targetGroup->getId() : 0,
+        ]);
 
         return $response;
     }

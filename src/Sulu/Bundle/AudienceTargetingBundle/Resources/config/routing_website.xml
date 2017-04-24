@@ -4,6 +4,6 @@
         xsi:schemaLocation="http://symfony.com/schema/routing
         http://symfony.com/schema/routing/routing-1.0.xsd">
     <route id="sulu_audience_targeting.user_context" path="%sulu_audience_targeting.user_context.uri%">
-        <default key="_controller">sulu_audience_targeting.user_context_controller:hashAction</default>
+        <default key="_controller">sulu_audience_targeting.user_context_controller:targetGroupAction</default>
     </route>
 </routes>

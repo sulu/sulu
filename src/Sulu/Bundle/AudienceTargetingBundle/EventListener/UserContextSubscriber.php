@@ -39,10 +39,17 @@ class UserContextSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::RESPONSE => 'addUserContextHeaders',
+            KernelEvents::RESPONSE => [
+                'addUserContextHeaders',
+            ],
         ];
     }
 
+    /**
+     * Adds the vary header on the response, so that the cache takes the user contexts into account.
+     *
+     * @param FilterResponseEvent $event
+     */
     public function addUserContextHeaders(FilterResponseEvent $event)
     {
         $request = $event->getRequest();

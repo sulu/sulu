@@ -67,18 +67,8 @@
         <!--USER CONTEXT-->
         <service id="sulu_audience_targeting.user_context_controller"
                  class="Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController">
-            <argument type="service" id="sulu_audience_targeting.cache.hash_generator"/>
-            <argument>%sulu_audience_targeting.user_context.header%</argument>
-            <argument>%sulu_audience_targeting.user_context.lifetime%</argument>
-        </service>
-        <service id="sulu_audience_targeting.cache.hash_generator" class="FOS\HttpCache\UserContext\HashGenerator">
-            <argument type="collection">
-                <argument type="service" id="sulu_audience_targeting.cache.audience_targeting_provider"/>
-            </argument>
-        </service>
-        <service id="sulu_audience_targeting.cache.audience_targeting_provider"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Cache\AudienceTargetingContextProvider">
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
+            <argument>%sulu_audience_targeting.user_context.header%</argument>
         </service>
         <service id="sulu_audience_targeting.user_context_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">

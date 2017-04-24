@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests;
 
-use FOS\HttpCache\SymfonyCache\UserContextSubscriber;
-use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -84,31 +82,24 @@ class CachingTest extends SuluTestCase
         /** @var TargetGroupConditionInterface $targetGroupCondition */
         $targetGroupCondition = $targetGroupConditionRepository->createNew();
         $targetGroupCondition->setType('locale');
-        $targetGroupCondition->setCondition(['locale' => 'de']);
+        $targetGroupCondition->setCondition(['locale' => 'en']);
         $targetGroupRule->addCondition($targetGroupCondition);
         $targetGroup->addRule($targetGroupRule);
-        $targetGroupRepository->save($targetGroup);
+        $targetGroup = $targetGroupRepository->save($targetGroup);
         $this->getEntityManager()->flush();
 
         // first request should be cache miss
-        $this->resetUserHash();
         $this->client->request('GET', '/');
         $response = $this->client->getResponse();
-        $this->assertContains('X-User-Context-Hash', $response->getVary());
+        $this->assertContains('X-User-Context', $response->getVary());
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(1, $response->headers->getCookies());
         /** @var Cookie $cookie */
         $cookie = $response->headers->getCookies()[0];
         $this->assertEquals('user-context', $cookie->getName());
-        $this->assertTrue(Uuid::isValid($cookie->getValue()));
-
-        $cookieNames = array_map(function($cookie) {
-            return $cookie->getName();
-        }, $response->headers->getCookies());
-        $this->assertContains('user-context', $cookieNames);
+        $this->assertEquals($targetGroup->getId(), $cookie->getValue());
 
         // second request should be cache hit
-        $this->resetUserHash();
         $this->client->request('GET', '/');
         $response = $this->client->getResponse();
         $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
@@ -116,7 +107,6 @@ class CachingTest extends SuluTestCase
 
         // third request from a different client with a different language should be a cache miss,
         // since a new target group should be selected
-        $this->resetUserHash();
         $this->cookieJar->clear(); // new client does not have any cookies yet
         $this->client->request('GET', '/', [], [], ['HTTP_ACCEPT_LANGUAGE' => 'de']);
         $response = $this->client->getResponse();
@@ -125,14 +115,6 @@ class CachingTest extends SuluTestCase
         /** @var Cookie $cookie */
         $cookie = $response->headers->getCookies()[0];
         $this->assertEquals('user-context', $cookie->getName());
-        $this->assertTrue(Uuid::isValid($cookie->getValue()));
-    }
-
-    private function resetUserHash()
-    {
-        $userContextSubscriber = $this->client->getKernel()->getEventDispatcher()->getListeners('fos_http_cache.pre_handle')[0][0];
-        $userContextSubscriberReflection = new \ReflectionProperty(UserContextSubscriber::class, 'userHash');
-        $userContextSubscriberReflection->setAccessible(true);
-        $userContextSubscriberReflection->setValue($userContextSubscriber, null);
+        $this->assertEquals(0, $cookie->getValue());
     }
 }

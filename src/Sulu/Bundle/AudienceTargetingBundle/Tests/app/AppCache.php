@@ -14,12 +14,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class AppCache extends HttpCache implements KernelInterface
 {
-    private $kernel;
-
     public function __construct(KernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
     {
         parent::__construct($kernel, $hasUserContext, $cacheDir);
-        $this->kernel = $kernel;
     }
 
     /**
