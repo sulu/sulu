@@ -126,7 +126,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             '',
         ]);
 
-        if (!true === $input->getOption('clear-destination-webspace')) {
+        if (true !== $input->getOption('clear-destination-webspace')) {
             $output->writeln([
                 '<error>==============================',
                 '<error>Aborted!</error>',
