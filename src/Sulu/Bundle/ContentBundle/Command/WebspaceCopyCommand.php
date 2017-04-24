@@ -25,12 +25,12 @@ use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Copies a given webspace with given locale to a destination webspace with a destination locale.
@@ -79,6 +79,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             ->addArgument('source-locale', InputArgument::REQUIRED)
             ->addArgument('destination-webspace', InputArgument::REQUIRED)
             ->addArgument('destination-locale', InputArgument::REQUIRED)
+            ->addOption('clear-destination-webspace')
             ->setDescription('Copy whole webspace');
     }
 
@@ -113,17 +114,27 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
         $output->writeln([
             'Locales: ' . implode(', ', $localesPairs),
-            '---------------',
+            '------------------------------',
             '',
         ]);
 
-        $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion('<question>Continue with this options?(y/n)</question> ', false);
+        $output->writeln([
+            '<info>==============================</info>',
+            '<info>ATTENTION</info>',
+            '<info>The whole destination webspace (' . $webspaceKeyDestination . ') will be deleted!</info>',
+            '<info>==============================</info>',
+            '',
+        ]);
 
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<error>Abort!</error>');
+        if (!true === $input->getOption('clear-destination-webspace')) {
+            $output->writeln([
+                '<error>==============================',
+                '<error>Aborted!</error>',
+                '<error>Run this command with --clear-destination-webspace</error>',
+                '<error>==============================</error>',
+            ]);
 
-            return;
+            return -1;
         }
 
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
@@ -139,6 +150,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $this->output->writeln([
             '==============================',
             '1. Clear destination webspace',
+            '------------------------------',
         ]);
         $this->clearDestinationWebspace();
         $this->output->writeln([
@@ -147,6 +159,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         ]);
 
         $this->output->writeln([
+            '==============================',
             '2. Copy pages to destination webspace',
         ]);
         for ($i = 0; $i < count($localesSource); ++$i) {
@@ -157,7 +170,8 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
 
         $this->output->writeln([
-            '3. Generate redirects',
+            '==============================',
+            '3. Copy redirects and structure',
         ]);
         for ($i = 0; $i < count($localesSource); ++$i) {
             $this->copyRedirectsAndStructure(
@@ -263,7 +277,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         BasePageDocument $parentDocumentDestination = null,
         $localeDestination
     ) {
-        // Generate new path.
         $newPath = str_replace(
             $this->sessionManager->getContentPath($this->webspaceKeySource),
             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
@@ -275,7 +288,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         /** @var BasePageDocument $documentDestination */
         try {
             $documentDestination = $this->documentManager->find($newPath, $localeDestination);
-        } catch (\Exception $exception) {
+        } catch (DocumentNotFoundException $exception) {
             $documentDestination = $this->documentManager->create('page');
         }
 
@@ -315,7 +328,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         BasePageDocument $documentSource,
         $localeDestination
     ) {
-        // Generate new path.
         $newPath = str_replace(
             $this->sessionManager->getContentPath($this->webspaceKeySource),
             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
@@ -330,7 +342,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         // Copy the redirects and correct the target.
         switch ($documentSource->getRedirectType()) {
             case RedirectType::INTERNAL:
-                // Generate new target path.
                 $newPathTarget = str_replace(
                     $this->sessionManager->getContentPath($this->webspaceKeySource),
                     $this->sessionManager->getContentPath($this->webspaceKeyDestination),
@@ -345,8 +356,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             case RedirectType::EXTERNAL:
                 $documentDestination->setRedirectType(RedirectType::EXTERNAL);
                 $documentDestination->setRedirectExternal($documentDestination->getRedirectExternal());
-                break;
-            default:
                 break;
         }
 
@@ -644,7 +653,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             return null;
         }
 
-        // Generate new target path.
         $newPathTarget = str_replace(
             $this->sessionManager->getContentPath($this->webspaceKeySource),
             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
