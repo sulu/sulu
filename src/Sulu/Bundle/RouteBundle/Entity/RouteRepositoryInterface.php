@@ -54,4 +54,15 @@ interface RouteRepositoryInterface
      * @return RouteInterface
      */
     public function findByEntity($entityClass, $entityId, $locale);
+
+    /**
+     * Return history-routes for given entity information.
+     *
+     * @param string $entityClass
+     * @param string $entityId
+     * @param string $locale
+     *
+     * @return RouteInterface[]
+     */
+    public function findHistoryByEntity($entityClass, $entityId, $locale);
 }

@@ -11,10 +11,20 @@
 
 namespace Sulu\Bundle\RouteBundle\Entity;
 
+use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route as HateoasRoute;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
 /**
  * Represents a base route in the route-pool.
+ *
+ * @Relation(
+ *     "delete",
+ *     href = @HateoasRoute(
+ *         "delete_route",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
  */
 abstract class BaseRoute implements RouteInterface
 {

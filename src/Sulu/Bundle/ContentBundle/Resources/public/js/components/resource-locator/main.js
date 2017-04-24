@@ -21,6 +21,8 @@ define(['config'], function(Config) {
             instanceName: null,
             url: null,
             historyApi: null,
+            historyResultKey: 'resourcelocators',
+            pathKey: 'resourceLocator',
             deleteApi: null,
             inputType: null,
             webspaceKey: null
@@ -146,11 +148,16 @@ define(['config'], function(Config) {
                 if (confirmed === true) {
                     var $currentElement = this.sandbox.dom.$(e.currentTarget),
                         $element = this.sandbox.dom.parent($currentElement),
-                        id = this.sandbox.dom.data($element, 'id');
+                        id = this.sandbox.dom.data($element, 'id'),
+                        link = this.items[id]._links.delete;
+
+                    if (typeof link === 'object') {
+                        link = link.href;
+                    }
 
                     startOptionsLoader.call(this, $element);
 
-                    this.sandbox.util.save(this.items[id]._links.delete, 'DELETE')
+                    this.sandbox.util.save(link, 'DELETE')
                         .then(function() {
                             stopOptionsLoader.call(this, $element);
                             this.sandbox.dom.remove($element);
@@ -205,8 +212,8 @@ define(['config'], function(Config) {
                 this.sandbox.util.foreach(histories, function(history) {
                     this.items[history.id] = history;
                     html.push(
-                            '<li data-id="' + history.id + '" data-path="' + history.resourceLocator + '">' +
-                            '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 30) + '</span>' +
+                        '<li data-id="' + history.id + '" data-path="' + history[this.options.pathKey] + '">' +
+                        '   <span class="url">' + this.sandbox.util.cropMiddle(history[this.options.pathKey], 30) + '</span>' +
                             '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
                             '   <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>' +
                             '</li>'
@@ -247,7 +254,7 @@ define(['config'], function(Config) {
             startLoader.call(this);
             this.sandbox.util.load(this.options.historyApi).then(function(data) {
                 stopLoader.call(this);
-                var content = renderHistories.call(this, data._embedded.resourcelocators);
+                var content = renderHistories.call(this, data._embedded[this.options.historyResultKey]);
                 startOverlay.call(this, content);
             }.bind(this));
         },
