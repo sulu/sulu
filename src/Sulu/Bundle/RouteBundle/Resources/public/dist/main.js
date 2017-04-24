@@ -1,0 +1,1 @@
+require.config({paths:{suluroute:"../../suluroute/dist"}}),define(function(){"use strict";return{name:"Sulu Route Bundle",initialize:function(a){a.components.addSource("suluroute","/bundles/suluroute/dist/components")}}});
