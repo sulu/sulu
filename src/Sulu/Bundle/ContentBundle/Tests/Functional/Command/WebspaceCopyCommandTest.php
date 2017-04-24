@@ -61,9 +61,9 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->tester->execute(
             [
                 'source-webspace' => 'sulu_io',
-                'source-locale'=> 'en',
+                'source-locale' => 'en',
                 'destination-webspace' => 'destination_io',
-                'destination-locale'=> 'es,de',
+                'destination-locale' => 'es,de',
             ]
         );
         $output = $this->tester->getDisplay();
@@ -72,9 +72,9 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->tester->execute(
             [
                 'source-webspace' => 'sulu_io',
-                'source-locale'=> 'en,en',
+                'source-locale' => 'en,en',
                 'destination-webspace' => 'destination_io',
-                'destination-locale'=> 'es,de',
+                'destination-locale' => 'es,de',
             ]
         );
         $output = $this->tester->getDisplay();
@@ -90,9 +90,9 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->tester->execute(
             [
                 'source-webspace' => 'sulu_io',
-                'source-locale'=> 'en,en',
+                'source-locale' => 'en,en',
                 'destination-webspace' => 'destination_io',
-                'destination-locale'=> 'es,de',
+                'destination-locale' => 'es,de',
                 '--clear-destination-webspace' => true,
             ]
         );
@@ -295,7 +295,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'internalLinks' => [
                     $page1->getUuid(),
                     $page2->getUuid(),
-                    $testIoHomeDocument->getUuid()
+                    $testIoHomeDocument->getUuid(),
                 ],
             ]
         );
@@ -357,7 +357,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                         'text' => '<p><sulu:link href="' . $page1->getUuid() . '" provider="page" target="_self" title="Link-Title">Link-Title</sulu:link></p>',
                         'title' => 'Node4 block',
                         'type' => 'textEditor',
-                    ]
+                    ],
                 ],
             ]
         );
