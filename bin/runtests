@@ -23,6 +23,11 @@ use Symfony\Component\Process\Process;
 // Setup the runner application
 // ============================
 
+// set default env variables
+if (!getenv('SYMFONY__PHPCR__TRANSPORT')) {
+    putenv('SYMFONY__PHPCR__TRANSPORT=doctrinedbal');
+}
+
 // ensure that we don't timeout
 set_time_limit(0);
 
