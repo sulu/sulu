@@ -198,6 +198,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents',
             ]
         );
+        $this->documentManager->flush();
 
         $page1_1 = $this->documentManager->create('page');
         $page1_1->setStructureType('default');
@@ -211,6 +212,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node1',
             ]
         );
+        $this->documentManager->flush();
 
         $page1_1_1 = $this->documentManager->create('page');
         $page1_1_1->setStructureType('default');
@@ -224,6 +226,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node1/node1-1',
             ]
         );
+        $this->documentManager->flush();
 
         $page1_1_2 = $this->documentManager->create('page');
         $page1_1_2->setStructureType('default');
@@ -237,6 +240,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node1/node1-1',
             ]
         );
+        $this->documentManager->flush();
 
         /** @var PageDocument $page1_1_3 */
         $page1_1_3 = $this->documentManager->create('page');
@@ -252,6 +256,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node1/node1-1',
             ]
         );
+        $this->documentManager->flush();
 
         $page1_2 = $this->documentManager->create('page');
         $page1_2->setStructureType('default');
@@ -265,6 +270,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node1',
             ]
         );
+        $this->documentManager->flush();
 
         $page2 = $this->documentManager->create('page');
         $page2->setStructureType('smartcontent');
@@ -285,6 +291,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents',
             ]
         );
+        $this->documentManager->flush();
 
         $page2_1 = $this->documentManager->create('page');
         $page2_1->setStructureType('internallinks');
@@ -307,6 +314,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node2',
             ]
         );
+        $this->documentManager->flush();
 
         $page2_2 = $this->documentManager->create('page');
         $page2_2->setStructureType('internallinks');
@@ -325,6 +333,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents/node2',
             ]
         );
+        $this->documentManager->flush();
 
         $page3 = $this->documentManager->create('page');
         $page3->setStructureType('smartcontent');
@@ -345,6 +354,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents',
             ]
         );
+        $this->documentManager->flush();
 
         $page4 = $this->documentManager->create('page');
         $page4->setStructureType('block');
@@ -369,7 +379,6 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents',
             ]
         );
-
         $this->documentManager->flush();
     }
 }
