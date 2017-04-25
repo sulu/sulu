@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #3306 [DocumentManagerBundle] Adapted document-manager service definition for new NodeNameSlugifier
+    * ENHANCEMENT #3302 [ContentBundle]         Added metadata to configure remove-live
     * FEATURE     #3300 [ContentBundle]         Added onInvalid flag with ignore option to properties
     * BUGFIX      #3298 [WebsiteBundle]         Fixed sitemap index provider without items
     * ENHANCEMENT #3299 [RouteBundle]           Added route-generator pool to combine different route-generators
