@@ -130,7 +130,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             $output->writeln([
                 '<error>==============================',
                 '<error>Aborted!</error>',
-                '<error>Run this command with --clear-destination-webspace</error>',
+                '<error>This command currently does not work if there is already data in the webspace. You can run the command with --clear-destination-webspace to remove all the content from the destination webspace.</error>',
                 '<error>==============================</error>',
             ]);
 
