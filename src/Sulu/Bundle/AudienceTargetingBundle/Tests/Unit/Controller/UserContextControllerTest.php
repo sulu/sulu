@@ -13,7 +13,10 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
 use Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserContextControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,9 +31,9 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideConfiguration
+     * @dataProvider provideTargetGroup
      */
-    public function testHashAction($header, $targetGroup, $targetGroupId)
+    public function testTargetGroupAction($header, $targetGroup, $targetGroupId)
     {
         $this->targetGroupEvaluator->evaluate()->willReturn($targetGroup);
         $userContextController = new UserContextController($this->targetGroupEvaluator->reveal(), $header);
@@ -39,13 +42,45 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($targetGroupId, $response->headers->get($header));
     }
 
-    public function provideConfiguration()
+    public function provideTargetGroup()
     {
         $targetGroup = new TargetGroup();
 
         return [
             ['X-User-Context-Hash', $targetGroup, null],
             ['X-User-Context', null, 0],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTargetGroupHit
+     */
+    public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId)
+    {
+        $request = new Request([], [], [], ['user_context' => (string) $oldTargetGroup->getId()]);
+        $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT)->willReturn($newTargetGroup);
+        $userContextController = new UserContextController($this->targetGroupEvaluator->reveal(), 'X-User-Context');
+        $response = $userContextController->targetGroupHitAction($request);
+
+        if ($newTargetGroupId) {
+            $cookie = $response->headers->getCookies()[0];
+            $this->assertEquals('user-context', $cookie->getName());
+            $this->assertEquals($newTargetGroupId, $cookie->getValue());
+        } else {
+            $this->assertCount(0, $response->headers->getCookies());
+        }
+    }
+
+    public function provideTargetGroupHit()
+    {
+        $oldTargetGroup1 = $this->prophesize(TargetGroupInterface::class);
+        $oldTargetGroup1->getId()->willReturn(1);
+        $newTargetGroup1 = $this->prophesize(TargetGroupInterface::class);
+        $newTargetGroup1->getId()->willReturn(2);
+
+        return [
+            [$oldTargetGroup1->reveal(), $newTargetGroup1->reveal(), 2],
+            [$oldTargetGroup1->reveal(), null, null],
         ];
     }
 }

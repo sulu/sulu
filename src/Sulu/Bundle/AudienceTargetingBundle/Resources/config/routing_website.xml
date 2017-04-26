@@ -6,4 +6,7 @@
     <route id="sulu_audience_targeting.user_context" path="%sulu_audience_targeting.user_context.uri%">
         <default key="_controller">sulu_audience_targeting.user_context_controller:targetGroupAction</default>
     </route>
+    <route id="sulu_audience_targeting.user_context_hit" path="%sulu_audience_targeting.user_context.hit_uri%">
+        <default key="_controller">sulu_audience_targeting.user_context_controller:targetGroupHitAction</default>
+    </route>
 </routes>

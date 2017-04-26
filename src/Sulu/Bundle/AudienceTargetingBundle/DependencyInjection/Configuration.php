@@ -44,6 +44,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('header')->defaultValue(HttpCache::USER_CONTEXT_HEADER)->end()
                         ->scalarNode('uri')->defaultValue(HttpCache::USER_CONTEXT_URI)->end()
+                        ->scalarNode('hit_uri')->defaultValue('/_user_context_hit')->end()
                         ->scalarNode('cookie')->defaultValue(HttpCache::USER_CONTEXT_COOKIE)->end()
                     ->end()
                 ->end()

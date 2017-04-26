@@ -42,7 +42,7 @@ class ReferrerRule implements RuleInterface
     public function evaluate(array $options)
     {
         return (bool) preg_match(
-            '/^' . str_replace('*', '(.*)', $options['referrer']) . '$/',
+            '/^' . str_replace(['*', '/'], ['(.*)', '\/'], $options['referrer']) . '$/',
             $this->requestStack->getCurrentRequest()->headers->get('referer')
         );
     }

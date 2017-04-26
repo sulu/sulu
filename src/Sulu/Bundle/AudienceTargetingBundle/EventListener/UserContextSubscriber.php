@@ -18,6 +18,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class UserContextSubscriber implements EventSubscriberInterface
 {
     /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
      * @var string
      */
     private $contextUrl;
@@ -28,11 +33,13 @@ class UserContextSubscriber implements EventSubscriberInterface
     private $httpHeader;
 
     /**
+     * @param \Twig_Environment $twig
      * @param string $contextUrl
      * @param string $httpHeader
      */
-    public function __construct($contextUrl, $httpHeader)
+    public function __construct(\Twig_Environment $twig, $contextUrl, $httpHeader)
     {
+        $this->twig = $twig;
         $this->contextUrl = $contextUrl;
         $this->httpHeader = $httpHeader;
     }
@@ -44,7 +51,8 @@ class UserContextSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::RESPONSE => [
-                'addUserContextHeaders',
+                ['addUserContextHeaders'],
+                ['addUserContextHitScript'],
             ],
         ];
     }
@@ -62,5 +70,15 @@ class UserContextSubscriber implements EventSubscriberInterface
         if ($request->getRequestUri() !== $this->contextUrl) {
             $response->setVary($this->httpHeader, false);
         }
+    }
+
+    public function addUserContextHitScript(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        $response->setContent(str_replace(
+            '</body>',
+            $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig') . '</body>',
+            $response->getContent()
+        ));
     }
 }

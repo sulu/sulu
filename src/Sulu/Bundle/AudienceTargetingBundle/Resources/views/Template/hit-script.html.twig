@@ -1,0 +1,7 @@
+<script type="text/javascript">
+    var request = new XMLHttpRequest();
+    request.open('POST', '/_user_context_hit');
+    request.setRequestHeader('X-Forwarded-URL', document.URL);
+    request.setRequestHeader('X-Forwarded-Referer', document.referrer);
+    request.send();
+</script>
