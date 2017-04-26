@@ -1,5 +1,4 @@
 <?xml version="1.0" ?>
-
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
@@ -64,6 +63,18 @@
             <argument>sulu_audience_targeting</argument>
             <argument type="collection"></argument>
             <tag name="sulu.js_config"/>
+        </service>
+        <!--USER CONTEXT-->
+        <service id="sulu_audience_targeting.user_context_controller"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController">
+            <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
+            <argument>%sulu_audience_targeting.user_context.header%</argument>
+        </service>
+        <service id="sulu_audience_targeting.user_context_subscriber"
+                 class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
+            <argument>%sulu_audience_targeting.user_context.uri%</argument>
+            <argument>%sulu_audience_targeting.user_context.header%</argument>
+            <tag name="kernel.event_subscriber"/>
         </service>
     </services>
 </container>
