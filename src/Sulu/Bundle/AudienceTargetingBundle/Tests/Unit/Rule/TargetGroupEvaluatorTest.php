@@ -16,6 +16,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluator;
@@ -60,8 +61,13 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideEvaluationData
      */
-    public function testEvaluate($targetGroups, $ruleWhitelists, $webspaceKey, $evaluatedTargetGroup)
-    {
+    public function testEvaluate(
+        $targetGroups,
+        $ruleWhitelists,
+        $webspaceKey,
+        $evaluatedTargetGroup,
+        $frequency = TargetGroupRuleInterface::FREQUENCY_SESSION
+    ) {
         $webspace = new Webspace();
         $webspace->setKey($webspaceKey);
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
@@ -77,9 +83,9 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
             return $rules[$arguments[0]];
         });
 
-        $this->targetGroupRepository->findAllActiveForWebspaceOrderedByPriority($webspaceKey)->willReturn($targetGroups);
+        $this->targetGroupRepository->findAllActiveForWebspaceOrderedByPriority($webspaceKey, $frequency)->willReturn($targetGroups);
 
-        $this->assertEquals($evaluatedTargetGroup, $this->targetGroupEvaluator->evaluate());
+        $this->assertEquals($evaluatedTargetGroup, $this->targetGroupEvaluator->evaluate($frequency));
     }
 
     public function provideEvaluationData()
@@ -143,6 +149,7 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
             [[$targetGroup5], ['rule1' => [['targetGroup5']], 'rule2' => [['targetGroup5']]], 'sulu_io', $targetGroup5],
             [[$targetGroup5], ['rule1' => [], 'rule2' => [['targetGroup5']]], 'sulu_io', $targetGroup5],
             [[$targetGroup5], ['rule1' => [], 'rule2' => []], 'sulu_io', null],
+            [[$targetGroup5], ['rule1' => [], 'rule2' => []], 'sulu_io', null, TargetGroupRuleInterface::FREQUENCY_HIT],
         ];
     }
 }

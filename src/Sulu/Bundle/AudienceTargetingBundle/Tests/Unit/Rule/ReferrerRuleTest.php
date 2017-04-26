@@ -54,6 +54,7 @@ class ReferrerRuleTest extends \PHPUnit_Framework_TestCase
     public function provideEvaluationData()
     {
         return [
+            ['https://www.google.com/test', ['referrer' => 'https://www.google.com/*'], true],
             ['https://www.google.com', ['referrer' => 'www.google.*'], false],
             ['https://www.google.com', ['referrer' => '*.google.*'], true],
             ['https://www.google.com?q=test', ['referrer' => '*.google.*q=test'], true],

@@ -72,9 +72,11 @@
         </service>
         <service id="sulu_audience_targeting.user_context_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
+            <argument type="service" id="twig"/>
             <argument>%sulu_audience_targeting.user_context.uri%</argument>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
             <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="website" />
         </service>
     </services>
 </container>
