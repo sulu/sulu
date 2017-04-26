@@ -37,13 +37,13 @@
             <key>sulucmf_at</key>
 
             <localizations>
-                <localization language="en" country="us" default="true"/>
+                <localization language="en" default="true"/>
             </localizations>
 
             <environments>
                 <environment type="test">
                     <urls>
-                        <url language="en" country="us">sulu.lo</url>
+                        <url language="en">{host}</url>
                     </urls>
                 </environment>
             </environments>

@@ -10,7 +10,18 @@
  */
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends SuluTestKernel
 {
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        parent::registerContainerConfiguration($loader);
+
+        if ($this->getContext() === 'admin') {
+            $loader->load(__DIR__ . '/config/config_admin.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/config_website.yml');
+        }
+    }
 }
