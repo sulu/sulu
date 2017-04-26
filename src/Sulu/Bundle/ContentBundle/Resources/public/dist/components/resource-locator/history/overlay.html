@@ -1,0 +1,13 @@
+<% if (histories.length > 0) { %>
+<ul class="resource-locator-history">
+    <% _.each(histories, function(history) { %>
+    <li data-id="<%= history.id %>" data-path="<%= history[pathKey] %>">
+        <span class="url"><%= crop(history[pathKey], 30) %></span>
+        <span class="date"><%= dateFormat(history.created) %></span>
+        <span class="options-delete"><i class="fa fa-trash-o pointer"></i></span>
+    </li>
+    <% }); %>
+</ul>
+<% } else { %>
+<p><%= translations.noHistory %></p>
+<% } %>
