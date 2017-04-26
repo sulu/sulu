@@ -398,17 +398,17 @@ class NodeControllerFieldsTest extends SuluTestCase
             return strcmp($layer1['title'], $layer2['title']);
         });
 
-        $this->assertCount(2, $layer);
-        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
-        $this->assertEquals('Sulu CMF', $layer[0]['title']);
-        $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
-        $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[1]['id']);
-        $this->assertEquals('Test CMF', $layer[1]['title']);
+        $this->assertCount(3, $layer);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[1]['id']);
+        $this->assertEquals('Sulu CMF', $layer[1]['title']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(0, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[2]['id']);
+        $this->assertEquals('Test CMF', $layer[2]['title']);
+        $this->assertTrue($layer[2]['hasChildren']);
+        $this->assertCount(0, $layer[2]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
@@ -499,17 +499,17 @@ class NodeControllerFieldsTest extends SuluTestCase
         usort($layer, function ($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
         });
-        $this->assertCount(2, $layer);
-        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
-        $this->assertEquals('Sulu CMF', $layer[0]['title']);
-        $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
-        $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[1]['id']);
-        $this->assertEquals('Test CMF', $layer[1]['title']);
+        $this->assertCount(3, $layer);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[1]['id']);
+        $this->assertEquals('Sulu CMF', $layer[1]['title']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(0, $layer[1]['_embedded']['nodes']);
+        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
+        $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[2]['id']);
+        $this->assertEquals('Test CMF', $layer[2]['title']);
+        $this->assertTrue($layer[2]['hasChildren']);
+        $this->assertCount(0, $layer[2]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['nodes'];
+        $layer = $layer[1]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);

@@ -23,6 +23,12 @@
                         <property name="article" type="text_area"/>
                     </properties>
                 </type>
+                <type name="textEditor">
+                    <properties>
+                        <property name="title" type="text_line"/>
+                        <property name="text" type="text_editor"/>
+                    </properties>
+                </type>
             </types>
         </block>
     </properties>

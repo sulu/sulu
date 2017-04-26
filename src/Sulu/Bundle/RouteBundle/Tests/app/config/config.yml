@@ -15,7 +15,7 @@ security:
                 check_path: sulu_admin.login_check
                 success_handler: sulu_security.authentication_handler
                 failure_handler: sulu_security.authentication_handler
-                csrf_provider: security.csrf.token_manager
+                csrf_token_generator: security.csrf.token_manager
             logout:
                 path: /admin/logout
                 target: /admin/

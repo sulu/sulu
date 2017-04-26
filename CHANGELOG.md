@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3310 [All]                   Fixed test setup to correct init all bundle tests correctly
+    * FEATURE     #3310 [ContentBundle]         Implemented `sulu:webspaces:copy` command
     * ENHANCEMENT #3312 [SecurityBundle]        Added configuration options to send reset password message 
     * ENHANCEMENT #3317 [All]                   Fixed jackalope conflict in composer.json
     * ENHANCEMENT #3306 [DocumentManagerBundle] Adapted document-manager service definition for new NodeNameSlugifier

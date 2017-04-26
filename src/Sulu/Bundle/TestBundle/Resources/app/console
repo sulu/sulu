@@ -38,7 +38,7 @@ function require_kernel()
     $dirs = [ 'tests/app', 'Tests/app' ];
 
     if ($kernelDir = getenv('KERNEL_DIR')) {
-        $dirs[] = $kernelDir;
+        array_unshift($dirs, $kernelDir);
     }
 
     $found = false;
