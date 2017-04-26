@@ -19,6 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepository;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepository;
+use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -38,6 +39,14 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('user_context')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('header')->defaultValue(HttpCache::USER_CONTEXT_HEADER)->end()
+                        ->scalarNode('uri')->defaultValue(HttpCache::USER_CONTEXT_URI)->end()
+                        ->scalarNode('cookie')->defaultValue(HttpCache::USER_CONTEXT_COOKIE)->end()
+                    ->end()
+                ->end()
                 ->scalarNode('number_of_priorities')
                     ->defaultValue(5)
                 ->end()

@@ -39,9 +39,18 @@ class SuluAudienceTargetingExtension extends Extension
             TargetGroupRuleInterface::FREQUENCY_SESSION_NAME => TargetGroupRuleInterface::FREQUENCY_SESSION,
         ]);
 
+        $this->processUserContext($config['user_context'], $container);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $this->configurePersistence($config['objects'], $container);
+    }
+
+    private function processUserContext($userContextConfig, ContainerBuilder $container)
+    {
+        $container->setParameter('sulu_audience_targeting.user_context.header', $userContextConfig['header']);
+        $container->setParameter('sulu_audience_targeting.user_context.uri', $userContextConfig['uri']);
+        $container->setParameter('sulu_audience_targeting.user_context.cookie', $userContextConfig['cookie']);
     }
 }
