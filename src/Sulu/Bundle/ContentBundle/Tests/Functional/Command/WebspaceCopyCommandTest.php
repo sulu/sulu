@@ -61,7 +61,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->tester->execute(
             [
                 'source-webspace' => 'sulu_io',
-                'source-locale' => 'en',
+                'source-locale' => 'de',
                 'destination-webspace' => 'destination_io',
                 'destination-locale' => 'es,de',
             ]
@@ -72,7 +72,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->tester->execute(
             [
                 'source-webspace' => 'sulu_io',
-                'source-locale' => 'en,en',
+                'source-locale' => 'de,de',
                 'destination-webspace' => 'destination_io',
                 'destination-locale' => 'es,de',
             ]
@@ -90,7 +90,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->tester->execute(
             [
                 'source-webspace' => 'sulu_io',
-                'source-locale' => 'en,en',
+                'source-locale' => 'de,de',
                 'destination-webspace' => 'destination_io',
                 'destination-locale' => 'es,de',
                 '--clear-destination-webspace' => true,
