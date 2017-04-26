@@ -18,6 +18,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\BlockMetadata;
@@ -31,12 +32,18 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Copies a given webspace with given locale to a destination webspace with a destination locale.
  */
 class WebspaceCopyCommand extends ContainerAwareCommand
 {
+    /**
+     * @var SymfonyStyle
+     */
+    private $io;
+
     /**
      * @var OutputInterface
      */
@@ -85,6 +92,8 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io = new SymfonyStyle($input, $output);
+
         $webspaceKeySource = $input->getArgument('source-webspace');
         $localesSource = explode(',', $input->getArgument('source-locale'));
         $webspaceKeyDestination = $input->getArgument('destination-webspace');
@@ -99,6 +108,11 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             return -1;
         }
 
+        $localesPairs = [];
+        for ($i = 0; $i < count($localesSource); ++$i) {
+            $localesPairs[] = $localesSource[$i] . ' => ' . $localesDestination[$i];
+        }
+
         $output->writeln([
             '<info>Webspace Copy</info>',
             '<info>==============================</info>',
@@ -106,13 +120,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             '<info>Options</info>',
             '------------------------------',
             'Webspace: ' . $webspaceKeySource . ' => ' . $webspaceKeyDestination,
-        ]);
-
-        $localesPairs = [];
-        for ($i = 0; $i < count($localesSource); ++$i) {
-            $localesPairs[] = $localesSource[$i] . ' => ' . $localesDestination[$i];
-        }
-        $output->writeln([
             'Locales: ' . implode(', ', $localesPairs),
             '------------------------------',
             '',
@@ -277,6 +284,12 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         BasePageDocument $parentDocumentDestination = null,
         $localeDestination
     ) {
+        if (LocalizationState::GHOST === $this->documentInspector->getLocalizationState($documentSource)) {
+            $this->io->warning('Can not copy ghost page and its possible children: ' . $documentSource->getPath());
+
+            return;
+        }
+
         $newPath = str_replace(
             $this->sessionManager->getContentPath($this->webspaceKeySource),
             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
@@ -309,7 +322,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             $documentDestination->setParent($parentDocumentDestination);
         }
 
-        $this->saveDocument($documentDestination, $localeDestination);
+        $this->saveDocument($documentDestination, $localeDestination, $newPath);
 
         foreach ($documentSource->getChildren() as $child) {
             $this->recursiveCopy(
@@ -328,52 +341,54 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         BasePageDocument $documentSource,
         $localeDestination
     ) {
-        $newPath = str_replace(
-            $this->sessionManager->getContentPath($this->webspaceKeySource),
-            $this->sessionManager->getContentPath($this->webspaceKeyDestination),
-            $documentSource->getPath()
-        );
-
-        $this->output->writeln('<info>Processing: </info>' . $documentSource->getPath() . ' => ' . $newPath);
-
-        /** @var PageDocument $documentDestination */
-        $documentDestination = $this->documentManager->find($newPath, $localeDestination);
-
-        // Copy the redirects and correct the target.
-        switch ($documentSource->getRedirectType()) {
-            case RedirectType::INTERNAL:
-                $newPathTarget = str_replace(
-                    $this->sessionManager->getContentPath($this->webspaceKeySource),
-                    $this->sessionManager->getContentPath($this->webspaceKeyDestination),
-                    $documentSource->getRedirectTarget()->getPath()
-                );
-
-                $documentDestination->setRedirectType(RedirectType::INTERNAL);
-                $documentDestination->setRedirectTarget(
-                    $this->documentManager->find($newPathTarget, $localeDestination)
-                );
-                break;
-            case RedirectType::EXTERNAL:
-                $documentDestination->setRedirectType(RedirectType::EXTERNAL);
-                $documentDestination->setRedirectExternal($documentDestination->getRedirectExternal());
-                break;
-        }
-
-        // Copy the structure and correct the target of references.
-        $newStructure = $documentSource->getStructure()->toArray();
-        $metadata = $this->documentInspector->getStructureMetadata($documentSource);
-        foreach ($metadata->getProperties() as $property) {
-            $this->processContentType(
-                $property,
-                $newStructure,
-                $documentSource->getLocale(),
-                $localeDestination
+        if (LocalizationState::LOCALIZED === $this->documentInspector->getLocalizationState($documentSource)) {
+            $newPath = str_replace(
+                $this->sessionManager->getContentPath($this->webspaceKeySource),
+                $this->sessionManager->getContentPath($this->webspaceKeyDestination),
+                $documentSource->getPath()
             );
-        }
-        $documentDestination->getStructure()->bind($newStructure);
 
-        // Save new document.
-        $this->saveDocument($documentDestination, $localeDestination);
+            $this->output->writeln('<info>Processing: </info>' . $documentSource->getPath() . ' => ' . $newPath);
+
+            /** @var PageDocument $documentDestination */
+            $documentDestination = $this->documentManager->find($newPath, $localeDestination);
+
+            // Copy the redirects and correct the target.
+            switch ($documentSource->getRedirectType()) {
+                case RedirectType::INTERNAL:
+                    $newPathTarget = str_replace(
+                        $this->sessionManager->getContentPath($this->webspaceKeySource),
+                        $this->sessionManager->getContentPath($this->webspaceKeyDestination),
+                        $documentSource->getRedirectTarget()->getPath()
+                    );
+
+                    $documentDestination->setRedirectType(RedirectType::INTERNAL);
+                    $documentDestination->setRedirectTarget(
+                        $this->documentManager->find($newPathTarget, $localeDestination)
+                    );
+                    break;
+                case RedirectType::EXTERNAL:
+                    $documentDestination->setRedirectType(RedirectType::EXTERNAL);
+                    $documentDestination->setRedirectExternal($documentDestination->getRedirectExternal());
+                    break;
+            }
+
+            // Copy the structure and correct the target of references.
+            $newStructure = $documentSource->getStructure()->toArray();
+            $metadata = $this->documentInspector->getStructureMetadata($documentSource);
+            foreach ($metadata->getProperties() as $property) {
+                $this->processContentType(
+                    $property,
+                    $newStructure,
+                    $documentSource->getLocale(),
+                    $localeDestination
+                );
+            }
+            $documentDestination->getStructure()->bind($newStructure);
+
+            // Save new document.
+            $this->saveDocument($documentDestination, $localeDestination);
+        }
 
         foreach ($documentSource->getChildren() as $child) {
             $this->recursiveCopyRedirectsAndStructure(
@@ -659,17 +674,31 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             $targetDocumentSource->getPath()
         );
 
-        /** @var BasePageDocument $targetDocumentDestination */
-        return $this->documentManager->find($newPathTarget, $localeDestination);
+        $targetDocument = null;
+
+        try {
+            $targetDocument = $this->documentManager->find($newPathTarget, $localeDestination);
+        } catch (DocumentNotFoundException $e) {
+            return null;
+        }
+
+        return $targetDocument;
     }
 
     /**
      * @param BasePageDocument $document
      * @param string $locale
+     * @param string|null $path
      */
-    protected function saveDocument(BasePageDocument $document, $locale)
+    protected function saveDocument(BasePageDocument $document, $locale, $path = null)
     {
-        $this->documentManager->persist($document, $locale);
+        $persistOptions = [];
+
+        if ($path) {
+            $persistOptions['path'] = $path;
+        }
+
+        $this->documentManager->persist($document, $locale, $persistOptions);
         $this->documentManager->flush();
     }
 }
