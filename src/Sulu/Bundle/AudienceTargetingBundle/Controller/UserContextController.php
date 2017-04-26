@@ -15,7 +15,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible for creating a user context hash based on the audience targeting groups of the logged in user,
+ * Controller responsible for creating a user context hash based on the audience targeting groups of the user,
  * which is recognized by a cookie.
  */
 class UserContextController
@@ -30,6 +30,10 @@ class UserContextController
      */
     private $hashHeader;
 
+    /**
+     * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
+     * @param string $hashHeader
+     */
     public function __construct(TargetGroupEvaluatorInterface $targetGroupEvaluator, $hashHeader)
     {
         $this->targetGroupEvaluator = $targetGroupEvaluator;

@@ -27,6 +27,10 @@ class UserContextSubscriber implements EventSubscriberInterface
      */
     private $httpHeader;
 
+    /**
+     * @param string $contextUrl
+     * @param string $httpHeader
+     */
     public function __construct($contextUrl, $httpHeader)
     {
         $this->contextUrl = $contextUrl;

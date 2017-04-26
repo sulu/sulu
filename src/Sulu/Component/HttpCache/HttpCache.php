@@ -38,6 +38,11 @@ class HttpCache extends AbstractHttpCache
      */
     private $hasUserContext;
 
+    /**
+     * @param HttpKernelInterface $kernel
+     * @param bool $hasUserContext
+     * @param string $cacheDir
+     */
     public function __construct(HttpKernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
