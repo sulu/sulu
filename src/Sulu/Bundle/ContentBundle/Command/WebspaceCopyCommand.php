@@ -350,44 +350,48 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
             $this->output->writeln('<info>Processing: </info>' . $documentSource->getPath() . ' => ' . $newPath);
 
-            /** @var PageDocument $documentDestination */
-            $documentDestination = $this->documentManager->find($newPath, $localeDestination);
+            try {
+                /** @var PageDocument $documentDestination */
+                $documentDestination = $this->documentManager->find($newPath, $localeDestination);
 
-            // Copy the redirects and correct the target.
-            switch ($documentSource->getRedirectType()) {
-                case RedirectType::INTERNAL:
-                    $newPathTarget = str_replace(
-                        $this->sessionManager->getContentPath($this->webspaceKeySource),
-                        $this->sessionManager->getContentPath($this->webspaceKeyDestination),
-                        $documentSource->getRedirectTarget()->getPath()
+                // Copy the redirects and correct the target.
+                switch ($documentSource->getRedirectType()) {
+                    case RedirectType::INTERNAL:
+                        $newPathTarget = str_replace(
+                            $this->sessionManager->getContentPath($this->webspaceKeySource),
+                            $this->sessionManager->getContentPath($this->webspaceKeyDestination),
+                            $documentSource->getRedirectTarget()->getPath()
+                        );
+
+                        $documentDestination->setRedirectType(RedirectType::INTERNAL);
+                        $documentDestination->setRedirectTarget(
+                            $this->documentManager->find($newPathTarget, $localeDestination)
+                        );
+                        break;
+                    case RedirectType::EXTERNAL:
+                        $documentDestination->setRedirectType(RedirectType::EXTERNAL);
+                        $documentDestination->setRedirectExternal($documentDestination->getRedirectExternal());
+                        break;
+                }
+
+                // Copy the structure and correct the target of references.
+                $newStructure = $documentSource->getStructure()->toArray();
+                $metadata = $this->documentInspector->getStructureMetadata($documentSource);
+                foreach ($metadata->getProperties() as $property) {
+                    $this->processContentType(
+                        $property,
+                        $newStructure,
+                        $documentSource->getLocale(),
+                        $localeDestination
                     );
+                }
+                $documentDestination->getStructure()->bind($newStructure);
 
-                    $documentDestination->setRedirectType(RedirectType::INTERNAL);
-                    $documentDestination->setRedirectTarget(
-                        $this->documentManager->find($newPathTarget, $localeDestination)
-                    );
-                    break;
-                case RedirectType::EXTERNAL:
-                    $documentDestination->setRedirectType(RedirectType::EXTERNAL);
-                    $documentDestination->setRedirectExternal($documentDestination->getRedirectExternal());
-                    break;
+                // Save new document.
+                $this->saveDocument($documentDestination, $localeDestination);
+            } catch (DocumentNotFoundException $e) {
+                // Do nothing.
             }
-
-            // Copy the structure and correct the target of references.
-            $newStructure = $documentSource->getStructure()->toArray();
-            $metadata = $this->documentInspector->getStructureMetadata($documentSource);
-            foreach ($metadata->getProperties() as $property) {
-                $this->processContentType(
-                    $property,
-                    $newStructure,
-                    $documentSource->getLocale(),
-                    $localeDestination
-                );
-            }
-            $documentDestination->getStructure()->bind($newStructure);
-
-            // Save new document.
-            $this->saveDocument($documentDestination, $localeDestination);
         }
 
         foreach ($documentSource->getChildren() as $child) {
