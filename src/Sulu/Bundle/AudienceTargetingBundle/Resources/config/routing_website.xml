@@ -3,10 +3,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing
         http://symfony.com/schema/routing/routing-1.0.xsd">
-    <route id="sulu_audience_targeting.user_context" path="%sulu_audience_targeting.user_context.uri%">
+    <route id="sulu_audience_targeting.user_context" path="%sulu_audience_targeting.user_context.url%">
         <default key="_controller">sulu_audience_targeting.user_context_controller:targetGroupAction</default>
     </route>
-    <route id="sulu_audience_targeting.user_context_hit" path="%sulu_audience_targeting.user_context.hit_uri%">
+    <route id="sulu_audience_targeting.user_context_hit" path="%sulu_audience_targeting.user_context.hit.url%">
         <default key="_controller">sulu_audience_targeting.user_context_controller:targetGroupHitAction</default>
     </route>
 </routes>

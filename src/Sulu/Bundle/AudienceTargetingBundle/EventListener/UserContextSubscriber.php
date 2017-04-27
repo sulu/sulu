@@ -30,18 +30,45 @@ class UserContextSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
+    private $contextHitUrl;
+
+    /**
+     * @var string
+     */
+    private $urlHeader;
+
+    /**
+     * @var string
+     */
+    private $refererHeader;
+
+    /**
+     * @var string
+     */
     private $httpHeader;
 
     /**
      * @param \Twig_Environment $twig
      * @param string $contextUrl
-     * @param string $httpHeader
+     * @param string $contextHitUrl
+     * @param string $urlHeader
+     * @param string $refererHeader
+     * @param string $userContextHeader
      */
-    public function __construct(\Twig_Environment $twig, $contextUrl, $httpHeader)
-    {
+    public function __construct(
+        \Twig_Environment $twig,
+        $contextUrl,
+        $contextHitUrl,
+        $urlHeader,
+        $refererHeader,
+        $userContextHeader
+    ) {
         $this->twig = $twig;
         $this->contextUrl = $contextUrl;
-        $this->httpHeader = $httpHeader;
+        $this->contextHitUrl = $contextHitUrl;
+        $this->urlHeader = $urlHeader;
+        $this->refererHeader = $refererHeader;
+        $this->httpHeader = $userContextHeader;
     }
 
     /**
@@ -75,9 +102,15 @@ class UserContextSubscriber implements EventSubscriberInterface
     public function addUserContextHitScript(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
+        $script = $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
+            'url' => $this->contextHitUrl,
+            'urlHeader' => $this->urlHeader,
+            'refererHeader' => $this->refererHeader,
+        ]);
+
         $response->setContent(str_replace(
             '</body>',
-            $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig') . '</body>',
+            $script . '</body>',
             $response->getContent()
         ));
     }
