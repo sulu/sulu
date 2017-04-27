@@ -99,6 +99,11 @@ class UserContextSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Adds a script for triggering an ajax request, which updates the target group on every hit.
+     *
+     * @param FilterResponseEvent $event
+     */
     public function addUserContextHitScript(FilterResponseEvent $event)
     {
         $response = $event->getResponse();

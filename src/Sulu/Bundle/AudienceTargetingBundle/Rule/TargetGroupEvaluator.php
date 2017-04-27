@@ -60,7 +60,6 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
             $maxFrequency
         );
 
-        $matchedTargetGroup = null;
         foreach ($considerableTargetGroups as $targetGroup) {
             if ($this->evaluateTargetGroup($targetGroup)) {
                 if (!$currentTargetGroup || $targetGroup->getPriority() > $currentTargetGroup->getPriority()) {
