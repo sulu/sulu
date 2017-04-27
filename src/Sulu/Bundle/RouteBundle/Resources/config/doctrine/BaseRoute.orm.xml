@@ -21,11 +21,7 @@
             </cascade>
         </one-to-many>
         <many-to-one field="target" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface"
-                     inversed-by="histories">
-            <cascade>
-                <cascade-all/>
-            </cascade>
-        </many-to-one>
+                     inversed-by="histories"/>
 
     </mapped-superclass>
 </doctrine-mapping>

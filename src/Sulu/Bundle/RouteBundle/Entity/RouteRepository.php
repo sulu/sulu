@@ -58,4 +58,20 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
             return;
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findHistoryByEntity($entityClass, $entityId, $locale)
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->andWhere('entity.entityClass = :entityClass')
+            ->andWhere('entity.entityId = :entityId')
+            ->andWhere('entity.locale = :locale')
+            ->andWhere('entity.history = true')
+            ->getQuery()
+            ->setParameters(['entityClass' => $entityClass, 'entityId' => $entityId, 'locale' => $locale]);
+
+        return $query->getResult();
+    }
 }

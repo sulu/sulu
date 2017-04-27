@@ -18,20 +18,20 @@ monolog:
             type:  "null"
 
 sulu_core:
-    cache_dir: %kernel.root_dir%/cache/sulu
+    cache_dir: "%kernel.root_dir%/cache/sulu"
     content:
         structure:
              default_type:
                 snippet: "default"
              paths:
                  pages:
-                     path: %kernel.root_dir%/Resources/pages
+                     path: "%kernel.root_dir%/Resources/pages"
                      type: page
                  homepage:
-                     path: %kernel.root_dir%/Resources/pages
+                     path: "%kernel.root_dir%/Resources/pages"
                      type: home
                  templates:
-                     path: %kernel.root_dir%/Resources/snippets
+                     path: "%kernel.root_dir%/Resources/snippets"
                      type: snippet
 
                  # This configuration could be used either from a bundle or the "root" of the repsitory
@@ -47,7 +47,7 @@ sulu_admin:
 
 doctrine:
     orm:
-        auto_generate_proxy_classes: %kernel.debug%
+        auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         resolve_target_entities:
             Sulu\Component\Security\Authentication\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
@@ -104,7 +104,7 @@ sulu_document_manager:
 
 jms_serializer:
     metadata:
-        debug: %kernel.debug%
+        debug: "%kernel.debug%"
 
 dubture_f_fmpeg:
     ffmpeg_binary: /usr/local/bin/ffmpeg # path to ffmpeg
