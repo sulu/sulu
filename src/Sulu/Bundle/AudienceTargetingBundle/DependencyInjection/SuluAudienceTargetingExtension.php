@@ -57,8 +57,8 @@ class SuluAudienceTargetingExtension extends Extension
             $userContextConfig['hit']['headers']['url']
         );
         $container->setParameter(
-            'sulu_audience_targeting.user_context.hit.headers.referer',
-            $userContextConfig['hit']['headers']['referer']
+            'sulu_audience_targeting.user_context.hit.headers.referrer',
+            $userContextConfig['hit']['headers']['referrer']
        );
         $container->setParameter('sulu_audience_targeting.user_context.cookie', $userContextConfig['cookie']);
     }
