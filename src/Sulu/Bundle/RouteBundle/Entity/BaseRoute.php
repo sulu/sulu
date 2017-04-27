@@ -14,6 +14,8 @@ namespace Sulu\Bundle\RouteBundle\Entity;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route as HateoasRoute;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 
 /**
  * Represents a base route in the route-pool.
@@ -26,8 +28,10 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
  *     )
  * )
  */
-abstract class BaseRoute implements RouteInterface
+abstract class BaseRoute implements RouteInterface, AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
