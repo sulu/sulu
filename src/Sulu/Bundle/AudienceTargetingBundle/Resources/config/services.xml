@@ -49,7 +49,7 @@
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\ReferrerRule">
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.referer%</argument>
+            <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
             <tag name="sulu.audience_target_rule" alias="referrer"/>
         </service>
         <!--CONTENT TYPES-->
@@ -78,7 +78,7 @@
             <argument>%sulu_audience_targeting.user_context.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.url%</argument>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.referer%</argument>
+            <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="website" />

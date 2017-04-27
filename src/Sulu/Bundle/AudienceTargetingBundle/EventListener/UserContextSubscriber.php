@@ -40,7 +40,7 @@ class UserContextSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    private $refererHeader;
+    private $referrerHeader;
 
     /**
      * @var string
@@ -52,7 +52,7 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @param string $contextUrl
      * @param string $contextHitUrl
      * @param string $urlHeader
-     * @param string $refererHeader
+     * @param string $referrerHeader
      * @param string $userContextHeader
      */
     public function __construct(
@@ -60,14 +60,14 @@ class UserContextSubscriber implements EventSubscriberInterface
         $contextUrl,
         $contextHitUrl,
         $urlHeader,
-        $refererHeader,
+        $referrerHeader,
         $userContextHeader
     ) {
         $this->twig = $twig;
         $this->contextUrl = $contextUrl;
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
-        $this->refererHeader = $refererHeader;
+        $this->referrerHeader = $referrerHeader;
         $this->httpHeader = $userContextHeader;
     }
 
@@ -105,7 +105,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         $script = $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
             'url' => $this->contextHitUrl,
             'urlHeader' => $this->urlHeader,
-            'refererHeader' => $this->refererHeader,
+            'refererHeader' => $this->referrerHeader,
         ]);
 
         $response->setContent(str_replace(

@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
                                     ->addDefaultsIfNotSet()
                                     ->children()
                                         ->scalarNode('url')->defaultValue('X-Forwarded-URL')->end()
-                                        ->scalarNode('referer')->defaultValue('X-Forwarded-Referer')->end()
+                                        ->scalarNode('referrer')->defaultValue('X-Forwarded-Referrer')->end()
                                     ->end()
                                 ->end()
                             ->end()

@@ -26,6 +26,9 @@ class ReferrerRule implements RuleInterface
      */
     private $translator;
 
+    /**
+     * @var string
+     */
     private $referrerHeader;
 
     public function __construct(RequestStack $requestStack, TranslatorInterface $translator, $referrerHeader = null)

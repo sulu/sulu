@@ -84,7 +84,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             'url' => $contextHitUrl,
             'urlHeader' => $forwardedUrlHeader,
             'refererHeader' => $forwardedRefererHeader,
-        ]) ->willReturn('<script></script>');
+        ])->willReturn('<script></script>');
 
         $userContextSubscriber->addUserContextHitScript($event->reveal());
 
