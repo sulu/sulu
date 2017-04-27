@@ -26,8 +26,12 @@ interface TargetGroupEvaluatorInterface
      * the highest frequency which will be taken into account when evaluating.
      *
      * @param int $maxFrequency
+     * @param TargetGroupInterface $currentTargetGroup
      *
      * @return TargetGroupInterface
      */
-    public function evaluate($maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION);
+    public function evaluate(
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
+        TargetGroupInterface $currentTargetGroup = null
+    );
 }

@@ -68,6 +68,7 @@
         <service id="sulu_audience_targeting.user_context_controller"
                  class="Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController">
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
+            <argument type="service" id="sulu.repository.target_group"/>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
         </service>
         <service id="sulu_audience_targeting.user_context_subscriber"
