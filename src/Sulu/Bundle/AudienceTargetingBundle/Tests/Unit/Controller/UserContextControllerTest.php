@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 use Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +26,15 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
      */
     private $targetGroupEvaluator;
 
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $targetGroupRepository;
+
     public function setUp()
     {
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
+        $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
     }
 
     /**
@@ -36,7 +43,11 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
     public function testTargetGroupAction($header, $targetGroup, $targetGroupId)
     {
         $this->targetGroupEvaluator->evaluate()->willReturn($targetGroup);
-        $userContextController = new UserContextController($this->targetGroupEvaluator->reveal(), $header);
+        $userContextController = new UserContextController(
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            $header
+        );
         $response = $userContextController->targetGroupAction();
 
         $this->assertEquals($targetGroupId, $response->headers->get($header));
@@ -57,9 +68,17 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId)
     {
-        $request = new Request([], [], [], ['user_context' => (string) $oldTargetGroup->getId()]);
-        $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT)->willReturn($newTargetGroup);
-        $userContextController = new UserContextController($this->targetGroupEvaluator->reveal(), 'X-User-Context');
+        $request = new Request([], [], [], ['user-context' => (string) $oldTargetGroup->getId()]);
+        $this->targetGroupRepository->find($oldTargetGroup->getId())->willReturn($oldTargetGroup);
+        $this->targetGroupEvaluator->evaluate(
+            TargetGroupRuleInterface::FREQUENCY_HIT,
+            $oldTargetGroup
+        )->willReturn($newTargetGroup);
+        $userContextController = new UserContextController(
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            'X-User-Context'
+        );
         $response = $userContextController->targetGroupHitAction($request);
 
         if ($newTargetGroupId) {
@@ -81,6 +100,7 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
         return [
             [$oldTargetGroup1->reveal(), $newTargetGroup1->reveal(), 2],
             [$oldTargetGroup1->reveal(), null, null],
+            [$oldTargetGroup1->reveal(), $oldTargetGroup1->reveal(), null],
         ];
     }
 }

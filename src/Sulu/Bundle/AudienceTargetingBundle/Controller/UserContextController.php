@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Component\HttpCache\HttpCache;
@@ -30,17 +31,27 @@ class UserContextController
     private $targetGroupEvaluator;
 
     /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $targetGroupRepository;
+
+    /**
      * @var string
      */
     private $hashHeader;
 
     /**
      * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
+     * @param TargetGroupRepositoryInterface $targetGroupRepository
      * @param string $hashHeader
      */
-    public function __construct(TargetGroupEvaluatorInterface $targetGroupEvaluator, $hashHeader)
-    {
+    public function __construct(
+        TargetGroupEvaluatorInterface $targetGroupEvaluator,
+        TargetGroupRepositoryInterface $targetGroupRepository,
+        $hashHeader
+    ) {
         $this->targetGroupEvaluator = $targetGroupEvaluator;
+        $this->targetGroupRepository = $targetGroupRepository;
         $this->hashHeader = $hashHeader;
     }
 
@@ -67,17 +78,23 @@ class UserContextController
      */
     public function targetGroupHitAction(Request $request)
     {
-        $targetGroup = $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT);
+        $currentTargetGroupId = $request->cookies->get(HttpCache::USER_CONTEXT_COOKIE);
+        $currentTargetGroup = $this->targetGroupRepository->find($currentTargetGroupId);
+
+        $targetGroup = $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT, $currentTargetGroup);
         $response = new Response();
         if (!$targetGroup) {
             return $response;
         }
 
-        if ($request->cookies->get(HttpCache::USER_CONTEXT_COOKIE) !== (string) $targetGroup->getId()
-        ) {
+        if ($currentTargetGroup !== $targetGroup) {
             // only set cookie if new target group has higher priority
             $response->headers->setCookie(
-                new Cookie(HttpCache::USER_CONTEXT_COOKIE, $targetGroup->getId(), HttpCache::USER_CONTEXT_COOKIE_LIFETIME)
+                new Cookie(
+                    HttpCache::USER_CONTEXT_COOKIE,
+                    $targetGroup->getId(),
+                    HttpCache::USER_CONTEXT_COOKIE_LIFETIME
+                )
             );
         }
 
