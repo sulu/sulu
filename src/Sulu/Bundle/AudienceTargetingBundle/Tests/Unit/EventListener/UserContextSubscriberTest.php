@@ -33,7 +33,14 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddUserContextHeaders($contextUrl, $requestUrl, $header, $varyHeaders)
     {
-        $userContextSubscriber = new UserContextSubscriber($this->twig->reveal(), $contextUrl, $header);
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            $contextUrl,
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwarded-Referer',
+            $header
+        );
         $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => $requestUrl]);
         $response = new Response();
@@ -55,18 +62,40 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testAddUserContextHitScript()
+    /**
+     * @dataProvider provideAddUserContextHitScript
+     */
+    public function testAddUserContextHitScript($contextHitUrl, $forwardedUrlHeader, $forwardedRefererHeader)
     {
-        $userContextSubscriber = new UserContextSubscriber($this->twig->reveal(), '/_user_context', 'X-User-Context');
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            '/_user_context',
+            $contextHitUrl,
+            $forwardedUrlHeader,
+            $forwardedRefererHeader,
+            'X-User-Context'
+        );
         $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request();
         $response = new Response('<body></body>');
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
-        $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig')->willReturn('<script></script>');
+        $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
+            'url' => $contextHitUrl,
+            'urlHeader' => $forwardedUrlHeader,
+            'refererHeader' => $forwardedRefererHeader,
+        ]) ->willReturn('<script></script>');
 
         $userContextSubscriber->addUserContextHitScript($event->reveal());
 
         $this->assertEquals('<body><script></script></body>', $response->getContent());
+    }
+
+    public function provideAddUserContextHitScript()
+    {
+        return [
+            ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer'],
+            ['/context_hit', 'X-Other-URL', 'X-Other-Referer'],
+        ];
     }
 }
