@@ -17,7 +17,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;

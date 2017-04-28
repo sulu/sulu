@@ -17,8 +17,8 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
+use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 
 class UserContextControllerTest extends \PHPUnit_Framework_TestCase
 {

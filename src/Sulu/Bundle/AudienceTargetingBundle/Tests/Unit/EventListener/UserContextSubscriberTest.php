@@ -100,7 +100,8 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSetUserContextWithoutCookie
      */
-    public function testSetUserContextWithoutCookie($evaluatedTargetGroup, $result) {
+    public function testSetUserContextWithoutCookie($evaluatedTargetGroup, $result)
+    {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
             $this->userContextStore->reveal(),
