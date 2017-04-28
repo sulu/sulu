@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Route-Table changed
+
+The route-table was extended with auditable information. Run following command to
+update the database schema.
+
+```bash
+bin/console doctrine:schema:update --force
+```
+
 ### Highlight section styling changed
 
 To make the highlight section reusable the css not longer depend on the `#content-form`
