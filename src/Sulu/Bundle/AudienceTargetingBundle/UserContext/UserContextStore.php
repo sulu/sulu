@@ -19,7 +19,7 @@ class UserContextStore implements UserContextStoreInterface
     /**
      * @var string
      */
-    private $userContext = 0;
+    private $userContext;
 
     /**
      * @var bool
@@ -47,8 +47,8 @@ class UserContextStore implements UserContextStoreInterface
      */
     public function updateUserContext($userContext)
     {
+        $this->changed = $this->getUserContext() != $userContext;
         $this->setUserContext($userContext);
-        $this->changed = true;
     }
 
     /**

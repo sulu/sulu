@@ -15,9 +15,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
-use Sulu\Component\HttpCache\HttpCache;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -81,8 +78,6 @@ class UserContextController
     /**
      * This end point is called by the injected code on the website to update the target group on every hit.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function targetGroupHitAction()
@@ -91,19 +86,9 @@ class UserContextController
 
         $targetGroup = $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT, $currentTargetGroup);
         $response = new Response();
-        if (!$targetGroup) {
-            return $response;
-        }
 
-        if ($currentTargetGroup !== $targetGroup) {
-            // only set cookie if new target group has higher priority
-            $response->headers->setCookie(
-                new Cookie(
-                    HttpCache::USER_CONTEXT_COOKIE,
-                    $targetGroup->getId(),
-                    HttpCache::USER_CONTEXT_COOKIE_LIFETIME
-                )
-            );
+        if ($targetGroup) {
+            $this->userContextStore->updateUserContext($targetGroup->getId());
         }
 
         return $response;

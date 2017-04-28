@@ -11,8 +11,11 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\EventListener;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -33,6 +36,11 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @var UserContextStoreInterface
      */
     private $userContextStore;
+
+    /**
+     * @var TargetGroupEvaluatorInterface
+     */
+    private $targetGroupEvaluator;
 
     /**
      * @var string
@@ -68,6 +76,7 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @param \Twig_Environment $twig
      * @param bool $preview
      * @param UserContextStoreInterface $userContextStore
+     * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
      * @param string $contextUrl
      * @param string $contextHitUrl
      * @param string $urlHeader
@@ -79,6 +88,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         \Twig_Environment $twig,
         $preview,
         UserContextStoreInterface $userContextStore,
+        TargetGroupEvaluatorInterface $targetGroupEvaluator,
         $contextUrl,
         $contextHitUrl,
         $urlHeader,
@@ -89,6 +99,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         $this->twig = $twig;
         $this->preview = $preview;
         $this->userContextStore =$userContextStore;
+        $this->targetGroupEvaluator = $targetGroupEvaluator;
         $this->contextUrl = $contextUrl;
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
@@ -108,6 +119,7 @@ class UserContextSubscriber implements EventSubscriberInterface
             ],
             KernelEvents::RESPONSE => [
                 ['addVaryHeader'],
+                ['addSetCookieHeader'],
                 ['addUserContextHitScript'],
             ],
         ];
@@ -127,6 +139,15 @@ class UserContextSubscriber implements EventSubscriberInterface
         if ($userContext) {
             $request->headers->add([$this->userContextHeader => $userContext]);
             $this->userContextStore->setUserContext($userContext);
+        } else {
+            $targetGroup = $this->targetGroupEvaluator->evaluate();
+
+            $targetGroupId = 0;
+            if ($targetGroup) {
+                $targetGroupId = $targetGroup->getId();
+            }
+
+            $this->userContextStore->updateUserContext($targetGroupId);
         }
     }
 
@@ -143,6 +164,26 @@ class UserContextSubscriber implements EventSubscriberInterface
         if ($request->getRequestUri() !== $this->contextUrl) {
             $response->setVary($this->userContextHeader, false);
         }
+    }
+
+    /**
+     * Adds the SetCookie header for the user context, if the user context has changed.
+     *
+     * @param FilterResponseEvent $event
+     */
+    public function addSetCookieHeader(FilterResponseEvent $event)
+    {
+        if (!$this->userContextStore->hasChanged()) {
+            return;
+        }
+
+        $event->getResponse()->headers->setCookie(
+            new Cookie(
+                $this->userContextCookie,
+                $this->userContextStore->getUserContext(),
+                HttpCache::USER_CONTEXT_COOKIE_LIFETIME
+            )
+        );
     }
 
     /**
