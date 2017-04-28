@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\EventListener;
 
+use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserContextSubscriber implements EventSubscriberInterface
@@ -21,6 +23,11 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @var \Twig_Environment
      */
     private $twig;
+
+    /**
+     * @var UserContextStoreInterface
+     */
+    private $userContextStore;
 
     /**
      * @var string
@@ -45,30 +52,41 @@ class UserContextSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    private $httpHeader;
+    private $userContextHeader;
+
+    /**
+     * @var string
+     */
+    private $userContextCookie;
 
     /**
      * @param \Twig_Environment $twig
+     * @param UserContextStoreInterface $userContextStore
      * @param string $contextUrl
      * @param string $contextHitUrl
      * @param string $urlHeader
      * @param string $referrerHeader
      * @param string $userContextHeader
+     * @param string $userContextCookie
      */
     public function __construct(
         \Twig_Environment $twig,
+        UserContextStoreInterface $userContextStore,
         $contextUrl,
         $contextHitUrl,
         $urlHeader,
         $referrerHeader,
-        $userContextHeader
+        $userContextHeader,
+        $userContextCookie
     ) {
         $this->twig = $twig;
+        $this->userContextStore =$userContextStore;
         $this->contextUrl = $contextUrl;
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
         $this->referrerHeader = $referrerHeader;
-        $this->httpHeader = $userContextHeader;
+        $this->userContextHeader = $userContextHeader;
+        $this->userContextCookie =$userContextCookie;
     }
 
     /**
@@ -77,11 +95,31 @@ class UserContextSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            KernelEvents::REQUEST => [
+                ['setUserContext'],
+            ],
             KernelEvents::RESPONSE => [
-                ['addUserContextHeaders'],
+                ['addVaryHeader'],
                 ['addUserContextHitScript'],
             ],
         ];
+    }
+
+    /**
+     * Evaluates the cookie holding the user context information. This has only an effect if there is no cache used,
+     * since in that case the cache already did it.
+     *
+     * @param GetResponseEvent $event
+     */
+    public function setUserContext(GetResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        $userContext = $request->headers->get($this->userContextHeader) ?: $request->cookies->get($this->userContextCookie);
+
+        if ($userContext) {
+            $request->headers->add([$this->userContextHeader => $userContext]);
+            $this->userContextStore->setUserContext($userContext);
+        }
     }
 
     /**
@@ -89,13 +127,13 @@ class UserContextSubscriber implements EventSubscriberInterface
      *
      * @param FilterResponseEvent $event
      */
-    public function addUserContextHeaders(FilterResponseEvent $event)
+    public function addVaryHeader(FilterResponseEvent $event)
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
 
         if ($request->getRequestUri() !== $this->contextUrl) {
-            $response->setVary($this->httpHeader, false);
+            $response->setVary($this->userContextHeader, false);
         }
     }
 

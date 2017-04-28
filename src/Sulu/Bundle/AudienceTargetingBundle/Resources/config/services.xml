@@ -70,18 +70,24 @@
                  class="Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController">
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
             <argument type="service" id="sulu.repository.target_group"/>
+            <argument type="service" id="sulu_audience_targeting.user_context_store"/>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
         </service>
         <service id="sulu_audience_targeting.user_context_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
             <argument type="service" id="twig"/>
+            <argument type="service" id="sulu_audience_targeting.user_context_store"/>
             <argument>%sulu_audience_targeting.user_context.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
+            <argument>%sulu_audience_targeting.user_context.cookie%</argument>
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="website" />
+        </service>
+        <service id="sulu_audience_targeting.user_context_store"
+                 class="Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStore">
         </service>
     </services>
 </container>
