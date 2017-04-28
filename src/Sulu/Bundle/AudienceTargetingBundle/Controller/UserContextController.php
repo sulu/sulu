@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
+use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -36,6 +37,11 @@ class UserContextController
     private $targetGroupRepository;
 
     /**
+     * @var UserContextStoreInterface
+     */
+    private $userContextStore;
+
+    /**
      * @var string
      */
     private $hashHeader;
@@ -43,15 +49,18 @@ class UserContextController
     /**
      * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
      * @param TargetGroupRepositoryInterface $targetGroupRepository
+     * @param UserContextStoreInterface $userContextStore
      * @param string $hashHeader
      */
     public function __construct(
         TargetGroupEvaluatorInterface $targetGroupEvaluator,
         TargetGroupRepositoryInterface $targetGroupRepository,
+        UserContextStoreInterface $userContextStore,
         $hashHeader
     ) {
         $this->targetGroupEvaluator = $targetGroupEvaluator;
         $this->targetGroupRepository = $targetGroupRepository;
+        $this->userContextStore = $userContextStore;
         $this->hashHeader = $hashHeader;
     }
 
@@ -76,10 +85,9 @@ class UserContextController
      *
      * @return Response
      */
-    public function targetGroupHitAction(Request $request)
+    public function targetGroupHitAction()
     {
-        $currentTargetGroupId = $request->cookies->get(HttpCache::USER_CONTEXT_COOKIE);
-        $currentTargetGroup = $this->targetGroupRepository->find($currentTargetGroupId);
+        $currentTargetGroup = $this->targetGroupRepository->find($this->userContextStore->getUserContext());
 
         $targetGroup = $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT, $currentTargetGroup);
         $response = new Response();

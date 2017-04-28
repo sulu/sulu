@@ -118,6 +118,7 @@ class HttpCache extends AbstractHttpCache
     {
         $hadUserContextCookie = true;
         $userContext = $request->cookies->get(static::USER_CONTEXT_COOKIE);
+        $request->cookies->remove(static::USER_CONTEXT_COOKIE);
 
         if (null === $userContext) {
             $hadUserContextCookie = false;

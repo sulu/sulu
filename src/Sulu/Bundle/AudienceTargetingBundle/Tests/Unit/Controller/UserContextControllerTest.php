@@ -16,8 +16,8 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
+use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserContextControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,10 +31,16 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
      */
     private $targetGroupRepository;
 
+    /**
+     * @var UserContextStoreInterface
+     */
+    private $userContextStore;
+
     public function setUp()
     {
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
+        $this->userContextStore = $this->prophesize(UserContextStoreInterface::class);
     }
 
     /**
@@ -46,6 +52,7 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
         $userContextController = new UserContextController(
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
+            $this->userContextStore->reveal(),
             $header
         );
         $response = $userContextController->targetGroupAction();
@@ -68,18 +75,19 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId)
     {
-        $request = new Request([], [], [], ['user-context' => (string) $oldTargetGroup->getId()]);
         $this->targetGroupRepository->find($oldTargetGroup->getId())->willReturn($oldTargetGroup);
         $this->targetGroupEvaluator->evaluate(
             TargetGroupRuleInterface::FREQUENCY_HIT,
             $oldTargetGroup
         )->willReturn($newTargetGroup);
+        $this->userContextStore->getUserContext()->willReturn($oldTargetGroup->getId());
         $userContextController = new UserContextController(
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
+            $this->userContextStore->reveal(),
             'X-User-Context'
         );
-        $response = $userContextController->targetGroupHitAction($request);
+        $response = $userContextController->targetGroupHitAction();
 
         if ($newTargetGroupId) {
             $cookie = $response->headers->getCookies()[0];
