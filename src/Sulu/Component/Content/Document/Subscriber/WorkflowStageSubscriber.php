@@ -189,7 +189,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->setWorkflowStageOnNode($event->getNode(), $event->getLocale(), WorkflowStage::TEST, false);
+        $this->setWorkflowStageOnNode($event->getNode(), $event->getLocale(), WorkflowStage::TEST, null);
     }
 
     /**
@@ -253,7 +253,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
         $publishDate = $document->getPublished();
 
-        if (!$document->getPublished() && $workflowStage === WorkflowStage::PUBLISHED) {
+        if (!$publishDate && $workflowStage === WorkflowStage::PUBLISHED) {
             $publishDate = new \DateTime();
             $accessor->set(self::PUBLISHED_FIELD, $publishDate);
         }
@@ -275,7 +275,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
      * @param int $workflowStage
      * @param \DateTime $publishDate
      */
-    private function setWorkflowStageOnNode(NodeInterface $node, $locale, $workflowStage, $publishDate)
+    private function setWorkflowStageOnNode(NodeInterface $node, $locale, $workflowStage, \DateTime $publishDate = null)
     {
         $node->setProperty(
             $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),
