@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
+use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
@@ -87,15 +88,14 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
             $this->userContextStore->reveal(),
             'X-User-Context'
         );
-        $response = $userContextController->targetGroupHitAction();
 
         if ($newTargetGroupId) {
-            $cookie = $response->headers->getCookies()[0];
-            $this->assertEquals('user-context', $cookie->getName());
-            $this->assertEquals($newTargetGroupId, $cookie->getValue());
+            $this->userContextStore->updateUserContext($newTargetGroupId)->shouldBeCalled();
         } else {
-            $this->assertCount(0, $response->headers->getCookies());
+            $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
         }
+
+        $userContextController->targetGroupHitAction();
     }
 
     public function provideTargetGroupHit()
@@ -108,7 +108,6 @@ class UserContextControllerTest extends \PHPUnit_Framework_TestCase
         return [
             [$oldTargetGroup1->reveal(), $newTargetGroup1->reveal(), 2],
             [$oldTargetGroup1->reveal(), null, null],
-            [$oldTargetGroup1->reveal(), $oldTargetGroup1->reveal(), null],
         ];
     }
 }

@@ -41,4 +41,20 @@ class UserContextStoreTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('3', $this->userContextStore->getUserContext());
         $this->assertTrue($this->userContextStore->hasChanged());
     }
+
+    public function testChangeUserContextToSame()
+    {
+        $this->userContextStore->setUserContext('2');
+        $this->userContextStore->updateUserContext('2');
+        $this->assertEquals('2', $this->userContextStore->getUserContext());
+        $this->assertFalse($this->userContextStore->hasChanged());
+    }
+
+    public function testChangeUserContextToSameDifferentType()
+    {
+        $this->userContextStore->setUserContext('2');
+        $this->userContextStore->updateUserContext(2);
+        $this->assertEquals('2', $this->userContextStore->getUserContext());
+        $this->assertFalse($this->userContextStore->hasChanged());
+    }
 }

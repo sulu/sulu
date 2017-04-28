@@ -77,6 +77,7 @@
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu_audience_targeting.user_context_store"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
             <argument>%sulu_audience_targeting.user_context.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.url%</argument>
