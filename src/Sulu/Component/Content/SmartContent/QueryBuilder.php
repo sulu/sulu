@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
-use Sulu\Bundle\AudienceTargetingBundle\Request\UserContextStoreInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;

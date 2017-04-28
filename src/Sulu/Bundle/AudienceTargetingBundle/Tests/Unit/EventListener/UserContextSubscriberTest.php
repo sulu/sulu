@@ -101,9 +101,11 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSetUserContextWithoutCookie
      */
-    public function testSetUserContextWithoutCookie($evaluatedTargetGroup, $result) {
+    public function testSetUserContextWithoutCookie($evaluatedTargetGroup, $result)
+    {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
+            false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             '/_user_context',
@@ -188,6 +190,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
+            false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             '/_user_context',
@@ -270,6 +273,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->twig->reveal(),
             true,
             $this->userContextStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',

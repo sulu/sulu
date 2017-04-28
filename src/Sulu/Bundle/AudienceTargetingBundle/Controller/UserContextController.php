@@ -13,8 +13,8 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
+use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -98,14 +98,14 @@ class UserContextSubscriber implements EventSubscriberInterface
     ) {
         $this->twig = $twig;
         $this->preview = $preview;
-        $this->userContextStore =$userContextStore;
+        $this->userContextStore = $userContextStore;
         $this->targetGroupEvaluator = $targetGroupEvaluator;
         $this->contextUrl = $contextUrl;
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
         $this->referrerHeader = $referrerHeader;
         $this->userContextHeader = $userContextHeader;
-        $this->userContextCookie =$userContextCookie;
+        $this->userContextCookie = $userContextCookie;
     }
 
     /**
