@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
     * FEATURE     #3326 [RouteBundle]           Added auditable to route
     * ENHANCEMENT #3310 [All]                   Fixed test setup to correct init all bundle tests correctly
     * FEATURE     #3310 [ContentBundle]         Implemented `sulu:webspaces:copy` command
