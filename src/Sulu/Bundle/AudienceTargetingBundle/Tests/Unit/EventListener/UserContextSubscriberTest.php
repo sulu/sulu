@@ -83,7 +83,6 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $userContextSubscriber->setUserContext($event->reveal());
 
-        $this->assertEquals($result, $request->headers->get($userContextHeader));
         $this->userContextStore->setUserContext($result)->shouldBeCalled();
     }
 

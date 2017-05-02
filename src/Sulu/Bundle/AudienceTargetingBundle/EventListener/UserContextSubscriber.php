@@ -137,7 +137,6 @@ class UserContextSubscriber implements EventSubscriberInterface
         $userContext = $request->headers->get($this->userContextHeader) ?: $request->cookies->get($this->userContextCookie);
 
         if ($userContext) {
-            $request->headers->add([$this->userContextHeader => $userContext]);
             $this->userContextStore->setUserContext($userContext);
         } else {
             $targetGroup = $this->targetGroupEvaluator->evaluate();
