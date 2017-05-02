@@ -20,13 +20,10 @@ class RouteControllerTest extends SuluTestCase
     const TEST_ID = 1;
     const TEST_LOCALE = 'de';
 
-    protected function setUp()
-    {
-        $this->purgeDatabase();
-    }
-
     public function testCGetAction()
     {
+        $this->purgeDatabase();
+
         $routes = [
             $this->createRoute('/test-1'),
             $this->createRoute('/test-2', null, self::TEST_ENTITY, 2),
@@ -58,6 +55,8 @@ class RouteControllerTest extends SuluTestCase
 
     public function testCGetActionHistory()
     {
+        $this->purgeDatabase();
+
         $targetRoute = $this->createRoute('/test');
         $routes = [
             $this->createRoute('/test-2', $targetRoute),
@@ -82,14 +81,24 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(3, $result['_embedded']['routes']);
 
         $items = $result['_embedded']['routes'];
+        $items = [
+            $items[0]['id'] => $items[0],
+            $items[1]['id'] => $items[1],
+            $items[2]['id'] => $items[2],
+        ];
+
         for ($i = 0; $i < 3; ++$i) {
-            $this->assertEquals($routes[$i]->getId(), $items[$i]['id']);
-            $this->assertEquals($routes[$i]->getPath(), $items[$i]['path']);
+            $id = $routes[$i]->getId();
+
+            $this->assertEquals($routes[$i]->getId(), $items[$id]['id']);
+            $this->assertEquals($routes[$i]->getPath(), $items[$id]['path']);
         }
     }
 
     public function testDelete()
     {
+        $this->purgeDatabase();
+
         $targetRoute = $this->createRoute('/test');
         $routes = [
             $this->createRoute('/test-2', $targetRoute),
@@ -117,6 +126,8 @@ class RouteControllerTest extends SuluTestCase
 
     public function testDeleteHistory()
     {
+        $this->purgeDatabase();
+
         $targetRoute = $this->createRoute('/test');
         $routes = [
             $this->createRoute('/test-2', $targetRoute),
@@ -145,9 +156,16 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(2, $result['_embedded']['routes']);
 
         $items = $result['_embedded']['routes'];
+        $items = [
+            $items[0]['id'] => $items[0],
+            $items[1]['id'] => $items[1],
+        ];
+
         for ($i = 0; $i < 2; ++$i) {
-            $this->assertEquals($routes[$i + 1]->getId(), $items[$i]['id']);
-            $this->assertEquals($routes[$i + 1]->getPath(), $items[$i]['path']);
+            $id = $routes[$i + 1]->getId();
+
+            $this->assertEquals($routes[$i + 1]->getId(), $items[$id]['id']);
+            $this->assertEquals($routes[$i + 1]->getPath(), $items[$id]['path']);
         }
     }
 
