@@ -75,6 +75,7 @@
         <service id="sulu_audience_targeting.user_context_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
             <argument type="service" id="twig"/>
+            <argument type="expression">container.hasParameter('sulu.preview') ? parameter('sulu.preview') : false</argument>
             <argument>%sulu_audience_targeting.user_context.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.url%</argument>

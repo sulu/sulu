@@ -23,6 +23,11 @@ class UserContextSubscriber implements EventSubscriberInterface
     private $twig;
 
     /**
+     * @var bool
+     */
+    private $preview;
+
+    /**
      * @var string
      */
     private $contextUrl;
@@ -49,6 +54,7 @@ class UserContextSubscriber implements EventSubscriberInterface
 
     /**
      * @param \Twig_Environment $twig
+     * @param bool $preview
      * @param string $contextUrl
      * @param string $contextHitUrl
      * @param string $urlHeader
@@ -57,6 +63,7 @@ class UserContextSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         \Twig_Environment $twig,
+        $preview,
         $contextUrl,
         $contextHitUrl,
         $urlHeader,
@@ -64,6 +71,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         $userContextHeader
     ) {
         $this->twig = $twig;
+        $this->preview = $preview;
         $this->contextUrl = $contextUrl;
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
@@ -106,6 +114,10 @@ class UserContextSubscriber implements EventSubscriberInterface
      */
     public function addUserContextHitScript(FilterResponseEvent $event)
     {
+        if ($this->preview) {
+            return;
+        }
+
         $response = $event->getResponse();
         $script = $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
             'url' => $this->contextHitUrl,

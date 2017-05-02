@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
+use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +36,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
+            false,
             $contextUrl,
             '/_user_context_hit',
             'X-Forwarded-Url',
@@ -69,6 +71,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
+            false,
             '/_user_context',
             $contextHitUrl,
             $forwardedUrlHeader,
@@ -97,5 +100,26 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer'],
             ['/context_hit', 'X-Other-URL', 'X-Other-Referer'],
         ];
+    }
+
+    public function testAddUserContextHitScriptInPreview()
+    {
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            true,
+            '/_user_context',
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwared-Referer',
+            'X-User-Context'
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+
+        $this->twig->render(Argument::cetera())->shouldNotBeCalled();
+        $event->getRequest()->shouldNotBeCalled();
+        $event->getResponse()->shouldNotBeCalled();
+
+        $userContextSubscriber->addUserContextHitScript($event->reveal());
     }
 }
