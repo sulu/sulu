@@ -145,11 +145,12 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->getPersistEventMock();
 
-        $this->document->getPublished()->willReturn(new \DateTime());
+        $published = new \DateTime();
+        $this->document->getPublished()->willReturn($published);
 
         $this->document->setWorkflowStage(WorkflowStage::TEST)->shouldBeCalled();
         $this->defaultNode->setProperty('i18n:de-state', WorkflowStage::TEST)->shouldBeCalled();
-        $this->defaultNode->setProperty('i18n:de-published', Argument::any())->shouldNotBeCalled();
+        $this->defaultNode->setProperty('i18n:de-published', $published)->shouldBeCalled();
         $this->liveNode->setProperty('i18n:de-state', Argument::any())->shouldNotBeCalled();
         $this->liveNode->setProperty('i18n:de-published', Argument::any())->shouldNotBeCalled();
 
@@ -183,13 +184,14 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->getPublishEventMock();
 
-        $this->document->getPublished()->willReturn(new \DateTime());
+        $published = new \DateTime();
+        $this->document->getPublished()->willReturn($published);
 
         $this->document->setWorkflowStage(WorkflowStage::PUBLISHED)->shouldBeCalled();
         $this->defaultNode->setProperty('i18n:de-state', WorkflowStage::PUBLISHED)->shouldBeCalled();
-        $this->defaultNode->setProperty('i18n:de-published', Argument::any())->shouldNotBeCalled();
+        $this->defaultNode->setProperty('i18n:de-published', $published)->shouldBeCalled();
         $this->liveNode->setProperty('i18n:de-state', WorkflowStage::PUBLISHED)->shouldBeCalled();
-        $this->liveNode->setProperty('i18n:de-published', Argument::any())->shouldNotBeCalled();
+        $this->liveNode->setProperty('i18n:de-published', $published)->shouldBeCalled();
 
         $this->documentAccessor->set('published', Argument::any())->shouldNotBeCalled();
 
