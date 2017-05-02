@@ -52,6 +52,12 @@
             <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
             <tag name="sulu.audience_target_rule" alias="referrer"/>
         </service>
+        <service id="sulu_audience_targeting.rules.page"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\PageRule">
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="page"/>
+        </service>
         <!--CONTENT TYPES-->
         <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
                  class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups">

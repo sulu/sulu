@@ -1,7 +1,8 @@
 define([
     'jquery',
+    'underscore',
     'text!./condition-list.html'
-], function($, conditionListTemplate) {
+], function($, _, conditionListTemplate) {
     var constants = {
             addButtonSelector: '.addButton',
             removeButtonSelector: '.remove',
@@ -56,9 +57,14 @@ define([
         },
 
         changeConditionType = function($conditionRow, type) {
-            $conditionRow.find(constants.conditionSelector).html(
-                this.options.conditionTypesTemplate.find('#' + type).html()
+            var $conditionValue = $conditionRow.find(constants.conditionSelector);
+            $conditionValue.html(
+                _.template(this.options.conditionTypesTemplate.find('#' + type).html(), {
+                    locale: this.sandbox.sulu.getDefaultContentLocale()
+                })
             );
+
+            this.sandbox.start($conditionValue);
         },
 
         findConditionFieldByName = function($conditionRow, name) {

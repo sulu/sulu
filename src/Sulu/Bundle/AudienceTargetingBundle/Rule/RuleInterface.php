@@ -33,7 +33,7 @@ interface RuleInterface
     public function getName();
 
     /**
-     * Returns the path for the twig template to render. The result of the twig template will be.
+     * Returns the HTML for the rule in the administration interface.
      *
      * @return string
      */
