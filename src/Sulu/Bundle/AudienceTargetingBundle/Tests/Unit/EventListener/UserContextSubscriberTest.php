@@ -16,6 +16,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -245,7 +246,10 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             'user-cookie'
         );
         $event = $this->prophesize(FilterResponseEvent::class);
+        $request = new Request();
+        $event->getRequest()->willReturn($request);
         $response = new Response('<body></body>');
+        $response->headers->set('Content-Type', 'text/html');
         $event->getResponse()->willReturn($response);
         $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
             'url' => $contextHitUrl,
@@ -282,11 +286,106 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $event->getRequest()->willReturn($request);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/html');
+        $event->getResponse()->willReturn($response);
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
-        $event->getRequest()->shouldNotBeCalled();
-        $event->getResponse()->shouldNotBeCalled();
 
         $userContextSubscriber->addUserContextHitScript($event->reveal());
+
+        $this->assertEquals('', $response->getContent());
+    }
+
+    public function testAddUserContextHitScriptNonHtml()
+    {
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->userContextStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            '/_user_context',
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwared-Referer',
+            'X-User-Context',
+            'user-cookie'
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $event->getRequest()->willReturn($request);
+        $response = new JsonResponse();
+        $event->getResponse()->willReturn($response);
+
+        $this->twig->render(Argument::cetera())->shouldNotBeCalled();
+
+        $userContextSubscriber->addUserContextHitScript($event->reveal());
+
+        $this->assertEquals('{}', $response->getContent());
+    }
+
+    public function testAddUserContextHitScriptHtmlUtf8()
+    {
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->userContextStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            '/_user_context',
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwared-Referer',
+            'X-User-Context',
+            'user-cookie'
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $event->getRequest()->willReturn($request);
+        $response = new Response('<body></body>');
+        $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
+        $event->getResponse()->willReturn($response);
+
+        $this->twig->render(Argument::cetera())->willReturn('<script></script>');
+
+        $userContextSubscriber->addUserContextHitScript($event->reveal());
+
+        $this->assertEquals('<body><script></script></body>', $response->getContent());
+    }
+
+    public function testAddUserContextHitScriptNonGet()
+    {
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->userContextStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            '/_user_context',
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwared-Referer',
+            'X-User-Context',
+            'user-cookie'
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+        $event->getRequest()->willReturn($request);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/html');
+        $event->getResponse()->willReturn($response);
+
+        $this->twig->render(Argument::cetera())->shouldNotBeCalled();
+
+        $userContextSubscriber->addUserContextHitScript($event->reveal());
+
+        $this->assertEquals('', $response->getContent());
     }
 }

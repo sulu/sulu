@@ -16,6 +16,8 @@ use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -192,11 +194,16 @@ class UserContextSubscriber implements EventSubscriberInterface
      */
     public function addUserContextHitScript(FilterResponseEvent $event)
     {
-        if ($this->preview) {
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
+        if ($this->preview
+            || strpos($response->headers->get('Content-Type'), 'text/html') !== 0
+            || $request->getMethod() !== Request::METHOD_GET
+        ) {
             return;
         }
 
-        $response = $event->getResponse();
         $script = $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
             'url' => $this->contextHitUrl,
             'urlHeader' => $this->urlHeader,
