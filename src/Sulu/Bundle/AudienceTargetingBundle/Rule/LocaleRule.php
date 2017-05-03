@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Text;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -19,6 +20,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class LocaleRule implements RuleInterface
 {
+    const LOCALE = 'locale';
+
     /**
      * @var RequestStack
      */
@@ -40,7 +43,7 @@ class LocaleRule implements RuleInterface
      */
     public function evaluate(array $options)
     {
-        if (!isset($options['locale'])) {
+        if (!isset($options[static::LOCALE])) {
             return false;
         }
 
@@ -49,7 +52,7 @@ class LocaleRule implements RuleInterface
             return false;
         }
 
-        return substr($languages[0], 0, 2) === $options['locale'];
+        return substr($languages[0], 0, 2) === $options[static::LOCALE];
     }
 
     /**
@@ -63,10 +66,8 @@ class LocaleRule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
+    public function getType()
     {
-        return '<div class="grid-col-12">
-                <input class="form-element" type="text" data-condition-name="locale" />
-            </div>';
+        return new Text(static::LOCALE);
     }
 }

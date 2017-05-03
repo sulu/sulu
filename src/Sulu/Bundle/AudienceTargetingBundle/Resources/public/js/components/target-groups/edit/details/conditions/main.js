@@ -50,7 +50,14 @@ define([
                     changeConditionType.call(this, $conditionRow, data.type);
 
                     Object.keys(data.condition).forEach(function(key) {
-                        findConditionFieldByName($conditionRow, key).val(data.condition[key]);
+                        var value = data.condition[key],
+                            $conditionField = findConditionFieldByName($conditionRow, key);
+
+                        if ($conditionField.data('rule-type') === 'internal_link') {
+                            $conditionField.data('singleInternalLink', value);
+                        } else  {
+                            $conditionField.val(value);
+                        }
                     });
                 }
             }.bind(this));

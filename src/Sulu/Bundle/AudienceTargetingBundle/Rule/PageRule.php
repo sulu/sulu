@@ -54,13 +54,14 @@ class PageRule implements RuleInterface
     public function getTemplate()
     {
         return '<div class="grid-12">
-            <div data-aura-component="single-internal-link@sulucontent"
+            <div data-condition-name="page"
+                data-condition-type="link"
+                data-aura-component="single-internal-link@sulucontent"
                 data-aura-instance-name="page-rule"
                 data-aura-url="/admin/api/nodes{/uuid}?depth=1&language=<%= locale %>&webspace-node=true"
                 data-aura-selected-url="/admin/api/nodes/{uuid}?tree=true&language=<%= locale %>&fields=title,order,published&webspace-nodes=all"
                 data-aura-column-navigation-url="/admin/api/nodes?fields=title,order,published&language=<%= locale %>&webspace-nodes=all"
-                data-aura-result-key="nodes"
-                ></div>
+                data-aura-result-key="nodes"></div>
         </div>';
     }
 }

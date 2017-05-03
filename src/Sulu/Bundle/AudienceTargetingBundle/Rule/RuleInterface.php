@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\RuleTypeInterface;
+
 /**
  * Interface for rules, which should help to find a matching target group.
  */
@@ -33,9 +35,7 @@ interface RuleInterface
     public function getName();
 
     /**
-     * Returns the HTML for the rule in the administration interface.
-     *
-     * @return string
+     * @return RuleTypeInterface
      */
-    public function getTemplate();
+    public function getType();
 }
