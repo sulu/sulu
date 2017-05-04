@@ -1,7 +1,8 @@
 define([
     'jquery',
+    'underscore',
     'text!./condition-list.html'
-], function($, conditionListTemplate) {
+], function($, _, conditionListTemplate) {
     var constants = {
             addButtonSelector: '.addButton',
             removeButtonSelector: '.remove',
@@ -49,20 +50,37 @@ define([
                     changeConditionType.call(this, $conditionRow, data.type);
 
                     Object.keys(data.condition).forEach(function(key) {
-                        findConditionFieldByName($conditionRow, key).val(data.condition[key]);
+                        var value = data.condition[key],
+                            $conditionField = findConditionFieldByName($conditionRow, key);
+
+                        if ($conditionField.data('rule-type') === 'internal_link') {
+                            $conditionField.data('singleInternalLink', value);
+                        } else  {
+                            $conditionField.val(value);
+                        }
                     });
                 }
             }.bind(this));
         },
 
         changeConditionType = function($conditionRow, type) {
-            $conditionRow.find(constants.conditionSelector).html(
-                this.options.conditionTypesTemplate.find('#' + type).html()
+            var $conditionValue = $conditionRow.find(constants.conditionSelector);
+            stopComponents.call(this, $conditionValue);
+            $conditionValue.html(
+                _.template(this.options.conditionTypesTemplate.find('#' + type).html(), {
+                    locale: this.sandbox.sulu.getDefaultContentLocale()
+                })
             );
+
+            this.sandbox.start($conditionValue);
         },
 
         findConditionFieldByName = function($conditionRow, name) {
             return $conditionRow.find('[data-condition-name=' + name + ']');
+        },
+
+        stopComponents = function($element) {
+            this.sandbox.stop($element.find('[data-aura-component]'));
         };
 
     return {

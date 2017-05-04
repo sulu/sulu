@@ -32,7 +32,7 @@ define([
 
                         $row.find('[data-condition-name]').each(function(index, element) {
                             var $element = $(element);
-                            condition[$element.attr('data-condition-name')] = $element.val();
+                            condition[$element.attr('data-condition-name')] = $element.data('singleInternalLink') || $element.val();
                         });
 
                         value.push({

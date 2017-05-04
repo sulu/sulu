@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('url')->defaultValue('X-Forwarded-URL')->end()
                                         ->scalarNode('referrer')->defaultValue('X-Forwarded-Referrer')->end()
+                                        ->scalarNode('uuid')->defaultValue('X-Forwarded-UUID')->end()
                                     ->end()
                                 ->end()
                             ->end()

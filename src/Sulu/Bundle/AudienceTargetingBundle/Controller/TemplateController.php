@@ -84,7 +84,7 @@ class TemplateController extends Controller
     public function conditionTypesAction()
     {
         $ruleTemplates = array_map(function(RuleInterface $rule) {
-            return $rule->getTemplate();
+            return $rule->getType()->getTemplate();
         }, $this->get('sulu_audience_targeting.rules_collection')->getRules());
 
         return $this->render('SuluAudienceTargetingBundle:Template:condition-types.html.twig', [
