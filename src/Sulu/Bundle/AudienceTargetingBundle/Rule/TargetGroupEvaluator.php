@@ -51,7 +51,7 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
      * {@inheritdoc}
      */
     public function evaluate(
-        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_USER,
         TargetGroupInterface $currentTargetGroup = null
     ) {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();

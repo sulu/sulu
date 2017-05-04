@@ -37,6 +37,7 @@ class SuluAudienceTargetingExtension extends Extension
         $container->setParameter('sulu_audience_targeting.frequencies', [
             TargetGroupRuleInterface::FREQUENCY_HIT_NAME => TargetGroupRuleInterface::FREQUENCY_HIT,
             TargetGroupRuleInterface::FREQUENCY_SESSION_NAME => TargetGroupRuleInterface::FREQUENCY_SESSION,
+            TargetGroupRuleInterface::FREQUENCY_USER_NAME => TargetGroupRuleInterface::FREQUENCY_USER,
         ]);
 
         $this->processUserContext($config['user_context'], $container);
