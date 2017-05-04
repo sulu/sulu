@@ -39,9 +39,16 @@ interface TargetGroupRepositoryInterface extends RepositoryInterface
     /**
      * Returns all active TargetGroups from the given webspace ordered by their priority.
      *
+     * Takes a value from the FREQUENCY_* constant of the TargetGroupRuleInterface as second argument. This parameter
+     * describes which is the highest frequency which will be taken into account when evaluating.
+     *
      * @param string $webspace
+     * @param int $maxFrequency
      *
      * @return TargetGroupInterface[]
      */
-    public function findAllActiveForWebspaceOrderedByPriority($webspace);
+    public function findAllActiveForWebspaceOrderedByPriority(
+        $webspace,
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION
+    );
 }

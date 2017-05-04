@@ -17,7 +17,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
@@ -79,11 +78,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     private $tagRepository;
 
     /**
-     * @var TargetGroupEvaluatorInterface
-     */
-    private $targetGroupEvaluator;
-
-    /**
      * @var TagInterface
      */
     private $tag1;
@@ -116,7 +110,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->contentQuery = $this->getContainer()->get('sulu.content.query_executor');
         $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
-        $this->targetGroupEvaluator = $this->getContainer()->get('sulu_audience_targeting.target_group_evaluator');
         $this->audienceTargetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
 
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
@@ -207,7 +200,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         $builder->init(
@@ -297,7 +289,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         // test news
@@ -332,7 +323,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         $builder->init(['config' => ['dataSource' => $root->getIdentifier(), 'includeSubFolders' => true]]);
@@ -362,30 +352,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
 
-        /** @var TargetGroupInterface $targetGroup */
-        $targetGroup = $this->audienceTargetGroupRepository->createNew();
-        $targetGroup->setTitle('Test');
-        $targetGroup->setPriority(5);
-        $targetGroup->setActive(true);
-        $targetGroupWebspace = new TargetGroupWebspace();
-        $targetGroupWebspace->setWebspaceKey('sulu_io');
-        $targetGroupWebspace->setTargetGroup($targetGroup);
-        $targetGroupRule = new TargetGroupRule();
-        $targetGroupRule->setTitle('Test');
-        $targetGroupRule->setFrequency(TargetGroupRuleInterface::FREQUENCY_SESSION);
-        $targetGroupRule->setTargetGroup($targetGroup);
-        $targetGroupCondition = new TargetGroupCondition();
-        $targetGroupCondition->setType('locale');
-        $targetGroupCondition->setCondition(['locale' => 'en']);
-        $targetGroupCondition->setRule($targetGroupRule);
-        $this->getEntityManager()->persist($targetGroup);
-        $this->getEntityManager()->persist($targetGroupWebspace);
-        $this->getEntityManager()->persist($targetGroupRule);
-        $this->getEntityManager()->persist($targetGroupCondition);
-        $this->getEntityManager()->flush();
-
-        $this->getEntityManager()->clear();
-
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
         $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
@@ -398,7 +364,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $familyDocument->setResourceSegment('/family');
         $familyDocument->setExtensionsData(
             [
-                'excerpt' => ['audience_targeting_groups' => [$targetGroup->getId()]],
+                'excerpt' => ['audience_targeting_groups' => [1]],
             ]
         );
         $familyDocument->setStructureType('simple');
@@ -425,12 +391,12 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
         $builder->init([
             'config' => [
+                'userContext' => 1,
                 'dataSource' => $root->getIdentifier(),
                 'includeSubFolders' => true,
                 'audienceTargeting' => true,
@@ -509,7 +475,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -662,7 +627,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -709,7 +673,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -800,7 +763,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -901,7 +863,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -1036,7 +997,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -1090,7 +1050,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
 
@@ -1138,7 +1097,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         $builder->init(
@@ -1170,7 +1128,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         $builder->init(['ids' => [array_keys($nodes)[0], array_keys($nodes)[1]]]);
@@ -1193,7 +1150,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         $builder->init(['excluded' => [$uuids[0]]]);
@@ -1375,7 +1331,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
-            $this->targetGroupEvaluator,
             $this->languageNamespace
         );
         $builder->init(

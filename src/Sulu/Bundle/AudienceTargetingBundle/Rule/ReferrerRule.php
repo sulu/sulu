@@ -26,10 +26,16 @@ class ReferrerRule implements RuleInterface
      */
     private $translator;
 
-    public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
+    /**
+     * @var string
+     */
+    private $referrerHeader;
+
+    public function __construct(RequestStack $requestStack, TranslatorInterface $translator, $referrerHeader = null)
     {
         $this->requestStack = $requestStack;
         $this->translator = $translator;
+        $this->referrerHeader = $referrerHeader;
     }
 
     /**
@@ -41,9 +47,15 @@ class ReferrerRule implements RuleInterface
      */
     public function evaluate(array $options)
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $referrer = $request->headers->get('referer');
+        if ($this->referrerHeader && $request->headers->has($this->referrerHeader)) {
+            $referrer = $request->headers->get($this->referrerHeader);
+        }
+
         return (bool) preg_match(
-            '/^' . str_replace('*', '(.*)', $options['referrer']) . '$/',
-            $this->requestStack->getCurrentRequest()->headers->get('referer')
+            '/^' . str_replace(['*', '/'], ['(.*)', '\/'], $options['referrer']) . '$/',
+            $referrer
         );
     }
 
