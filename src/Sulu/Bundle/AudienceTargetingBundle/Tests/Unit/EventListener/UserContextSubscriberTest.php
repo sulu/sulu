@@ -16,6 +16,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,6 +66,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
             $userContextHeader,
             $userContextCookie
         );
@@ -112,6 +114,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
             'X-User-Context',
             'user-context'
         );
@@ -159,6 +162,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
             $header,
             'user-context'
         );
@@ -197,6 +201,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context_hit',
             'X-Forwarded-URL',
             'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
             'X-User-Context',
             $userContextCookie
         );
@@ -231,8 +236,13 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideAddUserContextHitScript
      */
-    public function testAddUserContextHitScript($contextHitUrl, $forwardedUrlHeader, $forwardedRefererHeader)
-    {
+    public function testAddUserContextHitScript(
+        $contextHitUrl,
+        $forwardedUrlHeader,
+        $forwardedRefererHeader,
+        $forwardedUuidHeader,
+        $uuid
+    ) {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
             false,
@@ -242,19 +252,31 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             $contextHitUrl,
             $forwardedUrlHeader,
             $forwardedRefererHeader,
+            $forwardedUuidHeader,
             'X-User-Context',
             'user-cookie'
         );
+
         $event = $this->prophesize(FilterResponseEvent::class);
+
         $request = new Request();
+        if ($uuid) {
+            $structureBridge = $this->prophesize(StructureBridge::class);
+            $structureBridge->getUuid()->willReturn($uuid);
+            $request->attributes->set('structure', $structureBridge->reveal());
+        }
         $event->getRequest()->willReturn($request);
+
         $response = new Response('<body></body>');
         $response->headers->set('Content-Type', 'text/html');
         $event->getResponse()->willReturn($response);
+
         $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
             'url' => $contextHitUrl,
             'urlHeader' => $forwardedUrlHeader,
             'refererHeader' => $forwardedRefererHeader,
+            'uuidHeader' => $forwardedUuidHeader,
+            'uuid' => $uuid,
         ])->willReturn('<script></script>');
 
         $userContextSubscriber->addUserContextHitScript($event->reveal());
@@ -265,8 +287,9 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     public function provideAddUserContextHitScript()
     {
         return [
-            ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer'],
-            ['/context_hit', 'X-Other-URL', 'X-Other-Referer'],
+            ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],
+            ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', null],
+            ['/context_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', 'some-other-uuid'],
         ];
     }
 
@@ -280,7 +303,8 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
-            'X-Forwared-Referer',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
             'X-User-Context',
             'user-cookie'
         );
@@ -310,7 +334,8 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
-            'X-Forwared-Referer',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
             'X-User-Context',
             'user-cookie'
         );
@@ -340,6 +365,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwared-Referer',
+            'X-Fowarded-UUID',
             'X-User-Context',
             'user-cookie'
         );
@@ -370,6 +396,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwared-Referer',
+            'X-Forwarded-UUID',
             'X-User-Context',
             'user-cookie'
         );
