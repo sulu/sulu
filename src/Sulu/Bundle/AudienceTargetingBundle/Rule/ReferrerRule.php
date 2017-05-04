@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Text;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ReferrerRule implements RuleInterface
 {
+    const REFERRER = 'referrer';
+
     /**
      * @var RequestStack
      */
@@ -54,7 +57,7 @@ class ReferrerRule implements RuleInterface
         }
 
         return (bool) preg_match(
-            '/^' . str_replace(['*', '/'], ['(.*)', '\/'], $options['referrer']) . '$/',
+            '/^' . str_replace(['*', '/'], ['(.*)', '\/'], $options[static::REFERRER]) . '$/',
             $referrer
         );
     }
@@ -72,10 +75,8 @@ class ReferrerRule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
+    public function getType()
     {
-        return '<div class="grid-col-12">
-                <input class="form-element" type="text" data-condition-name="referrer" />
-            </div>';
+        return new Text(static::REFERRER);
     }
 }

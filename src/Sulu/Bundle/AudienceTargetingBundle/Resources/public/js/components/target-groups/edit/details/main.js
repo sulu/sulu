@@ -292,10 +292,7 @@ define([
             var $container = this.sandbox.dom.createElement('<div class="overlay-element"/>');
             this.sandbox.dom.append(this.$el, $container);
 
-            this.sandbox.once('husky.overlay.rule.opened', this.createRuleForm.bind(this, id));
-            this.sandbox.once('husky.overlay.rule.opened', this.bindRuleFormListener.bind(this, id));
-
-            this.sandbox.start([
+            var overlayStarted = this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
@@ -312,12 +309,17 @@ define([
                     }
                 }
             ]);
+
+            overlayStarted.then(function(overlayComponent) {
+                this.createRuleForm(overlayComponent, id);
+                this.bindRuleFormListener(id);
+            }.bind(this));
         },
 
         /**
          * Create a new rule form when the overlay will be opened.
          */
-        createRuleForm: function(id) {
+        createRuleForm: function(overlayComponent, id) {
             var selectedRule = {};
             if (!!id) {
                 selectedRule = this.findRule(id);
@@ -325,8 +327,8 @@ define([
 
             this.sandbox.form.create(constants.ruleFormSelector).initialized.then(function() {
                 this.sandbox.form.setData(constants.ruleFormSelector, selectedRule).then(function () {
-                    this.sandbox.start(constants.ruleFormSelector);
-                    this.sandbox.start([{
+                    overlayComponent.sandbox.start(constants.ruleFormSelector);
+                    overlayComponent.sandbox.start([{
                         name: 'target-groups/edit/details/conditions@suluaudiencetargeting',
                         options: {
                             el: constants.ruleFormSelector + ' #conditions',
