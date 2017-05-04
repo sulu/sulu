@@ -12,6 +12,7 @@
 namespace Sulu\Component\SmartContent;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -65,6 +66,11 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     private $categoryRequestHandler;
 
     /**
+     * @var UserContextStoreInterface
+     */
+    private $userContextStore;
+
+    /**
      * SmartContentType constructor.
      *
      * @param DataProviderPoolInterface $dataProviderPool
@@ -73,6 +79,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param TagRequestHandlerInterface $tagRequestHandler
      * @param CategoryRequestHandlerInterface $categoryRequestHandler
      * @param string $template
+     * @param UserContextStoreInterface $userContextStore
      */
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
@@ -80,7 +87,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         RequestStack $requestStack,
         TagRequestHandlerInterface $tagRequestHandler,
         CategoryRequestHandlerInterface $categoryRequestHandler,
-        $template
+        $template,
+        UserContextStoreInterface $userContextStore = null
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
@@ -88,6 +96,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->tagRequestHandler = $tagRequestHandler;
         $this->categoryRequestHandler = $categoryRequestHandler;
         $this->template = $template;
+        $this->userContextStore = $userContextStore;
     }
 
     /**
@@ -244,6 +253,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $params['categories_parameter']->getValue()
         );
         $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
+
+        if ($this->userContextStore) {
+            $filters['userContext'] = $this->userContextStore->getUserContext();
+        }
 
         // resolve tags to id
         $this->resolveTags($filters, 'tags');

@@ -85,8 +85,10 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
     /**
      * {@inheritdoc}
      */
-    public function findAllActiveForWebspaceOrderedByPriority($webspace)
-    {
+    public function findAllActiveForWebspaceOrderedByPriority(
+        $webspace,
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION
+    ) {
         $query = $this->createQueryBuilder('targetGroup')
             ->addSelect('targetGroupRules')
             ->addSelect('targetGroupConditions')
@@ -95,9 +97,12 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
             ->leftJoin('targetGroup.webspaces', 'targetGroupWebspaces')
             ->where('targetGroup.active = true')
             ->andWhere('(targetGroup.allWebspaces = true OR targetGroupWebspaces.webspaceKey = :webspace)')
+            ->andWhere('targetGroupRules.frequency <= :maxFrequency')
             ->orderBy('targetGroup.priority', 'desc')
             ->getQuery();
 
-        return $query->setParameter('webspace', $webspace)->getResult();
+        return $query->setParameter('webspace', $webspace)
+            ->setParameter('maxFrequency', $maxFrequency)
+            ->getResult();
     }
 }

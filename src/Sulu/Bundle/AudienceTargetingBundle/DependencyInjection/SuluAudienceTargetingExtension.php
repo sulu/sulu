@@ -50,7 +50,16 @@ class SuluAudienceTargetingExtension extends Extension
     private function processUserContext($userContextConfig, ContainerBuilder $container)
     {
         $container->setParameter('sulu_audience_targeting.user_context.header', $userContextConfig['header']);
-        $container->setParameter('sulu_audience_targeting.user_context.uri', $userContextConfig['uri']);
+        $container->setParameter('sulu_audience_targeting.user_context.url', $userContextConfig['url']);
+        $container->setParameter('sulu_audience_targeting.user_context.hit.url', $userContextConfig['hit']['url']);
+        $container->setParameter(
+            'sulu_audience_targeting.user_context.hit.headers.url',
+            $userContextConfig['hit']['headers']['url']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.user_context.hit.headers.referrer',
+            $userContextConfig['hit']['headers']['referrer']
+       );
         $container->setParameter('sulu_audience_targeting.user_context.cookie', $userContextConfig['cookie']);
     }
 }
