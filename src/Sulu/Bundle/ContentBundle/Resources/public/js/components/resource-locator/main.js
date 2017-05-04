@@ -81,7 +81,7 @@ define(['config'], function(Config) {
             }.bind(this));
 
             // value change
-            this.sandbox.dom.on(getId.call(this, 'input'), 'change', setDataValue.bind(this));
+            this.sandbox.dom.on(getId.call(this, 'input'), 'keyup', setDataValue.bind(this));
             this.sandbox.dom.on(getId.call(this, 'input'), 'change', function() {
                 this.sandbox.emit('sulu.content.changed');
             }.bind(this));
