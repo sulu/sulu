@@ -50,12 +50,23 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
     /**
      * {@inheritdoc}
      */
-    public function evaluate()
-    {
+    public function evaluate(
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
+        TargetGroupInterface $currentTargetGroup = null
+    ) {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        foreach ($this->targetGroupRepository->findAllActiveForWebspaceOrderedByPriority($webspaceKey) as $targetGroup) {
+        $considerableTargetGroups = $this->targetGroupRepository->findAllActiveForWebspaceOrderedByPriority(
+            $webspaceKey,
+            $maxFrequency
+        );
+
+        foreach ($considerableTargetGroups as $targetGroup) {
             if ($this->evaluateTargetGroup($targetGroup)) {
-                return $targetGroup;
+                if (!$currentTargetGroup || $targetGroup->getPriority() > $currentTargetGroup->getPriority()) {
+                    return $targetGroup;
+                }
+
+                break;
             }
         }
 

@@ -16,6 +16,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluator;
@@ -60,8 +61,14 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideEvaluationData
      */
-    public function testEvaluate($targetGroups, $ruleWhitelists, $webspaceKey, $evaluatedTargetGroup)
-    {
+    public function testEvaluate(
+        $targetGroups,
+        $ruleWhitelists,
+        $webspaceKey,
+        $evaluatedTargetGroup,
+        $frequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
+        $currentTargetGroup = null
+    ) {
         $webspace = new Webspace();
         $webspace->setKey($webspaceKey);
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
@@ -77,9 +84,11 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
             return $rules[$arguments[0]];
         });
 
-        $this->targetGroupRepository->findAllActiveForWebspaceOrderedByPriority($webspaceKey)->willReturn($targetGroups);
+        $this->targetGroupRepository
+            ->findAllActiveForWebspaceOrderedByPriority($webspaceKey, $frequency)
+            ->willReturn($targetGroups);
 
-        $this->assertEquals($evaluatedTargetGroup, $this->targetGroupEvaluator->evaluate());
+        $this->assertEquals($evaluatedTargetGroup, $this->targetGroupEvaluator->evaluate($frequency, $currentTargetGroup));
     }
 
     public function provideEvaluationData()
@@ -128,6 +137,21 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
         $targetGroupRule5_2->addCondition($targetGroupCondition5_2);
         $targetGroup5->addRule($targetGroupRule5_2);
 
+        $targetGroup6 = new TargetGroup();
+        $targetGroup6->setPriority(3);
+        $targetGroupRule6_1 = new TargetGroupRule();
+        $targetGroupCondition6_1 = new TargetGroupCondition();
+        $targetGroupCondition6_1->setType('rule1');
+        $targetGroupCondition6_1->setCondition(['targetGroup6']);
+        $targetGroupRule6_1->addCondition($targetGroupCondition6_1);
+        $targetGroup6->addRule($targetGroupRule6_1);
+
+        $targetGroup7 = new TargetGroup();
+        $targetGroup7->setPriority(5);
+
+        $targetGroup8 = new TargetGroup();
+        $targetGroup8->setPriority(1);
+
         return [
             [[], [], 'sulu_io', null],
             [[$targetGroup1], [], 'sulu_io', null],
@@ -143,6 +167,9 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
             [[$targetGroup5], ['rule1' => [['targetGroup5']], 'rule2' => [['targetGroup5']]], 'sulu_io', $targetGroup5],
             [[$targetGroup5], ['rule1' => [], 'rule2' => [['targetGroup5']]], 'sulu_io', $targetGroup5],
             [[$targetGroup5], ['rule1' => [], 'rule2' => []], 'sulu_io', null],
+            [[$targetGroup5], ['rule1' => [], 'rule2' => []], 'sulu_io', null, TargetGroupRuleInterface::FREQUENCY_HIT],
+            [[$targetGroup6], ['rule1' => [['targetGroup6']]], 'sulu_io', null, TargetGroupRuleInterface::FREQUENCY_HIT, $targetGroup7],
+            [[$targetGroup6], ['rule1' => [['targetGroup6']]], 'sulu_io', $targetGroup6, TargetGroupRuleInterface::FREQUENCY_HIT, $targetGroup8],
         ];
     }
 }
