@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -64,22 +63,15 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private $sessionManager;
 
-    /**
-     * @var TargetGroupEvaluatorInterface
-     */
-    private $targetGroupEvaluator;
-
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         SessionManagerInterface $sessionManager,
-        TargetGroupEvaluatorInterface $targetGroupEvaluator = null,
         $languageNamespace
     ) {
         parent::__construct($structureManager, $extensionManager, $languageNamespace);
 
         $this->sessionManager = $sessionManager;
-        $this->targetGroupEvaluator = $targetGroupEvaluator;
     }
 
     /**
@@ -98,11 +90,11 @@ class QueryBuilder extends ContentQueryBuilder
             );
         }
 
-        if ($this->targetGroupEvaluator
-            && $this->hasConfig('audienceTargeting')
+        if ($this->hasConfig('audienceTargeting')
             && $this->getConfig('audienceTargeting', false)
+            && $this->hasConfig('userContext')
         ) {
-            $result = $this->buildAudienceTargeting($locale);
+            $result = $this->buildAudienceTargeting($this->getConfig('userContext'), $locale);
 
             if ($result) {
                 $sql2Where[] = $result;
@@ -279,15 +271,14 @@ class QueryBuilder extends ContentQueryBuilder
     /**
      * Returns the where part for the audience targeting.
      *
+     * @param string $targetGroupId
      * @param string $locale
      *
-     * @return string|void
+     * @return string
      */
-    private function buildAudienceTargeting($locale)
+    private function buildAudienceTargeting($targetGroupId, $locale)
     {
-        $targetGroup = $this->targetGroupEvaluator->evaluate();
-
-        if (!$targetGroup) {
+        if (!$targetGroupId) {
             return;
         }
 
@@ -300,7 +291,7 @@ class QueryBuilder extends ContentQueryBuilder
             'excerpt'
         );
 
-        return 'page.[' . $property->getName() . '] = ' . $targetGroup->getId();
+        return 'page.[' . $property->getName() . '] = ' . $targetGroupId;
     }
 
     /**
