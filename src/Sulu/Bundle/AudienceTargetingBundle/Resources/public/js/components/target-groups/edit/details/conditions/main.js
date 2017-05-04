@@ -65,6 +65,7 @@ define([
 
         changeConditionType = function($conditionRow, type) {
             var $conditionValue = $conditionRow.find(constants.conditionSelector);
+            stopComponents.call(this, $conditionValue);
             $conditionValue.html(
                 _.template(this.options.conditionTypesTemplate.find('#' + type).html(), {
                     locale: this.sandbox.sulu.getDefaultContentLocale()
@@ -76,6 +77,10 @@ define([
 
         findConditionFieldByName = function($conditionRow, name) {
             return $conditionRow.find('[data-condition-name=' + name + ']');
+        },
+
+        stopComponents = function($element) {
+            this.sandbox.stop($element.find('[data-aura-component]'));
         };
 
     return {
