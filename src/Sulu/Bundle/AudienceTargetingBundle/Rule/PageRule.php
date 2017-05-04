@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\InternalLink;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class PageRule implements RuleInterface
 {
+    const PAGE = 'page';
+
     /**
      * @var RequestStack
      */
@@ -26,10 +29,21 @@ class PageRule implements RuleInterface
      */
     private $translator;
 
-    public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
+    /**
+     * @var string
+     */
+    private $uuidHeader;
+
+    /**
+     * @param RequestStack $requestStack
+     * @param TranslatorInterface $translator
+     * @param string $uuidHeader
+     */
+    public function __construct(RequestStack $requestStack, TranslatorInterface $translator, $uuidHeader)
     {
         $this->requestStack = $requestStack;
         $this->translator = $translator;
+        $this->uuidHeader = $uuidHeader;
     }
 
     /**
@@ -37,7 +51,20 @@ class PageRule implements RuleInterface
      */
     public function evaluate(array $options)
     {
-        // TODO: Implement evaluate() method.
+        $request = $this->requestStack->getCurrentRequest();
+
+        $uuid = $request->headers->get($this->uuidHeader);
+        if (!$uuid) {
+            if ($request->attributes->has('structure')) {
+                $uuid = $request->attributes->get('structure')->getUuid();
+            }
+        }
+
+        if (!$uuid) {
+            return false;
+        }
+
+        return $options['page'] === $uuid;
     }
 
     /**
@@ -51,17 +78,8 @@ class PageRule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
+    public function getType()
     {
-        return '<div class="grid-12">
-            <div data-condition-name="page"
-                data-condition-type="link"
-                data-aura-component="single-internal-link@sulucontent"
-                data-aura-instance-name="page-rule"
-                data-aura-url="/admin/api/nodes{/uuid}?depth=1&language=<%= locale %>&webspace-node=true"
-                data-aura-selected-url="/admin/api/nodes/{uuid}?tree=true&language=<%= locale %>&fields=title,order,published&webspace-nodes=all"
-                data-aura-column-navigation-url="/admin/api/nodes?fields=title,order,published&language=<%= locale %>&webspace-nodes=all"
-                data-aura-result-key="nodes"></div>
-        </div>';
+        return new InternalLink(static::PAGE);
     }
 }

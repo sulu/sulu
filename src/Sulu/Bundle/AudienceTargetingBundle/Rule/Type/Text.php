@@ -32,7 +32,7 @@ class Text implements RuleTypeInterface
     public function getTemplate()
     {
         return '<div class="grid-col-12">
-                <input class="form-element" type="text" data-rule-type="text" data-condition-name="' . $this->name .'" />
+                <input class="form-element" type="text" data-rule-type="text" data-condition-name="' . $this->name . '" />
             </div>';
     }
 }

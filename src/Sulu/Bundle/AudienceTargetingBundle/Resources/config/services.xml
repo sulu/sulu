@@ -56,6 +56,7 @@
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\PageRule">
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
+            <argument>%sulu_audience_targeting.user_context.hit.headers.uuid%</argument>
             <tag name="sulu.audience_target_rule" alias="page"/>
         </service>
         <!--CONTENT TYPES-->
@@ -89,6 +90,7 @@
             <argument>%sulu_audience_targeting.user_context.hit.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.url%</argument>
             <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
+            <argument>%sulu_audience_targeting.user_context.hit.headers.uuid%</argument>
             <argument>%sulu_audience_targeting.user_context.header%</argument>
             <argument>%sulu_audience_targeting.user_context.cookie%</argument>
             <tag name="kernel.event_subscriber"/>

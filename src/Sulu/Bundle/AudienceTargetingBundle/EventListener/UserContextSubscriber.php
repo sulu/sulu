@@ -67,6 +67,11 @@ class UserContextSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
+    private $uuidHeader;
+
+    /**
+     * @var string
+     */
     private $userContextHeader;
 
     /**
@@ -83,6 +88,7 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @param string $contextHitUrl
      * @param string $urlHeader
      * @param string $referrerHeader
+     * @param string $uuidHeader
      * @param string $userContextHeader
      * @param string $userContextCookie
      */
@@ -95,6 +101,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         $contextHitUrl,
         $urlHeader,
         $referrerHeader,
+        $uuidHeader,
         $userContextHeader,
         $userContextCookie
     ) {
@@ -106,6 +113,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
         $this->referrerHeader = $referrerHeader;
+        $this->uuidHeader = $uuidHeader;
         $this->userContextHeader = $userContextHeader;
         $this->userContextCookie = $userContextCookie;
     }
@@ -208,6 +216,8 @@ class UserContextSubscriber implements EventSubscriberInterface
             'url' => $this->contextHitUrl,
             'urlHeader' => $this->urlHeader,
             'refererHeader' => $this->referrerHeader,
+            'uuidHeader' => $this->uuidHeader,
+            'uuid' => $request->attributes->has('structure') ? $request->attributes->get('structure')->getUuid() : null,
         ]);
 
         $response->setContent(str_replace(
