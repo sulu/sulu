@@ -74,6 +74,11 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * @var Collection
      */
+    protected $socialMediaProfiles;
+
+    /**
+     * @var Collection
+     */
     protected $emails;
 
     /**
@@ -130,6 +135,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
         $this->emails = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->faxes = new ArrayCollection();
+        $this->socialMediaProfiles = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->accountContacts = new ArrayCollection();
@@ -351,7 +357,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove notes.
      *
-     * @param Note $notes
+     * @param Note $note
      */
     public function removeNote(Note $note)
     {
@@ -419,7 +425,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Remove fax.
      *
-     * @param Fax $faxes
+     * @param Fax $fax
      */
     public function removeFax(Fax $fax)
     {
@@ -434,6 +440,40 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     public function getFaxes()
     {
         return $this->faxes;
+    }
+
+    /**
+     * Add social media profile.
+     *
+     * @param SocialMediaProfile $socialMediaProfile
+     *
+     * @return Account
+     */
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    {
+        $this->socialMediaProfiles[] = $socialMediaProfile;
+
+        return $this;
+    }
+
+    /**
+     * Remove social media profile.
+     *
+     * @param SocialMediaProfile $socialMediaProfile
+     */
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    {
+        $this->socialMediaProfiles->removeElement($socialMediaProfile);
+    }
+
+    /**
+     * Get social media profiles.
+     *
+     * @return Collection
+     */
+    public function getSocialMediaProfiles()
+    {
+        return $this->socialMediaProfiles;
     }
 
     /**
