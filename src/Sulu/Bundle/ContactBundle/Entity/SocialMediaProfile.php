@@ -32,7 +32,7 @@ class SocialMediaProfile
      * @var string
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
-    private $name;
+    private $username;
 
     /**
      * @var SocialMediaProfileType
@@ -74,13 +74,13 @@ class SocialMediaProfile
     /**
      * Set name.
      *
-     * @param string $name
+     * @param string $username
      *
      * @return SocialMediaProfile
      */
-    public function setName($name)
+    public function setUsername($username)
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
@@ -90,9 +90,9 @@ class SocialMediaProfile
      *
      * @return string
      */
-    public function getName()
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
     }
 
     /**
