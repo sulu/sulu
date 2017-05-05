@@ -13,7 +13,6 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;

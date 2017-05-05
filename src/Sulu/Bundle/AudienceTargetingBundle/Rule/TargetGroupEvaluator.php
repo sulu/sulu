@@ -70,7 +70,7 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
             }
         }
 
-        return null;
+        return $currentTargetGroup;
     }
 
     /**

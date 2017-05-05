@@ -168,7 +168,7 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
             [[$targetGroup5], ['rule1' => [], 'rule2' => [['targetGroup5']]], 'sulu_io', $targetGroup5],
             [[$targetGroup5], ['rule1' => [], 'rule2' => []], 'sulu_io', null],
             [[$targetGroup5], ['rule1' => [], 'rule2' => []], 'sulu_io', null, TargetGroupRuleInterface::FREQUENCY_HIT],
-            [[$targetGroup6], ['rule1' => [['targetGroup6']]], 'sulu_io', null, TargetGroupRuleInterface::FREQUENCY_HIT, $targetGroup7],
+            [[$targetGroup6], ['rule1' => [['targetGroup6']]], 'sulu_io', $targetGroup7, TargetGroupRuleInterface::FREQUENCY_HIT, $targetGroup7],
             [[$targetGroup6], ['rule1' => [['targetGroup6']]], 'sulu_io', $targetGroup6, TargetGroupRuleInterface::FREQUENCY_HIT, $targetGroup8],
         ];
     }

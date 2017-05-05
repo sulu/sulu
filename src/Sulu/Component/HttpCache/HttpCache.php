@@ -33,6 +33,8 @@ class HttpCache extends AbstractHttpCache
 
     const USER_CONTEXT_COOKIE_LIFETIME = 2147483647;
 
+    const USER_CONTEXT_SESSION_COOKIE = 'user-context-session';
+
     /**
      * @var bool
      */
@@ -116,12 +118,13 @@ class HttpCache extends AbstractHttpCache
      */
     private function setUserContextHeader(Request $request)
     {
-        $hadUserContextCookie = true;
+        $hadValidUserContext = true;
         $userContext = $request->cookies->get(static::USER_CONTEXT_COOKIE);
+        $userContextSession = $request->cookies->get(static::USER_CONTEXT_SESSION_COOKIE);
 
-        if (null === $userContext) {
-            $hadUserContextCookie = false;
-            $userContext = $this->requestUserContext($request);
+        if (null === $userContext || null === $userContextSession) {
+            $hadValidUserContext = false;
+            $userContext = $this->requestUserContext($request, $userContext);
         }
 
         if ($request->isMethodSafe()) {
@@ -129,17 +132,18 @@ class HttpCache extends AbstractHttpCache
             $request->headers->set(static::USER_CONTEXT_HEADER, (string) $userContext);
         }
 
-        return $hadUserContextCookie;
+        return $hadValidUserContext;
     }
 
     /**
      * Sends a request to the application to determine the target group of the current user.
      *
      * @param Request $request
+     * @param int $userContext
      *
      * @return string
      */
-    private function requestUserContext(Request $request)
+    private function requestUserContext(Request $request, $userContext)
     {
         $userContextRequest = Request::create(
             static::USER_CONTEXT_URI,
@@ -149,6 +153,10 @@ class HttpCache extends AbstractHttpCache
             [],
             $request->server->all()
         );
+
+        if ($userContext) {
+            $userContextRequest->headers->set(static::USER_CONTEXT_HEADER, $userContext);
+        }
 
         // use the parent class to avoid user context based caching
         $userContextResponse = parent::handle($userContextRequest);
@@ -169,6 +177,13 @@ class HttpCache extends AbstractHttpCache
                 static::USER_CONTEXT_COOKIE,
                 $request->headers->get(static::USER_CONTEXT_HEADER),
                 static::USER_CONTEXT_COOKIE_LIFETIME
+            )
+        );
+
+        $response->headers->setCookie(
+            new Cookie(
+                static::USER_CONTEXT_SESSION_COOKIE,
+                time()
             )
         );
     }
