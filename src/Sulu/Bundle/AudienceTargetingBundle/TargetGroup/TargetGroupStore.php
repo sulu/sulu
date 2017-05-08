@@ -9,17 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\UserContext;
+namespace Sulu\Bundle\AudienceTargetingBundle\TargetGroup;
 
 /**
  * This class stores the current user context. Also allows updating it, in which case it is marked as changed.
  */
-class UserContextStore implements UserContextStoreInterface
+class TargetGroupStore implements TargetGroupStoreInterface
 {
     /**
      * @var string
      */
-    private $userContext;
+    private $targetGroup;
 
     /**
      * @var bool
@@ -29,26 +29,26 @@ class UserContextStore implements UserContextStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function setUserContext($userContext)
+    public function setTargetGroupId($targetGroupId)
     {
-        $this->userContext = $userContext;
+        $this->targetGroup = $targetGroupId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getUserContext()
+    public function getTargetGroupId()
     {
-        return $this->userContext;
+        return $this->targetGroup;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateUserContext($userContext)
+    public function updateTargetGroupId($targetGroupid)
     {
-        $this->changed = $this->getUserContext() != $userContext;
-        $this->setUserContext($userContext);
+        $this->changed = $this->getTargetGroupId() != $targetGroupid;
+        $this->setTargetGroupId($targetGroupid);
     }
 
     /**

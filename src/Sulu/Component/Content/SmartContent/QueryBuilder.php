@@ -92,9 +92,9 @@ class QueryBuilder extends ContentQueryBuilder
 
         if ($this->hasConfig('audienceTargeting')
             && $this->getConfig('audienceTargeting', false)
-            && $this->hasConfig('userContext')
+            && $this->hasConfig('targetGroupId')
         ) {
-            $result = $this->buildAudienceTargeting($this->getConfig('userContext'), $locale);
+            $result = $this->buildAudienceTargeting($this->getConfig('targetGroupId'), $locale);
 
             if ($result) {
                 $sql2Where[] = $result;

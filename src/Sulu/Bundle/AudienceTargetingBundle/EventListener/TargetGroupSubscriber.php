@@ -13,8 +13,8 @@ namespace Sulu\Bundle\AudienceTargetingBundle\EventListener;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
-use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class UserContextSubscriber implements EventSubscriberInterface
+class TargetGroupSubscriber implements EventSubscriberInterface
 {
     /**
      * @var \Twig_Environment
@@ -36,9 +36,9 @@ class UserContextSubscriber implements EventSubscriberInterface
     private $preview;
 
     /**
-     * @var UserContextStoreInterface
+     * @var TargetGroupStoreInterface
      */
-    private $userContextStore;
+    private $targetGroupStore;
 
     /**
      * @var TargetGroupEvaluatorInterface
@@ -53,12 +53,12 @@ class UserContextSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    private $contextUrl;
+    private $targetGroupUrl;
 
     /**
      * @var string
      */
-    private $contextHitUrl;
+    private $targetGroupHitUrl;
 
     /**
      * @var string
@@ -78,61 +78,61 @@ class UserContextSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    private $userContextHeader;
+    private $targetGroupHeader;
 
     /**
      * @var string
      */
-    private $userContextCookie;
+    private $targetGroupCookie;
 
     /**
      * @var string
      */
-    private $userContextSessionCookie;
+    private $visitorSessionCookie;
 
     /**
      * @param \Twig_Environment $twig
      * @param bool $preview
-     * @param UserContextStoreInterface $userContextStore
+     * @param TargetGroupStoreInterface $targetGroupStore
      * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
      * @param TargetGroupRepositoryInterface $targetGroupRepository
-     * @param string $contextUrl
-     * @param string $contextHitUrl
+     * @param string $targetGroupUrl
+     * @param string $targetGroupHitUrl
      * @param string $urlHeader
      * @param string $referrerHeader
      * @param string $uuidHeader
-     * @param string $userContextHeader
-     * @param string $userContextCookie
-     * @param string $userContextSessionCookie
+     * @param string $targetGroupHeader
+     * @param string $targetGroupCookie
+     * @param string $visitorSessionCookie
      */
     public function __construct(
         \Twig_Environment $twig,
         $preview,
-        UserContextStoreInterface $userContextStore,
+        TargetGroupStoreInterface $targetGroupStore,
         TargetGroupEvaluatorInterface $targetGroupEvaluator,
         TargetGroupRepositoryInterface $targetGroupRepository,
-        $contextUrl,
-        $contextHitUrl,
+        $targetGroupUrl,
+        $targetGroupHitUrl,
         $urlHeader,
         $referrerHeader,
         $uuidHeader,
-        $userContextHeader,
-        $userContextCookie,
-        $userContextSessionCookie
+        $targetGroupHeader,
+        $targetGroupCookie,
+        $visitorSessionCookie
     ) {
         $this->twig = $twig;
         $this->preview = $preview;
-        $this->userContextStore = $userContextStore;
+        $this->targetGroupStore = $targetGroupStore;
         $this->targetGroupEvaluator = $targetGroupEvaluator;
         $this->targetGroupRepository = $targetGroupRepository;
-        $this->contextUrl = $contextUrl;
-        $this->contextHitUrl = $contextHitUrl;
+        $this->targetGroupUrl = $targetGroupUrl;
+        $this->targetGroupHitUrl = $targetGroupHitUrl;
         $this->urlHeader = $urlHeader;
         $this->referrerHeader = $referrerHeader;
         $this->uuidHeader = $uuidHeader;
-        $this->userContextHeader = $userContextHeader;
-        $this->userContextCookie = $userContextCookie;
-        $this->userContextSessionCookie = $userContextSessionCookie;
+        $this->targetGroupHeader = $targetGroupHeader;
+        $this->targetGroupCookie = $targetGroupCookie;
+        $this->visitorSessionCookie = $visitorSessionCookie;
     }
 
     /**
@@ -142,43 +142,43 @@ class UserContextSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                ['setUserContext'],
+                ['setTargetGroup'],
             ],
             KernelEvents::RESPONSE => [
                 ['addVaryHeader'],
                 ['addSetCookieHeader'],
-                ['addUserContextHitScript'],
+                ['addTargetGroupHitScript'],
             ],
         ];
     }
 
     /**
-     * Evaluates the cookie holding the user context information. This has only an effect if there is no cache used,
+     * Evaluates the cookie holding the target group information. This has only an effect if there is no cache used,
      * since in that case the cache already did it.
      *
      * @param GetResponseEvent $event
      */
-    public function setUserContext(GetResponseEvent $event)
+    public function setTargetGroup(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 
-        if ($userContext = $request->headers->get($this->userContextHeader)) {
-            $this->userContextStore->setUserContext($userContext);
-        } elseif ($userContext = $request->cookies->get($this->userContextCookie)) {
-            $userContextSession = $request->cookies->get($this->userContextSessionCookie);
-            if ($userContextSession) {
-                $this->userContextStore->setUserContext($userContext);
+        if ($targetGroupId = $request->headers->get($this->targetGroupHeader)) {
+            $this->targetGroupStore->setTargetGroupId($targetGroupId);
+        } elseif ($targetGroupId = $request->cookies->get($this->targetGroupCookie)) {
+            $visitorSession = $request->cookies->get($this->visitorSessionCookie);
+            if ($visitorSession) {
+                $this->targetGroupStore->setTargetGroupId($targetGroupId);
 
                 return;
             }
 
             $targetGroup = $this->targetGroupEvaluator->evaluate(
                 TargetGroupRuleInterface::FREQUENCY_SESSION,
-                $this->targetGroupRepository->find($userContext)
+                $this->targetGroupRepository->find($targetGroupId)
             );
 
             if ($targetGroup) {
-                $this->userContextStore->updateUserContext($targetGroup->getId());
+                $this->targetGroupStore->updateTargetGroupId($targetGroup->getId());
             }
         } else {
             $targetGroup = $this->targetGroupEvaluator->evaluate();
@@ -188,12 +188,12 @@ class UserContextSubscriber implements EventSubscriberInterface
                 $targetGroupId = $targetGroup->getId();
             }
 
-            $this->userContextStore->updateUserContext($targetGroupId);
+            $this->targetGroupStore->updateTargetGroupId($targetGroupId);
         }
     }
 
     /**
-     * Adds the vary header on the response, so that the cache takes the user contexts into account.
+     * Adds the vary header on the response, so that the cache takes the target group into account.
      *
      * @param FilterResponseEvent $event
      */
@@ -202,19 +202,20 @@ class UserContextSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $response = $event->getResponse();
 
-        if ($request->getRequestUri() !== $this->contextUrl) {
-            $response->setVary($this->userContextHeader, false);
+        if ($request->getRequestUri() !== $this->targetGroupUrl) {
+            $response->setVary($this->targetGroupHeader, false);
         }
     }
 
     /**
-     * Adds the SetCookie header for the user context, if the user context has changed.
+     * Adds the SetCookie header for the target group, if the user context has changed. In addition to that a second
+     * cookie without a lifetime is set, whose expiration marks a new session.
      *
      * @param FilterResponseEvent $event
      */
     public function addSetCookieHeader(FilterResponseEvent $event)
     {
-        if (!$this->userContextStore->hasChanged()) {
+        if (!$this->targetGroupStore->hasChanged()) {
             return;
         }
 
@@ -222,15 +223,15 @@ class UserContextSubscriber implements EventSubscriberInterface
 
         $response->headers->setCookie(
             new Cookie(
-                $this->userContextCookie,
-                $this->userContextStore->getUserContext(),
-                HttpCache::USER_CONTEXT_COOKIE_LIFETIME
+                $this->targetGroupCookie,
+                $this->targetGroupStore->getTargetGroupId(),
+                HttpCache::TARGET_GROUP_COOKIE_LIFETIME
             )
         );
 
         $response->headers->setCookie(
             new Cookie(
-                $this->userContextSessionCookie,
+                $this->visitorSessionCookie,
                 time()
             )
         );
@@ -241,7 +242,7 @@ class UserContextSubscriber implements EventSubscriberInterface
      *
      * @param FilterResponseEvent $event
      */
-    public function addUserContextHitScript(FilterResponseEvent $event)
+    public function addTargetGroupHitScript(FilterResponseEvent $event)
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
@@ -254,7 +255,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         }
 
         $script = $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
-            'url' => $this->contextHitUrl,
+            'url' => $this->targetGroupHitUrl,
             'urlHeader' => $this->urlHeader,
             'refererHeader' => $this->referrerHeader,
             'uuidHeader' => $this->uuidHeader,

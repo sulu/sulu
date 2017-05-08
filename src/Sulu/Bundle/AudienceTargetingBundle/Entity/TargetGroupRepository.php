@@ -87,7 +87,7 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
      */
     public function findAllActiveForWebspaceOrderedByPriority(
         $webspace,
-        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_USER
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR
     ) {
         $query = $this->createQueryBuilder('targetGroup')
             ->addSelect('targetGroupRules')

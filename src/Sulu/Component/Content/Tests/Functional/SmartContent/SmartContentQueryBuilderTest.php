@@ -396,7 +396,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $builder->init([
             'config' => [
-                'userContext' => 1,
+                'targetGroupId' => 1,
                 'dataSource' => $root->getIdentifier(),
                 'includeSubFolders' => true,
                 'audienceTargeting' => true,

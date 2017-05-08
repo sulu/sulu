@@ -30,7 +30,7 @@
         </service>
         <!--RULES-->
         <service id="sulu_audience_targeting.target_group_evaluator"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluator">
+                 class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator">
             <argument type="service" id="sulu_audience_targeting.rules_collection"/>
             <argument type="service" id="sulu.repository.target_group"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
@@ -49,14 +49,14 @@
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\ReferrerRule">
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.referrer%</argument>
             <tag name="sulu.audience_target_rule" alias="referrer"/>
         </service>
         <service id="sulu_audience_targeting.rules.page"
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\PageRule">
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.uuid%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.uuid%</argument>
             <tag name="sulu.audience_target_rule" alias="page"/>
         </service>
         <!--CONTENT TYPES-->
@@ -72,34 +72,34 @@
             <argument type="collection"></argument>
             <tag name="sulu.js_config"/>
         </service>
-        <!--USER CONTEXT-->
-        <service id="sulu_audience_targeting.user_context_controller"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\UserContextController">
+        <!--TARGET GROUPS-->
+        <service id="sulu_audience_targeting.target_group_evaluation_controller"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController">
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
             <argument type="service" id="sulu.repository.target_group"/>
-            <argument type="service" id="sulu_audience_targeting.user_context_store"/>
-            <argument>%sulu_audience_targeting.user_context.header%</argument>
+            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
+            <argument>%sulu_audience_targeting.header%</argument>
         </service>
-        <service id="sulu_audience_targeting.user_context_subscriber"
-                 class="Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber">
+        <service id="sulu_audience_targeting.target_group_subscriber"
+                 class="Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber">
             <argument type="service" id="twig"/>
             <argument type="expression">container.hasParameter('sulu.preview') ? parameter('sulu.preview') : false</argument>
-            <argument type="service" id="sulu_audience_targeting.user_context_store"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
             <argument type="service" id="sulu.repository.target_group"/>
-            <argument>%sulu_audience_targeting.user_context.url%</argument>
-            <argument>%sulu_audience_targeting.user_context.hit.url%</argument>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.url%</argument>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.referrer%</argument>
-            <argument>%sulu_audience_targeting.user_context.hit.headers.uuid%</argument>
-            <argument>%sulu_audience_targeting.user_context.header%</argument>
-            <argument>%sulu_audience_targeting.user_context.cookies.target_group%</argument>
-            <argument>%sulu_audience_targeting.user_context.cookies.session%</argument>
+            <argument>%sulu_audience_targeting.url%</argument>
+            <argument>%sulu_audience_targeting.hit.url%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.url%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.referrer%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.uuid%</argument>
+            <argument>%sulu_audience_targeting.header%</argument>
+            <argument>%sulu_audience_targeting.cookies.target_group%</argument>
+            <argument>%sulu_audience_targeting.cookies.session%</argument>
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="website" />
         </service>
-        <service id="sulu_audience_targeting.user_context_store"
-                 class="Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStore">
+        <service id="sulu_audience_targeting.target_group_store"
+                 class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore">
         </service>
     </services>
 </container>
