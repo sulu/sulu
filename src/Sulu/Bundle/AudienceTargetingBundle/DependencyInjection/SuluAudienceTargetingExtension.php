@@ -65,6 +65,13 @@ class SuluAudienceTargetingExtension extends Extension
             'sulu_audience_targeting.user_context.hit.headers.uuid',
             $userContextConfig['hit']['headers']['uuid']
         );
-        $container->setParameter('sulu_audience_targeting.user_context.cookie', $userContextConfig['cookie']);
+        $container->setParameter(
+            'sulu_audience_targeting.user_context.cookies.target_group',
+            $userContextConfig['cookies']['target_group']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.user_context.cookies.session',
+            $userContextConfig['cookies']['session']
+        );
     }
 }

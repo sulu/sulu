@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\EventListener;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -43,6 +44,11 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @var TargetGroupEvaluatorInterface
      */
     private $targetGroupEvaluator;
+
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $targetGroupRepository;
 
     /**
      * @var string
@@ -80,10 +86,16 @@ class UserContextSubscriber implements EventSubscriberInterface
     private $userContextCookie;
 
     /**
+     * @var string
+     */
+    private $userContextSessionCookie;
+
+    /**
      * @param \Twig_Environment $twig
      * @param bool $preview
      * @param UserContextStoreInterface $userContextStore
      * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
+     * @param TargetGroupRepositoryInterface $targetGroupRepository
      * @param string $contextUrl
      * @param string $contextHitUrl
      * @param string $urlHeader
@@ -91,24 +103,28 @@ class UserContextSubscriber implements EventSubscriberInterface
      * @param string $uuidHeader
      * @param string $userContextHeader
      * @param string $userContextCookie
+     * @param string $userContextSessionCookie
      */
     public function __construct(
         \Twig_Environment $twig,
         $preview,
         UserContextStoreInterface $userContextStore,
         TargetGroupEvaluatorInterface $targetGroupEvaluator,
+        TargetGroupRepositoryInterface $targetGroupRepository,
         $contextUrl,
         $contextHitUrl,
         $urlHeader,
         $referrerHeader,
         $uuidHeader,
         $userContextHeader,
-        $userContextCookie
+        $userContextCookie,
+        $userContextSessionCookie
     ) {
         $this->twig = $twig;
         $this->preview = $preview;
         $this->userContextStore = $userContextStore;
         $this->targetGroupEvaluator = $targetGroupEvaluator;
+        $this->targetGroupRepository = $targetGroupRepository;
         $this->contextUrl = $contextUrl;
         $this->contextHitUrl = $contextHitUrl;
         $this->urlHeader = $urlHeader;
@@ -116,6 +132,7 @@ class UserContextSubscriber implements EventSubscriberInterface
         $this->uuidHeader = $uuidHeader;
         $this->userContextHeader = $userContextHeader;
         $this->userContextCookie = $userContextCookie;
+        $this->userContextSessionCookie = $userContextSessionCookie;
     }
 
     /**
@@ -144,10 +161,25 @@ class UserContextSubscriber implements EventSubscriberInterface
     public function setUserContext(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        $userContext = $request->headers->get($this->userContextHeader) ?: $request->cookies->get($this->userContextCookie);
 
-        if ($userContext) {
+        if ($userContext = $request->headers->get($this->userContextHeader)) {
             $this->userContextStore->setUserContext($userContext);
+        } elseif ($userContext = $request->cookies->get($this->userContextCookie)) {
+            $userContextSession = $request->cookies->get($this->userContextSessionCookie);
+            if ($userContextSession) {
+                $this->userContextStore->setUserContext($userContext);
+
+                return;
+            }
+
+            $targetGroup = $this->targetGroupEvaluator->evaluate(
+                TargetGroupRuleInterface::FREQUENCY_SESSION,
+                $this->targetGroupRepository->find($userContext)
+            );
+
+            if ($targetGroup) {
+                $this->userContextStore->updateUserContext($targetGroup->getId());
+            }
         } else {
             $targetGroup = $this->targetGroupEvaluator->evaluate();
 
@@ -186,11 +218,20 @@ class UserContextSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getResponse()->headers->setCookie(
+        $response = $event->getResponse();
+
+        $response->headers->setCookie(
             new Cookie(
                 $this->userContextCookie,
                 $this->userContextStore->getUserContext(),
                 HttpCache::USER_CONTEXT_COOKIE_LIFETIME
+            )
+        );
+
+        $response->headers->setCookie(
+            new Cookie(
+                $this->userContextSessionCookie,
+                time()
             )
         );
     }
