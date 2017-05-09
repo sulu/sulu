@@ -38,15 +38,23 @@ class MediaTag implements TagInterface
     private $mediaManager;
 
     /**
+     * @var array
+     */
+    private $dispositionType = [];
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param MediaManagerInterface $mediaManager
+     * @param array $dispositionType
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
-        MediaManagerInterface $mediaManager
+        MediaManagerInterface $mediaManager,
+        array $dispositionType = []
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->mediaManager = $mediaManager;
+        $this->dispositionType = $dispositionType;
     }
 
     /**
@@ -144,9 +152,45 @@ class MediaTag implements TagInterface
         $result = [];
         foreach ($medias as $media) {
             $media['url'] = $this->mediaManager->getUrl($media['id'], $media['name'], $media['version']);
+            $dispositionType = $this->findMediaDispositionType($media);
+
+            if ($dispositionType) {
+                $media['url'] .= '&' . $dispositionType . '=true';
+            }
+
             $result[$media['id']] = $media;
         }
 
         return $result;
+    }
+
+    /**
+     * Find disposition type by media MIME type
+     *
+     * @param array $media
+     * @return string|null
+     */
+    private function findMediaDispositionType(array $media)
+    {
+        if (
+            !isset($media['mimeType']) ||
+            !$media['mimeType'] ||
+            !isset($this->dispositionType['default']) ||
+            !$this->dispositionType['default']
+        ) {
+            return null;
+        }
+
+        foreach ($this->dispositionType as $key => $mimeTypes) {
+            if ('default' === $key || !is_array($mimeTypes) || !in_array($media['mimeType'], $mimeTypes)) {
+                continue;
+            }
+
+            $type = str_replace('mime_types_', '', $key);
+
+            return $type !== $this->dispositionType['default'] ? $type : null;
+        }
+
+        return null;
     }
 }

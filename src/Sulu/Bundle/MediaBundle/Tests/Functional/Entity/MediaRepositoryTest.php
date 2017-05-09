@@ -459,8 +459,8 @@ class MediaRepositoryTest extends SuluTestCase
 
         $result = $this->mediaRepository->findMediaDisplayInfo([$media1->getId(), $media3->getId()], 'en-gb');
         $this->assertEquals(2, count($result));
-        $this->assertEquals(5, count($result[0]));
-        $this->assertEquals(5, count($result[1]));
+        $this->assertEquals(6, count($result[0]));
+        $this->assertEquals(6, count($result[1]));
         $this->assertEquals($media1->getId(), $result[0]['id']);
         $this->assertEquals($media1->getFiles()[0]->getVersion(), $result[0]['version']);
         $this->assertEquals('test-1.jpeg', $result[0]['name']);

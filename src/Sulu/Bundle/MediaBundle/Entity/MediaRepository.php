@@ -215,6 +215,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->select('media.id')
             ->addSelect('fileVersion.version')
             ->addSelect('fileVersion.name')
+            ->addSelect('fileVersion.mimeType')
             ->addSelect('fileVersionMeta.title')
             ->addSelect('fileVersionDefaultMeta.title as defaultTitle')
             ->where('media.id IN (:mediaIds)');

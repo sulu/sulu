@@ -258,7 +258,11 @@
         <service id="sulu_media.markup" class="Sulu\Bundle\MediaBundle\Markup\MediaTag">
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="string">%kernel.environment%</argument>
+            <argument type="collection">
+                <argument key="default">%sulu_media.disposition_type.default%</argument>
+                <argument key="mime_types_inline">%sulu_media.disposition_type.mime_types_inline%</argument>
+                <argument key="mime_types_attachment">%sulu_media.disposition_type.mime_types_attachment%</argument>
+            </argument>
 
             <tag name="sulu_markup.tag" tag="media" type="html"/>
         </service>
