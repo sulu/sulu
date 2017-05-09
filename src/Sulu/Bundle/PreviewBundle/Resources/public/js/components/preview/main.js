@@ -9,10 +9,11 @@
 
 define([
     'jquery',
+    'config',
     'text!./skeleton.html',
     'text!./on-request.html',
     'text!./error.html'
-], function($, skeletonTemplate, onRequestTemplate, errorTemplate) {
+], function($, config, skeletonTemplate, onRequestTemplate, errorTemplate) {
 
     'use strict';
 
@@ -137,6 +138,22 @@ define([
                 };
             } else {
                 this.events.webspace(this.options.webspace);
+            }
+
+            if (config.has('sulu_audience_targeting')) {
+                buttons.audienceTargeting = {
+                    options: {
+                        icon: 'users',
+                        dropdownOptions: {
+                            resultKey: 'target-groups',
+                            titleAttribute: 'title',
+                            idAttribute: 'id',
+                            markSelected: true,
+                            changeButton: true,
+                            url: '/admin/api/target-groups'
+                        }
+                    }
+                }
             }
 
             this.sandbox.start(
