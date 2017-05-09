@@ -130,7 +130,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['X-Sulu-Target-Group', '1', '1'],
-            ['X-Context', '2', '2'],
+            ['X-Target-Group', '2', '2'],
             ['X-Sulu-Target-Group', '1', '1'],
         ];
     }
@@ -199,7 +199,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['sulu-visitor-target-group', 'visitor-session', '1', true, null, '1', false],
-            ['context', 'context-session', '3', true, null, '3', false],
+            ['target-group', 'session', '3', true, null, '3', false],
             ['sulu-visitor-target-group', 'visitor-session', '1', null, '2', '2', true],
             ['sulu-visitor-target-group', 'visitor-session', '1', true, '2', '1', false],
         ];
@@ -258,7 +258,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideAddVaryHeader
      */
-    public function testAddVaryHeader($contextUrl, $requestUrl, $header, $varyHeaders)
+    public function testAddVaryHeader($targetGroupUrl, $requestUrl, $header, $varyHeaders)
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -266,7 +266,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            $contextUrl,
+            $targetGroupUrl,
             '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
@@ -342,7 +342,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['sulu-visitor-target-group', 'visitor-session', false, null],
-            ['context', 'session', true, 1],
+            ['target-group', 'session', true, 1],
             ['sulu-visitor-target-group', 'visitor-session', true, 2],
         ];
     }
@@ -405,7 +405,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
         return [
             ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],
             ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', null],
-            ['/context_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', 'some-other-uuid'],
+            ['/_group_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', 'some-other-uuid'],
         ];
     }
 

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\TargetGroup;
 
 /**
- * This class stores the current user context. Also allows updating it, in which case it is marked as changed.
+ * This class stores the current target group. Also allows updating it, in which case it is marked as changed.
  */
 class TargetGroupStore implements TargetGroupStoreInterface
 {
