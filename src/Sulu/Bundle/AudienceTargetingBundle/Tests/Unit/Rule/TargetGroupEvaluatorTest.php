@@ -19,7 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluator;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 

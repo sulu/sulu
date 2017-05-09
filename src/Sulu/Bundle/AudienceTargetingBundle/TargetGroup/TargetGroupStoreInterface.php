@@ -9,34 +9,34 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\UserContext;
+namespace Sulu\Bundle\AudienceTargetingBundle\TargetGroup;
 
-interface UserContextStoreInterface
+interface TargetGroupStoreInterface
 {
     /**
-     * Ses the id of the current TargetGroup from the current request.
+     * Sets the id of the current TargetGroup from the current request.
      *
-     * @param string $userContext
+     * @param string $targetGroupId
      *
      * @return string
      */
-    public function setUserContext($userContext);
+    public function setTargetGroupId($targetGroupId);
 
     /**
      * Returns the id of the current TargetGroup from the current request.
      *
      * @return string
      */
-    public function getUserContext();
+    public function getTargetGroupId();
 
     /**
-     * Sets the given user context as the new one, and marking this value as changed.
+     * Sets the given target group as the new one, and marking this value as changed.
      *
-     * @param $userContext
+     * @param $targetGroupid
      *
      * @return string
      */
-    public function updateUserContext($userContext);
+    public function updateTargetGroupId($targetGroupid);
 
     /**
      * Returns whether the value hold by this store has changed or not.

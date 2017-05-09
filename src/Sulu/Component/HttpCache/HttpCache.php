@@ -25,31 +25,31 @@ class HttpCache extends AbstractHttpCache
 {
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
-    const USER_CONTEXT_URI = '/_user_context';
+    const TARGET_GROUP_URL = '/_sulu_target_group';
 
-    const USER_CONTEXT_HEADER = 'X-User-Context';
+    const TARGET_GROUP_HEADER = 'X-Sulu-Target-Group';
 
-    const USER_CONTEXT_COOKIE = 'user-context';
+    const TARGET_GROUP_COOKIE = 'sulu-visitor-target-group';
 
-    const USER_CONTEXT_COOKIE_LIFETIME = 2147483647;
+    const TARGET_GROUP_COOKIE_LIFETIME = 2147483647;
 
-    const USER_CONTEXT_SESSION_COOKIE = 'user-context-session';
+    const VISITOR_SESSION_COOKIE = 'sulu-visitor-session';
 
     /**
      * @var bool
      */
-    private $hasUserContext;
+    private $hasAudienceTargeting;
 
     /**
      * @param HttpKernelInterface $kernel
-     * @param bool $hasUserContext
+     * @param bool $hasAudienceTargeting
      * @param string $cacheDir
      */
-    public function __construct(HttpKernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
+    public function __construct(HttpKernelInterface $kernel, $hasAudienceTargeting = false, $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
-        $this->hasUserContext = $hasUserContext;
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
     }
 
     /**
@@ -57,9 +57,9 @@ class HttpCache extends AbstractHttpCache
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        $hadUserContextCookie = null;
-        if ($this->hasUserContext) {
-            $hadUserContextCookie = $this->setUserContextHeader($request);
+        $hadValidTargetGroupCookie = null;
+        if ($this->hasAudienceTargeting) {
+            $hadValidTargetGroupCookie = $this->setTargetGroupHeader($request);
         }
 
         $response = parent::handle($request, $type, $catch);
@@ -68,8 +68,8 @@ class HttpCache extends AbstractHttpCache
             $response->headers->remove(self::HEADER_REVERSE_PROXY_TTL);
         }
 
-        if ($this->hasUserContext && !$hadUserContextCookie) {
-            $this->setUserContextCookie($response, $request);
+        if ($this->hasAudienceTargeting && !$hadValidTargetGroupCookie) {
+            $this->setTargetGroupCookie($response, $request);
         }
 
         return $response;
@@ -107,7 +107,7 @@ class HttpCache extends AbstractHttpCache
     }
 
     /**
-     * Sets the user context header based on an existing cookie, so that the application can adapt the content according
+     * Sets the target group header based on an existing cookie, so that the application can adapt the content according
      * to it. If the cookie didn't exist yet, another request is fired in order to set the value for the cookie.
      *
      * Returns true if the cookie was already set and false otherwise.
@@ -116,37 +116,37 @@ class HttpCache extends AbstractHttpCache
      *
      * @return bool
      */
-    private function setUserContextHeader(Request $request)
+    private function setTargetGroupHeader(Request $request)
     {
-        $hadValidUserContext = true;
-        $userContext = $request->cookies->get(static::USER_CONTEXT_COOKIE);
-        $userContextSession = $request->cookies->get(static::USER_CONTEXT_SESSION_COOKIE);
+        $hadValidTargetGroup = true;
+        $visitorTargetGroup = $request->cookies->get(static::TARGET_GROUP_COOKIE);
+        $visitorSession = $request->cookies->get(static::VISITOR_SESSION_COOKIE);
 
-        if (null === $userContext || null === $userContextSession) {
-            $hadValidUserContext = false;
-            $userContext = $this->requestUserContext($request, $userContext);
+        if (null === $visitorTargetGroup || null === $visitorSession) {
+            $hadValidTargetGroup = false;
+            $visitorTargetGroup = $this->requestTargetGroup($request, $visitorTargetGroup);
         }
 
         if ($request->isMethodSafe()) {
-            // add the user context as separate header to vary on it
-            $request->headers->set(static::USER_CONTEXT_HEADER, (string) $userContext);
+            // add the target group as separate header to vary on it
+            $request->headers->set(static::TARGET_GROUP_HEADER, (string) $visitorTargetGroup);
         }
 
-        return $hadValidUserContext;
+        return $hadValidTargetGroup;
     }
 
     /**
-     * Sends a request to the application to determine the target group of the current user.
+     * Sends a request to the application to determine the target group of the current visitor.
      *
      * @param Request $request
-     * @param int $userContext
+     * @param int $currentTargetGroup
      *
      * @return string
      */
-    private function requestUserContext(Request $request, $userContext)
+    private function requestTargetGroup(Request $request, $currentTargetGroup)
     {
-        $userContextRequest = Request::create(
-            static::USER_CONTEXT_URI,
+        $targetGroupRequest = Request::create(
+            static::TARGET_GROUP_URL,
             Request::METHOD_GET,
             [],
             [],
@@ -154,35 +154,35 @@ class HttpCache extends AbstractHttpCache
             $request->server->all()
         );
 
-        if ($userContext) {
-            $userContextRequest->headers->set(static::USER_CONTEXT_HEADER, $userContext);
+        if ($currentTargetGroup) {
+            $targetGroupRequest->headers->set(static::TARGET_GROUP_HEADER, $currentTargetGroup);
         }
 
-        // use the parent class to avoid user context based caching
-        $userContextResponse = parent::handle($userContextRequest);
+        // use the parent class to avoid target group based caching
+        $targetGroupResponse = parent::handle($targetGroupRequest);
 
-        return $userContextResponse->headers->get(static::USER_CONTEXT_HEADER);
+        return $targetGroupResponse->headers->get(static::TARGET_GROUP_HEADER);
     }
 
     /**
-     * Set the cookie for the user context from the request. Should only be set in case the cookie was not set before.
+     * Set the cookie for the target group from the request. Should only be set in case the cookie was not set before.
      *
      * @param Response $response
      * @param Request $request
      */
-    private function setUserContextCookie(Response $response, Request $request)
+    private function setTargetGroupCookie(Response $response, Request $request)
     {
         $response->headers->setCookie(
             new Cookie(
-                static::USER_CONTEXT_COOKIE,
-                $request->headers->get(static::USER_CONTEXT_HEADER),
-                static::USER_CONTEXT_COOKIE_LIFETIME
+                static::TARGET_GROUP_COOKIE,
+                $request->headers->get(static::TARGET_GROUP_HEADER),
+                static::TARGET_GROUP_COOKIE_LIFETIME
             )
         );
 
         $response->headers->setCookie(
             new Cookie(
-                static::USER_CONTEXT_SESSION_COOKIE,
+                static::VISITOR_SESSION_COOKIE,
                 time()
             )
         );

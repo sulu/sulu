@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
+namespace Sulu\Bundle\AudienceTargetingBundle\TargetGroup;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -51,7 +52,7 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
      * {@inheritdoc}
      */
     public function evaluate(
-        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_USER,
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR,
         TargetGroupInterface $currentTargetGroup = null
     ) {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();

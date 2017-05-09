@@ -37,41 +37,36 @@ class SuluAudienceTargetingExtension extends Extension
         $container->setParameter('sulu_audience_targeting.frequencies', [
             TargetGroupRuleInterface::FREQUENCY_HIT_NAME => TargetGroupRuleInterface::FREQUENCY_HIT,
             TargetGroupRuleInterface::FREQUENCY_SESSION_NAME => TargetGroupRuleInterface::FREQUENCY_SESSION,
-            TargetGroupRuleInterface::FREQUENCY_USER_NAME => TargetGroupRuleInterface::FREQUENCY_USER,
+            TargetGroupRuleInterface::FREQUENCY_VISITOR_NAME => TargetGroupRuleInterface::FREQUENCY_VISITOR,
         ]);
 
-        $this->processUserContext($config['user_context'], $container);
+        $container->setParameter('sulu_audience_targeting.header', $config['header']);
+        $container->setParameter('sulu_audience_targeting.url', $config['url']);
+        $container->setParameter('sulu_audience_targeting.hit.url', $config['hit']['url']);
+        $container->setParameter(
+            'sulu_audience_targeting.hit.headers.url',
+            $config['hit']['headers']['url']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.hit.headers.referrer',
+            $config['hit']['headers']['referrer']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.hit.headers.uuid',
+            $config['hit']['headers']['uuid']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.cookies.target_group',
+            $config['cookies']['target_group']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.cookies.session',
+            $config['cookies']['session']
+        );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $this->configurePersistence($config['objects'], $container);
-    }
-
-    private function processUserContext($userContextConfig, ContainerBuilder $container)
-    {
-        $container->setParameter('sulu_audience_targeting.user_context.header', $userContextConfig['header']);
-        $container->setParameter('sulu_audience_targeting.user_context.url', $userContextConfig['url']);
-        $container->setParameter('sulu_audience_targeting.user_context.hit.url', $userContextConfig['hit']['url']);
-        $container->setParameter(
-            'sulu_audience_targeting.user_context.hit.headers.url',
-            $userContextConfig['hit']['headers']['url']
-        );
-        $container->setParameter(
-            'sulu_audience_targeting.user_context.hit.headers.referrer',
-            $userContextConfig['hit']['headers']['referrer']
-       );
-        $container->setParameter(
-            'sulu_audience_targeting.user_context.hit.headers.uuid',
-            $userContextConfig['hit']['headers']['uuid']
-        );
-        $container->setParameter(
-            'sulu_audience_targeting.user_context.cookies.target_group',
-            $userContextConfig['cookies']['target_group']
-        );
-        $container->setParameter(
-            'sulu_audience_targeting.user_context.cookies.session',
-            $userContextConfig['cookies']['session']
-        );
     }
 }

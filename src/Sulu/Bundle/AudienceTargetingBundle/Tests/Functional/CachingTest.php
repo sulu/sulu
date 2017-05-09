@@ -41,21 +41,21 @@ class CachingTest extends SuluTestCase
             3,
             'locale',
             ['locale' => 'en'],
-            TargetGroupRuleInterface::FREQUENCY_USER
+            TargetGroupRuleInterface::FREQUENCY_VISITOR
         );
 
         // first request should be cache miss
         $client->request('GET', '/');
         $response = $client->getResponse();
-        $this->assertContains('X-User-Context', $response->getVary());
+        $this->assertContains('X-Sulu-Target-Group', $response->getVary());
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
-        /** @var Cookie $userContextCookie */
-        $userContextCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('user-context', $userContextCookie->getName());
-        $this->assertEquals($targetGroup->getId(), $userContextCookie->getValue());
-        $userContextSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+        /** @var Cookie $visitorTargetGroupCookie */
+        $visitorTargetGroupCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals($targetGroup->getId(), $visitorTargetGroupCookie->getValue());
+        $visitorSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
 
         return [$client, $cookieJar];
     }
@@ -88,11 +88,11 @@ class CachingTest extends SuluTestCase
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
         /** @var Cookie $cookie */
-        $userContextCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('user-context', $userContextCookie->getName());
-        $this->assertEquals(0, $userContextCookie->getValue());
-        $userContextSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+        $visitorTargetGroupCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals(0, $visitorTargetGroupCookie->getValue());
+        $visitorSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
 
         return [$client, $cookieJar];
     }
@@ -106,18 +106,18 @@ class CachingTest extends SuluTestCase
         /** @var CookieJar $cookieJar */
         list($client, $cookieJar) = $arguments;
 
-        $cookieJar->expire('user-context-session');
+        $cookieJar->expire('sulu-visitor-session');
 
         $client->request('GET', '/');
         $response = $client->getResponse();
         $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
 
-        /** @var Cookie $userContextCookie */
-        $userContextCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('user-context', $userContextCookie->getName());
-        $userContextSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+        /** @var Cookie $visitorTargetGroupCookie */
+        $visitorTargetGroupCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $visitorSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
 
         return [$client, $cookieJar];
     }
@@ -131,13 +131,13 @@ class CachingTest extends SuluTestCase
         /** @var CookieJar $cookieJar */
         list($client, $cookieJar) = $arguments;
 
-        $cookieJar->expire('user-context-session');
+        $cookieJar->expire('sulu-visitor-session');
 
         $targetGroup1 = $this->createTargetGroup(
             5,
             'locale',
             ['locale' => 'en'],
-            TargetGroupRuleInterface::FREQUENCY_USER
+            TargetGroupRuleInterface::FREQUENCY_VISITOR
         );
 
         $targetGroup2 = $this->createTargetGroup(
@@ -152,12 +152,12 @@ class CachingTest extends SuluTestCase
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
 
-        /** @var Cookie $userContextCookie */
-        $userContextCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('user-context', $userContextCookie->getName());
-        $this->assertEquals($targetGroup2->getId(), $userContextCookie->getValue());
-        $userContextSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+        /** @var Cookie $visitorTargetGroupCookie */
+        $visitorTargetGroupCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals($targetGroup2->getId(), $visitorTargetGroupCookie->getValue());
+        $visitorSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
     }
 
     /**
