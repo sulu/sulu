@@ -37,6 +37,7 @@ class SuluAudienceTargetingExtension extends Extension
         $container->setParameter('sulu_audience_targeting.frequencies', [
             TargetGroupRuleInterface::FREQUENCY_HIT_NAME => TargetGroupRuleInterface::FREQUENCY_HIT,
             TargetGroupRuleInterface::FREQUENCY_SESSION_NAME => TargetGroupRuleInterface::FREQUENCY_SESSION,
+            TargetGroupRuleInterface::FREQUENCY_USER_NAME => TargetGroupRuleInterface::FREQUENCY_USER,
         ]);
 
         $this->processUserContext($config['user_context'], $container);
@@ -64,6 +65,13 @@ class SuluAudienceTargetingExtension extends Extension
             'sulu_audience_targeting.user_context.hit.headers.uuid',
             $userContextConfig['hit']['headers']['uuid']
         );
-        $container->setParameter('sulu_audience_targeting.user_context.cookie', $userContextConfig['cookie']);
+        $container->setParameter(
+            'sulu_audience_targeting.user_context.cookies.target_group',
+            $userContextConfig['cookies']['target_group']
+        );
+        $container->setParameter(
+            'sulu_audience_targeting.user_context.cookies.session',
+            $userContextConfig['cookies']['session']
+        );
     }
 }

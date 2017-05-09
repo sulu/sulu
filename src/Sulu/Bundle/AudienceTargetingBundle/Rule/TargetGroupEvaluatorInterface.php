@@ -31,7 +31,7 @@ interface TargetGroupEvaluatorInterface
      * @return TargetGroupInterface
      */
     public function evaluate(
-        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_USER,
         TargetGroupInterface $currentTargetGroup = null
     );
 }

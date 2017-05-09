@@ -27,36 +27,144 @@ require_once __DIR__ . '/../app/AppCache.php';
 
 class CachingTest extends SuluTestCase
 {
-    /**
-     * @var \AppCache
-     */
-    private $cacheKernel;
-
-    /**
-     * @var CookieJar
-     */
-    private $cookieJar;
-
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function setUp()
+    public function testFirstRequestIsACacheMiss()
     {
         $this->purgeDatabase();
+        $cacheKernel = new \AppCache($this->getKernel(['sulu_context' => 'website']), true);
+        $cookieJar = new CookieJar();
+        $client = new Client($cacheKernel, [], null, $cookieJar);
 
-        $this->cacheKernel = new \AppCache($this->getKernel(['sulu_context' => 'website']), true);
-        $this->cookieJar = new CookieJar();
-        $this->client = new Client($this->cacheKernel, [], null, $this->cookieJar);
+        $client->request('PURGE', '/');
+
+        $cookieJar->clear();
+        $targetGroup = $this->createTargetGroup(
+            3,
+            'locale',
+            ['locale' => 'en'],
+            TargetGroupRuleInterface::FREQUENCY_USER
+        );
+
+        // first request should be cache miss
+        $client->request('GET', '/');
+        $response = $client->getResponse();
+        $this->assertContains('X-User-Context', $response->getVary());
+        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(2, $response->headers->getCookies());
+        /** @var Cookie $userContextCookie */
+        $userContextCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('user-context', $userContextCookie->getName());
+        $this->assertEquals($targetGroup->getId(), $userContextCookie->getValue());
+        $userContextSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+
+        return [$client, $cookieJar];
     }
 
-    public function testAudienceTargeting()
+    /**
+     * @depends testFirstRequestIsACacheMiss
+     */
+    public function testSecondRequestIsACacheHit($arguments)
     {
-        $this->client->request('PURGE', '/');
+        list($client, $cookieJar) = $arguments;
 
-        $this->cookieJar->clear();
+        $client->request('GET', '/');
+        $response = $client->getResponse();
+        $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(0, $response->headers->getCookies());
 
+        return [$client, $cookieJar];
+    }
+
+    /**
+     * @depends testSecondRequestIsACacheHit
+     */
+    public function testRequestFromOtherClientIsACacheMiss($arguments)
+    {
+        list($client, $cookieJar) = $arguments;
+
+        $cookieJar->clear(); // new client does not have any cookies yet
+        $client->request('GET', '/', [], [], ['HTTP_ACCEPT_LANGUAGE' => 'de']);
+        $response = $client->getResponse();
+        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(2, $response->headers->getCookies());
+        /** @var Cookie $cookie */
+        $userContextCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('user-context', $userContextCookie->getName());
+        $this->assertEquals(0, $userContextCookie->getValue());
+        $userContextSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+
+        return [$client, $cookieJar];
+    }
+
+    /**
+     * @depends testRequestFromOtherClientIsACacheMiss
+     */
+    public function testRequestWithoutSessionCookieTriggersNoRules($arguments)
+    {
+        /** @var Client $client */
+        /** @var CookieJar $cookieJar */
+        list($client, $cookieJar) = $arguments;
+
+        $cookieJar->expire('user-context-session');
+
+        $client->request('GET', '/');
+        $response = $client->getResponse();
+        $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(2, $response->headers->getCookies());
+
+        /** @var Cookie $userContextCookie */
+        $userContextCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('user-context', $userContextCookie->getName());
+        $userContextSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+
+        return [$client, $cookieJar];
+    }
+
+    /**
+     * @depends testRequestWithoutSessionCookieTriggersNoRules
+     */
+    public function testRequestWithoutSessionCookieTriggersARule($arguments)
+    {
+        /** @var Client $client */
+        /** @var CookieJar $cookieJar */
+        list($client, $cookieJar) = $arguments;
+
+        $cookieJar->expire('user-context-session');
+
+        $targetGroup1 = $this->createTargetGroup(
+            5,
+            'locale',
+            ['locale' => 'en'],
+            TargetGroupRuleInterface::FREQUENCY_USER
+        );
+
+        $targetGroup2 = $this->createTargetGroup(
+            4,
+            'locale',
+            ['locale' => 'en'],
+            TargetGroupRuleInterface::FREQUENCY_SESSION
+        );
+
+        $client->request('GET', '/');
+        $response = $client->getResponse();
+        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertCount(2, $response->headers->getCookies());
+
+        /** @var Cookie $userContextCookie */
+        $userContextCookie = $response->headers->getCookies()[0];
+        $this->assertEquals('user-context', $userContextCookie->getName());
+        $this->assertEquals($targetGroup2->getId(), $userContextCookie->getValue());
+        $userContextSessionCookie = $response->headers->getCookies()[1];
+        $this->assertEquals('user-context-session', $userContextSessionCookie->getName());
+    }
+
+    /**
+     * @return TargetGroupInterface
+     */
+    private function createTargetGroup($priority, $rule, $condition, $frequency)
+    {
         /** @var TargetGroupRepositoryInterface $targetGroupRepository */
         $targetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
         /** @var TargetGroupWebspaceRepositoryInterface $targetGroupWebspaceRepository */
@@ -69,7 +177,7 @@ class CachingTest extends SuluTestCase
         /** @var TargetGroupInterface $targetGroup */
         $targetGroup = $targetGroupRepository->createNew();
         $targetGroup->setTitle('Test');
-        $targetGroup->setPriority(5);
+        $targetGroup->setPriority($priority);
         $targetGroup->setActive(true);
         /** @var TargetGroupWebspaceInterface $targetGroupWebspace */
         $targetGroupWebspace = $targetGroupWebspaceRepository->createNew();
@@ -78,43 +186,16 @@ class CachingTest extends SuluTestCase
         /** @var TargetGroupRuleInterface $targetGroupRule */
         $targetGroupRule = $targetGroupRuleRepository->createNew();
         $targetGroupRule->setTitle('Test');
-        $targetGroupRule->setFrequency(TargetGroupRuleInterface::FREQUENCY_HIT);
+        $targetGroupRule->setFrequency($frequency);
         /** @var TargetGroupConditionInterface $targetGroupCondition */
         $targetGroupCondition = $targetGroupConditionRepository->createNew();
-        $targetGroupCondition->setType('locale');
-        $targetGroupCondition->setCondition(['locale' => 'en']);
+        $targetGroupCondition->setType($rule);
+        $targetGroupCondition->setCondition($condition);
         $targetGroupRule->addCondition($targetGroupCondition);
         $targetGroup->addRule($targetGroupRule);
         $targetGroup = $targetGroupRepository->save($targetGroup);
         $this->getEntityManager()->flush();
 
-        // first request should be cache miss
-        $this->client->request('GET', '/');
-        $response = $this->client->getResponse();
-        $this->assertContains('X-User-Context', $response->getVary());
-        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
-        $this->assertCount(1, $response->headers->getCookies());
-        /** @var Cookie $cookie */
-        $cookie = $response->headers->getCookies()[0];
-        $this->assertEquals('user-context', $cookie->getName());
-        $this->assertEquals($targetGroup->getId(), $cookie->getValue());
-
-        // second request should be cache hit
-        $this->client->request('GET', '/');
-        $response = $this->client->getResponse();
-        $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
-        $this->assertCount(0, $response->headers->getCookies());
-
-        // third request from a different client with a different language should be a cache miss,
-        // since a new target group should be selected
-        $this->cookieJar->clear(); // new client does not have any cookies yet
-        $this->client->request('GET', '/', [], [], ['HTTP_ACCEPT_LANGUAGE' => 'de']);
-        $response = $this->client->getResponse();
-        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
-        $this->assertCount(1, $response->headers->getCookies());
-        /** @var Cookie $cookie */
-        $cookie = $response->headers->getCookies()[0];
-        $this->assertEquals('user-context', $cookie->getName());
-        $this->assertEquals(0, $cookie->getValue());
+        return $targetGroup;
     }
 }
