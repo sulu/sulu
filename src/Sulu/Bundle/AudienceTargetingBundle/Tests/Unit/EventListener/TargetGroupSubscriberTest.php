@@ -15,9 +15,9 @@ use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
-use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
+class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Twig_Environment
@@ -33,9 +33,9 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     private $twig;
 
     /**
-     * @var UserContextStoreInterface
+     * @var TargetGroupStoreInterface
      */
-    private $userContextStore;
+    private $targetGroupStore;
 
     /**
      * @var TargetGroupEvaluatorInterface
@@ -50,134 +50,134 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->twig = $this->prophesize(\Twig_Environment::class);
-        $this->userContextStore = $this->prophesize(UserContextStoreInterface::class);
+        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
     }
 
-    public function testSetUserContextWithHeaderAndCookie()
+    public function testSetTargetGroupWithHeaderAndCookie()
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
 
-        $request->headers->set('X-User-Context', '1');
-        $request->cookies->set('user-context', '2');
+        $request->headers->set('X-Sulu-Target-Group', '1');
+        $request->cookies->set('sulu-visitor-target-group', '2');
 
         $event->getRequest()->willReturn($request);
 
-        $this->userContextStore->setUserContext('1')->shouldBeCalled();
-        $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
+        $this->targetGroupStore->setTargetGroupId('1')->shouldBeCalled();
+        $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
 
-        $userContextSubscriber->setUserContext($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event->reveal());
     }
 
     /**
-     * @dataProvider provideSetUserContextFromHeader
+     * @dataProvider provideSetTargetGroupFromHeader
      */
-    public function testSetUserContextFromHeader(
-        $userContextHeader,
-        $headerUserContext,
+    public function testSetTargetGroupFromHeader(
+        $targetGroupHeader,
+        $headerTargetGroup,
         $result
     ) {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            $userContextHeader,
-            'user-context',
-            'user-context-session'
+            $targetGroupHeader,
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
 
-        if ($headerUserContext) {
-            $request->headers->set($userContextHeader, $headerUserContext);
+        if ($headerTargetGroup) {
+            $request->headers->set($targetGroupHeader, $headerTargetGroup);
         }
 
         $event->getRequest()->willReturn($request);
 
-        $this->userContextStore->setUserContext($result)->shouldBeCalled();
-        $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
+        $this->targetGroupStore->setTargetGroupId($result)->shouldBeCalled();
+        $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
 
-        $userContextSubscriber->setUserContext($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event->reveal());
     }
 
-    public function provideSetUserContextFromHeader()
+    public function provideSetTargetGroupFromHeader()
     {
         return [
-            ['X-User-Context', '1', '1'],
-            ['X-Context', '2', '2'],
-            ['X-User-Context', '1', '1'],
+            ['X-Sulu-Target-Group', '1', '1'],
+            ['X-Target-Group', '2', '2'],
+            ['X-Sulu-Target-Group', '1', '1'],
         ];
     }
 
     /**
-     * @dataProvider provideSetUserContextFromCookie
+     * @dataProvider provideSetTargetGroupFromCookie
      */
-    public function testSetUserContextFromCookie(
-        $userContextCookie,
-        $userContextSessionCookie,
-        $cookieUserContext,
-        $cookieUserContextSession,
+    public function testSetTargetGroupFromCookie(
+        $targetGroupCookie,
+        $visitorSessionCookie,
+        $cookieTargetGroup,
+        $cookieVisitorSession,
         $evaluationResult,
         $result,
         $resultUpdate
     ) {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            $userContextCookie,
-            $userContextSessionCookie
+            'X-Sulu-Target-Group',
+            $targetGroupCookie,
+            $visitorSessionCookie
         );
 
         $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
 
-        if ($cookieUserContext) {
-            $request->cookies->set($userContextCookie, $cookieUserContext);
+        if ($cookieTargetGroup) {
+            $request->cookies->set($targetGroupCookie, $cookieTargetGroup);
         }
 
-        if ($cookieUserContextSession) {
-            $request->cookies->set($userContextSessionCookie, $cookieUserContextSession);
+        if ($cookieVisitorSession) {
+            $request->cookies->set($visitorSessionCookie, $cookieVisitorSession);
         }
 
         if ($evaluationResult) {
             $targetGroup = $this->prophesize(TargetGroupInterface::class);
             $targetGroup->getId()->willReturn($evaluationResult);
-            $this->targetGroupRepository->find($cookieUserContext)->willReturn($targetGroup->reveal());
+            $this->targetGroupRepository->find($cookieTargetGroup)->willReturn($targetGroup->reveal());
             $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_SESSION, $targetGroup->reveal())
                 ->willReturn($targetGroup->reveal());
         }
@@ -185,45 +185,45 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getRequest()->willReturn($request);
 
         if ($resultUpdate) {
-            $this->userContextStore->setUserContext(Argument::any())->shouldNotBeCalled();
-            $this->userContextStore->updateUserContext($result)->shouldBeCalled();
+            $this->targetGroupStore->setTargetGroupId(Argument::any())->shouldNotBeCalled();
+            $this->targetGroupStore->updateTargetGroupId($result)->shouldBeCalled();
         } else {
-            $this->userContextStore->setUserContext($result)->shouldBeCalled();
-            $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
+            $this->targetGroupStore->setTargetGroupId($result)->shouldBeCalled();
+            $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
         }
 
-        $userContextSubscriber->setUserContext($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event->reveal());
     }
 
-    public function provideSetUserContextFromCookie()
+    public function provideSetTargetGroupFromCookie()
     {
         return [
-            ['user-context', 'user-context-session', '1', true, null, '1', false],
-            ['context', 'context-session', '3', true, null, '3', false],
-            ['user-context', 'user-context-session', '1', null, '2', '2', true],
-            ['user-context', 'user-context-session', '1', true, '2', '1', false],
+            ['sulu-visitor-target-group', 'visitor-session', '1', true, null, '1', false],
+            ['target-group', 'session', '3', true, null, '3', false],
+            ['sulu-visitor-target-group', 'visitor-session', '1', null, '2', '2', true],
+            ['sulu-visitor-target-group', 'visitor-session', '1', true, '2', '1', false],
         ];
     }
 
     /**
-     * @dataProvider provideSetUserContextFromEvaluation
+     * @dataProvider provideSetTargetGroupFromEvaluation
      */
-    public function testSetUserContextFromEvaluation($evaluatedTargetGroup, $result)
+    public function testSetTargetGroupFromEvaluation($evaluatedTargetGroup, $result)
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(GetResponseEvent::class);
@@ -232,15 +232,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->targetGroupEvaluator->evaluate()->willReturn($evaluatedTargetGroup);
 
-        $this->userContextStore->setUserContext(Argument::any())->shouldNotBeCalled();
-        $this->userContextStore->updateUserContext($result)->shouldBeCalled();
+        $this->targetGroupStore->setTargetGroupId(Argument::any())->shouldNotBeCalled();
+        $this->targetGroupStore->updateTargetGroupId($result)->shouldBeCalled();
 
-        $userContextSubscriber->setUserContext($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event->reveal());
 
         $this->assertCount(0, $request->headers->all());
     }
 
-    public function provideSetUserContextFromEvaluation()
+    public function provideSetTargetGroupFromEvaluation()
     {
         $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
         $targetGroup1->getId()->willReturn(1);
@@ -258,22 +258,22 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideAddVaryHeader
      */
-    public function testAddVaryHeader($contextUrl, $requestUrl, $header, $varyHeaders)
+    public function testAddVaryHeader($targetGroupUrl, $requestUrl, $header, $varyHeaders)
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            $contextUrl,
-            '/_user_context_hit',
+            $targetGroupUrl,
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             $header,
-            'user-context',
-            'user-context-session'
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
         $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => $requestUrl]);
@@ -281,7 +281,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
 
-        $userContextSubscriber->addVaryHeader($event->reveal());
+        $targetGroupSubscriber->addVaryHeader($event->reveal());
 
         $this->assertEquals($varyHeaders, $response->getVary());
     }
@@ -289,50 +289,50 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     public function provideAddVaryHeader()
     {
         return [
-            ['/_user_context', '/test', 'X-User-Context-Hash', ['X-User-Context-Hash']],
-            ['/_user_context', '/test', 'X-User-Context', ['X-User-Context']],
-            ['/_user_context', '/_user_context', 'X-User-Context-Hash', []],
-            ['/_user', '/_user', 'X-User-Context-Hash', []],
+            ['/_target_group', '/test', 'X-Sulu-Target-Group-Hash', ['X-Sulu-Target-Group-Hash']],
+            ['/_target_group', '/test', 'X-Sulu-Target-Group', ['X-Sulu-Target-Group']],
+            ['/_target_group', '/_target_group', 'X-Sulu-Target-Group-Hash', []],
+            ['/_visitor', '/_visitor', 'X-Sulu-Target-Group-Hash', []],
         ];
     }
 
     /**
      * @dataProvider provideAddSetCookieHeader
      */
-    public function testAddSetCookieHeader($userContextCookie, $userContextSession, $hasChanged, $cookieValue)
+    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $cookieValue)
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-URL',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            $userContextCookie,
-            $userContextSession
+            'X-Sulu-Target-Group',
+            $targetGroupCookie,
+            $visitorSession
         );
 
-        $this->userContextStore->hasChanged()->willReturn($hasChanged);
-        $this->userContextStore->getUserContext()->willReturn($cookieValue);
+        $this->targetGroupStore->hasChanged()->willReturn($hasChanged);
+        $this->targetGroupStore->getTargetGroupId()->willReturn($cookieValue);
 
         $event = $this->prophesize(FilterResponseEvent::class);
         $response = new Response();
         $event->getResponse()->willReturn($response);
 
-        $userContextSubscriber->addSetCookieHeader($event->reveal());
+        $targetGroupSubscriber->addSetCookieHeader($event->reveal());
 
         if ($cookieValue) {
-            $userContextResponseCookie = $response->headers->getCookies()[0];
-            $this->assertEquals($userContextCookie, $userContextResponseCookie->getName());
-            $this->assertEquals($cookieValue, $userContextResponseCookie->getValue());
-            $userContextSessionResponseCookie = $response->headers->getCookies()[1];
-            $this->assertEquals($userContextSession, $userContextSessionResponseCookie->getName());
-            $this->assertEquals(0, $userContextSessionResponseCookie->getExpiresTime());
+            $targetGroupResponseCookie = $response->headers->getCookies()[0];
+            $this->assertEquals($targetGroupCookie, $targetGroupResponseCookie->getName());
+            $this->assertEquals($cookieValue, $targetGroupResponseCookie->getValue());
+            $visitorSessionResponseCookie = $response->headers->getCookies()[1];
+            $this->assertEquals($visitorSession, $visitorSessionResponseCookie->getName());
+            $this->assertEquals(0, $visitorSessionResponseCookie->getExpiresTime());
         } else {
             $this->assertCount(0, $response->headers->getCookies());
         }
@@ -341,36 +341,36 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     public function provideAddSetCookieHeader()
     {
         return [
-            ['user-context', 'user-context-session', false, null],
-            ['context', 'session', true, 1],
-            ['user-context', 'user-context-session', true, 2],
+            ['sulu-visitor-target-group', 'visitor-session', false, null],
+            ['target-group', 'session', true, 1],
+            ['sulu-visitor-target-group', 'visitor-session', true, 2],
         ];
     }
 
     /**
-     * @dataProvider provideAddUserContextHitScript
+     * @dataProvider provideAddTargetGroupHitScript
      */
-    public function testAddUserContextHitScript(
-        $contextHitUrl,
+    public function testAddTargetGroupHitScript(
+        $targetGroupHitUrl,
         $forwardedUrlHeader,
         $forwardedRefererHeader,
         $forwardedUuidHeader,
         $uuid
     ) {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            $contextHitUrl,
+            '/_target_group',
+            $targetGroupHitUrl,
             $forwardedUrlHeader,
             $forwardedRefererHeader,
             $forwardedUuidHeader,
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -388,43 +388,43 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getResponse()->willReturn($response);
 
         $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
-            'url' => $contextHitUrl,
+            'url' => $targetGroupHitUrl,
             'urlHeader' => $forwardedUrlHeader,
             'refererHeader' => $forwardedRefererHeader,
             'uuidHeader' => $forwardedUuidHeader,
             'uuid' => $uuid,
         ])->willReturn('<script></script>');
 
-        $userContextSubscriber->addUserContextHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
 
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
 
-    public function provideAddUserContextHitScript()
+    public function provideAddTargetGroupHitScript()
     {
         return [
-            ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],
-            ['/_user_context_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', null],
-            ['/context_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', 'some-other-uuid'],
+            ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],
+            ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', null],
+            ['/_group_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', 'some-other-uuid'],
         ];
     }
 
-    public function testAddUserContextHitScriptInPreview()
+    public function testAddTargetGroupHitScriptInPreview()
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             true,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -437,27 +437,27 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
 
-        $userContextSubscriber->addUserContextHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
 
         $this->assertEquals('', $response->getContent());
     }
 
-    public function testAddUserContextHitScriptNonHtml()
+    public function testAddTargetGroupHitScriptNonHtml()
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -469,27 +469,27 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
 
-        $userContextSubscriber->addUserContextHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
 
         $this->assertEquals('{}', $response->getContent());
     }
 
-    public function testAddUserContextHitScriptHtmlUtf8()
+    public function testAddTargetGroupHitScriptHtmlUtf8()
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwared-Referer',
             'X-Fowarded-UUID',
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -502,27 +502,27 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->twig->render(Argument::cetera())->willReturn('<script></script>');
 
-        $userContextSubscriber->addUserContextHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
 
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
 
-    public function testAddUserContextHitScriptNonGet()
+    public function testAddTargetGroupHitScriptNonGet()
     {
-        $userContextSubscriber = new UserContextSubscriber(
+        $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
-            $this->userContextStore->reveal(),
+            $this->targetGroupStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
-            '/_user_context',
-            '/_user_context_hit',
+            '/_target_group',
+            '/_target_group_hit',
             'X-Forwarded-Url',
             'X-Forwared-Referer',
             'X-Forwarded-UUID',
-            'X-User-Context',
-            'user-context',
-            'user-context-session'
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -535,7 +535,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
 
-        $userContextSubscriber->addUserContextHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
 
         $this->assertEquals('', $response->getContent());
     }

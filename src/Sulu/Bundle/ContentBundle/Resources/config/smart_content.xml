@@ -52,7 +52,7 @@
             <argument type="service" id="sulu_tag.tag_request_handler"/>
             <argument type="service" id="sulu_category.category_request_handler"/>
             <argument>%sulu.content.type.smart_content.template%</argument>
-            <argument type="service" id="sulu_audience_targeting.user_context_store" on-invalid="null"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="smart_content"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

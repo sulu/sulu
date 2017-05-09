@@ -13,16 +13,15 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
-use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible for creating a user context hash based on the audience targeting groups of the user,
- * which is recognized by a cookie.
+ * Controller for evaluating the target group based on the current request.
  */
-class UserContextController
+class TargetGroupEvaluationController
 {
     /**
      * @var TargetGroupEvaluatorInterface
@@ -35,35 +34,35 @@ class UserContextController
     private $targetGroupRepository;
 
     /**
-     * @var UserContextStoreInterface
+     * @var TargetGroupStoreInterface
      */
-    private $userContextStore;
+    private $targetGroupStore;
 
     /**
      * @var string
      */
-    private $userContextHeader;
+    private $targetGroupHeader;
 
     /**
      * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
      * @param TargetGroupRepositoryInterface $targetGroupRepository
-     * @param UserContextStoreInterface $userContextStore
-     * @param string $userContextHeader
+     * @param TargetGroupStoreInterface $targetGroupStore
+     * @param string $targetGroupHeader
      */
     public function __construct(
         TargetGroupEvaluatorInterface $targetGroupEvaluator,
         TargetGroupRepositoryInterface $targetGroupRepository,
-        UserContextStoreInterface $userContextStore,
-        $userContextHeader
+        TargetGroupStoreInterface $targetGroupStore,
+        $targetGroupHeader
     ) {
         $this->targetGroupEvaluator = $targetGroupEvaluator;
         $this->targetGroupRepository = $targetGroupRepository;
-        $this->userContextStore = $userContextStore;
-        $this->userContextHeader = $userContextHeader;
+        $this->targetGroupStore = $targetGroupStore;
+        $this->targetGroupHeader = $targetGroupHeader;
     }
 
     /**
-     * Takes the request and calculates a user context hash based on the user.
+     * Takes the request and evaluates a target group based on the request.
      *
      * @param Request $request
      *
@@ -72,17 +71,17 @@ class UserContextController
     public function targetGroupAction(Request $request)
     {
         $currentTargetGroup = null;
-        if ($request->headers->has($this->userContextHeader)) {
-            $currentTargetGroup = $this->targetGroupRepository->find($request->headers->get($this->userContextHeader));
+        if ($request->headers->has($this->targetGroupHeader)) {
+            $currentTargetGroup = $this->targetGroupRepository->find($request->headers->get($this->targetGroupHeader));
         }
 
         $targetGroup = $this->targetGroupEvaluator->evaluate(
-            $currentTargetGroup ? TargetGroupRuleInterface::FREQUENCY_SESSION : TargetGroupRuleInterface::FREQUENCY_USER,
+            $currentTargetGroup ? TargetGroupRuleInterface::FREQUENCY_SESSION : TargetGroupRuleInterface::FREQUENCY_VISITOR,
             $currentTargetGroup
         );
 
         $response = new Response(null, 200, [
-            $this->userContextHeader => $targetGroup ? $targetGroup->getId() : 0,
+            $this->targetGroupHeader => $targetGroup ? $targetGroup->getId() : 0,
         ]);
 
         return $response;
@@ -95,13 +94,13 @@ class UserContextController
      */
     public function targetGroupHitAction()
     {
-        $currentTargetGroup = $this->targetGroupRepository->find($this->userContextStore->getUserContext());
+        $currentTargetGroup = $this->targetGroupRepository->find($this->targetGroupStore->getTargetGroupId());
 
         $targetGroup = $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT, $currentTargetGroup);
         $response = new Response();
 
         if ($targetGroup) {
-            $this->userContextStore->updateUserContext($targetGroup->getId());
+            $this->targetGroupStore->updateTargetGroupId($targetGroup->getId());
         }
 
         return $response;
