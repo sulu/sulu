@@ -16,6 +16,7 @@ use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor;
+use Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -65,6 +66,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer = new RequestAnalyzer(
             $this->requestStack->reveal(),
             [
+                new UrlRequestProcessor(),
                 new WebsiteRequestProcessor(
                     $this->webspaceManager->reveal(), $this->contentMapper->reveal(), $this->replacer->reveal(), 'prod'
                 ),

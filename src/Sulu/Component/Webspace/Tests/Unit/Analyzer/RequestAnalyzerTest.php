@@ -143,7 +143,6 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $requestAnalyzer->analyze($request->reveal());
 
-        $this->assertEquals('www.sulu.io', $requestAnalyzer->getAttribute('host'));
         $this->assertEquals('https', $requestAnalyzer->getAttribute('scheme'));
     }
 
