@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\UserContextSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
@@ -40,21 +42,57 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $targetGroupEvaluator;
 
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $targetGroupRepository;
+
     public function setUp()
     {
         $this->twig = $this->prophesize(\Twig_Environment::class);
         $this->userContextStore = $this->prophesize(UserContextStoreInterface::class);
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
+        $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
+    }
+
+    public function testSetUserContextWithHeaderAndCookie()
+    {
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->userContextStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            '/_user_context',
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
+            'X-User-Context',
+            'user-context',
+            'user-context-session'
+        );
+
+        $event = $this->prophesize(GetResponseEvent::class);
+        $request = new Request();
+
+        $request->headers->set('X-User-Context', '1');
+        $request->cookies->set('user-context', '2');
+
+        $event->getRequest()->willReturn($request);
+
+        $this->userContextStore->setUserContext('1')->shouldBeCalled();
+        $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
+
+        $userContextSubscriber->setUserContext($event->reveal());
     }
 
     /**
-     * @dataProvider provideSetUserContext
+     * @dataProvider provideSetUserContextFromHeader
      */
-    public function testSetUserContext(
+    public function testSetUserContextFromHeader(
         $userContextHeader,
-        $userContextCookie,
         $headerUserContext,
-        $cookieUserContext,
         $result
     ) {
         $userContextSubscriber = new UserContextSubscriber(
@@ -62,13 +100,67 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             $userContextHeader,
-            $userContextCookie
+            'user-context',
+            'user-context-session'
+        );
+
+        $event = $this->prophesize(GetResponseEvent::class);
+        $request = new Request();
+
+        if ($headerUserContext) {
+            $request->headers->set($userContextHeader, $headerUserContext);
+        }
+
+        $event->getRequest()->willReturn($request);
+
+        $this->userContextStore->setUserContext($result)->shouldBeCalled();
+        $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
+
+        $userContextSubscriber->setUserContext($event->reveal());
+    }
+
+    public function provideSetUserContextFromHeader()
+    {
+        return [
+            ['X-User-Context', '1', '1'],
+            ['X-Context', '2', '2'],
+            ['X-User-Context', '1', '1'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSetUserContextFromCookie
+     */
+    public function testSetUserContextFromCookie(
+        $userContextCookie,
+        $userContextSessionCookie,
+        $cookieUserContext,
+        $cookieUserContextSession,
+        $evaluationResult,
+        $result,
+        $resultUpdate
+    ) {
+        $userContextSubscriber = new UserContextSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->userContextStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            '/_user_context',
+            '/_user_context_hit',
+            'X-Forwarded-Url',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
+            'X-User-Context',
+            $userContextCookie,
+            $userContextSessionCookie
         );
 
         $event = $this->prophesize(GetResponseEvent::class);
@@ -78,45 +170,60 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             $request->cookies->set($userContextCookie, $cookieUserContext);
         }
 
-        if ($headerUserContext) {
-            $request->headers->set($userContextHeader, $headerUserContext);
+        if ($cookieUserContextSession) {
+            $request->cookies->set($userContextSessionCookie, $cookieUserContextSession);
+        }
+
+        if ($evaluationResult) {
+            $targetGroup = $this->prophesize(TargetGroupInterface::class);
+            $targetGroup->getId()->willReturn($evaluationResult);
+            $this->targetGroupRepository->find($cookieUserContext)->willReturn($targetGroup->reveal());
+            $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_SESSION, $targetGroup->reveal())
+                ->willReturn($targetGroup->reveal());
         }
 
         $event->getRequest()->willReturn($request);
 
-        $userContextSubscriber->setUserContext($event->reveal());
+        if ($resultUpdate) {
+            $this->userContextStore->setUserContext(Argument::any())->shouldNotBeCalled();
+            $this->userContextStore->updateUserContext($result)->shouldBeCalled();
+        } else {
+            $this->userContextStore->setUserContext($result)->shouldBeCalled();
+            $this->userContextStore->updateUserContext(Argument::any())->shouldNotBeCalled();
+        }
 
-        $this->userContextStore->setUserContext($result)->shouldBeCalled();
+        $userContextSubscriber->setUserContext($event->reveal());
     }
 
-    public function provideSetUserContext()
+    public function provideSetUserContextFromCookie()
     {
         return [
-            ['X-User-Context', 'user-context', '1', null, '1'],
-            ['X-Context', 'user-context', '2', null, '2'],
-            ['X-User-Context', 'user-context', null, '1', '1'],
-            ['X-User-Context', 'context', null, '3', '3'],
-            ['X-User-Context', 'user-context', '1', '2', '1'],
+            ['user-context', 'user-context-session', '1', true, null, '1', false],
+            ['context', 'context-session', '3', true, null, '3', false],
+            ['user-context', 'user-context-session', '1', null, '2', '2', true],
+            ['user-context', 'user-context-session', '1', true, '2', '1', false],
         ];
     }
 
     /**
-     * @dataProvider provideSetUserContextWithoutCookie
+     * @dataProvider provideSetUserContextFromEvaluation
      */
-    public function testSetUserContextWithoutCookie($evaluatedTargetGroup, $result)
+    public function testSetUserContextFromEvaluation($evaluatedTargetGroup, $result)
     {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             'X-User-Context',
-            'user-context'
+            'user-context',
+            'user-context-session'
         );
 
         $event = $this->prophesize(GetResponseEvent::class);
@@ -133,7 +240,7 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $request->headers->all());
     }
 
-    public function provideSetUserContextWithoutCookie()
+    public function provideSetUserContextFromEvaluation()
     {
         $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
         $targetGroup1->getId()->willReturn(1);
@@ -158,13 +265,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             $contextUrl,
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             $header,
-            'user-context'
+            'user-context',
+            'user-context-session'
         );
         $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => $requestUrl]);
@@ -190,20 +299,22 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideAddSetCookieHeader
      */
-    public function testAddSetCookieHeader($userContextCookie, $hasChanged, $cookieValue)
+    public function testAddSetCookieHeader($userContextCookie, $userContextSession, $hasChanged, $cookieValue)
     {
         $userContextSubscriber = new UserContextSubscriber(
             $this->twig->reveal(),
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-URL',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             'X-User-Context',
-            $userContextCookie
+            $userContextCookie,
+            $userContextSession
         );
 
         $this->userContextStore->hasChanged()->willReturn($hasChanged);
@@ -216,9 +327,12 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
         $userContextSubscriber->addSetCookieHeader($event->reveal());
 
         if ($cookieValue) {
-            $cookie = $response->headers->getCookies()[0];
-            $this->assertEquals($userContextCookie, $cookie->getName());
-            $this->assertEquals($cookieValue, $cookie->getValue());
+            $userContextResponseCookie = $response->headers->getCookies()[0];
+            $this->assertEquals($userContextCookie, $userContextResponseCookie->getName());
+            $this->assertEquals($cookieValue, $userContextResponseCookie->getValue());
+            $userContextSessionResponseCookie = $response->headers->getCookies()[1];
+            $this->assertEquals($userContextSession, $userContextSessionResponseCookie->getName());
+            $this->assertEquals(0, $userContextSessionResponseCookie->getExpiresTime());
         } else {
             $this->assertCount(0, $response->headers->getCookies());
         }
@@ -227,9 +341,9 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
     public function provideAddSetCookieHeader()
     {
         return [
-            ['user-cookie', false, null],
-            ['user-cookie', true, 1],
-            ['user-cookie', true, 2],
+            ['user-context', 'user-context-session', false, null],
+            ['context', 'session', true, 1],
+            ['user-context', 'user-context-session', true, 2],
         ];
     }
 
@@ -248,13 +362,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             $contextHitUrl,
             $forwardedUrlHeader,
             $forwardedRefererHeader,
             $forwardedUuidHeader,
             'X-User-Context',
-            'user-cookie'
+            'user-context',
+            'user-context-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -300,13 +416,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             true,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             'X-User-Context',
-            'user-cookie'
+            'user-context',
+            'user-context-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -331,13 +449,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwarded-Referer',
             'X-Forwarded-UUID',
             'X-User-Context',
-            'user-cookie'
+            'user-context',
+            'user-context-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -361,13 +481,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwared-Referer',
             'X-Fowarded-UUID',
             'X-User-Context',
-            'user-cookie'
+            'user-context',
+            'user-context-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);
@@ -392,13 +514,15 @@ class UserContextSubscriberTest extends \PHPUnit_Framework_TestCase
             false,
             $this->userContextStore->reveal(),
             $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
             '/_user_context',
             '/_user_context_hit',
             'X-Forwarded-Url',
             'X-Forwared-Referer',
             'X-Forwarded-UUID',
             'X-User-Context',
-            'user-cookie'
+            'user-context',
+            'user-context-session'
         );
 
         $event = $this->prophesize(FilterResponseEvent::class);

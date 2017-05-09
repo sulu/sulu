@@ -49,6 +49,6 @@ interface TargetGroupRepositoryInterface extends RepositoryInterface
      */
     public function findAllActiveForWebspaceOrderedByPriority(
         $webspace,
-        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_SESSION
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_USER
     );
 }
