@@ -14,9 +14,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class AppCache extends HttpCache implements KernelInterface
 {
-    public function __construct(KernelInterface $kernel, $hasUserContext = false, $cacheDir = null)
+    public function __construct(KernelInterface $kernel, $hasAudienceTargeting = false, $cacheDir = null)
     {
-        parent::__construct($kernel, $hasUserContext, $cacheDir);
+        parent::__construct($kernel, $hasAudienceTargeting, $cacheDir);
     }
 
     /**

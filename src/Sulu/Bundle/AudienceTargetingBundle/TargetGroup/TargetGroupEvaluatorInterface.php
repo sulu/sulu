@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
+namespace Sulu\Bundle\AudienceTargetingBundle\TargetGroup;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
@@ -31,7 +31,7 @@ interface TargetGroupEvaluatorInterface
      * @return TargetGroupInterface
      */
     public function evaluate(
-        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_USER,
+        $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR,
         TargetGroupInterface $currentTargetGroup = null
     );
 }

@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="target-group-9">
                 <source>sulu_audience_targeting.rule-sets-descriptions</source>
-                <target>Users matching ANY of these rules will be added to the target group.</target>
+                <target>Visitors matching ANY of these rules will be added to the target group.</target>
             </trans-unit>
             <trans-unit id="target-group-10">
                 <source>sulu_audience_targeting.frequency</source>
@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="target-group-13">
                 <source>sulu_audience_targeting.conditions-description</source>
-                <target>Users matching ALL of these conditions will be added to the target group.</target>
+                <target>Visitors matching ALL of these conditions will be added to the target group.</target>
             </trans-unit>
             <trans-unit id="target-group-14">
                 <source>sulu_audience_targeting.condition-add</source>

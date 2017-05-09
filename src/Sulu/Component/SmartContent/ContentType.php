@@ -12,7 +12,7 @@
 namespace Sulu\Component\SmartContent;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AudienceTargetingBundle\UserContext\UserContextStoreInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -66,9 +66,9 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     private $categoryRequestHandler;
 
     /**
-     * @var UserContextStoreInterface
+     * @var TargetGroupStoreInterface
      */
-    private $userContextStore;
+    private $targetGroupStore;
 
     /**
      * SmartContentType constructor.
@@ -79,7 +79,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param TagRequestHandlerInterface $tagRequestHandler
      * @param CategoryRequestHandlerInterface $categoryRequestHandler
      * @param string $template
-     * @param UserContextStoreInterface $userContextStore
+     * @param TargetGroupStoreInterface $targetGroupStore
      */
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
@@ -88,7 +88,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         TagRequestHandlerInterface $tagRequestHandler,
         CategoryRequestHandlerInterface $categoryRequestHandler,
         $template,
-        UserContextStoreInterface $userContextStore = null
+        TargetGroupStoreInterface $targetGroupStore = null
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
@@ -96,7 +96,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->tagRequestHandler = $tagRequestHandler;
         $this->categoryRequestHandler = $categoryRequestHandler;
         $this->template = $template;
-        $this->userContextStore = $userContextStore;
+        $this->targetGroupStore = $targetGroupStore;
     }
 
     /**
@@ -262,8 +262,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         );
         $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
-        if ($this->userContextStore) {
-            $filters['userContext'] = $this->userContextStore->getUserContext();
+        if ($this->targetGroupStore) {
+            $filters['targetGroupId'] = $this->targetGroupStore->getTargetGroupId();
         }
 
         // resolve tags to id
