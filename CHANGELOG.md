@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
+    * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
     * ENHANCEMENT #3332 [RouteBundle]           Added parameter to disable conflict-resolver
     * FEATURE     #3326 [RouteBundle]           Added auditable to route
