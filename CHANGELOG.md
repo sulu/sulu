@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
     * FEATURE     #3326 [RouteBundle]           Added auditable to route
     * ENHANCEMENT #3310 [All]                   Fixed test setup to correct init all bundle tests correctly
