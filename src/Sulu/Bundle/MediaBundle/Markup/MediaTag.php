@@ -168,7 +168,7 @@ class MediaTag implements TagInterface
      * Find disposition type by media MIME type.
      *
      * @param array $media
-     * 
+     *
      * @return string|null
      */
     private function findMediaDispositionType(array $media)
