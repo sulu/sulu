@@ -126,14 +126,16 @@ define([
          *
          * @param {{send}} client
          * @param {String} webspace
+         * @param {number} targetGroup
          * @param {Object} data
          *
          * @returns {$.Deferred}
          */
-        sendUpdate = function(client, webspace, data) {
+        sendUpdate = function(client, webspace, targetGroup, data) {
             return client.send(constants.MESSAGE_HANDLER_NAME, {
                 command: 'update',
                 webspaceKey: webspace,
+                targetGroupId: targetGroup,
                 data: data
             }).then(function(handler, message) {
                 if (!message || !message.data) {
@@ -149,15 +151,17 @@ define([
          *
          * @param {{send}} client
          * @param {String} webspace
+         * @param {number} targetGroup
          * @param {Object} context
          * @param {Object} data
          *
          * @returns {$.Deferred}
          */
-        sendContextUpdate = function(client, webspace, context, data) {
+        sendContextUpdate = function(client, webspace, targetGroup, context, data) {
             return client.send(constants.MESSAGE_HANDLER_NAME, {
                 command: 'update-context',
                 webspaceKey: webspace,
+                targetGroupId: targetGroup,
                 context: context,
                 data: data
             }).then(function(handler, message) {
@@ -212,6 +216,7 @@ define([
             this.webspace = webspace;
 
             Mediator.on('sulu.preview.webspace', this.setWebspace.bind(this));
+            Mediator.on('sulu.preview.target-group', this.setTargetGroup.bind(this));
             Mediator.on('sulu.preview.render', this.render.bind(this));
         }.bind(this));
     }
@@ -236,6 +241,7 @@ define([
                 id: id,
                 user: AppConfig.getUser().id,
                 webspaceKey: this.getWebspace(),
+                targetGroupId: this.getTargetGroup(),
                 locale: locale,
                 data: this.data
             }).then(function(handler, message) {
@@ -293,7 +299,7 @@ define([
                 data[getPropertyName(sequence)] = getValue($(this));
             });
 
-            return sendUpdate(this.client, this.getWebspace(), data);
+            return sendUpdate(this.client, this.getWebspace(), this.getTargetGroup(), data);
         }.bind(this));
     };
 
@@ -312,7 +318,7 @@ define([
             var data = {};
             data[propertyName] = value;
 
-            return sendUpdate(this.client, this.getWebspace(), data);
+            return sendUpdate(this.client, this.getWebspace(), this.getTargetGroup(), data);
         }.bind(this));
     };
 
@@ -326,7 +332,7 @@ define([
      */
     Preview.prototype.updateContext = function(context, data) {
         this.promise.then(function() {
-            return sendContextUpdate(this.client, this.getWebspace(), context, data);
+            return sendContextUpdate(this.client, this.getWebspace(), this.getTargetGroup(), context, data);
         }.bind(this));
     };
 
@@ -356,8 +362,28 @@ define([
             var data = {};
             data[propertyName] = value;
 
-            sendUpdate(this.client, this.getWebspace(), data);
+            sendUpdate(this.client, this.getWebspace(), this.getTargetGroup(), data);
         }.bind(this), config.delay));
+    };
+
+    /**
+     * Returns target group.
+     *
+     * @returns {number}
+     */
+    Preview.prototype.getTargetGroup = function() {
+        return this.targetGroup;
+    };
+
+    /**
+     * Sets target group.
+     *
+     * @param targetGroup
+     */
+    Preview.prototype.setTargetGroup = function(targetGroup) {
+        this.targetGroup = targetGroup;
+
+        this.render();
     };
 
     /**
@@ -388,7 +414,8 @@ define([
     Preview.prototype.render = function() {
         return this.client.send(constants.MESSAGE_HANDLER_NAME, {
             command: 'render',
-            webspaceKey: this.getWebspace()
+            webspaceKey: this.getWebspace(),
+            targetGroupId: this.getTargetGroup()
         }).then(function(handler, message) {
             if (!message) {
                 return;

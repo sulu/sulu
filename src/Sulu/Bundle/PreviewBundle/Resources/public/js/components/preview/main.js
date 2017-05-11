@@ -59,6 +59,7 @@ define([
                 updateContent: {postFix: 'update-content', type: 'on'},
                 error: {postFix: 'error', type: 'on'},
                 webspace: {postFix: 'webspace'},
+                targetGroup: {postFix: 'target-group'},
                 render: {postFix: 'render'}
             },
             namespace: 'sulu.preview.'
@@ -144,13 +145,23 @@ define([
                 buttons.audienceTargeting = {
                     options: {
                         icon: 'users',
+                        dropdownItems: [
+                            {
+                                id: null,
+                                title: 'No target group'
+                            }
+                        ],
                         dropdownOptions: {
                             resultKey: 'target-groups',
                             titleAttribute: 'title',
                             idAttribute: 'id',
                             markSelected: true,
                             changeButton: true,
-                            url: '/admin/api/target-groups'
+                            url: '/admin/api/target-groups',
+                            concatRequestedItemsFirst: true,
+                            callback: function (item) {
+                                this.events.targetGroup(item.id);
+                            }.bind(this)
                         }
                     }
                 }
