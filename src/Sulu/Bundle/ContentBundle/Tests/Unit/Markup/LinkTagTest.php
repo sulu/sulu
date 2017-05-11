@@ -106,6 +106,29 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
                 '<a href="/de/test" title="Test-Title" target="_self">Test-Content</a>',
             ],
+            [
+                '<sulu:link href="123-123-123" provider="article" class="test">Test-Content</sulu:link>',
+                [
+                    'href' => '123-123-123',
+                    'provider' => 'article',
+                    'class' => 'test',
+                    'content' => 'Test-Content',
+                ],
+                [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
+                '<a href="/de/test" class="test" title="Page-Title">Test-Content</a>',
+            ],
+            [
+                '<sulu:link href="123-123-123" title="Test-Title" class="test" provider="article">Test-Content</sulu:link>',
+                [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'class' => 'test',
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
+                ],
+                [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
+                '<a href="/de/test" title="Test-Title" class="test">Test-Content</a>',
+            ],
         ];
     }
 
