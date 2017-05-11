@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
+use Sulu\Bundle\RouteBundle\Exception\RouteIsNotUniqueException;
 use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Bundle\RouteBundle\Manager\RouteAlreadyCreatedException;
@@ -53,10 +54,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->entity = $this->prophesize(RoutableInterface::class);
         $this->chainRouteGenerator = $this->prophesize(ChainRouteGeneratorInterface::class);
         $this->conflictResolver = $this->prophesize(ConflictResolverInterface::class);
+        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->manager = new RouteManager(
             $this->chainRouteGenerator->reveal(),
-            $this->conflictResolver->reveal()
+            $this->conflictResolver->reveal(),
+            $this->routeRepository->reveal()
         );
     }
 
@@ -96,6 +99,41 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->conflictResolver->resolve($route->reveal())->willReturn($route->reveal());
 
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal(), '/test'));
+    }
+
+    public function testCreateWithRoutePathAndResolveConflictFalse()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+
+        $this->entity->getRoute()->willReturn(null);
+        $this->entity->setRoute($route->reveal())->shouldBeCalled();
+
+        $this->chainRouteGenerator->generate($this->entity->reveal(), '/test')->willReturn($route->reveal());
+        $this->conflictResolver->resolve($route->reveal())->shouldNotBeCalled();
+
+        $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal(), '/test', false));
+    }
+
+    public function testCreateWithRoutePathAndResolveConflictFalseNotUnique()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+        $route->getId()->willReturn(1);
+        $route->getPath()->willReturn('/test');
+        $route->getLocale()->willReturn('de');
+
+        $loadedRoute = $this->prophesize(RouteInterface::class);
+        $loadedRoute->getId()->willReturn(5);
+
+        $this->entity->getRoute()->willReturn(null);
+        $this->entity->setRoute($route->reveal())->shouldNotBeCalled();
+
+        $this->chainRouteGenerator->generate($this->entity->reveal(), '/test')->willReturn($route->reveal());
+        $this->conflictResolver->resolve($route->reveal())->shouldNotBeCalled();
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($loadedRoute->reveal());
+
+        $this->setExpectedException(RouteIsNotUniqueException::class);
+
+        $this->manager->create($this->entity->reveal(), '/test', false);
     }
 
     public function testCreateAlreadyExists()
@@ -283,6 +321,62 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->chainRouteGenerator->generate($this->entity->reveal())->willReturn('/test');
 
         $this->manager->update($this->entity->reveal());
+    }
+
+    public function testUpdateWithPathAndResolveConflictFalse()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+        $route->getPath()->willReturn('/test');
+        $route->getLocale()->willReturn('de');
+        $route->setHistory(true)->shouldBeCalled()->willReturn($route->reveal());
+
+        $this->entity->getId()->willReturn('1');
+        $this->entity->getLocale()->willReturn('de');
+        $this->entity->getRoute()->willReturn($route->reveal());
+
+        $newRoute = $this->prophesize(RouteInterface::class);
+        $newRoute->getPath()->willReturn('/test-2');
+        $newRoute->getLocale()->willReturn('de');
+        $newRoute->addHistory($route->reveal())->shouldBeCalled()->willReturn($newRoute->reveal());
+
+        $route->setTarget($newRoute->reveal())->shouldBeCalled()->willReturn($route->reveal());
+        $route->getHistories()->willReturn([]);
+
+        $this->entity->setRoute($newRoute->reveal())->shouldBeCalled();
+
+        $this->chainRouteGenerator->generate($this->entity->reveal(), '/test-2')->willReturn($newRoute->reveal());
+        $this->conflictResolver->resolve($newRoute->reveal())->shouldNotBeCalled()->willReturn($newRoute->reveal());
+
+        $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
+    }
+
+    public function testUpdateWithPathAndResolveConflictFalseNotUnique()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+        $route->getPath()->willReturn('/test');
+        $route->getLocale()->willReturn('de');
+
+        $this->entity->getId()->willReturn('1');
+        $this->entity->getLocale()->willReturn('de');
+        $this->entity->getRoute()->willReturn($route->reveal());
+
+        $newRoute = $this->prophesize(RouteInterface::class);
+        $newRoute->getId()->willReturn(1);
+        $newRoute->getPath()->willReturn('/test-2');
+        $newRoute->getLocale()->willReturn('de');
+
+        $loadedRoute = $this->prophesize(RouteInterface::class);
+        $loadedRoute->getId()->willReturn(5);
+
+        $this->entity->setRoute($newRoute->reveal())->shouldNotBeCalled();
+
+        $this->chainRouteGenerator->generate($this->entity->reveal(), '/test-2')->willReturn($newRoute->reveal());
+        $this->conflictResolver->resolve($newRoute->reveal())->shouldNotBeCalled()->willReturn($newRoute->reveal());
+        $this->routeRepository->findByPath('/test-2', 'de')->willReturn($loadedRoute->reveal());
+
+        $this->setExpectedException(RouteIsNotUniqueException::class);
+
+        $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
     }
 }
 
