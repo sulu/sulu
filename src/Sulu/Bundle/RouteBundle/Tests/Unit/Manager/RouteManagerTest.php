@@ -355,6 +355,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
         $route->getLocale()->willReturn('de');
+        $route->getEntityClass()->willReturn('TestEntity');
+        $route->getEntityId()->willReturn(1);
 
         $this->entity->getId()->willReturn('1');
         $this->entity->getLocale()->willReturn('de');
@@ -364,9 +366,13 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $newRoute->getId()->willReturn(1);
         $newRoute->getPath()->willReturn('/test-2');
         $newRoute->getLocale()->willReturn('de');
+        $newRoute->getEntityClass()->willReturn('TestEntity');
+        $newRoute->getEntityId()->willReturn(1);
 
         $loadedRoute = $this->prophesize(RouteInterface::class);
         $loadedRoute->getId()->willReturn(5);
+        $loadedRoute->getEntityClass()->willReturn('TestEntity');
+        $loadedRoute->getEntityId()->willReturn(2);
 
         $this->entity->setRoute($newRoute->reveal())->shouldNotBeCalled();
 
@@ -377,6 +383,47 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(RouteIsNotUniqueException::class);
 
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
+    }
+
+    public function testUpdateWithPathAndResolveConflictRestore()
+    {
+        $route = $this->prophesize(RouteInterface::class);
+        $route->getPath()->willReturn('/test');
+        $route->getLocale()->willReturn('de');
+        $route->getEntityClass()->willReturn('TestEntity');
+        $route->getEntityId()->willReturn(1);
+
+        $this->entity->getId()->willReturn('1');
+        $this->entity->getLocale()->willReturn('de');
+        $this->entity->getRoute()->willReturn($route->reveal());
+
+        $newRoute = $this->prophesize(RouteInterface::class);
+        $newRoute->getId()->willReturn(1);
+        $newRoute->getPath()->willReturn('/test-2');
+        $newRoute->getLocale()->willReturn('de');
+        $newRoute->getEntityClass()->willReturn('TestEntity');
+        $newRoute->getEntityId()->willReturn(1);
+
+        $loadedRoute = $this->prophesize(RouteInterface::class);
+        $loadedRoute->getId()->willReturn(5);
+        $loadedRoute->getEntityClass()->willReturn('TestEntity');
+        $loadedRoute->getEntityId()->willReturn(1);
+        $loadedRoute->getPath()->willReturn('/test-2');
+
+        $this->entity->setRoute($newRoute->reveal())->shouldNotBeCalled();
+
+        $this->chainRouteGenerator->generate($this->entity->reveal(), '/test-2')->willReturn($newRoute->reveal());
+        $this->conflictResolver->resolve($newRoute->reveal())->shouldNotBeCalled()->willReturn($newRoute->reveal());
+        $this->routeRepository->findByPath('/test-2', 'de')->willReturn($loadedRoute->reveal());
+
+        $route->setHistory(true)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setTarget($loadedRoute->reveal())->shouldBeCalled()->willReturn($route->reveal());
+
+        $loadedRoute->addHistory($route->reveal())->shouldBeCalled();
+        $route->getHistories()->willReturn([]);
+        $this->entity->setRoute($loadedRoute->reveal())->shouldBeCalled();
+
+        $this->assertEquals($loadedRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
     }
 }
 

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
     * ENHANCEMENT #3332 [RouteBundle]           Added parameter to disable conflict-resolver
