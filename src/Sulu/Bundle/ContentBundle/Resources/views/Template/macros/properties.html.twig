@@ -1,6 +1,7 @@
 <div class="grid-row">
 {# initialize columns #}
 {% set columns = 0 %}
+{% set lastProperty = null %}
 {% for property in properties %}
 
     {# set propertyColspan with default if colspan is not set #}
@@ -12,7 +13,12 @@
         {% set columns = columns + propertyColspan %}
     {% else %}
         </div>
-        <div class="grid-row">
+        
+        {% set gridRowClass = '' %}
+        {% if property.contentTypeName == 'section' and lastProperty.contentTypeName|default != 'section' %}
+            {% set gridRowClass = ' m-top-40' %}
+        {% endif %}
+        <div class="grid-row{{ gridRowClass }}">
         {# set current amount of colspans #}
         {% set columns = propertyColspan %}
     {% endif %}
@@ -71,5 +77,7 @@
             } only %}
         {% endif %}
     {% endif %}
+
+    {% set lastProperty = property %}
 {% endfor %}
 </div>
