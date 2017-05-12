@@ -157,42 +157,6 @@
                             </div>
                         </div>
                     </script>
-                    <script type="text/template" id="social-media-profile-tpl">
-                        <div class="grid-col-6 floating">
-                            <~ var uid = _.uniqueId('social_media_profile_') ~>
-                            <div class="form-group">
-                                <label for="<~= uid ~>" class="visible"></label>
-                                <label for="<~= uid ~>" class="hidden">
-                                    <%=translate('public.social_media_profile')%>
-                                    <span class="label-container">
-                                        (<span class="type-value"
-                                               data-form="true"
-                                               data-mapper-property="socialMediaProfileType"
-                                               data-type="label"
-                                               data-type-label="name"
-                                               data-type-id="id"
-                                               data-id="{{ defaultSocialMediaProfileType.id }}">
-                                            (<%=translate('{{ defaultSocialMediaProfileType.name }}')%>)
-                                        </span>)
-                                    </span>
-                                </label>
-
-                                <div data-form="true"
-                                     data-type="husky-input"
-                                     data-aura-component="input@husky"
-                                     data-aura-front-icon="user"
-                                     data-aura-instance-name="social-media-profile"
-                                     data-aura-input-id="<~= uid ~>"
-                                     data-aura-input-name="<~= uid ~>"
-                                     data-mapper-property="socialMediaProfile"></div>
-                                <span class="hidden"
-                                      data-mapper-property="attributes"
-                                      data-form="true"
-                                      data-type="attributes"></span>
-                                <input type="hidden" data-mapper-property="id" class="id-value"/>
-                            </div>
-                        </div>
-                    </script>
                     <script type="text/template" id="phone-tpl">
                         <div class="grid-col-6 floating">
                             <~ var uid = _.uniqueId('phone_') ~>
@@ -239,6 +203,42 @@
                                      data-mapper-property="url"
                                      class="trigger-save-button"></div>
                                 <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
+                                <input type="hidden" data-mapper-property="id" class="id-value"/>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="social-media-profile-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('social_media_profile_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="visible"></label>
+                                <label for="<~= uid ~>" class="hidden">
+                                    <%=translate('public.socialMediaProfile')%>
+                                    <span class="label-container">
+                                        (<span class="type-value"
+                                               data-form="true"
+                                               data-mapper-property="socialMediaProfileType"
+                                               data-type="label"
+                                               data-type-label="name"
+                                               data-type-id="id"
+                                               data-id="{{ defaultSocialMediaProfileType.id }}">
+                                            (<%=translate('{{ defaultSocialMediaProfileType.name }}')%>)
+                                        </span>)
+                                    </span>
+                                </label>
+
+                                <div data-form="true"
+                                     data-type="husky-input"
+                                     data-aura-component="input@husky"
+                                     data-aura-front-icon="user"
+                                     data-aura-instance-name="social-media-profile"
+                                     data-aura-input-id="<~= uid ~>"
+                                     data-aura-input-name="<~= uid ~>"
+                                     data-mapper-property="username"></div>
+                                <span class="hidden"
+                                      data-mapper-property="attributes"
+                                      data-form="true"
+                                      data-type="attributes"></span>
                                 <input type="hidden" data-mapper-property="id" class="id-value"/>
                             </div>
                         </div>

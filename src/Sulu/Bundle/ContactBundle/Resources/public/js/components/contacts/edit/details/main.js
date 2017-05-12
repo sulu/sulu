@@ -414,7 +414,7 @@ define([
                 fax: '',
                 faxType: this.defaultTypes.faxType
             });
-            contactJson.faxes = this.fillFields(contactJson.socialMediaProfiles, 0, {
+            contactJson.socialMediaProfiles = this.fillFields(contactJson.socialMediaProfiles, 0, {
                 id: null,
                 username: '',
                 socialMediaProfileType: this.defaultTypes.socialMediaProfileType

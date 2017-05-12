@@ -534,9 +534,9 @@ define([
                 address: data.addresses,
                 email: data.emails,
                 fax: data.faxes,
-                socialMediaProfile: data.socialMediaProfiles,
                 phone: data.phones,
-                url: data.urls
+                url: data.urls,
+                socialMediaProfile: data.socialMediaProfiles
             };
 
             //loop through object properties
