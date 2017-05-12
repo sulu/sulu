@@ -413,6 +413,39 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
+    public function testPutWithExcerpt()
+    {
+        $data = [
+            'template' => 'hotel',
+            'title' => 'Renamed Hotel',
+            'description' => 'My hotel is red',
+            'ext' => [
+                'excerpt' => [
+                    'title' => 'Magnificient hotel',
+                ],
+            ],
+        ];
+
+        $params = [
+            'language' => 'de',
+        ];
+
+        $query = http_build_query($params);
+        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $response = $this->client->getResponse();
+
+        $result = json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertEquals('Magnificient hotel', $result['ext']['excerpt']['title']);
+
+        $document = $this->documentManager->find($result['id'], 'de');
+
+        $this->assertEquals('Magnificient hotel', $document->getExtensionsData()['excerpt']['title']);
+        $this->assertEquals($data['title'], $document->getTitle());
+        $this->assertEquals($data['description'], $document->getStructure()->getProperty('description')->getValue());
+    }
+
     public function testDeleteReferenced()
     {
         $page = $this->documentManager->create('page');

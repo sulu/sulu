@@ -84,7 +84,13 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'snippet/snippets/:language/edit::id',
                 callback: function(language, id) {
-                    return '<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '"/>';
+                    sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language + '/edit:' + id + '/details');
+                }
+            });
+            sandbox.mvc.routes.push({
+                route: 'snippet/snippets/:language/edit::id/:content',
+                callback: function(language, id) {
+                    return '<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '" data-aura-content="' + content + '"/>';
                 }
             });
 
