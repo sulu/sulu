@@ -457,6 +457,29 @@ interface AccountInterface
     public function getFaxes();
 
     /**
+     * Add social media profile.
+     *
+     * @param SocialMediaProfile $socialMediaProfile
+     *
+     * @return Account
+     */
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
+
+    /**
+     * Remove social media profile.
+     *
+     * @param SocialMediaProfile $socialMediaProfile
+     */
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
+
+    /**
+     * Get social media profiles.
+     *
+     * @return Collection
+     */
+    public function getSocialMediaProfiles();
+
+    /**
      * Add bankAccounts.
      *
      * @param BankAccount $bankAccounts

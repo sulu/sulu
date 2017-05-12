@@ -114,12 +114,14 @@ class TemplateController extends RestController
             'emailTypes' => $values['emailTypes'],
             'urlTypes' => $values['urlTypes'],
             'faxTypes' => $values['faxTypes'],
+            'socialMediaProfileTypes' => $values['socialMediaProfileTypes'],
             'countries' => $values['countries'],
             'defaultPhoneType' => $defaults['phoneType'],
             'defaultEmailType' => $defaults['emailType'],
             'defaultAddressType' => $defaults['addressType'],
             'defaultUrlType' => $defaults['urlType'],
             'defaultFaxType' => $defaults['faxType'],
+            'defaultSocialMediaProfileType' => $defaults['socialMediaProfileType'],
             'defaultCountry' => $defaults['country'],
         ];
     }
@@ -154,6 +156,10 @@ class TemplateController extends RestController
 
         $values['faxTypes'] = $this->getDoctrine()
             ->getRepository('SuluContactBundle:FaxType')
+            ->findAll();
+
+        $values['socialMediaProfileTypes'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:SocialMediaProfileType')
             ->findAll();
 
         $values['countries'] = $this->getDoctrine()
@@ -197,6 +203,11 @@ class TemplateController extends RestController
         $defaults['faxType'] = $this->getDoctrine()
             ->getRepository($faxTypeEntity)
             ->find($config['faxType']);
+
+        $socialMediaProfileTypeEntity = 'SuluContactBundle:SocialMediaProfileType';
+        $defaults['socialMediaProfileType'] = $this->getDoctrine()
+            ->getRepository($socialMediaProfileTypeEntity)
+            ->find($config['socialMediaProfileType']);
 
         $countryEntity = 'SuluContactBundle:Country';
         $defaults['country'] = $this->getDoctrine()

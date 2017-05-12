@@ -90,6 +90,8 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
                 ->leftJoin('account.notes', 'notes')
                 ->leftJoin('account.faxes', 'faxes')
                 ->leftJoin('faxes.faxType', 'faxType')
+                ->leftJoin('account.socialMediaProfiles', 'socialMediaProfiles')
+                ->leftJoin('socialMediaProfiles.socialMediaProfileType', 'socialMediaProfileType')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
                 ->leftJoin('account.tags', 'tags')
                 ->leftJoin('account.mainContact', 'mainContact')

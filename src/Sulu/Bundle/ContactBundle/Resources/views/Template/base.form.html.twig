@@ -101,7 +101,7 @@
                     </script>
                 </div>
 
-                <div class="grid-row form-horizontal small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
+                <div class="grid-row form-horizontal small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"},{"data":"socialMediaProfiles","tpl":"social-media-profile-tpl"}]'>
                     <script type="text/template" id="email-tpl">
                         <div class="grid-col-6 floating">
                             <~ var uid = _.uniqueId('email_') ~>
@@ -153,6 +153,42 @@
                                      data-aura-input-name="<~= uid ~>"
                                      data-mapper-property="fax"></div>
                                 <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
+                                <input type="hidden" data-mapper-property="id" class="id-value"/>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="social-media-profile-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('social_media_profile_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>" class="visible"></label>
+                                <label for="<~= uid ~>" class="hidden">
+                                    <%=translate('public.social_media_profile')%>
+                                    <span class="label-container">
+                                        (<span class="type-value"
+                                               data-form="true"
+                                               data-mapper-property="socialMediaProfileType"
+                                               data-type="label"
+                                               data-type-label="name"
+                                               data-type-id="id"
+                                               data-id="{{ defaultSocialMediaProfileType.id }}">
+                                            (<%=translate('{{ defaultSocialMediaProfileType.name }}')%>)
+                                        </span>)
+                                    </span>
+                                </label>
+
+                                <div data-form="true"
+                                     data-type="husky-input"
+                                     data-aura-component="input@husky"
+                                     data-aura-front-icon="user"
+                                     data-aura-instance-name="social-media-profile"
+                                     data-aura-input-id="<~= uid ~>"
+                                     data-aura-input-name="<~= uid ~>"
+                                     data-mapper-property="socialMediaProfile"></div>
+                                <span class="hidden"
+                                      data-mapper-property="attributes"
+                                      data-form="true"
+                                      data-type="attributes"></span>
                                 <input type="hidden" data-mapper-property="id" class="id-value"/>
                             </div>
                         </div>
@@ -302,6 +338,10 @@
                             'id': {{ defaultFaxType.id }},
                             'name': '{{ defaultFaxType.name }}'
                         },
+                        socialMediaProfileType: {
+                            'id': {{ defaultSocialMediaProfileType.id }},
+                            'name': '{{ defaultSocialMediaProfileType.name }}'
+                        },
                         country: {
                             'id': {{ defaultCountry.id }},
                             'name': '{{ defaultCountry.name }}'
@@ -313,6 +353,7 @@
                         'address': {{ addressTypes|json_encode()|raw }},
                         'url': {{ urlTypes|json_encode()|raw }},
                         'fax': {{ faxTypes|json_encode()|raw }},
+                        'socialMediaProfile': {{ socialMediaProfileTypes|json_encode()|raw }},
                         'countries': {{ countries|json_encode()|raw }}
                     };
             App.emit('sulu.contacts.set-types', types);

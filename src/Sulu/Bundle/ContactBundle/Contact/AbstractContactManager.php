@@ -23,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -48,6 +49,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected static $urlTypeEntityName = 'SuluContactBundle:UrlType';
     protected static $emailTypeEntityName = 'SuluContactBundle:EmailType';
     protected static $faxTypeEntityName = 'SuluContactBundle:FaxType';
+    protected static $socialMediaProfileTypeEntityName = 'SuluContactBundle:SocialMediaProfileType';
     protected static $phoneTypeEntityName = 'SuluContactBundle:PhoneType';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $countryEntityName = 'SuluContactBundle:Country';
@@ -336,6 +338,20 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
+     * Return social media profile type by name.
+     *
+     * @param $name
+     *
+     * @return mixed
+     */
+    public function getSocialMediaProfileTypeByName($name)
+    {
+        return $this->em->getRepository(
+            self::$socialMediaProfileTypeEntityName
+        )->findOneByName($name);
+    }
+
+    /**
      * return email type by name.
      *
      * @param $name
@@ -360,6 +376,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $this->deleteAddresses($entity);
         $this->deleteEmails($entity);
         $this->deleteFaxes($entity);
+        $this->deleteSocialMediaProfiles($entity);
         $this->deletePhones($entity);
         $this->deleteUrls($entity);
     }
@@ -397,6 +414,18 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($entity->getFaxes()) {
             $this->deleteAllEntitiesOfCollection($entity->getFaxes());
+        }
+    }
+
+    /**
+     * Deletes all social media profiles that are assigned to entity.
+     *
+     * @param $entity
+     */
+    public function deleteSocialMediaProfiles($entity)
+    {
+        if ($entity->getSocialMediaProfiles()) {
+            $this->deleteAllEntitiesOfCollection($entity->getSocialMediaProfiles());
         }
     }
 
@@ -588,6 +617,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 $this->addFax($contact, $faxData);
             }
             $this->setMainFax($contact);
+        }
+
+        // Social media profiles.
+        $socialMediaProfiles = $this->getProperty($data, 'socialMediaProfiles');
+        if (!empty($socialMediaProfiles)) {
+            foreach ($socialMediaProfiles as $socialMediaProfileData) {
+                $this->addSocialMediaProfile($contact, $socialMediaProfileData);
+            }
         }
 
         // emails
@@ -1125,6 +1162,110 @@ abstract class AbstractContactManager implements ContactManagerInterface
         } else {
             $fax->setFax($entry['fax']);
             $fax->setFaxType($faxType);
+        }
+
+        return $success;
+    }
+
+    /**
+     * @param $contact
+     * @param array $socialMediaProfiles
+     *
+     * @return bool
+     */
+    public function processSocialMediaProfiles($contact, $socialMediaProfiles)
+    {
+        $get = function ($socialMediaProfile) {
+            return $socialMediaProfile->getId();
+        };
+
+        $delete = function ($socialMediaProfile) use ($contact) {
+            $contact->removeSocialMediaProfile($socialMediaProfile);
+
+            return true;
+        };
+
+        $update = function ($socialMediaProfile, $matchedEntry) {
+            return $this->updateSocialMediaProfile($socialMediaProfile, $matchedEntry);
+        };
+
+        $add = function ($socialMediaProfile) use ($contact) {
+            $this->addSocialMediaProfile($contact, $socialMediaProfile);
+
+            return true;
+        };
+
+        $entities = $contact->getSocialMediaProfiles();
+
+        $result = $this->processSubEntities(
+            $entities,
+            $socialMediaProfiles,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
+
+        $this->resetIndexOfSubentites($entities);
+
+        return $result;
+    }
+
+    /**
+     * @param $contact
+     * @param array $socialMediaProfileData
+     *
+     * @throws EntityIdAlreadySetException
+     * @throws EntityNotFoundException
+     */
+    protected function addSocialMediaProfile($contact, $socialMediaProfileData)
+    {
+        $socialMediaProfileEntity = 'SuluContactBundle:SocialMediaProfile';
+
+        $socialMediaProfileType = $this->em
+            ->getRepository(self::$socialMediaProfileTypeEntityName)
+            ->find($socialMediaProfileData['socialMediaProfileType']['id']);
+
+        if (isset($socialMediaProfileData['id'])) {
+            throw new EntityIdAlreadySetException($socialMediaProfileEntity, $socialMediaProfileData['id']);
+        } elseif (!$socialMediaProfileType) {
+            throw new EntityNotFoundException(
+                self::$socialMediaProfileTypeEntityName,
+                    $socialMediaProfileData['socialMediaProfileType']['id']
+            );
+        } else {
+            $socialMediaProfile = new SocialMediaProfile();
+            $socialMediaProfile->setUsername($socialMediaProfileData['username']);
+            $socialMediaProfile->setSocialMediaProfileType($socialMediaProfileType);
+            $this->em->persist($socialMediaProfile);
+            $contact->addSocialMediaProfile($socialMediaProfile);
+        }
+    }
+
+    /**
+     * @param SocialMediaProfile $socialMediaProfile
+     * @param $entry
+     *
+     * @throws EntityNotFoundException
+     *
+     * @return bool
+     */
+    protected function updateSocialMediaProfile(SocialMediaProfile $socialMediaProfile, $entry)
+    {
+        $success = true;
+
+        $socialMediaProfileType = $this->em->getRepository(
+            self::$socialMediaProfileTypeEntityName
+        )->find($entry['socialMediaProfileType']['id']);
+
+        if (!$socialMediaProfileType) {
+            throw new EntityNotFoundException(
+                self::$socialMediaProfileTypeEntityName,
+                $entry['socialMediaProfileType']['id']
+            );
+        } else {
+            $socialMediaProfile->setUsername($entry['username']);
+            $socialMediaProfile->setSocialMediaProfileType($socialMediaProfileType);
         }
 
         return $success;

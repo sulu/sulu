@@ -17,7 +17,7 @@ define([
     'use strict';
 
     var defaults = {
-            fields: ['email', 'fax', 'phone', 'url'],
+            fields: ['email', 'fax', 'phone', 'url', 'socialMediaProfile'],
             fieldTypes: [],
             defaultTypes: [],
             trigger: '.contact-options-toggle'
@@ -311,6 +311,7 @@ define([
             this.sandbox.form.removeCollectionFilter(this.form, 'phones');
             this.sandbox.form.removeCollectionFilter(this.form, 'urls');
             this.sandbox.form.removeCollectionFilter(this.form, 'faxes');
+            this.sandbox.form.removeCollectionFilter(this.form, 'socialMediaProfiles');
             this.sandbox.form.removeCollectionFilter(this.form, 'notes');
         },
 
@@ -360,6 +361,13 @@ define([
                     delete fax.id;
                 }
                 return fax.fax !== "";
+            });
+
+            this.sandbox.form.addCollectionFilter(this.form, 'socialMediaProfiles', function(socialMediaProfile) {
+                if (socialMediaProfile.id === "") {
+                    delete socialMediaProfile.id;
+                }
+                return socialMediaProfile.username !== "";
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
@@ -526,6 +534,7 @@ define([
                 address: data.addresses,
                 email: data.emails,
                 fax: data.faxes,
+                socialMediaProfile: data.socialMediaProfiles,
                 phone: data.phones,
                 url: data.urls
             };

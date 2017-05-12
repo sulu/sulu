@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;
 use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
 use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile as SocialMediaProfileEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
@@ -549,6 +550,50 @@ class Contact extends ApiWrapper
         }
 
         return $entities;
+    }
+
+    /**
+     * Add social media profile.
+     *
+     * @param SocialMediaProfileEntity $socialMediaProfile
+     *
+     * @return Contact
+     */
+    public function addSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
+    {
+        $this->entity->addSocialMediaProfile($fax);
+
+        return $this;
+    }
+
+    /**
+     * Remove social media profile.
+     *
+     * @param SocialMediaProfileEntity $socialMediaProfile
+     */
+    public function removeSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
+    {
+        $this->entity->removeSocialMediaProfile($socialMediaProfile);
+    }
+
+    /**
+     * Get social media profiles.
+     *
+     * @return SocialMediaProfileEntity[]
+     * @VirtualProperty
+     * @SerializedName("socialMediaProfiles")
+     * @Groups({"fullContact"})
+     */
+    public function getSocialMediaProfiles()
+    {
+        $socialMediaProfiles = [];
+        if ($this->entity->getSocialMediaProfiles()) {
+            foreach ($this->entity->getSocialMediaProfiles() as $socialMediaProfile) {
+                $socialMediaProfiles[] = $socialMediaProfile;
+            }
+        }
+
+        return $socialMediaProfiles;
     }
 
     /**

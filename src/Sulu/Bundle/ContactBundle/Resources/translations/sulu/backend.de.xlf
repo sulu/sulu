@@ -644,6 +644,10 @@
                 <source>labels.success.user.activated</source>
                 <target>Benutzer aktiviert</target>
             </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d63" resname="public.social_media_profile">
+                <source>public.social_media_profile</source>
+                <target>Social-Media-Profil</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
