@@ -13,42 +13,42 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\Contact\Model\ContactInterface;
 
 /**
- * SocialMediaProfile.
+ * Social media profile belonging to account or contact.
+ *
+ * @ExclusionPolicy("All")
  */
 class SocialMediaProfile
 {
     /**
      * @var int
-     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var string
-     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $username;
 
     /**
      * @var SocialMediaProfileType
-     * @Groups({"fullAccount", "fullContact"})
      */
     private $socialMediaProfileType;
 
     /**
      * @var Collection
-     * @Exclude
      */
     private $contacts;
 
     /**
      * @var Collection
-     * @Exclude
      */
     private $accounts;
 
@@ -62,7 +62,9 @@ class SocialMediaProfile
     }
 
     /**
-     * Get id.
+     * @VirtualProperty()
+     * @SerializedName("id")
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
      * @return int
      */
@@ -72,21 +74,22 @@ class SocialMediaProfile
     }
 
     /**
-     * Set name.
-     *
      * @param string $username
      *
      * @return SocialMediaProfile
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        // Limit to maximal sql column length.
+        $this->username = substr($username, 0 , 255);
 
         return $this;
     }
 
     /**
-     * Get name.
+     * @VirtualProperty()
+     * @SerializedName("username")
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
      * @return string
      */
@@ -96,8 +99,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Set social media profile type.
-     *
      * @param SocialMediaProfileType $socialMediaProfileType
      *
      * @return SocialMediaProfile
@@ -110,7 +111,9 @@ class SocialMediaProfile
     }
 
     /**
-     * Get social media profile type.
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("socialMediaProfileType")
+     * @Groups({"fullAccount", "fullContact"})
      *
      * @return SocialMediaProfileType
      */
@@ -120,8 +123,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Add contact.
-     *
      * @param ContactInterface $contacts
      *
      * @return SocialMediaProfile
@@ -134,8 +135,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Remove contact.
-     *
      * @param ContactInterface $contacts
      */
     public function removeContact(ContactInterface $contacts)
@@ -144,8 +143,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Get contacts.
-     *
      * @return Collection
      */
     public function getContacts()
@@ -154,8 +151,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Add account.
-     *
      * @param AccountInterface $account
      *
      * @return SocialMediaProfile
@@ -168,8 +163,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Remove account.
-     *
      * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
@@ -178,8 +171,6 @@ class SocialMediaProfile
     }
 
     /**
-     * Get accounts.
-     *
      * @return Collection
      */
     public function getAccounts()

@@ -23,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
@@ -180,6 +181,16 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                 }
             }
 
+            $socialMediaProfiles = $contact->getSocialMediaProfiles()->toArray();
+            /** @var SocialMediaProfile $socialMediaProfile */
+            foreach ($socialMediaProfiles as $socialMediaProfile) {
+                if ($socialMediaProfile->getAccounts()->count() == 0
+                    && $socialMediaProfile->getContacts()->count() == 1
+                ) {
+                    $this->em->remove($socialMediaProfile);
+                }
+            }
+
             $notes = $contact->getNotes()->toArray();
             /** @var Note $note */
             foreach ($notes as $note) {
@@ -244,6 +255,9 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             }
             if (!$patch || $this->getProperty($data, 'faxes')) {
                 $this->processFaxes($contact, $this->getProperty($data, 'faxes', []));
+            }
+            if (!$patch || $this->getProperty($data, 'socialMediaProfiles')) {
+                $this->processSocialMediaProfiles($contact, $this->getProperty($data, 'socialMediaProfiles', []));
             }
             if (!$patch || $this->getProperty($data, 'tags')) {
                 $this->processTags($contact, $this->getProperty($data, 'tags', []));

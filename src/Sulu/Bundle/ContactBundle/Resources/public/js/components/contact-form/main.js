@@ -17,7 +17,7 @@ define([
     'use strict';
 
     var defaults = {
-            fields: ['email', 'fax', 'phone', 'url'],
+            fields: ['email', 'fax', 'phone', 'url', 'socialMediaProfile'],
             fieldTypes: [],
             defaultTypes: [],
             trigger: '.contact-options-toggle'
@@ -311,6 +311,7 @@ define([
             this.sandbox.form.removeCollectionFilter(this.form, 'phones');
             this.sandbox.form.removeCollectionFilter(this.form, 'urls');
             this.sandbox.form.removeCollectionFilter(this.form, 'faxes');
+            this.sandbox.form.removeCollectionFilter(this.form, 'socialMediaProfiles');
             this.sandbox.form.removeCollectionFilter(this.form, 'notes');
         },
 
@@ -331,6 +332,7 @@ define([
                 if (address.id === "") {
                     delete address.id;
                 }
+
                 return true;
             });
 
@@ -338,6 +340,7 @@ define([
                 if (email.id === "") {
                     delete email.id;
                 }
+
                 return email.email !== "";
             });
 
@@ -345,6 +348,7 @@ define([
                 if (phone.id === "") {
                     delete phone.id;
                 }
+
                 return phone.phone !== "";
             });
 
@@ -352,6 +356,7 @@ define([
                 if (url.id === "") {
                     delete url.id;
                 }
+
                 return !!url.url;
             });
 
@@ -359,13 +364,23 @@ define([
                 if (fax.id === "") {
                     delete fax.id;
                 }
+
                 return fax.fax !== "";
+            });
+
+            this.sandbox.form.addCollectionFilter(this.form, 'socialMediaProfiles', function(socialMediaProfile) {
+                if (socialMediaProfile.id === "") {
+                    delete socialMediaProfile.id;
+                }
+
+                return socialMediaProfile.username !== "";
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
                 if (note.id === "") {
                     delete note.id;
                 }
+
                 return note.value !== "";
             });
         },
@@ -527,7 +542,8 @@ define([
                 email: data.emails,
                 fax: data.faxes,
                 phone: data.phones,
-                url: data.urls
+                url: data.urls,
+                socialMediaProfile: data.socialMediaProfiles
             };
 
             //loop through object properties

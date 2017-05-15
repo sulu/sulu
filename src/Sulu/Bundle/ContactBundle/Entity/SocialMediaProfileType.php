@@ -13,29 +13,34 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * SocialMediaProfileType.
+ * Type of social media profile (i.e. Facebook,...).
+ *
+ * @ExclusionPolicy("All")
  */
 class SocialMediaProfileType implements \JsonSerializable
 {
+    const TYPE_FACEBOOK = 'social_media_profile.facebook';
+    const TYPE_TWITTER = 'social_media_profile.twitter';
+    const TYPE_INSTAGRAM = 'social_media_profile.instagram';
+
     /**
      * @var int
-     * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
 
     /**
      * @var string
-     * @Groups({"fullAccount", "fullContact"})
      */
     private $name;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
+     * @var Collection
      */
     private $socialMediaProfiles;
 
@@ -58,7 +63,9 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * Get id.
+     * @VirtualProperty()
+     * @SerializedName("id")
+     * @Groups({"fullAccount", "fullContact"})
      *
      * @return int
      */
@@ -68,21 +75,22 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * Set name.
-     *
      * @param string $name
      *
      * @return SocialMediaProfileType
      */
     public function setName($name)
     {
-        $this->name = $name;
+        // Limit to maximal sql column length.
+        $this->username = substr($username, 0 , 100);
 
         return $this;
     }
 
     /**
-     * Get name.
+     * @VirtualProperty()
+     * @SerializedName("name")
+     * @Groups({"fullAccount", "fullContact"})
      *
      * @return string
      */
@@ -92,8 +100,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * Add social media profile.
-     *
      * @param SocialMediaProfile $socialMediaProfile
      *
      * @return SocialMediaProfileType
@@ -106,8 +112,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * Remove social media profile.
-     *
      * @param SocialMediaProfile $socialMediaProfile
      */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
@@ -116,8 +120,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * Get social media profiles.
-     *
      * @return Collection
      */
     public function getSocialMediaProfiles()
@@ -126,7 +128,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
      * Specify data which should be serialized to JSON.
      *
      * @see http://php.net/manual/en/jsonserializable.jsonserialize.php

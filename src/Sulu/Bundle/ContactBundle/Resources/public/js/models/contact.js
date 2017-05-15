@@ -15,12 +15,13 @@ define([
     'sulucontact/models/email',
     'sulucontact/models/phone',
     'sulucontact/models/address',
+    'sulucontact/models/socialMediaProfile',
     'sulucontact/models/note',
     'sulucontact/models/accountContact',
     'sulucontact/models/contactMedia',
     'sulucontact/models/bankAccount',
     'sulucategory/model/category'
-], function(RelationalModel, HasMany, HasOne, Account, Email, Phone, Address, Note, AccountContact, Media, BankAccount, Category) {
+], function(RelationalModel, HasMany, HasOne, Account, Email, Phone, Address, SocialMediaProfile, Note, AccountContact, Media, BankAccount, Category) {
 
     'use strict';
 
@@ -39,6 +40,7 @@ define([
                 emails: [],
                 accountContacts: [],
                 phones: [],
+                socialMediaProfiles: [],
                 notes: [],
                 addresses: [],
                 formOfAddress: '',
@@ -72,6 +74,11 @@ define([
                 type: HasMany,
                 key: 'accountContacts',
                 relatedModel: AccountContact
+            },
+            {
+                type: HasMany,
+                key: 'socialMediaProfiles',
+                relatedModel: SocialMediaProfile
             },
             {
                 type: HasMany,

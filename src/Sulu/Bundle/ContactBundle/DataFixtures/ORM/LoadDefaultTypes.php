@@ -120,17 +120,17 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $socialMediaProfileType1 = new SocialMediaProfileType();
         $socialMediaProfileType1->setId(1);
         $socialMediaProfileType1 = $manager->merge($socialMediaProfileType1);
-        $socialMediaProfileType1->setName('social_media_profile.facebook');
+        $socialMediaProfileType1->setName(SocialMediaProfileType::TYPE_FACEBOOK);
 
         $socialMediaProfileType2 = new SocialMediaProfileType();
         $socialMediaProfileType2->setId(2);
         $socialMediaProfileType2 = $manager->merge($socialMediaProfileType2);
-        $socialMediaProfileType2->setName('social_media_profile.twitter');
+        $socialMediaProfileType2->setName(SocialMediaProfileType::TYPE_TWITTER);
 
         $socialMediaProfileType3 = new SocialMediaProfileType();
         $socialMediaProfileType3->setId(3);
         $socialMediaProfileType3 = $manager->merge($socialMediaProfileType3);
-        $socialMediaProfileType3->setName('social_media_profile.instagram');
+        $socialMediaProfileType3->setName(SocialMediaProfileType::TYPE_INSTAGRAM);
 
         $manager->flush();
     }

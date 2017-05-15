@@ -76,22 +76,22 @@ class SerializerEventListener implements EventSubscriberInterface
         }
 
         foreach ($content->getData() as $key => $value) {
-            $visitor->addData($key, $value);
+            $visitor->setData($key, $value);
         }
 
-        $visitor->addData('publishedState', (WorkflowStage::PUBLISHED === $content->getWorkflowStage()));
+        $visitor->setData('publishedState', (WorkflowStage::PUBLISHED === $content->getWorkflowStage()));
 
         if (RedirectType::EXTERNAL === $content->getNodeType()) {
-            $visitor->addData('linked', 'external');
+            $visitor->setData('linked', 'external');
         } elseif (RedirectType::INTERNAL === $content->getNodeType()) {
-            $visitor->addData('linked', 'internal');
+            $visitor->setData('linked', 'internal');
         }
 
         if (null !== $content->getLocalizationType()) {
-            $visitor->addData('type', $content->getLocalizationType()->toArray());
+            $visitor->setData('type', $content->getLocalizationType()->toArray());
         }
 
-        $visitor->addData(
+        $visitor->setData(
             '_permissions',
             $this->accessControlManager->getUserPermissionByArray(
                 $content->getLocale(),

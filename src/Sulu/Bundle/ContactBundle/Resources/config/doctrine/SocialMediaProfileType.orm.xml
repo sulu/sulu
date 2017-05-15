@@ -7,7 +7,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="name" type="string" column="name" length="100"/>
         <one-to-many field="socialMediaProfiles"
                      target-entity="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile"
                      mapped-by="socialMediaProfileType"/>

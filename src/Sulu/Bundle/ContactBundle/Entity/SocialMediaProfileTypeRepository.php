@@ -14,7 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Class SocialMediaProfileTypeRepository.
+ * Repository for social media profile types.
  */
 class SocialMediaProfileTypeRepository extends EntityRepository
 {
