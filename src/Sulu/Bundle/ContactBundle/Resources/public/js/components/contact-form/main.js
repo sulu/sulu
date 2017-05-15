@@ -332,6 +332,7 @@ define([
                 if (address.id === "") {
                     delete address.id;
                 }
+
                 return true;
             });
 
@@ -339,6 +340,7 @@ define([
                 if (email.id === "") {
                     delete email.id;
                 }
+
                 return email.email !== "";
             });
 
@@ -346,6 +348,7 @@ define([
                 if (phone.id === "") {
                     delete phone.id;
                 }
+
                 return phone.phone !== "";
             });
 
@@ -353,6 +356,7 @@ define([
                 if (url.id === "") {
                     delete url.id;
                 }
+
                 return !!url.url;
             });
 
@@ -360,6 +364,7 @@ define([
                 if (fax.id === "") {
                     delete fax.id;
                 }
+
                 return fax.fax !== "";
             });
 
@@ -367,6 +372,7 @@ define([
                 if (socialMediaProfile.id === "") {
                     delete socialMediaProfile.id;
                 }
+
                 return socialMediaProfile.username !== "";
             });
 
@@ -374,6 +380,7 @@ define([
                 if (note.id === "") {
                     delete note.id;
                 }
+
                 return note.value !== "";
             });
         },

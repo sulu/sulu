@@ -184,34 +184,28 @@ class TemplateController extends RestController
             ->getRepository($emailTypeEntity)
             ->find($config['emailType']);
 
-        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
         $defaults['phoneType'] = $this->getDoctrine()
-            ->getRepository($phoneTypeEntity)
+            ->getRepository('SuluContactBundle:PhoneType')
             ->find($config['phoneType']);
 
-        $addressTypeEntity = 'SuluContactBundle:AddressType';
         $defaults['addressType'] = $this->getDoctrine()
-            ->getRepository($addressTypeEntity)
+            ->getRepository('SuluContactBundle:AddressType')
             ->find($config['addressType']);
 
-        $urlTypeEntity = 'SuluContactBundle:UrlType';
         $defaults['urlType'] = $this->getDoctrine()
-            ->getRepository($urlTypeEntity)
+            ->getRepository('SuluContactBundle:UrlType')
             ->find($config['urlType']);
 
-        $faxTypeEntity = 'SuluContactBundle:FaxType';
         $defaults['faxType'] = $this->getDoctrine()
-            ->getRepository($faxTypeEntity)
+            ->getRepository('SuluContactBundle:FaxType')
             ->find($config['faxType']);
 
-        $socialMediaProfileTypeEntity = 'SuluContactBundle:SocialMediaProfileType';
         $defaults['socialMediaProfileType'] = $this->getDoctrine()
-            ->getRepository($socialMediaProfileTypeEntity)
+            ->getRepository('SuluContactBundle:SocialMediaProfileType')
             ->find($config['socialMediaProfileType']);
 
-        $countryEntity = 'SuluContactBundle:Country';
         $defaults['country'] = $this->getDoctrine()
-            ->getRepository($countryEntity)
+            ->getRepository('SuluContactBundle:Country')
             ->findOneByCode($config['country']);
 
         return $defaults;

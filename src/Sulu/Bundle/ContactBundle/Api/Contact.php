@@ -579,10 +579,11 @@ class Contact extends ApiWrapper
     /**
      * Get social media profiles.
      *
-     * @return SocialMediaProfileEntity[]
      * @VirtualProperty
      * @SerializedName("socialMediaProfiles")
      * @Groups({"fullContact"})
+     *
+     * @return SocialMediaProfileEntity[]
      */
     public function getSocialMediaProfiles()
     {
