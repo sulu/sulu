@@ -22,6 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -250,6 +251,29 @@ interface ContactInterface
      * @return Collection
      */
     public function getFaxes();
+
+    /**
+     * Add social media profile.
+     *
+     * @param SocialMediaProfile $socialMediaProfile
+     *
+     * @return ContactInterface
+     */
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
+
+    /**
+     * Remove social media profile.
+     *
+     * @param SocialMediaProfile $socialMediaProfile
+     */
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
+
+    /**
+     * Get social media profiles.
+     *
+     * @return Collection
+     */
+    public function getSocialMediaProfiles();
 
     /**
      * Add url.
