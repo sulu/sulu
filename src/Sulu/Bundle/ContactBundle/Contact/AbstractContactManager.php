@@ -1162,12 +1162,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ContactInterface $contact
+     * @param ContactInterface|AccountInterface $contact
      * @param array $socialMediaProfiles
      *
      * @return bool
      */
-    public function processSocialMediaProfiles(ContactInterface $contact, $socialMediaProfiles)
+    public function processSocialMediaProfiles($contact, $socialMediaProfiles)
     {
         $get = function ($socialMediaProfile) {
             return $socialMediaProfile->getId();
@@ -1206,13 +1206,13 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ContactInterface $contact
+     * @param ContactInterface|AccountInterface $contact
      * @param array $socialMediaProfileData
      *
      * @throws EntityIdAlreadySetException
      * @throws EntityNotFoundException
      */
-    protected function addSocialMediaProfile(ContactInterface $contact, $socialMediaProfileData)
+    protected function addSocialMediaProfile($contact, $socialMediaProfileData)
     {
         $socialMediaProfileEntity = 'SuluContactBundle:SocialMediaProfile';
 
