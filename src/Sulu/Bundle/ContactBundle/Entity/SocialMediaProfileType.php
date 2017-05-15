@@ -21,6 +21,10 @@ use JMS\Serializer\Annotation\Groups;
  */
 class SocialMediaProfileType implements \JsonSerializable
 {
+    const TYPE_FACEBOOK = 'social_media_profile.facebook';
+    const TYPE_TWITTER = 'social_media_profile.twitter';
+    const TYPE_INSTAGRAM = 'social_media_profile.instagram';
+
     /**
      * @var int
      * @Groups({"fullAccount", "fullContact"})

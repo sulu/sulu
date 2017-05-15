@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Social media profile fixtures
+
+Add fixtures for social media profile for contacts. Run following command to
+add the fixtures.
+
+```bash
+INSERT INTO co_social_media_profile_types (id, name) VALUES ('1', 'social_media_profile.facebook'), ('2', 'social_media_profile.twitter'), ('3', 'social_media_profile.instagram');
+```
+
 ### Route-Table changed
 
 The route-table was extended with auditable information. Run following command to
