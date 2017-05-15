@@ -13,13 +13,15 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Type of social media profile (i.e. Facebook,...).
  *
- * @Serializer\ExclusionPolicy("All")
+ * @ExclusionPolicy("All")
  */
 class SocialMediaProfileType implements \JsonSerializable
 {
@@ -61,8 +63,8 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("id")
+     * @VirtualProperty()
+     * @SerializedName("id")
      * @Groups({"fullAccount", "fullContact"})
      *
      * @return int
@@ -86,8 +88,8 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("name")
+     * @VirtualProperty()
+     * @SerializedName("name")
      * @Groups({"fullAccount", "fullContact"})
      *
      * @return string

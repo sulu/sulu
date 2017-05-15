@@ -14,14 +14,16 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
-use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\Contact\Model\ContactInterface;
 
 /**
  * Social media profile belonging to account or contact.
  *
- * @Serializer\ExclusionPolicy("All")
+ * @ExclusionPolicy("All")
  */
 class SocialMediaProfile
 {
@@ -60,8 +62,8 @@ class SocialMediaProfile
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("id")
+     * @VirtualProperty()
+     * @SerializedName("id")
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
      * @return int
@@ -85,8 +87,8 @@ class SocialMediaProfile
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("username")
+     * @VirtualProperty()
+     * @SerializedName("username")
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
      * @return string
@@ -97,10 +99,6 @@ class SocialMediaProfile
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("socialMediaProfileType")
-     * @Groups({"fullAccount", "fullContact"})
-     *
      * @param SocialMediaProfileType $socialMediaProfileType
      *
      * @return SocialMediaProfile
@@ -113,6 +111,10 @@ class SocialMediaProfile
     }
 
     /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("socialMediaProfileType")
+     * @Groups({"fullAccount", "fullContact"})
+     *
      * @return SocialMediaProfileType
      */
     public function getSocialMediaProfileType()
