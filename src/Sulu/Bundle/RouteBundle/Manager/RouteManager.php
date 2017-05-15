@@ -89,8 +89,8 @@ class RouteManager implements RouteManagerInterface
 
         if ($resolveConflict) {
             $route = $this->conflictResolver->resolve($route);
-        } elseif (!$this->isUnique($route)) {
-            throw new RouteIsNotUniqueException($route, $entity);
+        } else {
+            $route = $this->resolve($route, $entity);
         }
 
         // path haven't changed after conflict resolving
@@ -129,6 +129,36 @@ class RouteManager implements RouteManagerInterface
     {
         $persistedRoute = $this->routeRepository->findByPath($route->getPath(), $route->getLocale());
 
-        return !$persistedRoute || $persistedRoute->getId() === $route->getId();
+        return !$persistedRoute;
+    }
+
+    /**
+     * Looks for the same route in the database.
+     * If no route was found the method returns the newly created route.
+     * If the route is a history route for given entity the history route will be returned.
+     * Else a RouteIsNotUniqueException will be thrown.
+     *
+     * @param RouteInterface $route
+     * @param RoutableInterface $entity
+     *
+     * @return RouteInterface
+     *
+     * @throws RouteIsNotUniqueException
+     */
+    private function resolve(RouteInterface $route, RoutableInterface $entity)
+    {
+        $persistedRoute = $this->routeRepository->findByPath($route->getPath(), $route->getLocale());
+
+        if (!$persistedRoute) {
+            return $route;
+        }
+
+        if ($persistedRoute->getEntityClass() === $route->getEntityClass()
+            && $persistedRoute->getEntityId() === $route->getEntityId()
+        ) {
+            return $persistedRoute;
+        }
+
+        throw new RouteIsNotUniqueException($route, $entity);
     }
 }
