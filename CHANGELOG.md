@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #3351 [ContactBundle]         Added social media profile field
+    * FEATURE     #3354 [ContactBundle]         Added social media profile field
     * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
     * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
