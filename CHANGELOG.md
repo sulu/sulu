@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * 1.5.4 (dev-master)
     * HOTFIX      #3314 [ContentBundle]         Fixed author migration script for removed users.
+    * BUGFIX      #3355 [ContentBundle]         Fixed sort-handler of teaser-selection
 
 * 1.5.3 (2017-04-06)
     * HOTFIX      #3279 [CategoryBundle]        Add missing return statement.
