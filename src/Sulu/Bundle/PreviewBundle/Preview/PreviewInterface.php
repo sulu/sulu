@@ -58,13 +58,14 @@ interface PreviewInterface
      * @param string $webspaceKey Webspace to render object
      * @param string $locale
      * @param array $data Data which will be updated before re-rendering content
+     * @param int $targetGroupId
      *
      * @return array Changes for the rendering
      *
      * @throws ProviderNotFoundException
      * @throws TokenNotFoundException
      */
-    public function update($token, $webspaceKey, $locale, array $data);
+    public function update($token, $webspaceKey, $locale, array $data, $targetGroupId = null);
 
     /**
      * Updates given context and restart preview with given data.
@@ -74,13 +75,14 @@ interface PreviewInterface
      * @param string $locale
      * @param array $context Contains contextual data to restart preview
      * @param array $data Data which will be updated before re-rendering content
+     * @param string $targetGroupId
      *
      * @return string Complete html response
      *
      * @throws ProviderNotFoundException
      * @throws TokenNotFoundException
      */
-    public function updateContext($token, $webspaceKey, $locale, array $context, array $data);
+    public function updateContext($token, $webspaceKey, $locale, array $context, array $data, $targetGroupId = null);
 
     /**
      * Returns rendered preview-session.
@@ -88,11 +90,12 @@ interface PreviewInterface
      * @param string $token To identify the preview-session
      * @param string $webspaceKey Webspace to render object
      * @param string $locale
+     * @param string $targetGroupId
      *
      * @return string Complete html response
      *
      * @throws ProviderNotFoundException
      * @throws TokenNotFoundException
      */
-    public function render($token, $webspaceKey, $locale);
+    public function render($token, $webspaceKey, $locale, $targetGroupId = null);
 }

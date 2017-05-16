@@ -101,7 +101,7 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function update($token, $webspaceKey, $locale, array $data)
+    public function update($token, $webspaceKey, $locale, array $data, $targetGroupId = null)
     {
         if (0 === count($data)) {
             return [];
@@ -113,7 +113,7 @@ class Preview implements PreviewInterface
         $this->save($token, $object);
 
         $id = $provider->getId($object);
-        $html = $this->renderer->render($object, $id, $webspaceKey, $locale, true);
+        $html = $this->renderer->render($object, $id, $webspaceKey, $locale, true, $targetGroupId);
 
         $extractor = new RdfaExtractor($html);
 
@@ -123,14 +123,14 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function updateContext($token, $webspaceKey, $locale, array $context, array $data)
+    public function updateContext($token, $webspaceKey, $locale, array $context, array $data, $targetGroupId = null)
     {
         $object = $this->fetch($token);
         $provider = $this->getProvider(get_class($object));
         if (0 === count($context)) {
             $id = $provider->getId($object);
 
-            return $this->renderer->render($object, $id, $webspaceKey, $locale);
+            return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
         }
 
         // context
@@ -144,18 +144,18 @@ class Preview implements PreviewInterface
 
         $this->save($token, $object);
 
-        return $this->renderer->render($object, $id, $webspaceKey, $locale);
+        return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($token, $webspaceKey, $locale)
+    public function render($token, $webspaceKey, $locale, $targetGroupId = null)
     {
         $object = $this->fetch($token);
         $id = $this->getProvider(get_class($object))->getId($object);
 
-        return $this->renderer->render($object, $id, $webspaceKey, $locale);
+        return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
     }
 
     /**
