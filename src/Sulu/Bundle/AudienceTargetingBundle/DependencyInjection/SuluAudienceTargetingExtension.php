@@ -40,13 +40,11 @@ class SuluAudienceTargetingExtension extends Extension
             TargetGroupRuleInterface::FREQUENCY_VISITOR_NAME => TargetGroupRuleInterface::FREQUENCY_VISITOR,
         ]);
 
-        $container->setParameter('sulu_audience_targeting.header', $config['header']);
+        $container->setParameter('sulu_audience_targeting.headers.target_group', $config['headers']['target_group']);
+        $container->setParameter('sulu_audience_targeting.headers.url', $config['headers']['url']);
+
         $container->setParameter('sulu_audience_targeting.url', $config['url']);
         $container->setParameter('sulu_audience_targeting.hit.url', $config['hit']['url']);
-        $container->setParameter(
-            'sulu_audience_targeting.hit.headers.url',
-            $config['hit']['headers']['url']
-        );
         $container->setParameter(
             'sulu_audience_targeting.hit.headers.referrer',
             $config['hit']['headers']['referrer']

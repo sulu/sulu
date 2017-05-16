@@ -39,7 +39,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('header')->defaultValue(HttpCache::TARGET_GROUP_HEADER)->end()
+                ->arrayNode('headers')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('target_group')->defaultValue(HttpCache::TARGET_GROUP_HEADER)->end()
+                        ->scalarNode('url')->defaultValue(HttpCache::USER_CONTEXT_URL_HEADER)->end()
+                    ->end()
+                ->end()
                 ->scalarNode('url')->defaultValue(HttpCache::TARGET_GROUP_URL)->end()
                 ->arrayNode('cookies')
                     ->addDefaultsIfNotSet()
@@ -55,7 +61,6 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('headers')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('url')->defaultValue('X-Forwarded-URL')->end()
                                 ->scalarNode('referrer')->defaultValue('X-Forwarded-Referrer')->end()
                                 ->scalarNode('uuid')->defaultValue('X-Forwarded-UUID')->end()
                             ->end()
