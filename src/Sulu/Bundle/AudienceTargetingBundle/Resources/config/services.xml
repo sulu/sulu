@@ -28,6 +28,13 @@
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
+        <!--REQUEST-->
+        <service id="sulu_audience_targeting.request_processor.forwarded_url"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Request\ForwardedUrlRequestProcessor">
+            <argument>%sulu_audience_targeting.headers.url%</argument>
+            <tag name="sulu.request_attributes" priority="96"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
         <!--RULES-->
         <service id="sulu_audience_targeting.target_group_evaluator"
                  class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator">
@@ -55,8 +62,11 @@
         <service id="sulu_audience_targeting.rules.page"
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\PageRule">
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument>%sulu_audience_targeting.hit.headers.uuid%</argument>
+            <argument>%sulu_audience_targeting.headers.url%</argument>
             <tag name="sulu.audience_target_rule" alias="page"/>
         </service>
         <!--CONTENT TYPES-->
@@ -78,7 +88,7 @@
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
             <argument type="service" id="sulu.repository.target_group"/>
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
-            <argument>%sulu_audience_targeting.header%</argument>
+            <argument>%sulu_audience_targeting.headers.target_group%</argument>
         </service>
         <service id="sulu_audience_targeting.target_group_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber">
@@ -89,10 +99,10 @@
             <argument type="service" id="sulu.repository.target_group"/>
             <argument>%sulu_audience_targeting.url%</argument>
             <argument>%sulu_audience_targeting.hit.url%</argument>
-            <argument>%sulu_audience_targeting.hit.headers.url%</argument>
+            <argument>%sulu_audience_targeting.headers.url%</argument>
             <argument>%sulu_audience_targeting.hit.headers.referrer%</argument>
             <argument>%sulu_audience_targeting.hit.headers.uuid%</argument>
-            <argument>%sulu_audience_targeting.header%</argument>
+            <argument>%sulu_audience_targeting.headers.target_group%</argument>
             <argument>%sulu_audience_targeting.cookies.target_group%</argument>
             <argument>%sulu_audience_targeting.cookies.session%</argument>
             <tag name="kernel.event_subscriber"/>

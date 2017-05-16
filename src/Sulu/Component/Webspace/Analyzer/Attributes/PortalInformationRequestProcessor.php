@@ -63,7 +63,8 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
 
         list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
             $portalInformation,
-            $request
+            $request,
+            $requestAttributes->getAttribute('path')
         );
 
         $attributes['urlExpression'] = $portalInformation->getUrlExpression();
@@ -92,13 +93,12 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
      *
      * @param PortalInformation $portalInformation
      * @param Request $request
+     * @param string $path
      *
      * @return array
      */
-    private function getResourceLocatorFromRequest(PortalInformation $portalInformation, Request $request)
+    private function getResourceLocatorFromRequest(PortalInformation $portalInformation, Request $request, $path)
     {
-        $path = $request->getPathInfo();
-
         // extract file and extension info
         $pathParts = explode('/', $path);
         $fileInfo = explode('.', array_pop($pathParts));

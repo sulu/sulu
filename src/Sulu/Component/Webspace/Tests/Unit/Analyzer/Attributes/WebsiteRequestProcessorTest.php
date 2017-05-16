@@ -104,14 +104,14 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2, $portalInformation3]);
 
-        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/test']);
+        $request = new Request();
 
         $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
         $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
         $this->replacer->replaceHost('{host}/de', 'sulu.lo')->willReturn('sulu.lo/de');
         $this->replacer->replaceHost('sulu.io/de', 'sulu.lo')->willReturn('sulu.io/de');
 
-        $attributes = $this->provider->process($request, new RequestAttributes());
+        $attributes = $this->provider->process($request, new RequestAttributes(['host' => 'sulu.lo', 'path' => '/test']));
 
         $this->assertEquals('sulu.lo', $attributes->getAttribute('portalInformation')->getUrl());
         $this->assertEquals('sulu.lo', $portalInformation1->getUrl());
@@ -164,13 +164,13 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2]);
 
-        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/test']);
+        $request = new Request();
 
         $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
         $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
         $this->replacer->replaceHost('sulu.lo', 'sulu.lo')->willReturn('sulu.lo');
 
-        $attributes = $this->provider->process($request, new RequestAttributes());
+        $attributes = $this->provider->process($request, new RequestAttributes(['host' => 'sulu.lo', 'path' => '/test']));
 
         $this->assertEquals($portalInformation2, $attributes->getAttribute('portalInformation'));
         $this->assertEquals('sulu.lo', $portalInformation1->getUrl());
@@ -222,13 +222,13 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->getPortalInformations('prod')
             ->willReturn([$portalInformation1, $portalInformation2]);
 
-        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => '/de']);
+        $request = new Request();
 
         $this->replacer->replaceHost(null, 'sulu.lo')->willReturn('sulu.lo');
         $this->replacer->replaceHost('sulu.lo', 'sulu.lo')->willReturn('sulu.lo');
         $this->replacer->replaceHost('sulu.lo/de', 'sulu.lo')->willReturn('sulu.lo/de');
 
-        $attributes = $this->provider->process($request, new RequestAttributes());
+        $attributes = $this->provider->process($request, new RequestAttributes(['host' => 'sulu.lo', 'path' => 'de']));
 
         $this->assertEquals($portalInformation1, $attributes->getAttribute('portalInformation'));
     }
