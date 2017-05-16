@@ -9,10 +9,11 @@
 
 define([
     'jquery',
+    'config',
     'text!./skeleton.html',
     'text!./on-request.html',
     'text!./error.html'
-], function($, skeletonTemplate, onRequestTemplate, errorTemplate) {
+], function($, config, skeletonTemplate, onRequestTemplate, errorTemplate) {
 
     'use strict';
 
@@ -58,6 +59,7 @@ define([
                 updateContent: {postFix: 'update-content', type: 'on'},
                 error: {postFix: 'error', type: 'on'},
                 webspace: {postFix: 'webspace'},
+                targetGroup: {postFix: 'target-group'},
                 render: {postFix: 'render'}
             },
             namespace: 'sulu.preview.'
@@ -137,6 +139,32 @@ define([
                 };
             } else {
                 this.events.webspace(this.options.webspace);
+            }
+
+            if (config.has('sulu_audience_targeting')) {
+                buttons.audienceTargeting = {
+                    options: {
+                        icon: 'users',
+                        dropdownItems: [
+                            {
+                                id: null,
+                                title: 'No target group'
+                            }
+                        ],
+                        dropdownOptions: {
+                            resultKey: 'target-groups',
+                            titleAttribute: 'title',
+                            idAttribute: 'id',
+                            markSelected: true,
+                            changeButton: true,
+                            url: '/admin/api/target-groups',
+                            concatRequestedItemsFirst: true,
+                            callback: function (item) {
+                                this.events.targetGroup(item.id);
+                            }.bind(this)
+                        }
+                    }
+                }
             }
 
             this.sandbox.start(

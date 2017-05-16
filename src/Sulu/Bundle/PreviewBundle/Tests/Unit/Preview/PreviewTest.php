@@ -145,7 +145,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
         $provider->getId($object->reveal())->willReturn(1);
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true)
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, null)
             ->willReturn('<h1 property="title">SULU</h1>');
 
         $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
@@ -183,6 +183,31 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
     }
 
+    public function testUpdateWithTargetGroup()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $token = '123-123-123';
+        $this->dataCache->contains($token)->willReturn(true);
+        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+            ->shouldBeCalled();
+
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
+        $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
+        $provider->getId($object->reveal())->willReturn(1);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2)
+            ->willReturn('<h1 property="title">SULU</h1>');
+
+        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU'], 2);
+
+        $this->assertEquals(['title' => [['property' => 'title', 'html' => 'SULU']]], $changes);
+    }
+
     public function testUpdateContext()
     {
         $object = $this->prophesize(\stdClass::class);
@@ -202,7 +227,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->serialize($newObject->reveal())->willReturn('{"title": "SULU"}');
         $provider->getId($newObject->reveal())->willReturn(1);
 
-        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de')
+        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
 
         $preview = $this->getPreview(
@@ -231,7 +256,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de')
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
 
         $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
@@ -264,7 +289,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->serialize($newObject->reveal())->willReturn('{"title": "test"}');
         $provider->getId($newObject->reveal())->willReturn(1);
 
-        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de')
+        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<html><body><h1 property="title">test</h1></html></body>');
 
         $preview = $this->getPreview(
@@ -281,6 +306,43 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<html><body><h1 property="title">test</h1></html></body>', $response);
     }
 
+    public function testUpdateContextWithTargetGroup()
+    {
+        $object = $this->prophesize(\stdClass::class);
+        $newObject = $this->prophesize(\stdClass::class);
+
+        $token = '123-123-123';
+        $this->dataCache->contains($token)->willReturn(true);
+        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+            ->shouldBeCalled();
+
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
+            ->shouldBeCalled()->willReturn($newObject->reveal());
+        $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
+        $provider->serialize($newObject->reveal())->willReturn('{"title": "SULU"}');
+        $provider->getId($newObject->reveal())->willReturn(1);
+
+        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, 2)
+            ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
+
+        $preview = $this->getPreview(
+            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+        );
+        $response = $preview->updateContext(
+            $token,
+            'sulu_io',
+            'de',
+            ['template' => 'test-template'],
+            ['title' => 'SULU'],
+            2
+        );
+
+        $this->assertEquals('<html><body><h1 property="title">SULU</h1></html></body>', $response);
+    }
+
     public function testRender()
     {
         $object = $this->prophesize(\stdClass::class);
@@ -293,11 +355,32 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de')
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<h1 property="title">test</h1>');
 
         $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de');
+
+        $this->assertEquals('<h1 property="title">test</h1>', $response);
+    }
+
+    public function testRenderWithTargetGroup()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $token = '123-123-123';
+        $this->dataCache->contains($token)->willReturn(true);
+        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->getId($object->reveal())->willReturn(1);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, 2)
+            ->willReturn('<h1 property="title">test</h1>');
+
+        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $response = $preview->render($token, 'sulu_io', 'de', 2);
 
         $this->assertEquals('<h1 property="title">test</h1>', $response);
     }

@@ -75,6 +75,11 @@ class PreviewRenderer implements PreviewRendererInterface
     private $environment;
 
     /**
+     * @var string
+     */
+    private $targetGroupHeader;
+
+    /**
      * @param RouteDefaultsProviderInterface $routeDefaultsProvider
      * @param RequestStack $requestStack
      * @param KernelFactoryInterface $kernelFactory
@@ -82,6 +87,7 @@ class PreviewRenderer implements PreviewRendererInterface
      * @param EventDispatcherInterface $eventDispatcher
      * @param array $previewDefaults
      * @param string $environment
+     * @param string $targetGroupHeader
      */
     public function __construct(
         RouteDefaultsProviderInterface $routeDefaultsProvider,
@@ -90,7 +96,8 @@ class PreviewRenderer implements PreviewRendererInterface
         WebspaceManagerInterface $webspaceManager,
         EventDispatcherInterface $eventDispatcher,
         array $previewDefaults,
-        $environment
+        $environment,
+        $targetGroupHeader = null
     ) {
         $this->routeDefaultsProvider = $routeDefaultsProvider;
         $this->requestStack = $requestStack;
@@ -99,12 +106,13 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->eventDispatcher = $eventDispatcher;
         $this->previewDefaults = $previewDefaults;
         $this->environment = $environment;
+        $this->targetGroupHeader = $targetGroupHeader;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($object, $id, $webspaceKey, $locale, $partial = false)
+    public function render($object, $id, $webspaceKey, $locale, $partial = false, $targetGroupId = null)
     {
         if (!$this->routeDefaultsProvider->supports(get_class($object))) {
             throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
@@ -128,12 +136,10 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $query = [];
         $request = [];
-        $cookies = [];
         $currentRequest = $this->requestStack->getCurrentRequest();
         if ($currentRequest !== null) {
             $query = $currentRequest->query->all();
             $request = $currentRequest->request->all();
-            $cookies = $currentRequest->cookies->all();
         }
 
         $attributes = new RequestAttributes(
@@ -159,8 +165,12 @@ class PreviewRenderer implements PreviewRendererInterface
         $defaults['partial'] = $partial;
         $defaults['_sulu'] = $attributes;
 
-        $request = new Request($query, $request, $defaults, $cookies);
+        $request = new Request($query, $request, $defaults);
         $request->setLocale($locale);
+
+        if ($this->targetGroupHeader && $targetGroupId) {
+            $request->headers->set($this->targetGroupHeader, $targetGroupId);
+        }
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes));
 

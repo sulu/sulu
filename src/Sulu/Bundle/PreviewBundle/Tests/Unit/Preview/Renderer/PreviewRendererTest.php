@@ -101,7 +101,8 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             $this->webspaceManager->reveal(),
             $this->eventDispatcher->reveal(),
             $this->previewDefault,
-            $this->environment
+            $this->environment,
+            'X-Sulu-Target-Group'
         );
     }
 
@@ -135,6 +136,39 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+        $this->assertEquals('<title>Hallo</title>', $response);
+    }
+
+    public function testRenderWithTargetGroup()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+            ->shouldBeCalled();
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+            ->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
+
+        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2);
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
