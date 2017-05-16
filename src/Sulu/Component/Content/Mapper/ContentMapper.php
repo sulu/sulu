@@ -30,6 +30,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
+use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -657,7 +658,6 @@ class ContentMapper implements ContentMapperInterface
         // reset cache
         $this->initializeExtensionCache();
         $templateName = $this->encoder->localizedSystemName('template', $locale);
-        $nodeTypeName = $this->encoder->localizedSystemName('nodeType', $locale);
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
@@ -670,25 +670,29 @@ class ContentMapper implements ContentMapperInterface
 
         $originalDocument = $document;
 
-        if (!$node->hasProperty($templateName) && !$node->hasProperty($nodeTypeName)) {
+        if (!$node->hasProperty($templateName) && !$node->hasProperty('template')) {
             return false;
         }
 
-        $redirectType = $document->getRedirectType();
+        $redirectType = null;
+        $url = null;
+        if ($document instanceof RedirectTypeBehavior) {
+            $redirectType = $document->getRedirectType();
 
-        if ($redirectType === RedirectType::INTERNAL) {
-            $target = $document->getRedirectTarget();
+            if ($redirectType === RedirectType::INTERNAL) {
+                $target = $document->getRedirectTarget();
 
-            if ($target) {
-                $url = $target->getResourceSegment();
+                if ($target) {
+                    $url = $target->getResourceSegment();
 
-                $document = $target;
-                $node = $this->inspector->getNode($document);
+                    $document = $target;
+                    $node = $this->inspector->getNode($document);
+                }
             }
-        }
 
-        if ($redirectType === RedirectType::EXTERNAL) {
-            $url = $document->getRedirectExternal();
+            if ($redirectType === RedirectType::EXTERNAL) {
+                $url = $document->getRedirectExternal();
+            }
         }
 
         $originLocale = $locale;
@@ -706,12 +710,8 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        if (!isset($url)) {
+        if ($document instanceof ResourceSegmentBehavior && !isset($url)) {
             $url = $document->getResourceSegment();
-        }
-
-        if (false === $url) {
-            return;
         }
 
         // generate field data
@@ -739,13 +739,16 @@ class ContentMapper implements ContentMapperInterface
             'published' => $document->getPublished(),
             'creator' => $document->getCreator(),
             'title' => $originalDocument->getTitle(),
-            'url' => $url,
-            'urls' => $this->inspector->getLocalizedUrlsForPage($document),
             'locale' => $locale,
             'webspaceKey' => $this->inspector->getWebspace($document),
             'template' => $structureType,
             'parent' => $this->inspector->getParent($document)->getUuid(),
         ];
+
+        if (isset($url)) {
+            $documentData['url'] = $url;
+            $documentData['urls'] = $this->inspector->getLocalizedUrlsForPage($document);
+        }
 
         if ($document instanceof LocalizedAuthorBehavior) {
             $documentData['author'] = $document->getAuthor();

@@ -174,6 +174,26 @@ class SuluNodeHelper
     }
 
     /**
+     * Returns the path for the base snippet.
+     *
+     * @return string
+     */
+    public function getBaseSnippetPath()
+    {
+        return '/' . $this->getPath('base') . '/' . $this->getPath('snippet');
+    }
+
+    /**
+     * Returns the uuid for the base snippet.
+     *
+     * @return string
+     */
+    public function getBaseSnippetUuid()
+    {
+        return $this->session->getNode($this->getBaseSnippetPath())->getIdentifier();
+    }
+
+    /**
      * Extract the snippet path from the given path.
      *
      * @param string $path
@@ -193,7 +213,7 @@ class SuluNodeHelper
             );
         }
 
-        $snippetsPath = '/' . $this->getPath('base') . '/' . $this->getPath('snippet') . '/';
+        $snippetsPath = $this->getBaseSnippetPath() . '/';
         $newPath = PathHelper::getParentPath($path);
         $newPath = substr($newPath, strlen($snippetsPath));
 

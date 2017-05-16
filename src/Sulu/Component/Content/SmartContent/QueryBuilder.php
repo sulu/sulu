@@ -356,7 +356,7 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return bool
      */
-    private function hasConfig($name)
+    protected function hasConfig($name)
     {
         return isset($this->config[$name]);
     }
@@ -369,7 +369,7 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return mixed config value
      */
-    private function getConfig($name, $default = null)
+    protected function getConfig($name, $default = null)
     {
         if (!$this->hasConfig($name)) {
             return $default;
