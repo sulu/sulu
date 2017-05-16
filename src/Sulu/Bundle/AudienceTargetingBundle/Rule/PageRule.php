@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\InternalLink;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -25,9 +27,19 @@ class PageRule implements RuleInterface
     private $requestStack;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
+
+    /**
+     * @var ResourceLocatorStrategyPoolInterface
+     */
+    private $resourceLocatorStrategyPool;
 
     /**
      * @var string
@@ -35,15 +47,32 @@ class PageRule implements RuleInterface
     private $uuidHeader;
 
     /**
-     * @param RequestStack $requestStack
-     * @param TranslatorInterface $translator
-     * @param string $uuidHeader
+     * @var string
      */
-    public function __construct(RequestStack $requestStack, TranslatorInterface $translator, $uuidHeader)
-    {
+    private $urlHeader;
+
+    /**
+     * @param RequestStack $requestStack
+     * @param RequestAnalyzerInterface $requestAnalyzer
+     * @param TranslatorInterface $translator
+     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
+     * @param string $uuidHeader
+     * @param string $urlHeader
+     */
+    public function __construct(
+        RequestStack $requestStack,
+        RequestAnalyzerInterface $requestAnalyzer,
+        TranslatorInterface $translator,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        $uuidHeader,
+        $urlHeader
+    ) {
         $this->requestStack = $requestStack;
+        $this->requestAnalyzer = $requestAnalyzer;
         $this->translator = $translator;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->uuidHeader = $uuidHeader;
+        $this->urlHeader = $urlHeader;
     }
 
     /**
@@ -55,9 +84,22 @@ class PageRule implements RuleInterface
 
         $uuid = $request->headers->get($this->uuidHeader);
         if (!$uuid) {
-            if ($request->attributes->has('structure')) {
-                $uuid = $request->attributes->get('structure')->getUuid();
+            $webspace = $this->requestAnalyzer->getWebspace();
+            if (!$webspace) {
+                return false;
             }
+
+            $localization = $this->requestAnalyzer->getCurrentLocalization();
+            if (!$localization) {
+                return false;
+            }
+
+            $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspace->getKey());
+            $uuid = $resourceLocatorStrategy->loadByResourceLocator(
+                $this->requestAnalyzer->getResourceLocator(),
+                $webspace->getKey(),
+                $localization->getLocale()
+            );
         }
 
         if (!$uuid) {

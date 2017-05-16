@@ -66,12 +66,12 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             [],
             [],
             [],
-            ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => $config['path_info']]
+            ['HTTP_HOST' => 'sulu.lo']
         );
 
         $attributes = $this->portalInformationRequestProcessor->process(
             $request,
-            new RequestAttributes(['portalInformation' => $portalInformation])
+            new RequestAttributes(['portalInformation' => $portalInformation, 'path' => $config['path_info']])
         );
 
         $this->assertEquals($localization->getLocale(), $request->getLocale());
@@ -121,12 +121,12 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             [],
             [],
             [],
-            ['HTTP_HOST' => 'sulu.lo', 'REQUEST_URI' => $config['path_info']]
+            ['HTTP_HOST' => 'sulu.lo']
         );
 
         $attributes = $this->portalInformationRequestProcessor->process(
             $request,
-            new RequestAttributes(['portalInformation' => $portalInformation])
+            new RequestAttributes(['portalInformation' => $portalInformation, 'path' => $config['path_info']])
         );
 
         $this->assertEquals($localization->getLocale(), $request->getLocale());
@@ -164,12 +164,12 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
             [],
             [],
             [],
-            ['HTTP_HOST' => 'sulu.lo:8000', 'REQUEST_URI' => '/test/path/to']
+            ['HTTP_HOST' => 'sulu.lo:8000']
         );
 
         $attributes = $this->portalInformationRequestProcessor->process(
             $request,
-            new RequestAttributes(['portalInformation' => $portalInformation])
+            new RequestAttributes(['portalInformation' => $portalInformation, 'path' => '/test/path/to'])
         );
 
         $this->assertEquals('/path/to', $attributes->getAttribute('resourceLocator'));

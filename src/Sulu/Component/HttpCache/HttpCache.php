@@ -35,6 +35,8 @@ class HttpCache extends AbstractHttpCache
 
     const VISITOR_SESSION_COOKIE = 'sulu-visitor-session';
 
+    const USER_CONTEXT_URL_HEADER = 'X-Forwarded-URL';
+
     /**
      * @var bool
      */
@@ -157,6 +159,8 @@ class HttpCache extends AbstractHttpCache
         if ($currentTargetGroup) {
             $targetGroupRequest->headers->set(static::TARGET_GROUP_HEADER, $currentTargetGroup);
         }
+
+        $targetGroupRequest->headers->set(static::USER_CONTEXT_URL_HEADER, $request->getUri());
 
         // use the parent class to avoid target group based caching
         $targetGroupResponse = parent::handle($targetGroupRequest);
