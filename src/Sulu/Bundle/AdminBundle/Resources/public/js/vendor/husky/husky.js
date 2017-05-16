@@ -38516,7 +38516,8 @@ define('__component__$toolbar@husky',[],function() {
 
                                 // add items if present
                                 if (!!item.dropdownItems) {
-                                    data = data.concat(item.dropdownItems);
+                                    data = !!item.dropdownOptions.concatRequestedItemsFirst
+                                        ? item.dropdownItems.concat(data) : data.concat(item.dropdownItems);
                                 }
 
                                 handleRequestedItems.call(this, data, item.id);
