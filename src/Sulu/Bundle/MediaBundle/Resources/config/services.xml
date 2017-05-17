@@ -27,6 +27,7 @@
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
+        <parameter key="sulu_media.disposition_type.class">Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeService</parameter>
     </parameters>
 
     <services>
@@ -265,6 +266,12 @@
             </argument>
 
             <tag name="sulu_markup.tag" tag="media" type="html"/>
+        </service>
+
+        <service id="sulu_media.disposition_type" class="%sulu_media.disposition_type.class%">
+            <argument>%sulu_media.disposition_type.default%</argument>
+            <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
+            <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>
         </service>
     </services>
 </container>
