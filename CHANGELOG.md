@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3360 [ContentBundle]         Removed get-type from content-type-interface 
     * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
     * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field
     * ENHANCEMENT #3344 [ContentBundle]         Added possibility to add additional attributes to "sulu:link"-tag

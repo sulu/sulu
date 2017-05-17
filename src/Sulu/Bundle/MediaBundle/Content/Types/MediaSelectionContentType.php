@@ -81,14 +81,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     /**
      * {@inheritdoc}
      */
-    public function getType()
-    {
-        return self::PRE_SAVE;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,

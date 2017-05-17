@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### ContentTypeInterface
+
+Following methods and constants was removed from `ContentTypeInterface`.
+
+* `PRE_SAVE`
+* `POST_SAVE`
+* `getType()`
+
 ### Route-Table changed
 
 The route-table was extended with auditable information. Run following command to
