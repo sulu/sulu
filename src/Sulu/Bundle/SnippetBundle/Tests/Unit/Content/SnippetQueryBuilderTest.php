@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -34,6 +36,11 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
     private $sessionManager;
 
     /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * @var SnippetQueryBuilder
      */
     private $snippetQueryBuilder;
@@ -43,6 +50,9 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $this->session = $this->prophesize(SessionInterface::class);
+
+        $this->sessionManager->getSession()->willReturn($this->session->reveal());
 
         $this->snippetQueryBuilder = new SnippetQueryBuilder(
             $this->structureManager->reveal(),
@@ -63,12 +73,17 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->snippetQueryBuilder->init([
             'config' => [
-                'types' => ['default', 'test'],
+                'dataSource' => 'some-uuid',
+                'includeSubFolders' => true,
             ],
         ]);
 
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPath()->willReturn('/cmf/snippets/default');
+        $this->session->getNodeByIdentifier('some-uuid')->willReturn($node->reveal());
+
         list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
 
-        $this->assertContains('(page.[template] = "default" OR page.[template] = "test"))', $sql2);
+        $this->assertContains('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
     }
 }

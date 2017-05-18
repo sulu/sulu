@@ -90,6 +90,22 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
             $pageSize ? $pageSize * ($page - 1) : null
         )->willReturn($result);
 
+        if (array_key_exists('type', $propertyParameter)) {
+            $this->nodeHelper->getBaseSnippetUuid($propertyParameter['type'])->willReturn('some-uuid');
+        } else {
+            $this->nodeHelper->getBaseSnippetUuid(null)->willReturn(null);
+        }
+
+        $this->snippetQueryBuilder->init([
+            'config' => [
+                'excluded' => null,
+                'dataSource' => array_key_exists('type', $propertyParameter) ? 'some-uuid' : null,
+                'includeSubFolders' => true,
+            ],
+            'properties' => [],
+            'excluded' => [],
+        ])->shouldBeCalled();
+
         $dataProviderResult = $this->snippetDataProvider->resolveDataItems(
             $filters,
             $propertyParameter,
@@ -130,6 +146,16 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
             [
                 ['excluded' => null],
                 [],
+                ['webspaceKey' => 'sulu', 'locale' => 'de'],
+                null,
+                5,
+                2,
+                [['uuid' => 1], ['uuid' => 2]],
+                false,
+            ],
+            [
+                ['excluded' => null],
+                ['type' => 'default'],
                 ['webspaceKey' => 'sulu', 'locale' => 'de'],
                 null,
                 5,

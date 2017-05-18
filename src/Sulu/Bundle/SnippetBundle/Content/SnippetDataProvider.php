@@ -257,10 +257,10 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private function resolveFilters(array $filters, array $propertyParameter, array $options, $limit, $page, $pageSize)
     {
-        $filters['dataSource'] = $this->nodeHelper->getBaseSnippetUuid();
+        $filters['dataSource'] = $this->nodeHelper->getBaseSnippetUuid(
+            array_key_exists('type', $propertyParameter) ? $propertyParameter['type'] : null
+        );
         $filters['includeSubFolders'] = true;
-        $filters['types'] = array_key_exists('types', $propertyParameter)
-            ? explode(',', $propertyParameter['types']->getValue()) : [];
 
         $properties = array_key_exists('properties', $propertyParameter)
             ? $propertyParameter['properties']->getValue() : [];

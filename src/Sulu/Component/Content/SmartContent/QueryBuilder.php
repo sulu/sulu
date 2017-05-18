@@ -398,7 +398,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $idsWhere = [];
         foreach ($this->excluded as $id) {
-            $idsWhere[] = sprintf("NOT (page.[jcr:uuid] = '%s')", $id);
+            $idsWhere[] = sprintf("(NOT page.[jcr:uuid] = '%s')", $id);
         }
 
         return $idsWhere;

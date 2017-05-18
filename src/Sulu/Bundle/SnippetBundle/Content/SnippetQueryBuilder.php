@@ -19,16 +19,4 @@ use Sulu\Component\Content\SmartContent\QueryBuilder;
 class SnippetQueryBuilder extends QueryBuilder
 {
     protected static $mixinTypes = ['sulu:snippet'];
-
-    public function buildWhere($webspaceKey, $locale)
-    {
-        $sqlWhere = parent::buildWhere($webspaceKey, $locale);
-        if ($types = $this->getConfig('types')) {
-            $sqlWhere .= ' AND (' . implode(' OR ', array_map(function($type) {
-                return 'page.[template] = "' . $type . '"';
-            }, $types)) . ')';
-        }
-
-        return $sqlWhere;
-    }
 }
