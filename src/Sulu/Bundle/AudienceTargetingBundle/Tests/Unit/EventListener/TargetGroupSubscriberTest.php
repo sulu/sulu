@@ -258,7 +258,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideAddVaryHeader
      */
-    public function testAddVaryHeader($targetGroupUrl, $requestUrl, $header, $varyHeaders)
+    public function testAddVaryHeader($targetGroupUrl, $requestUrl, $hasInfluencedContent, $header, $varyHeaders)
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -280,6 +280,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $event->getRequest()->willReturn($request);
         $event->getResponse()->willReturn($response);
+        $this->targetGroupStore->hasInfluencedContent()->willReturn($hasInfluencedContent);
 
         $targetGroupSubscriber->addVaryHeader($event->reveal());
 
@@ -289,10 +290,11 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     public function provideAddVaryHeader()
     {
         return [
-            ['/_target_group', '/test', 'X-Sulu-Target-Group-Hash', ['X-Sulu-Target-Group-Hash']],
-            ['/_target_group', '/test', 'X-Sulu-Target-Group', ['X-Sulu-Target-Group']],
-            ['/_target_group', '/_target_group', 'X-Sulu-Target-Group-Hash', []],
-            ['/_visitor', '/_visitor', 'X-Sulu-Target-Group-Hash', []],
+            ['/_target_group', '/test', true, 'X-Sulu-Target-Group-Hash', ['X-Sulu-Target-Group-Hash']],
+            ['/_target_group', '/test', true, 'X-Sulu-Target-Group', ['X-Sulu-Target-Group']],
+            ['/_target_group', '/test', false, 'X-Sulu-Target-Group', []],
+            ['/_target_group', '/_target_group', true, 'X-Sulu-Target-Group-Hash', []],
+            ['/_visitor', '/_visitor', true, 'X-Sulu-Target-Group-Hash', []],
         ];
     }
 
@@ -317,8 +319,8 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
             $visitorSession
         );
 
-        $this->targetGroupStore->hasChanged()->willReturn($hasChanged);
-        $this->targetGroupStore->getTargetGroupId()->willReturn($cookieValue);
+        $this->targetGroupStore->hasChangedTargetGroup()->willReturn($hasChanged);
+        $this->targetGroupStore->getTargetGroupId(true)->willReturn($cookieValue);
 
         $event = $this->prophesize(FilterResponseEvent::class);
         $response = new Response();
