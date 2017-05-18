@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-    <file source-language="de" datatype="plaintext" original="file.ext">
+    <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="target-group-2">
                 <source>sulu_audience_targeting.target-groups</source>
-                <target>Zielgruppen</target>
+                <target>Groupes ciblés</target>
             </trans-unit>
             <trans-unit id="target-group-3">
                 <source>sulu_audience_targeting.is-active</source>
-                <target>Aktiv</target>
+                <target>Activés</target>
             </trans-unit>
             <trans-unit id="target-group-4">
                 <source>sulu_audience_targeting.title</source>
-                <target>Zielgruppen Titel</target>
+                <target>Titre du groupe ciblé</target>
             </trans-unit>
             <trans-unit id="target-group-5">
                 <source>sulu_audience_targeting.webspaces</source>
@@ -20,59 +20,59 @@
             </trans-unit>
             <trans-unit id="target-group-6">
                 <source>sulu_audience_targeting.priority</source>
-                <target>Priorität</target>
+                <target>Priorité</target>
             </trans-unit>
             <trans-unit id="target-group-7">
                 <source>sulu_audience_targeting.target-group-not-found</source>
-                <target>Zielgruppe konnte nicht gefunden werden.</target>
+                <target>Le groupe ciblé n'a pas été trouvé.</target>
             </trans-unit>
             <trans-unit id="target-group-8">
                 <source>sulu_audience_targeting.rule-sets</source>
-                <target>Regeln</target>
+                <target>Ensemble de règles</target>
             </trans-unit>
             <trans-unit id="target-group-9">
                 <source>sulu_audience_targeting.rule-sets-descriptions</source>
-                <target>Besucher die zumindest EINER dieser Regeln entsprechen werden der Zielgruppe hinzugefügt.</target>
+                <target>Les utilisateurs ne correspondant à aucune de ces règles seront ajoutés au groupe ciblé.</target>
             </trans-unit>
             <trans-unit id="target-group-10">
                 <source>sulu_audience_targeting.frequency</source>
-                <target>Häufigkeit</target>
+                <target>Fréquence</target>
             </trans-unit>
             <trans-unit id="target-group-11">
                 <source>sulu_audience_targeting.conditions</source>
-                <target>Voraussetzung</target>
+                <target>Conditions</target>
             </trans-unit>
             <trans-unit id="target-group-12">
                 <source>sulu_audience_targeting.rule-overlay-title</source>
-                <target>Regel konfigurieren</target>
+                <target>Configurer la règle</target>
             </trans-unit>
             <trans-unit id="target-group-13">
                 <source>sulu_audience_targeting.conditions-description</source>
-                <target>Besucher die ALLE diese Voraussetzungen erfüllen werden der Zielgruppe hinzugefügt.</target>
+                <target>Les utilisateurs correspondant à toutes ces conditions seront ajoutés au groupe ciblé.</target>
             </trans-unit>
             <trans-unit id="target-group-14">
                 <source>sulu_audience_targeting.condition-add</source>
-                <target>Voraussetzung hinzufügen</target>
+                <target>Ajouter une condition</target>
             </trans-unit>
             <trans-unit id="target-group-15" resname="sulu_audience_targeting.rules.locale">
                 <source>sulu_audience_targeting.rules.locale</source>
-                <target>Sprache</target>
+                <target>Langue</target>
             </trans-unit>
             <trans-unit id="target-group-16" resname="sulu_audience_targeting.rules.referrer">
                 <source>sulu_audience_targeting.rules.referrer</source>
-                <target>Referrer</target>
+                <target>Url de provenance</target>
             </trans-unit>
             <trans-unit id="target-group-17">
                 <source>sulu_audience_targeting.no-target-groups-available</source>
-                <target>Keine Zielgruppen verfügbar</target>
+                <target>Aucun groupe disponible</target>
             </trans-unit>
             <trans-unit id="target-group-18">
                 <source>smart-content.audience-targeting</source>
-                <target>Zielgruppen berücksichtigen</target>
+                <target>Utiliser les groupes ciblés</target>
             </trans-unit>
             <trans-unit id="target-group-19" resname="sulu_audience_targeting.rules.page">
                 <source>sulu_audience_targeting.rules.page</source>
-                <target>Seite</target>
+                <target>Page</target>
             </trans-unit>
         </body>
     </file>
