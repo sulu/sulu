@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
@@ -22,6 +23,11 @@ class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
     private $property;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
      * @var SingleInternalLink
      */
     private $type;
@@ -29,9 +35,12 @@ class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->property = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+
+        $this->property = $this->prophesize(PropertyInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $this->type = new SingleInternalLink(
+            $this->referenceStore->reveal(),
             'some_template.html.twig'
         );
     }
@@ -62,5 +71,36 @@ class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
         $this->property->getValue()->willReturn($propertyValue);
         $uuids = $this->type->getReferencedUuids($this->property->reveal());
         $this->assertEquals($expected, $uuids);
+    }
+
+    public function providePreResolve()
+    {
+        return [
+            [
+                '4234-2345-2345-3245',
+                ['4234-2345-2345-3245'],
+            ],
+            [
+                null,
+                [],
+            ],
+            [
+                '',
+                [],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providePreResolve
+     */
+    public function testPreResolve($propertyValue, $expected)
+    {
+        $this->property->getValue()->willReturn($propertyValue);
+        $this->type->preResolve($this->property->reveal());
+
+        foreach ($expected as $uuid) {
+            $this->referenceStore->add($uuid)->shouldBeCalled();
+        }
     }
 }

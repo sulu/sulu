@@ -289,7 +289,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         // append view data
         $filters['page'] = $page;
         $filters['hasNextPage'] = $data->getHasNextPage();
-        $filters['referencedUuids'] = $data->getReferencedUuids();
+        // FIXME $filters['referencedUuids'] = $data->getReferencedUuids();
         $filters['paginated'] = $configuration->hasPagination();
         $property->setValue($filters);
 

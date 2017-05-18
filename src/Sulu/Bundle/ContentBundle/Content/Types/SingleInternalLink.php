@@ -12,20 +12,35 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
  * ContentType for SingleInternalLink.
  */
-class SingleInternalLink extends SimpleContentType
+class SingleInternalLink extends SimpleContentType implements PreResolvableContentTypeInterface
 {
+    /**
+     * @var string
+     */
     private $template;
 
-    public function __construct($template)
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
+     * @param ReferenceStoreInterface $referenceStore
+     * @param string $template
+     */
+    public function __construct(ReferenceStoreInterface $referenceStore, $template)
     {
         parent::__construct('SingleInternalLink', '');
 
+        $this->referenceStore = $referenceStore;
         $this->template = $template;
     }
 
@@ -85,5 +100,18 @@ class SingleInternalLink extends SimpleContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preResolve(PropertyInterface $property)
+    {
+        $uuid = $property->getValue();
+        if (!$uuid) {
+            return;
+        }
+
+        $this->referenceStore->add($uuid);
     }
 }

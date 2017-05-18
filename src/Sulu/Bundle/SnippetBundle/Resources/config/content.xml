@@ -4,6 +4,11 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="sulu_snippet.reference_store.snippet"
+                 class="Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_content.reference_store" alias="snippet"/>
+        </service>
+
         <service id="sulu_snippet.default_snippet.manager" class="Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager">
             <argument type="service" id="sulu_core.webspace.settings_manager"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
@@ -19,6 +24,7 @@
         <service id="sulu_snippet.content.snippet" class="Sulu\Bundle\SnippetBundle\Content\SnippetContent">
             <argument type="service" id="sulu_snippet.default_snippet.manager"/>
             <argument type="service" id="sulu_snippet.resolver"/>
+            <argument type="service" id="sulu_snippet.reference_store.snippet"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
             <argument>%sulu_snippet.content-type.template%</argument>
 
