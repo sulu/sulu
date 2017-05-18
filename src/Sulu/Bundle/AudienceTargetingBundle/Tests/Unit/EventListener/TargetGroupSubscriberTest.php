@@ -299,49 +299,6 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideSetMaxAgeHeader
-     */
-    public function testSetMaxAgeHeader($hasInfluenced, $maxAge, $result)
-    {
-        $targetGroupSubscriber = new TargetGroupSubscriber(
-            $this->twig->reveal(),
-            false,
-            $this->targetGroupStore->reveal(),
-            $this->targetGroupEvaluator->reveal(),
-            $this->targetGroupRepository->reveal(),
-            '/_target_group',
-            '/_target_group_hit',
-            'X-Forwarded-Url',
-            'X-Forwarded-Referer',
-            'X-Forwarded-UUID',
-            'X-Sulu-Target-Group',
-            'sulu-visitor-target-group',
-            'visitor-session'
-        );
-
-        $event = $this->prophesize(FilterResponseEvent::class);
-        $response = new Response();
-        $response->setMaxAge($maxAge);
-        $response->setSharedMaxAge($maxAge);
-        $event->getResponse()->willReturn($response);
-
-        $this->targetGroupStore->hasInfluencedContent()->willReturn($hasInfluenced);
-
-        $targetGroupSubscriber->setMaxAgeHeader($event->reveal());
-
-        $this->assertEquals($result, $response->getMaxAge());
-        $this->assertEquals($result, $response->headers->getCacheControlDirective('s-maxage'));
-    }
-
-    public function provideSetMaxAgeHeader()
-    {
-        return [
-            [true, 100, 0],
-            [false, 100, 100],
-        ];
-    }
-
-    /**
      * @dataProvider provideAddSetCookieHeader
      */
     public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $cookieValue)

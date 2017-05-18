@@ -74,6 +74,11 @@ class HttpCache extends AbstractHttpCache
             $this->setTargetGroupCookie($response, $request);
         }
 
+        if ($this->hasAudienceTargeting && in_array(static::TARGET_GROUP_HEADER, $response->getVary())) {
+            $response->setMaxAge(0);
+            $response->setSharedMaxAge(0);
+        }
+
         return $response;
     }
 
@@ -101,7 +106,7 @@ class HttpCache extends AbstractHttpCache
      */
     protected function isFreshEnough(Request $request, Response $entry)
     {
-        if (!$this->isFreshCacheEntry($entry)) {
+        if (!$entry->isFresh() && !$this->isFreshCacheEntry($entry)) {
             return $this->lock($request, $entry);
         }
 

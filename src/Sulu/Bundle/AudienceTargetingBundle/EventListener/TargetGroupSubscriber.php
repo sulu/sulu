@@ -146,7 +146,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             ],
             KernelEvents::RESPONSE => [
                 ['addVaryHeader'],
-                ['setMaxAgeHeader'],
                 ['addSetCookieHeader'],
                 ['addTargetGroupHitScript'],
             ],
@@ -205,20 +204,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
 
         if ($this->targetGroupStore->hasInfluencedContent() && $request->getRequestUri() !== $this->targetGroupUrl) {
             $response->setVary($this->targetGroupHeader, false);
-        }
-    }
-
-    /**
-     * Sets the max age header to zero if the response was influenced by a target group. That is necessary, because the
-     * target group can change within a very short amount of time, and the browser cache would be wrong then.
-     *
-     * @param FilterResponseEvent $event
-     */
-    public function setMaxAgeHeader(FilterResponseEvent $event)
-    {
-        if ($this->targetGroupStore->hasInfluencedContent()) {
-            $event->getResponse()->setMaxAge(0);
-            $event->getResponse()->setSharedMaxAge(0);
         }
     }
 
