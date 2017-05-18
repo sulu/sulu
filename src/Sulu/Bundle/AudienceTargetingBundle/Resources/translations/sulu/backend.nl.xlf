@@ -54,6 +54,26 @@
                 <source>sulu_audience_targeting.condition-add</source>
                 <target>Conditie toevoegen</target>
             </trans-unit>
+            <trans-unit id="target-group-15" resname="sulu_audience_targeting.rules.locale">
+                <source>sulu_audience_targeting.rules.locale</source>
+                <target>Taal</target>
+            </trans-unit>
+            <trans-unit id="target-group-16" resname="sulu_audience_targeting.rules.referrer">
+                <source>sulu_audience_targeting.rules.referrer</source>
+                <target>Referrer</target>
+            </trans-unit>
+            <trans-unit id="target-group-17">
+                <source>sulu_audience_targeting.no-target-groups-available</source>
+                <target>Geen doelgroepen beschikbaar</target>
+            </trans-unit>
+            <trans-unit id="target-group-18">
+                <source>smart-content.audience-targeting</source>
+                <target>Gebruik doelgroepen</target>
+            </trans-unit>
+            <trans-unit id="target-group-19" resname="sulu_audience_targeting.rules.page">
+                <source>sulu_audience_targeting.rules.page</source>
+                <target>Pagina</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
