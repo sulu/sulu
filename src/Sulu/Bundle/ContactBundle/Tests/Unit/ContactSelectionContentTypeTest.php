@@ -25,7 +25,6 @@ use Sulu\Bundle\ContactBundle\Util\IndexComparator;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 
 class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -100,20 +99,6 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->property->getStructure()->willReturn($this->structure->reveal());
 
         $this->serializer = $this->prophesize(Serializer::class);
-    }
-
-    public function testGetType()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->accountManager->reveal(),
-            $this->serializer->reveal(),
-            new CustomerIdConverter(),
-            new IndexComparator()
-        );
-
-        $this->assertEquals(ContentTypeInterface::PRE_SAVE, $type->getType());
     }
 
     public function testGetTemplate()
