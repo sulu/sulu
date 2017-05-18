@@ -101,7 +101,7 @@ class HttpCache extends AbstractHttpCache
      */
     protected function isFreshEnough(Request $request, Response $entry)
     {
-        if (!$entry->isFresh() && !$this->isFreshCacheEntry($entry)) {
+        if (!$this->isFreshCacheEntry($entry)) {
             return $this->lock($request, $entry);
         }
 

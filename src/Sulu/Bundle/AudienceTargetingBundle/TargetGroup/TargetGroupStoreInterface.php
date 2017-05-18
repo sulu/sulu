@@ -25,23 +25,32 @@ interface TargetGroupStoreInterface
     /**
      * Returns the id of the current TargetGroup from the current request.
      *
+     * @param bool $internal True for internal calls, which means the result has no influence on the page output
+     *
      * @return string
      */
-    public function getTargetGroupId();
+    public function getTargetGroupId($internal = false);
 
     /**
      * Sets the given target group as the new one, and marking this value as changed.
      *
-     * @param $targetGroupid
+     * @param $targetGroupId
      *
      * @return string
      */
-    public function updateTargetGroupId($targetGroupid);
+    public function updateTargetGroupId($targetGroupId);
 
     /**
      * Returns whether the value hold by this store has changed or not.
      *
      * @return bool
      */
-    public function hasChanged();
+    public function hasChangedTargetGroup();
+
+    /**
+     * Returns whether the content from this request has been influenced by the target group or not.
+     *
+     * @return bool
+     */
+    public function hasInfluencedContent();
 }

@@ -29,17 +29,25 @@ class TargetGroupStoreTest extends \PHPUnit_Framework_TestCase
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId());
+        $this->assertEquals(true, $this->targetGroupStore->hasInfluencedContent());
+    }
+
+    public function testGetTargetGroupIdInternal()
+    {
+        $this->targetGroupStore->setTargetGroupId('2');
+        $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId(true));
+        $this->assertEquals(false, $this->targetGroupStore->hasInfluencedContent());
     }
 
     public function testUpdateTargetGroupId()
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId());
-        $this->assertFalse($this->targetGroupStore->hasChanged());
+        $this->assertFalse($this->targetGroupStore->hasChangedTargetGroup());
 
         $this->targetGroupStore->updateTargetGroupId('3');
         $this->assertEquals('3', $this->targetGroupStore->getTargetGroupId());
-        $this->assertTrue($this->targetGroupStore->hasChanged());
+        $this->assertTrue($this->targetGroupStore->hasChangedTargetGroup());
     }
 
     public function testChangeTargetGroupIdToSame()
@@ -47,7 +55,7 @@ class TargetGroupStoreTest extends \PHPUnit_Framework_TestCase
         $this->targetGroupStore->setTargetGroupId('2');
         $this->targetGroupStore->updateTargetGroupId('2');
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId());
-        $this->assertFalse($this->targetGroupStore->hasChanged());
+        $this->assertFalse($this->targetGroupStore->hasChangedTargetGroup());
     }
 
     public function testChangeTargetGroupIdToSameDifferentType()
@@ -55,6 +63,6 @@ class TargetGroupStoreTest extends \PHPUnit_Framework_TestCase
         $this->targetGroupStore->setTargetGroupId('2');
         $this->targetGroupStore->updateTargetGroupId(2);
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId());
-        $this->assertFalse($this->targetGroupStore->hasChanged());
+        $this->assertFalse($this->targetGroupStore->hasChangedTargetGroup());
     }
 }

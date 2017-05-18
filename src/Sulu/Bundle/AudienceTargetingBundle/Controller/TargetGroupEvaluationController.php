@@ -94,7 +94,7 @@ class TargetGroupEvaluationController
      */
     public function targetGroupHitAction()
     {
-        $currentTargetGroup = $this->targetGroupRepository->find($this->targetGroupStore->getTargetGroupId());
+        $currentTargetGroup = $this->targetGroupRepository->find($this->targetGroupStore->getTargetGroupId(true));
 
         $targetGroup = $this->targetGroupEvaluator->evaluate(TargetGroupRuleInterface::FREQUENCY_HIT, $currentTargetGroup);
         $response = new Response();
