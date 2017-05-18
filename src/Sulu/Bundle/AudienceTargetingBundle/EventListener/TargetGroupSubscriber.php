@@ -202,7 +202,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $response = $event->getResponse();
 
-        if ($request->getRequestUri() !== $this->targetGroupUrl) {
+        if ($this->targetGroupStore->hasInfluencedContent() && $request->getRequestUri() !== $this->targetGroupUrl) {
             $response->setVary($this->targetGroupHeader, false);
         }
     }
@@ -215,7 +215,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
      */
     public function addSetCookieHeader(FilterResponseEvent $event)
     {
-        if (!$this->targetGroupStore->hasChanged()) {
+        if (!$this->targetGroupStore->hasChangedTargetGroup()) {
             return;
         }
 
@@ -224,7 +224,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $response->headers->setCookie(
             new Cookie(
                 $this->targetGroupCookie,
-                $this->targetGroupStore->getTargetGroupId(),
+                $this->targetGroupStore->getTargetGroupId(true),
                 HttpCache::TARGET_GROUP_COOKIE_LIFETIME
             )
         );

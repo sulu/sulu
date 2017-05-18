@@ -19,43 +19,60 @@ class TargetGroupStore implements TargetGroupStoreInterface
     /**
      * @var string
      */
-    private $targetGroup;
+    private $targetGroupId;
 
     /**
      * @var bool
      */
-    private $changed = false;
+    private $changedTargetGroup = false;
+
+    /**
+     * @var bool
+     */
+    private $influencedContent = false;
 
     /**
      * {@inheritdoc}
      */
     public function setTargetGroupId($targetGroupId)
     {
-        $this->targetGroup = $targetGroupId;
+        $this->targetGroupId = $targetGroupId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTargetGroupId()
+    public function getTargetGroupId($internal = false)
     {
-        return $this->targetGroup;
+        if (!$internal) {
+            $this->influencedContent = true;
+        }
+
+        return $this->targetGroupId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTargetGroupId($targetGroupid)
+    public function updateTargetGroupId($targetGroupId)
     {
-        $this->changed = $this->getTargetGroupId() != $targetGroupid;
-        $this->setTargetGroupId($targetGroupid);
+        $this->changedTargetGroup = $this->targetGroupId != $targetGroupId;
+        $this->setTargetGroupId($targetGroupId);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasChanged()
+    public function hasChangedTargetGroup()
     {
-        return $this->changed;
+        return $this->changedTargetGroup;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasInfluencedContent()
+    {
+        return $this->influencedContent;
     }
 }

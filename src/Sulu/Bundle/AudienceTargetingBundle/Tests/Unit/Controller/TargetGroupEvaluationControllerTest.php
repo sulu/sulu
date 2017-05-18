@@ -105,7 +105,7 @@ class TargetGroupEvaluationControllerTest extends \PHPUnit_Framework_TestCase
             TargetGroupRuleInterface::FREQUENCY_HIT,
             $oldTargetGroup
         )->willReturn($newTargetGroup);
-        $this->targetGroupStore->getTargetGroupId()->willReturn($oldTargetGroup->getId());
+        $this->targetGroupStore->getTargetGroupId(true)->willReturn($oldTargetGroup->getId());
         $targetGroupEvaluationController = new TargetGroupEvaluationController(
             $this->targetGroupEvaluator->reveal(),
             $this->targetGroupRepository->reveal(),
