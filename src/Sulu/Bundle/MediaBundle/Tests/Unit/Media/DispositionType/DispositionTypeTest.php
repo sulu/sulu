@@ -74,7 +74,7 @@ class DispositionTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         // Test FileVersion object with MimeType that has no defined disposition
-        $fileVersion = $this->createFileVersionObject('foobar.html', 'text/plain');
+        $fileVersion = $this->createFileVersionObject('foobar.html', 'text/html');
         $this->assertEquals(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $this->dispositionType->getFileVersionDisposition($fileVersion)
