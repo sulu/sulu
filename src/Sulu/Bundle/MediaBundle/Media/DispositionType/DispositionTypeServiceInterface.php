@@ -11,26 +11,17 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\DispositionType;
 
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-
 /**
  * Interface for implementing disposition type service.
  */
 interface DispositionTypeServiceInterface
 {
     /**
-     * Get disposition type for passed mime type
+     * Get disposition type for passed mime type.
      *
      * @param string $mimeType
-     * @return string
-     */
-    public function getMimeTypeDispositionType($mimeType);
-
-    /**
-     * Get disposition type for passed FileVersion object
      *
-     * @param FileVersion $fileVersion
      * @return string
      */
-    public function getFileVersionDispositionType(FileVersion $fileVersion);
+    public function getMimeTypeDisposition($mimeType);
 }

@@ -51,7 +51,7 @@ class DispositionTypeService implements DispositionTypeServiceInterface
     /**
      * @inheritdoc
      */
-    public function getMimeTypeDispositionType($mimeType)
+    public function getMimeTypeDisposition($mimeType)
     {
         if (in_array($mimeType, $this->mimeTypesInline)) {
             return ResponseHeaderBag::DISPOSITION_INLINE;
@@ -63,10 +63,14 @@ class DispositionTypeService implements DispositionTypeServiceInterface
     }
 
     /**
-     * @inheritdoc
+     * Get disposition type for passed FileVersion object.
+     *
+     * @param FileVersion $fileVersion
+     *
+     * @return string
      */
-    public function getFileVersionDispositionType(FileVersion $fileVersion)
+    public function getFileVersionDisposition(FileVersion $fileVersion)
     {
-        return $this->getMimeTypeDispositionType($fileVersion->getMimeType());
+        return $this->getMimeTypeDisposition($fileVersion->getMimeType());
     }
 }

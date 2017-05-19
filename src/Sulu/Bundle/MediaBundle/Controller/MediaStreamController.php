@@ -90,7 +90,7 @@ class MediaStreamController extends Controller
                 $dispositionType = $forceInline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT;
             } else {
                 $dispositionType = $this->get('sulu_media.disposition_type')
-                    ->getFileVersionDispositionType($fileVersion);
+                    ->getFileVersionDisposition($fileVersion);
             }
 
             if (!$noCount) {
