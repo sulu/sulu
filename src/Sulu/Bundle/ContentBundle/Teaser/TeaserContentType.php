@@ -106,7 +106,12 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
      */
     public function getContentData(PropertyInterface $property)
     {
-        return $this->teaserManager->find($this->getItems($property), $property->getStructure()->getLanguageCode());
+        $items = $this->getItems($property);
+        if (0 === count($items)) {
+            return [];
+        }
+
+        return $this->teaserManager->find($items, $property->getStructure()->getLanguageCode());
     }
 
     /**

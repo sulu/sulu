@@ -11,47 +11,86 @@
 
 namespace Sulu\Component\HttpCache\Tests\Unit\Handler;
 
-use Prophecy\Argument;
+use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
+use Ramsey\Uuid\Uuid;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\Handler\TagsHandler;
+use Sulu\Component\HttpCache\HandlerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Response;
 
 class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var StructureInterface
+     */
+    private $structure;
+
+    /**
+     * @var BanInterface
+     */
+    private $proxyCache;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
     /**
      * @var HandlerInterface
      */
     private $handler;
 
     /**
-     * @var StructureInterface
+     * @var ParameterBag
      */
-    private $structure;
+    private $parameterBag;
+
+    /**
+     * @var Response
+     */
+    private $response;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property1;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property2;
 
     public function setUp()
     {
-        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
-        $this->proxyCache = $this->prophesize('FOS\HttpCache\ProxyClient\Invalidation\BanInterface');
-        $this->parameterBag = $this->prophesize('Symfony\Component\HttpFoundation\ParameterBag');
-        $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
-        $this->response->headers = $this->parameterBag;
-        $this->property1 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
-        $this->property2 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
-        $this->contentType1 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
-        $this->contentType2 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
-        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManager');
+        $this->structure = $this->prophesize(StructureInterface::class);
+        $this->proxyCache = $this->prophesize(BanInterface::class);
+        $this->parameterBag = $this->prophesize(ParameterBag::class);
+        $this->response = $this->prophesize(Response::class);
+        $this->response->headers = $this->parameterBag->reveal();
+        $this->property1 = $this->prophesize(PropertyInterface::class);
+        $this->property2 = $this->prophesize(PropertyInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $this->handler = new TagsHandler(
             $this->proxyCache->reveal(),
-            $this->contentTypeManager->reveal()
+            $this->referenceStore->reveal()
         );
     }
 
     public function testInvalidateStructure()
     {
-        $this->structure->getUuid()->willReturn('this-is-uuid');
+        $uuid = Uuid::uuid4()->toString();
 
-        $this->proxyCache->ban([
-            TagsHandler::TAGS_HEADER => '(structure\-this\-is\-uuid)(,.+)?$',
-        ])->shouldBeCalled();
+        $this->structure->getUuid()->willReturn($uuid);
+
+        $this->proxyCache->ban(
+            [
+                TagsHandler::TAGS_HEADER => '(' . preg_quote($uuid) . ')(,.+)?$',
+            ]
+        )->shouldBeCalled();
         $this->proxyCache->flush()->shouldBeCalled();
 
         $this->handler->invalidateStructure($this->structure->reveal());
@@ -61,30 +100,12 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateResponse()
     {
-        $expectedTags = [
-            'structure-1', 'structure-2', 'structure-3', 'structure-4',
-        ];
+        $ids = ['123-123-123', '123-321-123'];
+        $this->structure->getUuid()->willReturn('321-123-321');
 
-        $this->structure->getUuid()->willReturn('1');
-        $this->structure->getProperties(true)->willReturn([
-            $this->property1->reveal(),
-            $this->property2->reveal(),
-        ]);
-        $this->property1->getContentTypeName()->willReturn('type1');
-        $this->property2->getContentTypeName()->willReturn('type2');
+        $this->referenceStore->getAll()->willReturn($ids);
 
-        $this->contentTypeManager->get('type1')->willReturn($this->contentType1);
-        $this->contentTypeManager->get('type2')->willReturn($this->contentType2);
-
-        $this->contentType1->getReferencedUuids(Argument::any())->willReturn([
-            '2',
-        ]);
-        $this->contentType2->getReferencedUuids(Argument::any())->willReturn([
-            '3',
-            '4',
-        ]);
-
-        $this->parameterBag->set('X-Cache-Tags', implode(',', $expectedTags))->shouldBeCalled();
+        $this->parameterBag->set('X-Cache-Tags', implode(',', array_merge(['321-123-321'], $ids)))->shouldBeCalled();
 
         $this->handler->updateResponse($this->response->reveal(), $this->structure->reveal());
     }

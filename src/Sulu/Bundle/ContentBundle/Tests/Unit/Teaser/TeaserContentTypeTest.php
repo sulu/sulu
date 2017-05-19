@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Teaser;
 
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
@@ -38,6 +39,11 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
     private $teaserManager;
 
     /**
+     * @var TeaserManagerInterface
+     */
+    private $referenceStore;
+
+    /**
      * @var TeaserContentType
      */
     private $contentType;
@@ -46,11 +52,13 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
         $this->teaserManager = $this->prophesize(TeaserManagerInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $this->contentType = new TeaserContentType(
             $this->template,
             $this->teaserProviderPool->reveal(),
-            $this->teaserManager->reveal()
+            $this->teaserManager->reveal(),
+            $this->referenceStore->reveal()
         );
     }
 
