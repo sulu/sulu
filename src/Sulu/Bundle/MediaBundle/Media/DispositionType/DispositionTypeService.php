@@ -49,7 +49,7 @@ class DispositionTypeService implements DispositionTypeServiceInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMimeTypeDisposition($mimeType)
     {
