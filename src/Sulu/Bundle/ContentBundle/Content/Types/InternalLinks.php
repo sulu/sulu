@@ -97,16 +97,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     /**
      * {@inheritdoc}
      */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $data = $property->getValue();
-
-        return isset($data) ? $data : [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return ['properties' => new PropertyParameter('properties', [], 'collection')];

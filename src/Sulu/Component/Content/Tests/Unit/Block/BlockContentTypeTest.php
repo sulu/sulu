@@ -551,44 +551,4 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($data, $result);
     }
-
-    public function testGetReferencedUuids()
-    {
-        $this->prepareMultipleBlockWithLinksProperty();
-        $data = [
-            [
-                'type' => 'type1',
-                'title' => 'Test-Title-1',
-                'article' => [
-                    'Test-Article-1-1',
-                    'Test-Article-1-2',
-                ],
-                'sub-block' => [
-                    'type' => 'subType1',
-                    'title' => 'Test-Title-Sub-1',
-                    'article' => 'Test-Article-Sub-1',
-                    'link' => 'UUID-1',
-                ],
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-2',
-                'link' => 'UUID-1',
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-3',
-                'link' => 'UUID-2',
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-4',
-                'link' => 'UUID-3',
-            ],
-        ];
-        $this->blockProperty->setValue($data);
-
-        $result = $this->blockContentType->getReferencedUuids($this->blockProperty);
-        $this->assertEquals(['UUID-1', 'UUID-2', 'UUID-3'], $result, true);
-    }
 }

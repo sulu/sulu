@@ -67,16 +67,6 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
     /**
      * {@inheritdoc}
      */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $uuid = $property->getValue();
-
-        return $uuid ? [$uuid] : [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $this->defaultValue;

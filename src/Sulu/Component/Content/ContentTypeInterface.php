@@ -135,14 +135,4 @@ interface ContentTypeInterface
      * @return array
      */
     public function getContentData(PropertyInterface $property);
-
-    /**
-     * Return the UUIDs that are referenced by this content type for
-     * the given PropertyInterface instance.
-     *
-     * @param PropertyInterface $property
-     *
-     * @return array
-     */
-    public function getReferencedUuids(PropertyInterface $property);
 }

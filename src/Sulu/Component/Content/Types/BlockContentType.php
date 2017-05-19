@@ -408,35 +408,12 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     /**
      * {@inheritdoc}
      */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $data = $this->prepareData(
-            $property,
-            function (ContentTypeInterface $contentType, $property) {
-                return $contentType->getReferencedUuids($property);
-            },
-            false
-        );
-
-        $referencedUuids = [];
-        array_walk_recursive($data, function ($val) use (&$referencedUuids) {
-            if (!in_array($val, $referencedUuids)) {
-                $referencedUuids[] = $val;
-            }
-        });
-
-        return $referencedUuids;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $this->prepareData(
             $property,
             function (ContentTypeInterface $contentType, $property) {
-                if(!$contentType instanceof PreResolvableContentTypeInterface) {
+                if (!$contentType instanceof PreResolvableContentTypeInterface) {
                     return;
                 }
 

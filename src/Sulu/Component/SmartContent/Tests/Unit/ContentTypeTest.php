@@ -360,16 +360,6 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetReferencedUuids()
-    {
-        $property = $this->getContentDataProperty(
-            ['tags' => [], 'dataSource' => '123-123-123', 'referencedUuids' => [1, 2, 3, 4, 5, 6]]
-        );
-        $uuids = $this->smartContent->getReferencedUuids($property);
-
-        $this->assertEquals([1, 2, 3, 4, 5, 6], $uuids);
-    }
-
     public function testGetContentDataPaged()
     {
         $property = $this->getMockForAbstractClass(
@@ -672,7 +662,6 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                     'page' => null,
                     'hasNextPage' => null,
                     'paginated' => false,
-                    'referencedUuids' => [],
                     'categoryRoot' => null,
                     'categoriesParameter' => 'categories',
                     'tagsParameter' => 'tags',

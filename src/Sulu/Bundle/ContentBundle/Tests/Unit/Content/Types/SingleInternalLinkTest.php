@@ -45,34 +45,6 @@ class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideGetReferencedUuids()
-    {
-        return [
-            [
-                '4234-2345-2345-3245',
-                ['4234-2345-2345-3245'],
-            ],
-            [
-                null,
-                [],
-            ],
-            [
-                '',
-                [],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideGetReferencedUuids
-     */
-    public function testGetReferencedUuids($propertyValue, $expected)
-    {
-        $this->property->getValue()->willReturn($propertyValue);
-        $uuids = $this->type->getReferencedUuids($this->property->reveal());
-        $this->assertEquals($expected, $uuids);
-    }
-
     public function providePreResolve()
     {
         return [

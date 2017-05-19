@@ -58,38 +58,6 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
     }
 
-    public function provideGetReferencedUuids()
-    {
-        return [
-            [
-                ['4234-2345-2345-3245', '4321-4321-4321-4321'],
-                ['4234-2345-2345-3245', '4321-4321-4321-4321'],
-            ],
-            [
-                [],
-                [],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideGetReferencedUuids
-     */
-    public function testGetReferencedUuids($propertyValue, $expected)
-    {
-        $internalLinks = new InternalLinks(
-            $this->contentQueryExecutor->reveal(),
-            $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
-            $this->logger->reveal(),
-            'some_template.html.twig',
-            false
-        );
-
-        $this->property->getValue()->willReturn($propertyValue);
-        $uuids = $internalLinks->getReferencedUuids($this->property->reveal());
-        $this->assertEquals($expected, $uuids);
-    }
-
     public function testWriteWithNoneExistingUUID()
     {
         $internalLinks = new InternalLinks(

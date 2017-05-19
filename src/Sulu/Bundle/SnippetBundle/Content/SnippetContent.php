@@ -210,16 +210,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $data = $property->getValue();
-
-        return $this->getUuids($data);
-    }
-
-    /**
      * The data is not always normalized, so we normalize the data here.
      */
     private function getUuids($data)
