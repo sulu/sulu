@@ -1,11 +1,12 @@
 define([
     'jquery',
+    'config',
     'services/suluaudiencetargeting/target-group-manager',
     'text!/admin/target-groups/template/target-group-details.html',
     'text!/admin/target-groups/template/rule-overlay.html',
     'text!/admin/target-groups/template/condition-row.html',
     'text!/admin/target-groups/template/condition-types.html'
-], function($, TargetGroupManager, FormTemplate, RuleOverlayTemplate, ConditionRowTemplate, ConditionTypesTemplate) {
+], function($, config, TargetGroupManager, FormTemplate, RuleOverlayTemplate, ConditionRowTemplate, ConditionTypesTemplate) {
     var constants = {
             ruleFormSelector: '#rule-form',
             newRecordPrefix: 'newrecord',
@@ -251,7 +252,12 @@ define([
                             name: 'conditions',
                             content: this.translations.conditions
                         }
-                    ]
+                    ],
+                    contentFilters: {
+                        frequency: function(frequency) {
+                            return config.get('sulu_audience_targeting')['frequencies'][frequency];
+                        }
+                    }
                 },
                 'rules'
             );
