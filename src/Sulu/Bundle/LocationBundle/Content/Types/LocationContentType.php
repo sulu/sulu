@@ -85,14 +85,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
     /**
      * {@inheritdoc}
      */
-    public function getType()
-    {
-        return self::PRE_SAVE;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);

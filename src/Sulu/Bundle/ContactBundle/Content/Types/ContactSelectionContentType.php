@@ -23,7 +23,6 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * ContentType for Contact.
@@ -74,14 +73,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $this->serializer = $serializer;
         $this->converter = $converter;
         $this->comparator = $comparator;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return ContentTypeInterface::PRE_SAVE;
     }
 
     /**

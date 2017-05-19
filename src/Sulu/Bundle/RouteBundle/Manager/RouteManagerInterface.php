@@ -25,22 +25,22 @@ interface RouteManagerInterface
      *
      * @param RoutableInterface $entity
      * @param string|null $path
-     *
-     * @throws RouteAlreadyCreatedException
+     * @param bool $resolveConflict
      *
      * @return RouteInterface
      */
-    public function create(RoutableInterface $entity, $path = null);
+    public function create(RoutableInterface $entity, $path = null, $resolveConflict = true);
 
     /**
      * Creates a new route and handles the histories if the route has changed.
      *
      * @param RoutableInterface $entity
      * @param string|null $path
+     * @param bool $resolveConflict
      *
      * @throws RouteNotCreatedException
      *
      * @return RouteInterface|null
      */
-    public function update(RoutableInterface $entity, $path = null);
+    public function update(RoutableInterface $entity, $path = null, $resolveConflict = true);
 }

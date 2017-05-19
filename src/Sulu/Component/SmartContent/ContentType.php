@@ -208,14 +208,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     /**
      * {@inheritdoc}
      */
-    public function getType()
-    {
-        return self::PRE_SAVE;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         // check memoize

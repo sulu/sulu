@@ -13,6 +13,9 @@ namespace Sulu\Bundle\RouteBundle\Entity;
 
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route as HateoasRoute;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
@@ -27,6 +30,8 @@ use Sulu\Component\Persistence\Model\AuditableTrait;
  *         parameters = { "id" = "expr(object.getId())" }
  *     )
  * )
+ *
+ * @ExclusionPolicy("all")
  */
 abstract class BaseRoute implements RouteInterface, AuditableInterface
 {
@@ -34,16 +39,22 @@ abstract class BaseRoute implements RouteInterface, AuditableInterface
 
     /**
      * @var int
+     *
+     * @Expose
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $path;
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $locale;
 
@@ -59,6 +70,8 @@ abstract class BaseRoute implements RouteInterface, AuditableInterface
 
     /**
      * @var bool
+     *
+     * @Expose
      */
     private $history = false;
 
@@ -228,5 +241,15 @@ abstract class BaseRoute implements RouteInterface, AuditableInterface
         $this->histories[] = $history;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @VirtualProperty
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 }

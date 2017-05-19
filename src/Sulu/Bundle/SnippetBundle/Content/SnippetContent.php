@@ -22,7 +22,6 @@ use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * ContentType for Snippets.
@@ -59,14 +58,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->defaultEnabled = $defaultEnabled;
         $this->template = $template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return ContentTypeInterface::PRE_SAVE;
     }
 
     /**

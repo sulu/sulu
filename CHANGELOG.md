@@ -2,9 +2,15 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #3343 [MediaBundle]           Added disposition type parameter to parsed `<sulu:media>` tag url
+    * ENHANCEMENT #3360 [ContentBundle]         Removed get-type from content-type-interface 
+    * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
+    * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field
+    * ENHANCEMENT #3344 [ContentBundle]         Added possibility to add additional attributes to "sulu:link"-tag
+    * ENHANCEMENT #3343 [MediaBundle]           Use media disposition type config to serve media files
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
+    * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
+    * ENHANCEMENT #3332 [RouteBundle]           Added parameter to disable conflict-resolver
     * FEATURE     #3326 [RouteBundle]           Added auditable to route
     * ENHANCEMENT #3310 [All]                   Fixed test setup to correct init all bundle tests correctly
     * FEATURE     #3310 [ContentBundle]         Implemented `sulu:webspaces:copy` command
