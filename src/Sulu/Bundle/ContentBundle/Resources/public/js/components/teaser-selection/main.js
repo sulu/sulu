@@ -412,14 +412,7 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
         sortHandler: function(ids) {
             var data = this.getData();
 
-            data.items = _.map(ids, function(id) {
-                var parts = id.split(';');
-
-                return {
-                    type: parts[0],
-                    id: parts[1]
-                }
-            });
+            data.items = _.map(ids, this.getItem.bind(this));
 
             this.setData(data, false);
         },
