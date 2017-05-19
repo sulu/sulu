@@ -33,7 +33,8 @@ define(function(){
         },
 
         getTemplate: function() {
-            return 'text!/admin/content/template/form/excerpt.html?language=' + this.options.locale;
+            return 'text!/admin/content/template/form/excerpt.html?language=' + this.options.locale
+                + '&excludedProperties=title,more,description,icon,images';
         },
 
         save: function(data, action) {
