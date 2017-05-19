@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field
     * ENHANCEMENT #3344 [ContentBundle]         Added possibility to add additional attributes to "sulu:link"-tag
     * ENHANCEMENT #3343 [MediaBundle]           Use media disposition type config to serve media files
+    * ENHANCEMENT #3345 [CustomUrlBundle]       Added redirect parameter of custom-url
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
     * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
