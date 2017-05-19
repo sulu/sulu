@@ -11,13 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\DispositionType;
 
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Service handling media disposition type.
+ * Media disposition type resolver.
  */
-class DispositionTypeService implements DispositionTypeServiceInterface
+class DispositionTypeResolver implements DispositionTypeResolverInterface
 {
     /**
      * @var string
@@ -35,7 +34,7 @@ class DispositionTypeService implements DispositionTypeServiceInterface
     protected $mimeTypesAttachment = [];
 
     /**
-     * DispositionTypeService constructor.
+     * DispositionTypeResolver constructor.
      *
      * @param string $defaultType
      * @param array $mimeTypesInline
@@ -51,7 +50,7 @@ class DispositionTypeService implements DispositionTypeServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getMimeTypeDisposition($mimeType)
+    public function getByMimeType($mimeType)
     {
         if (in_array($mimeType, $this->mimeTypesInline)) {
             return ResponseHeaderBag::DISPOSITION_INLINE;
@@ -60,17 +59,5 @@ class DispositionTypeService implements DispositionTypeServiceInterface
         }
 
         return $this->defaultType;
-    }
-
-    /**
-     * Get disposition type for passed FileVersion object.
-     *
-     * @param FileVersion $fileVersion
-     *
-     * @return string
-     */
-    public function getFileVersionDisposition(FileVersion $fileVersion)
-    {
-        return $this->getMimeTypeDisposition($fileVersion->getMimeType());
     }
 }

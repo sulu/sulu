@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\MediaBundle\Media\DispositionType;
 
 /**
- * Interface for implementing disposition type service.
+ * Interface for implementing disposition type resolver.
  */
-interface DispositionTypeServiceInterface
+interface DispositionTypeResolverInterface
 {
     /**
      * Get disposition type for passed mime type.
@@ -23,5 +23,5 @@ interface DispositionTypeServiceInterface
      *
      * @return string
      */
-    public function getMimeTypeDisposition($mimeType);
+    public function getByMimeType($mimeType);
 }
