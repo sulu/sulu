@@ -39,12 +39,7 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
 
         $this->mediaTag = new MediaTag(
             $this->mediaRepository->reveal(),
-            $this->mediaManager->reveal(),
-            [
-                'default' => 'attachment',
-                'mime_types_inline' => ['application/pdf'],
-                'mime_types_attachment' => [],
-            ]
+            $this->mediaManager->reveal()
         );
     }
 
@@ -55,18 +50,16 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
      * @param string $title
      * @param string $name
      * @param string $version
-     * @param string $mimeType
      *
      * @return array
      */
-    private function createMedia($id, $title, $name, $version, $mimeType = '')
+    private function createMedia($id, $title, $name, $version)
     {
         return [
             'id' => $id,
             'title' => $title,
             'name' => $name,
             'version' => $version,
-            'mimeType' => $mimeType,
         ];
     }
 
@@ -75,28 +68,28 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 '<sulu:media id="1" title="Test-Title">Test-Content</sulu:media>',
-                ['id' => '1', 'title' => 'Test-Title', 'content' => 'Test-Content', 'mimeType' => 'application/pdf'],
-                '<a href="/test-url?v=1&inline=true" title="Test-Title">Test-Content</a>',
+                ['id' => '1', 'title' => 'Test-Title', 'content' => 'Test-Content'],
+                '<a href="/test-url" title="Test-Title">Test-Content</a>',
             ],
             [
                 '<sulu:media id="1" title="Test-Title"/>',
-                ['id' => '1', 'title' => 'Test-Title', 'mimeType' => 'image/jpeg'],
-                '<a href="/test-url?v=1" title="Test-Title">Media-Title</a>',
+                ['id' => '1', 'title' => 'Test-Title'],
+                '<a href="/test-url" title="Test-Title">Media-Title</a>',
             ],
             [
                 '<sulu:media id="1" title="Test-Title"></sulu:media>',
-                ['id' => '1', 'title' => 'Test-Title', 'mimeType' => 'text/plain'],
-                '<a href="/test-url?v=1" title="Test-Title">Media-Title</a>',
+                ['id' => '1', 'title' => 'Test-Title'],
+                '<a href="/test-url" title="Test-Title">Media-Title</a>',
             ],
             [
                 '<sulu:media id="1">Test-Content</sulu:media>',
-                ['id' => '1', 'content' => 'Test-Content', 'mimeType' => 'text/plain'],
-                '<a href="/test-url?v=1" title="Media-Title">Test-Content</a>',
+                ['id' => '1', 'content' => 'Test-Content'],
+                '<a href="/test-url" title="Media-Title">Test-Content</a>',
             ],
             [
                 '<sulu:media id="1"/>',
-                ['id' => '1', 'mimeType' => 'text/plain'],
-                '<a href="/test-url?v=1" title="Media-Title">Media-Title</a>',
+                ['id' => '1'],
+                '<a href="/test-url" title="Media-Title">Media-Title</a>',
             ],
         ];
     }
@@ -106,11 +99,11 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseAll($tag, $attributes, $expected)
     {
-        $media = $this->createMedia($attributes['id'], 'Media-Title', 'Media-Name', 1, $attributes['mimeType']);
+        $media = $this->createMedia($attributes['id'], 'Media-Title', 'Media-Name', 1);
 
         $this->mediaRepository->findMediaDisplayInfo([$media['id']], 'de')->shouldBeCalled();
         $this->mediaRepository->findMediaDisplayInfo([$media['id']], 'de')->willReturn([$media]);
-        $this->mediaManager->getUrl($media['id'], $media['name'], $media['version'])->willReturn('/test-url?v=' . $media['version']);
+        $this->mediaManager->getUrl($media['id'], $media['name'], $media['version'])->willReturn('/test-url');
 
         $result = $this->mediaTag->parseAll([$tag => $attributes], 'de');
 
@@ -119,8 +112,8 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
 
     public function testParseAllMultipleTags()
     {
-        $media1 = $this->createMedia(1, 'Media-Title-1', 'Media-Name-1', 1, 'application/pdf');
-        $media2 = $this->createMedia(2, 'Media-Title-2', 'Media-Name-2', 1, 'text/plain');
+        $media1 = $this->createMedia(1, 'Media-Title-1', 'Media-Name-1', 1);
+        $media2 = $this->createMedia(2, 'Media-Title-2', 'Media-Name-2', 1);
 
         $this->mediaRepository->findMediaDisplayInfo([$media1['id'], $media2['id']], 'de')->shouldBeCalled();
         $this->mediaRepository->findMediaDisplayInfo(
@@ -128,8 +121,8 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
             'de'
         )->willReturn([$media1, $media2]);
 
-        $this->mediaManager->getUrl($media1['id'], $media1['name'], $media1['version'])->willReturn('/test-1?v=1');
-        $this->mediaManager->getUrl($media2['id'], $media2['name'], $media2['version'])->willReturn('/test-2?v=1');
+        $this->mediaManager->getUrl($media1['id'], $media1['name'], $media1['version'])->willReturn('/test-1');
+        $this->mediaManager->getUrl($media2['id'], $media2['name'], $media2['version'])->willReturn('/test-2');
 
         $tag1 = '<sulu:media id="1">Test-Content</sulu:media>';
         $tag2 = '<sulu:media id="2" title="Test-Title"/>';
@@ -146,9 +139,9 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/test-1?v=1&inline=true" title="Media-Title-1">Test-Content</a>',
-                $tag2 => '<a href="/test-2?v=1" title="Test-Title">Media-Title-2</a>',
-                $tag3 => '<a href="/test-1?v=1&inline=true" title="Test-Title">Test-Content</a>',
+                $tag1 => '<a href="/test-1" title="Media-Title-1">Test-Content</a>',
+                $tag2 => '<a href="/test-2" title="Test-Title">Media-Title-2</a>',
+                $tag3 => '<a href="/test-1" title="Test-Title">Test-Content</a>',
             ],
             $result
         );
