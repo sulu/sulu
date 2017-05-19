@@ -35,9 +35,9 @@ class SuluAudienceTargetingExtension extends Extension
 
         $container->setParameter('sulu_audience_targeting.number_of_priorities', $config['number_of_priorities']);
         $container->setParameter('sulu_audience_targeting.frequencies', [
-            TargetGroupRuleInterface::FREQUENCY_HIT_NAME => TargetGroupRuleInterface::FREQUENCY_HIT,
-            TargetGroupRuleInterface::FREQUENCY_SESSION_NAME => TargetGroupRuleInterface::FREQUENCY_SESSION,
-            TargetGroupRuleInterface::FREQUENCY_VISITOR_NAME => TargetGroupRuleInterface::FREQUENCY_VISITOR,
+            TargetGroupRuleInterface::FREQUENCY_HIT => TargetGroupRuleInterface::FREQUENCY_HIT_NAME,
+            TargetGroupRuleInterface::FREQUENCY_SESSION => TargetGroupRuleInterface::FREQUENCY_SESSION_NAME,
+            TargetGroupRuleInterface::FREQUENCY_VISITOR => TargetGroupRuleInterface::FREQUENCY_VISITOR_NAME,
         ]);
 
         $container->setParameter('sulu_audience_targeting.headers.target_group', $config['headers']['target_group']);
