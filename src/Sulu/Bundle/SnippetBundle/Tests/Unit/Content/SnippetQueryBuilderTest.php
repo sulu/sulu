@@ -14,6 +14,8 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder;
+use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -85,5 +87,18 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
         list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
 
         $this->assertContains('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
+    }
+
+    public function testBuildWithProperties()
+    {
+        $this->structureManager->getStructures(Structure::TYPE_SNIPPET)->shouldBeCalled()->willReturn([]);
+
+        $this->snippetQueryBuilder->init([
+            'properties' => [
+                new PropertyParameter('description', 'description'),
+            ],
+        ]);
+
+        list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
     }
 }

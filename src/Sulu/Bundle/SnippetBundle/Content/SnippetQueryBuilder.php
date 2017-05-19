@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Content;
 
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\SmartContent\QueryBuilder;
 
 /**
@@ -19,4 +20,6 @@ use Sulu\Component\Content\SmartContent\QueryBuilder;
 class SnippetQueryBuilder extends QueryBuilder
 {
     protected static $mixinTypes = ['sulu:snippet'];
+
+    protected static $structureType = Structure::TYPE_SNIPPET;
 }
