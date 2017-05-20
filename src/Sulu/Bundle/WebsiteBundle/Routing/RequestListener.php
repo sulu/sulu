@@ -37,6 +37,9 @@ class RequestListener
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
+    /**
+     * @param GetResponseEvent $event
+     */
     public function onRequest(GetResponseEvent $event)
     {
         $context = $this->router->getContext();

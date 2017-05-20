@@ -13,8 +13,10 @@ namespace Sulu\Component\Import;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Import\Exception\FormatImporterNotFoundException;
+use Sulu\Component\Import\Format\FormatImportInterface;
 use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 /**
@@ -23,7 +25,7 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 class Import
 {
     /**
-     * @var WebspaceFormatImportInterface[]
+     * @var FormatImportInterface[]
      */
     protected $formatFilePaths = [];
 
@@ -42,6 +44,10 @@ class Import
      */
     protected $exceptionStore = [];
 
+    /**
+     * @param FormatImportInterface $service
+     * @param $format
+     */
     public function add($service, $format)
     {
         $this->formatFilePaths[$format] = $service;
@@ -52,9 +58,9 @@ class Import
      *
      * @param $format
      *
-     * @return WebspaceFormatImportInterface
+     * @return FormatImportInterface
      *
-     * @throws WebspaceFormatImporterNotFoundException
+     * @throws FormatImporterNotFoundException
      */
     protected function getParser($format)
     {

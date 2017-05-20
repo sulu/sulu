@@ -150,6 +150,11 @@ class Environment
         $this->customUrls[] = $customUrl;
     }
 
+    /**
+     * @param int|null $depth
+     *
+     * @return array
+     */
     public function toArray($depth = null)
     {
         $res = [];
