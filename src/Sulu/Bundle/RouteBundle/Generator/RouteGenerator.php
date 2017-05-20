@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
+use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

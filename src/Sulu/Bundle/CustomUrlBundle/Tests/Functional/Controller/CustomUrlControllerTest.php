@@ -11,10 +11,10 @@
 
 namespace Functional\Controller;
 
-use Ferrandini\Urlizer;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class CustomUrlControllerTest extends SuluTestCase
 {
@@ -28,11 +28,17 @@ class CustomUrlControllerTest extends SuluTestCase
      */
     private $contentDocument;
 
+    /**
+     * @var SlugifierInterface
+     */
+    private $slugifier;
+
     protected function setUp()
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->contentDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
+        $this->slugifier = $this->getContainer()->get('sulu_document_manager.slugifier');
     }
 
     public function postProvider()
@@ -99,6 +105,35 @@ class CustomUrlControllerTest extends SuluTestCase
                 400,
                 9003,
             ],
+            [
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-1.sulu.io/test-2',
+            ],
+            [
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-1.sulu.io/test-2',
+            ],
         ];
     }
 
@@ -141,7 +176,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
-        $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
+        $this->assertEquals($this->slugifier->slugify($data['title']), $responseData['nodeName']);
         if (array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
         } else {
@@ -245,6 +280,34 @@ class CustomUrlControllerTest extends SuluTestCase
                 'test.sulu.io/test',
                 409,
                 1103,
+            ],
+            [
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї 1',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї 2',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-11.sulu.io/test-21',
+                'test-12.sulu.io/test-22',
             ],
         ];
     }
@@ -494,6 +557,35 @@ class CustomUrlControllerTest extends SuluTestCase
                 409,
                 1103,
             ],
+            [
+                [
+                    'test-11.sulu.io/test-21' => [
+                        'title' => 'Тестовий Заголовок Ґ Є І Ї 1',
+                        'published' => true,
+                        'baseDomain' => '*.sulu.io',
+                        'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                        'targetDocument' => true,
+                        'targetLocale' => 'en',
+                        'canonical' => true,
+                        'redirect' => true,
+                        'noFollow' => true,
+                        'noIndex' => true,
+                    ],
+                ],
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї 2',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-12.sulu.io/test-22',
+            ],
         ];
     }
 
@@ -540,7 +632,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
-        $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
+        $this->assertEquals($this->slugifier->slugify($data['title']), $responseData['nodeName']);
         if (array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
         } else {
@@ -565,6 +657,21 @@ class CustomUrlControllerTest extends SuluTestCase
             [
                 [
                     'title' => 'Test',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-1.sulu.io/test-2',
+            ],
+            [
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї',
                     'published' => true,
                     'baseDomain' => '*.sulu.io',
                     'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
@@ -615,7 +722,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertGreaterThanOrEqual(new \DateTime($responseData['created']), $dateTime);
         $this->assertGreaterThanOrEqual(new \DateTime($responseData['changed']), $dateTime);
-        $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
+        $this->assertEquals($this->slugifier->slugify($data['title']), $responseData['nodeName']);
         if (array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
         } else {
@@ -666,6 +773,34 @@ class CustomUrlControllerTest extends SuluTestCase
                     ],
                     'test-2.sulu.io/test-2' => [
                         'title' => 'Test-2',
+                        'published' => true,
+                        'baseDomain' => '*.sulu.io',
+                        'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
+                        'targetDocument' => true,
+                        'targetLocale' => 'en',
+                        'canonical' => true,
+                        'redirect' => true,
+                        'noFollow' => true,
+                        'noIndex' => true,
+                    ],
+                ],
+            ],
+            [
+                [
+                    'test-1.sulu.io/test-1' => [
+                        'title' => 'Тестовий Заголовок Ґ Є І Ї 1',
+                        'published' => true,
+                        'baseDomain' => '*.sulu.io',
+                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'targetDocument' => true,
+                        'targetLocale' => 'en',
+                        'canonical' => true,
+                        'redirect' => true,
+                        'noFollow' => true,
+                        'noIndex' => true,
+                    ],
+                    'test-2.sulu.io/test-2' => [
+                        'title' => 'Тестовий Заголовок Ґ Є І Ї 2',
                         'published' => true,
                         'baseDomain' => '*.sulu.io',
                         'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
@@ -898,6 +1033,37 @@ class CustomUrlControllerTest extends SuluTestCase
                 ['test-1.sulu.io/test-1'],
                 420,
                 9000,
+            ],
+            [
+                [
+                    'test-1.sulu.io/test-1' => [
+                        'title' => 'Тестовий Заголовок Ґ Є І Ї 1',
+                        'published' => true,
+                        'baseDomain' => '*.sulu.io',
+                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'targetDocument' => true,
+                        'targetLocale' => 'en',
+                        'canonical' => true,
+                        'redirect' => true,
+                        'noFollow' => true,
+                        'noIndex' => true,
+                    ],
+                ],
+                [
+                    'title' => 'Тестовий Заголовок Ґ Є І Ї 2',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'en',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-2.sulu.io/test-2',
+                [],
+                ['test-2.sulu.io/test-2', 'test-1.sulu.io/test-1'],
             ],
         ];
     }

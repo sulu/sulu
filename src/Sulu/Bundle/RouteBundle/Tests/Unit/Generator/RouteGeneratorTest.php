@@ -14,9 +14,10 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 use Sulu\Bundle\RouteBundle\Generator\RouteGenerator;
 use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
-class RouteGeneratorTest extends \PHPUnit_Framework_TestCase
+class RouteGeneratorTest extends SuluTestCase
 {
     /**
      * @var TokenProviderInterface
@@ -36,9 +37,9 @@ class RouteGeneratorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->tokenProvider = $this->prophesize(TokenProviderInterface::class);
-        $this->slugifier = $this->prophesize(SlugifierInterface::class);
+        $this->slugifier = $this->getContainer()->get('sulu_document_manager.slugifier');
 
-        $this->generator = new RouteGenerator($this->tokenProvider->reveal(), $this->slugifier->reveal());
+        $this->generator = new RouteGenerator($this->tokenProvider->reveal(), $this->slugifier);
     }
 
     public function testGenerate()
@@ -48,15 +49,42 @@ class RouteGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->tokenProvider->provide($entity->reveal(), 'object.getTitle()')->willReturn('Test Title');
         $this->tokenProvider->provide($entity->reveal(), 'object.getId()')->willReturn(1);
 
-        $this->slugifier->slugify('Test Title')->willReturn('test-title');
-        $this->slugifier->slugify(1)->willReturn('1');
-
         $path = $this->generator->generate(
             $entity->reveal(),
             ['route_schema' => '/prefix/{object.getTitle()}/postfix/{object.getId()}']
         );
 
         $this->assertEquals('/prefix/test-title/postfix/1', $path);
+    }
+
+    public function testGenerateLatinExtended()
+    {
+        $entity = $this->prophesize(RoutableInterface::class);
+
+        $this->tokenProvider->provide($entity->reveal(), 'object.getTitle()')->willReturn('Tytuł testowy');
+        $this->tokenProvider->provide($entity->reveal(), 'object.getId()')->willReturn(1);
+
+        $path = $this->generator->generate(
+            $entity->reveal(),
+            ['route_schema' => '/prefix/{object.getTitle()}/postfix/{object.getId()}']
+        );
+
+        $this->assertEquals('/prefix/tytul-testowy/postfix/1', $path);
+    }
+
+    public function testGenerateNonLatin()
+    {
+        $entity = $this->prophesize(RoutableInterface::class);
+
+        $this->tokenProvider->provide($entity->reveal(), 'object.getTitle()')->willReturn('Тестовий Заголовок ґ є і ї');
+        $this->tokenProvider->provide($entity->reveal(), 'object.getId()')->willReturn(1);
+
+        $path = $this->generator->generate(
+            $entity->reveal(),
+            ['route_schema' => '/prefix/{object.getTitle()}/postfix/{object.getId()}']
+        );
+
+        $this->assertEquals('/prefix/testovii-zagolovok-g-ie-i-yi/postfix/1', $path);
     }
 
     public function testGetOptionsResolver()

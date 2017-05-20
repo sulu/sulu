@@ -46,7 +46,7 @@
         </service>
 
         <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier" public="false">
-            <argument>Ferrandini\Urlizer::urlize</argument>
+            <argument>Behat\Transliterator\Transliterator::transliterate</argument>
         </service>
 
         <service id="sulu_document_manager.node_name_slugifier"
