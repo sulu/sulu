@@ -58,7 +58,9 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentType = new TeaserContentType(
             $this->template,
-            $this->teaserProviderPool->reveal(), $this->teaserManager->reveal(), $this->referenceStorePool->reveal()
+            $this->teaserProviderPool->reveal(),
+            $this->teaserManager->reveal(),
+            $this->referenceStorePool->reveal()
         );
     }
 

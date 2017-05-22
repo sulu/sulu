@@ -17,6 +17,13 @@ namespace Sulu\Bundle\ContentBundle\ReferenceStore;
 interface ReferenceStorePoolInterface
 {
     /**
+     * Returns reference-stores.
+     *
+     * @return ReferenceStoreInterface[]
+     */
+    public function getStores();
+
+    /**
      * Returns reference-store for given alias.
      *
      * @param string $alias
@@ -24,11 +31,4 @@ interface ReferenceStorePoolInterface
      * @return ReferenceStoreInterface
      */
     public function getStore($alias);
-
-    /**
-     * Returns existing references in all pools.
-     *
-     * @return Reference[]
-     */
-    public function getReferences();
 }

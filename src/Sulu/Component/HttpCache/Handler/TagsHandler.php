@@ -12,6 +12,8 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Ramsey\Uuid\Uuid;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
@@ -34,7 +36,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
     /**
      * @var ReferenceStorePoolInterface
      */
-    private $referenceStore;
+    private $referenceStorePool;
 
     /**
      * @var array
@@ -43,12 +45,12 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
 
     /**
      * @param ProxyClientInterface $proxyClient
-     * @param ReferenceStorePoolInterface $referenceStore
+     * @param ReferenceStorePoolInterface $referenceStorePool
      */
-    public function __construct(ProxyClientInterface $proxyClient, ReferenceStorePoolInterface $referenceStore)
+    public function __construct(ProxyClientInterface $proxyClient, ReferenceStorePoolInterface $referenceStorePool)
     {
         $this->proxyClient = $proxyClient;
-        $this->referenceStore = $referenceStore;
+        $this->referenceStorePool = $referenceStorePool;
     }
 
     /**
@@ -64,7 +66,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
      */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
-        $tags = array_merge([$structure->getUuid()], $this->referenceStore->getReferences());
+        $tags = array_merge([$structure->getUuid()], $this->getTags());
 
         $response->headers->set(self::TAGS_HEADER, implode(',', $tags));
     }
@@ -89,5 +91,43 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
         $this->proxyClient->flush();
 
         return true;
+    }
+
+    /**
+     * Merges tags from all registered stores.
+     *
+     * @return array
+     */
+    private function getTags()
+    {
+        $tags = [];
+        foreach ($this->referenceStorePool->getStores() as $alias => $referenceStore) {
+            $tags = array_merge($tags, $this->getTagsFromStore($alias, $referenceStore));
+        }
+
+        return $tags;
+    }
+
+    /**
+     * Returns tags from given store.
+     *
+     * @param string $alias
+     * @param ReferenceStoreInterface $referenceStore
+     *
+     * @return array
+     */
+    private function getTagsFromStore($alias, ReferenceStoreInterface $referenceStore)
+    {
+        $tags = [];
+        foreach ($referenceStore->getAll() as $reference) {
+            $tag = $reference;
+            if (!Uuid::isValid($reference)) {
+                $tag = $alias . '-' . $reference;
+            }
+
+            $tags[] = $tag;
+        }
+
+        return $tags;
     }
 }

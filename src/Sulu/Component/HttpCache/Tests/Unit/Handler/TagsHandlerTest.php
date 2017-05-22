@@ -13,9 +13,8 @@ namespace Sulu\Component\HttpCache\Tests\Unit\Handler;
 
 use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
 use Ramsey\Uuid\Uuid;
-use Sulu\Bundle\ContentBundle\ReferenceStore\Reference;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\Handler\TagsHandler;
 use Sulu\Component\HttpCache\HandlerInterface;
@@ -54,16 +53,6 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private $response;
 
-    /**
-     * @var PropertyInterface
-     */
-    private $property1;
-
-    /**
-     * @var PropertyInterface
-     */
-    private $property2;
-
     public function setUp()
     {
         $this->structure = $this->prophesize(StructureInterface::class);
@@ -71,8 +60,6 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->parameterBag = $this->prophesize(ParameterBag::class);
         $this->response = $this->prophesize(Response::class);
         $this->response->headers = $this->parameterBag->reveal();
-        $this->property1 = $this->prophesize(PropertyInterface::class);
-        $this->property2 = $this->prophesize(PropertyInterface::class);
         $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
 
         $this->handler = new TagsHandler(
@@ -101,15 +88,23 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     public function testUpdateResponse()
     {
         $id = Uuid::uuid4()->toString();
-        $references = [
-            new Reference('article', Uuid::uuid4()->toString()),
-            new Reference('article', Uuid::uuid4()->toString()),
-        ];
+
+        $articles = [Uuid::uuid4()->toString(), Uuid::uuid4()->toString()];
+        $articleStore = $this->prophesize(ReferenceStoreInterface::class);
+        $articleStore->getAll()->willReturn($articles);
+
+        $contacts = [1];
+        $contactStore = $this->prophesize(ReferenceStoreInterface::class);
+        $contactStore->getAll()->willReturn($contacts);
+
         $this->structure->getUuid()->willReturn($id);
 
-        $this->referenceStorePool->getReferences()->willReturn($references);
+        $this->referenceStorePool->getStores()->willReturn(
+            ['article' => $articleStore->reveal(), 'contact' => $contactStore->reveal()]
+        );
 
-        $this->parameterBag->set('X-Cache-Tags', implode(',', array_merge([$id], $references)))->shouldBeCalled();
+        $this->parameterBag->set('X-Cache-Tags', implode(',', array_merge([$id], $articles, ['contact-1'])))
+            ->shouldBeCalled();
 
         $this->handler->updateResponse($this->response->reveal(), $this->structure->reveal());
     }
