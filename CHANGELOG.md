@@ -12,6 +12,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
     * ENHANCEMENT #3332 [RouteBundle]           Added parameter to disable conflict-resolver
     * FEATURE     #3326 [RouteBundle]           Added auditable to route
+    * ENHANCEMENT #3327 [ContentBundle]         Added option for single-markable in content-datasource
     * ENHANCEMENT #3310 [All]                   Fixed test setup to correct init all bundle tests correctly
     * FEATURE     #3310 [ContentBundle]         Implemented `sulu:webspaces:copy` command
     * BUGFIX      #3322 [ContentBundle]         Fixed validator for resource-locator 

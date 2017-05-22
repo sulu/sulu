@@ -80,11 +80,15 @@ define([], function() {
                     actionOnGhost: this.options.actionOnGhost,
                     resultKey: this.options.resultKey,
                     selected: this.selected,
+                    singleMarkable: true,
+                    markable: true,
+                    premarkedIds: [this.selected],
                     actionCallback: function(item) {
                         this.selected = item.id;
                         this.options.selectCallback(item.id, item.path, item.title, item);
                     }.bind(this)
-                });
+                }
+            );
 
             // start child components and bind events
             this.startColumnNavigation(this.columnNavigationOptions).then(this.bindCustomEvents.bind(this));
@@ -157,7 +161,7 @@ define([], function() {
 
             this.sandbox.emit(
                 'husky.column-navigation.smart-content-' + this.options.instanceName + '.set-options',
-                {selected: selected, url: this.getUrl(selected)}
+                {selected: selected, url: this.getUrl(selected), premarkedIds: [selected]}
             );
         },
 
