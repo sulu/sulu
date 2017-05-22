@@ -45,10 +45,7 @@ define([
     SnippetForm.prototype.header = function() {
         return {
             tabs: {
-                url: '/admin/content-navigations?alias=snippet',
-                componentOptions: {
-                    values: this.data
-                }
+                url: '/admin/content-navigations?alias=snippet'
             },
 
             toolbar: {
@@ -144,6 +141,10 @@ define([
             this.sandbox.emit('sulu.snippets.snippet.list');
         }.bind(this));
 
+        this.sandbox.on('sulu.tab.dirty', function() {
+            this.setHeaderBar(false);
+        }, this);
+
         // get content data
         this.sandbox.on('sulu.snippets.snippet.get-data', function(callback) {
             callback(this.data);
@@ -165,6 +166,11 @@ define([
         // content save-error
         this.sandbox.on('sulu.snippets.snippet.save-error', function() {
             this.setHeaderBar(false);
+        }, this);
+
+        // delegate save to tab
+        this.sandbox.on('sulu.toolbar.save', function(action) {
+            this.sandbox.emit('sulu.tab.save', action);
         }, this);
     };
 

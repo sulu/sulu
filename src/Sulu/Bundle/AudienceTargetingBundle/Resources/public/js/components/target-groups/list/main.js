@@ -64,7 +64,9 @@ define([
         initialize: function() {
             this.render();
 
-            this.bindCustomEvents();
+            this.sandbox.on('husky.datagrid.target-groups.loaded', function(){
+                this.bindCustomEvents();
+            }.bind(this));
         },
 
         /**

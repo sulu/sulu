@@ -9,7 +9,8 @@
     <div class="grid">
         <div class="grid-row">
             {% include 'SuluContentBundle:Template:macros/properties.html.twig' with {
-                'properties': property.childProperties
+                'properties': property.childProperties,
+                'excludedProperties': excludedProperties
             } %}
         </div>
     </div>

@@ -75,6 +75,10 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface
      */
     public function getUrl()
     {
+        if (!$this->exists('url')) {
+            return null;
+        }
+
         return $this->get('url');
     }
 

@@ -68,6 +68,8 @@ class LocaleRuleTest extends \PHPUnit_Framework_TestCase
             [[], ['locale' => 'de'], false],
             [['en_US', 'en'], [], false],
             [[], [], false],
+            [['de'], ['locale' => 'DE'], true],
+            [['de_DE'], ['locale' => 'DE'], true],
         ];
     }
 }

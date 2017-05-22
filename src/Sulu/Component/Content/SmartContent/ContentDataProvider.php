@@ -194,6 +194,7 @@ class ContentDataProvider implements DataProviderInterface
             $page,
             $pageSize
         );
+
         $items = $this->decorateDataItems($items, $options['locale']);
 
         return new DataProviderResult(
