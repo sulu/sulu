@@ -37,6 +37,7 @@
  * @params {String} [options.sortMethodParameter] parameter for the sort method
  * @params {String} [options.presentAsParameter] parameter for the presentation-possibility id
  * @params {String} [options.limitResultParameter] parameter for the limit-result-value
+ * @params {String} [options.excludedParameter] parameter for the excluded-value
  * @params {String} [options.idKey] key for the id in the returning JSON-result
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
@@ -48,6 +49,8 @@
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
  * @params {Boolean} [options.has] activates or deactivates features (default all false)
  * @params {Boolean} [options.datasource] name and options of datasource component
+ * @params {Boolean} [options.excluded] id of an excluded item
+ * @params {Boolean} [options.provider] alias of used provider
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
  * @params {String} [options.translations.noContentFound] translation key
@@ -84,7 +87,7 @@
  * @params {String} [options.translations.chooseCategoriesOk] translation key
  * @params {String} [options.translations.chooseCategoriesCancel] translation key
  */
-define(['config', 'services/husky/util'], function(config, util) {
+define(['config', 'services/sulucontent/smart-content-manager'], function(config, manager) {
 
     'use strict';
 
@@ -118,6 +121,7 @@ define(['config', 'services/husky/util'], function(config, util) {
             sortMethodParameter: 'sortMethod',
             presentAsParameter: 'presentAs',
             limitResultParameter: 'limitResult',
+            excludedParameter: 'excluded',
             limitResultDisabled: false,
             publishedStateKey: 'publishedState',
             publishedKey: 'published',
@@ -1252,6 +1256,7 @@ define(['config', 'services/husky/util'], function(config, util) {
             data[this.options.categoryOperatorParameter] = this.overlayData.categoryOperator ||
                 this.options.preSelectedCategoryOperator;
             data[this.options.paramsParameter] = JSON.stringify(this.options.property.params);
+            data[this.options.excludedParameter] = [this.options.excluded, this.overlayData.dataSource];
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
@@ -1277,29 +1282,21 @@ define(['config', 'services/husky/util'], function(config, util) {
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
 
-                this.sandbox.util.ajax({
-                    method: 'GET',
-                    url: this.URI.str,
-                    data: data,
-
-                    success: function(data) {
-                        this.$container.removeClass(constants.isLoadingClass);
-                        if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
-                            this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
-                            this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
-                        } else {
-                            this.overlayData.title = null;
-                            this.overlayData.fullQualifiedTitle = '';
-                        }
-                        this.items = data._embedded[this.options.resultKey];
-                        this.updateSelectedCounter(this.items.length);
-                        this.sandbox.emit(DATA_RETRIEVED.call(this));
-                    }.bind(this),
-
-                    error: function(error) {
-                        this.sandbox.logger.log(error);
-                    }.bind(this)
-                });
+                manager.schedule(this.URI.str, this.URI.data, this.options.provider).done(function(data) {
+                    this.$container.removeClass(constants.isLoadingClass);
+                    if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
+                        this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
+                        this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
+                    } else {
+                        this.overlayData.title = null;
+                        this.overlayData.fullQualifiedTitle = '';
+                    }
+                    this.items = data._embedded[this.options.resultKey];
+                    this.updateSelectedCounter(this.items.length);
+                    this.sandbox.emit(DATA_RETRIEVED.call(this));
+                }.bind(this)).fail(function(error) {
+                    this.sandbox.logger.log(error);
+                }.bind(this));
             }
         },
 

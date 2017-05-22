@@ -1,0 +1,1 @@
+define(function(){"use strict";var a={};return{add:function(b,c){a[b]||(a[b]=[]),a[b].push(c)},getAll:function(b){return a[b]?a[b]:[]}}});
