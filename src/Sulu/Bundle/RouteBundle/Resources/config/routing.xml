@@ -14,14 +14,8 @@
         </service>
 
         <!-- router -->
-        <service id="sulu_route.routing.proxy_factor.configuration" class="ProxyManager\Configuration" public="false">
-            <call method="setProxiesTargetDir">
-                <argument>%sulu.cache_dir%</argument>
-            </call>
-        </service>
-
         <service id="sulu_route.routing.proxy_factory" class="ProxyManager\Factory\LazyLoadingValueHolderFactory">
-            <argument type="service" id="sulu_route.routing.proxy_factor.configuration"/>
+            <argument type="service" id="sulu_core.proxy_manager.configuration"/>
         </service>
 
         <service id="sulu_route.routing.provider" class="Sulu\Bundle\RouteBundle\Routing\RouteProvider">

@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### ProxyManager
+
+We had to update `ocramius/proxy-manager` in order to be compatible with PHP 7.
+In case you have defined your own proxies, you should check the
+[ProxyManager UPGRADE.md](https://github.com/Ocramius/ProxyManager/blob/master/UPGRADE.md).
+
 ### ContentTypeInterface
 
 Following methods and constants was removed from `ContentTypeInterface`.
