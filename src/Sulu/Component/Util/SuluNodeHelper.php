@@ -12,11 +12,14 @@
 namespace Sulu\Component\Util;
 
 use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
  * Utility class for extracting Sulu-centric properties from nodes.
@@ -40,12 +43,22 @@ class SuluNodeHelper
     private $session;
 
     /**
-     * @param SessionInterface $session
-     * @param string           $languageNamespace
-     * @param array            $paths             Path segments from configuration
+     * @var StructureMetadataFactoryInterface
      */
-    public function __construct(SessionInterface $session, $languageNamespace, $paths)
-    {
+    private $structureMetadataFactory;
+
+    /**
+     * @param SessionInterface $session
+     * @param string $languageNamespace
+     * @param array $paths Path segments from configuration
+     * @param StructureMetadataFactoryInterface $structureMetadataFactory
+     */
+    public function __construct(
+        SessionInterface $session,
+        $languageNamespace,
+        $paths,
+        StructureMetadataFactoryInterface $structureMetadataFactory
+    ) {
         $this->languageNamespace = $languageNamespace;
         $this->paths = array_merge(
             [
@@ -57,6 +70,7 @@ class SuluNodeHelper
             $paths
         );
         $this->session = $session;
+        $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
     /**
@@ -174,6 +188,52 @@ class SuluNodeHelper
     }
 
     /**
+     * Returns the path for the base snippet of the given type resp. of all types if not given.
+     *
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getBaseSnippetPath($type = null)
+    {
+        $path = '/' . $this->getPath('base') . '/' . $this->getPath('snippet');
+
+        if ($type) {
+            $path .= '/' . $type;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Returns the uuid for the base snippet of the given type resp. of all types if not given.
+     *
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getBaseSnippetUuid($type = null)
+    {
+        try {
+            return $this->session->getNode($this->getBaseSnippetPath($type))->getIdentifier();
+        } catch (PathNotFoundException $e) {
+            $snippetStructures = array_map(function (StructureMetadata $structureMetadata) {
+                return $structureMetadata->getName();
+            }, $this->structureMetadataFactory->getStructures('snippet'));
+
+            if (in_array($type, $snippetStructures)) {
+                return null;
+            }
+
+            throw new \InvalidArgumentException(sprintf(
+                'Snippet type "%s" not available, available snippet types are: [%s]',
+                $type,
+                implode(', ', $snippetStructures)
+            ));
+        }
+    }
+
+    /**
      * Extract the snippet path from the given path.
      *
      * @param string $path
@@ -193,7 +253,7 @@ class SuluNodeHelper
             );
         }
 
-        $snippetsPath = '/' . $this->getPath('base') . '/' . $this->getPath('snippet') . '/';
+        $snippetsPath = $this->getBaseSnippetPath() . '/';
         $newPath = PathHelper::getParentPath($path);
         $newPath = substr($newPath, strlen($snippetsPath));
 

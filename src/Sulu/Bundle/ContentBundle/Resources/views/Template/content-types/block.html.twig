@@ -54,6 +54,7 @@
                             <div class="block block-{{ property.name }}">
                                 {% include 'SuluContentBundle:Template:macros/properties.html.twig' with {
                                     'properties': type.childProperties,
+                                    'excludedProperties': [],
                                     'propertyPrefix': id,
                                     'propertyPostfix': '<~=index~>'
                                 } %}

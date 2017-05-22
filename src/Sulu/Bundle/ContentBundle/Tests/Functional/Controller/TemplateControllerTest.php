@@ -26,14 +26,48 @@ class TemplateControllerTest extends SuluTestCase
         $crawler = $client->request('GET', '/content/template/form/default.html');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertEquals(1, $crawler->filter('form#content-form')->count());
+        $this->assertCount(1, $crawler->filter('form#content-form'));
 
         // foreach property one textfield
-        $this->assertEquals(1, $crawler->filter('input#title')->count());
-        $this->assertEquals(1, $crawler->filter('div#url')->count());
-        $this->assertEquals(1, $crawler->filter('textarea#article')->count());
+        $this->assertCount(1, $crawler->filter('input#title'));
+        $this->assertCount(1, $crawler->filter('div#url'));
+        $this->assertCount(1, $crawler->filter('textarea#article'));
         // for tags 2
-        $this->assertEquals(1, $crawler->filter('div#tags')->count());
+        $this->assertCount(1, $crawler->filter('div#tags'));
+    }
+
+    public function testContentFormWithExcludedProperty()
+    {
+        $client = $this->createAuthenticatedClient();
+        $crawler = $client->request('GET', '/content/template/form/default.html?excludedProperties=article');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertCount(1, $crawler->filter('form#content-form'));
+
+        // foreach property one textfield
+        $this->assertCount(1, $crawler->filter('input#title'));
+        $this->assertCount(1, $crawler->filter('div#url'));
+        // article should not be displayed because it was excluded in the URL
+        $this->assertCount(0, $crawler->filter('textarea#article'));
+        // for tags 2
+        $this->assertCount(1, $crawler->filter('div#tags'));
+    }
+
+    public function testContentFormWithExcludedProperties()
+    {
+        $client = $this->createAuthenticatedClient();
+        $crawler = $client->request('GET', '/content/template/form/default.html?excludedProperties=article,title');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertCount(1, $crawler->filter('form#content-form'));
+
+        // foreach property one textfield
+        $this->assertCount(0, $crawler->filter('input#title'));
+        $this->assertCount(1, $crawler->filter('div#url'));
+        // article should not be displayed because it was excluded in the URL
+        $this->assertCount(0, $crawler->filter('textarea#article'));
+        // for tags 2
+        $this->assertCount(1, $crawler->filter('div#tags'));
     }
 
     public function testGetActionSorting()

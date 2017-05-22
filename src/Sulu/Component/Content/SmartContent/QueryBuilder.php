@@ -63,6 +63,11 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private $sessionManager;
 
+    /**
+     * @var string
+     */
+    protected static $structureType = Structure::TYPE_PAGE;
+
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
@@ -228,7 +233,7 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
-        foreach ($this->structureManager->getStructures(Structure::TYPE_PAGE) as $structure) {
+        foreach ($this->structureManager->getStructures(static::$structureType) as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
                 $additionalFields[$locale][] = [
@@ -356,7 +361,7 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return bool
      */
-    private function hasConfig($name)
+    protected function hasConfig($name)
     {
         return isset($this->config[$name]);
     }
@@ -369,7 +374,7 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return mixed config value
      */
-    private function getConfig($name, $default = null)
+    protected function getConfig($name, $default = null)
     {
         if (!$this->hasConfig($name)) {
             return $default;
@@ -398,7 +403,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $idsWhere = [];
         foreach ($this->excluded as $id) {
-            $idsWhere[] = sprintf("NOT (page.[jcr:uuid] = '%s')", $id);
+            $idsWhere[] = sprintf("(NOT page.[jcr:uuid] = '%s')", $id);
         }
 
         return $idsWhere;

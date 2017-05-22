@@ -94,10 +94,7 @@ class TemplateController extends Controller
     public function contentAction(Request $request, $key = null)
     {
         $fireEvent = false;
-        $templateIndex = null;
         $webspace = $request->get('webspace');
-        $language = $request->get('language');
-        $uuid = $request->get('uuid');
         $type = $request->get('type', 'page');
 
         if ($key === null) {
@@ -123,11 +120,13 @@ class TemplateController extends Controller
             [
                 'template' => $template,
                 'webspaceKey' => $webspace,
-                'languageCode' => $language,
-                'uuid' => $uuid,
+                'languageCode' => $request->get('language'),
+                'uuid' => $request->get('uuid'),
                 'userLocale' => $userLocale,
                 'templateKey' => $key,
                 'fireEvent' => $fireEvent,
+                'excludedProperties' => $request->query->has('excludedProperties')
+                    ? explode(',', $request->query->get('excludedProperties')) : [],
             ]
         );
     }

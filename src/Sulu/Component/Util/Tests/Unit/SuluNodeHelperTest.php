@@ -11,9 +11,12 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Mapper\Translation;
 
+use Jackalope\Node;
+use Jackalope\Property;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
@@ -22,6 +25,11 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
      * @var SessionInterface
      */
     private $session;
+
+    /**
+     * @var StructureMetadataFactoryInterface
+     */
+    private $structureMetadataFactory;
 
     /**
      * @var NodeInterface
@@ -70,15 +78,17 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->session = $this->getMockBuilder('PHPCR\SessionInterface')->disableOriginalConstructor()->getMock();
-        $this->node = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
-        $this->property1 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
-        $this->property2 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
-        $this->property3 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
-        $this->property4 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
-        $this->property5 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
-        $this->property6 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
-        $this->property7 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
+        $this->session = $this->getMockBuilder(SessionInterface::class)->disableOriginalConstructor()->getMock();
+        $this->node = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
+        $this->structureMetadataFactory = $this->getMockBuilder(StructureMetadataFactoryInterface::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->property1 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property2 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property3 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property4 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property5 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property6 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property7 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
 
         $propertyIndex = 1;
         foreach ([
@@ -117,7 +127,8 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             [
                 'base' => 'cmf',
                 'snippet' => 'snippets',
-            ]
+            ],
+            $this->structureMetadataFactory
         );
     }
 
@@ -257,5 +268,20 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
         $res = $this->helper->getPreviousNode($node2);
         $this->assertSame($node1->getPath(), $res->getPath());
+    }
+
+    public function testGetBaseSnippetUuid()
+    {
+        $baseSnippetNode = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
+        $baseSnippetNode->expects($this->any())
+            ->method('getIdentifier')
+            ->will($this->returnValue('some-uuid'));
+
+        $this->session->expects($this->any())
+            ->method('getNode')
+            ->with('/cmf/snippets/snippet')
+            ->will($this->returnValue($baseSnippetNode));
+
+        $this->assertEquals('some-uuid', $this->helper->getBaseSnippetUuid('snippet'));
     }
 }

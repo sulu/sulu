@@ -38,5 +38,6 @@
         <property name="path" type="string" exclude="true"/>
         <property name="structure" inline="true" type="Sulu\Component\Content\Document\Structure\Structure"/>
         <property name="parent" exclude="true"/>
+        <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" serialized-name="ext" />
     </class>
 </serializer>

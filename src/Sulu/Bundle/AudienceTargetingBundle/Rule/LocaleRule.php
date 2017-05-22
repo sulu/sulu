@@ -52,7 +52,7 @@ class LocaleRule implements RuleInterface
             return false;
         }
 
-        return substr($languages[0], 0, 2) === $options[static::LOCALE];
+        return substr($languages[0], 0, 2) === strtolower($options[static::LOCALE]);
     }
 
     /**

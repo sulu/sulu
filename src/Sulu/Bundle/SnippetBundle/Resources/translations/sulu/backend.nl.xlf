@@ -102,6 +102,10 @@
                 <source>snippet.settings.copy-locale-overlay.info</source>
                 <target>Een nieuw fragment zal worden aangemaakt</target>
             </trans-unit>
+            <trans-unit id="27" resname="content-navigation.snippets.taxonomies">
+                <source>content-navigation.snippets.excerpt</source>
+                <target>Taxonomieën</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
