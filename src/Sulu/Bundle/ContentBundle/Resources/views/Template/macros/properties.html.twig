@@ -25,6 +25,7 @@
         {% if property.contentTypeName == 'section' %}
             {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
                 'property': property,
+                'excludedProperties': excludedProperties,
                 'params': params,
                 'id': id,
                 'webspaceKey': webspaceKey,
