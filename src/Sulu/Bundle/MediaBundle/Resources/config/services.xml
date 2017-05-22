@@ -23,6 +23,7 @@
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
         <parameter key="sulu_media.format_options_entity">SuluMediaBundle:FormatOptions</parameter>
         <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
+        <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
@@ -174,7 +175,7 @@
             <argument>%sulu_security.permissions%</argument>
         </service>
 
-        <service id="sulu_media.twig_extension.disposition_type" class="Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension">
+        <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">
             <tag name="twig.extension"/>
         </service>
 
