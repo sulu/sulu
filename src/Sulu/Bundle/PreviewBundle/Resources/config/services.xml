@@ -40,8 +40,8 @@
             </argument>
             <argument type="string">%kernel.environment%</argument>
             <argument type="expression">
-                container.hasParameter('sulu_audience_targeting.header')
-                    ? parameter('sulu_audience_targeting.header')
+                container.hasParameter('sulu_audience_targeting.headers.target_group')
+                    ? parameter('sulu_audience_targeting.headers.target_group')
                     : null
             </argument>
         </service>

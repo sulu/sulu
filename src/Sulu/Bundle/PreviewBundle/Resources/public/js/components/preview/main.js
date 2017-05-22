@@ -156,6 +156,7 @@ define([
                             titleAttribute: 'title',
                             idAttribute: 'id',
                             markSelected: true,
+                            preSelected: true,
                             changeButton: true,
                             url: '/admin/api/target-groups',
                             concatRequestedItemsFirst: true,
