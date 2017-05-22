@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Teaser;
 
 use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
@@ -39,9 +41,9 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
     private $teaserManager;
 
     /**
-     * @var TeaserManagerInterface
+     * @var ReferenceStorePoolInterface
      */
-    private $referenceStore;
+    private $referenceStorePool;
 
     /**
      * @var TeaserContentType
@@ -52,13 +54,11 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
         $this->teaserManager = $this->prophesize(TeaserManagerInterface::class);
-        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
 
         $this->contentType = new TeaserContentType(
             $this->template,
-            $this->teaserProviderPool->reveal(),
-            $this->teaserManager->reveal(),
-            $this->referenceStore->reveal()
+            $this->teaserProviderPool->reveal(), $this->teaserManager->reveal(), $this->referenceStorePool->reveal()
         );
     }
 
@@ -136,5 +136,34 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
             ['items' => [], 'presentAs' => null],
             $this->contentType->getViewData($property->reveal())
         );
+    }
+
+    public function testPreResolve()
+    {
+        $data = [
+            'items' => [
+                ['type' => 'article', 'id' => 1],
+                ['type' => 'test', 'id' => 2],
+                ['type' => 'content', 'id' => 3],
+            ],
+        ];
+
+        $articleStore = $this->prophesize(ReferenceStoreInterface::class);
+        $contentStore = $this->prophesize(ReferenceStoreInterface::class);
+
+        $this->referenceStorePool->getStore('article')->willReturn($articleStore->reveal());
+        $this->referenceStorePool->getStore('content')->willReturn($contentStore->reveal());
+        $this->referenceStorePool->getStore('test')
+            ->willThrow(
+                new ReferenceStoreNotExistsException('test', ['article', 'content'])
+            );
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn($data);
+
+        $this->contentType->preResolve($property->reveal());
+
+        $articleStore->add(1)->shouldBeCalled();
+        $contentStore->add(3)->shouldBeCalled();
     }
 }

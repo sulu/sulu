@@ -12,7 +12,7 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
@@ -32,7 +32,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
     private $proxyClient;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStorePoolInterface
      */
     private $referenceStore;
 
@@ -43,9 +43,9 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
 
     /**
      * @param ProxyClientInterface $proxyClient
-     * @param ReferenceStoreInterface $referenceStore
+     * @param ReferenceStorePoolInterface $referenceStore
      */
-    public function __construct(ProxyClientInterface $proxyClient, ReferenceStoreInterface $referenceStore)
+    public function __construct(ProxyClientInterface $proxyClient, ReferenceStorePoolInterface $referenceStore)
     {
         $this->proxyClient = $proxyClient;
         $this->referenceStore = $referenceStore;
@@ -64,7 +64,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
      */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
-        $tags = array_merge([$structure->getUuid()], $this->referenceStore->getAll());
+        $tags = array_merge([$structure->getUuid()], $this->referenceStore->getReferences());
 
         $response->headers->set(self::TAGS_HEADER, implode(',', $tags));
     }

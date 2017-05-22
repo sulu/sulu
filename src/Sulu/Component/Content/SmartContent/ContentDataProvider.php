@@ -17,6 +17,7 @@ use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -79,7 +80,7 @@ class ContentDataProvider implements DataProviderInterface
         DocumentManagerInterface $documentManager,
         LazyLoadingValueHolderFactory $proxyFactory,
         SessionInterface $session,
-        ReferenceStore $referenceStore,
+        ReferenceStoreInterface $referenceStore,
         $showDrafts
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
@@ -364,8 +365,6 @@ class ContentDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
-                $this->referenceStore->add($item['uuid']);
-
                 return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -384,6 +383,8 @@ class ContentDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
+                $this->referenceStore->add($item['uuid']);
+
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
             },
             $data

@@ -13,7 +13,8 @@ namespace Sulu\Component\HttpCache\Tests\Unit\Handler;
 
 use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
 use Ramsey\Uuid\Uuid;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\ContentBundle\ReferenceStore\Reference;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\Handler\TagsHandler;
@@ -34,9 +35,9 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     private $proxyCache;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStorePoolInterface
      */
-    private $referenceStore;
+    private $referenceStorePool;
 
     /**
      * @var HandlerInterface
@@ -72,11 +73,10 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->response->headers = $this->parameterBag->reveal();
         $this->property1 = $this->prophesize(PropertyInterface::class);
         $this->property2 = $this->prophesize(PropertyInterface::class);
-        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
 
         $this->handler = new TagsHandler(
-            $this->proxyCache->reveal(),
-            $this->referenceStore->reveal()
+            $this->proxyCache->reveal(), $this->referenceStorePool->reveal()
         );
     }
 
@@ -100,12 +100,16 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateResponse()
     {
-        $ids = ['123-123-123', '123-321-123'];
-        $this->structure->getUuid()->willReturn('321-123-321');
+        $id = Uuid::uuid4()->toString();
+        $references = [
+            new Reference('article', Uuid::uuid4()->toString()),
+            new Reference('article', Uuid::uuid4()->toString()),
+        ];
+        $this->structure->getUuid()->willReturn($id);
 
-        $this->referenceStore->getAll()->willReturn($ids);
+        $this->referenceStorePool->getReferences()->willReturn($references);
 
-        $this->parameterBag->set('X-Cache-Tags', implode(',', array_merge(['321-123-321'], $ids)))->shouldBeCalled();
+        $this->parameterBag->set('X-Cache-Tags', implode(',', array_merge([$id], $references)))->shouldBeCalled();
 
         $this->handler->updateResponse($this->response->reveal(), $this->structure->reveal());
     }

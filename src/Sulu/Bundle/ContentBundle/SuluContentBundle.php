@@ -49,7 +49,7 @@ class SuluContentBundle extends Bundle
         );
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(
-                'sulu_content.reference_store',
+                'sulu_content.reference_store_pool',
                 'sulu_content.reference_store',
                 0,
                 'alias'

@@ -15,6 +15,11 @@ Following methods and constants was removed from `ContentTypeInterface`.
 * `PRE_SAVE`
 * `POST_SAVE`
 * `getType()`
+* `getReferenceUuids()`
+
+For replacement of `getReferenceUuids` we have introduced the 
+[reference-store](http://docs.sulu.io/en/latest/bundles/content/reference-store.html)
+and the `PreResolveContentTypeInterface::preResolve` method. 
 
 ### Route-Table changed
 

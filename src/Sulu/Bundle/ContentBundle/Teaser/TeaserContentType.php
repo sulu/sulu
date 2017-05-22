@@ -12,9 +12,8 @@
 namespace Sulu\Bundle\ContentBundle\Teaser;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ChainReferenceStore;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -42,28 +41,28 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
     private $teaserManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStorePoolInterface
      */
-    private $referenceStore;
+    private $referenceStorePool;
 
     /**
      * @param string $template
      * @param TeaserProviderPoolInterface $providerPool
      * @param TeaserManagerInterface $teaserManager
-     * @param ReferenceStoreInterface $referenceStore
+     * @param ReferenceStorePoolInterface $referenceStorePool
      */
     public function __construct(
         $template,
         TeaserProviderPoolInterface $providerPool,
         TeaserManagerInterface $teaserManager,
-        ReferenceStoreInterface $referenceStore
+        ReferenceStorePoolInterface $referenceStorePool
     ) {
         parent::__construct('teaser_selection');
 
         $this->template = $template;
         $this->teaserProviderPool = $providerPool;
         $this->teaserManager = $teaserManager;
-        $this->referenceStore = $referenceStore;
+        $this->referenceStorePool = $referenceStorePool;
     }
 
     /**
@@ -148,7 +147,7 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
     {
         foreach ($this->getItems($property) as $item) {
             try {
-                $this->referenceStore->add($item['type'] . ChainReferenceStore::DELIMITER . $item['id']);
+                $this->referenceStorePool->getStore($item['type'])->add($item['id']);
             } catch (ReferenceStoreNotExistsException $exception) {
                 // ignore not existing stores
             }
