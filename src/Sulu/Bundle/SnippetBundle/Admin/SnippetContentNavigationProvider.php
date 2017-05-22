@@ -29,7 +29,7 @@ class SnippetContentNavigationProvider implements ContentNavigationProviderInter
         $details->setPosition(10);
         $details->setComponent('snippet/form/details@sulusnippet');
 
-        $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
+        $excerpt = new ContentNavigationItem('content-navigation.snippets.taxonomies');
         $excerpt->setId('tab-excerpt');
         $excerpt->setPosition(20);
         $excerpt->setAction('excerpt');

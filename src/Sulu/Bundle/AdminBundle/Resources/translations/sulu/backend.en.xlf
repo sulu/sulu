@@ -700,7 +700,7 @@
             </trans-unit>
             <trans-unit id="143d99ff2f64652633a5ca2169f22254" resname="content-navigation.contents.excerpt">
                 <source>content-navigation.contents.excerpt</source>
-                <target>Excerpt &amp; Categories</target>
+                <target>Excerpt &amp; Taxonomies</target>
             </trans-unit>
             <trans-unit id="948826fa2261f741d03a40c20af27c1b" resname="content-navigation.contents.permissions">
                 <source>content-navigation.contents.permissions</source>
