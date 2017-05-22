@@ -206,16 +206,7 @@ class ContentDataProvider implements DataProviderInterface
 
         $items = $this->decorateDataItems($items, $options['locale']);
 
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(
-                function (ContentDataItem $item) {
-                    return $item->getId();
-                },
-                $items
-            )
-        );
+        return new DataProviderResult($items, $hasNextPage);
     }
 
     /**
@@ -239,16 +230,7 @@ class ContentDataProvider implements DataProviderInterface
         );
         $items = $this->decorateResourceItems($items, $options['locale']);
 
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(
-                function (ArrayAccessItem $item) {
-                    return $item->getId();
-                },
-                $items
-            )
-        );
+        return new DataProviderResult($items, $hasNextPage);
     }
 
     /**
@@ -284,7 +266,7 @@ class ContentDataProvider implements DataProviderInterface
             [
                 'config' => $filters,
                 'properties' => $properties,
-                'excluded' => $filters['excluded'],
+                'excluded' => array_merge($filters['excluded'], $this->referenceStore->getAll()),
                 'published' => !$this->showDrafts,
             ]
         );
