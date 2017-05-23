@@ -48,35 +48,4 @@ class ReferenceStorePool implements ReferenceStorePoolInterface
 
         return $this->stores[$alias];
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReferences()
-    {
-        $references = [];
-        foreach ($this->stores as $alias => $store) {
-            $references = array_merge($references, $this->getReferencesForPool($store, $alias));
-        }
-
-        return $references;
-    }
-
-    /**
-     * Returns references for given pool.
-     *
-     * @param ReferenceStoreInterface $store
-     * @param string $alias
-     *
-     * @return Reference[]
-     */
-    private function getReferencesForPool(ReferenceStoreInterface $store, $alias)
-    {
-        $references = [];
-        foreach ($store->getAll() as $id) {
-            $references[] = new Reference($alias, $id);
-        }
-
-        return $references;
-    }
 }
