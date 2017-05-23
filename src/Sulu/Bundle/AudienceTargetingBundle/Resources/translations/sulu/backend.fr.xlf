@@ -78,6 +78,14 @@
                 <source>sulu_audience_targeting.rules.query_string</source>
                 <target>Query String</target>
             </trans-unit>
+            <trans-unit id="target-group-21" resname="sulu_audience_targeting.rules.query_string_parameter">
+                <source>sulu_audience_targeting.rules.query_string_parameter</source>
+                <target>le paramètre</target>
+            </trans-unit>
+            <trans-unit id="target-group-22" resname="sulu_audience_targeting.rules.query_string_value">
+                <source>sulu_audience_targeting.rules.query_string_value</source>
+                <target>la valeur</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

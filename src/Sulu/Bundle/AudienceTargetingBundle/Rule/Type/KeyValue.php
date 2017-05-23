@@ -23,10 +23,22 @@ class KeyValue implements RuleTypeInterface
      */
     private $valueName;
 
-    public function __construct($keyName, $valueName)
+    /**
+     * @var string
+     */
+    private $keyPlaceholder;
+
+    /**
+     * @var string
+     */
+    private $valuePlaceholder;
+
+    public function __construct($keyName, $valueName, $keyPlaceholder, $valuePlaceHolder)
     {
         $this->keyName = $keyName;
         $this->valueName = $valueName;
+        $this->keyPlaceholder = $keyPlaceholder;
+        $this->valuePlaceholder = $valuePlaceHolder;
     }
 
     /**
@@ -38,13 +50,15 @@ class KeyValue implements RuleTypeInterface
                 <input class="form-element"
                        type="text"
                        data-rule-type="text"
-                       data-condition-name="' . $this->keyName . '" />
+                       data-condition-name="' . $this->keyName . '"
+                       placeholder="' . $this->keyPlaceholder . '"/>
             </div>
             <div class="grid-col-6">
                 <input class="form-element"
                        type="text"
                        data-rule-type="text"
-                       data-condition-name="' . $this->valueName . '" />
+                       data-condition-name="' . $this->valueName . '"
+                       placeholder="' . $this->valuePlaceholder . '"/>
             </div>';
     }
 }

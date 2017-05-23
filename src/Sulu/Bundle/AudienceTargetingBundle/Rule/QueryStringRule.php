@@ -73,6 +73,11 @@ class QueryStringRule implements RuleInterface
      */
     public function getType()
     {
-        return new KeyValue('parameter', 'value');
+        return new KeyValue(
+            'parameter',
+            'value',
+            $this->translator->trans('sulu_audience_targeting.rules.query_string_parameter', [], 'backend'),
+            $this->translator->trans('sulu_audience_targeting.rules.query_string_value', [], 'backend')
+        );
     }
 }
