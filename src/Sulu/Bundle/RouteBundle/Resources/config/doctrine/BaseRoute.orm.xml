@@ -14,14 +14,17 @@
         <field name="entityId" type="string" length="255"/>
         <field name="history" type="boolean"/>
 
-        <one-to-many field="histories" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface"
-                     mapped-by="target">
+        <field name="created" type="datetime" nullable="false">
+            <options>
+                <option name="default">1970-01-01 00:00:00</option>
+            </options>
+        </field>
+
+        <one-to-many field="histories" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface" mapped-by="target">
             <cascade>
                 <cascade-all/>
             </cascade>
         </one-to-many>
-        <many-to-one field="target" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface"
-                     inversed-by="histories"/>
-
+        <many-to-one field="target" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface" inversed-by="histories"/>
     </mapped-superclass>
 </doctrine-mapping>

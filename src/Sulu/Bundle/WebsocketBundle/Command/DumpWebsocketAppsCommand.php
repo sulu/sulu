@@ -42,8 +42,7 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
     {
         $manager = $this->getContainer()->get(self::MANAGER_ID);
 
-        /** @var Table $table */
-        $table = $this->getHelper('table');
+        $table = new Table($output);
         $table->setHeaders(['App-Name', 'Route', 'Allowed-Origins', 'Host-Name']);
 
         foreach ($manager->getApps() as $app) {
@@ -57,6 +56,6 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
             );
         }
 
-        $table->render($output);
+        $table->render();
     }
 }

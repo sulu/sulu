@@ -55,14 +55,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     /**
      * {@inheritdoc}
      */
-    public function getType()
-    {
-        return ContentTypeInterface::PRE_SAVE;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,

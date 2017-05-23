@@ -45,6 +45,6 @@ class ContentTypesDumpCommand extends ContainerAwareCommand
         foreach ($contentTypeManager->getAll() as $alias => $service) {
             $table->addRow([$alias, $service['id']]);
         }
-        $table->render($output);
+        $table->render();
     }
 }

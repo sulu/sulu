@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use ProxyManager\Proxy\VirtualProxyInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -23,7 +24,6 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\SmartContent\ContentDataItem;
 use Sulu\Component\Content\SmartContent\ContentDataProvider;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
@@ -94,13 +94,17 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $mock = $this->prophesize(LazyLoadingValueHolderFactory::class);
         $lazyLoading = $this->prophesize(LazyLoadingInterface::class);
 
+        $that = $this;
         $mock->createProxy(PageDocument::class, Argument::any())->will(
-            function ($args) use ($lazyLoading) {
+            function ($args) use ($that, $lazyLoading) {
                 $wrappedObject = 1;
                 $initializer = 1;
                 $args[1]($wrappedObject, $lazyLoading->reveal(), null, [], $initializer);
 
-                return $wrappedObject;
+                $virtualProxy = $that->prophesize(VirtualProxyInterface::class);
+                $virtualProxy->getWrappedValueHolderValue()->willReturn($wrappedObject);
+
+                return $virtualProxy;
             }
         );
 
@@ -245,10 +249,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
-        $this->assertEquals(
-            [new ContentDataItem($data[0], $data[0]), new ContentDataItem($data[1], $data[1])],
-            $result->getItems()
-        );
+        $items = $result->getItems();
+        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $result->getReferencedUuids());
     }
@@ -287,10 +292,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
-        $this->assertEquals(
-            [new ContentDataItem($data[0], $data[0]), new ContentDataItem($data[1], $data[1])],
-            $result->getItems()
-        );
+        $items = $result->getItems();
+        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $result->getReferencedUuids());
     }
@@ -329,13 +335,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
-        $this->assertEquals(
-            [
-                new ArrayAccessItem($data[0]['uuid'], $data[0], $data[0]),
-                new ArrayAccessItem($data[1]['uuid'], $data[1], $data[1]),
-            ],
-            $result->getItems()
-        );
+        $items = $result->getItems();
+        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $result->getReferencedUuids());
     }
@@ -373,14 +377,15 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
-        $this->assertEquals(
-            [
-                new ContentDataItem($data[0], $data[0]),
-                new ContentDataItem($data[1], $data[1]),
-                new ContentDataItem($data[2], $data[2]),
-            ],
-            $result->getItems()
-        );
+
+        $items = $result->getItems();
+
+        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertEquals($data[2]['uuid'], $items[2]->getId());
+        $this->assertEquals($data[2], $items[2]->getResource()->getWrappedValueHolderValue());
         $this->assertFalse($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456', '123-123-789'], $result->getReferencedUuids());
     }

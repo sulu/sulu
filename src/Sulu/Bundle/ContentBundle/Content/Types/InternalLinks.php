@@ -69,14 +69,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     /**
      * {@inheritdoc}
      */
-    public function getType()
-    {
-        return self::PRE_SAVE;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,

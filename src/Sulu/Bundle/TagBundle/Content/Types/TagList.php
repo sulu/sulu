@@ -16,7 +16,6 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
@@ -41,17 +40,6 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
     {
         $this->tagManager = $tagManager;
         $this->template = $template;
-    }
-
-    /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE.
-     *
-     * @return int
-     */
-    public function getType()
-    {
-        return ContentTypeInterface::PRE_SAVE;
     }
 
     /**

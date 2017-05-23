@@ -220,6 +220,16 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu.cache_dir', $config['cache_dir']);
 
+        $proxyCacheDirectory = $container->getParameterBag()->resolveValue(
+            $container->getParameter('sulu.cache_dir') . '/proxies'
+        );
+
+        if (!is_dir($proxyCacheDirectory)) {
+            mkdir($proxyCacheDirectory, 0777, true);
+        }
+
+        $container->setParameter('sulu_core.proxy_cache_dir', $proxyCacheDirectory);
+
         // Content
         if (isset($config['content'])) {
             $this->initContent($config['content'], $container, $loader);
