@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
+use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\VirtualProxyInterface;
 use Sulu\Bundle\SnippetBundle\Content\SnippetDataProvider;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -57,6 +59,9 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->nodeHelper = $this->prophesize(SuluNodeHelper::class);
         $this->proxyFactory = $this->prophesize(LazyLoadingValueHolderFactory::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
+
+        $this->proxyFactory->createProxy(Argument::cetera())
+            ->willReturn($this->prophesize(VirtualProxyInterface::class)->reveal());
 
         $this->snippetDataProvider = new SnippetDataProvider(
             $this->contentQueryExecutor->reveal(),
