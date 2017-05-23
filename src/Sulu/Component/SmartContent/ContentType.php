@@ -289,7 +289,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         // append view data
         $filters['page'] = $page;
         $filters['hasNextPage'] = $data->getHasNextPage();
-        $filters['referencedUuids'] = $data->getReferencedUuids();
         $filters['paginated'] = $configuration->hasPagination();
         $property->setValue($filters);
 
@@ -324,7 +323,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 'page' => null,
                 'hasNextPage' => null,
                 'paginated' => false,
-                'referencedUuids' => [],
                 'categoryRoot' => $params['category_root']->getValue(),
                 'categoriesParameter' => $params['categories_parameter']->getValue(),
                 'tagsParameter' => $params['tags_parameter']->getValue(),
@@ -333,20 +331,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         );
 
         return $config;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $value = $property->getValue();
-
-        if (!array_key_exists('referencedUuids', $value)) {
-            return [];
-        }
-
-        return $value['referencedUuids'];
     }
 
     /**

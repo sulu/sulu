@@ -15,10 +15,12 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -26,7 +28,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * content type for internal links selection.
  */
-class InternalLinks extends ComplexContentType implements ContentTypeExportInterface
+class InternalLinks extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
      * @var ContentQueryExecutorInterface
@@ -43,6 +45,11 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     private $logger;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
      * @var string
      */
     private $template;
@@ -55,12 +62,14 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
+        ReferenceStoreInterface $referenceStore,
         LoggerInterface $logger,
         $template,
         $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
+        $this->referenceStore = $referenceStore;
         $this->logger = $logger;
         $this->template = $template;
         $this->showDrafts = $showDrafts;
@@ -83,16 +92,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
 
         $refs = isset($data) ? $data : [];
         $property->setValue($refs);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $data = $property->getValue();
-
-        return isset($data) ? $data : [];
     }
 
     /**
@@ -206,5 +205,20 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     ) {
         $property->setValue(json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preResolve(PropertyInterface $property)
+    {
+        $uuids = $property->getValue();
+        if (!is_array($uuids)) {
+            return;
+        }
+
+        foreach ($uuids as $uuid) {
+            $this->referenceStore->add($uuid);
+        }
     }
 }

@@ -165,5 +165,11 @@
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <tag name="massive_build.builder" />
         </service>
+
+        <!-- reference-store -->
+        <service id="sulu_content.reference_store.content"
+                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="content"/>
+        </service>
     </services>
 </container>

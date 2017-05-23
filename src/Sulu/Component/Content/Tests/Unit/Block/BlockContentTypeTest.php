@@ -15,6 +15,7 @@ use Jackalope\Node;
 use PHPCR\NodeInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property;
@@ -68,13 +69,13 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
             ['text_area', new TextArea('not in use')],
-            ['internal_link', new SingleInternalLink('not in use')],
+            ['internal_link', new SingleInternalLink(new ReferenceStore(), 'not in use')],
             ['block', $this->blockContentType],
         ];
 
         $this->contentTypeManager->get('text_line')->willReturn(new TextLine('not in use'));
         $this->contentTypeManager->get('text_area')->willReturn(new TextArea('not in use'));
-        $this->contentTypeManager->get('internal_link')->willReturn(new SingleInternalLink('not in use'));
+        $this->contentTypeManager->get('internal_link')->willReturn(new SingleInternalLink(new ReferenceStore(), 'not in use'));
         $this->contentTypeManager->get('block')->willReturn($this->blockContentType);
     }
 
@@ -549,45 +550,5 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
-    }
-
-    public function testGetReferencedUuids()
-    {
-        $this->prepareMultipleBlockWithLinksProperty();
-        $data = [
-            [
-                'type' => 'type1',
-                'title' => 'Test-Title-1',
-                'article' => [
-                    'Test-Article-1-1',
-                    'Test-Article-1-2',
-                ],
-                'sub-block' => [
-                    'type' => 'subType1',
-                    'title' => 'Test-Title-Sub-1',
-                    'article' => 'Test-Article-Sub-1',
-                    'link' => 'UUID-1',
-                ],
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-2',
-                'link' => 'UUID-1',
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-3',
-                'link' => 'UUID-2',
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-4',
-                'link' => 'UUID-3',
-            ],
-        ];
-        $this->blockProperty->setValue($data);
-
-        $result = $this->blockContentType->getReferencedUuids($this->blockProperty);
-        $this->assertEquals(['UUID-1', 'UUID-2', 'UUID-3'], $result, true);
     }
 }

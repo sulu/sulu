@@ -18,6 +18,7 @@
         <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
+            <argument type="service" id="sulu_content.reference_store.content"/>
             <argument type="service" id="logger"/>
             <argument>%sulu.content.type.internal_links.template%</argument>
             <argument>%sulu_document_manager.show_drafts%</argument>
@@ -26,7 +27,9 @@
         </service>
 
         <service id="sulu.content.type.single_internal_link" class="%sulu.content.type.single_internal_link.class%">
+            <argument type="service" id="sulu_content.reference_store.content"/>
             <argument>%sulu.content.type.single_internal_link.template%</argument>
+
             <tag name="sulu.content.type" alias="single_internal_link"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>

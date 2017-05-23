@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\HttpCacheBundle\DependencyInjection\SuluHttpCacheExtension;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
@@ -46,6 +47,11 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
      */
     private $logger;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $referenceStore;
+
     public function setUp()
     {
         parent::setUp();
@@ -55,6 +61,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->replacer = $this->prophesize(ReplacerInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStorePoolInterface::class);
 
         $this->container->setParameter('kernel.environment', 'test');
         $this->container->set('sulu_core.webspace.webspace_manager', $this->webspaceManager->reveal());
@@ -62,6 +69,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->container->set('request_stack', $this->requestStack->reveal());
         $this->container->set('sulu_core.webspace.webspace_manager.url_replacer', $this->replacer->reveal());
         $this->container->set('logger', $this->logger->reveal());
+        $this->container->set('sulu_website.reference_store_pool', $this->referenceStore->reveal());
     }
 
     protected function getContainerExtensions()

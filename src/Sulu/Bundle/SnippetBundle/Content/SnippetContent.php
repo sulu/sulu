@@ -16,22 +16,34 @@ use PHPCR\PropertyType;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 /**
  * ContentType for Snippets.
  */
-class SnippetContent extends ComplexContentType implements ContentTypeExportInterface
+class SnippetContent extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
      * @var SnippetResolverInterface
      */
     private $snippetResolver;
+
+    /**
+     * @var DefaultSnippetManagerInterface
+     */
+    private $defaultSnippetManager;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
 
     /**
      * @var string
@@ -44,18 +56,22 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     protected $defaultEnabled;
 
     /**
-     * @var DefaultSnippetManagerInterface
+     * @param DefaultSnippetManagerInterface $defaultSnippetManager
+     * @param SnippetResolverInterface $snippetResolver
+     * @param ReferenceStoreInterface $referenceStore
+     * @param true $defaultEnabled
+     * @param string $template
      */
-    private $defaultSnippetManager;
-
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,
         SnippetResolverInterface $snippetResolver,
+        ReferenceStoreInterface $referenceStore,
         $defaultEnabled,
         $template
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
+        $this->referenceStore = $referenceStore;
         $this->defaultEnabled = $defaultEnabled;
         $this->template = $template;
     }
@@ -194,16 +210,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $data = $property->getValue();
-
-        return $this->getUuids($data);
-    }
-
-    /**
      * The data is not always normalized, so we normalize the data here.
      */
     private function getUuids($data)
@@ -258,5 +264,15 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     ) {
         $property->setValue(json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preResolve(PropertyInterface $property)
+    {
+        foreach ($this->getUuids($property->getValue()) as $uuid) {
+            $this->referenceStore->add($uuid);
+        }
     }
 }

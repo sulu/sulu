@@ -16,6 +16,8 @@ use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -63,6 +65,11 @@ class ContentDataProvider implements DataProviderInterface
     private $session;
 
     /**
+     * @var ReferenceStore
+     */
+    private $referenceStore;
+
+    /**
      * @var bool
      */
     private $showDrafts;
@@ -73,6 +80,7 @@ class ContentDataProvider implements DataProviderInterface
         DocumentManagerInterface $documentManager,
         LazyLoadingValueHolderFactory $proxyFactory,
         SessionInterface $session,
+        ReferenceStoreInterface $referenceStore,
         $showDrafts
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
@@ -80,6 +88,7 @@ class ContentDataProvider implements DataProviderInterface
         $this->documentManager = $documentManager;
         $this->proxyFactory = $proxyFactory;
         $this->session = $session;
+        $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
     }
 
@@ -374,6 +383,8 @@ class ContentDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
+                $this->referenceStore->add($item['uuid']);
+
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
             },
             $data

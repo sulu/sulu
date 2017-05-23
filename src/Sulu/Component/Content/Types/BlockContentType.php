@@ -22,11 +22,12 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 /**
  * content type for block.
  */
-class BlockContentType extends ComplexContentType implements ContentTypeExportInterface
+class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
      * @var ContentTypeManagerInterface
@@ -407,23 +408,18 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     /**
      * {@inheritdoc}
      */
-    public function getReferencedUuids(PropertyInterface $property)
+    public function preResolve(PropertyInterface $property)
     {
-        $data = $this->prepareData(
+        $this->prepareData(
             $property,
             function (ContentTypeInterface $contentType, $property) {
-                return $contentType->getReferencedUuids($property);
+                if (!$contentType instanceof PreResolvableContentTypeInterface) {
+                    return;
+                }
+
+                return $contentType->preResolve($property);
             },
             false
         );
-
-        $referencedUuids = [];
-        array_walk_recursive($data, function ($val) use (&$referencedUuids) {
-            if (!in_array($val, $referencedUuids)) {
-                $referencedUuids[] = $val;
-            }
-        });
-
-        return $referencedUuids;
     }
 }
