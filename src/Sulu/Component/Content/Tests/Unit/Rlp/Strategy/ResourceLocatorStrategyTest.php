@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
-class ResourceLocatorStrategyTest extends \PHPUnit_Framework_TestCase
+class ResourceLocatorStrategyTest extends SuluTestCase
 {
     /**
      * @var ResourceLocatorMapperInterface
@@ -73,89 +74,177 @@ class ResourceLocatorStrategyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->mapper = $this->prophesize(ResourceLocatorMapperInterface::class);
-        $this->cleaner = $this->prophesize(PathCleanupInterface::class);
+        $this->cleaner = $this->getContainer()->get('sulu.content.path_cleaner');
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->nodeHelper = $this->prophesize(SuluNodeHelper::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
-        $this->resourceLocatorGenerator = $this->prophesize(ResourceLocatorGeneratorInterface::class);
+        $this->resourceLocatorGenerator = $this->getContainer()->get('sulu.content.resource_locator.strategy.tree_generator');
 
         $this->resourceLocatorStrategy = $this->getMockForAbstractClass(
             ResourceLocatorStrategy::class,
             [
                 $this->mapper->reveal(),
-                $this->cleaner->reveal(),
+                $this->cleaner,
                 $this->structureManager->reveal(),
                 $this->contentTypeManager->reveal(),
                 $this->nodeHelper->reveal(),
                 $this->documentInspector->reveal(),
                 $this->documentManager->reveal(),
-                $this->resourceLocatorGenerator->reveal(),
+                $this->resourceLocatorGenerator,
             ]
         );
     }
 
     public function testGenerate()
     {
+        $title = 'test';
+        $uuid = '123-123-123';
+        $webspaceKey = 'sulu_io';
+        $languageCode = 'de';
+
+        $expectedPath = '/test';
+
         $document = $this->prophesize(ParentBehavior::class);
 
-        $this->documentManager->find('123-123-123', 'de', ['load_ghost_content' => false])
+        $this->documentManager->find($uuid, $languageCode, ['load_ghost_content' => false])
             ->willReturn($document->reveal());
+        $this->documentInspector->getUuid($document->reveal())
+            ->willReturn($uuid);
 
-        $this->documentInspector->getUuid($document->reveal())->willReturn('123-123-123');
-
-        $this->mapper->loadByContentUuid('123-123-123', 'sulu_io', 'de', null)
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, null)
             ->willThrow(ResourceLocatorNotFoundException::class);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedPath);
 
-        $this->resourceLocatorGenerator->generate('test', null)->willReturn('/test');
-        $this->cleaner->cleanup('/test', 'de')->willReturn('/test');
-        $this->mapper->getUniquePath('/test', 'sulu_io', 'de', null)->willReturn('/test');
+        $result = $this->resourceLocatorStrategy->generate($title, $uuid, $webspaceKey, $languageCode);
+        $this->assertEquals($expectedPath, $result);
+    }
 
-        $this->assertEquals(
-            $this->resourceLocatorStrategy->generate('test', '123-123-123', 'sulu_io', 'de'),
-            '/test'
-        );
+    public function testGenerateLatinExtended()
+    {
+        $title = 'tytuł testu w rozszerzonej łacinie';
+        $uuid = '123-123-123';
+        $webspaceKey = 'sulu_io';
+        $languageCode = 'de';
+
+        $expectedPath = '/tytul-testu-w-rozszerzonej-lacinie';
+
+        $document = $this->prophesize(ParentBehavior::class);
+
+        $this->documentManager->find($uuid, $languageCode, ['load_ghost_content' => false])
+            ->willReturn($document->reveal());
+        $this->documentInspector->getUuid($document->reveal())
+            ->willReturn($uuid);
+
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, null)
+            ->willThrow(ResourceLocatorNotFoundException::class);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedPath);
+
+        $result = $this->resourceLocatorStrategy->generate($title, $uuid, $webspaceKey, $languageCode);
+        $this->assertEquals($expectedPath, $result);
+    }
+
+    public function testGenerateNonLatin()
+    {
+        $title = 'тестовий заголовок з і, ї, є, ґ';
+        $uuid = '123-123-123';
+        $webspaceKey = 'sulu_io';
+        $languageCode = 'de';
+
+        $expectedPath = '/testovii-zagolovok-z-i-yi-ie-g';
+
+        $document = $this->prophesize(ParentBehavior::class);
+
+        $this->documentManager->find($uuid, $languageCode, ['load_ghost_content' => false])
+            ->willReturn($document->reveal());
+        $this->documentInspector->getUuid($document->reveal())
+            ->willReturn($uuid);
+
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, null)
+            ->willThrow(ResourceLocatorNotFoundException::class);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedPath);
+
+        $result = $this->resourceLocatorStrategy->generate($title, $uuid, $webspaceKey, $languageCode);
+        $this->assertEquals($expectedPath, $result);
+    }
+
+    public function testGenerateSpecialChars()
+    {
+        $title = '@#$%&*()';
+        $uuid = '123-123-123';
+        $webspaceKey = 'sulu_io';
+        $languageCode = 'de';
+
+        $expectedPath = '/cd5af187dd19cfc9256678a9824d5e9f';
+
+        $document = $this->prophesize(ParentBehavior::class);
+
+        $this->documentManager->find($uuid, $languageCode, ['load_ghost_content' => false])
+            ->willReturn($document->reveal());
+        $this->documentInspector->getUuid($document->reveal())
+            ->willReturn($uuid);
+
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, null)
+            ->willThrow(ResourceLocatorNotFoundException::class);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedPath);
+
+        $result = $this->resourceLocatorStrategy->generate($title, $uuid, $webspaceKey, $languageCode);
+        $this->assertEquals($expectedPath, $result);
     }
 
     public function testGenerateWithParentDocument()
     {
+        $title = 'test';
+        $uuid = '123-123-123';
+        $parentUuid = '456-456-456';
+        $webspaceKey = 'sulu_io';
+        $languageCode = 'de';
+        $segmentKey = null;
+
+        $expectedPath = '/parent/test';
+        $expectedParentPath = '/parent';
+
         $document = $this->prophesize(ParentBehavior::class);
         $parentDocument = $this->prophesize(ParentBehavior::class);
         $document->getParent()->willReturn($parentDocument);
 
-        $this->documentManager->find('123-123-123', 'de', ['load_ghost_content' => false])
+        $this->documentManager->find($uuid, $languageCode, ['load_ghost_content' => false])
             ->willReturn($document->reveal());
-        $this->documentManager->find('456-456-456', 'de', ['load_ghost_content' => false])
+        $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false])
             ->willReturn($parentDocument->reveal());
+        $this->documentInspector->getUuid($document->reveal())
+            ->willReturn($uuid);
+        $this->documentInspector->getUuid($parentDocument->reveal())
+            ->willReturn($parentUuid);
 
-        $this->documentInspector->getUuid($document->reveal())->willReturn('123-123-123');
-        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('456-456-456');
-
-        $this->mapper->loadByContentUuid('123-123-123', 'sulu_io', 'de', null)
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey)
             ->willThrow(ResourceLocatorNotFoundException::class);
-        $this->mapper->loadByContentUuid('456-456-456', 'sulu_io', 'de', null)
-            ->willReturn('/parent');
+        $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn($expectedParentPath);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn($expectedPath);
 
-        $this->resourceLocatorGenerator->generate('test', '/parent')->willReturn('/parent/test');
-        $this->cleaner->cleanup('/parent/test', 'de')->willReturn('/parent/test');
-        $this->mapper->getUniquePath('/parent/test', 'sulu_io', 'de', null)->willReturn('/parent/test');
-
-        $this->assertEquals(
-            $this->resourceLocatorStrategy->generate('test', '123-123-123', 'sulu_io', 'de'),
-            '/parent/test'
-        );
+        $result = $this->resourceLocatorStrategy->generate($title, $uuid, $webspaceKey, $languageCode);
+        $this->assertEquals($expectedPath, $result);
     }
 
     public function testGenerateWithParent()
     {
-        $this->resourceLocatorGenerator->generate('test', null)->willReturn('/test');
-        $this->cleaner->cleanup('/test', 'de')->willReturn('/test');
-        $this->mapper->getUniquePath('/test', 'sulu_io', 'de', null)->willReturn('/test');
+        $title = 'test';
+        $webspaceKey = 'sulu_io';
+        $languageCode = 'de';
+        $segmentKey = null;
+        $expectedPath = '/test';
 
-        $this->assertEquals(
-            $this->resourceLocatorStrategy->generate('test', null, 'sulu_io', 'de'),
-            '/test'
-        );
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn('/test');
+
+        $result = $this->resourceLocatorStrategy->generate($title, null, $webspaceKey, $languageCode, $segmentKey);
+        $this->assertEquals($expectedPath, $result);
     }
 }

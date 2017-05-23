@@ -1600,10 +1600,10 @@ class NodeControllerTest extends SuluTestCase
         $uuid = json_decode($client->getResponse()->getContent(), true)['id'];
 
         $germanDocument = $this->documentManager->find($uuid, 'de');
-        $this->assertStringStartsWith('/test_de/test_de', $germanDocument->getResourceSegment());
+        $this->assertStringStartsWith('/test_de/test-de', $germanDocument->getResourceSegment());
 
         $englishDocument = $this->documentManager->find($uuid, 'en');
-        $this->assertStringStartsWith('/test_en/test_en', $englishDocument->getResourceSegment());
+        $this->assertStringStartsWith('/test_en/test-en', $englishDocument->getResourceSegment());
     }
 
     public function testUnpublish()

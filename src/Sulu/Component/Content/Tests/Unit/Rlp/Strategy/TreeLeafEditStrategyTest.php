@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -29,8 +30,9 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
+use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
-class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
+class TreeLeafEditStrategyTest extends SuluTestCase
 {
     /**
      * @var ResourceLocatorMapperInterface
@@ -72,25 +74,31 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $treeStrategy;
 
+    /**
+     * @var SlugifierInterface
+     */
+    private $slugifier;
+
     public function setUp()
     {
         $this->mapper = $this->prophesize(ResourceLocatorMapperInterface::class);
-        $this->cleaner = $this->prophesize(PathCleanupInterface::class);
+        $this->cleaner = $this->getContainer()->get('sulu.content.path_cleaner');
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->nodeHelper = $this->prophesize(SuluNodeHelper::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $this->slugifier = $this->getContainer()->get('sulu_document_manager.slugifier');
 
         $this->treeStrategy = new TreeLeafEditStrategy(
             $this->mapper->reveal(),
-            $this->cleaner->reveal(),
+            $this->cleaner,
             $this->structureManager->reveal(),
             $this->contentTypeManager->reveal(),
             $this->nodeHelper->reveal(),
             $this->documentInspector->reveal(),
             $this->documentManager->reveal(),
-            new TreeGenerator()
+            new TreeGenerator($this->slugifier)
         );
     }
 
@@ -108,19 +116,24 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
 
+        $expectedPath = '/path/to/parent/new-page';
+        $expectedParentPath = '/path/to/parent';
+
         $parent = $this->prophesize(PageDocument::class);
         $parent->getPublished()->willReturn(true);
 
-        $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false])->willReturn($parent);
-        $this->documentInspector->getUuid($parent)->willReturn($parentUuid);
-        $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, null)->willReturn('path/to/parent');
-        $this->cleaner->cleanup('path/to/parent/new-page', $languageCode)->willReturn('path/to/parent/new-page');
-        $this->mapper->getUniquePath('path/to/parent/new-page', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/parent/new-page'
-        );
+        $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false])
+            ->willReturn($parent);
+        $this->documentInspector->getUuid($parent)
+            ->willReturn($parentUuid);
+
+        $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedParentPath);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedPath);
 
         $result = $this->treeStrategy->generate($title, $parentUuid, $webspaceKey, $languageCode);
-        $this->assertEquals('path/to/parent/new-page', $result);
+        $this->assertEquals($expectedPath, $result);
     }
 
     public function testGenerateWithSegmentKey()
@@ -131,19 +144,24 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $languageCode = 'de';
         $segmentKey = 'segment';
 
+        $expectedPath = '/path/to/parent/new-page';
+        $expectedParentPath = '/path/to/parent';
+
         $parent = $this->prophesize(PageDocument::class);
         $parent->getPublished()->willReturn(true);
 
-        $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false])->willReturn($parent);
-        $this->documentInspector->getUuid($parent)->willReturn($parentUuid);
-        $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, null)->willReturn('path/to/parent');
-        $this->cleaner->cleanup('path/to/parent/new-page', $languageCode)->willReturn('path/to/parent/new-page');
-        $this->mapper->getUniquePath('path/to/parent/new-page', $webspaceKey, $languageCode, $segmentKey)->willReturn(
-            'path/to/parent/new-page'
-        );
+        $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false])
+            ->willReturn($parent);
+        $this->documentInspector->getUuid($parent)
+            ->willReturn($parentUuid);
+
+        $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, null)
+            ->willReturn($expectedParentPath);
+        $this->mapper->getUniquePath($expectedPath, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn($expectedPath);
 
         $result = $this->treeStrategy->generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey);
-        $this->assertEquals('path/to/parent/new-page', $result);
+        $this->assertEquals($expectedPath, $result);
     }
 
     public function testGenerateWithoutParentUuid()
@@ -152,16 +170,16 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
 
+        $expectedPath = '/path/to/parent/new-page';
+
         $parent = $this->prophesize(PageDocument::class);
         $parent->getPublished()->willReturn(true);
 
-        $this->cleaner->cleanup('/new-page', $languageCode)->willReturn('/new-page');
-        $this->mapper->getUniquePath('/new-page', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/parent/new-page'
-        );
+        $this->mapper->getUniquePath('/new-page', $webspaceKey, $languageCode, null)
+            ->willReturn($expectedPath);
 
         $result = $this->treeStrategy->generate($title, null, $webspaceKey, $languageCode);
-        $this->assertEquals('path/to/parent/new-page', $result);
+        $this->assertEquals($expectedPath, $result);
     }
 
     public function testSave()
@@ -170,7 +188,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $languageCode = 'de';
 
         $document = $this->prophesize(PageDocument::class);
-        $document->getResourceSegment()->willReturn('path/to/doc');
+        $document->getResourceSegment()->willReturn('/path/to/doc');
         $document->getChildren()->willReturn([]);
 
         $session = $this->prophesize(SessionInterface::class);
@@ -182,9 +200,10 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
-        $this->cleaner->validate('path/to/doc')->willReturn(true);
-        $this->mapper->unique('path/to/doc', $webspaceKey, $languageCode)->willReturn(true);
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)
+            ->willReturn('/old/path');
+        $this->mapper->unique('/path/to/doc', $webspaceKey, $languageCode)
+            ->willReturn(true);
         $this->mapper->save($document)->shouldBeCalled();
 
         $this->treeStrategy->save($document->reveal(), null);
@@ -196,14 +215,15 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $languageCode = 'de';
 
         $document = $this->prophesize(PageDocument::class);
-        $document->getResourceSegment()->willReturn('path/to/doc');
+        $document->getResourceSegment()->willReturn('/path/to/doc');
         $node = $this->prophesize(NodeInterface::class);
 
         $this->documentInspector->getNode($document)->willReturn($node);
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('path/to/doc');
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/doc');
 
         $this->treeStrategy->save($document->reveal(), null);
     }
@@ -223,8 +243,8 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getWebspace($document)->willReturn($webspaceKey);
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
-        $this->cleaner->validate('path/to/doc')->willReturn(false);
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)
+            ->willReturn('old/path');
 
         $this->treeStrategy->save($document->reveal(), null);
     }
@@ -237,7 +257,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $languageCode = 'de';
 
         $document = $this->prophesize(PageDocument::class);
-        $document->getResourceSegment()->willReturn('path/to/doc');
+        $document->getResourceSegment()->willReturn('/path/to/doc');
         $node = $this->prophesize(NodeInterface::class);
 
         $this->documentInspector->getNode($document)->willReturn($node);
@@ -245,12 +265,12 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('document-uuid-uuid');
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
-        $this->cleaner->validate('path/to/doc')->willReturn(true);
-        $this->mapper->unique('path/to/doc', $webspaceKey, $languageCode)->willReturn(false);
-        $this->mapper->loadByResourceLocator('path/to/doc', $webspaceKey, $languageCode, null)->willReturn(
-            'other-uuid'
-        );
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)
+            ->willReturn('/old/path');
+        $this->mapper->unique('/path/to/doc', $webspaceKey, $languageCode)
+            ->willReturn(false);
+        $this->mapper->loadByResourceLocator('/path/to/doc', $webspaceKey, $languageCode, null)
+            ->willReturn('other-uuid');
 
         $this->treeStrategy->save($document->reveal(), null);
     }
@@ -267,7 +287,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $session->save()->shouldBeCalledTimes(2);
 
         $childDocument = $this->prophesize(PageDocument::class);
-        $childDocument->getResourceSegment()->willReturn('path/to/olddoc/pub');
+        $childDocument->getResourceSegment()->willReturn('/path/to/olddoc/pub');
         $childDocument->getChildren()->willReturn([]);
         $childDocument->getPublished()->willReturn(true);
 
@@ -281,7 +301,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getUuid($childDocument)->willReturn('published-child-uuid-uuid');
 
         $document = $this->prophesize(PageDocument::class);
-        $document->getResourceSegment()->willReturn('path/to/doc');
+        $document->getResourceSegment()->willReturn('/path/to/doc');
         $document->getChildren()->willReturn([$childDocument]);
         $document->getPublished()->willReturn(true);
 
@@ -293,28 +313,25 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
-        $this->cleaner->validate('path/to/doc')->willReturn(true);
-        $this->mapper->unique('path/to/doc', $webspaceKey, $languageCode)->willReturn(true);
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)
+            ->willReturn('/old/path');
+        $this->mapper->unique('/path/to/doc', $webspaceKey, $languageCode)
+            ->willReturn(true);
         $this->mapper->save($document)->shouldBeCalled();
 
         // adapt published child
-        $this->documentManager->find('uuid-uuid-uuid-uuid', $languageCode, ['load_ghost_content' => false])->willReturn(
-            $document
-        );
+        $this->documentManager->find('uuid-uuid-uuid-uuid', $languageCode, ['load_ghost_content' => false])
+            ->willReturn($document);
         $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
-        $this->mapper->loadByContentUuid('uuid-uuid-uuid-uuid', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc'
-        );
-        $this->cleaner->cleanup('path/to/doc/pub', $languageCode)->willReturn('path/to/doc/pub');
-        $this->mapper->getUniquePath('path/to/doc/pub', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc/pub'
-        );
+        $this->mapper->loadByContentUuid('uuid-uuid-uuid-uuid', $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/doc');
+        $this->mapper->getUniquePath('/path/to/doc/pub', $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/doc/pub');
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getContentTypeName()->willReturn('content-type');
         $structure->getPropertyByTagName('sulu.rlp')->willReturn($property);
-        $property->setValue('path/to/doc/pub')->shouldBeCalled();
+        $property->setValue('/path/to/doc/pub')->shouldBeCalled();
 
         $contentType = $this->prophesize(ContentTypeInterface::class);
         $this->contentTypeManager->get('content-type')->willReturn($contentType);
@@ -322,12 +339,13 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $translatedProperty = $this->prophesize(PropertyInterface::class);
         $this->nodeHelper->getTranslatedProperty($property, $languageCode)->willReturn($translatedProperty);
         $contentType->write($childNode, $translatedProperty, null, $webspaceKey, $languageCode, null)->shouldBeCalled();
-        $childDocument->setResourceSegment('path/to/doc/pub')->shouldBeCalled();
-        $childDocument->getResourceSegment()->willReturn('path/to/doc/pub');
+        $childDocument->setResourceSegment('/path/to/doc/pub')->shouldBeCalled();
+        $childDocument->getResourceSegment()->willReturn('/path/to/doc/pub');
 
-        $this->mapper->loadByContent($childNode, $webspaceKey, $languageCode, null)->willReturn('path/to/olddoc/pub');
-        $this->cleaner->validate('path/to/doc/pub')->willReturn(true);
-        $this->mapper->unique('path/to/doc/pub', $webspaceKey, $languageCode)->willReturn(true);
+        $this->mapper->loadByContent($childNode, $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/olddoc/pub');
+        $this->mapper->unique('/path/to/doc/pub', $webspaceKey, $languageCode)
+            ->willReturn(true);
         $this->mapper->save($childDocument)->shouldBeCalled();
 
         $this->treeStrategy->save($document->reveal(), null);
@@ -345,7 +363,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $session->save()->shouldBeCalledTimes(2);
 
         $childDocument = $this->prophesize(PageDocument::class);
-        $childDocument->getResourceSegment()->willReturn('path/to/olddoc/pub');
+        $childDocument->getResourceSegment()->willReturn('/path/to/olddoc/pub');
         $childDocument->getChildren()->willReturn([]);
         $childDocument->getPublished()->willReturn(false);
 
@@ -359,7 +377,7 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getUuid($childDocument)->willReturn('published-child-uuid-uuid');
 
         $document = $this->prophesize(PageDocument::class);
-        $document->getResourceSegment()->willReturn('path/to/doc');
+        $document->getResourceSegment()->willReturn('/path/to/doc');
         $document->getChildren()->willReturn([$childDocument]);
         $document->getPublished()->willReturn(true);
 
@@ -371,28 +389,26 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getOriginalLocale($document)->willReturn($languageCode);
         $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
 
-        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)->willReturn('old/path');
-        $this->cleaner->validate('path/to/doc')->willReturn(true);
-        $this->mapper->unique('path/to/doc', $webspaceKey, $languageCode)->willReturn(true);
+        $this->mapper->loadByContent($node, $webspaceKey, $languageCode, null)
+            ->willReturn('/old/path');
+        $this->mapper->unique('/path/to/doc', $webspaceKey, $languageCode)
+            ->willReturn(true);
         $this->mapper->save($document)->shouldBeCalled();
 
         // adapt published child
-        $this->documentManager->find('uuid-uuid-uuid-uuid', $languageCode, ['load_ghost_content' => false])->willReturn(
-            $document
-        );
-        $this->documentInspector->getUuid($document)->willReturn('uuid-uuid-uuid-uuid');
-        $this->mapper->loadByContentUuid('uuid-uuid-uuid-uuid', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc'
-        );
-        $this->cleaner->cleanup('path/to/doc/pub', $languageCode)->willReturn('path/to/doc/pub');
-        $this->mapper->getUniquePath('path/to/doc/pub', $webspaceKey, $languageCode, null)->willReturn(
-            'path/to/doc/pub'
-        );
+        $this->documentManager->find('uuid-uuid-uuid-uuid', $languageCode, ['load_ghost_content' => false])
+            ->willReturn($document);
+        $this->documentInspector->getUuid($document)
+            ->willReturn('uuid-uuid-uuid-uuid');
+        $this->mapper->loadByContentUuid('uuid-uuid-uuid-uuid', $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/doc');
+        $this->mapper->getUniquePath('/path/to/doc/pub', $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/doc/pub');
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getContentTypeName()->willReturn('content-type');
         $structure->getPropertyByTagName('sulu.rlp')->willReturn($property);
-        $property->setValue('path/to/doc/pub')->shouldBeCalled();
+        $property->setValue('/path/to/doc/pub')->shouldBeCalled();
 
         $contentType = $this->prophesize(ContentTypeInterface::class);
         $this->contentTypeManager->get('content-type')->willReturn($contentType);
@@ -400,8 +416,8 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $translatedProperty = $this->prophesize(PropertyInterface::class);
         $this->nodeHelper->getTranslatedProperty($property, $languageCode)->willReturn($translatedProperty);
         $contentType->write($childNode, $translatedProperty, null, $webspaceKey, $languageCode, null)->shouldBeCalled();
-        $childDocument->setResourceSegment('path/to/doc/pub')->shouldBeCalled();
-        $childDocument->getResourceSegment()->willReturn('path/to/doc/pub');
+        $childDocument->setResourceSegment('/path/to/doc/pub')->shouldBeCalled();
+        $childDocument->getResourceSegment()->willReturn('/path/to/doc/pub');
 
         $this->treeStrategy->save($document->reveal(), null);
     }
@@ -415,10 +431,11 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getWebspace($document)->willReturn('sulu_io');
         $this->documentInspector->getOriginalLocale($document)->willReturn('en');
 
-        $this->mapper->loadByContent($node, 'sulu_io', 'en', null)->willReturn('path/to/document');
+        $this->mapper->loadByContent($node, 'sulu_io', 'en', null)
+            ->willReturn('/path/to/document');
 
         $result = $this->treeStrategy->loadByContent($document->reveal());
-        $this->assertEquals('path/to/document', $result);
+        $this->assertEquals('/path/to/document', $result);
     }
 
     public function testLoadByContentUuid()
@@ -427,10 +444,11 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
 
-        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, null)->willReturn('path/to/document');
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, null)
+            ->willReturn('/path/to/document');
 
         $result = $this->treeStrategy->loadByContentUuid($uuid, $webspaceKey, $languageCode);
-        $this->assertEquals('path/to/document', $result);
+        $this->assertEquals('/path/to/document', $result);
     }
 
     public function testLoadByContentUuidWithSegmentKey()
@@ -440,12 +458,11 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $languageCode = 'de';
         $segmentKey = 'segment';
 
-        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey)->willReturn(
-            'path/to/document'
-        );
+        $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn('/path/to/document');
 
         $result = $this->treeStrategy->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
-        $this->assertEquals('path/to/document', $result);
+        $this->assertEquals('/path/to/document', $result);
     }
 
     public function testLoadHistoryByContentUuid()
@@ -455,13 +472,12 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $languageCode = 'de';
 
         $resourceLocator = $this->prophesize(ResourceLocatorInformation::class);
-        $resourceLocator->getResourceLocator()->willReturn('old/path');
-        $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, null)->willReturn(
-            [$resourceLocator]
-        );
+        $resourceLocator->getResourceLocator()->willReturn('/old/path');
+        $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, null)
+            ->willReturn([$resourceLocator]);
 
         $result = $this->treeStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode);
-        $this->assertEquals('old/path', $result[0]->getResourceLocator());
+        $this->assertEquals('/old/path', $result[0]->getResourceLocator());
     }
 
     public function testLoadHistoryByContentUuidWithSegmentKey()
@@ -472,22 +488,22 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $segmentKey = 'segment';
 
         $resourceLocator = $this->prophesize(ResourceLocatorInformation::class);
-        $resourceLocator->getResourceLocator()->willReturn('old/path');
-        $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey)->willReturn(
-            [$resourceLocator]
-        );
+        $resourceLocator->getResourceLocator()->willReturn('/old/path');
+        $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn([$resourceLocator]);
 
         $result = $this->treeStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
-        $this->assertEquals('old/path', $result[0]->getResourceLocator());
+        $this->assertEquals('/old/path', $result[0]->getResourceLocator());
     }
 
     public function testLoadByResourceLocator()
     {
-        $resourceLocator = 'path/to/document';
+        $resourceLocator = '/path/to/document';
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
 
-        $this->mapper->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, null)->willReturn('uuid');
+        $this->mapper->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, null)
+            ->willReturn('uuid');
 
         $result = $this->treeStrategy->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode);
         $this->assertEquals('uuid', $result);
@@ -495,14 +511,13 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadByResourceLocatorWithSegmentKey()
     {
-        $resourceLocator = 'path/to/document';
+        $resourceLocator = '/path/to/document';
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
         $segmentKey = 'segment';
 
-        $this->mapper->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey)->willReturn(
-            'uuid'
-        );
+        $this->mapper->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey)
+            ->willReturn('uuid');
 
         $result = $this->treeStrategy->loadByResourceLocator(
             $resourceLocator,
@@ -513,12 +528,42 @@ class TreeLeafEditStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('uuid', $result);
     }
 
-    public function testIsValid()
+    public function validPathProvider()
     {
-        $path = 'som/valid/path';
-        $this->cleaner->validate($path)->willReturn(true);
+        return [
+            ['/some/valid/path'],
+            ['/some-valid-path'],
+            ['/one/more/valid-path'],
+            ['/another/one/valid/path-69'],
+            ['/under_score/is_also/valid_path'],
+        ];
+    }
 
+    /**
+     * @dataProvider validPathProvider
+     */
+    public function testIsValid($path)
+    {
         $this->assertTrue($this->treeStrategy->isValid($path, 'default', 'de'));
+    }
+
+    public function invalidPathProvider()
+    {
+        return [
+            ['some/invalid/path'],
+            ['inv@lid'],
+            ['-invalid'],
+            ['invalid(path)'],
+            ['не латиниця'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidPathProvider
+     */
+    public function testIsNotValid($path)
+    {
+        $this->assertFalse($this->treeStrategy->isValid($path, 'default', 'de'));
     }
 
     public function testIsValidSlash()

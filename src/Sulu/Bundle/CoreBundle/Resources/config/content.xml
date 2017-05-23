@@ -93,7 +93,9 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
         <service id="sulu.content.resource_locator.strategy.tree_generator"
-                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator"/>
+                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator">
+            <argument type="service" id="sulu_document_manager.slugifier"/>
+        </service>
         <service id="sulu.content.resource_locator.strategy.tree_leaf_edit"
                  class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy">
             <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
