@@ -59,16 +59,6 @@
             <argument>%sulu_audience_targeting.hit.headers.referrer%</argument>
             <tag name="sulu.audience_target_rule" alias="referrer"/>
         </service>
-        <service id="sulu_audience_targeting.rules.page"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\PageRule">
-            <argument type="service" id="request_stack"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="translator"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
-            <argument>%sulu_audience_targeting.hit.headers.uuid%</argument>
-            <argument>%sulu_audience_targeting.headers.url%</argument>
-            <tag name="sulu.audience_target_rule" alias="page"/>
-        </service>
         <service id="sulu_audience_targeting.rules.query_string"
                  class="Sulu\Bundle\AudienceTargetingBundle\Rule\QueryStringRule">
             <argument type="service" id="request_stack"/>
