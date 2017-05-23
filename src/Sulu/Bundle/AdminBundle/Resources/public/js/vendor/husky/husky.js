@@ -48330,7 +48330,9 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                     addPlugin: function(name, plugin) {
                         plugins.push(name);
 
-                        CKEDITOR.plugins.add(name, plugin);
+                        if (!!plugin) {
+                            CKEDITOR.plugins.add(name, plugin);
+                        }
                     },
 
                     addToolbarButton: function(sectionName, button, icon, buttonRelations) {

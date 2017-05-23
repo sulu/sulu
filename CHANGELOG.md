@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.5.4 (dev-master)
+    * HOTFIX      #3356 [AdminBundle]           Updated husky to fix issue with ckeditor plugins
     * HOTFIX      #3314 [ContentBundle]         Fixed author migration script for removed users.
     * BUGFIX      #3355 [ContentBundle]         Fixed sort-handler of teaser-selection
 
