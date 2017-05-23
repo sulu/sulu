@@ -74,6 +74,10 @@
                 <source>sulu_audience_targeting.rules.page</source>
                 <target>Pagina</target>
             </trans-unit>
+            <trans-unit id="target-group-20" resname="sulu_audience_targeting.rules.query_string">
+                <source>sulu_audience_targeting.rules.query_string</source>
+                <target>Query String</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
