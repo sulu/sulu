@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\ReferenceStore;
+namespace Sulu\Bundle\WebsiteBundle\ReferenceStore;
 
 /**
  * Indicates missing reference-store.

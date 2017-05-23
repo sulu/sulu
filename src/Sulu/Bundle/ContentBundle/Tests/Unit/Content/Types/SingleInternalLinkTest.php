@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase

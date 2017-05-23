@@ -16,7 +16,7 @@ use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;

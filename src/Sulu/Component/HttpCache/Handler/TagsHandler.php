@@ -13,8 +13,8 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use Ramsey\Uuid\Uuid;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;

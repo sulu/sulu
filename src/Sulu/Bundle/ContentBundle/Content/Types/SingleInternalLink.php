@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;

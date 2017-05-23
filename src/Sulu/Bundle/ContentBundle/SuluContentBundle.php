@@ -47,13 +47,5 @@ class SuluContentBundle extends Bundle
                 'alias'
             )
         );
-        $container->addCompilerPass(
-            new TaggedServiceCollectorCompilerPass(
-                'sulu_content.reference_store_pool',
-                'sulu_content.reference_store',
-                0,
-                'alias'
-            )
-        );
     }
 }

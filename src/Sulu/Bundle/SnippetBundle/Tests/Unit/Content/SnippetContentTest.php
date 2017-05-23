@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 

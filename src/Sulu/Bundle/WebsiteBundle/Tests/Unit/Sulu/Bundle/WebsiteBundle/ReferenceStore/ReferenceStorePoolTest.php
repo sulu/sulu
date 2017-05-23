@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\ReferenceStore;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePool;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool;
 
 class ReferenceStorePoolTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +35,7 @@ class ReferenceStorePoolTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreNotExistsException
+     * @expectedException \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException
      */
     public function testGetStoreNotExisting()
     {

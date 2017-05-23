@@ -11,14 +11,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Teaser;
 
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreNotExistsException;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Teaser;
 use Sulu\Bundle\ContentBundle\Teaser\TeaserContentType;
 use Sulu\Bundle\ContentBundle\Teaser\TeaserManagerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;

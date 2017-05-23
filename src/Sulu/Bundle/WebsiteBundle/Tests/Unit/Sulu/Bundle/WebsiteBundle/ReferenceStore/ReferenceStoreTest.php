@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\ReferenceStore;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 
 class ReferenceStoreTest extends \PHPUnit_Framework_TestCase
 {

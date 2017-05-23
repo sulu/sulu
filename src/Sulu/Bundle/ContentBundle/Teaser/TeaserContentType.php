@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\ContentBundle\Teaser;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStoreNotExistsException;
-use Sulu\Bundle\ContentBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;

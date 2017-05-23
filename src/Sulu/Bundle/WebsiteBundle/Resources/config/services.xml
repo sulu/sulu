@@ -234,5 +234,11 @@
                  method="setLocaleOnPreviewPreRender"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <!-- reference-store -->
+        <service id="sulu_website.reference_store_pool"
+                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool">
+            <argument type="collection"/>
+        </service>
     </services>
 </container>
