@@ -648,18 +648,6 @@
                 <source>public.socialMediaProfile</source>
                 <target>Social-Media-Profil</target>
             </trans-unit>
-            <trans-unit id="235b14f26g712345e44gs2e9335a8d73" resname="social_media_profile.facebook">
-                <source>social_media_profile.facebook</source>
-                <target>Facebook</target>
-            </trans-unit>
-            <trans-unit id="235b14f26g712345e44gs2e9335a8d83" resname="social_media_profile.twitter">
-                <source>social_media_profile.twitter</source>
-                <target>Twitter</target>
-            </trans-unit>
-            <trans-unit id="235b14f26g712345e44gs2e9335a8d93" resname="social_media_profile.instagram">
-                <source>social_media_profile.instagram</source>
-                <target>Instagram</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>
