@@ -92,7 +92,7 @@
             </trans-unit>
             <trans-unit id="143d99fa2864553633a5ca2169f12232" resname="sulu.category.move-to-root">
                 <source>sulu.category.move-to-root</source>
-                <target>???</target>
+                <target>Naar het hoogste niveau verplaatsen</target>
             </trans-unit>
         </body>
     </file>
