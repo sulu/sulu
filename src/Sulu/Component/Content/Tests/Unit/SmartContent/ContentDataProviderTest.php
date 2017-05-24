@@ -490,7 +490,10 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $result = $provider->resolveResourceItems(
             ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
-            ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
+            [
+                'properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection'),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', true),
+            ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             5,
             1,

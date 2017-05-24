@@ -51,6 +51,7 @@
  * @params {Boolean} [options.datasource] name and options of datasource component
  * @params {Boolean} [options.excluded] id of an excluded item
  * @params {Boolean} [options.provider] alias of used provider
+ * @params {Boolean} [options.excludeDuplicate] if true duplicates will be excluded
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
  * @params {String} [options.translations.noContentFound] translation key
@@ -1282,21 +1283,23 @@ define(['config', 'services/sulucontent/smart-content-manager'], function(config
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
 
-                manager.schedule(this.URI.str, this.URI.data, this.options.provider).done(function(data) {
-                    this.$container.removeClass(constants.isLoadingClass);
-                    if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
-                        this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
-                        this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
-                    } else {
-                        this.overlayData.title = null;
-                        this.overlayData.fullQualifiedTitle = '';
-                    }
-                    this.items = data._embedded[this.options.resultKey];
-                    this.updateSelectedCounter(this.items.length);
-                    this.sandbox.emit(DATA_RETRIEVED.call(this));
-                }.bind(this)).fail(function(error) {
-                    this.sandbox.logger.log(error);
-                }.bind(this));
+                manager.schedule(this.URI.str, this.URI.data, this.options.excludeDuplicates ? this.options.provider : null)
+                    .done(function(data) {
+                        this.$container.removeClass(constants.isLoadingClass);
+                        if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
+                            this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
+                            this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
+                        } else {
+                            this.overlayData.title = null;
+                            this.overlayData.fullQualifiedTitle = '';
+                        }
+                        this.items = data._embedded[this.options.resultKey];
+                        this.updateSelectedCounter(this.items.length);
+                        this.sandbox.emit(DATA_RETRIEVED.call(this));
+                    }.bind(this))
+                    .fail(function(error) {
+                        this.sandbox.logger.log(error);
+                    }.bind(this));
             }
         },
 

@@ -262,11 +262,18 @@ class ContentDataProvider implements DataProviderInterface
         $properties = array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
 
+        $excluded = $filters['excluded'];
+        if (array_key_exists('exclude_duplicates', $propertyParameter)
+            && $propertyParameter['exclude_duplicates']->getValue()
+        ) {
+            $excluded = array_merge($excluded, $this->referenceStore->getAll());
+        }
+
         $this->contentQueryBuilder->init(
             [
                 'config' => $filters,
                 'properties' => $properties,
-                'excluded' => array_merge($filters['excluded'], $this->referenceStore->getAll()),
+                'excluded' => $excluded,
                 'published' => !$this->showDrafts,
             ]
         );

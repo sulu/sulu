@@ -198,6 +198,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             ],
             'datasource' => $configuration->getDatasource(),
             'deep_link' => new PropertyParameter('deep_link', $configuration->getDeepLink()),
+            'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
         ];
 
         return array_merge(
