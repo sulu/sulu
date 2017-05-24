@@ -46,7 +46,7 @@ define([
         };
 
     return {
-        schedule: function(url, data, alias) {
+        load: function(url, data, alias) {
             if (resolved) {
                 return load(url, data, alias);
             }

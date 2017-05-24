@@ -1283,7 +1283,7 @@ define(['config', 'services/sulucontent/smart-content-manager'], function(config
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
 
-                manager.schedule(this.URI.str, this.URI.data, this.options.excludeDuplicates ? this.options.provider : null)
+                manager.load(this.URI.str, this.URI.data, this.options.excludeDuplicates ? this.options.provider : null)
                     .done(function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
                         if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
