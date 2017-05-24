@@ -52,10 +52,10 @@ class CachingTest extends SuluTestCase
         $this->assertCount(2, $response->headers->getCookies());
         /** @var Cookie $visitorTargetGroupCookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals('_svtg', $visitorTargetGroupCookie->getName());
         $this->assertEquals($targetGroup->getId(), $visitorTargetGroupCookie->getValue());
         $visitorSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
+        $this->assertEquals('_svs', $visitorSessionCookie->getName());
 
         return [$client, $cookieJar];
     }
@@ -89,10 +89,10 @@ class CachingTest extends SuluTestCase
         $this->assertCount(2, $response->headers->getCookies());
         /** @var Cookie $cookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals('_svtg', $visitorTargetGroupCookie->getName());
         $this->assertEquals(0, $visitorTargetGroupCookie->getValue());
         $visitorSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
+        $this->assertEquals('_svs', $visitorSessionCookie->getName());
 
         return [$client, $cookieJar];
     }
@@ -106,7 +106,7 @@ class CachingTest extends SuluTestCase
         /** @var CookieJar $cookieJar */
         list($client, $cookieJar) = $arguments;
 
-        $cookieJar->expire('sulu-visitor-session');
+        $cookieJar->expire('_svs');
 
         $client->request('GET', '/');
         $response = $client->getResponse();
@@ -115,9 +115,9 @@ class CachingTest extends SuluTestCase
 
         /** @var Cookie $visitorTargetGroupCookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals('_svtg', $visitorTargetGroupCookie->getName());
         $visitorSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
+        $this->assertEquals('_svs', $visitorSessionCookie->getName());
 
         return [$client, $cookieJar];
     }
@@ -131,7 +131,7 @@ class CachingTest extends SuluTestCase
         /** @var CookieJar $cookieJar */
         list($client, $cookieJar) = $arguments;
 
-        $cookieJar->expire('sulu-visitor-session');
+        $cookieJar->expire('_svs');
 
         $targetGroup1 = $this->createTargetGroup(
             5,
@@ -154,10 +154,10 @@ class CachingTest extends SuluTestCase
 
         /** @var Cookie $visitorTargetGroupCookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
-        $this->assertEquals('sulu-visitor-target-group', $visitorTargetGroupCookie->getName());
+        $this->assertEquals('_svtg', $visitorTargetGroupCookie->getName());
         $this->assertEquals($targetGroup2->getId(), $visitorTargetGroupCookie->getValue());
         $visitorSessionCookie = $response->headers->getCookies()[1];
-        $this->assertEquals('sulu-visitor-session', $visitorSessionCookie->getName());
+        $this->assertEquals('_svs', $visitorSessionCookie->getName());
     }
 
     /**
