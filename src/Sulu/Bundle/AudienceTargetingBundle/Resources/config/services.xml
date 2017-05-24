@@ -79,6 +79,12 @@
             <argument type="service" id="translator"/>
             <tag name="sulu.audience_target_rule" alias="browser"/>
         </service>
+        <service id="sulu_audience_targeting.rules.os"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="os"/>
+        </service>
         <!--CONTENT TYPES-->
         <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
                  class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups">
