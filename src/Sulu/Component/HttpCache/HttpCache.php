@@ -29,11 +29,11 @@ class HttpCache extends AbstractHttpCache
 
     const TARGET_GROUP_HEADER = 'X-Sulu-Target-Group';
 
-    const TARGET_GROUP_COOKIE = 'sulu-visitor-target-group';
+    const TARGET_GROUP_COOKIE = '_svtg';
 
     const TARGET_GROUP_COOKIE_LIFETIME = 2147483647;
 
-    const VISITOR_SESSION_COOKIE = 'sulu-visitor-session';
+    const VISITOR_SESSION_COOKIE = '_svs';
 
     const USER_CONTEXT_URL_HEADER = 'X-Forwarded-URL';
 
