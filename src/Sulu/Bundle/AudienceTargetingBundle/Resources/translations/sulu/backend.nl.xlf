@@ -82,6 +82,14 @@
                 <source>sulu_audience_targeting.rules.query_string_value</source>
                 <target>Waarde</target>
             </trans-unit>
+            <trans-unit id="target-group-23" resname="sulu_audience_targeting.rules.browser">
+                <source>sulu_audience_targeting.rules.browser</source>
+                <target>Browser</target>
+            </trans-unit>
+            <trans-unit id="target-group-24" resname="sulu_audience_targeting.rules.operating_system">
+                <source>sulu_audience_targeting.rules.operating_system</source>
+                <target>Besturingssysteem</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

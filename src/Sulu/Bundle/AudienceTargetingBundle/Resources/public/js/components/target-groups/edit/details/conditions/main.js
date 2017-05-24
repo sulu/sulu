@@ -53,9 +53,24 @@ define([
                         var value = data.condition[key],
                             $conditionField = findConditionFieldByName($conditionRow, key);
 
-                        if ($conditionField.data('rule-type') === 'internal_link') {
+                        var ruleType = $conditionField.data('rule-type');
+                        if (ruleType === 'internal_link') {
                             $conditionField.data('singleInternalLink', value);
-                        } else  {
+                        } else if (ruleType === 'select') {
+                            var id = null;
+                            $conditionField.data('auraData').forEach(function(selectValue, index) {
+                                if (selectValue.name === value) {
+                                    id = index;
+
+                                    return false;
+                                }
+                            });
+
+                            $conditionField.data({
+                                'selection': [id],
+                                'selectionValues': [value]
+                            });
+                        } else {
                             $conditionField.val(value);
                         }
                     });
