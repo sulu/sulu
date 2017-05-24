@@ -155,6 +155,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         if (array_key_exists('SuluAutomationBundle', $bundles)) {
             $loader->load('automation.xml');
         }
+
+        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+            $loader->load('rule.xml');
+        }
     }
 
     private function processTemplates(ContainerBuilder $container, $config)

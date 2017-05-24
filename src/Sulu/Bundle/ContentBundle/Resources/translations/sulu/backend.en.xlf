@@ -847,6 +847,10 @@
                  <source>sulu.content.form.settings.authored</source>
                  <target>Authored Date</target>
              </trans-unit>
+            <trans-unit id="81" resname="sulu_content.rules.page">
+                <source>sulu_content.rules.page</source>
+                <target>Page</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
