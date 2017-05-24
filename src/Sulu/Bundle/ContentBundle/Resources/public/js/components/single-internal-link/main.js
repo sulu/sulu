@@ -13,7 +13,7 @@
  * @class SingleInternalLink
  * @constructor
  */
-define(['services/sulucontent/reference-store'], function(referenceStore) {
+define(['services/suluwebsite/reference-store'], function(referenceStore) {
 
     'use strict';
 

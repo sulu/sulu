@@ -16,7 +16,7 @@
 define([
     'underscore',
     'config',
-    'services/sulucontent/reference-store',
+    'services/suluwebsite/reference-store',
     'text!./item.html'
 ], function(_, Config, referenceStore, item) {
 

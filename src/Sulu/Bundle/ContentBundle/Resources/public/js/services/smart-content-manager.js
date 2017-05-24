@@ -11,7 +11,7 @@ define([
     'jquery',
     'services/husky/util',
     'services/husky/mediator',
-    'services/sulucontent/reference-store'
+    'services/suluwebsite/reference-store'
 ], function($, util, mediator, referenceStore) {
 
     'use strict';
