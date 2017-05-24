@@ -35,6 +35,13 @@
             <tag name="sulu.request_attributes" priority="96"/>
             <tag name="sulu.context" context="website"/>
         </service>
+        <service id="sulu_audience_targeting.device_detector" class="DeviceDetector\DeviceDetector"/>
+        <service id="sulu_audience_targeting.device_detector_subscriber"
+                 class="Sulu\Bundle\AudienceTargetingBundle\EventListener\DeviceDetectorSubscriber">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <tag name="sulu.context" context="website" />
+            <tag name="kernel.event_subscriber" />
+        </service>
         <!--RULES-->
         <service id="sulu_audience_targeting.target_group_evaluator"
                  class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator">
@@ -65,6 +72,18 @@
             <argument type="service" id="translator"/>
             <argument>%sulu_audience_targeting.headers.url%</argument>
             <tag name="sulu.audience_target_rule" alias="query_string"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.browser"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\BrowserRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="browser"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.os"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="os"/>
         </service>
         <!--CONTENT TYPES-->
         <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
