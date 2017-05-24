@@ -70,10 +70,6 @@
                 <source>smart-content.audience-targeting</source>
                 <target>Gebruik doelgroepen</target>
             </trans-unit>
-            <trans-unit id="target-group-19" resname="sulu_audience_targeting.rules.page">
-                <source>sulu_audience_targeting.rules.page</source>
-                <target>Pagina</target>
-            </trans-unit>
             <trans-unit id="target-group-20" resname="sulu_audience_targeting.rules.query_string">
                 <source>sulu_audience_targeting.rules.query_string</source>
                 <target>Query String</target>

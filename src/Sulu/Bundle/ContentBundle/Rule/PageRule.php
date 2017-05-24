@@ -9,8 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
+namespace Sulu\Bundle\ContentBundle\Rule;
 
+use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\InternalLink;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -114,7 +115,7 @@ class PageRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.page', [], 'backend');
+        return $this->translator->trans('sulu_content.rules.page', [], 'backend');
     }
 
     /**

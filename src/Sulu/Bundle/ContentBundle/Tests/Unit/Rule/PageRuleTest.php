@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Rule;
 
-use Sulu\Bundle\AudienceTargetingBundle\Rule\PageRule;
+use Sulu\Bundle\ContentBundle\Rule\PageRule;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
