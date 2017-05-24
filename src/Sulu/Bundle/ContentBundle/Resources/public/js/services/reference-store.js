@@ -11,10 +11,24 @@ define(function() {
 
     'use strict';
 
-    var references = {};
+    var synonyms = {},
+        references = {},
+
+        resolveAlias = function(alias) {
+            if (synonyms.hasOwnProperty(alias)) {
+                return synonyms[alias];
+            }
+
+            return alias;
+        };
 
     return {
+        setSynonym: function(synonym, alias) {
+            synonyms[synonym] = alias;
+        },
+
         add: function(alias, id) {
+            alias = resolveAlias(alias);
             if (!references[alias]) {
                 references[alias] = [];
             }
@@ -23,6 +37,7 @@ define(function() {
         },
 
         getAll: function(alias) {
+            alias = resolveAlias(alias);
             if (!references[alias]) {
                 return [];
             }

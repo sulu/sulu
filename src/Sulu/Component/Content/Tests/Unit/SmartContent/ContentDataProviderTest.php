@@ -501,13 +501,15 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
-        $this->assertEquals(
-            [
-                new ArrayAccessItem($data[0]['uuid'], $data[0], $data[0]),
-                new ArrayAccessItem($data[1]['uuid'], $data[1], $data[1]),
-            ],
-            $result->getItems()
-        );
+
+        $items = $result->getItems();
+        for ($i = 0, $length = count($items); $i < $length; ++$i) {
+            $this->assertEquals($data[$i]['uuid'], $items[$i]->getId());
+            $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
+
+            $this->assertEquals($data[$i], $items[$i]->getResource()->getWrappedValueHolderValue());
+        }
+
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-456-789', '123-123-123', '123-123-456'], $referenceStore->getAll());
     }

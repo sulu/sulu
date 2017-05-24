@@ -1,1 +1,1 @@
-define(function(){"use strict";var a={};return{add:function(b,c){a[b]||(a[b]=[]),a[b].push(c)},getAll:function(b){return a[b]?a[b]:[]}}});
+define(function(){"use strict";var a={},b={},c=function(b){return a.hasOwnProperty(b)?a[b]:b};return{setSynonym:function(b,c){a[b]=c},add:function(a,d){a=c(a),b[a]||(b[a]=[]),b[a].push(d)},getAll:function(a){return a=c(a),b[a]?b[a]:[]}}});
