@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class OperatingSystemRule implements RuleInterface
 {
     const OPERATING_SYSTEM = 'os';
-    const OPERATING_SYSTEMS = ['Android', 'iOS', 'GNU/Linux', 'Mac', 'Windows'];
+    private static $operatingSystems = ['Android', 'iOS', 'GNU/Linux', 'Mac', 'Windows'];
 
     /**
      * @var DeviceDetector
@@ -69,6 +69,6 @@ class OperatingSystemRule implements RuleInterface
                 'id' => $key,
                 'name' => $operatingSystem,
             ];
-        }, static::OPERATING_SYSTEMS, array_keys(static::OPERATING_SYSTEMS)));
+        }, static::$operatingSystems, array_keys(static::$operatingSystems)));
     }
 }

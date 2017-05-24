@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class BrowserRule implements RuleInterface
 {
     const BROWSER = 'browser';
-    const BROWSERS = ['Chrome', 'Firefox', 'Internet Explorer', 'Opera', 'Safari'];
+    private static $browsers = ['Chrome', 'Firefox', 'Internet Explorer', 'Opera', 'Safari'];
 
     /**
      * @var DeviceDetector
@@ -69,6 +69,6 @@ class BrowserRule implements RuleInterface
                 'id' => $key,
                 'name' => $browser,
             ];
-        }, static::BROWSERS, array_keys(static::BROWSERS)));
+        }, static::$browsers, array_keys(static::$browsers)));
     }
 }
