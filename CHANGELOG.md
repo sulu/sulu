@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #3379 [All]                   Upgraded to Symfony 3.3
     * BUGFIX      #3378 [ContentBundle]         Fixed smart-content-manager
+    * ENHANCEMENT #3359 [ContentBundle]         Added check for existence before redirect
     * FEATURE     #3354 [ContactBundle]         Added social media profile field
     * FEATURE     #3212 [CategoryBundle]        Added functionality to move categories
     * BUGFIX      #3363 [MediaBundle]           Fixed compatibility with newest imagick version

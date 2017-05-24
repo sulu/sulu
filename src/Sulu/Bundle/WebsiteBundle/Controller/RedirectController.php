@@ -28,9 +28,13 @@ class RedirectController extends Controller
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @deprecated since 1.6 will be removed with 2.0. Replaced by ExceptionListener::redirectPartialMatch
      */
     public function redirectWebspaceAction(Request $request)
     {
+        @trigger_error(__METHOD__ . '() is deprecated since version 1.6 and will be removed in 2.0. Replaced by ExceptionListener::redirectPartialMatch.', E_USER_DEPRECATED);
+
         $url = $this->resolveRedirectUrl(
             $request->get('redirect'),
             $request->getUri(),

@@ -1,0 +1,241 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\WebsiteBundle\EventListener;
+
+use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+
+/**
+ * This event-listener redirect trailing slashes and ".html" and redirects to default locale for partial-matches.
+ */
+class RedirectExceptionListener
+{
+    const HTML = '.html';
+
+    /**
+     * @var RequestMatcherInterface
+     */
+    private $router;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var DefaultLocaleProviderInterface
+     */
+    private $defaultLocaleProvider;
+
+    /**
+     * @var ReplacerInterface
+     */
+    private $urlReplacer;
+
+    /**
+     * @param RequestMatcherInterface $router
+     * @param RequestAnalyzerInterface $requestAnalyzer
+     * @param DefaultLocaleProviderInterface $defaultLocaleProvider
+     * @param ReplacerInterface $urlReplacer
+     */
+    public function __construct(
+        RequestMatcherInterface $router,
+        RequestAnalyzerInterface $requestAnalyzer,
+        DefaultLocaleProviderInterface $defaultLocaleProvider,
+        ReplacerInterface $urlReplacer
+    ) {
+        $this->router = $router;
+        $this->requestAnalyzer = $requestAnalyzer;
+        $this->defaultLocaleProvider = $defaultLocaleProvider;
+        $this->urlReplacer = $urlReplacer;
+    }
+
+    /**
+     * Redirect trailing slashes or ".html".
+     *
+     * @param GetResponseForExceptionEvent $event
+     */
+    public function redirectTrailingSlashOrHtml(GetResponseForExceptionEvent $event)
+    {
+        $request = $event->getRequest();
+        $route = $this->getRoute($request);
+        if ($route === $request->getPathInfo() || !$this->matchRoute($route, $request->getSchemeAndHttpHost())) {
+            return;
+        }
+
+        $event->setResponse(new RedirectResponse($route, 301));
+    }
+
+    /**
+     * Redirect partial and redirect matches.
+     *
+     * @param GetResponseForExceptionEvent $event
+     */
+    public function redirectPartialMatch(GetResponseForExceptionEvent $event)
+    {
+        $request = $event->getRequest();
+
+        /** @var RequestAttributes $attributes */
+        $attributes = $event->getRequest()->attributes->get('_sulu', new RequestAttributes());
+
+        $types = [RequestAnalyzerInterface::MATCH_TYPE_REDIRECT, RequestAnalyzerInterface::MATCH_TYPE_PARTIAL];
+        $matchType = $attributes->getAttribute('matchType');
+        if (!in_array($matchType, $types)) {
+            return;
+        }
+
+        $localization = $this->defaultLocaleProvider->getDefaultLocale();
+
+        $redirect = $attributes->getAttribute('redirect');
+        $redirect = $this->urlReplacer->replaceCountry($redirect, $localization->getCountry());
+        $redirect = $this->urlReplacer->replaceLanguage($redirect, $localization->getLanguage());
+        $redirect = $this->urlReplacer->replaceLocalization($redirect, $localization->getLocale(Localization::DASH));
+
+        $route = $this->resolveRedirectUrl(
+            $redirect,
+            $request->getUri(),
+            $attributes->getAttribute('resourceLocatorPrefix')
+        );
+
+        if (!$this->matchRoute($route, $request->getSchemeAndHttpHost())) {
+            return;
+        }
+
+        $event->setResponse(new RedirectResponse($route, 301));
+    }
+
+    /**
+     * Returns true if given route exists.
+     *
+     * @param string $route
+     * @param string $domain
+     *
+     * @return bool
+     */
+    private function matchRoute($route, $domain)
+    {
+        return $this->matchUrl($domain . $route);
+    }
+
+    /**
+     * Returns true if given url exists.
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    private function matchUrl($url)
+    {
+        $request = Request::create($url);
+        $this->requestAnalyzer->analyze($request);
+
+        try {
+            return $this->router->matchRequest($request) !== null;
+        } catch (ResourceNotFoundException $exception) {
+            return false;
+        }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string
+     */
+    protected function getRoute(Request $request)
+    {
+        /** @var RequestAttributes $attributes */
+        $attributes = $request->attributes->get('_sulu', new RequestAttributes());
+
+        return rtrim(
+            $attributes->getAttribute('resourceLocatorPrefix') . $attributes->getAttribute('resourceLocator'),
+            '/'
+        );
+    }
+
+    /**
+     * Resolve the redirect URL, appending any additional path data.
+     *
+     * @param string $redirectUrl Redirect webspace URI
+     * @param string $requestUri The actual incoming request URI
+     * @param string $resourceLocatorPrefix The prefix of the actual portal
+     *
+     * @return string URL to redirect to
+     */
+    private function resolveRedirectUrl($redirectUrl, $requestUri, $resourceLocatorPrefix)
+    {
+        $redirectInfo = $this->parseUrl($redirectUrl);
+        $requestInfo = $this->parseUrl($requestUri);
+
+        $url = sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
+
+        if (isset($redirectInfo['host'])) {
+            $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
+        }
+
+        if (isset($requestInfo['port'])) {
+            $url .= ':' . $requestInfo['port'];
+        }
+
+        if (isset($redirectInfo['path'])
+            && (// if requested url not starting with redirectUrl it need to be added
+                !isset($requestInfo['path'])
+                || strpos($requestInfo['path'], $redirectInfo['path'] . '/') !== 0)
+        ) {
+            $url .= $redirectInfo['path'];
+        }
+
+        if (isset($requestInfo['path']) && $resourceLocatorPrefix !== $requestInfo['path']) {
+            $path = $requestInfo['path'];
+            if ($resourceLocatorPrefix && 0 === strpos($path, $resourceLocatorPrefix)) {
+                $path = substr($path, strlen($resourceLocatorPrefix));
+            }
+
+            $url .= $path;
+            $url = rtrim($url, '/');
+        }
+
+        if (isset($requestInfo['query'])) {
+            $url .= '?' . $requestInfo['query'];
+        }
+
+        if (isset($requestInfo['fragment'])) {
+            $url .= '#' . $requestInfo['fragment'];
+        }
+
+        return $url;
+    }
+
+    /**
+     * Prefix http to the URL if it is missing and
+     * then parse the string using parse_url.
+     *
+     * @param string $url
+     *
+     * @return array
+     */
+    private function parseUrl($url)
+    {
+        if (!preg_match('{^https?://}', $url)) {
+            $url = 'http://' . $url;
+        }
+
+        return parse_url($url);
+    }
+}
