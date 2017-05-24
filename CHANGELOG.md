@@ -3,7 +3,13 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #3354 [ContactBundle]         Added social media profile field
+    * BUGFIX      #3363 [MediaBundle]           Fixed compatibility with newest imagick version
+    * BUGFIX      #3369 [DocumentManagerBundle] Adapt to latest ProxyManager
+    * ENHANCEMENT #3360 [ContentBundle]         Removed get-type from content-type-interface 
     * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
+    * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field
+    * ENHANCEMENT #3344 [ContentBundle]         Added possibility to add additional attributes to "sulu:link"-tag
+    * ENHANCEMENT #3345 [CustomUrlBundle]       Added redirect parameter of custom-url
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
     * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
     * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents

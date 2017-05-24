@@ -52,6 +52,10 @@ class RedirectEnhancer extends AbstractEnhancer
             $defaults['_webspace']->getKey()
         );
 
+        if ($request->getQueryString()) {
+            $url .= '?' . $request->getQueryString();
+        }
+
         return [
             '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
             'url' => $url,

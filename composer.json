@@ -25,7 +25,7 @@
         "jms/serializer-bundle": "^1.2",
         "friendsofsymfony/rest-bundle": "^1.6",
         "guzzlehttp/guzzle": "^6.2",
-        "imagine/imagine": "~0.6.1",
+        "imagine/imagine": "~0.6.1 || ~0.7.0",
         "massive/search-bundle": "0.16.*",
         "sensio/framework-extra-bundle": "^3.0",
         "sulu/document-manager": "dev-develop",

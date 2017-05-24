@@ -11,6 +11,20 @@ add the fixtures:
 INSERT INTO co_social_media_profile_types (id, name) VALUES ('1', 'social_media_profile.facebook'), ('2', 'social_media_profile.twitter'), ('3', 'social_media_profile.instagram');
 ```
 
+### ProxyManager
+
+We had to update `ocramius/proxy-manager` in order to be compatible with PHP 7.
+In case you have defined your own proxies, you should check the
+[ProxyManager UPGRADE.md](https://github.com/Ocramius/ProxyManager/blob/master/UPGRADE.md).
+
+### ContentTypeInterface
+
+Following methods and constants was removed from `ContentTypeInterface`.
+
+* `PRE_SAVE`
+* `POST_SAVE`
+* `getType()`
+
 ### Route-Table changed
 
 The route-table was extended with auditable information. Run following command to

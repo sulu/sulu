@@ -104,14 +104,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return ContentTypeInterface::PRE_SAVE;
-    }
-
-    /**
      * magic getter for twig templates.
      *
      * @param $property string name of property
