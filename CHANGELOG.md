@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #3354 [ContactBundle]         Added social media profile field
     * BUGFIX      #3363 [MediaBundle]           Fixed compatibility with newest imagick version
     * BUGFIX      #3369 [DocumentManagerBundle] Adapt to latest ProxyManager
     * ENHANCEMENT #3361 [ContentBundle]         Replace "getReferencedUuids" with a reference-store 

@@ -634,6 +634,10 @@
                 <source>contact-selection.add</source>
                 <target>Choisissez le contact</target>
             </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d63" resname="public.socialMediaProfile">
+                <source>public.socialMediaProfile</source>
+                <target>Profil de médias sociaux</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

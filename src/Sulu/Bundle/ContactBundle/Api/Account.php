@@ -28,6 +28,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
 use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile as SocialMediaProfileEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -433,6 +434,50 @@ class Account extends ApiWrapper
     }
 
     /**
+     * Add social media profile.
+     *
+     * @param SocialMediaProfileEntity $socialMediaProfile
+     *
+     * @return Account
+     */
+    public function addSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
+    {
+        $this->entity->addSocialMediaProfile($socialMediaProfile);
+
+        return $this;
+    }
+
+    /**
+     * Remove social media profile.
+     *
+     * @param SocialMediaProfileEntity $socialMediaProfile
+     */
+    public function removeSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
+    {
+        $this->entity->removeSocialMediaProfile($socialMediaProfile);
+    }
+
+    /**
+     * Get social media profiles.
+     *
+     * @return SocialMediaProfileEntity[]
+     * @VirtualProperty
+     * @SerializedName("socialMediaProfiles")
+     * @Groups({"fullAccount"})
+     */
+    public function getSocialMediaProfiles()
+    {
+        $socialMediaProfiles = [];
+        if ($this->entity->getSocialMediaProfiles()) {
+            foreach ($this->entity->getSocialMediaProfiles() as $socialMediaProfile) {
+                $socialMediaProfiles[] = $socialMediaProfile;
+            }
+        }
+
+        return $socialMediaProfiles;
+    }
+
+    /**
      * Set corporation.
      *
      * @param string $corporation
@@ -484,32 +529,6 @@ class Account extends ApiWrapper
     public function getUid()
     {
         return $this->entity->getUid();
-    }
-
-    /**
-     * Add faxes.
-     *
-     * @param FaxEntity $fax
-     *
-     * @return Account
-     */
-    public function addFaxe(FaxEntity $fax)
-    {
-        $this->entity->addFaxe($fax);
-
-        return $this;
-    }
-
-    /**
-     * Remove faxes.
-     *
-     * @param FaxEntity $fax
-     *
-     * @return Account
-     */
-    public function removeFaxe(FaxEntity $fax)
-    {
-        $this->entity->removeFaxe($fax);
     }
 
     /**

@@ -124,6 +124,12 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $faxes;
 
     /**
+     * @var Collection
+     * @Groups({"fullContact"})
+     */
+    protected $socialMediaProfiles;
+
+    /**
      * @var int
      */
     protected $formOfAddress = 0;
@@ -241,6 +247,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->addresses = new ArrayCollection();
         $this->phones = new ArrayCollection();
         $this->faxes = new ArrayCollection();
+        $this->socialMediaProfiles = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->accountContacts = new ArrayCollection();
@@ -590,6 +597,32 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getFaxes()
     {
         return $this->faxes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    {
+        $this->socialMediaProfiles[] = $socialMediaProfile;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    {
+        $this->socialMediaProfiles->removeElement($socialMediaProfile);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSocialMediaProfiles()
+    {
+        return $this->socialMediaProfiles;
     }
 
     /**

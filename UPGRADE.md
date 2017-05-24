@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Social media profile fixtures
+
+Add fixtures for social media profile of contacts. Run following command to
+add the fixtures:
+
+```bash
+INSERT INTO co_social_media_profile_types (id, name) VALUES ('1', 'Facebook'), ('2', 'Twitter'), ('3', 'Instagram');
+```
+
 ### ProxyManager
 
 We had to update `ocramius/proxy-manager` in order to be compatible with PHP 7.

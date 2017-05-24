@@ -55,6 +55,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('addressType')->defaultValue('1')->end()
                         ->scalarNode('urlType')->defaultValue('1')->end()
                         ->scalarNode('faxType')->defaultValue('1')->end()
+                        ->scalarNode('socialMediaProfileType')->defaultValue('1')->end()
                         ->scalarNode('country')->defaultValue('AT')->end()
                     ->end()
                 ->end()

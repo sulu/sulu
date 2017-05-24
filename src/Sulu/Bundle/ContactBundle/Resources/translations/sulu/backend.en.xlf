@@ -642,6 +642,10 @@
                 <source>labels.success.user.activated</source>
                 <target>User enable</target>
             </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d63" resname="public.socialMediaProfile">
+                <source>public.socialMediaProfile</source>
+                <target>Social media profile</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
