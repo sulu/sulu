@@ -31,8 +31,14 @@ define([
                         }
 
                         $row.find('[data-condition-name]').each(function(index, element) {
-                            var $element = $(element);
-                            condition[$element.attr('data-condition-name')] = $element.data('selectionValues')[0] || $element.data('singleInternalLink') || $element.val();
+                            var $element = $(element), fieldValue = null;
+
+                            if ($element.data('selectionValues') && $element.data('selectionValues').length > 0) {
+                                fieldValue = $element.data('selectionValues')[0];
+                            } else {
+                                fieldValue = $element.data('singleInternalLink') || $element.val();
+                            }
+                            condition[$element.attr('data-condition-name')] = fieldValue;
                         });
 
                         value.push({
