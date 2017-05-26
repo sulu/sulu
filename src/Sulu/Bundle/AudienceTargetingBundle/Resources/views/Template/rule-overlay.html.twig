@@ -1,0 +1,34 @@
+<form id="rule-form">
+    <input type="hidden" id="id" data-mapper-property="id">
+    <div class="form-horizontal">
+        <div class="grid-row">
+            <label for="title" class="required"><%= translations.title %></label>
+
+            <input class="form-element" type="text" id="title"
+                   data-validation-required="true"
+                   data-mapper-property="title"/>
+        </div>
+
+        <div class="grid-row">
+            <label for="frequency" class="required"><%= translations.frequency %></label>
+
+            <div id="frequency"
+                 class="grid-col-4"
+                 data-type="husky-select"
+                 data-form="true"
+                 data-aura-component="select@husky"
+                 data-aura-default-label="<%= translations.pleaseChoose %>"
+                 data-aura-data="{{ frequencies|json_encode }}"
+                 data-validation-required="true"
+                 data-mapper-property="frequency"
+                 data-mapper-return-value="id"></div>
+        </div>
+
+        <div class="grid-row form-group-vertical">
+            <label><%= translations.conditions %></label>
+            <div class="input-description"><%= translations.conditionsDescription %></div>
+        </div>
+
+        <div id="conditions" data-form="true" data-type="conditionList" data-mapper-property="conditions"></div>
+    </div>
+</form>

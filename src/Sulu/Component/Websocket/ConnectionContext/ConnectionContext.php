@@ -15,7 +15,6 @@ use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
 use Ratchet\ConnectionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass name="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule"
+                       repository-class="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepository"
+                       table="at_target_group_rules">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="title" column="title" type="string" length="255" nullable="false"/>
+        <field name="frequency" column="frequency" type="integer" nullable="false"/>
+
+        <one-to-many field="conditions"
+                     mapped-by="rule"
+                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <many-to-one field="targetGroup"
+                     inversed-by="rules"
+                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup">
+            <join-columns>
+                <join-column name="idTargetGroups" referenced-column-name="id" on-delete="CASCADE"/>
+            </join-columns>
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </many-to-one>
+    </mapped-superclass>
+</doctrine-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="sulu_audience_targeting.target_group_details" path="/template/target-group-details.html">
+        <default key="_controller">SuluAudienceTargetingBundle:Template:targetGroupDetails</default>
+    </route>
+
+    <route id="sulu_audience_targeting.rule_overlay" path="/template/rule-overlay.html">
+        <default key="_controller">SuluAudienceTargetingBundle:Template:ruleOverlay</default>
+    </route>
+
+    <route id="sulu_audience_targeting.condition_row" path="/template/condition-row.html">
+        <default key="_controller">SuluAudienceTargetingBundle:Template:conditionRow</default>
+    </route>
+
+    <route id="sulu_audience_targeting.condition_types" path="/template/condition-types.html">
+        <default key="_controller">SuluAudienceTargetingBundle:Template:conditionTypes</default>
+    </route>
+</routes>

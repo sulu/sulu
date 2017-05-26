@@ -102,6 +102,10 @@
                 <source>snippet.settings.copy-locale-overlay.info</source>
                 <target>New snippet will be created</target>
             </trans-unit>
+            <trans-unit id="27" resname="content-navigation.snippets.taxonomies">
+                <source>content-navigation.snippets.excerpt</source>
+                <target>Taxonomies</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

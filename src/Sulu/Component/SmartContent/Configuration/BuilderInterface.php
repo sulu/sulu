@@ -74,6 +74,15 @@ interface BuilderInterface
     public function enableDatasource($component, array $options = []);
 
     /**
+     * Enables audience targeting.
+     *
+     * @param bool $enable
+     *
+     * @return BuilderInterface
+     */
+    public function enableAudienceTargeting($enable = true);
+
+    /**
      * Enables categories.
      *
      * @param array $sorting array of arrays with keys column and title (translation key)

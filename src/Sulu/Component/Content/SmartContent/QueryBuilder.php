@@ -63,6 +63,11 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private $sessionManager;
 
+    /**
+     * @var string
+     */
+    protected static $structureType = Structure::TYPE_PAGE;
+
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
@@ -88,6 +93,17 @@ class QueryBuilder extends ContentQueryBuilder
                 'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
                 $webspaceKey
             );
+        }
+
+        if ($this->hasConfig('audienceTargeting')
+            && $this->getConfig('audienceTargeting', false)
+            && $this->hasConfig('targetGroupId')
+        ) {
+            $result = $this->buildAudienceTargeting($this->getConfig('targetGroupId'), $locale);
+
+            if ($result) {
+                $sql2Where[] = $result;
+            }
         }
 
         // build where clause for tags
@@ -217,7 +233,7 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
-        foreach ($this->structureManager->getStructures(Structure::TYPE_PAGE) as $structure) {
+        foreach ($this->structureManager->getStructures(static::$structureType) as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
                 $additionalFields[$locale][] = [
@@ -255,6 +271,32 @@ class QueryBuilder extends ContentQueryBuilder
         $node = $this->sessionManager->getSession()->getNodeByIdentifier($dataSource);
 
         return $sqlFunction . '(page, \'' . $node->getPath() . '\')';
+    }
+
+    /**
+     * Returns the where part for the audience targeting.
+     *
+     * @param string $targetGroupId
+     * @param string $locale
+     *
+     * @return string
+     */
+    private function buildAudienceTargeting($targetGroupId, $locale)
+    {
+        if (!$targetGroupId) {
+            return;
+        }
+
+        $structure = $this->structureManager->getStructure('excerpt');
+
+        $property = new TranslatedProperty(
+            $structure->getProperty('audience_targeting_groups'),
+            $locale,
+            $this->languageNamespace,
+            'excerpt'
+        );
+
+        return 'page.[' . $property->getName() . '] = ' . $targetGroupId;
     }
 
     /**
@@ -319,7 +361,7 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return bool
      */
-    private function hasConfig($name)
+    protected function hasConfig($name)
     {
         return isset($this->config[$name]);
     }
@@ -332,7 +374,7 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return mixed config value
      */
-    private function getConfig($name, $default = null)
+    protected function getConfig($name, $default = null)
     {
         if (!$this->hasConfig($name)) {
             return $default;
@@ -361,7 +403,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $idsWhere = [];
         foreach ($this->excluded as $id) {
-            $idsWhere[] = sprintf("NOT (page.[jcr:uuid] = '%s')", $id);
+            $idsWhere[] = sprintf("(NOT page.[jcr:uuid] = '%s')", $id);
         }
 
         return $idsWhere;

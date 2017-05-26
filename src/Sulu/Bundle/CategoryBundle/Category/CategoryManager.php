@@ -505,7 +505,7 @@ class CategoryManager implements CategoryManagerInterface
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(
-            __method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
+            __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
             E_USER_DEPRECATED
         );
 
@@ -522,7 +522,7 @@ class CategoryManager implements CategoryManagerInterface
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(
-            __method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
+            __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
             E_USER_DEPRECATED
         );
 

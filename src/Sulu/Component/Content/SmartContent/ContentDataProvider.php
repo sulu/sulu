@@ -117,6 +117,7 @@ class ContentDataProvider implements DataProviderInterface
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableAudienceTargeting()
             ->enableDatasource(
                 'content-datasource@sulucontent',
                 [
@@ -202,6 +203,7 @@ class ContentDataProvider implements DataProviderInterface
             $page,
             $pageSize
         );
+
         $items = $this->decorateDataItems($items, $options['locale']);
 
         return new DataProviderResult(

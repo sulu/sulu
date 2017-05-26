@@ -36,6 +36,7 @@ class SnippetType extends AbstractStructureBehaviorType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+        $builder->add('extensions', TextType::class, ['property_path' => 'extensionsData']);
         $builder->add('workflowStage');
 
         // TODO: Fix the admin interface to not send this junk (not required for snippets)

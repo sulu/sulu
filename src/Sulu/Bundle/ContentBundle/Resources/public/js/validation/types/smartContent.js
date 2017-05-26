@@ -9,8 +9,9 @@
  */
 
 define([
-    'type/default'
-], function(Default) {
+    'type/default',
+    'config'
+], function(Default, Config) {
 
     'use strict';
 
@@ -71,6 +72,9 @@ define([
                     }
                     if (typeof(config.limitResult) !== 'undefined' && !!config.limitResult) {
                         App.dom.data($el, 'auraLimitResult', config.limitResult);
+                    }
+                    if (typeof(config.audienceTargeting) !== 'undefined' && !!config.audienceTargeting && Config.has('sulu_audience_targeting')){
+                        App.dom.data($el, 'auraAudienceTargeting', config.audienceTargeting);
                     }
                 },
 

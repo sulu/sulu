@@ -146,7 +146,7 @@ class ContentRouteProvider implements RouteProviderInterface
         } else {
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
-            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
             $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($portal->getWebspace()->getKey());
 
             try {
