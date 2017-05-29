@@ -202,7 +202,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
         ];
 
-        if ($provider instanceof AliasDataProviderInterface) {
+        if ($provider instanceof DataProviderAliasInterface) {
             $defaults['alias'] = $provider->getAlias();
         }
 

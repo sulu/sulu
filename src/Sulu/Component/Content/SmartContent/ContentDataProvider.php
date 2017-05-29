@@ -21,10 +21,10 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\SmartContent\AliasDataProviderInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
+use Sulu\Component\SmartContent\DataProviderAliasInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
@@ -32,7 +32,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 /**
  * DataProvider for content.
  */
-class ContentDataProvider implements DataProviderInterface, AliasDataProviderInterface
+class ContentDataProvider implements DataProviderInterface, DataProviderAliasInterface
 {
     /**
      * @var ContentQueryBuilderInterface
