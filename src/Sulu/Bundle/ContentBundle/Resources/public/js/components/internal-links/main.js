@@ -13,7 +13,7 @@
  * @class InternalLinks
  * @constructor
  */
-define([], function() {
+define(['services/suluwebsite/reference-store'], function(referenceStore) {
 
     'use strict';
 
@@ -224,6 +224,7 @@ define([], function() {
                 columnNavigation: 'internal-links-' + this.options.instanceName + '-column-navigation'
             };
 
+            this.prefillReferenceStore();
             this.render();
 
             // sandbox event handling
@@ -303,6 +304,15 @@ define([], function() {
             }
 
             this.setData(data);
+        },
+
+        prefillReferenceStore: function() {
+            var data = this.getData();
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    referenceStore.add('content', data[key]);
+                }
+            }
         }
     };
 });

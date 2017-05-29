@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3363 [MediaBundle]           Fixed compatibility with newest imagick version
     * BUGFIX      #3369 [DocumentManagerBundle] Adapt to latest ProxyManager
     * ENHANCEMENT #3361 [ContentBundle]         Replace "getReferencedUuids" with a reference-store 
+    * FEATURE     #3368 [ContentBundle]         Used reference-store to avoid duplicated content via smart-content 
     * ENHANCEMENT #3360 [ContentBundle]         Removed get-type from content-type-interface 
     * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
     * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field

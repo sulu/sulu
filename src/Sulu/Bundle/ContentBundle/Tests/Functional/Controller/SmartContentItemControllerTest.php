@@ -22,7 +22,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -293,6 +292,40 @@ class SmartContentItemControllerTest extends SuluTestCase
             [
                 ['id' => $this->daniel->getUuid(), 'title' => 'Daniel', 'publishedState' => false, 'url' => '/team/daniel'],
                 ['id' => $this->thomas->getUuid(), 'title' => 'Thomas', 'publishedState' => false, 'url' => '/team/thomas'],
+            ],
+            $result['_embedded']['items']
+        );
+    }
+
+    public function testGetItemsMultipleExcluded()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/items?webspace=sulu_io&locale=en&dataSource='
+            . $this->team->getUuid()
+            . '&provider=content&excluded='
+            . $this->johannes->getUuid()
+            . ','
+            . $this->daniel->getUuid()
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            ['id' => $this->team->getUuid(), 'title' => 'Team', 'path' => '/team'],
+            $result['datasource']
+        );
+        $this->assertEquals(
+            [
+                [
+                    'id' => $this->thomas->getUuid(),
+                    'title' => 'Thomas',
+                    'publishedState' => false,
+                    'url' => '/team/thomas',
+                ],
             ],
             $result['_embedded']['items']
         );

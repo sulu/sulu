@@ -174,7 +174,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveDataItems(
-            ['excluded' => '123-123-123'],
+            ['excluded' => ['123-123-123']],
             ['properties' => ['my-properties' => true]],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             5,
@@ -191,9 +191,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
-                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
                     'properties' => ['my-properties' => true],
-                    'excluded' => '123-123-123',
+                    'excluded' => ['123-123-123'],
                     'published' => false,
                 ]
             ),
@@ -206,7 +206,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveDataItems(
-            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             5,
@@ -230,9 +230,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
-                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
                     'properties' => ['my-properties' => true],
-                    'excluded' => '123-123-123',
+                    'excluded' => ['123-123-123'],
                     'published' => false,
                 ]
             ),
@@ -245,7 +245,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveDataItems(
-            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             5,
@@ -273,9 +273,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
-                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
                     'properties' => ['my-properties' => true],
-                    'excluded' => '123-123-123',
+                    'excluded' => ['123-123-123'],
                     'published' => true,
                 ]
             ),
@@ -288,7 +288,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveDataItems(
-            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             5,
@@ -317,9 +317,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
-                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
                     'properties' => ['my-properties' => true],
-                    'excluded' => '123-123-123',
+                    'excluded' => ['123-123-123'],
                     'published' => false,
                 ]
             ),
@@ -332,7 +332,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveResourceItems(
-            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             5,
@@ -361,9 +361,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
-                    'config' => ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
                     'properties' => ['my-properties' => true],
-                    'excluded' => '123-123-123',
+                    'excluded' => ['123-123-123'],
                     'published' => false,
                 ]
             ),
@@ -378,7 +378,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveDataItems(
-            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en']
         );
@@ -409,7 +409,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $provider->resolveDataItems(
-            ['dataSource' => '123-123-123', 'excluded' => '123-123-123'],
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
             10
@@ -459,5 +459,58 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resource, $item->getResource());
 
         $this->assertNull($item->getImage());
+    }
+
+    public function testResolveResourceItemsExcluded()
+    {
+        $data = [
+            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+        ];
+
+        $referenceStore = new ReferenceStore();
+        $referenceStore->add('123-456-789');
+        $provider = new ContentDataProvider(
+            $this->getContentQueryBuilder(
+                [
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+                    'properties' => ['my-properties' => true],
+                    'excluded' => ['123-123-123', '123-456-789'],
+                    'published' => false,
+                ]
+            ),
+            $this->getContentQueryExecutor(2, 1, $data),
+            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            $referenceStore,
+            true
+        );
+
+        $result = $provider->resolveResourceItems(
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+            [
+                'properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection'),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', true),
+            ],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            5,
+            1,
+            2
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+
+        $items = $result->getItems();
+        for ($i = 0, $length = count($items); $i < $length; ++$i) {
+            $this->assertEquals($data[$i]['uuid'], $items[$i]->getId());
+            $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
+
+            $this->assertEquals($data[$i], $items[$i]->getResource()->getWrappedValueHolderValue());
+        }
+
+        $this->assertTrue($result->getHasNextPage());
+        $this->assertEquals(['123-456-789', '123-123-123', '123-123-456'], $referenceStore->getAll());
     }
 }

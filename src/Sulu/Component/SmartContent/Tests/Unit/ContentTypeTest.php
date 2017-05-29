@@ -294,6 +294,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -325,6 +326,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', '5'),
                 'deep_link' => new PropertyParameter('deep_link', ''),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
             ['webspaceKey' => null, 'locale' => null],
             null,
@@ -401,6 +403,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -432,6 +435,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', '5'),
                 'deep_link' => new PropertyParameter('deep_link', ''),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
             ['webspaceKey' => null, 'locale' => null],
             null,
@@ -504,6 +508,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -535,6 +540,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', $pageSize),
                 'deep_link' => new PropertyParameter('deep_link', ''),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
@@ -601,6 +607,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -632,6 +639,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', $pageSize),
                 'deep_link' => new PropertyParameter('deep_link', null),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
@@ -714,6 +722,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -744,6 +753,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 ],
                 'datasource' => null,
                 'deep_link' => new PropertyParameter('deep_link', null),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
             ['webspaceKey' => null, 'locale' => null],
             null

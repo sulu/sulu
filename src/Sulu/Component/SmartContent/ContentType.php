@@ -168,6 +168,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         $defaults = [
             'provider' => new PropertyParameter('provider', 'content'),
+            'alias' => null,
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
             'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -198,7 +199,12 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             ],
             'datasource' => $configuration->getDatasource(),
             'deep_link' => new PropertyParameter('deep_link', $configuration->getDeepLink()),
+            'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
         ];
+
+        if ($provider instanceof DataProviderAliasInterface) {
+            $defaults['alias'] = $provider->getAlias();
+        }
 
         return array_merge(
             parent::getDefaultParams(),
