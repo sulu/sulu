@@ -50,7 +50,7 @@
  * @params {Boolean} [options.has] activates or deactivates features (default all false)
  * @params {Boolean} [options.datasource] name and options of datasource component
  * @params {Boolean} [options.excluded] id of an excluded item
- * @params {Boolean} [options.provider] alias of used provider
+ * @params {Boolean} [options.alias] alias of used provider
  * @params {Boolean} [options.excludeDuplicate] if true duplicates will be excluded
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
@@ -1283,7 +1283,7 @@ define(['config', 'services/sulucontent/smart-content-manager'], function(config
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
 
-                manager.load(this.URI.str, this.URI.data, this.options.excludeDuplicates ? this.options.provider : null)
+                manager.load(this.URI.str, this.URI.data, this.options.excludeDuplicates ? this.options.alias : null)
                     .done(function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
                         if (!!this.options.has.datasource && data[this.options.datasourceKey]) {

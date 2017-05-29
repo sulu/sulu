@@ -294,6 +294,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -402,6 +403,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -506,6 +508,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -604,6 +607,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -718,6 +722,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
+                'alias' => null,
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
                 'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
