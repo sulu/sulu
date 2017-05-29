@@ -12,7 +12,7 @@
 namespace Sulu\Component\SmartContent;
 
 /**
- * Indicates that the provider ca be identified by an alias.
+ * Indicates that the data provider can be identified by an alias.
  */
 interface DataProviderAliasInterface
 {
