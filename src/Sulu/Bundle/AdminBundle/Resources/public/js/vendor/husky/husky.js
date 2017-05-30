@@ -32328,7 +32328,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     if (this.table.rows[id].selectedChildren > 0) {
                         this.sandbox.dom.prop(
                             this.sandbox.dom.find(
-                                '.' + constants.checkboxClass + ', .' + constants.radioClass, this.table.rows[id].$el
+                                '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                                this.table.rows[id].$el
                             ),
                             'indeterminate',
                             true

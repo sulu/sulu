@@ -395,12 +395,11 @@ class CategoryManager implements CategoryManagerInterface
             $categoryWrapper->setMeta($metaEntities);
         }
         if (!$patch || $this->getProperty($data, 'parent')) {
+            $parentCategory = null;
             if ($this->getProperty($data, 'parent')) {
-                $parentEntity = $this->findById($this->getProperty($data, 'parent'));
-            } else {
-                $parentEntity = null;
+                $parentCategory = $this->findById($this->getProperty($data, 'parent'));
             }
-            $categoryWrapper->setParent($parentEntity);
+            $categoryWrapper->setParent($parentCategory);
         }
 
         if (!$categoryWrapper->getName()) {
@@ -448,19 +447,19 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function move($id, $parent)
     {
-        if (!$entity = $this->categoryRepository->findCategoryById($id)) {
+        if (!$category = $this->categoryRepository->findCategoryById($id)) {
             throw new CategoryIdNotFoundException($id);
         }
 
-        $parentEntity = null;
-        if ($parent && !$parentEntity = $this->categoryRepository->findCategoryById($parent)) {
+        $parentCategory = null;
+        if ($parent && !$parentCategory = $this->categoryRepository->findCategoryById($parent)) {
             throw new CategoryIdNotFoundException($parent);
         }
 
-        $entity->setParent($parentEntity);
+        $category->setParent($parentCategory);
         $this->em->flush();
 
-        return $entity;
+        return $category;
     }
 
     /**
