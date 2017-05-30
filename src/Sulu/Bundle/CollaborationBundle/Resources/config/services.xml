@@ -20,7 +20,7 @@
 
         <service id="sulu_collaboration.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu-collaboration</argument>
-            <argument key="collaboration" type="collection">
+            <argument type="collection">
                 <argument key="interval">%sulu_collaboration.interval%</argument>
             </argument>
             <tag name="sulu.js_config"/>
