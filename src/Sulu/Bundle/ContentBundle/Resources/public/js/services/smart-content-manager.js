@@ -21,18 +21,6 @@ define([
 
         resolved = false,
 
-        initialize = function() {
-            if (!!start) {
-                return;
-            }
-
-            start = last = $.Deferred();
-            mediator.on('sulu.content.initialized', function() {
-                resolved = true;
-                start.resolve();
-            });
-        },
-
         load = function(url, data, alias) {
             if (alias) {
                 data.excluded = data.excluded.concat(referenceStore.getAll(alias));
@@ -46,15 +34,20 @@ define([
         };
 
     return {
+        initialize: function() {
+            start = last = $.Deferred();
+            mediator.once('sulu.content.initialized', function() {
+                resolved = true;
+                start.resolve();
+            });
+        },
+
         load: function(url, data, alias) {
             if (resolved) {
                 return load(url, data, alias);
             }
 
-            initialize();
-
             var deferred = $.Deferred();
-
             last.always(function() {
                 load(url, data, alias).done(function(result) {
                     deferred.resolve(result);
