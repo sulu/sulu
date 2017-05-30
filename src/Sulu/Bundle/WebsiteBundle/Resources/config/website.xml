@@ -31,8 +31,7 @@
             <argument type="service" id="sulu_website.default_locale.provider"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
 
-            <tag name="kernel.event_listener" event="kernel.exception" method="redirectPartialMatch"/>
-            <tag name="kernel.event_listener" event="kernel.exception" method="redirectTrailingSlashOrHtml"/>
+            <tag name="kernel.event_subscriber"/>
 
             <tag name="sulu.context" context="website"/>
         </service>

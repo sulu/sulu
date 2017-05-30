@@ -16,18 +16,20 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
  * This event-listener redirect trailing slashes and ".html" and redirects to default locale for partial-matches.
  */
-class RedirectExceptionListener
+class RedirectExceptionListener implements EventSubscriberInterface
 {
-    const HTML = '.html';
+    const HTML_SUFFIX = '.html';
 
     /**
      * @var RequestMatcherInterface
@@ -68,6 +70,16 @@ class RedirectExceptionListener
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::EXCEPTION => ['redirectPartialMatch', 'redirectTrailingSlashOrHtml'],
+        ];
+    }
+
+    /**
      * Redirect trailing slashes or ".html".
      *
      * @param GetResponseForExceptionEvent $event
@@ -75,7 +87,17 @@ class RedirectExceptionListener
     public function redirectTrailingSlashOrHtml(GetResponseForExceptionEvent $event)
     {
         $request = $event->getRequest();
-        $route = $this->getRoute($request);
+
+        /** @var RequestAttributes $attributes */
+        $attributes = $request->attributes->get('_sulu');
+        if (!$attributes) {
+            return;
+        }
+
+        $prefix = $attributes->getAttribute('resourceLocatorPrefix');
+        $resourceLocator = $attributes->getAttribute('resourceLocator');
+
+        $route = rtrim($prefix . $resourceLocator, '/');
         if ($route === $request->getPathInfo() || !$this->matchRoute($route, $request->getSchemeAndHttpHost())) {
             return;
         }
@@ -93,7 +115,10 @@ class RedirectExceptionListener
         $request = $event->getRequest();
 
         /** @var RequestAttributes $attributes */
-        $attributes = $event->getRequest()->attributes->get('_sulu', new RequestAttributes());
+        $attributes = $event->getRequest()->attributes->get('_sulu');
+        if (!$attributes) {
+            return;
+        }
 
         $types = [RequestAnalyzerInterface::MATCH_TYPE_REDIRECT, RequestAnalyzerInterface::MATCH_TYPE_PARTIAL];
         $matchType = $attributes->getAttribute('matchType');
@@ -151,22 +176,6 @@ class RedirectExceptionListener
         } catch (ResourceNotFoundException $exception) {
             return false;
         }
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return string
-     */
-    protected function getRoute(Request $request)
-    {
-        /** @var RequestAttributes $attributes */
-        $attributes = $request->attributes->get('_sulu', new RequestAttributes());
-
-        return rtrim(
-            $attributes->getAttribute('resourceLocatorPrefix') . $attributes->getAttribute('resourceLocator'),
-            '/'
-        );
     }
 
     /**
