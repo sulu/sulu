@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
@@ -92,6 +93,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->request->reveal()->attributes = new ParameterBag(['_sulu' => $this->attributes->reveal()]);
         $this->event = $this->prophesize(GetResponseForExceptionEvent::class);
         $this->event->getRequest()->willReturn($this->request->reveal());
+        $this->event->getException()->willReturn(new NotFoundHttpException());
     }
 
     public function testRedirectTrailingSlash()
@@ -100,6 +102,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
 
         $this->request->getPathInfo()->willReturn('/de/test/');
+        $this->request->getRequestFormat()->willReturn('html');
 
         $this->router->matchRequest(Argument::type(Request::class))->willReturn(
             $this->prophesize(Route::class)->reveal()
@@ -122,6 +125,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
 
         $this->request->getPathInfo()->willReturn('/de/test.html');
+        $this->request->getRequestFormat()->willReturn('html');
 
         $this->router->matchRequest(Argument::type(Request::class))->willReturn(
             $this->prophesize(Route::class)->reveal()
@@ -138,12 +142,30 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
     }
 
+    public function testRedirectJson()
+    {
+        $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test');
+        $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+
+        $this->request->getPathInfo()->willReturn('/de/test.json');
+        $this->request->getRequestFormat()->willReturn('json');
+
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
+            $this->prophesize(Route::class)->reveal()
+        );
+
+        $this->event->setResponse(Argument::any())->shouldNotBeCalled();
+
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+    }
+
     public function testRedirectTrailingHtmlNotExists()
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
 
         $this->request->getPathInfo()->willReturn('/de/test.html');
+        $this->request->getRequestFormat()->willReturn('html');
 
         $this->router->matchRequest(Argument::type(Request::class))->willThrow(new ResourceNotFoundException());
         $this->event->setResponse(Argument::any())->shouldNotBeCalled();
@@ -293,7 +315,13 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
             ->shouldBeCalled()
             ->willReturn('sulu.lo/de-at');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
+        $this->router->matchRequest(
+            Argument::that(
+                function (Request $request) {
+                    return $request->getUri() === 'http://sulu.lo/de-at';
+                }
+            )
+        )->willReturn(
             $this->prophesize(Route::class)->reveal()
         );
 

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
     * BUGFIX      #3379 [All]                   Upgraded to Symfony 3.3
     * BUGFIX      #3378 [ContentBundle]         Fixed smart-content-manager
     * ENHANCEMENT #3359 [ContentBundle]         Added check for existence before redirect

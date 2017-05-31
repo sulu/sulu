@@ -20,6 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -87,6 +88,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
      */
     public function redirectTrailingSlashOrHtml(GetResponseForExceptionEvent $event)
     {
+        if (!$event->getException() instanceof NotFoundHttpException) {
+            return;
+        }
+
         $request = $event->getRequest();
 
         /** @var RequestAttributes $attributes */
@@ -99,7 +104,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         $resourceLocator = $attributes->getAttribute('resourceLocator');
 
         $route = rtrim($prefix . $resourceLocator, '/');
-        if ($route === $request->getPathInfo() || !$this->matchRoute($route, $request->getSchemeAndHttpHost())) {
+        if (!in_array($request->getRequestFormat(), ['htm', 'html'])
+            || $route === $request->getPathInfo()
+            || !$this->matchRoute($request->getSchemeAndHttpHost() . $route)
+        ) {
             return;
         }
 
@@ -113,6 +121,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
      */
     public function redirectPartialMatch(GetResponseForExceptionEvent $event)
     {
+        if (!$event->getException() instanceof NotFoundHttpException) {
+            return;
+        }
+
         $request = $event->getRequest();
 
         /** @var RequestAttributes $attributes */
@@ -140,7 +152,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
             $attributes->getAttribute('resourceLocatorPrefix')
         );
 
-        if (!$this->matchRoute($route, $request->getSchemeAndHttpHost())) {
+        if (!$this->matchRoute($route)) {
             return;
         }
 
@@ -151,13 +163,12 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
      * Returns true if given route exists.
      *
      * @param string $route
-     * @param string $domain
      *
      * @return bool
      */
-    private function matchRoute($route, $domain)
+    private function matchRoute($route)
     {
-        return $this->matchUrl($domain . $route);
+        return $this->matchUrl($route);
     }
 
     /**
