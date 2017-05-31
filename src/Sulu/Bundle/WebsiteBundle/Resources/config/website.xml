@@ -25,7 +25,7 @@
         </service>
 
         <service id="sulu_website.redirect_exception_listener"
-                 class="Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionListener">
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber">
             <argument type="service" id="router"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.default_locale.provider"/>

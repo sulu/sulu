@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Routing;
 
 use Prophecy\Argument;
-use Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionListener;
+use Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
-class RedirectExceptionListenerTest extends \PHPUnit_Framework_TestCase
+class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RequestMatcherInterface
@@ -52,7 +52,7 @@ class RedirectExceptionListenerTest extends \PHPUnit_Framework_TestCase
     private $urlReplacer;
 
     /**
-     * @var RedirectExceptionListener
+     * @var RedirectExceptionSubscriber
      */
     private $exceptionListener;
 
@@ -78,7 +78,7 @@ class RedirectExceptionListenerTest extends \PHPUnit_Framework_TestCase
         $this->defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
         $this->urlReplacer = $this->prophesize(ReplacerInterface::class);
 
-        $this->exceptionListener = new RedirectExceptionListener(
+        $this->exceptionListener = new RedirectExceptionSubscriber(
             $this->router->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->defaultLocaleProvider->reveal(),

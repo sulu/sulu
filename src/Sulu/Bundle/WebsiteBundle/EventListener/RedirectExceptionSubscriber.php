@@ -27,10 +27,8 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 /**
  * This event-listener redirect trailing slashes and ".html" and redirects to default locale for partial-matches.
  */
-class RedirectExceptionListener implements EventSubscriberInterface
+class RedirectExceptionSubscriber implements EventSubscriberInterface
 {
-    const HTML_SUFFIX = '.html';
-
     /**
      * @var RequestMatcherInterface
      */
@@ -75,7 +73,10 @@ class RedirectExceptionListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::EXCEPTION => ['redirectPartialMatch', 'redirectTrailingSlashOrHtml'],
+            KernelEvents::EXCEPTION => [
+                ['redirectPartialMatch', 0],
+                ['redirectTrailingSlashOrHtml', 0],
+            ],
         ];
     }
 

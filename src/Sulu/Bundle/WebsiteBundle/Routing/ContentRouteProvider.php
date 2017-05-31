@@ -87,7 +87,11 @@ class ContentRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         /** @var RequestAttributes $attributes */
-        $attributes = $request->attributes->get('_sulu', new RequestAttributes());
+        $attributes = $request->attributes->get('_sulu');
+        if (!$attributes) {
+            return $collection;
+        }
+
         $matchType = $attributes->getAttribute('matchType');
 
         // no portal information without localization supported
