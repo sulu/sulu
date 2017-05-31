@@ -1,6 +1,6 @@
 /*
  * Require-CSS RequireJS css! loader plugin
- * 0.1.8
+ * 0.1.10
  * Guy Bedford 2014
  * MIT
  */
@@ -14,7 +14,7 @@
  * Android
  * iOS 6
  * IE 6 - 10
- * Chome 3 - 26
+ * Chrome 3 - 26
  * Firefox 3.5 - 19
  * Opera 10 - 12
  * 
@@ -49,7 +49,7 @@ define(function() {
   if (engine[1] || engine[7])
     useImportLoad = parseInt(engine[1]) < 6 || parseInt(engine[7]) <= 9;
   // webkit
-  else if (engine[2] || engine[8])
+  else if (engine[2] || engine[8] || 'WebkitAppearance' in document.documentElement.style)
     useOnload = false;
   // gecko
   else if (engine[4])

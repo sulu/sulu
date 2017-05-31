@@ -100,6 +100,8 @@ start values for `author` and `authored`.
 app/console phpcr:migrations:migrate
 ```
 
+If the migration failed with `getContact() on a none object` upgrade to at least 1.5.4 and run the migration command again.
+
 ### Twig 2
 
 If you upgrade twig to version 2 please read follow

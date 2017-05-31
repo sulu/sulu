@@ -1,14 +1,16 @@
 /*!
- * clipboard.js v1.5.15
+ * clipboard.js v1.7.1
  * https://zenorocha.github.io/clipboard.js
  *
  * Licensed MIT © Zeno Rocha
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Clipboard = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var DOCUMENT_NODE_TYPE = 9;
+
 /**
  * A polyfill for Element.matches()
  */
-if (Element && !Element.prototype.matches) {
+if (typeof Element !== 'undefined' && !Element.prototype.matches) {
     var proto = Element.prototype;
 
     proto.matches = proto.matchesSelector ||
@@ -26,8 +28,11 @@ if (Element && !Element.prototype.matches) {
  * @return {Function}
  */
 function closest (element, selector) {
-    while (element && element !== document) {
-        if (element.matches(selector)) return element;
+    while (element && element.nodeType !== DOCUMENT_NODE_TYPE) {
+        if (typeof element.matches === 'function' &&
+            element.matches(selector)) {
+          return element;
+        }
         element = element.parentNode;
     }
 }
@@ -238,8 +243,18 @@ function select(element) {
         selectedText = element.value;
     }
     else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
-        element.focus();
+        var isReadOnly = element.hasAttribute('readonly');
+
+        if (!isReadOnly) {
+            element.setAttribute('readonly', '');
+        }
+
+        element.select();
         element.setSelectionRange(0, element.value.length);
+
+        if (!isReadOnly) {
+            element.removeAttribute('readonly');
+        }
 
         selectedText = element.value;
     }
@@ -408,6 +423,7 @@ module.exports = E;
                 var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
                 this.action = options.action;
+                this.container = options.container;
                 this.emitter = options.emitter;
                 this.target = options.target;
                 this.text = options.text;
@@ -436,7 +452,7 @@ module.exports = E;
                 this.fakeHandlerCallback = function () {
                     return _this.removeFake();
                 };
-                this.fakeHandler = document.body.addEventListener('click', this.fakeHandlerCallback) || true;
+                this.fakeHandler = this.container.addEventListener('click', this.fakeHandlerCallback) || true;
 
                 this.fakeElem = document.createElement('textarea');
                 // Prevent zooming on iOS
@@ -450,13 +466,12 @@ module.exports = E;
                 this.fakeElem.style[isRTL ? 'right' : 'left'] = '-9999px';
                 // Move element to the same position vertically
                 var yPosition = window.pageYOffset || document.documentElement.scrollTop;
-                this.fakeElem.addEventListener('focus', window.scrollTo(0, yPosition));
                 this.fakeElem.style.top = yPosition + 'px';
 
                 this.fakeElem.setAttribute('readonly', '');
                 this.fakeElem.value = this.text;
 
-                document.body.appendChild(this.fakeElem);
+                this.container.appendChild(this.fakeElem);
 
                 this.selectedText = (0, _select2.default)(this.fakeElem);
                 this.copyText();
@@ -465,13 +480,13 @@ module.exports = E;
             key: 'removeFake',
             value: function removeFake() {
                 if (this.fakeHandler) {
-                    document.body.removeEventListener('click', this.fakeHandlerCallback);
+                    this.container.removeEventListener('click', this.fakeHandlerCallback);
                     this.fakeHandler = null;
                     this.fakeHandlerCallback = null;
                 }
 
                 if (this.fakeElem) {
-                    document.body.removeChild(this.fakeElem);
+                    this.container.removeChild(this.fakeElem);
                     this.fakeElem = null;
                 }
             }
@@ -507,8 +522,8 @@ module.exports = E;
         }, {
             key: 'clearSelection',
             value: function clearSelection() {
-                if (this.target) {
-                    this.target.blur();
+                if (this.trigger) {
+                    this.trigger.focus();
                 }
 
                 window.getSelection().removeAllRanges();
@@ -590,6 +605,12 @@ module.exports = E;
         };
     }
 
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+        return typeof obj;
+    } : function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
             throw new TypeError("Cannot call a class as a function");
@@ -670,6 +691,7 @@ module.exports = E;
                 this.action = typeof options.action === 'function' ? options.action : this.defaultAction;
                 this.target = typeof options.target === 'function' ? options.target : this.defaultTarget;
                 this.text = typeof options.text === 'function' ? options.text : this.defaultText;
+                this.container = _typeof(options.container) === 'object' ? options.container : document.body;
             }
         }, {
             key: 'listenClick',
@@ -693,6 +715,7 @@ module.exports = E;
                     action: this.action(trigger),
                     target: this.target(trigger),
                     text: this.text(trigger),
+                    container: this.container,
                     trigger: trigger,
                     emitter: this
                 });
@@ -725,6 +748,20 @@ module.exports = E;
                     this.clipboardAction.destroy();
                     this.clipboardAction = null;
                 }
+            }
+        }], [{
+            key: 'isSupported',
+            value: function isSupported() {
+                var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ['copy', 'cut'];
+
+                var actions = typeof action === 'string' ? [action] : action;
+                var support = !!document.queryCommandSupported;
+
+                actions.forEach(function (action) {
+                    support = support && !!document.queryCommandSupported(action);
+                });
+
+                return support;
             }
         }]);
 
