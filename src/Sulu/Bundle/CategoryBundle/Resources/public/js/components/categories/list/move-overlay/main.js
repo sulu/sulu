@@ -115,32 +115,33 @@ define(function() {
             }.bind(this));
 
             this.sandbox.once('husky.overlay.' + constants.name + '.initialized', function() {
-                var fieldsResponse = $.ajax('/admin/api/categories/fields?locale=' + this.options.locale, {async: false});
-
-                this.sandbox.start([{
-                    name: 'datagrid@husky',
-                    options: {
-                        el: this.$componentContainer,
-                        url: '/admin/api/categories?flat=true&sortBy=name&sortOrder=asc&locale=' + this.options.locale,
-                        childrenPropertyName: 'hasChildren',
-                        expandIds: [this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey)],
-                        pagination: false,
-                        resultKey: constants.resultKey,
-                        instanceName: constants.name,
-                        matchings: fieldsResponse.responseJSON,
-                        viewOptions: {
-                            table: {
-                                actionIcon: 'check',
-                                hideChildrenAtBeginning: false,
-                                cropContents: false,
-                                selectItem: {
-                                    type: 'radio',
-                                    inFirstCell: true
+                $.ajax('/admin/api/categories/fields?locale=' + this.options.locale)
+                    .done(function(fields) {
+                        this.sandbox.start([{
+                            name: 'datagrid@husky',
+                            options: {
+                                el: this.$componentContainer,
+                                url: '/admin/api/categories?flat=true&sortBy=name&sortOrder=asc&locale=' + this.options.locale,
+                                childrenPropertyName: 'hasChildren',
+                                expandIds: [this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey)],
+                                pagination: false,
+                                resultKey: constants.resultKey,
+                                instanceName: constants.name,
+                                matchings: fields,
+                                viewOptions: {
+                                    table: {
+                                        actionIcon: 'check',
+                                        hideChildrenAtBeginning: false,
+                                        cropContents: false,
+                                        selectItem: {
+                                            type: 'radio',
+                                            inFirstCell: true
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                }]);
+                        }]);
+                    }.bind(this));
             }.bind(this));
         },
 
