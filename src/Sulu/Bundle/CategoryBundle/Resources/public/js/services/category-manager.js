@@ -27,6 +27,9 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, Util) {
         },
         delete: function(id, locale) {
             return Util.save(url({id: id, locale: locale}), 'DELETE');
+        },
+        move: function(id, locale, parent) {
+            return Util.save(url({id: id, locale: locale}) + '&action=move&parent=' + parent, 'POST');
         }
     };
 

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
@@ -19,6 +20,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
@@ -27,6 +29,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes categories available through a REST API.
@@ -77,7 +80,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id, Request $request)
     {
@@ -101,7 +104,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param Request $request
      * @param mixed $parentId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getChildrenAction($parentId, Request $request)
     {
@@ -128,7 +131,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -149,11 +152,61 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
+     * Trigger an action for given category. Action is specified over get-action parameter.
+     *
+     * @Post("categories/{id}")
+     *
+     * @param int $id
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function postTriggerAction($id, Request $request)
+    {
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'move':
+                    return $this->move($id, $request);
+                    break;
+                default:
+                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
+
+            return $this->handleView($view);
+        }
+    }
+
+    /**
+     * Moves category - identified by id.
+     *
+     * @param int $id
+     * @param Request $request
+     *
+     * @return Response
+     */
+    private function move($id, Request $request)
+    {
+        $parent = $this->getRequestParameter($request, 'parent', true);
+        if ($parent === 'null') {
+            $parent = null;
+        }
+
+        $categoryManager = $this->getCategoryManager();
+        $category = $categoryManager->move($id, $parent);
+
+        return $this->handleView($this->view($categoryManager->getApiObject($category, $request->get('locale'))));
+    }
+
+    /**
      * Adds a new category.
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -167,7 +220,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction($id, Request $request)
     {
@@ -181,7 +234,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function patchAction(Request $request, $id)
     {
@@ -193,7 +246,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -215,7 +268,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param null $id
      * @param bool $patch
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws CategoryIdNotFoundException
      * @throws CategoryKeyNotUniqueException

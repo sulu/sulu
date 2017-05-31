@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(function () {
+define([
+    'jquery',
+    'services/sulucategory/category-manager',
+    'services/sulucategory/category-router'
+], function($, categoryManager, categoryRouter) {
 
     'use strict';
 
@@ -27,7 +31,7 @@ define(function () {
             }
         },
 
-        header: function () {
+        header: function() {
             return {
                 noBack: true,
 
@@ -37,7 +41,29 @@ define(function () {
                 toolbar: {
                     buttons: {
                         add: {},
-                        deleteSelected: {},
+                        deleteSelected: {
+                            options: {
+                                callback: function() {
+                                    this.sandbox.emit(
+                                        'husky.datagrid.items.get-selected',
+                                        this.deleteSelected.bind(this)
+                                    );
+                                }.bind(this)
+                            }
+                        },
+                        moveSelected: {
+                            options: {
+                                icon: 'arrows',
+                                title: 'sulu.category.move',
+                                disabled: true,
+                                callback: function() {
+                                    this.sandbox.emit(
+                                        'husky.datagrid.items.get-selected',
+                                        this.moveSelected.bind(this)
+                                    );
+                                }.bind(this)
+                            }
+                        },
                         export: {
                             options: {
                                 urlParameter: {
@@ -56,7 +82,7 @@ define(function () {
 
         templates: ['/admin/category/template/category/list'],
 
-        initialize: function () {
+        initialize: function() {
             this.locale = this.options.locale;
 
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.category-delete-desc');
@@ -68,12 +94,12 @@ define(function () {
             this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
             this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this));
             this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
-            this.sandbox.on('sulu.toolbar.delete', this.deleteSelected.bind(this));
 
             // checkbox clicked
             this.sandbox.on('husky.datagrid.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'moveSelected', false);
             }.bind(this));
         },
 
@@ -89,11 +115,11 @@ define(function () {
         /**
          * Renderes the component
          */
-        render: function () {
+        render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/category/template/category/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 
+            this.sandbox.sulu.initListToolbarAndList.call(this,
                 'categories',
                 '/admin/api/categories/fields?locale=' + this.locale,
                 {
@@ -158,7 +184,7 @@ define(function () {
          * Navigates to the the form for adding a new category
          * @param parent
          */
-        addNewCategory: function (parent) {
+        addNewCategory: function(parent) {
             this.saveLastClickedCategory(parent);
             this.sandbox.emit('sulu.category.categories.form-add', parent);
         },
@@ -167,7 +193,7 @@ define(function () {
          * Navigates to the form for editing an existing category
          * @param id
          */
-        editCategory: function (id) {
+        editCategory: function(id) {
             this.saveLastClickedCategory(id);
             this.sandbox.emit('sulu.category.categories.form', id);
         },
@@ -185,14 +211,40 @@ define(function () {
         /**
          * Deletes all selected categories
          */
-        deleteSelected: function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(categories) {
-                this.sandbox.emit('sulu.category.categories.delete', categories, function(deletedId) {
-                    this.sandbox.emit('husky.datagrid.record.remove', deletedId);
-                }.bind(this), function() {
-                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-delete-desc', 'labels.success');
-                }.bind(this));
+        deleteSelected: function(categories) {
+            this.sandbox.emit('sulu.category.categories.delete', categories, function(deletedId) {
+                this.sandbox.emit('husky.datagrid.record.remove', deletedId);
+            }.bind(this), function() {
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-delete-desc', 'labels.success');
             }.bind(this));
+        },
+
+        /**
+         * Moves all selected categories
+         */
+        moveSelected: function(categories) {
+            var $componentContainer = $('<div/>');
+            this.$el.append($componentContainer);
+
+            this.sandbox.start([{
+                name: 'categories/list/move-overlay@sulucategory',
+                options: {
+                    el: $componentContainer,
+                    locale: this.options.locale,
+                    selectCallback: function(parent) {
+                        var defs = [];
+                        for (var i = 0; i < categories.length; i++) {
+                            defs.push(categoryManager.move(categories[i], this.options.locale, parent));
+                        }
+
+                        $.when.apply($, defs).done(function() {
+                            this.saveLastClickedCategory(parent);
+
+                            categoryRouter.toList(this.options.locale);
+                        }.bind(this));
+                    }.bind(this)
+                }
+            }]);
         }
     };
 });

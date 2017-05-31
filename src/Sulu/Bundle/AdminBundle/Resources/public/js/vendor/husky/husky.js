@@ -32318,11 +32318,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 if (this.table.rows[id]) {
                     // ensure that checkboxes are unchecked
                     this.sandbox.dom.prop(
-                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
+                        this.sandbox.dom.find(
+                            '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                            this.table.rows[id].$el
+                        ),
+                        'checked',
+                        false
                     );
                     if (this.table.rows[id].selectedChildren > 0) {
                         this.sandbox.dom.prop(
-                            this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el),
+                            this.sandbox.dom.find(
+                                '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                                this.table.rows[id].$el
+                            ),
                             'indeterminate',
                             true
                         );

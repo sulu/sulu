@@ -140,4 +140,31 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->categoryManager->delete($id);
     }
+
+    public function testMove($id = 1, $parentId = 2)
+    {
+        $category = $this->prophesize(CategoryInterface::class);
+        $parentCategory = $this->prophesize(CategoryInterface::class);
+
+        $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
+        $this->categoryRepository->findCategoryById($parentId)->willReturn($parentCategory->reveal());
+
+        $category->setParent($parentCategory->reveal())->shouldBeCalled();
+
+        $result = $this->categoryManager->move($id, $parentId);
+        $this->assertEquals($category->reveal(), $result);
+    }
+
+    public function testMoveToRoot($id = 1, $parentId = null)
+    {
+        $category = $this->prophesize(CategoryInterface::class);
+
+        $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
+        $this->categoryRepository->findCategoryById($parentId)->shouldNotBeCalled();
+
+        $category->setParent(null)->shouldBeCalled();
+
+        $result = $this->categoryManager->move($id, $parentId);
+        $this->assertEquals($category->reveal(), $result);
+    }
 }
