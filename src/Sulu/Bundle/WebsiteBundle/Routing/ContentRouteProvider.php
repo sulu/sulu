@@ -105,7 +105,10 @@ class ContentRouteProvider implements RouteProviderInterface
         $resourceLocator = $attributes->getAttribute('resourceLocator');
         $prefix = $attributes->getAttribute('resourceLocatorPrefix');
 
-        if ($request->getPathInfo() !== $prefix . $resourceLocator
+        $htmlRedirect = $request->getPathInfo() !== $prefix . $resourceLocator
+                        && in_array($request->getRequestFormat(), ['htm', 'html']);
+
+        if ($htmlRedirect
             || $matchType == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
             || $matchType == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
         ) {
