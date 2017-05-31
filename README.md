@@ -21,5 +21,5 @@ at the current stage.**
 
 ## Requirements
 
-* Symfony: >= 2.6.*
+* Symfony: >= 2.8.*
 * See also the require section of [composer.json](https://github.com/sulu/sulu/blob/develop/composer.json)

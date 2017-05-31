@@ -180,7 +180,8 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             if ($targetGroup) {
                 $this->targetGroupStore->updateTargetGroupId($targetGroup->getId());
             }
-        } else {
+        } elseif ($request->getPathInfo() !== $this->targetGroupUrl) {
+            // this should not happen on the endpoint for the cache, because it is set there manually as a header
             $targetGroup = $this->targetGroupEvaluator->evaluate();
 
             $targetGroupId = 0;
@@ -215,7 +216,9 @@ class TargetGroupSubscriber implements EventSubscriberInterface
      */
     public function addSetCookieHeader(FilterResponseEvent $event)
     {
-        if (!$this->targetGroupStore->hasChangedTargetGroup()) {
+        if (!$this->targetGroupStore->hasChangedTargetGroup()
+            || $event->getRequest()->getPathInfo() === $this->targetGroupUrl
+        ) {
             return;
         }
 

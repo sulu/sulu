@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3379 [All]                   Upgraded to Symfony 3.3
     * FEATURE     #3354 [ContactBundle]         Added social media profile field
     * BUGFIX      #3363 [MediaBundle]           Fixed compatibility with newest imagick version
     * BUGFIX      #3369 [DocumentManagerBundle] Adapt to latest ProxyManager

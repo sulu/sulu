@@ -255,6 +255,36 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testSetTargetGroupFromEvaluationOnTargetHitUrl()
+    {
+        $targetGroupSubscriber = new TargetGroupSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->targetGroupStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            '/_target_group',
+            '/_target_group_hit',
+            'X-Forwarded-Url',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
+        );
+
+        $event = $this->prophesize(GetResponseEvent::class);
+        $request = Request::create('/_target_group');
+        $event->getRequest()->willReturn($request);
+
+        $this->targetGroupEvaluator->evaluate()->shouldNotBeCalled();
+
+        $this->targetGroupStore->setTargetGroupId(Argument::any())->shouldNotBeCalled();
+        $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
+
+        $targetGroupSubscriber->setTargetGroup($event->reveal());
+    }
+
     /**
      * @dataProvider provideAddVaryHeader
      */
@@ -301,7 +331,7 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideAddSetCookieHeader
      */
-    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $cookieValue)
+    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $url, $cookieValue)
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -323,6 +353,8 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->targetGroupStore->getTargetGroupId(true)->willReturn($cookieValue);
 
         $event = $this->prophesize(FilterResponseEvent::class);
+        $request = Request::create($url);
+        $event->getRequest()->willReturn($request);
         $response = new Response();
         $event->getResponse()->willReturn($response);
 
@@ -343,9 +375,10 @@ class TargetGroupSubscriberTest extends \PHPUnit_Framework_TestCase
     public function provideAddSetCookieHeader()
     {
         return [
-            ['sulu-visitor-target-group', 'visitor-session', false, null],
-            ['target-group', 'session', true, 1],
-            ['sulu-visitor-target-group', 'visitor-session', true, 2],
+            ['sulu-visitor-target-group', 'visitor-session', false, '/_target_group_hit', null],
+            ['target-group', 'session', true, '/_target_group_hit', 1],
+            ['sulu-visitor-target-group', 'visitor-session', true, '/_tgh', 2],
+            ['sulu-visitor-target-group', 'visitor-session', true, '/_target_group', null],
         ];
     }
 
