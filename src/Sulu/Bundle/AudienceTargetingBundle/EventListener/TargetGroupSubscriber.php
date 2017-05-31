@@ -181,6 +181,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
                 $this->targetGroupStore->updateTargetGroupId($targetGroup->getId());
             }
         } elseif ($request->getPathInfo() !== $this->targetGroupUrl) {
+            // this should not happen on the endpoint for the cache, because it is set there manually as a header
             $targetGroup = $this->targetGroupEvaluator->evaluate();
 
             $targetGroupId = 0;
