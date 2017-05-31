@@ -180,7 +180,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             if ($targetGroup) {
                 $this->targetGroupStore->updateTargetGroupId($targetGroup->getId());
             }
-        } else {
+        } elseif ($request->getPathInfo() !== $this->targetGroupUrl) {
             $targetGroup = $this->targetGroupEvaluator->evaluate();
 
             $targetGroupId = 0;
@@ -215,7 +215,9 @@ class TargetGroupSubscriber implements EventSubscriberInterface
      */
     public function addSetCookieHeader(FilterResponseEvent $event)
     {
-        if (!$this->targetGroupStore->hasChangedTargetGroup()) {
+        if (!$this->targetGroupStore->hasChangedTargetGroup()
+            || $event->getRequest()->getPathInfo() === $this->targetGroupUrl
+        ) {
             return;
         }
 
