@@ -20,28 +20,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class DispositionTypeTwigExtension extends \Twig_Extension
 {
     /**
-     * @var string
-     */
-    private $default;
-
-    /**
-     * @var array
-     */
-    private $mimeTypesInline;
-
-    /**
-     * @var array
-     */
-    private $mimeTypesAttachment;
-
-    public function __construct($default, array $mimeTypesInline, array $mimeTypesAttachment)
-    {
-        $this->default = $default;
-        $this->mimeTypesInline = $mimeTypesInline;
-        $this->mimeTypesAttachment = $mimeTypesAttachment;
-    }
-
-    /**
      * Returns an array of possible function in this extension.
      *
      * @return array
@@ -53,32 +31,25 @@ class DispositionTypeTwigExtension extends \Twig_Extension
         ];
     }
 
+    /**
+     * Get media url.
+     *
+     * @param Media $media
+     * @param null|string $dispositionType
+     *
+     * @return string
+     */
     public function getMediaUrl(Media $media, $dispositionType = null)
     {
-        if (!$dispositionType &&
-            !($dispositionType = $this->getDispositionTypeByMimeType($media->getMimeType()))
-        ) {
-            $dispositionType = $this->default;
-        }
-
         $url = $media->getUrl();
 
         if ($dispositionType === ResponseHeaderBag::DISPOSITION_INLINE) {
             $url .= (false === strpos($url, '?') ? '?inline=1' : '&inline=1');
+        } elseif ($dispositionType === ResponseHeaderBag::DISPOSITION_ATTACHMENT) {
+            $url .= (false === strpos($url, '?') ? '?inline=0' : '&inline=0');
         }
 
         return $url;
-    }
-
-    private function getDispositionTypeByMimeType($mimeType)
-    {
-        if (in_array($mimeType, $this->mimeTypesInline)) {
-            return ResponseHeaderBag::DISPOSITION_INLINE;
-        } elseif (in_array($mimeType, $this->mimeTypesAttachment)) {
-            return ResponseHeaderBag::DISPOSITION_ATTACHMENT;
-        }
-
-        return;
     }
 
     /**
