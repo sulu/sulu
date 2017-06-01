@@ -42,16 +42,23 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     private $registry;
 
+    /**
+     * @var array
+     */
+    private $defaultTypes;
+
     public function __construct(
         SettingsManagerInterface $settingsManager,
         DocumentManagerInterface $documentManager,
         WebspaceManagerInterface $webspaceManager,
-        DocumentRegistry $registry
+        DocumentRegistry $registry,
+        $defaultTypes
     ) {
         $this->settingsManager = $settingsManager;
         $this->documentManager = $documentManager;
         $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
+        $this->defaultTypes = $defaultTypes;
     }
 
     /**
@@ -66,7 +73,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
             throw new SnippetNotFoundException($uuid);
         }
 
-        if ($document->getStructureType() !== $type) {
+        if (!$this->checkTemplate($document, $type)) {
             throw new WrongSnippetTypeException($document->getStructureType(), $type, $document);
         }
 
@@ -102,7 +109,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         /** @var SnippetDocument $document */
         $document = $this->documentManager->find($uuid, $locale);
 
-        if (null !== $document && $document->getStructureType() !== $type) {
+        if (null !== $document && !$this->checkTemplate($document, $type)) {
             throw new WrongSnippetTypeException($document->getStructureType(), $type, $document);
         }
 
@@ -131,5 +138,24 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     public function loadIdentifier($webspaceKey, $type)
     {
         return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $type);
+    }
+
+    /**
+     * Check template.
+     *
+     * @param SnippetDocument $document
+     * @param string $type
+     *
+     * @return bool
+     */
+    private function checkTemplate($document, $type)
+    {
+        if (empty($this->defaultTypes)) {
+            @trigger_error('Use default snippets without defining them is deprecated and will be removed in 2.0', E_USER_DEPRECATED);
+
+            return $document->getStructureType() === $type;
+        }
+
+        return $document->getStructureType() === $this->defaultTypes[$type]['template'];
     }
 }

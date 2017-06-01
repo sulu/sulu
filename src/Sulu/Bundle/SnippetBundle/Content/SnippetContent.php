@@ -198,8 +198,13 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $default = $this->getParameterValue($property->getParams(), 'default', false);
 
         if (empty($ids) && $snippetType && $default && $this->defaultEnabled) {
+            if ($default === 'true') {
+                @trigger_error('Use default snippets without defining them is deprecated and will be removed in 2.0', E_USER_DEPRECATED);
+                $default = $snippetType;
+            }
+
             $ids = [
-                $this->defaultSnippetManager->loadIdentifier($webspaceKey, $snippetType),
+                $this->defaultSnippetManager->loadIdentifier($webspaceKey, $default),
             ];
 
             // to filter null default snippet

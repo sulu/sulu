@@ -42,6 +42,8 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
         if ($defaults) {
+            @trigger_error('Load default snippets over the snippet type is deprecated and will be removed in 2.0 use cgetDefaultAction instead', E_USER_DEPRECATED);
+
             $this->get('sulu_security.security_checker')->checkPermission(
                 new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
                 PermissionTypes::VIEW
@@ -80,14 +82,57 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * Save default snippet for given key.
+     * Get default types.
      *
-     * @param string $key
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function putDefaultAction($key, Request $request)
+    public function cgetDefaultsAction(Request $request)
+    {
+        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $this->get('sulu_security.security_checker')->checkPermission(
+            new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
+            PermissionTypes::VIEW
+        );
+
+        $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
+        $defaultTypes = $this->getDefaultTypes();
+
+        $defaults = [];
+        foreach ($defaultTypes as $key => $defaultType) {
+            $default = [
+                'key' => $key,
+                'template' => $defaultType['template'],
+                'title' => $defaultType['title'],
+            ];
+
+            $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
+            $default['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+            $default['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+
+            $defaults[] = $default;
+        }
+
+        $data = [
+            '_embedded' => [
+                'defaults' => $defaults,
+            ],
+            'total' => count($defaults),
+        ];
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * Save default snippet for given key.
+     *
+     * @param Request $request
+     * @param string $key
+     *
+     * @return JsonResponse
+     */
+    public function putDefaultAction(Request $request, $key)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
         $this->get('sulu_security.security_checker')->checkPermission(
@@ -97,7 +142,9 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
 
         $default = $request->get('default');
 
-        $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
+        $defaultTypes = $this->getDefaultTypes();
+        $defaultType = $defaultTypes[$key];
+
         $defaultSnippet = $this->get('sulu_snippet.default_snippet.manager')->save(
             $webspaceKey,
             $key,
@@ -107,8 +154,9 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
 
         return new JsonResponse(
             [
-                'template' => $type->getKey(),
-                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
+                'key' => $key,
+                'template' => $defaultType['template'],
+                'title' => $defaultType['title'],
                 'defaultUuid' => $defaultSnippet ? $defaultSnippet->getUuid() : null,
                 'defaultTitle' => $defaultSnippet ? $defaultSnippet->getTitle() : null,
             ]
@@ -131,16 +179,46 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
             PermissionTypes::EDIT
         );
 
-        $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
+        $defaultTypes = $this->getDefaultTypes();
+        $defaultType = $defaultTypes[$key];
+
         $this->get('sulu_snippet.default_snippet.manager')->remove($webspaceKey, $key);
 
         return new JsonResponse(
             [
-                'template' => $type->getKey(),
-                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
+                'key' => $key,
+                'template' => $defaultType['template'],
+                'title' => $defaultType['title'],
                 'defaultUuid' => null,
                 'defaultTitle' => null,
             ]
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getDefaultTypes()
+    {
+        $defaultTypes = $this->getParameter('sulu_snippet.default_types');
+
+        if (!empty($defaultTypes)) {
+            return $defaultTypes;
+        }
+
+        @trigger_error('Use default snippets without defining them is deprecated and will be removed in 2.0', E_USER_DEPRECATED);
+
+        /** @var StructureManagerInterface $structureManager */
+        $structureManager = $this->get('sulu.content.structure_manager');
+        $types = $structureManager->getStructures(Structure::TYPE_SNIPPET);
+
+        foreach ($types as $type) {
+            $defaultTypes[$type->getKey()] = [
+                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
+                'template' => $type->getKey(),
+            ];
+        }
+
+        return $defaultTypes;
     }
 }
