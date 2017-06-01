@@ -71,7 +71,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         $attributes['resourceLocator'] = $resourceLocator;
         $attributes['format'] = $format;
 
-        $attributes['resourceLocatorPrefix'] = substr($portalInformation->getUrl(), strlen($request->getHttpHost()));
+        $attributes['resourceLocatorPrefix'] = substr($portalInformation->getUrl(), strlen($request->getHost()));
 
         if (null !== $format) {
             $request->setRequestFormat($format);
@@ -110,7 +110,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         }
 
         $resourceLocator = substr(
-            $request->getHttpHost() . $path,
+            $request->getHost() . $path,
             strlen($portalInformation->getUrl())
         );
 

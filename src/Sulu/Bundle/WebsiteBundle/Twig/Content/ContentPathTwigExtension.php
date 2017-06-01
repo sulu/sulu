@@ -87,6 +87,13 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
             $scheme
         );
 
+        $port = $this->requestAnalyzer->getAttribute('port');
+        if ($url && strpos($url, $host) !== false) {
+            if (!('http' == $scheme && $port == 80) && !('https' == $scheme && $port == 443)) {
+                $url = str_replace($host, $host . ':' . $port, $url);
+            }
+        }
+
         if (!$withoutDomain && !$url) {
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $route,

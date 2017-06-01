@@ -148,34 +148,6 @@ class PortalInformationRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
     }
 
-    public function testProcessWithPort()
-    {
-        $portalInformation = new PortalInformation(
-            RequestAnalyzerInterface::MATCH_TYPE_FULL,
-            null,
-            null,
-            null,
-            'sulu.lo:8000/test'
-        );
-
-        $request = new Request(
-            [],
-            [],
-            [],
-            [],
-            [],
-            ['HTTP_HOST' => 'sulu.lo:8000']
-        );
-
-        $attributes = $this->portalInformationRequestProcessor->process(
-            $request,
-            new RequestAttributes(['portalInformation' => $portalInformation, 'path' => '/test/path/to'])
-        );
-
-        $this->assertEquals('/path/to', $attributes->getAttribute('resourceLocator'));
-        $this->assertEquals('/test', $attributes->getAttribute('resourceLocatorPrefix'));
-    }
-
     public function testValidate()
     {
         $this->assertTrue($this->portalInformationRequestProcessor->validate(new RequestAttributes()));

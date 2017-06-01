@@ -20,7 +20,7 @@ class ForwardedUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideProcess
      */
-    public function testProcess($urlHeader, $url, $host, $path)
+    public function testProcess($urlHeader, $url, $host, $port, $path)
     {
         $forwardedUrlRequestProcessor = new ForwardedUrlRequestProcessor($urlHeader);
         $request = new Request();
@@ -28,15 +28,16 @@ class ForwardedUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $requestAttributes = $forwardedUrlRequestProcessor->process($request, new RequestAttributes());
 
         $this->assertEquals($host, $requestAttributes->getAttribute('host'));
+        $this->assertEquals($port, $requestAttributes->getAttribute('port'));
         $this->assertEquals($path, $requestAttributes->getAttribute('path'));
     }
 
     public function provideProcess()
     {
         return [
-            ['X-Forwarded-Url', 'http://127.0.0.1:8000/en/test', '127.0.0.1:8000', '/en/test'],
-            ['X-Url', 'http://sulu.lo/en/test', 'sulu.lo', '/en/test'],
-            ['X-Forwarded-Url', 'http://sulu.lo/de/test', 'sulu.lo', '/de/test'],
+            ['X-Forwarded-Url', 'http://127.0.0.1:8000/en/test', '127.0.0.1', 8000, '/en/test'],
+            ['X-Url', 'http://sulu.lo/en/test', 'sulu.lo', 80, '/en/test'],
+            ['X-Forwarded-Url', 'http://sulu.lo/de/test', 'sulu.lo', 80, '/de/test'],
         ];
     }
 }
