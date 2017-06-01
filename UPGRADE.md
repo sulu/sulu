@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 1.6.0-RC1
 
 ### Social media profile fixtures
 
