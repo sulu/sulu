@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #3384 [Webspace]              Fixed usage of Sulu with non-default HTTP port
+    * ENHANCEMENT #3343 [MediaBundle]           Use media disposition type config to serve media files
+
 * 1.6.0-RC1 (2017-06-01)
     * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
     * BUGFIX      #3379 [All]                   Upgraded to Symfony 3.3
@@ -16,7 +20,6 @@ CHANGELOG for Sulu
     * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
     * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field
     * ENHANCEMENT #3344 [ContentBundle]         Added possibility to add additional attributes to "sulu:link"-tag
-    * ENHANCEMENT #3343 [MediaBundle]           Use media disposition type config to serve media files
     * ENHANCEMENT #3345 [CustomUrlBundle]       Added redirect parameter of custom-url
     * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
     * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
