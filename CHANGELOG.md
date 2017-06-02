@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3385 [SecurityBundle]        Fixed UserLocaleListener
     * BUGFIX      #3384 [Webspace]              Fixed usage of Sulu with non-default HTTP port
     * ENHANCEMENT #3343 [MediaBundle]           Use media disposition type config to serve media files
 

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Sets the locale of the current User to the request. Required for the translator to work properly.
@@ -25,9 +26,15 @@ class UserLocaleListener
      */
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
     }
 
     /**
@@ -47,6 +54,8 @@ class UserLocaleListener
             return;
         }
 
-        $event->getRequest()->setLocale($user->getLocale());
+        $locale = $user->getLocale();
+        $event->getRequest()->setLocale($locale);
+        $this->translator->setLocale($locale);
     }
 }
