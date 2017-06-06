@@ -33,8 +33,8 @@ define([
                         $row.find('[data-condition-name]').each(function(index, element) {
                             var $element = $(element), fieldValue = null;
 
-                            if ($element.data('selectionValues') && $element.data('selectionValues').length > 0) {
-                                fieldValue = $element.data('selectionValues')[0];
+                            if ($element.data('selection') && $element.data('selection').length > 0) {
+                                fieldValue = $element.data('selection')[0];
                             } else {
                                 fieldValue = $element.data('singleInternalLink') || $element.val();
                             }

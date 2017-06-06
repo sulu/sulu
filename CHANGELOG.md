@@ -2,9 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #3385 [SecurityBundle]        Fixed UserLocaleListener
-    * BUGFIX      #3384 [Webspace]              Fixed usage of Sulu with non-default HTTP port
-    * ENHANCEMENT #3343 [MediaBundle]           Use media disposition type config to serve media files
+    * FEATURE     #3387 [AudienceTargetingBundle] Added rule for detecting device type
+    * BUGFIX      #3385 [SecurityBundle]          Fixed UserLocaleListener
+    * BUGFIX      #3384 [Webspace]                Fixed usage of Sulu with non-default HTTP port
+    * ENHANCEMENT #3343 [MediaBundle]             Use media disposition type config to serve media files
 
 * 1.6.0-RC1 (2017-06-01)
     * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
