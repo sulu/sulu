@@ -67,8 +67,7 @@ define([
                             });
 
                             $conditionField.data({
-                                'selection': [id],
-                                'selectionValues': [value]
+                                'selection': [value]
                             });
                         } else {
                             $conditionField.val(value);

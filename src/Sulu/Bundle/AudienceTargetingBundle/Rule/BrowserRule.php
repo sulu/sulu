@@ -64,11 +64,11 @@ class BrowserRule implements RuleInterface
      */
     public function getType()
     {
-        return new Select(static::BROWSER, array_map(function($browser, $key) {
+        return new Select(static::BROWSER, array_map(function($browser) {
             return [
-                'id' => $key,
+                'id' => $browser,
                 'name' => $browser,
             ];
-        }, static::$browsers, array_keys(static::$browsers)));
+        }, static::$browsers));
     }
 }
