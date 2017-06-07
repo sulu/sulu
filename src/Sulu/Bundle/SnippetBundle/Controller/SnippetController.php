@@ -302,6 +302,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
                     // publish the snippet, otherwise it's not in the live workspace.
                     $this->documentManager->publish($snippet->getDocument(), $locale);
+                    $this->documentManager->flush();
 
                     break;
                 default:
