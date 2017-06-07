@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\ContentType as SmartContent;
 use Sulu\Component\SmartContent\DataProviderInterface;
@@ -461,6 +462,10 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             [3, 3, 8, '123-123-123', [7, 8], false],
             // fourth page page-size 3 (empty result)
             [4, 3, 8, '123-123-123', [], false],
+            [-1, 3, 8, '123-123-123', [1, 2, 3], true],
+            [-1, 3, 8, '123-123-123', [1, 2, 3], true],
+            [0, 3, 8, '123-123-123', [1, 2, 3], true],
+            ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true],
         ];
     }
 
@@ -484,9 +489,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             true,
             ['getValue', 'getParams']
         );
-        $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\StructureInterface'
-        );
+        $structure = $this->getMockForAbstractClass(StructureInterface::class);
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
@@ -544,7 +547,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
-            $page,
+            $page < 1 ? 1 : ($page > PHP_INT_MAX ? PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
 
@@ -643,7 +646,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
-            $page,
+            $page < 1 ? 1 : ($page > PHP_INT_MAX ? PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
 
