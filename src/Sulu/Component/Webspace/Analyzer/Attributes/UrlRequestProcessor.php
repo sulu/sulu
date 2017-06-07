@@ -23,9 +23,10 @@ class UrlRequestProcessor implements RequestProcessorInterface
      */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $host = $request->getHttpHost();
+        $host = $request->getHost();
+        $port = $request->getPort();
 
-        return new RequestAttributes(['host' => $host, 'path' => $request->getPathInfo()]);
+        return new RequestAttributes(['host' => $host, 'port' => $port, 'path' => $request->getPathInfo()]);
     }
 
     /**

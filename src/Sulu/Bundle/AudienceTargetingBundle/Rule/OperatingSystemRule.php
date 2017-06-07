@@ -64,11 +64,11 @@ class OperatingSystemRule implements RuleInterface
      */
     public function getType()
     {
-        return new Select(static::OPERATING_SYSTEM, array_map(function($operatingSystem, $key) {
+        return new Select(static::OPERATING_SYSTEM, array_map(function($operatingSystem) {
             return [
-                'id' => $key,
+                'id' => $operatingSystem,
                 'name' => $operatingSystem,
             ];
-        }, static::$operatingSystems, array_keys(static::$operatingSystems)));
+        }, static::$operatingSystems));
     }
 }

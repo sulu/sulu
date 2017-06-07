@@ -85,6 +85,12 @@
             <argument type="service" id="translator"/>
             <tag name="sulu.audience_target_rule" alias="os"/>
         </service>
+        <service id="sulu_audience_targeting.rules.device"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\DeviceTypeRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="device"/>
+        </service>
         <!--CONTENT TYPES-->
         <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
                  class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups">

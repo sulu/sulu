@@ -90,6 +90,22 @@
                 <source>sulu_audience_targeting.rules.operating_system</source>
                 <target>Besturingssysteem</target>
             </trans-unit>
+            <trans-unit id="target-group-25" resname="sulu_audience_targeting.rules.device_type">
+                <source>sulu_audience_targeting.rules.device_type</source>
+                <target>Soort apparaat</target>
+            </trans-unit>
+            <trans-unit id="target-group-26" resname="sulu_audience_targeting.device_types.smartphone">
+                <source>sulu_audience_targeting.device_types.smartphone</source>
+                <target>Smartphone</target>
+            </trans-unit>
+            <trans-unit id="target-group-27" resname="sulu_audience_targeting.device_types.tablet">
+                <source>sulu_audience_targeting.device_types.tablet</source>
+                <target>Tablet</target>
+            </trans-unit>
+            <trans-unit id="target-group-28" resname="sulu_audience_targeting.device_types.desktop">
+                <source>sulu_audience_targeting.device_types.desktop</source>
+                <target>PC</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
