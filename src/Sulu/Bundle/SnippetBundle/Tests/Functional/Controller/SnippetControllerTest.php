@@ -63,7 +63,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=' . $locale);
         $response = $this->client->getResponse();
-        
+
         $result = json_decode($response->getContent(), true);
         $this->assertHttpStatusCode(200, $response);
         $this->assertLinks([
