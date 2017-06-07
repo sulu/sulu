@@ -47,7 +47,7 @@ class TemplateController extends Controller
         foreach (array_flip($this->getParameter('sulu_audience_targeting.frequencies')) as $name => $value) {
             $frequencies[] = [
                 'id' => $value,
-                'name' => $name,
+                'name' => $this->get('translator')->trans('sulu_audience_targeting.frequencies.' . $name, [], 'backend'),
             ];
         }
 

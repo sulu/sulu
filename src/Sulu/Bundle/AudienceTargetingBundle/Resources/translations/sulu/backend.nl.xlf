@@ -36,7 +36,7 @@
             </trans-unit>
             <trans-unit id="target-group-10">
                 <source>sulu_audience_targeting.frequency</source>
-                <target>Frequentie</target>
+                <target>Toegewezen bij</target>
             </trans-unit>
             <trans-unit id="target-group-11">
                 <source>sulu_audience_targeting.conditions</source>
@@ -105,6 +105,18 @@
             <trans-unit id="target-group-28" resname="sulu_audience_targeting.device_types.desktop">
                 <source>sulu_audience_targeting.device_types.desktop</source>
                 <target>PC</target>
+            </trans-unit>
+            <trans-unit id="target-group-29" resname="sulu_audience_targeting.frequencies.hit">
+                <source>sulu_audience_targeting.frequencies.hit</source>
+                <target>ieder paginabezoek</target>
+            </trans-unit>
+            <trans-unit id="target-group-30" resname="sulu_audience_targeting.frequencies.session">
+                <source>sulu_audience_targeting.frequencies.session</source>
+                <target>iedere sessie</target>
+            </trans-unit>
+            <trans-unit id="target-group-31" resname="sulu_audience_targeting.frequencies.visitor">
+                <source>sulu_audience_targeting.frequencies.visitor</source>
+                <target>eerste bezoek</target>
             </trans-unit>
         </body>
     </file>
