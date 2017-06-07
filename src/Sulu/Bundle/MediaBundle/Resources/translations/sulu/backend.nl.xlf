@@ -278,6 +278,10 @@
                 <source>sulu.media.formats</source>
                 <target>Media formats</target>
             </trans-unit>
+            <trans-unit id="243288cd2f64a52w2379s55869f221238" resname="sulu.media.taxonomies">
+                <source>sulu.media.taxonomies</source>
+                <target>Taxonomieën</target>
+            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f221238" resname="sulu.media.categories">
                 <source>sulu.media.categories</source>
                 <target>Categorieën</target>
