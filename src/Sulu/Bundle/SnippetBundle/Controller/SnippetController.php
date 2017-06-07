@@ -299,6 +299,10 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                         $locale,
                         explode(',', $destLocale)
                     );
+
+                    // publish the snippet, otherwise it's not in the live workspace.
+                    $this->documentManager->publish($snippet->getDocument(), $locale);
+
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
@@ -341,7 +345,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     'translation' => 'snippets.list.template',
                     'disabled' => false,
                     'default' => true,
-                    'sortable' => true,
+                    'sortable' => false,
                     'type' => '',
                     'width' => '',
                     'minWidth' => '',
@@ -352,7 +356,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     'translation' => 'public.id',
                     'disabled' => true,
                     'default' => false,
-                    'sortable' => true,
+                    'sortable' => false,
                     'type' => '',
                     'width' => '50px',
                     'minWidth' => '',

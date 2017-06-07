@@ -1,5 +1,12 @@
 # Upgrade
 
+### Snippet list
+
+Some field configuration has changed, so we need to delete the saved one in the database:
+```sql
+DELETE FROM `se_user_settings` WHERE `settingsKey` = 'snippetsFields';
+```
+
 ## 1.6.0-RC1
 
 ### Social media profile fixtures

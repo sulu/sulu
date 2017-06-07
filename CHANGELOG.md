@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #xxxx [SnippetBundle]         Snippet list: Changed field sortable; Fixed bug with copy locale functionality
+
 * 1.6.0-RC1 (2017-06-01)
     * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
     * BUGFIX      #3379 [All]                   Upgraded to Symfony 3.3

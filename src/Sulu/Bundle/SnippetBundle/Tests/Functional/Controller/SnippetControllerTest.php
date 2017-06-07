@@ -15,6 +15,7 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -62,8 +63,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=' . $locale);
         $response = $this->client->getResponse();
-
-        $result = $response->getContent();
+        
         $result = json_decode($response->getContent(), true);
         $this->assertHttpStatusCode(200, $response);
         $this->assertLinks([
@@ -489,10 +489,13 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
+        /** @var SnippetDocument $newPage */
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
+        $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
         $this->assertEquals('Hotel de', $newPage->getTitle());
 
         $newPage = $this->documentManager->find($snippet->getUuid(), 'de');
+        $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
         $this->assertEquals('Hotel de', $newPage->getTitle());
     }
 
