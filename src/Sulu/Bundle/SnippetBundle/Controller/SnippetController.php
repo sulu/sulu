@@ -290,18 +290,23 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         try {
             switch ($action) {
                 case 'copy-locale':
-                    $destLocale = $this->getRequestParameter($request, 'dest', true);
+                    $destLocales = explode(',', $this->getRequestParameter($request, 'dest', true));
 
                     // call repository method
                     $snippet = $this->snippetRepository->copyLocale(
                         $uuid,
                         $this->getUser()->getId(),
                         $locale,
-                        explode(',', $destLocale)
+                        $destLocales
                     );
 
-                    // publish the snippet, otherwise it's not in the live workspace.
-                    $this->documentManager->publish($snippet->getDocument(), $locale);
+                    // publish the snippet in every dest locale, otherwise it's not in the live workspace.
+                    foreach ($destLocales as $destLocale) {
+                        $destSnippet = $this->findDocument($uuid, $destLocale);
+                        $this->documentManager->publish($destSnippet, $destLocale);
+                    }
+
+                    // flush all published snippets
                     $this->documentManager->flush();
 
                     break;

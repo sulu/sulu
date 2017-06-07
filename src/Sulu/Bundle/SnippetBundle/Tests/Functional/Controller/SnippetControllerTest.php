@@ -484,10 +484,13 @@ class SnippetControllerTest extends SuluTestCase
         $snippet->setStructureType('hotel');
         $snippet->setTitle('Hotel de');
         $this->documentManager->persist($snippet, 'de');
+        $this->documentManager->publish($snippet, 'de');
         $this->documentManager->flush();
 
         $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->documentManager->clear();
 
         /** @var SnippetDocument $newPage */
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
