@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
     * FEATURE     #3387 [AudienceTargetingBundle] Added rule for detecting device type
     * BUGFIX      #3385 [SecurityBundle]          Fixed UserLocaleListener
     * BUGFIX      #3384 [Webspace]                Fixed usage of Sulu with non-default HTTP port
