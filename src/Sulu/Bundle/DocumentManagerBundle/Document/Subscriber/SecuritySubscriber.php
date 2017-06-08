@@ -68,12 +68,7 @@ class SecuritySubscriber implements EventSubscriberInterface
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'User must implement the Sulu UserInterface, got "%s"',
-                    is_object($user) ? get_class($user) : gettype($user)
-                )
-            );
+            return null;
         }
 
         $optionsResolver->setDefault(static::USER_OPTION, $user->getId());
