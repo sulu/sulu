@@ -464,7 +464,8 @@ define([
             return _.template(taxonomiesTemplate, {
                 categoryLocale: this.options.locale,
                 media: this.media,
-                translate: this.sandbox.translate
+                translate: this.sandbox.translate,
+                hasAudienceTargeting: config.has('sulu_audience_targeting')
             });
         },
 

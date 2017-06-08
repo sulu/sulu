@@ -410,6 +410,10 @@
                 <source>sulu-media.saved-crops-not-visible</source>
                 <target>Die Ausschnitte wurde gespeichert, werden aber in dieser Voransicht nicht dargestellt</target>
             </trans-unit>
+            <trans-unit id="1c4135ca12b79a2w4caj83643e831817a" resname="sulu.media.audience-target-groups">
+                <source>sulu.media.audience-target-groups</source>
+                <target>Zielgruppen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

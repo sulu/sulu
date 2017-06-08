@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -133,6 +134,11 @@ class FileVersion implements AuditableInterface
     private $categories = [];
 
     /**
+     * @var TargetGroupInterface[]
+     */
+    private $targetGroups;
+
+    /**
      * @var int
      */
     private $focusPointX;
@@ -153,6 +159,7 @@ class FileVersion implements AuditableInterface
         $this->formatOptions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
         $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->targetGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -788,6 +795,32 @@ class FileVersion implements AuditableInterface
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Add a target group.
+     *
+     * @param TargetGroupInterface $targetGroup
+     */
+    public function addTargetGroup(TargetGroupInterface $targetGroup)
+    {
+        $this->targetGroups[] = $targetGroup;
+    }
+
+    /**
+     * Remove all target groups.
+     */
+    public function removeTargetGroups()
+    {
+        $this->targetGroups->clear();
+    }
+
+    /**
+     * @return TargetGroupInterface[]
+     */
+    public function getTargetGroups()
+    {
+        return $this->targetGroups;
     }
 
     /**

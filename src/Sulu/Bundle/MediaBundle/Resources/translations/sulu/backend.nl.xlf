@@ -410,6 +410,10 @@
                 <source>sulu-media.saved-crops-not-visible</source>
                 <target>Uitsneden zijn opgeslagen, maar zijn niet zichtbaar in deze voorbeeldweergave</target>
             </trans-unit>
+            <trans-unit id="1c4135ca12b79a2w4caj83643e831817a" resname="sulu.media.audience-target-groups">
+                <source>sulu.media.audience-target-groups</source>
+                <target>Doelgroepen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -15,6 +15,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -68,6 +69,11 @@ class MediaManager implements MediaManagerInterface
      * @var CategoryRepositoryInterface
      */
     protected $categoryRepository;
+
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    protected $targetGroupRepository;
 
     /**
      * @var EntityManager
@@ -148,6 +154,8 @@ class MediaManager implements MediaManagerInterface
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepositoryInterface $collectionRepository
      * @param UserRepositoryInterface $userRepository
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param TargetGroupRepositoryInterface $targetGroupRepository
      * @param EntityManager $em
      * @param StorageInterface $storage
      * @param FileValidatorInterface $validator
@@ -179,12 +187,14 @@ class MediaManager implements MediaManagerInterface
         FFProbe $ffprobe,
         $permissions,
         $downloadPath,
-        $maxFileSize
+        $maxFileSize,
+        TargetGroupRepositoryInterface $targetGroupRepository = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->targetGroupRepository = $targetGroupRepository;
         $this->em = $em;
         $this->storage = $storage;
         $this->validator = $validator;
@@ -626,6 +636,18 @@ class MediaManager implements MediaManagerInterface
 
                             foreach ($categories as $category) {
                                 $media->addCategory($category);
+                            }
+                        }
+                        break;
+                    case 'targetGroups':
+                        $targetGroupIds = $value;
+                        $media->removeTargetGroups();
+
+                        if (is_array($targetGroupIds) && !empty($targetGroupIds)) {
+                            $targetGroups = $this->targetGroupRepository->findByIds($targetGroupIds);
+
+                            foreach ($targetGroups as $targetGroup) {
+                                $media->addTargetGroup($targetGroup);
                             }
                         }
                         break;
