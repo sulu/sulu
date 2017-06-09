@@ -109,7 +109,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("id")
-     * @Groups({"partialMedia"})
+     * @Groups({"partialMedia", "Default"})
      *
      * @return int
      */
@@ -1041,12 +1041,13 @@ class Media extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("targetGroups")
+     * @Groups({"fullMediaAudienceTargeting"})
      *
      * @return TargetGroupInterface[]
      */
     public function getTargetGroups()
     {
-        return $this->getFileVersion()->getTargetGroups();
+        return $this->getFileVersion()->getTargetGroups()->toArray();
     }
 
     /**

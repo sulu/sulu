@@ -154,7 +154,6 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),
             $this->categoryRepository->reveal(),
-            $this->targetGroupRepository->reveal(),
             $this->em->reveal(),
             $this->storage->reveal(),
             $this->validator->reveal(),
@@ -169,7 +168,8 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
                 'view' => 64,
             ],
             '/',
-            0
+            0,
+            $this->targetGroupRepository->reveal()
         );
     }
 
