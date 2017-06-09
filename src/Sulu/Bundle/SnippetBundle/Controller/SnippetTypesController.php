@@ -42,7 +42,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
         if ($defaults) {
-            @trigger_error('Load default snippets over the snippet type is deprecated and will be removed in 2.0 use cgetDefaultAction instead', E_USER_DEPRECATED);
+            @trigger_error('Load default snippets over the cgetAction is deprecated and will be removed in 2.0 use cgetDefaultsAction instead', E_USER_DEPRECATED);
 
             $this->get('sulu_security.security_checker')->checkPermission(
                 new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
@@ -196,29 +196,30 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * @return mixed
+     * Get snippet default types.
+     *
+     * @return array
      */
     private function getDefaultTypes()
     {
         $defaultTypes = $this->getParameter('sulu_snippet.default_types');
+        $locale = $this->getUser()->getLocale();
 
-        if (!empty($defaultTypes)) {
-            return $defaultTypes;
-        }
+        $types = [];
 
-        @trigger_error('Use default snippets without defining them is deprecated and will be removed in 2.0', E_USER_DEPRECATED);
+        foreach ($defaultTypes as $type) {
+            $title = $type['key'];
 
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->get('sulu.content.structure_manager');
-        $types = $structureManager->getStructures(Structure::TYPE_SNIPPET);
+            if (isset($type['title'][$locale])) {
+                $title = $type['title'][$locale];
+            }
 
-        foreach ($types as $type) {
-            $defaultTypes[$type->getKey()] = [
-                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
-                'template' => $type->getKey(),
+            $types[$type['key']] = [
+                'title' => $title,
+                'template' => $type['template'],
             ];
         }
 
-        return $defaultTypes;
+        return $types;
     }
 }

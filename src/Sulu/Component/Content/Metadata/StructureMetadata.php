@@ -57,6 +57,11 @@ class StructureMetadata extends ItemMetadata
     public $internal;
 
     /**
+     * @var array
+     */
+    public $zones;
+
+    /**
      * Return a model property.
      *
      * @see StructureMetadata::getProperties()

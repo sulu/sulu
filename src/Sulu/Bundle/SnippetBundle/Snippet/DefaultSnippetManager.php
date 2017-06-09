@@ -150,12 +150,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     private function checkTemplate($document, $type)
     {
-        if (empty($this->defaultTypes)) {
-            @trigger_error('Use default snippets without defining them is deprecated and will be removed in 2.0', E_USER_DEPRECATED);
-
-            return $document->getStructureType() === $type;
-        }
-
         return $document->getStructureType() === $this->defaultTypes[$type]['template'];
     }
 }

@@ -29,6 +29,7 @@
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="internal" minOccurs="0" maxOccurs="1"/>
             <xs:element type="cacheLifetimeType" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="zonesType" name="zones"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="meta">
@@ -50,6 +51,24 @@
             <xs:element type="langType" name="placeholder"/>
         </xs:choice>
         <xs:attributeGroup ref="defaultAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="zonesType">
+        <xs:sequence>
+            <xs:element type="zoneContextType" name="zone" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="zoneContextType">
+        <xs:sequence>
+            <xs:element name="meta">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element type="langType" name="title"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="langType">
