@@ -629,7 +629,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             return $media->getId();
         }, $mediaResults);
 
-        $expectedMediaIds = array_map(function($expectedIndex) use($medias) {
+        $expectedMediaIds = array_map(function($expectedIndex) use ($medias) {
             return $medias[$expectedIndex]->getId();
         }, $expectedIndexes);
 
