@@ -129,10 +129,17 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
-            ->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
+        $this->httpKernel->handle(
+            Argument::that(
+                function (Request $request) {
+                    return $request->getHost() === 'sulu.io';
+                }
+            ),
+            HttpKernelInterface::MASTER_REQUEST,
+            false
+        )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
-        $request = new Request();
+        $request = new Request([], [], [], [], [], ['SERVER_NAME' => 'sulu.io']);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
