@@ -197,7 +197,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $snippetType = $this->getParameterValue($property->getParams(), 'snippetType');
         $default = $this->getParameterValue($property->getParams(), 'default', false);
 
-        if ($default === 'true') {
+        if ($default === true || $default === 'true') {
             $default = $snippetType;
         }
 
