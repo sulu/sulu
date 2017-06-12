@@ -19,6 +19,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -379,6 +380,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param string $pageParameter
      *
      * @return int
+     *
+     * @throws PageOutOfBoundsException
      */
     private function getCurrentPage($pageParameter)
     {
@@ -387,10 +390,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         }
 
         $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
-        if ($page < 1) {
-            return 1;
-        } elseif ($page > PHP_INT_MAX) {
-            return PHP_INT_MAX;
+        if ($page < 1 || $page > PHP_INT_MAX) {
+            throw new PageOutOfBoundsException($page);
         }
 
         return $page;

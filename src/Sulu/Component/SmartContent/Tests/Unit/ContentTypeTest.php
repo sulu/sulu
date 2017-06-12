@@ -13,6 +13,7 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
@@ -21,6 +22,7 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -462,10 +464,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             [3, 3, 8, '123-123-123', [7, 8], false],
             // fourth page page-size 3 (empty result)
             [4, 3, 8, '123-123-123', [], false],
-            [-1, 3, 8, '123-123-123', [1, 2, 3], true],
-            [-1, 3, 8, '123-123-123', [1, 2, 3], true],
-            [0, 3, 8, '123-123-123', [1, 2, 3], true],
-            ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true],
+            [-1, 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
+            [0, 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
+            ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
         ];
     }
 
@@ -478,10 +479,15 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $limitResult,
         $uuid,
         $expectedData,
-        $hasNextPage
+        $hasNextPage,
+        $exception = null
     ) {
+        if ($exception) {
+            $this->setExpectedException($exception);
+        }
+
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -547,7 +553,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
-            $page < 1 ? 1 : ($page > PHP_INT_MAX ? PHP_INT_MAX : $page),
+            $page,
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
 
@@ -573,8 +579,13 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $limitResult,
         $uuid,
         $expectedData,
-        $hasNextPage
+        $hasNextPage,
+        $exception = null
     ) {
+        if ($exception) {
+            $this->setExpectedException($exception);
+        }
+
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\Compat\PropertyInterface',
             [],
