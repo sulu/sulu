@@ -37,13 +37,25 @@ For replacement of `getReferenceUuids` we have introduced the
 [reference-store](http://docs.sulu.io/en/latest/bundles/content/reference-store.html)
 and the `PreResolveContentTypeInterface::preResolve` method. 
 
+### Additional routing file from SuluRouteBundle
+
+Add following lines to `app/config/admin/routing.yml`:
+
+```yml
+sulu_route_api:
+    type: rest
+    resource: "@SuluRouteBundle/Resources/config/routing_api.xml"
+    prefix: /admin/api
+```
+
 ### Route-Table changed
 
-The route-table was extended with auditable information. Run following command to
+The route-table was extended with auditable information. Run following sql-statement to
 update the database schema.
 
 ```bash
-bin/console doctrine:schema:update --force
+ALTER TABLE ro_routes ADD changed DATETIME DEFAULT '1970-01-01 00:00:00' NOT NULL, ADD created DATETIME DEFAULT '1970-01-01 00:00:00' NOT NULL;
+ALTER TABLE ro_routes CHANGE created created DATETIME NOT NULL, CHANGE changed changed DATETIME NOT NULL;
 ```
 
 ### Highlight section styling changed

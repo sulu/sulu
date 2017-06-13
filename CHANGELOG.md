@@ -3,13 +3,16 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #3385 [SnippetBundle]           Implement snippet areas to replace default snippets 
+    * BUGFIX      #3400 [PreviewBundle]           Added host to preview request
     * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
     * ENHANCEMENT #3393 [AudienceTargetingBundle] Added translations for frequencies
+    * BUGFIX      #3392 [ContentBundle]           Fixed smart-content out of range
     * FEATURE     #3387 [AudienceTargetingBundle] Added rule for detecting device type
     * BUGFIX      #3385 [SecurityBundle]          Fixed UserLocaleListener
     * BUGFIX      #3384 [Webspace]                Fixed usage of Sulu with non-default HTTP port
     * ENHANCEMENT #3343 [MediaBundle]             Use media disposition type config to serve media files
     * ENHANCEMENT #3390 [RouteBundle]             Avoid BC break in content-type "route" form
+    * ENHANCEMENT #3383 [RouteBundle]             Added upgrade sql-statement to add changed and created column
 
 * 1.6.0-RC1 (2017-06-01)
     * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
