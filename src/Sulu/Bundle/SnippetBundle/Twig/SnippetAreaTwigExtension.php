@@ -16,14 +16,9 @@ use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * @deprecated
- *
- * Load snippets over the sulu_snippet_load_default is deprecated
- * and will be removed in 2.0 use sulu_snippet_load_by_area instead.
- *
- * Provides default snippets.
+ * Provides snippets by area.
  */
-class DefaultSnippetTwigExtension extends \Twig_Extension
+class SnippetAreaTwigExtension extends \Twig_Extension
 {
     /**
      * @var DefaultSnippetManagerInterface
@@ -56,14 +51,21 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_snippet_load_default', [$this, 'getDefault']),
+            new \Twig_SimpleFunction('sulu_snippet_load_by_area', [$this, 'loadByArea']),
         ];
     }
 
-    public function getDefault($snippetType, $webspaceKey = null, $locale = null)
+    /**
+     * Load snippet for webspace by area.
+     *
+     * @param string $area
+     * @param string $webspaceKey
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function loadByArea($area, $webspaceKey = null, $locale = null)
     {
-        @trigger_error('Load snippets over the sulu_snippet_load_default is deprecated and will be removed in 2.0 use sulu_snippet_load_by_area instead', E_USER_DEPRECATED);
-
         if (!$webspaceKey) {
             $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         }
@@ -72,7 +74,7 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
         }
 
         $ids = [
-            $this->defaultSnippetManager->loadIdentifier($webspaceKey, $snippetType),
+            $this->defaultSnippetManager->loadIdentifier($webspaceKey, $area),
         ];
 
         // to filter null default snippet
@@ -86,6 +88,6 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'sulu_snippet.default';
+        return 'sulu_snippet.area';
     }
 }

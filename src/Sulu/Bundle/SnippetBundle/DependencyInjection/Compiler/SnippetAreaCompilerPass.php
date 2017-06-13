@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Get all snippets from compiler.
  */
-class DefaultSnippetCompilerPass implements CompilerPassInterface
+class SnippetAreaCompilerPass implements CompilerPassInterface
 {
     /**
      * @param ContainerBuilder $container
@@ -30,8 +30,8 @@ class DefaultSnippetCompilerPass implements CompilerPassInterface
 
         $locales = $container->getParameter('sulu_core.locales');
 
-        $defaultZones = [];
-        $zones = [];
+        $defaultAreas = [];
+        $areas = [];
 
         /** @var StructureMetadata $structure */
         foreach ($structures as $structure) {
@@ -42,40 +42,40 @@ class DefaultSnippetCompilerPass implements CompilerPassInterface
                 $templateTitles[$locale] = $structure->getTitle($locale);
             }
 
-            $defaultZones[$template] = [
+            $defaultAreas[$template] = [
                 'key' => $template,
                 'template' => $template,
                 'title' => $templateTitles,
             ];
 
-            foreach ($structure->getZones() as $zone) {
-                $zone = $this->getZone($template, $zone, $locales, $templateTitles);
-                $zones[$zone['key']] = $zone;
+            foreach ($structure->getAreas() as $area) {
+                $area = $this->getArea($template, $area, $locales, $templateTitles);
+                $areas[$area['key']] = $area;
             }
         }
 
-        if (empty($zones)) {
-            $zones = $defaultZones;
+        if (empty($areas)) {
+            $areas = $defaultAreas;
         }
 
-        $container->setParameter('sulu_snippet.default_types', $zones);
+        $container->setParameter('sulu_snippet.areas', $areas);
     }
 
     /**
-     * Get zone.
+     * Get area.
      *
      * @return array
      */
-    private function getZone($template, $zone, $locales, $templateTitles)
+    private function getArea($template, $area, $locales, $templateTitles)
     {
-        $key = $template . '.' . $zone['key'];
+        $key = $template . '.' . $area['key'];
 
         $titles = [];
 
         foreach ($locales as $locale) {
-            $title = $templateTitles[$locale] . ' ' . ucfirst($zone['key']);
-            if (isset($zone['title'][$locale])) {
-                $title = $zone['title'][$locale];
+            $title = $templateTitles[$locale] . ' ' . ucfirst($area['key']);
+            if (isset($area['title'][$locale])) {
+                $title = $area['title'][$locale];
             }
 
             $titles[$locale] = $title;

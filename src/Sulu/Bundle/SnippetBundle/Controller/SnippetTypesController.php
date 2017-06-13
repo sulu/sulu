@@ -42,7 +42,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
         if ($defaults) {
-            @trigger_error('Load default snippets over the cgetAction is deprecated and will be removed in 2.0 use cgetDefaultsAction instead', E_USER_DEPRECATED);
+            @trigger_error('Load default snippets over the cgetAction is deprecated and will be removed in 2.0 use cgetAreasAction instead', E_USER_DEPRECATED);
 
             $this->get('sulu_security.security_checker')->checkPermission(
                 new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
@@ -82,13 +82,13 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * Get default types.
+     * Get snippet areas.
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function cgetDefaultsAction(Request $request)
+    public function cgetAreasAction(Request $request)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
         $this->get('sulu_security.security_checker')->checkPermission(
@@ -97,38 +97,38 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         );
 
         $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
-        $defaultTypes = $this->getDefaultTypes();
+        $areas = $this->getLocalizedAreas();
 
-        $defaults = [];
-        foreach ($defaultTypes as $key => $defaultType) {
-            $default = [
+        $dataList = [];
+        foreach ($areas as $key => $area) {
+            $areaData = [
                 'key' => $key,
-                'template' => $defaultType['template'],
-                'title' => $defaultType['title'],
+                'template' => $area['template'],
+                'title' => $area['title'],
             ];
 
             $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
-            $default['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
-            $default['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+            $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+            $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
 
-            $defaults[] = $default;
+            $dataList[] = $areaData;
         }
 
         $data = [
             '_embedded' => [
-                'defaults' => $defaults,
+                'areas' => $dataList,
             ],
-            'total' => count($defaults),
+            'total' => count($dataList),
         ];
 
         return new JsonResponse($data);
     }
 
     /**
-     * Save default snippet for given key.
+     * @deprecated
      *
      * @param Request $request
-     * @param string $key
+     * @param $key
      *
      * @return JsonResponse
      */
@@ -142,8 +142,8 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
 
         $default = $request->get('default');
 
-        $defaultTypes = $this->getDefaultTypes();
-        $defaultType = $defaultTypes[$key];
+        $areas = $this->getLocalizedAreas();
+        $area = $areas[$key];
 
         $defaultSnippet = $this->get('sulu_snippet.default_snippet.manager')->save(
             $webspaceKey,
@@ -155,8 +155,8 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         return new JsonResponse(
             [
                 'key' => $key,
-                'template' => $defaultType['template'],
-                'title' => $defaultType['title'],
+                'template' => $area['template'],
+                'title' => $area['title'],
                 'defaultUuid' => $defaultSnippet ? $defaultSnippet->getUuid() : null,
                 'defaultTitle' => $defaultSnippet ? $defaultSnippet->getTitle() : null,
             ]
@@ -164,14 +164,14 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * Remove default snippet for given key.
+     * @deprecated
      *
-     * @param string $key
      * @param Request $request
+     * @param $key
      *
      * @return JsonResponse
      */
-    public function deleteDefaultAction($key, Request $request)
+    public function deleteDefaultAction(Request $request, $key)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
         $this->get('sulu_security.security_checker')->checkPermission(
@@ -179,16 +179,16 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
             PermissionTypes::EDIT
         );
 
-        $defaultTypes = $this->getDefaultTypes();
-        $defaultType = $defaultTypes[$key];
+        $areas = $this->getLocalizedAreas();
+        $area = $areas[$key];
 
         $this->get('sulu_snippet.default_snippet.manager')->remove($webspaceKey, $key);
 
         return new JsonResponse(
             [
                 'key' => $key,
-                'template' => $defaultType['template'],
-                'title' => $defaultType['title'],
+                'template' => $area['template'],
+                'title' => $area['title'],
                 'defaultUuid' => null,
                 'defaultTitle' => null,
             ]
@@ -200,26 +200,26 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
      *
      * @return array
      */
-    private function getDefaultTypes()
+    private function getLocalizedAreas()
     {
-        $defaultTypes = $this->getParameter('sulu_snippet.default_types');
+        $areas = $this->getParameter('sulu_snippet.areas');
         $locale = $this->getUser()->getLocale();
 
-        $types = [];
+        $localizedAreas = [];
 
-        foreach ($defaultTypes as $type) {
+        foreach ($areas as $type) {
             $title = $type['key'];
 
             if (isset($type['title'][$locale])) {
                 $title = $type['title'][$locale];
             }
 
-            $types[$type['key']] = [
+            $localizedAreas[$type['key']] = [
                 'title' => $title,
                 'template' => $type['template'],
             ];
         }
 
-        return $types;
+        return $localizedAreas;
     }
 }

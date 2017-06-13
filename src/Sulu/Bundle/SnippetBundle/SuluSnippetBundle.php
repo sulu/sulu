@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle;
 
-use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\DefaultSnippetCompilerPass;
+use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\SnippetAreaCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -22,7 +22,7 @@ class SuluSnippetBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new DefaultSnippetCompilerPass());
+        $container->addCompilerPass(new SnippetAreaCompilerPass());
 
         parent::build($container);
     }

@@ -11,15 +11,15 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\DependencyInjection\Compiler;
 
-use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\DefaultSnippetCompilerPass;
+use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\SnippetAreaCompilerPass;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Test default snippet compiler pass.
+ * Test snippet area compiler pass.
  */
-class DefaultSnippetCompilerPassTest extends \PHPUnit_Framework_TestCase
+class SnippetAreaCompilerPassTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContainerBuilder
@@ -31,9 +31,9 @@ class DefaultSnippetCompilerPassTest extends \PHPUnit_Framework_TestCase
      */
     protected $structureFactory;
 
-    public function testWithoutZones()
+    public function testWithoutAreas()
     {
-        $compiler = new DefaultSnippetCompilerPass();
+        $compiler = new SnippetAreaCompilerPass();
 
         $structureMetaData1 = $this->createStructureMetaData('test');
         $structureMetaData2 = $this->createStructureMetaData('hotel');
@@ -51,7 +51,7 @@ class DefaultSnippetCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
 
         $this->container->setParameter(
-            'sulu_snippet.default_types',
+            'sulu_snippet.areas',
             [
                 'test' => [
                     'key' => 'test',
@@ -75,9 +75,9 @@ class DefaultSnippetCompilerPassTest extends \PHPUnit_Framework_TestCase
         $compiler->process($this->container->reveal());
     }
 
-    public function testWithZones()
+    public function testWithAreas()
     {
-        $compiler = new DefaultSnippetCompilerPass();
+        $compiler = new SnippetAreaCompilerPass();
 
         $structureMetaData1 = $this->createStructureMetaData(
             'test',
@@ -106,7 +106,7 @@ class DefaultSnippetCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
 
         $this->container->setParameter(
-            'sulu_snippet.default_types',
+            'sulu_snippet.areas',
             [
                 'test.article' => [
                     'key' => 'test.article',
@@ -122,11 +122,11 @@ class DefaultSnippetCompilerPassTest extends \PHPUnit_Framework_TestCase
         $compiler->process($this->container->reveal());
     }
 
-    private function createStructureMetaData($name, $zones = [])
+    private function createStructureMetaData($name, $areas = [])
     {
         $structureMetaData = $this->prophesize(StructureMetadata::class);
         $structureMetaData->getName()->willReturn($name);
-        $structureMetaData->getZones()->willReturn($zones);
+        $structureMetaData->getAreas()->willReturn($areas);
         $structureMetaData->getTitle('de')->willReturn(ucfirst($name) . ' DE');
         $structureMetaData->getTitle('en')->willReturn(ucfirst($name) . ' EN');
 

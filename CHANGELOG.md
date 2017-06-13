@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #3385 [SnippetBundle]           Allow multiple default snippets use the same template
+    * FEATURE     #3385 [SnippetBundle]           Implement snippet areas to replace default snippets 
     * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
     * ENHANCEMENT #3393 [AudienceTargetingBundle] Added translations for frequencies
     * FEATURE     #3387 [AudienceTargetingBundle] Added rule for detecting device type

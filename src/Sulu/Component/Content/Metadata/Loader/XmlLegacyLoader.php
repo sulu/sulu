@@ -175,7 +175,7 @@ class XmlLegacyLoader implements LoaderInterface
                 'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
                 'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-                'zones' => $this->loadStructureZones('/x:template/x:zones/x:zone', $xpath),
+                'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
@@ -205,7 +205,7 @@ class XmlLegacyLoader implements LoaderInterface
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
                 'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-                'zones' => $this->loadStructureZones('/x:template/x:zones/x:zone', $xpath),
+                'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
@@ -440,7 +440,7 @@ class XmlLegacyLoader implements LoaderInterface
     }
 
     /**
-     * Loads the zones for the structure.
+     * Loads the areas for the structure.
      *
      * @param $path
      * @param \DOMXPath $xpath
@@ -449,30 +449,30 @@ class XmlLegacyLoader implements LoaderInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function loadStructureZones($path, $xpath)
+    private function loadStructureAreas($path, $xpath)
     {
         $result = [];
 
         foreach ($xpath->query($path) as $node) {
-            $zone = [];
+            $area = [];
 
             foreach ($node->attributes as $key => $attr) {
                 if (in_array($key, ['key'])) {
-                    $zone[$key] = $attr->value;
+                    $area[$key] = $attr->value;
                 } else {
-                    $zone['attributes'][$key] = $attr->value;
+                    $area['attributes'][$key] = $attr->value;
                 }
             }
 
             $meta = $this->loadMeta('x:meta/x:*', $xpath, $node);
-            $zone['title'] = $meta['title'];
+            $area['title'] = $meta['title'];
 
-            if (!isset($zone['key'])) {
+            if (!isset($area['key'])) {
                 // this should not happen because of the XSD validation
                 throw new \InvalidArgumentException('Zone does not have a key in the attributes');
             }
 
-            $result[] = $zone;
+            $result[] = $area;
         }
 
         return $result;

@@ -13,7 +13,7 @@ define(['config', 'app-config'], function(Config, AppConfig) {
 
     var defaults = {
         options: {
-            snippetDefaultTypesUrl: '/admin/api/snippet-types/defaults?webspace=<%= webspace %>',
+            snippetAreasUrl: '/admin/api/snippet-types/areas?webspace=<%= webspace %>',
             snippetDefaultTypeUrl: '/admin/api/snippet-types/<%= key %>/default?webspace=<%= webspace %>',
             snippetsUrl: '/admin/api/snippets?type=<%= type %>&language=<%= locale %>'
         },
@@ -237,9 +237,9 @@ define(['config', 'app-config'], function(Config, AppConfig) {
             var deferred = this.sandbox.data.deferred();
 
             this.sandbox.util.load(
-                _.template(this.options.snippetDefaultTypesUrl, {webspace: this.options.webspace})
+                _.template(this.options.snippetAreasUrl, {webspace: this.options.webspace})
             ).then(function(data) {
-                deferred.resolve({webspace: this.options.data(), types: data._embedded.defaults});
+                deferred.resolve({webspace: this.options.data(), types: data._embedded.areas});
             }.bind(this));
 
             return deferred.promise();

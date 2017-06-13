@@ -59,7 +59,7 @@ class StructureMetadata extends ItemMetadata
     /**
      * @var array
      */
-    public $zones;
+    public $areas;
 
     /**
      * Return a model property.
@@ -219,12 +219,12 @@ class StructureMetadata extends ItemMetadata
     }
 
     /**
-     * Return the structure zones.
+     * Return the structure areas.
      *
      * @return array
      */
-    public function getZones()
+    public function getAreas()
     {
-        return $this->zones;
+        return $this->areas;
     }
 }
