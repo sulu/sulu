@@ -37,6 +37,17 @@ For replacement of `getReferenceUuids` we have introduced the
 [reference-store](http://docs.sulu.io/en/latest/bundles/content/reference-store.html)
 and the `PreResolveContentTypeInterface::preResolve` method. 
 
+### Additional routing file from SuluRouteBundle
+
+Add following lines to `app/config/admin/routing.yml`:
+
+```yml
+sulu_route_api:
+    type: rest
+    resource: "@SuluRouteBundle/Resources/config/routing_api.xml"
+    prefix: /admin/api
+```
+
 ### Route-Table changed
 
 The route-table was extended with auditable information. Run following sql-statement to
