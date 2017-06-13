@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * BUGFIX      #3384 [Webspace]                Fixed usage of Sulu with non-default HTTP port
     * ENHANCEMENT #3343 [MediaBundle]             Use media disposition type config to serve media files
     * ENHANCEMENT #3390 [RouteBundle]             Avoid BC break in content-type "route" form
+    * ENHANCEMENT #3383 [RouteBundle]             Added upgrade sql-statement to add changed and created column
 
 * 1.6.0-RC1 (2017-06-01)
     * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
