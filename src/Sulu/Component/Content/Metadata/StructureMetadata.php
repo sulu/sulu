@@ -217,4 +217,14 @@ class StructureMetadata extends ItemMetadata
     {
         return $this->internal;
     }
+
+    /**
+     * Return the structure zones.
+     *
+     * @return array
+     */
+    public function getZones()
+    {
+        return $this->zones;
+    }
 }

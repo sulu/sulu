@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Get all snippets from compiler.
  */
-class SnippetZoneCompilerPass implements CompilerPassInterface
+class DefaultSnippetCompilerPass implements CompilerPassInterface
 {
     /**
      * @param ContainerBuilder $container
@@ -35,29 +35,23 @@ class SnippetZoneCompilerPass implements CompilerPassInterface
 
         /** @var StructureMetadata $structure */
         foreach ($structures as $structure) {
-            $template = $structure->name;
+            $template = $structure->getName();
 
-            foreach ($structure->zones as $zone) {
-                $key = $template . '.' . $zone['key'];
-
-                $zones[$key] = [
-                    'key' => $key,
-                    'template' => $template,
-                    'title' => $zone['title'],
-                ];
-            }
-
-            $titles = [];
-
+            $templateTitles = [];
             foreach ($locales as $locale) {
-                $titles[$locale] = $structure->getTitle($locale);
+                $templateTitles[$locale] = $structure->getTitle($locale);
             }
 
             $defaultZones[$template] = [
                 'key' => $template,
                 'template' => $template,
-                'title' => $titles,
+                'title' => $templateTitles,
             ];
+
+            foreach ($structure->getZones() as $zone) {
+                $zone = $this->getZone($template, $zone, $locales, $templateTitles);
+                $zones[$zone['key']] = $zone;
+            }
         }
 
         if (empty($zones)) {
@@ -65,5 +59,32 @@ class SnippetZoneCompilerPass implements CompilerPassInterface
         }
 
         $container->setParameter('sulu_snippet.default_types', $zones);
+    }
+
+    /**
+     * Get zone.
+     *
+     * @return array
+     */
+    private function getZone($template, $zone, $locales, $templateTitles)
+    {
+        $key = $template . '.' . $zone['key'];
+
+        $titles = [];
+
+        foreach ($locales as $locale) {
+            $title = $templateTitles[$locale] . ' ' . ucfirst($zone['key']);
+            if (isset($zone['title'][$locale])) {
+                $title = $zone['title'][$locale];
+            }
+
+            $titles[$locale] = $title;
+        }
+
+        return [
+            'key' => $key,
+            'template' => $template,
+            'title' => $titles,
+        ];
     }
 }
