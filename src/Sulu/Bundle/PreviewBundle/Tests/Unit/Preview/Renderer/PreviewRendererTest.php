@@ -132,14 +132,14 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->httpKernel->handle(
             Argument::that(
                 function (Request $request) {
-                    return $request->getHost() === 'sulu.io';
+                    return $request->getHost() === 'sulu.io' && $request->getPort() === 8080;
                 }
             ),
             HttpKernelInterface::MASTER_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
-        $request = new Request([], [], [], [], [], ['SERVER_NAME' => 'sulu.io']);
+        $request = new Request([], [], [], [], [], ['SERVER_NAME' => 'sulu.io', 'SERVER_PORT' => 8080]);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
