@@ -165,7 +165,9 @@ class PreviewRenderer implements PreviewRendererInterface
         $defaults['partial'] = $partial;
         $defaults['_sulu'] = $attributes;
 
-        $request = new Request($query, $request, $defaults);
+        $host = $currentRequest ? $currentRequest->getHost() : null;
+        $port = $currentRequest ? $currentRequest->getPort() : null;
+        $request = new Request($query, $request, $defaults, [], [], ['SERVER_NAME' => $host, 'SERVER_PORT' => $port]);
         $request->setLocale($locale);
 
         if ($this->targetGroupHeader && $targetGroupId) {

@@ -19,6 +19,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -297,6 +298,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $page,
                 $pageSize
             );
+
+            if ($page > 1 && 0 === count($data->getItems())) {
+                throw new PageOutOfBoundsException($page);
+            }
         } else {
             $data = $provider->resolveResourceItems(
                 $filters,
@@ -379,16 +384,21 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param string $pageParameter
      *
      * @return int
+     *
+     * @throws PageOutOfBoundsException
      */
     private function getCurrentPage($pageParameter)
     {
-        if ($this->requestStack->getCurrentRequest() !== null) {
-            $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
-        } else {
-            $page = 1;
+        if ($this->requestStack->getCurrentRequest() === null) {
+            return 1;
         }
 
-        return intval($page);
+        $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+        if ($page < 1 || $page > PHP_INT_MAX) {
+            throw new PageOutOfBoundsException($page);
+        }
+
+        return $page;
     }
 
     /**
