@@ -173,6 +173,9 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         return 'fileVersion.categories';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function appendTargetGroupRelation(QueryBuilder $queryBuilder, $alias)
     {
         return 'fileVersion.targetGroups';

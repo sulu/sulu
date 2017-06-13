@@ -18,6 +18,9 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 
+/**
+ * This subscriber adds the relationship between media and audience target groups if both bundles are registered.
+ */
 class MediaAudienceTargetingSubscriber implements EventSubscriber
 {
     /**
@@ -39,7 +42,7 @@ class MediaAudienceTargetingSubscriber implements EventSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
-        if ($reflection && $reflection->getName() === FileVersion::class) {
+        if ($reflection && FileVersion::class === $reflection->getName()) {
             $metadata->mapManyToMany([
                 'fieldName' => 'targetGroups',
                 'targetEntity' => TargetGroupInterface::class,
