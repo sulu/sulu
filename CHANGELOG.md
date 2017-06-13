@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #3397 [DocumentManagerBundle]   Removed exception when user is not instance of Sulu UserInterface
     * BUGFIX      #3400 [PreviewBundle]           Added host to preview request
     * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
     * ENHANCEMENT #3393 [AudienceTargetingBundle] Added translations for frequencies
