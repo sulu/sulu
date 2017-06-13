@@ -1,7 +1,17 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler;
 
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -18,9 +28,12 @@ class SnippetZoneCompilerPass implements CompilerPassInterface
         $structureFactory = $container->get('sulu_content.structure.factory');
         $structures = $structureFactory->getStructures('snippet');
 
+        $locales = $container->getParameter('sulu_core.locales');
+
         $defaultZones = [];
         $zones = [];
 
+        /** @var StructureMetadata $structure */
         foreach ($structures as $structure) {
             $template = $structure->name;
 
@@ -34,10 +47,16 @@ class SnippetZoneCompilerPass implements CompilerPassInterface
                 ];
             }
 
+            $titles = [];
+
+            foreach ($locales as $locale) {
+                $titles[$locale] = $structure->getTitle($locale);
+            }
+
             $defaultZones[$template] = [
                 'key' => $template,
                 'template' => $template,
-                'title' => $structure->title,
+                'title' => $titles,
             ];
         }
 

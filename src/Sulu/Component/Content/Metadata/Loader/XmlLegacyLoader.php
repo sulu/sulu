@@ -211,7 +211,6 @@ class XmlLegacyLoader implements LoaderInterface
 
             $result = array_filter($result);
 
-
             if (count($result) < 1) {
                 throw new InvalidXmlException($result['key']);
             }
