@@ -11,10 +11,12 @@
 
 namespace Sulu\Component\SmartContent\Exception;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * The requested page was out of bounds.
  */
-class PageOutOfBoundsException extends SmartContentException
+class PageOutOfBoundsException extends NotFoundHttpException
 {
     /**
      * @var int

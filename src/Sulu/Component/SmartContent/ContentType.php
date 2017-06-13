@@ -298,6 +298,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $page,
                 $pageSize
             );
+
+            if ($page > 1 && 0 === count($data->getItems())) {
+                throw new PageOutOfBoundsException($page);
+            }
         } else {
             $data = $provider->resolveResourceItems(
                 $filters,

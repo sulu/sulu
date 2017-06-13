@@ -463,7 +463,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             // third page page-size 3 (only two pages because of the limit-result)
             [3, 3, 8, '123-123-123', [7, 8], false],
             // fourth page page-size 3 (empty result)
-            [4, 3, 8, '123-123-123', [], false],
+            [4, 3, 8, '123-123-123', [], false, PageOutOfBoundsException::class],
+            [1, 3, 8, '123-123-123', [], false],
             [-1, 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
             [0, 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
             ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
