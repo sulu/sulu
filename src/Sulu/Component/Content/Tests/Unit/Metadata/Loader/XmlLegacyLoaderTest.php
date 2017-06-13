@@ -47,6 +47,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'en' => 'That´s the template 1',
                 ],
             ],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -266,6 +267,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title_section' => [
                     'name' => 'title_section',
@@ -339,6 +341,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'properties' => [],
             'tags' => [],
             'meta' => [],
+            'areas' => [],
         ];
 
         $this->setExpectedException(
@@ -364,6 +367,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 4800],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -655,6 +659,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 4800],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -873,6 +878,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1082,6 +1088,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1148,6 +1155,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1335,6 +1343,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'tags' => [],
+            'areas' => [],
             'meta' => [
                 'title' => [
                     'de' => 'Das ist das Template 1',

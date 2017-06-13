@@ -209,7 +209,12 @@ class XmlLegacyLoader implements LoaderInterface
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
-            $result = array_filter($result);
+            $result = array_filter(
+                $result,
+                function ($value) {
+                    return $value !== null;
+                }
+            );
 
             if (count($result) < 1) {
                 throw new InvalidXmlException($result['key']);
