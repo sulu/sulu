@@ -24,6 +24,9 @@ interface SitemapProviderInterface
     /**
      * Returns sitemap-entries.
      *
+     * @deprecated The $locale parameter is deprecated and will be removed in 2.0. The implementation should always
+     *     return the all available localizations.
+     *
      * @param int $page
      * @param string $portalKey
      * @param string $locale

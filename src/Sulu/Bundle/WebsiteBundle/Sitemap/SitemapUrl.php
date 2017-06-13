@@ -35,6 +35,11 @@ class SitemapUrl
     private $loc;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * Datetime of last modification.
      *
      * @var \DateTime
@@ -68,9 +73,10 @@ class SitemapUrl
      * @param string $changefreq
      * @param float $priority
      */
-    public function __construct($loc, \DateTime $lastmod = null, $changefreq = null, $priority = null)
+    public function __construct($loc, $locale, \DateTime $lastmod = null, $changefreq = null, $priority = null)
     {
         $this->loc = $loc;
+        $this->locale = $locale;
         $this->lastmod = $lastmod;
         $this->changefreq = $changefreq;
         $this->priority = $priority;
@@ -84,6 +90,16 @@ class SitemapUrl
     public function getLoc()
     {
         return $this->loc;
+    }
+
+    /**
+     * Returns locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 
     /**
