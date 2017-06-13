@@ -68,7 +68,7 @@ class SecuritySubscriber implements EventSubscriberInterface
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
-            return null;
+            return;
         }
 
         $optionsResolver->setDefault(static::USER_OPTION, $user->getId());
