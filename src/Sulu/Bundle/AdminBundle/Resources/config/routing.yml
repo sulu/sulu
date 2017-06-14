@@ -1,3 +1,8 @@
+sulu_admin_v2:
+    path:  /v2
+    defaults:
+        _controller: sulu_admin.admin_controller:indexV2Action
+
 sulu_admin:
     path:  /
     defaults:

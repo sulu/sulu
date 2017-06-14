@@ -15,6 +15,7 @@
 /src/Sulu/Bundle/TestBundle/Resources/app/cache/
 *~
 
+**/package-lock.json
 npm-debug.log
 package-lock.json
 

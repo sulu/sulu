@@ -1,0 +1,7 @@
+{
+    "name": "sulu-admin-bundle",
+    "dependencies": {
+        "react": "^15.6.0",
+        "react-dom": "^15.6.0"
+    }
+}
