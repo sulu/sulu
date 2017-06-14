@@ -40,11 +40,12 @@ before_script:
   - if [[ $PHP = true ]]; then bin/travis/before_script_php.sh; fi
   - if [[ $JS = true ]]; then nvm install node; fi
   - if [[ $JS = true ]]; then npm install -g npm; fi
-  - if [[ $JS = true ]]; then npm update; fi
+  - if [[ $JS = true ]]; then npm install; fi
 
 script:
   - if [[ $PHP = true ]]; then time ./bin/runtests -i -a $TEST_FLAGS; fi
   - if [[ $JS = true ]]; then npm run lint; fi
+  - if [[ $JS = true ]]; then npm run flow; fi
 
 notifications:
   slack:
