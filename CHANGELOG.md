@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3404 [DocumentManagerBundle] Remove exception for non-Sulu user
+
 * 1.5.4 (2017-05-31)
     * HOTFIX      #3356 [AdminBundle]           Updated husky to fix issue with ckeditor plugins
     * HOTFIX      #3314 [ContentBundle]         Fixed author migration script for removed users.
