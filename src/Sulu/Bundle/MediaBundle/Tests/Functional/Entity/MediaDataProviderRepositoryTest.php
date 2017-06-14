@@ -618,7 +618,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         ];
 
         if ($targetGroupIndex !== null) {
-            $filters['targetGroupId'] = [$targetGroups[$targetGroupIndex]->getId()];
+            $filters['targetGroupId'] = $targetGroups[$targetGroupIndex]->getId();
         }
 
         $mediaResults = $this->getContainer()

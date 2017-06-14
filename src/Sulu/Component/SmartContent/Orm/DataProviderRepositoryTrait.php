@@ -105,14 +105,14 @@ trait DataProviderRepositoryTrait
             );
         }
 
-        if (isset($filters['targetGroupId'])) {
+        if (isset($filters['targetGroupId']) && $filters['targetGroupId']) {
             $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, 'c');
             $parameter = array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
                     $targetGroupRelation,
-                    $filters['targetGroupId'],
+                    [$filters['targetGroupId']],
                     'and',
                     'targetGroupId'
                 )
