@@ -125,7 +125,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * @deprecated
+     * Put default action.
      *
      * @param Request $request
      * @param $key
@@ -164,7 +164,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * @deprecated
+     * Delete default action.
      *
      * @param Request $request
      * @param $key

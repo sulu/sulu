@@ -19,7 +19,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function templateDataProvider()
     {
-        return [['page'], ['home'], ['article']];
+        return [['page'], ['home'], ['article'], ['snippet']];
     }
 
     /**
@@ -47,7 +47,20 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'en' => 'That´s the template 1',
                 ],
             ],
-            'areas' => [],
+            'areas' => [
+                [
+                    'key' => 'test',
+                    'title' => [
+                        'de' => 'Test DE',
+                    ],
+                ],
+                [
+                    'key' => 'hotel',
+                    'title' => [
+                        'en' => 'Hotel EN',
+                    ],
+                ],
+            ],
             'properties' => [
                 'title' => [
                     'name' => 'title',
