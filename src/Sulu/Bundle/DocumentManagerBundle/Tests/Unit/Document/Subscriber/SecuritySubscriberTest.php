@@ -88,18 +88,17 @@ class SecuritySubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testSetDefaultUserWithNonSuluUser()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
-
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
         $optionsResolver = $this->prophesize(OptionsResolver::class);
         $event->getOptions()->willReturn($optionsResolver->reveal());
-        $optionsResolver->setDefault('user', null)->shouldBeCalled();
 
         $token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage->getToken()->willReturn($token->reveal());
 
         $token->getUser()->willReturn(new \stdClass());
+
+        $optionsResolver->setDefault('user', null)->shouldBeCalled();
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
