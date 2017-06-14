@@ -48,6 +48,7 @@ class MediaDataProvider extends BaseDataProvider
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableAudienceTargeting()
             ->enableDatasource(
                 'media-datasource@sulumedia',
                 [
@@ -129,5 +130,17 @@ class MediaDataProvider extends BaseDataProvider
             },
             $data
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSerializationContext()
+    {
+        $serializationContext = parent::getSerializationContext();
+
+        $serializationContext->setGroups(['Default']);
+
+        return $serializationContext;
     }
 }

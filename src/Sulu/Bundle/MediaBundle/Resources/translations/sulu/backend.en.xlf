@@ -278,6 +278,10 @@
                 <source>sulu.media.formats</source>
                 <target>Media formats</target>
             </trans-unit>
+            <trans-unit id="243288cd2f64a52w2379s55869f221238" resname="sulu.media.taxonomies">
+                <source>sulu.media.taxonomies</source>
+                <target>Taxonomies</target>
+            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f221238" resname="sulu.media.categories">
                 <source>sulu.media.categories</source>
                 <target>Categories</target>
@@ -405,6 +409,10 @@
             <trans-unit id="8c4195ca42b7ca2wccajs3648e834817a" resname="sulu-media.saved-crops-not-visible">
                 <source>sulu-media.saved-crops-not-visible</source>
                 <target>Crops have been saved but are not visible in this preview</target>
+            </trans-unit>
+            <trans-unit id="1c4135ca12b79a2w4caj83643e831817a" resname="sulu.media.audience-target-groups">
+                <source>sulu.media.audience-target-groups</source>
+                <target>Audience target groups</target>
             </trans-unit>
         </body>
     </file>

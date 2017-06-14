@@ -44,6 +44,7 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $configuration = $provider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+        $this->assertTrue($configuration->hasAudienceTargeting());
     }
 
     public function testGetDefaultParameter()

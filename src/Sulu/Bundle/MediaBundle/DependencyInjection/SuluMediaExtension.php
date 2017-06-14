@@ -83,6 +83,8 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $bundles = $container->getParameter('kernel.bundles');
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -187,6 +189,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             }
 
             $loader->load('search.xml');
+        }
+
+        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+            $loader->load('audience_targeting.xml');
         }
 
         $this->configurePersistence($config['objects'], $container);

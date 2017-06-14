@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -108,7 +109,7 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("id")
-     * @Groups({"partialMedia"})
+     * @Groups({"partialMedia", "Default"})
      *
      * @return int
      */
@@ -972,11 +973,15 @@ class Media extends ApiWrapper
 
     /**
      * Removes all category from the entity.
+     *
+     * @return self
      */
     public function removeCategories()
     {
         $fileVersion = $this->getFileVersion();
         $fileVersion->removeCategories();
+
+        return $this;
     }
 
     /**
@@ -1001,6 +1006,48 @@ class Media extends ApiWrapper
         }
 
         return $apiCategories;
+    }
+
+    /**
+     * Adds a target group to the entity.
+     *
+     * @param TargetGroupInterface $targetGroup
+     *
+     * @return self
+     */
+    public function addTargetGroup(TargetGroupInterface $targetGroup)
+    {
+        $fileVersion = $this->getFileVersion();
+        $fileVersion->addTargetGroup($targetGroup);
+
+        return $this;
+    }
+
+    /**
+     * Removes all target groups from the entities.
+     *
+     * @return self
+     */
+    public function removeTargetGroups()
+    {
+        $fileVersion = $this->getFileVersion();
+        $fileVersion->removeTargetGroups();
+
+        return $this;
+    }
+
+    /**
+     * Returns the target groups of the media.
+     *
+     * @VirtualProperty
+     * @SerializedName("targetGroups")
+     * @Groups({"fullMediaAudienceTargeting"})
+     *
+     * @return TargetGroupInterface[]
+     */
+    public function getTargetGroups()
+    {
+        return $this->getFileVersion()->getTargetGroups()->toArray();
     }
 
     /**
