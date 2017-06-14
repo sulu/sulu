@@ -16,6 +16,14 @@ __After:__
 sulu_snippet_load_by_area('your_snippet_key')
 ```
 
+### Sitemap Localization
+
+The `build` method of the `SitemapProviderInterface` had a `$locale` parameter,
+which shouldn't be there, because the sitemaps need to be generated or all
+locales at once. If you have implemented this interface you have to adapt the
+implementation to remove the `$locale` parameter and return the URLs for all
+locales instead.
+
 ### Snippet list
 
 Some field configuration has changed, so we need to delete the saved one in the database:

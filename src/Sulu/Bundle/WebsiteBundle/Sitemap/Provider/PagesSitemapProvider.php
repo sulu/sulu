@@ -49,7 +49,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function build($page, $portalKey, $locale)
+    public function build($page, $portalKey)
     {
         $portal = $this->webspaceManager->findPortalByKey($portalKey);
 

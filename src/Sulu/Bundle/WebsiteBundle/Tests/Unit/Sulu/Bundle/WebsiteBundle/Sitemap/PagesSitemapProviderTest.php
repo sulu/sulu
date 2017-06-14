@@ -83,7 +83,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($pages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, 'de');
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(3, $result);
         for ($i = 0; $i < 3; ++$i) {
@@ -133,7 +133,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($englishPages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, 'de');
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(2, $result);
 
@@ -173,7 +173,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($pages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, 'de');
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(1, $result);
         $this->assertEquals($pages[0]->getUrl(), $result[0]->getLoc());
@@ -203,7 +203,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($pages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, 'de');
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(1, $result);
         $this->assertEquals($pages[0]->getUrl(), $result[0]->getLoc());
