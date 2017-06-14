@@ -1,0 +1,5 @@
+**/node_modules/
+
+# TODO Remove these rules once the old code is removed
+Gruntfile.js
+**/Resources/public/**/*.js
