@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
 import {render} from 'react-dom';
+import Application from './containers/Application';
 
-render(<h1>Hello World</h1>, document.getElementById('react-root'));
+render(<Application />, document.getElementById('react-root'));
