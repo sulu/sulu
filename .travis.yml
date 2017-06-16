@@ -46,6 +46,7 @@ script:
   - if [[ $PHP = true ]]; then time ./bin/runtests -i -a $TEST_FLAGS; fi
   - if [[ $JS = true ]]; then npm run lint; fi
   - if [[ $JS = true ]]; then npm run flow; fi
+  - if [[ $JS = true ]]; then bin/travis/script_js.sh; fi
 
 notifications:
   slack:

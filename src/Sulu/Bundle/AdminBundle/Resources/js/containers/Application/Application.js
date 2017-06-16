@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
+import ViewRenderer from '../ViewRenderer';
 
 export default class Application extends React.Component {
     render() {
-        return (<h1>Hello World</h1>);
+        return (<ViewRenderer name="hello_world" />);
     }
 }

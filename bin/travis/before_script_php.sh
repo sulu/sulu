@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ ! -d downloads ]; then mkdir downloads; fi
 
 if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then

@@ -1,7 +1,16 @@
 {
     "name": "sulu-admin-bundle",
+    "scripts": {
+        "test": "jest"
+    },
     "dependencies": {
         "react": "^15.6.0",
         "react-dom": "^15.6.0"
+    },
+    "devDependencies": {
+        "babel-preset-es2015": "^6.24.1",
+        "babel-preset-react": "^6.24.1",
+        "jest": "^20.0.4",
+        "react-test-renderer": "^15.6.1"
     }
 }
