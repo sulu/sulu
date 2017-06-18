@@ -2,7 +2,7 @@
 import React from 'react';
 import {getView} from '../../services/ViewRegistry';
 
-export default class ViewRenderer extends React.Component {
+export default class ViewRenderer extends React.PureComponent {
     props: {
         name: string,
         parameters?: Object,
