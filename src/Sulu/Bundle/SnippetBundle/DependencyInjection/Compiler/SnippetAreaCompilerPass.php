@@ -68,7 +68,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      */
     private function getArea($template, $area, $locales, $templateTitles)
     {
-        $key = $template . '.' . $area['key'];
+        $key = $template . '_' . $area['key'];
 
         $titles = [];
 

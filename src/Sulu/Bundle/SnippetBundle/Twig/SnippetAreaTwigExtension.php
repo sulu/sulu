@@ -80,7 +80,11 @@ class SnippetAreaTwigExtension extends \Twig_Extension
         // to filter null default snippet
         $ids = array_filter($ids);
 
-        return $this->snippetResolver->resolve($ids, $webspaceKey, $locale);
+        $snippets = $this->snippetResolver->resolve($ids, $webspaceKey, $locale);
+
+        if (isset($snippets[0])) {
+            return $snippets[0];
+        }
     }
 
     /**

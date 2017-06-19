@@ -2,12 +2,12 @@
 
 ### Default Snippets
 
-Default snippets were replaces with snippet areas to have the same behaviour as before replace the old twig extension:
+Default snippets were replaced with snippet areas. To have the same behaviour as before replace the old twig extension:
 
 __Before:__
 
 ```twig
-sulu_snippet_load_default('your_snippet_key')
+sulu_snippet_load_default('your_snippet_key')[0]
 ```
 
 __After:__
