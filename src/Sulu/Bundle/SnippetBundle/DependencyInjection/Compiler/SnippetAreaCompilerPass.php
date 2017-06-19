@@ -50,6 +50,16 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
             foreach ($structure->getAreas() as $area) {
                 $area = $this->getArea($template, $area, $locales, $templateTitles);
+
+                if (isset($areas[$area['key']])) {
+                    throw new \InvalidArgumentException(sprintf(
+                        'Snippet area "%s" need to be unique it is defined in "%s" and "%s"',
+                        $area['key'],
+                        $areas[$area['key']]['template'] . '.xml',
+                        $area['template'] . '.xml'
+                    ));
+                }
+
                 $areas[$area['key']] = $area;
             }
         }
@@ -68,12 +78,12 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      */
     private function getArea($template, $area, $locales, $templateTitles)
     {
-        $key = $template . '_' . $area['key'];
+        $key = $area['key'];
 
         $titles = [];
 
         foreach ($locales as $locale) {
-            $title = $templateTitles[$locale] . ' ' . ucfirst($area['key']);
+            $title = $templateTitles[$locale] . ' ' . ucfirst($key);
             if (isset($area['title'][$locale])) {
                 $title = $area['title'][$locale];
             }

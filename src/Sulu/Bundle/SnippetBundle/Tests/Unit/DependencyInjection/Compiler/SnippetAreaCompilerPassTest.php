@@ -108,8 +108,8 @@ class SnippetAreaCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container->setParameter(
             'sulu_snippet.areas',
             [
-                'test_article' => [
-                    'key' => 'test_article',
+                'article' => [
+                    'key' => 'article',
                     'template' => 'test',
                     'title' => [
                         'de' => 'Artikel Test',
