@@ -6,7 +6,7 @@
                 <source>content.collaboration.warning</source>
                 <target><![CDATA[
 +                    Deze pagina is in gebruik door: <strong>%s</strong><br/>
-+                    Je wijzigingen gaan mogelijk verloren of je wist het werk een andere auteur.
++                    Je wijzigingen gaan mogelijk verloren of je wist het werk van een andere auteur.
 +                    ]]></target>
             </trans-unit>
         </body>

@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -808,6 +810,21 @@ class MediaControllerTest extends SuluTestCase
     public function testPost()
     {
         $client = $this->createAuthenticatedClient();
+        /** @var TargetGroupRepositoryInterface $targetGroupRepository */
+        $targetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
+
+        /** @var TargetGroup $targetGroup1 */
+        $targetGroup1 = $targetGroupRepository->createNew();
+        $targetGroup1->setTitle('Target Group 1');
+        $targetGroup1->setPriority(1);
+        /** @var TargetGroup $targetGroup2 */
+        $targetGroup2 = $targetGroupRepository->createNew();
+        $targetGroup2->setTitle('Target Group 2');
+        $targetGroup2->setPriority(1);
+
+        $this->getEntityManager()->persist($targetGroup1);
+        $this->getEntityManager()->persist($targetGroup2);
+        $this->getEntityManager()->flush();
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
@@ -834,8 +851,13 @@ class MediaControllerTest extends SuluTestCase
                     'en',
                     'de',
                 ],
+                'targetGroups' => [
+                    $targetGroup1->getId(),
+                    $targetGroup2->getId(),
+                ],
                 'categories' => [
-                    $this->category->getId(), $this->category2->getId(),
+                    $this->category->getId(),
+                    $this->category2->getId(),
                 ],
             ],
             [
@@ -899,6 +921,22 @@ class MediaControllerTest extends SuluTestCase
             'key' => $this->category2->getKey(),
             'name' => 'Second Category',
         ], $categories);
+
+        $targetGroups = [
+            [
+                'id' => $response->targetGroups[0]->id,
+            ],
+            [
+                'id' => $response->targetGroups[1]->id,
+            ],
+        ];
+
+        $this->assertContains([
+            'id' => $targetGroup1->getId(),
+        ], $targetGroups);
+        $this->assertContains([
+            'id' => $targetGroup2->getId(),
+        ], $targetGroups);
     }
 
     /**

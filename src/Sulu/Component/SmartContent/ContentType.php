@@ -261,7 +261,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         );
         $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
-        if ($this->targetGroupStore) {
+        if ($this->targetGroupStore && isset($filters['audienceTargeting']) && $filters['audienceTargeting']) {
             $filters['targetGroupId'] = $this->targetGroupStore->getTargetGroupId();
         }
 

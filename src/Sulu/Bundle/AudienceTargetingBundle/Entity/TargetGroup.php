@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Entity class for target group.
@@ -50,12 +49,12 @@ class TargetGroup implements TargetGroupInterface
     private $active = false;
 
     /**
-     * @var Collection
+     * @var TargetGroupWebspaceInterface[]
      */
     private $webspaces;
 
     /**
-     * @var Collection
+     * @var TargetGroupRuleInterface[]
      */
     private $rules;
 

@@ -16,6 +16,7 @@ use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -66,6 +67,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      * @var CategoryRepositoryInterface
      */
     private $categoryRepository;
+
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $targetGroupRepository;
 
     /**
      * @var ObjectProphecy
@@ -130,6 +136,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
+        $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
         $this->em = $this->prophesize(EntityManager::class);
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->validator = $this->prophesize(FileValidatorInterface::class);
@@ -161,7 +168,8 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
                 'view' => 64,
             ],
             '/',
-            0
+            0,
+            $this->targetGroupRepository->reveal()
         );
     }
 

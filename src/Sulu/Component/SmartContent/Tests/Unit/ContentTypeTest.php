@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
+use Prophecy\Argument;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -37,11 +39,6 @@ interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
  */
 class ContentTypeTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var SmartContent
-     */
-    private $smartContent;
-
     /**
      * @var TagManagerInterface
      */
@@ -77,6 +74,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
      */
     private $contentDataProvider;
 
+    /**
+     * @var TargetGroupStoreInterface
+     */
+    private $targetGroupStore;
+
     public function setUp()
     {
         $this->contentDataProvider = $this->prophesize(DataProviderInterface::class);
@@ -109,15 +111,6 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->categoryRequestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
         $this->categoryRequestHandler->getCategories('categories')->willReturn([]);
 
-        $this->smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            'SuluContentBundle:Template:content-types/smart_content.html.twig'
-        );
-
         $this->tagManager->expects($this->any())->method('resolveTagIds')->will(
             $this->returnValueMap(
                 [
@@ -133,6 +126,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 ]
             )
         );
+
+        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
     }
 
     private function getProviderConfiguration()
@@ -149,14 +144,32 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testTemplate()
     {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         $this->assertEquals(
             'SuluContentBundle:Template:content-types/smart_content.html.twig',
-            $this->smartContent->getTemplate()
+            $smartContent->getTemplate()
         );
     }
 
     public function testWrite()
     {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         $node = $this->getMockForAbstractClass(
             MyNodeInterface::class,
             [],
@@ -168,7 +181,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -206,11 +219,20 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->smartContent->write($node, $property, 0, 'test', 'en', 's');
+        $smartContent->write($node, $property, 0, 'test', 'en', 's');
     }
 
     public function testRead()
     {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         $config = [
             'tags' => ['Tag1', 'Tag2'],
             'limitResult' => '2',
@@ -227,7 +249,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -251,13 +273,22 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $property->expects($this->exactly(1))->method('setValue')->with($config);
 
-        $this->smartContent->read($node, $property, 'test', 'en', 's');
+        $smartContent->read($node, $property, 'test', 'en', 's');
     }
 
     public function testGetViewData()
     {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -266,7 +297,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ['getValue', 'getParams']
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\StructureInterface'
+            StructureInterface::class
         );
 
         $config = ['dataSource' => 'some-uuid'];
@@ -343,15 +374,24 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('p'))
             ->willReturn(1);
 
-        $viewData = $this->smartContent->getViewData($property);
+        $viewData = $smartContent->getViewData($property);
 
         $this->assertContains(array_merge($config, ['page' => 1, 'hasNextPage' => true]), $viewData);
     }
 
     public function testGetContentData()
     {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         $property = $this->getContentDataProperty();
-        $contentData = $this->smartContent->getContentData($property);
+        $contentData = $smartContent->getContentData($property);
 
         $this->assertEquals(
             [
@@ -368,8 +408,17 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetContentDataPaged()
     {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -378,7 +427,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ['getValue', 'getParams']
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\StructureInterface'
+            StructureInterface::class
         );
 
         $this->request->expects($this->at(0))->method('get')
@@ -448,7 +497,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
-        $contentData = $this->smartContent->getContentData($property);
+        $contentData = $smartContent->getContentData($property);
 
         $this->assertEquals([1, 2, 3, 4, 5], $contentData);
     }
@@ -483,6 +532,15 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $exception = null
     ) {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         if ($exception) {
             $this->setExpectedException($exception);
         }
@@ -567,7 +625,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
 
-        $contentData = $this->smartContent->getContentData($property);
+        $contentData = $smartContent->getContentData($property);
         $this->assertEquals($expectedData, $contentData);
     }
 
@@ -583,12 +641,21 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $exception = null
     ) {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
         if ($exception) {
             $this->setExpectedException($exception);
         }
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -597,7 +664,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ['getValue', 'getParams']
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\StructureInterface'
+            StructureInterface::class
         );
 
         $this->request->expects($this->at(0))->method('get')
@@ -674,7 +741,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
 
-        $viewData = $this->smartContent->getViewData($property);
+        $viewData = $smartContent->getViewData($property);
         $this->assertEquals(
             array_merge(
                 [
@@ -703,7 +770,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     private function getContentDataProperty($value = ['dataSource' => '123-123-123'])
     {
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
@@ -712,7 +779,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ['getValue', 'getParams']
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\StructureInterface'
+            StructureInterface::class
         );
 
         $property->expects($this->exactly(1))->method('getValue')
@@ -790,5 +857,81 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
         return $property;
+    }
+
+    public function testGetContentDataWithActivatedAudienceTargeting()
+    {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig',
+            $this->targetGroupStore->reveal()
+        );
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getParams()->willReturn([
+            'provider' => new PropertyParameter('provider', 'content'),
+        ]);
+        $property->getValue()->willReturn([
+            'audienceTargeting' => true,
+        ]);
+
+        $structure = $this->prophesize(StructureInterface::class);
+        $property->getStructure()->willReturn($structure->reveal());
+
+        $this->targetGroupStore->getTargetGroupId()->willReturn(1);
+        $this->contentDataProvider->resolveResourceItems(
+            Argument::that(function($value) {
+                return $value['targetGroupId'] === 1;
+            }),
+            Argument::cetera()
+        )->willReturn(new DataProviderResult([], false));
+
+        $property->setValue(Argument::that(function($value) {
+            return $value['targetGroupId'] === 1;
+        }))->shouldBeCalled();
+
+        $smartContent->getContentData($property->reveal());
+    }
+
+    public function testGetContentDataWithDeactivatedAudienceTargeting()
+    {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            'SuluContentBundle:Template:content-types/smart_content.html.twig',
+            $this->targetGroupStore->reveal()
+        );
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getParams()->willReturn([
+            'provider' => new PropertyParameter('provider', 'content'),
+        ]);
+        $property->getValue()->willReturn([
+            'audienceTargeting' => false,
+        ]);
+
+        $structure = $this->prophesize(StructureInterface::class);
+        $property->getStructure()->willReturn($structure->reveal());
+
+        $this->targetGroupStore->getTargetGroupId()->shouldNotBeCalled();
+        $this->contentDataProvider->resolveResourceItems(
+            Argument::that(function($value) {
+                return !array_key_exists('targetGroupId', $value);
+            }),
+            Argument::cetera()
+        )->willReturn(new DataProviderResult([], false));
+
+        $property->setValue(Argument::that(function($value) {
+            return !array_key_exists('targetGroupId', $value);
+        }))->shouldBeCalled();
+
+        $smartContent->getContentData($property->reveal());
     }
 }
