@@ -2,9 +2,12 @@
 import React from 'react';
 import {render} from 'react-dom';
 import Application from './containers/Application';
-import {addView} from './services/ViewRegistry';
+import {viewStore} from './containers/ViewRenderer';
 import HelloWorld from './views/HelloWorld';
 
-addView('hello_world', HelloWorld);
+viewStore.add('hello_world', HelloWorld);
 
-render(<Application />, document.getElementById('react-root'));
+render(
+    <Application />,
+    document.getElementById('react-root')
+);

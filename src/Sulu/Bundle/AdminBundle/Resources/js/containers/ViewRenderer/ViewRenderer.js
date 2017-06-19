@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {getView} from '../../services/ViewRegistry';
+import viewStore from './stores/ViewStore';
 
 export default class ViewRenderer extends React.PureComponent {
     props: {
@@ -9,6 +9,6 @@ export default class ViewRenderer extends React.PureComponent {
     };
 
     render() {
-        return React.createElement(getView(this.props.name), this.props.parameters);
+        return React.createElement(viewStore.get(this.props.name), this.props.parameters);
     }
 }

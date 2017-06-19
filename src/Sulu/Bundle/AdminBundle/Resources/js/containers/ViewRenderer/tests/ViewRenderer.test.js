@@ -2,24 +2,24 @@
 import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import ViewRenderer from '../ViewRenderer';
-import ViewRegistry from '../../../services/ViewRegistry';
+import viewStore from '../stores/ViewStore';
 
-jest.mock('../../../services/ViewRegistry', () => {
+jest.mock('../stores/ViewStore', () => {
     return {
-        getView: jest.fn(),
+        get: jest.fn(),
     };
 });
 
 test('Render view returned from ViewRegistry', () => {
-    ViewRegistry.getView.mockReturnValue(() => (<h1>Test</h1>));
+    viewStore.get.mockReturnValue(() => (<h1>Test</h1>));
     const view = ReactTestRenderer.create(<ViewRenderer name="test" />);
     expect(view).toMatchSnapshot();
-    expect(ViewRegistry.getView).toBeCalledWith('test');
+    expect(viewStore.get).toBeCalledWith('test');
 });
 
 test('Render view returned from ViewRegistry with passed props', () => {
-    ViewRegistry.getView.mockReturnValue((props) => (<h1>{props.value}</h1>));
+    viewStore.get.mockReturnValue((props) => (<h1>{props.value}</h1>));
     const view = ReactTestRenderer.create(<ViewRenderer name="test" parameters={{value: 'Test from props'}} />);
     expect(view).toMatchSnapshot();
-    expect(ViewRegistry.getView).toBeCalledWith('test');
+    expect(viewStore.get).toBeCalledWith('test');
 });
