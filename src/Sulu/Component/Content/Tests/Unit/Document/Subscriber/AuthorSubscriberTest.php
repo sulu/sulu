@@ -20,6 +20,8 @@ use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Subscriber\AuthorSubscriber;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
@@ -39,6 +41,16 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
     protected $userRepository;
 
     /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
+     * @var Metadata
+     */
+    private $metadata;
+
+    /**
      * @var AuthorSubscriber
      */
     private $authorSubscriber;
@@ -50,10 +62,17 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+
         $this->authorSubscriber = new AuthorSubscriber(
             $this->propertyEncoder->reveal(),
-            $this->userRepository->reveal()
+            $this->userRepository->reveal(),
+            $this->metadataFactory->reveal()
         );
+
+        $this->metadata = $this->prophesize(Metadata::class);
+        $this->metadata->getSetDefaultAuthor()->willReturn(true);
+        $this->metadataFactory->getMetadataForClass(Argument::any())->willReturn($this->metadata->reveal());
     }
 
     public function testSetAuthorOnDocument()
@@ -192,6 +211,40 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $node->setProperty('i18n:author', 5)->shouldBeCalled();
         $node->setProperty('i18n:authored', Argument::type(\DateTime::class))->shouldBeCalled();
+
+        $this->authorSubscriber->setAuthorOnNode($event->reveal());
+    }
+
+    public function testSetAuthorOnNodeDefaultValueFalseMetadata()
+    {
+        $event = $this->prophesize(AbstractMappingEvent::class);
+        $node = $this->prophesize(NodeInterface::class);
+        $document = $this->prophesize(AuthorBehavior::class);
+
+        $event->getDocument()->willReturn($document->reveal());
+        $event->getNode()->willReturn($node->reveal());
+        $event->getLocale()->willReturn('de');
+
+        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHORED_PROPERTY_NAME, 'de')
+            ->willReturn('i18n:authored');
+        $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
+            ->willReturn('i18n:author');
+
+        $document->getCreator()->willReturn(1);
+        $document->getAuthor()->willReturn(null);
+        $document->setAuthor(Argument::any())->shouldNotBeCalled();
+
+        $document->getAuthored()->willReturn(null);
+        $document->setAuthored(Argument::type(\DateTime::class))->shouldBeCalled()->will(
+            function ($arguments) use ($document) {
+                $document->getAuthored()->willReturn($arguments[0]);
+            }
+        );
+
+        $node->setProperty('i18n:author', null)->shouldBeCalled();
+        $node->setProperty('i18n:authored', Argument::type(\DateTime::class))->shouldBeCalled();
+
+        $this->metadata->getSetDefaultAuthor()->willReturn(false);
 
         $this->authorSubscriber->setAuthorOnNode($event->reveal());
     }

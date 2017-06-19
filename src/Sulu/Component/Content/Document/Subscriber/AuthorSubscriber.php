@@ -16,6 +16,7 @@ use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -39,13 +40,23 @@ class AuthorSubscriber implements EventSubscriberInterface
     private $userRepository;
 
     /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
      * @param PropertyEncoder $propertyEncoder
      * @param UserRepositoryInterface $userRepository
+     * @param MetadataFactoryInterface $metadataFactory
      */
-    public function __construct(PropertyEncoder $propertyEncoder, UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        PropertyEncoder $propertyEncoder,
+        UserRepositoryInterface $userRepository,
+        MetadataFactoryInterface $metadataFactory
+    ) {
         $this->propertyEncoder = $propertyEncoder;
         $this->userRepository = $userRepository;
+        $this->metadataFactory = $metadataFactory;
     }
 
     /**
@@ -111,13 +122,9 @@ class AuthorSubscriber implements EventSubscriberInterface
             $document->setAuthored(new \DateTime());
         }
 
-        // Set default value if author is not set.
-        if (null === $document->getAuthor() && null !== $document->getCreator()) {
-            $user = $this->userRepository->findUserById($document->getCreator());
-
-            if ($user && $user->getContact()) {
-                $document->setAuthor($user->getContact()->getId());
-            }
+        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+        if ($metadata->getSetDefaultAuthor()) {
+            $this->setDefaultAuthor($document);
         }
 
         $encoding = 'system_localized';
@@ -136,5 +143,22 @@ class AuthorSubscriber implements EventSubscriberInterface
             $this->propertyEncoder->encode($encoding, self::AUTHOR_PROPERTY_NAME, $event->getLocale()),
             $document->getAuthor()
         );
+    }
+
+    /**
+     * Set default author (if not set) to given document.
+     *
+     * @param LocalizedAuthorBehavior $document
+     */
+    private function setDefaultAuthor(LocalizedAuthorBehavior $document)
+    {
+        if ($document->getAuthor() || !$document->getCreator()) {
+            return;
+        }
+
+        $user = $this->userRepository->findUserById($document->getCreator());
+        if ($user && $user->getContact()) {
+            $document->setAuthor($user->getContact()->getId());
+        }
     }
 }
