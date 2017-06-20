@@ -68,7 +68,7 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
             $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         }
         if (!$locale) {
-            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         }
 
         $ids = [
