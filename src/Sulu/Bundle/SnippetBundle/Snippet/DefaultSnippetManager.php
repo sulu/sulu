@@ -16,6 +16,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 
 /**
  * Manages default snippets.
@@ -43,22 +44,22 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     private $registry;
 
     /**
-     * @var array
+     * @var FrozenParameterBag
      */
-    private $defaultTypes;
+    private $areas;
 
     public function __construct(
         SettingsManagerInterface $settingsManager,
         DocumentManagerInterface $documentManager,
         WebspaceManagerInterface $webspaceManager,
         DocumentRegistry $registry,
-        $defaultTypes
+        array $areas
     ) {
         $this->settingsManager = $settingsManager;
         $this->documentManager = $documentManager;
         $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
-        $this->defaultTypes = $defaultTypes;
+        $this->areas = new FrozenParameterBag($areas);
     }
 
     /**
@@ -137,7 +138,9 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     public function loadIdentifier($webspaceKey, $type)
     {
-        return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $type);
+        $area = $this->areas->get($type);
+
+        return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $area['key']);
     }
 
     /**
@@ -150,6 +153,8 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     private function checkTemplate($document, $type)
     {
-        return $document->getStructureType() === $this->defaultTypes[$type]['template'];
+        $area = $this->areas->get($type);
+
+        return $document->getStructureType() === $area['template'];
     }
 }
