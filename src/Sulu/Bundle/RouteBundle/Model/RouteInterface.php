@@ -119,7 +119,7 @@ interface RouteInterface
      *
      * @return RouteInterface
      */
-    public function setTarget(RouteInterface $target);
+    public function setTarget(RouteInterface $target = null);
 
     /**
      * Remove target.
