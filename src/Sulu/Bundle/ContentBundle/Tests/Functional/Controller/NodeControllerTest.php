@@ -17,7 +17,6 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
