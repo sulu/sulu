@@ -10,6 +10,7 @@
         <service id="sulu_website.sitemap.pages_provider"
                  class="Sulu\Bundle\WebsiteBundle\Sitemap\Provider\PagesSitemapProvider">
             <argument type="service" id="sulu_content.content_repository"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
             <tag name="sulu.sitemap.provider" alias="pages"/>
         </service>

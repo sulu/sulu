@@ -17,6 +17,9 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Portal;
 
 /**
  * Tests for PagesSitemapProvider.
@@ -29,14 +32,14 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
     private $contentRepository;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * @var PagesSitemapProvider
      */
     private $sitemapProvider;
-
-    /**
-     * @var string
-     */
-    private $locale = 'de';
 
     /**
      * @var string
@@ -49,12 +52,20 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
-        $this->sitemapProvider = new PagesSitemapProvider($this->contentRepository->reveal());
+        $this->sitemapProvider = new PagesSitemapProvider(
+            $this->contentRepository->reveal(),
+            $this->webspaceManager->reveal()
+        );
     }
 
     public function testBuild()
     {
+        $portal = new Portal();
+        $portal->addLocalization(new Localization('de'));
+        $this->webspaceManager->findPortalByKey($this->portalKey)->willReturn($portal);
+
         /** @var Content[] $pages */
         $pages = [
             $this->createContent('/test-1'),
@@ -63,7 +74,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->contentRepository->findAllByPortal(
-            $this->locale,
+            'de',
             $this->portalKey,
             MappingBuilder::create()
                 ->addProperties(['changed', 'seo-hideInSitemap'])
@@ -72,7 +83,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($pages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, $this->locale);
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(3, $result);
         for ($i = 0; $i < 3; ++$i) {
@@ -81,8 +92,70 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testBuildMultipleLocales()
+    {
+        $portal = new Portal();
+        $portal->addLocalization(new Localization('de'));
+        $portal->addLocalization(new Localization('en'));
+        $this->webspaceManager->findPortalByKey($this->portalKey)->willReturn($portal);
+
+        $germanPages = [
+            $this->createContent('/de-test-1', false, RedirectType::NONE, [
+                'de' => '/de-test-1',
+                'en' => '/en-test-1',
+            ]),
+        ];
+
+        $englishPages = [
+            $this->createContent('/en-test-1', false, RedirectType::NONE, [
+                'en' => '/en-test-1',
+                'de' => '/de-test-1',
+            ]),
+        ];
+
+        $this->contentRepository->findAllByPortal(
+            'de',
+            $this->portalKey,
+            MappingBuilder::create()
+                ->addProperties(['changed', 'seo-hideInSitemap'])
+                ->setResolveUrl(true)
+                ->setHydrateGhost(false)
+                ->getMapping()
+        )->willReturn($germanPages);
+
+        $this->contentRepository->findAllByPortal(
+            'en',
+            $this->portalKey,
+            MappingBuilder::create()
+                ->addProperties(['changed', 'seo-hideInSitemap'])
+                ->setResolveUrl(true)
+                ->setHydrateGhost(false)
+                ->getMapping()
+        )->willReturn($englishPages);
+
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals('/en-test-1', $result[0]->getLoc());
+        $alternateLinks1 = $result[0]->getAlternateLinks();
+        $this->assertCount(2, $alternateLinks1);
+        $this->assertEquals('/en-test-1', $alternateLinks1['en']->getHref());
+        $this->assertEquals('/de-test-1', $alternateLinks1['de']->getHref());
+
+        $this->assertEquals('/de-test-1', $result[1]->getLoc());
+        $alternateLinks2 = $result[1]->getAlternateLinks();
+        $this->assertCount(2, $alternateLinks2);
+        $this->assertEquals('/de-test-1', $alternateLinks2['de']->getHref());
+        $this->assertEquals('/en-test-1', $alternateLinks2['en']->getHref());
+    }
+
     public function testBuildHideInSitemap()
     {
+        $portal = new Portal();
+        $portal->addLocalization(new Localization('de'));
+        $this->webspaceManager->findPortalByKey($this->portalKey)->willReturn($portal);
+
         /** @var Content[] $pages */
         $pages = [
             $this->createContent('/test-1'),
@@ -91,7 +164,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->contentRepository->findAllByPortal(
-            $this->locale,
+            'de',
             $this->portalKey,
             MappingBuilder::create()
                 ->addProperties(['changed', 'seo-hideInSitemap'])
@@ -100,7 +173,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($pages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, $this->locale);
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(1, $result);
         $this->assertEquals($pages[0]->getUrl(), $result[0]->getLoc());
@@ -109,6 +182,10 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildInternalExternalLink()
     {
+        $portal = new Portal();
+        $portal->addLocalization(new Localization('de'));
+        $this->webspaceManager->findPortalByKey($this->portalKey)->willReturn($portal);
+
         /** @var Content[] $pages */
         $pages = [
             $this->createContent('/test-1'),
@@ -117,7 +194,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->contentRepository->findAllByPortal(
-            $this->locale,
+            'de',
             $this->portalKey,
             MappingBuilder::create()
                 ->addProperties(['changed', 'seo-hideInSitemap'])
@@ -126,7 +203,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
                 ->getMapping()
         )->willReturn($pages);
 
-        $result = $this->sitemapProvider->build(1, $this->portalKey, $this->locale);
+        $result = $this->sitemapProvider->build(1, $this->portalKey);
 
         $this->assertCount(1, $result);
         $this->assertEquals($pages[0]->getUrl(), $result[0]->getLoc());
@@ -146,7 +223,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
     public function createContent($url, $hideInSitemap = false, $redirectTarget = RedirectType::NONE, $urls = [])
     {
         $content = new Content(
-            $this->locale,
+            'de',
             $this->portalKey,
             uniqid('test-'),
             $url,

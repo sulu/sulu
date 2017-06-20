@@ -134,7 +134,7 @@ class XmlSitemapRendererTest extends \PHPUnit_Framework_TestCase
         $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
 
-        $entries = [new SitemapUrl('http://sulu.lo')];
+        $entries = [new SitemapUrl('http://sulu.lo', 'en')];
         $pagesProvider->build(1, 'sulu_io', 'en')->willReturn($entries);
         $pagesProvider->getMaxPage()->willReturn(1);
 
