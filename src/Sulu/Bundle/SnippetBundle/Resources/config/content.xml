@@ -14,6 +14,7 @@
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_document_manager.document_registry"/>
+            <argument>%sulu_snippet.areas%</argument>
         </service>
 
         <service id="sulu_snippet.resolver" class="Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver">

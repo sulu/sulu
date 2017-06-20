@@ -1,5 +1,21 @@
 # Upgrade
 
+### Default Snippets
+
+Default snippets were replaced with snippet areas. To have the same behaviour as before replace the old twig extension:
+
+__Before:__
+
+```twig
+sulu_snippet_load_default('your_snippet_key')[0]
+```
+
+__After:__
+
+```twig
+sulu_snippet_load_by_area('your_snippet_key')
+```
+
 ### Snippet list
 
 Some field configuration has changed, so we need to delete the saved one in the database:

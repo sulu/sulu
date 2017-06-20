@@ -248,6 +248,31 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(1, $data);
     }
 
+    public function testGetContentDataDefaultZone()
+    {
+        $structure = $this->prophesize(PageBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getIsShadow()->willReturn(false);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn([]);
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getParams()->willReturn(
+            [
+                'snippetType' => new PropertyParameter('snippetType', 'test'),
+                'default' => new PropertyParameter('default', 'sidebar.homepage'),
+            ]
+        );
+
+        $this->defaultSnippetManager->loadIdentifier('sulu_io', 'sidebar.homepage')->shouldBeCalledTimes(1)->willReturn(
+            $this->hotel1->getUuid()
+        );
+
+        $data = $this->contentType->getContentData($property->reveal());
+        $this->assertCount(1, $data);
+    }
+
     public function testGetContentDataDefaultDefaultNotSet()
     {
         $structure = $this->prophesize(PageBridge::class);

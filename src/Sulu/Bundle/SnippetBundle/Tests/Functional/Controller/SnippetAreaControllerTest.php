@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 /**
  * Handles snippet types and defaults.
  */
-class SnippetTypesControllerTest extends BaseFunctionalTestCase
+class SnippetAreaControllerTest extends BaseFunctionalTestCase
 {
     /**
      * @var ContentMapperInterface
@@ -35,18 +35,19 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/snippet-types');
+        $client->request('GET', '/snippet-areas?webspace=sulu_io');
         $response = json_decode($client->getResponse()->getContent(), true);
 
+        $data = $response['_embedded']['areas'];
         $this->assertEquals(2, $response['total']);
-        $this->assertEquals('car', $response['_embedded'][0]['template']);
-        $this->assertEquals('Car', $response['_embedded'][0]['title']);
-        $this->assertArrayNotHasKey('defaultTitle', $response['_embedded'][0]);
-        $this->assertArrayNotHasKey('defaultUuid', $response['_embedded'][0]);
-        $this->assertEquals('hotel', $response['_embedded'][1]['template']);
-        $this->assertEquals('Hotel', $response['_embedded'][1]['title']);
-        $this->assertArrayNotHasKey('defaultTitle', $response['_embedded'][1]);
-        $this->assertArrayNotHasKey('defaultUuid', $response['_embedded'][1]);
+        $this->assertEquals('car', $data[0]['template']);
+        $this->assertEquals('Car', $data[0]['title']);
+        $this->assertEquals(null, $data[0]['defaultTitle']);
+        $this->assertEquals(null, $data[0]['defaultUuid']);
+        $this->assertEquals('hotel', $data[1]['template']);
+        $this->assertEquals('Hotel', $data[1]['title']);
+        $this->assertEquals(null, $data[1]['defaultTitle']);
+        $this->assertEquals(null, $data[1]['defaultUuid']);
     }
 
     public function testPutDefault()
@@ -55,7 +56,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
 
         $client->request(
             'PUT',
-            '/snippet-types/car/default',
+            '/snippet-areas/car',
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
@@ -66,18 +67,19 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals($this->car1->getUuid(), $response['defaultUuid']);
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
-        $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
+        $client->request('GET', '/snippet-areas?webspace=sulu_io');
         $response = json_decode($client->getResponse()->getContent(), true);
+        $data = $response['_embedded']['areas'];
 
         $this->assertEquals(2, $response['total']);
-        $this->assertEquals('car', $response['_embedded'][0]['template']);
-        $this->assertEquals('Car', $response['_embedded'][0]['title']);
-        $this->assertEquals($this->car1->getTitle(), $response['_embedded'][0]['defaultTitle']);
-        $this->assertEquals($this->car1->getUuid(), $response['_embedded'][0]['defaultUuid']);
-        $this->assertEquals('hotel', $response['_embedded'][1]['template']);
-        $this->assertEquals('Hotel', $response['_embedded'][1]['title']);
-        $this->assertEquals(null, $response['_embedded'][1]['defaultTitle']);
-        $this->assertEquals(null, $response['_embedded'][1]['defaultUuid']);
+        $this->assertEquals('car', $data[0]['template']);
+        $this->assertEquals('Car', $data[0]['title']);
+        $this->assertEquals($this->car1->getTitle(), $data[0]['defaultTitle']);
+        $this->assertEquals($this->car1->getUuid(), $data[0]['defaultUuid']);
+        $this->assertEquals('hotel', $data[1]['template']);
+        $this->assertEquals('Hotel', $data[1]['title']);
+        $this->assertEquals(null, $data[1]['defaultTitle']);
+        $this->assertEquals(null, $data[1]['defaultUuid']);
     }
 
     /**
@@ -89,7 +91,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
 
         $client->request(
             'DELETE',
-            '/snippet-types/car/default',
+            '/snippet-areas/car',
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
@@ -100,19 +102,19 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals(null, $response['defaultUuid']);
         $this->assertEquals(null, $response['defaultTitle']);
 
-        $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
+        $client->request('GET', '/snippet-areas?webspace=sulu_io');
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        $responseAreas = $response['_embedded'];
+        $data = $response['_embedded']['areas'];
 
         $this->assertEquals(2, $response['total']);
-        $this->assertEquals('car', $responseAreas[0]['template']);
-        $this->assertEquals('Car', $responseAreas[0]['title']);
-        $this->assertEquals(null, $responseAreas[0]['defaultTitle']);
-        $this->assertEquals(null, $responseAreas[0]['defaultUuid']);
-        $this->assertEquals('hotel', $responseAreas[1]['template']);
-        $this->assertEquals('Hotel', $responseAreas[1]['title']);
-        $this->assertEquals(null, $responseAreas[1]['defaultTitle']);
-        $this->assertEquals(null, $responseAreas[1]['defaultUuid']);
+        $this->assertEquals('car', $data[0]['template']);
+        $this->assertEquals('Car', $data[0]['title']);
+        $this->assertEquals(null, $data[0]['defaultTitle']);
+        $this->assertEquals(null, $data[0]['defaultUuid']);
+        $this->assertEquals('hotel', $data[1]['template']);
+        $this->assertEquals('Hotel', $data[1]['title']);
+        $this->assertEquals(null, $data[1]['defaultTitle']);
+        $this->assertEquals(null, $data[1]['defaultUuid']);
     }
 }

@@ -13,8 +13,8 @@ define(['config', 'app-config'], function(Config, AppConfig) {
 
     var defaults = {
         options: {
-            snippetTypesUrl: '/admin/api/snippet-types?defaults=true&webspace=<%= webspace %>',
-            snippetTypeDefaultUrl: '/admin/api/snippet-types/<%= type %>/default?webspace=<%= webspace %>',
+            snippetAreasUrl: '/admin/api/snippet-areas?webspace=<%= webspace %>',
+            snippetDefaultTypeUrl: '/admin/api/snippet-areas/<%= key %>?webspace=<%= webspace %>',
             snippetsUrl: '/admin/api/snippets?type=<%= type %>&language=<%= locale %>'
         },
         templates: {
@@ -109,7 +109,7 @@ define(['config', 'app-config'], function(Config, AppConfig) {
                     options: {
                         el: this.$find('#' + this.ids.datagrid),
                         instanceName: 'snippets',
-                        idKey: 'template',
+                        idKey: 'key',
                         viewOptions: {
                             table: {
                                 selectItem: false,
@@ -132,7 +132,9 @@ define(['config', 'app-config'], function(Config, AppConfig) {
             ]);
         },
 
-        openOverlay: function(type) {
+        openOverlay: function(key, data) {
+            var type = data.template;
+
             var $container = $('<div/>');
 
             this.$find('#' + this.ids.overlayContainer).append($container);
@@ -154,11 +156,11 @@ define(['config', 'app-config'], function(Config, AppConfig) {
                     ]
                 }
             }]).then(function() {
-                this.startSnippetDatagrid(type);
+                this.startSnippetDatagrid(key, type);
             }.bind(this));
         },
 
-        startSnippetDatagrid: function(type) {
+        startSnippetDatagrid: function(key, type) {
             this.sandbox.start(
                 [
                     {
@@ -188,7 +190,7 @@ define(['config', 'app-config'], function(Config, AppConfig) {
                                             icon: 'check-circle',
                                             column: 'title',
                                             callback: function(item) {
-                                                this.saveDefault(type, item);
+                                                this.saveDefault(key, item);
                                             }.bind(this)
                                         }
                                     ]
@@ -210,8 +212,8 @@ define(['config', 'app-config'], function(Config, AppConfig) {
             );
         },
 
-        saveDefault: function(type, id) {
-            var url = _.template(this.options.snippetTypeDefaultUrl, {type: type, webspace: this.options.webspace});
+        saveDefault: function(key, id) {
+            var url = _.template(this.options.snippetDefaultTypeUrl, {key: key, webspace: this.options.webspace});
 
             this.sandbox.util.save(url, 'PUT', {default: id}).then(function(data) {
                 this.sandbox.emit('husky.overlay.snippets.close');
@@ -221,8 +223,8 @@ define(['config', 'app-config'], function(Config, AppConfig) {
             }.bind(this));
         },
 
-        removeDefault: function(type, id) {
-            var url = _.template(this.options.snippetTypeDefaultUrl, {type: type, webspace: this.options.webspace});
+        removeDefault: function(key, id) {
+            var url = _.template(this.options.snippetDefaultTypeUrl, {key: key, webspace: this.options.webspace});
 
             this.sandbox.util.save(url, 'DELETE', {default: id}).then(function(data) {
                 this.sandbox.emit('husky.datagrid.snippets.records.change', data);
@@ -235,9 +237,9 @@ define(['config', 'app-config'], function(Config, AppConfig) {
             var deferred = this.sandbox.data.deferred();
 
             this.sandbox.util.load(
-                _.template(this.options.snippetTypesUrl, {webspace: this.options.webspace})
+                _.template(this.options.snippetAreasUrl, {webspace: this.options.webspace})
             ).then(function(data) {
-                deferred.resolve({webspace: this.options.data(), types: data._embedded});
+                deferred.resolve({webspace: this.options.data(), types: data._embedded.areas});
             }.bind(this));
 
             return deferred.promise();

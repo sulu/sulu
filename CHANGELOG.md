@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #3385 [SnippetBundle]           Implement snippet areas to replace default snippets 
     * BUGFIX      #3400 [PreviewBundle]           Added host to preview request
     * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
     * ENHANCEMENT #3393 [AudienceTargetingBundle] Added translations for frequencies

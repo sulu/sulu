@@ -58,6 +58,14 @@
             <tag name="twig.extension"/>
         </service>
 
+        <service id="sulu_snippet.twig.area_snippet" class="Sulu\Bundle\SnippetBundle\Twig\SnippetAreaTwigExtension">
+            <argument type="service" id="sulu_snippet.default_snippet.manager"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_snippet.resolver"/>
+
+            <tag name="twig.extension"/>
+        </service>
+
         <service id="sulu_snippet.form.snippet" class="%sulu_snippet.form.snippet.class%">
             <tag name="form.type"/>
         </service>

@@ -42,6 +42,8 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
         if ($defaults) {
+            @trigger_error('Load default snippets over the cgetAction is deprecated and will be removed in 2.0 use SnippetAreaController::cgetAction instead', E_USER_DEPRECATED);
+
             $this->get('sulu_security.security_checker')->checkPermission(
                 new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
                 PermissionTypes::VIEW
@@ -80,67 +82,32 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     }
 
     /**
-     * Save default snippet for given key.
+     * Put default action.
      *
-     * @param string $key
      * @param Request $request
+     * @param string $key
      *
      * @return JsonResponse
      */
-    public function putDefaultAction($key, Request $request)
+    public function putDefaultAction(Request $request, $key)
     {
-        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $this->get('sulu_security.security_checker')->checkPermission(
-            new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
-            PermissionTypes::EDIT
-        );
+        @trigger_error('Set default snippets over the putDefaultAction is deprecated and will be removed in 2.0 use SnippetAreaController::putAction instead', E_USER_DEPRECATED);
 
-        $default = $request->get('default');
-
-        $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
-        $defaultSnippet = $this->get('sulu_snippet.default_snippet.manager')->save(
-            $webspaceKey,
-            $key,
-            $default,
-            $this->getUser()->getLocale()
-        );
-
-        return new JsonResponse(
-            [
-                'template' => $type->getKey(),
-                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
-                'defaultUuid' => $defaultSnippet ? $defaultSnippet->getUuid() : null,
-                'defaultTitle' => $defaultSnippet ? $defaultSnippet->getTitle() : null,
-            ]
-        );
+        return $this->forward('SuluSnippetBundle:SnippetArea:put', $request->attributes->all(), $request->query->all());
     }
 
     /**
-     * Remove default snippet for given key.
+     * Delete default action.
      *
-     * @param string $key
      * @param Request $request
+     * @param string $key
      *
      * @return JsonResponse
      */
-    public function deleteDefaultAction($key, Request $request)
+    public function deleteDefaultAction(Request $request, $key)
     {
-        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $this->get('sulu_security.security_checker')->checkPermission(
-            new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
-            PermissionTypes::EDIT
-        );
+        @trigger_error('Remove default snippets over the deleteDefaultAction is deprecated and will be removed in 2.0 use SnippetAreaController::deleteAction instead', E_USER_DEPRECATED);
 
-        $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
-        $this->get('sulu_snippet.default_snippet.manager')->remove($webspaceKey, $key);
-
-        return new JsonResponse(
-            [
-                'template' => $type->getKey(),
-                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
-                'defaultUuid' => null,
-                'defaultTitle' => null,
-            ]
-        );
+        return $this->forward('SuluSnippetBundle:SnippetArea:delete', $request->attributes->all(), $request->query->all());
     }
 }
