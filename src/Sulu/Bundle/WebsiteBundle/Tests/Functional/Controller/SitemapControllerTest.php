@@ -45,19 +45,19 @@ class SitemapControllerTest extends SuluTestCase
 
         $this->assertEquals('http://test.lo/en-us', $crawler->filterXPath('//x:urlset/x:url[1]/x:loc')->text());
         $this->assertEquals(
-            'en',
+            'en-us',
             $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[1]')->attr('hreflang')
         );
         $this->assertEquals(
-            'http://test.lo/en',
+            'http://test.lo/en-us',
             $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[1]')->attr('href')
         );
         $this->assertEquals(
-            'en-us',
+            'en',
             $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[2]')->attr('hreflang')
         );
         $this->assertEquals(
-            'http://test.lo/en-us',
+            'http://test.lo/en',
             $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[2]')->attr('href')
         );
         $this->assertEquals(

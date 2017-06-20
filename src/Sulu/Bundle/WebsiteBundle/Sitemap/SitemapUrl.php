@@ -80,6 +80,8 @@ class SitemapUrl
         $this->lastmod = $lastmod;
         $this->changefreq = $changefreq;
         $this->priority = $priority;
+
+        $this->addAlternateLink(new SitemapAlternateLink($loc, $locale));
     }
 
     /**
@@ -151,7 +153,7 @@ class SitemapUrl
      */
     public function addAlternateLink(SitemapAlternateLink $alternateLink)
     {
-        $this->alternateLinks[] = $alternateLink;
+        $this->alternateLinks[$alternateLink->getLocale()] = $alternateLink;
 
         return $this;
     }

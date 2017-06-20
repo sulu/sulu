@@ -140,14 +140,14 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/en-test-1', $result[0]->getLoc());
         $alternateLinks1 = $result[0]->getAlternateLinks();
         $this->assertCount(2, $alternateLinks1);
-        $this->assertEquals('/en-test-1', $alternateLinks1[0]->getHref());
-        $this->assertEquals('/de-test-1', $alternateLinks1[1]->getHref());
+        $this->assertEquals('/en-test-1', $alternateLinks1['en']->getHref());
+        $this->assertEquals('/de-test-1', $alternateLinks1['de']->getHref());
 
         $this->assertEquals('/de-test-1', $result[1]->getLoc());
         $alternateLinks2 = $result[1]->getAlternateLinks();
         $this->assertCount(2, $alternateLinks2);
-        $this->assertEquals('/de-test-1', $alternateLinks2[0]->getHref());
-        $this->assertEquals('/en-test-1', $alternateLinks2[1]->getHref());
+        $this->assertEquals('/de-test-1', $alternateLinks2['de']->getHref());
+        $this->assertEquals('/en-test-1', $alternateLinks2['en']->getHref());
     }
 
     public function testBuildHideInSitemap()
