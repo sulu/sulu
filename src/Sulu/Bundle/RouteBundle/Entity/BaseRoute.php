@@ -208,7 +208,7 @@ abstract class BaseRoute implements RouteInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function setTarget(RouteInterface $target)
+    public function setTarget(RouteInterface $target = null)
     {
         $this->target = $target;
 
