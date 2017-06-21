@@ -25,7 +25,7 @@ test('get routes from RouteStore', () => {
     expect(routeStore.get('route1')).toBe(route1);
     expect(routeStore.get('route2')).toBe(route2);
 
-    expect(routeStore.routes).toEqual({
+    expect(routeStore.getAll()).toEqual({
         route1: route1,
         route2: route2,
     });

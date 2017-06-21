@@ -16,6 +16,10 @@ class RouteStore {
     get(name: string): Route {
         return this.routes[name];
     }
+
+    getAll(): RouteMap {
+        return this.routes;
+    }
 }
 
 export default new RouteStore();
