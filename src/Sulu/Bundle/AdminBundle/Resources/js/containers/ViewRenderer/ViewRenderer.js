@@ -9,6 +9,11 @@ export default class ViewRenderer extends React.PureComponent {
     };
 
     render() {
-        return React.createElement(viewStore.get(this.props.name), this.props.parameters);
+        const view = viewStore.get(this.props.name);
+        if (!view) {
+            throw new Error('View "' + this.props.name + '" has not been found');
+        }
+
+        return React.createElement(view, this.props.parameters);
     }
 }

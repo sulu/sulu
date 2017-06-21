@@ -23,3 +23,8 @@ test('Render view returned from ViewRegistry with passed props', () => {
     expect(view).toMatchSnapshot();
     expect(viewStore.get).toBeCalledWith('test');
 });
+
+test('Render view should throw if view does not exist', () => {
+    viewStore.get.mockReturnValue(undefined);
+    expect(() => ReactTestRenderer.create(<ViewRenderer name="not_existing" />)).toThrow(/not_existing/);
+});
