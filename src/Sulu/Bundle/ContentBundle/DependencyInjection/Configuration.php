@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('default_author')->defaultTrue()->info('Set default author if none isset')->end()
                 ->arrayNode('search')
                     ->addDefaultsIfNotSet()
                     ->children()

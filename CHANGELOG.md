@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #3411 [RouteBundle]             Allow to reset the route entity target to null
     * FEATURE     #3385 [SnippetBundle]           Implement snippet areas to replace default snippets 
     * BUGFIX      #3401 [WebsiteBundle]           Fixed localizatin of sitemaps
+    * FEATURE     #3410 [DocumentManagerBundle]   Added configuration for set-default-author
     * BUGFIX      #3400 [PreviewBundle]           Added host to preview request
     * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
     * ENHANCEMENT #3393 [AudienceTargetingBundle] Added translations for frequencies

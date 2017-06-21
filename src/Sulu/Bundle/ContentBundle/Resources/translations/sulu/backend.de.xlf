@@ -851,6 +851,10 @@
                 <source>sulu_content.rules.page</source>
                 <target>Seite</target>
             </trans-unit>
+            <trans-unit id="82" resname="sulu.content.form.settings.no-author">
+                 <source>sulu.content.form.settings.no-author</source>
+                 <target>Kein Autor ausgewählt</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

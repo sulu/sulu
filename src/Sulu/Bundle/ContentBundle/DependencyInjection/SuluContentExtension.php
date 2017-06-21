@@ -160,6 +160,8 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('rule.xml');
         }
+
+        $this->appendDefaultAuthor($config, $container);
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
@@ -226,5 +228,39 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     {
         $container->setParameter('sulu_content.search.mapping', $config['search']['mapping']);
         $loader->load('search.xml');
+    }
+
+    /**
+     * Append configuration for article "set_default_author".
+     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     */
+    private function appendDefaultAuthor(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('sulu_content.default_author', $config['default_author']);
+        if (!$container->hasParameter('sulu_document_manager.mapping')) {
+            $container->prependExtensionConfig(
+                'sulu_document_manager',
+                [
+                    'mapping' => [
+                        'page' => ['set_default_author' => $config['default_author']],
+                        'home' => ['set_default_author' => $config['default_author']],
+                    ],
+                ]
+            );
+
+            return;
+        }
+
+        $mapping = $container->getParameter('sulu_document_manager.mapping');
+
+        foreach ($mapping as $key => $item) {
+            if ($item['alias'] === 'page' || $item['alias'] === 'home') {
+                $mapping[$key]['set_default_author'] = $config['default_author'];
+            }
+        }
+
+        $container->setParameter('sulu_document_manager.mapping', $mapping);
     }
 }
