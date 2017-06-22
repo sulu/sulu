@@ -14,7 +14,7 @@ export default class Application extends React.PureComponent {
         return (
             <ViewRenderer
                 key={this.props.router.currentRoute.name}
-                name={this.props.router.currentRoute.name}
+                name={this.props.router.currentRoute.view}
                 parameters={this.props.router.currentParameters} />
         );
     }
