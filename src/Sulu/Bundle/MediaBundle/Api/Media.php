@@ -1047,6 +1047,10 @@ class Media extends ApiWrapper
      */
     public function getTargetGroups()
     {
+        if (!$this->getFileVersion()->getTargetGroups()) {
+            return [];
+        }
+
         return $this->getFileVersion()->getTargetGroups()->toArray();
     }
 
