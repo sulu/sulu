@@ -5,9 +5,8 @@ import createHistory from 'history/createHashHistory';
 import Application from './containers/Application';
 import {viewStore} from './containers/ViewRenderer';
 import Router, {routeStore} from './services/Router';
-import HelloWorld from './views/HelloWorld';
 
-viewStore.add('hello_world', HelloWorld);
+viewStore.add('hello_world', () => (<h1>Hello World!</h1>));
 
 routeStore.add({
     name: 'hello_world',
