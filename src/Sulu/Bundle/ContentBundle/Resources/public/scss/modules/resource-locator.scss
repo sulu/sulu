@@ -43,7 +43,14 @@
     .url,
     .date {
         float: left;
-        width: 47.5%;
+    }
+
+    .url {
+        width: 72.5%;
+    }
+
+    .date {
+        width: 22.5%;
     }
 
     .options-delete {
