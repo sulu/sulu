@@ -3,6 +3,9 @@
         "lint": "eslint .",
         "flow": "flow"
     },
+    "dependencies": {
+        "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js"
+    },
     "devDependencies": {
         "babel-eslint": "^7.2.3",
         "eslint": "^4.0.0",
