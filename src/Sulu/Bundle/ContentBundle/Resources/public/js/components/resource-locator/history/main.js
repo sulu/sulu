@@ -107,7 +107,7 @@ define(['text!./skeleton.html', 'text!./overlay.html'], function(skeletonTemplat
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'url-history',
-                        skin: 'medium',
+                        skin: 'large',
                         slides: [{
                             title: this.translations.title,
                             buttons: [{type: 'ok', align: 'center'}],

@@ -154,19 +154,26 @@
 .resource-locator-history .url,
 .resource-locator-history .date {
   float: left;
-  width: 47.5%;
 }
-/* line 49, ../scss/modules/resource-locator.scss */
+/* line 48, ../scss/modules/resource-locator.scss */
+.resource-locator-history .url {
+  width: 72.5%;
+}
+/* line 52, ../scss/modules/resource-locator.scss */
+.resource-locator-history .date {
+  width: 22.5%;
+}
+/* line 56, ../scss/modules/resource-locator.scss */
 .resource-locator-history .options-delete {
   float: right;
   width: 5%;
   text-align: center;
 }
-/* line 55, ../scss/modules/resource-locator.scss */
+/* line 62, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url {
   text-align: left;
 }
-/* line 58, ../scss/modules/resource-locator.scss */
+/* line 65, ../scss/modules/resource-locator.scss */
 .resource-locator-history .date {
   text-align: center;
 }

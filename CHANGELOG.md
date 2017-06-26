@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #3416 [ContentBundle]           Changed skin of history-url to large
     * BUGFIX      #3414 [MediaBundle]             Added check for null target-groups
     * ENHANCEMENT #3411 [RouteBundle]             Allow to reset the route entity target to null
     * FEATURE     #3385 [SnippetBundle]           Implement snippet areas to replace default snippets 
