@@ -2,6 +2,8 @@
 export type Route = {
     name: string,
     view: string,
-    pattern: string,
+    path: string,
     parameters?: Object,
 };
+
+export type RouteMap = {[string]: Route};

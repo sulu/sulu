@@ -1,6 +1,5 @@
 // @flow
-import type {Route} from '../Route';
-import type {RouteMap} from '../RouteMap';
+import type {Route, RouteMap} from '../types';
 
 class RouteStore {
     routes: RouteMap;

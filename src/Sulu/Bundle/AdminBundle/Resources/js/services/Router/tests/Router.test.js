@@ -18,7 +18,7 @@ test('Navigate to route using state', () => {
         page: {
             name: 'page',
             view: 'form',
-            pattern: '/pages/:uuid',
+            path: '/pages/:uuid',
             parameters: {
                 type: 'page',
             },
@@ -41,7 +41,7 @@ test('Navigate to route without parameters using state', () => {
         page: {
             name: 'page',
             view: 'form',
-            pattern: '/pages/:uuid',
+            path: '/pages/:uuid',
         },
     });
 
@@ -57,7 +57,7 @@ test('Navigate to route using URL', () => {
         page: {
             name: 'page',
             view: 'form',
-            pattern: '/pages/:uuid/:test',
+            path: '/pages/:uuid/:test',
             parameters: {
                 type: 'page',
             },
@@ -81,7 +81,7 @@ test('Navigate to route changing only parameters', () => {
         page: {
             name: 'page',
             view: 'form',
-            pattern: '/pages/:uuid',
+            path: '/pages/:uuid',
         },
     });
 
@@ -100,12 +100,12 @@ test('Navigate to route using history and let mobx react', () => {
         home: {
             name: 'home',
             view: 'home',
-            pattern: '/',
+            path: '/',
         },
         page: {
             name: 'page',
             view: 'page',
-            pattern: '/page',
+            path: '/page',
         },
     });
 
@@ -129,12 +129,12 @@ test('Navigate to route and let history react', () => {
         home: {
             name: 'home',
             view: 'home',
-            pattern: '/',
+            path: '/',
         },
         page: {
             name: 'page',
             view: 'page',
-            pattern: '/page',
+            path: '/page',
         },
     });
 
@@ -151,7 +151,7 @@ test('Use current route from URL', () => {
         page: {
             name: 'page',
             view: 'page',
-            pattern: '/page',
+            path: '/page',
         },
     });
 

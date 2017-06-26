@@ -7,6 +7,10 @@ class ViewStore {
     }
 
     add(name: string, view: ReactClass<*>) {
+        if (name in this.map) {
+            throw new Error('The key "' + name + '" has already been used for another view');
+        }
+
         this.map[name] = view;
     }
 

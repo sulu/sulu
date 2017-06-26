@@ -1,7 +1,7 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
 import pathToRegexp, {compile} from 'path-to-regexp';
-import type {Route} from './Route';
+import type {Route} from './types';
 import routeStore from './stores/RouteStore';
 
 export default class Router {
@@ -28,7 +28,7 @@ export default class Router {
         for (const key in routeStore.getAll()) {
             const route = routeStore.get(key);
             const keys = [];
-            const match = pathToRegexp(route.pattern, keys).exec(path);
+            const match = pathToRegexp(route.path, keys).exec(path);
 
             if (!match) {
                 continue;
@@ -45,7 +45,7 @@ export default class Router {
         }
     }
 
-    @action navigate(key: string, parameters: Object) {
+    @action navigate(key: string, parameters: Object = {}) {
         const currentRoute = routeStore.get(key);
         const currentParameters = {...currentRoute.parameters, ...parameters};
 
@@ -79,6 +79,6 @@ export default class Router {
             return '';
         }
 
-        return compile(this.currentRoute.pattern)(this.currentParameters);
+        return compile(this.currentRoute.path)(this.currentParameters);
     }
 }
