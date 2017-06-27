@@ -11,9 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Controller;
 
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -54,6 +58,11 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
      * @var SerializerInterface
      */
     private $serializer;
+
+    /**
+     * @var ViewHandlerInterface
+     */
+    private $viewHandler;
 
     /**
      * @var EngineInterface
@@ -115,6 +124,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->adminPool = $this->prophesize(AdminPool::class);
         $this->jsConfigPool = $this->prophesize(JsConfigPool::class);
         $this->serializer = $this->prophesize(SerializerInterface::class);
+        $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
 
@@ -125,6 +135,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->adminPool->reveal(),
             $this->jsConfigPool->reveal(),
             $this->serializer->reveal(),
+            $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->localizationManager->reveal(),
             $this->environment,
@@ -135,6 +146,20 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->translations,
             $this->fallbackLocale
         );
+    }
+
+    public function testMetadataAction()
+    {
+        $data = [
+            new Route('sulu_snippet.list', 'sulu_admin.list', '/snippets', ['type' => 'snippets']),
+        ];
+        $this->adminPool->getRoutes()->willReturn($data);
+
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($data) {
+            return $view->getFormat() === 'json' && $view->getData() === ['routes' => $data];
+        }))->shouldBeCalled();
+
+        $this->adminController->metadataAction();
     }
 
     public function testContextsAction()

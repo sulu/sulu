@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
@@ -77,6 +78,16 @@ class SnippetAdmin extends Admin
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes()
+    {
+        return [
+            new Route('sulu_snippet.list', 'sulu_admin.list', '/snippets', ['type' => 'snippets']),
+        ];
     }
 
     /**

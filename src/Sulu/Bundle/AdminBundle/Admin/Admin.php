@@ -25,6 +25,11 @@ abstract class Admin
      */
     protected $navigation;
 
+    public function getRoutes()
+    {
+        return [];
+    }
+
     /**
      * Sets the navigation containing the position of the admin in the navigation.
      *
@@ -47,6 +52,8 @@ abstract class Admin
 
     /**
      * Returns the bundle name for the javascript main file.
+     *
+     * @deprecated Will not be used and removed in 2.0
      *
      * @return string
      */

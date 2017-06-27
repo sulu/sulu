@@ -46,7 +46,20 @@ class AdminPool
     }
 
     /**
-     * Returns the navigation combined from all admin-objects.
+     * Returns all the routes for the frontend application from all Admin objects.
+     */
+    public function getRoutes()
+    {
+        $routes = [];
+        $this->iterateAdmins(function(Admin $admin) use (&$routes) {
+            $routes = array_merge($routes, $admin->getRoutes());
+        });
+
+        return $routes;
+    }
+
+    /**
+     * Returns the navigation combined from all Admin objects.
      *
      * @return Navigation
      */
@@ -54,26 +67,42 @@ class AdminPool
     {
         /** @var Navigation $navigation */
         $navigation = null;
-        foreach ($this->pool as $admin) {
-            /* @var Admin $admin */
-            if ($navigation == null) {
+        $this->iterateAdmins(function(Admin $admin) use (&$navigation) {
+            if ($navigation === null) {
                 $navigation = $admin->getNavigation();
-            } else {
-                $navigation = $navigation->merge($admin->getNavigation());
+
+                return;
             }
-        }
+            $navigation = $navigation->merge($admin->getNavigation());
+        });
 
         return $navigation;
     }
 
+    /**
+     * Returns the combined security contexts from all Admin objects.
+     *
+     * @return array
+     */
     public function getSecurityContexts()
     {
         $contexts = [];
-        foreach ($this->pool as $admin) {
-            /* @var Admin $admin */
+        $this->iterateAdmins(function(Admin $admin) use (&$contexts) {
             $contexts = array_merge_recursive($contexts, $admin->getSecurityContexts());
-        }
+        });
 
         return $contexts;
+    }
+
+    /**
+     * Helper function to iterate over all available Admin objects.
+     *
+     * @param callable $callback
+     */
+    private function iterateAdmins($callback)
+    {
+        foreach ($this->pool as $admin) {
+            $callback($admin);
+        }
     }
 }
