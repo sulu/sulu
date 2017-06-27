@@ -83,7 +83,7 @@ class SnippetAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         return [
             new Route('sulu_snippet.list', 'sulu_admin.list', '/snippets', ['type' => 'snippets']),

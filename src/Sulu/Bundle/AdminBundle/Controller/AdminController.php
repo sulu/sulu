@@ -196,11 +196,9 @@ class AdminController
     }
 
     /**
-     * Returns all the metadata for the admin interface.
-     *
-     * @return Response
+     * Returns all the configuration for the admin interface.
      */
-    public function metadataAction()
+    public function configurationAction(): Response
     {
         $view = View::create([
             'routes' => $this->adminPool->getRoutes(),

@@ -48,7 +48,7 @@ class AdminPool
     /**
      * Returns all the routes for the frontend application from all Admin objects.
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         $routes = [];
         $this->iterateAdmins(function(Admin $admin) use (&$routes) {
@@ -96,10 +96,8 @@ class AdminPool
 
     /**
      * Helper function to iterate over all available Admin objects.
-     *
-     * @param callable $callback
      */
-    private function iterateAdmins($callback)
+    private function iterateAdmins(callable $callback): void
     {
         foreach ($this->pool as $admin) {
             $callback($admin);

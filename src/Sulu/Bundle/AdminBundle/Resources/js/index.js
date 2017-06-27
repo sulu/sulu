@@ -16,7 +16,7 @@ function startApplication() {
     render(<Application router={router} />, document.getElementById('application'));
 }
 
-fetch('/admin/metadata', {credentials: 'same-origin'})
+fetch('/admin/configuration', {credentials: 'same-origin'})
     .then((response) => response.json())
     .then((json) => routeStore.addCollection(json.routes))
     .then(startApplication);

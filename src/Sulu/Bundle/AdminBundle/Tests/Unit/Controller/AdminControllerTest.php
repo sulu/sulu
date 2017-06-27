@@ -23,6 +23,7 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -148,7 +149,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testMetadataAction()
+    public function testConfigurationAction()
     {
         $data = [
             new Route('sulu_snippet.list', 'sulu_admin.list', '/snippets', ['type' => 'snippets']),
@@ -157,9 +158,9 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($data) {
             return $view->getFormat() === 'json' && $view->getData() === ['routes' => $data];
-        }))->shouldBeCalled();
+        }))->shouldBeCalled()->willReturn(new Response());
 
-        $this->adminController->metadataAction();
+        $this->adminController->configurationAction();
     }
 
     public function testContextsAction()

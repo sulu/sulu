@@ -3,10 +3,10 @@ sulu_admin_v2:
     defaults:
         _controller: sulu_admin.admin_controller:indexV2Action
 
-sulu_admin_v2.metadata:
-    path: /metadata
+sulu_admin_v2.configuration:
+    path: /configuration
     defaults:
-        _controller: sulu_admin.admin_controller:metadataAction
+        _controller: sulu_admin.admin_controller:configurationAction
 
 sulu_admin:
     path:  /

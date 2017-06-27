@@ -33,7 +33,7 @@ class Route
      */
     private $parameters;
 
-    public function __construct($name, $view, $path, $parameters = [])
+    public function __construct(string $name, string $view, string $path, array $parameters = [])
     {
         $this->name = $name;
         $this->view = $view;
