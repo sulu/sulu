@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Application should not fail if current route does not exist 1`] = `
+<div>
+  <header />
+  <main />
+  <aside />
+</div>
+`;
+
+exports[`Application should render based on current route 1`] = `
+<div>
+  <header />
+  <main>
+    <h1>
+      Test
+    </h1>
+  </main>
+  <aside />
+</div>
+`;

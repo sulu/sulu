@@ -17,10 +17,12 @@ export default class Application extends React.PureComponent {
             <div>
                 <Toolbar />
                 <main>
-                    <ViewRenderer
-                        key={this.props.router.currentRoute.name}
-                        name={this.props.router.currentRoute.view}
-                        parameters={this.props.router.currentParameters} />
+                    {this.props.router.currentRoute &&
+                        <ViewRenderer
+                            key={this.props.router.currentRoute.name}
+                            name={this.props.router.currentRoute.view}
+                            parameters={this.props.router.currentParameters} />
+                    }
                 </main>
                 <SplitView />
             </div>

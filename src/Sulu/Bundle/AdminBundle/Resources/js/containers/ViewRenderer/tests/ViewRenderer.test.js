@@ -4,11 +4,9 @@ import ReactTestRenderer from 'react-test-renderer';
 import ViewRenderer from '../ViewRenderer';
 import viewStore from '../stores/ViewStore';
 
-jest.mock('../stores/ViewStore', () => {
-    return {
-        get: jest.fn(),
-    };
-});
+jest.mock('../stores/ViewStore', () => ({
+    get: jest.fn(),
+}));
 
 test('Render view returned from ViewRegistry', () => {
     viewStore.get.mockReturnValue(() => (<h1>Test</h1>));
