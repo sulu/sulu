@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
+/**
+ * Represents a route for adminstration frontend.
+ */
 class Route
 {
     /**
