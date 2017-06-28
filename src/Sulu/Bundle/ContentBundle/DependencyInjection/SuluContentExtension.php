@@ -162,6 +162,8 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
 
         $this->appendDefaultAuthor($config, $container);
+
+        $container->setParameter('sulu_content.seo', $config['seo']);
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
