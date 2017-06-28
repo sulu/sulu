@@ -1,5 +1,7 @@
 # Upgrade
 
+## 1.6.0
+
 ### Default Snippets
 
 Default snippets were replaced with snippet areas. To have the same behaviour as before replace the old twig extension:
