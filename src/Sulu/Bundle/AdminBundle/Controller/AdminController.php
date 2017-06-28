@@ -140,6 +140,8 @@ class AdminController
      * Renders admin ui.
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated Should be replaced with indexV2Action
      */
     public function indexAction()
     {
@@ -176,6 +178,11 @@ class AdminController
                 'config' => $jsConfig,
             ]
         );
+    }
+
+    public function indexV2Action()
+    {
+        return $this->engine->renderResponse('SuluAdminBundle:Admin:main.html.twig');
     }
 
     /**
