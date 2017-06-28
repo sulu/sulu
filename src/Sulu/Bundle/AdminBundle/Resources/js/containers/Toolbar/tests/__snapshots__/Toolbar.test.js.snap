@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render the items from the ToolbarStore 1`] = `
+<header>
+  <ul>
+    <li>
+      Save
+    </li>
+    <li>
+      Delete
+    </li>
+  </ul>
+</header>
+`;

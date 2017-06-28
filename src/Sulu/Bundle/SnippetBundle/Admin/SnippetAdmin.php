@@ -87,6 +87,7 @@ class SnippetAdmin extends Admin
     {
         return [
             new Route('sulu_snippet.list', 'sulu_admin.list', '/snippets', ['type' => 'snippets']),
+            new Route('sulu_snippet.form', 'sulu_admin.form', '/snippets/:uuid', ['type' => 'snippets']),
         ];
     }
 
