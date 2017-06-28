@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use FOS\HttpCache\ProxyClient\ProxyClient;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
@@ -29,7 +29,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
     const TAGS_HEADER = 'X-Cache-Tags';
 
     /**
-     * @var ProxyClientInterface
+     * @var ProxyClient
      */
     private $proxyClient;
 
@@ -44,10 +44,10 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerUpdateR
     private $structuresToInvalidate;
 
     /**
-     * @param ProxyClientInterface $proxyClient
+     * @param ProxyClient $proxyClient
      * @param ReferenceStorePoolInterface $referenceStorePool
      */
-    public function __construct(ProxyClientInterface $proxyClient, ReferenceStorePoolInterface $referenceStorePool)
+    public function __construct(ProxyClient $proxyClient, ReferenceStorePoolInterface $referenceStorePool)
     {
         $this->proxyClient = $proxyClient;
         $this->referenceStorePool = $referenceStorePool;

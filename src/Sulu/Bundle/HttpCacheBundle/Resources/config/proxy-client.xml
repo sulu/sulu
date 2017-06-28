@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
         <parameter key="sulu_http_cache.proxy_client.varnish.class">FOS\HttpCache\ProxyClient\Varnish</parameter>
+        <parameter key="sulu_http_cache.proxy_client.varnish.http_dispatcher.class">FOS\HttpCache\ProxyClient\HttpDispatcher</parameter>
         <parameter key="sulu_http_cache.proxy_client.symfony.class">Sulu\Component\HttpCache\ProxyClient\Symfony</parameter>
     </parameters>
 
     <services>
 
+        <!-- HTTP Dispatcher -->
+        <service id="sulu_http_cache.proxy_client.varnish.http_dispatcher"
+                 class="%sulu_http_cache.proxy_client.varnish.http_dispatcher.class%">
+            <argument>%sulu_http_cache.proxy_client.varnish.servers%</argument>
+            <argument>%sulu_http_cache.proxy_client.varnish.base_url%</argument>
+        </service>
+
         <!-- Varnish -->
         <service id="sulu_http_cache.proxy_client.varnish"
                  class="%sulu_http_cache.proxy_client.varnish.class%">
-            <argument>%sulu_http_cache.proxy_client.varnish.servers%</argument>
-            <argument>%sulu_http_cache.proxy_client.varnish.base_url%</argument>
+            <argument type="service" id="sulu_http_cache.proxy_client.varnish.http_dispatcher"/>
         </service>
 
         <!-- Symfony Http Cache -->
