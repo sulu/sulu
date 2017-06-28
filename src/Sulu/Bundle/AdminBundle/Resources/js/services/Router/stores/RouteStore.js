@@ -14,7 +14,7 @@ class RouteStore {
 
     add(route: Route) {
         if (route.name in this.routes) {
-            throw new Error('The name "' + name + '" has already been used for another route');
+            throw new Error('The name "' + route.name + '" has already been used for another route');
         }
         this.routes[route.name] = route;
     }

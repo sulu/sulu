@@ -75,12 +75,12 @@ test('Add a route collection to the RouteStore', () => {
 
 test('Add route with existing key should throw', () => {
     const route = {
-        name: 'route',
+        name: 'test_route',
         view: 'view',
         pattern: '/route',
     };
 
     routeStore.add(route);
 
-    expect(() => routeStore.add(route)).toThrow('route');
+    expect(() => routeStore.add(route)).toThrow('test_route');
 });
