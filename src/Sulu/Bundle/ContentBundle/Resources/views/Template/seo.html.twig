@@ -14,7 +14,7 @@
                class="form-element preview-update trigger-save-button"/>
 
         <span class="smaller-font grey-font">
-            <%= translate('sulu.content.seo.title.note')%>
+            <%= sprintf(translate('sulu.content.seo.title.note'), options.maxTitleCharacters) %>
             <strong>
                 <span id="title-left"></span>
                 <%= translate('sulu.content.seo.characters-left')%>
@@ -27,7 +27,7 @@
                   class="form-element preview-update trigger-save-button"></textarea>
 
         <span class="smaller-font grey-font">
-            <%= translate('sulu.content.seo.descriptions.note')%>
+            <%= sprintf(translate('sulu.content.seo.descriptions.note'), options.maxDescriptionCharacters) %>
             <strong>
                 <span id="description-left"></span>
                 <%= translate('sulu.content.seo.characters-left')%>
@@ -39,7 +39,7 @@
         <input type="text" id="seo-keywords" data-mapper-property="keywords"
                class="form-element preview-update trigger-save-button"/>
         <span class="smaller-font grey-font">
-            <%= translate('sulu.content.seo.keywords.note')%>
+            <%= sprintf(translate('sulu.content.seo.keywords.note'), options.maxKeywords) %>
             <strong>
                 <span id="keywords-left"></span>
                 <%= translate('sulu.content.seo.keywords-left')%>

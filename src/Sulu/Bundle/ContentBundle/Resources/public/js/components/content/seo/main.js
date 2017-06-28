@@ -24,7 +24,7 @@ define(function() {
         getUrl: function() {
             var content = this.options.data();
 
-            return this.options.excerptUrlPrefix + '/' + this.options.language + content.url;
+            return this.options.excerptUrlPrefix.replace('{locale}', this.options.language) + content.url;
         },
 
         setHeaderBar: function() {

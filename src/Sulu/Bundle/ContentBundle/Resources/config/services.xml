@@ -111,6 +111,7 @@
                     <argument key="enabled">%sulu_document_manager.versioning.enabled%</argument>
                 </argument>
                 <argument key="default_author">%sulu_content.default_author%</argument>
+                <argument key="seo">%sulu_content.seo%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

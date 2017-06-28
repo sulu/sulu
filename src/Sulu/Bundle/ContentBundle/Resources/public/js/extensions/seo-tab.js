@@ -7,11 +7,13 @@
  * with this source code in the file LICENSE.
  */
 
-define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, formTemplate) {
+define(['jquery', 'config', 'text!/admin/content/template/content/seo.html'], function($, config, formTemplate) {
 
     'use strict';
 
     var formId = '#seo-form',
+
+        contentConfig = config.get('sulu-content')['seo'],
 
         seoTab = {
 
@@ -19,11 +21,11 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
 
             defaults: {
                 options: {
-                    maxTitleCharacters: 55,
-                    maxDescriptionCharacters: 155,
-                    maxKeywords: 5,
-                    keywordsSeparator: ',',
-                    excerptUrlPrefix: 'www.yoursite.com'
+                    maxTitleCharacters: contentConfig['max_title_length'],
+                    maxDescriptionCharacters: contentConfig['max_description_length'],
+                    maxKeywords: contentConfig['max_keywords'],
+                    keywordsSeparator: contentConfig['keywords_separator'],
+                    excerptUrlPrefix: contentConfig['url_prefix']
                 },
                 templates: {
                     form: formTemplate
@@ -82,6 +84,8 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
                 this.data = data;
                 this.$el.html(
                     this.templates.form({
+                        sprintf: this.sandbox.util.sprintf,
+                        options: this.options,
                         translate: this.sandbox.translate,
                         siteUrl: this.getUrl(data)
                     })
