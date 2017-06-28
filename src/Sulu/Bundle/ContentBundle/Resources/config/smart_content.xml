@@ -20,15 +20,9 @@
         </service>
 
         <!-- content provider -->
-        <service id="sulu_content.smart_content.data_provider.content.proxy_factory.configuration"
-                 class="ProxyManager\Configuration" public="false">
-            <call method="setProxiesTargetDir">
-                <argument>%sulu.cache_dir%</argument>
-            </call>
-        </service>
         <service id="sulu_content.smart_content.data_provider.content.proxy_factory"
                  class="%sulu_content.smart_content.data_provider.content.proxy_factory.class%">
-            <argument type="service" id="sulu_content.smart_content.data_provider.content.proxy_factory.configuration"/>
+            <argument type="service" id="sulu_core.proxy_manager.configuration"/>
         </service>
         <service id="sulu_content.smart_content.data_provider.content.query_builder"
                  class="%sulu_content.smart_content.data_provider.content.query_builder.class%" public="false">
@@ -44,6 +38,7 @@
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_content.smart_content.data_provider.content.proxy_factory"/>
             <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_content.reference_store.content"/>
             <argument>%sulu_document_manager.show_drafts%</argument>
 
             <tag name="sulu.smart_content.data_provider" alias="content"/>
@@ -57,6 +52,7 @@
             <argument type="service" id="sulu_tag.tag_request_handler"/>
             <argument type="service" id="sulu_category.category_request_handler"/>
             <argument>%sulu.content.type.smart_content.template%</argument>
+            <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="smart_content"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

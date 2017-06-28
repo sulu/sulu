@@ -15,6 +15,7 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -63,7 +64,6 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=' . $locale);
         $response = $this->client->getResponse();
 
-        $result = $response->getContent();
         $result = json_decode($response->getContent(), true);
         $this->assertHttpStatusCode(200, $response);
         $this->assertLinks([
@@ -413,6 +413,39 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
+    public function testPutWithExcerpt()
+    {
+        $data = [
+            'template' => 'hotel',
+            'title' => 'Renamed Hotel',
+            'description' => 'My hotel is red',
+            'ext' => [
+                'excerpt' => [
+                    'title' => 'Magnificient hotel',
+                ],
+            ],
+        ];
+
+        $params = [
+            'language' => 'de',
+        ];
+
+        $query = http_build_query($params);
+        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $response = $this->client->getResponse();
+
+        $result = json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertEquals('Magnificient hotel', $result['ext']['excerpt']['title']);
+
+        $document = $this->documentManager->find($result['id'], 'de');
+
+        $this->assertEquals('Magnificient hotel', $document->getExtensionsData()['excerpt']['title']);
+        $this->assertEquals($data['title'], $document->getTitle());
+        $this->assertEquals($data['description'], $document->getStructure()->getProperty('description')->getValue());
+    }
+
     public function testDeleteReferenced()
     {
         $page = $this->documentManager->create('page');
@@ -451,15 +484,21 @@ class SnippetControllerTest extends SuluTestCase
         $snippet->setStructureType('hotel');
         $snippet->setTitle('Hotel de');
         $this->documentManager->persist($snippet, 'de');
+        $this->documentManager->publish($snippet, 'de');
         $this->documentManager->flush();
 
         $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
+        $this->documentManager->clear();
+
+        /** @var SnippetDocument $newPage */
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
+        $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
         $this->assertEquals('Hotel de', $newPage->getTitle());
 
         $newPage = $this->documentManager->find($snippet->getUuid(), 'de');
+        $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
         $this->assertEquals('Hotel de', $newPage->getTitle());
     }
 

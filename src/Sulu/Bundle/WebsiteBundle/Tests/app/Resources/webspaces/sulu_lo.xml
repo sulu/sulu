@@ -54,13 +54,11 @@
                 <environment type="dev">
                     <urls>
                         <url language="en">sulu.lo</url>
-                        <url language="en">localhost</url>
                     </urls>
                 </environment>
                 <environment type="test">
                     <urls>
                         <url language="en">sulu.lo</url>
-                        <url language="en">localhost</url>
                     </urls>
                 </environment>
             </environments>

@@ -105,6 +105,20 @@ trait DataProviderRepositoryTrait
             );
         }
 
+        if (isset($filters['targetGroupId']) && $filters['targetGroupId']) {
+            $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, 'c');
+            $parameter = array_merge(
+                $parameter,
+                $this->appendRelation(
+                    $queryBuilder,
+                    $targetGroupRelation,
+                    [$filters['targetGroupId']],
+                    'and',
+                    'targetGroupId'
+                )
+            );
+        }
+
         if (isset($filters['websiteTags']) && !empty($filters['websiteTags'])) {
             $parameter = array_merge(
                 $parameter,
@@ -307,6 +321,19 @@ trait DataProviderRepositoryTrait
     protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
         return $alias . '.categories';
+    }
+
+    /**
+     * Extension point to append relations to target group relation if it is not direct linked.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     *
+     * @return string
+     */
+    protected function appendTargetGroupRelation(QueryBuilder $queryBuilder, $alias)
+    {
+        return $alias . '.targetGroups';
     }
 
     /**

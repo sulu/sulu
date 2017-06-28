@@ -18,6 +18,7 @@ use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 
 class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterface
@@ -27,7 +28,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function load(ObjectManager $manager)
     {
-        // phone types
+        // Phone types.
         $metadata = $manager->getClassMetaData(PhoneType::class);
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -47,7 +48,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $phoneType3 = $manager->merge($phoneType3);
         $phoneType3->setName('phone.mobile');
 
-        // email types
+        // Email types.
         $metadata = $manager->getClassMetaData(EmailType::class);
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -66,7 +67,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $this->addReference('email.type.home', $emailType2);
 
-        // address types
+        // Address types.
         $metadata = $manager->getClassMetaData(AddressType::class);
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -81,7 +82,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $addressType2 = $manager->merge($addressType2);
         $addressType2->setName('address.home');
 
-        // url types
+        // Url types.
         $metadata = $manager->getClassMetaData(UrlType::class);
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -96,7 +97,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $urlType2 = $manager->merge($urlType2);
         $urlType2->setName('url.home');
 
-        // fax types
+        // Fax types.
         $metadata = $manager->getClassMetaData(FaxType::class);
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -110,6 +111,26 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $faxType2->setId(2);
         $faxType2 = $manager->merge($faxType2);
         $faxType2->setName('fax.home');
+
+        // Social media profile types.
+        $metadata = $manager->getClassMetaData(SocialMediaProfileType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $socialMediaProfileType1 = new SocialMediaProfileType();
+        $socialMediaProfileType1->setId(1);
+        $socialMediaProfileType1 = $manager->merge($socialMediaProfileType1);
+        $socialMediaProfileType1->setName('Facebook');
+
+        $socialMediaProfileType2 = new SocialMediaProfileType();
+        $socialMediaProfileType2->setId(2);
+        $socialMediaProfileType2 = $manager->merge($socialMediaProfileType2);
+        $socialMediaProfileType2->setName('Twitter');
+
+        $socialMediaProfileType3 = new SocialMediaProfileType();
+        $socialMediaProfileType3->setId(3);
+        $socialMediaProfileType3 = $manager->merge($socialMediaProfileType3);
+        $socialMediaProfileType3->setName('Instagram');
 
         $manager->flush();
     }

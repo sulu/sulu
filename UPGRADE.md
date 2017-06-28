@@ -1,5 +1,101 @@
 # Upgrade
 
+### Default Snippets
+
+Default snippets were replaced with snippet areas. To have the same behaviour as before replace the old twig extension:
+
+__Before:__
+
+```twig
+sulu_snippet_load_default('your_snippet_key')[0]
+```
+
+__After:__
+
+```twig
+sulu_snippet_load_by_area('your_snippet_key')
+```
+
+### Sitemap Localization
+
+The `build` method of the `SitemapProviderInterface` had a `$locale` parameter,
+which shouldn't be there, because the sitemaps need to be generated or all
+locales at once. If you have implemented this interface you have to adapt the
+implementation to remove the `$locale` parameter and return the URLs for all
+locales instead.
+
+### Snippet list
+
+Some field configuration has changed, so we need to delete the saved one in the database:
+```sql
+DELETE FROM `se_user_settings` WHERE `settingsKey` = 'snippetsFields';
+```
+
+## 1.6.0-RC1
+
+### Social media profile fixtures
+
+Add fixtures for social media profile of contacts. Run following command to
+add the fixtures:
+
+```bash
+INSERT INTO co_social_media_profile_types (id, name) VALUES ('1', 'Facebook'), ('2', 'Twitter'), ('3', 'Instagram');
+```
+
+### ProxyManager
+
+We had to update `ocramius/proxy-manager` in order to be compatible with PHP 7.
+In case you have defined your own proxies, you should check the
+[ProxyManager UPGRADE.md](https://github.com/Ocramius/ProxyManager/blob/master/UPGRADE.md).
+
+### ContentTypeInterface
+
+Following methods and constants was removed from `ContentTypeInterface`.
+
+* `PRE_SAVE`
+* `POST_SAVE`
+* `getType()`
+* `getReferenceUuids()`
+
+For replacement of `getReferenceUuids` we have introduced the 
+[reference-store](http://docs.sulu.io/en/latest/bundles/content/reference-store.html)
+and the `PreResolveContentTypeInterface::preResolve` method. 
+
+### Additional routing file from SuluRouteBundle
+
+Add following lines to `app/config/admin/routing.yml`:
+
+```yml
+sulu_route_api:
+    type: rest
+    resource: "@SuluRouteBundle/Resources/config/routing_api.xml"
+    prefix: /admin/api
+```
+
+### Route-Table changed
+
+The route-table was extended with auditable information. Run following sql-statement to
+update the database schema.
+
+```bash
+ALTER TABLE ro_routes ADD changed DATETIME DEFAULT '1970-01-01 00:00:00' NOT NULL, ADD created DATETIME DEFAULT '1970-01-01 00:00:00' NOT NULL;
+ALTER TABLE ro_routes CHANGE created created DATETIME NOT NULL, CHANGE changed changed DATETIME NOT NULL;
+```
+
+### Highlight section styling changed
+
+To make the highlight section reusable the css not longer depend on the `#content-form`
+selector you should use now the `.form` class instead. 
+
+### Removed symfony/security-acl dependency
+
+The following deprecated classes was removed:
+
+* `Sulu\Component\Security\Authorization\AccessControl\PermissionMap`
+* `Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlManager`
+
+Therefor the dependency `symfony/security-acl` was useless and removed.
+
 ## 1.5.0-RC1
 
 ### Media formats uniqueness

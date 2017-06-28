@@ -24,7 +24,7 @@ define([
     'text!./versions.html',
     'text!./preview.html',
     'text!./formats.html',
-    'text!./categories.html'
+    'text!./taxonomies.html'
 ], function(
     config,
     croppingSlide,
@@ -37,7 +37,7 @@ define([
     versionsTemplate,
     previewTemplate,
     formatsTemplate,
-    categoriesTemplate
+    taxonomiesTemplate
 ) {
 
     'use strict';
@@ -296,8 +296,8 @@ define([
 
             tabs.push(
                 {
-                    title: this.sandbox.translate('sulu.media.categories'),
-                    data: this.renderCategoriesTab()
+                    title: this.sandbox.translate('sulu.media.taxonomies'),
+                    data: this.renderTaxonomiesTab()
                 }
             );
 
@@ -460,11 +460,12 @@ define([
         /**
          * Renders the content for the categories tab
          */
-        renderCategoriesTab: function() {
-            return _.template(categoriesTemplate, {
+        renderTaxonomiesTab: function() {
+            return _.template(taxonomiesTemplate, {
                 categoryLocale: this.options.locale,
                 media: this.media,
-                translate: this.sandbox.translate
+                translate: this.sandbox.translate,
+                hasAudienceTargeting: config.has('sulu_audience_targeting')
             });
         },
 

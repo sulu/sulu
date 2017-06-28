@@ -1,0 +1,13 @@
+{
+    "name": "sulu/sulu-minimal",
+    "license": "MIT",
+    "type": "project",
+    "description": "The sulu content management framework",
+    "version": "1.2.3",
+    "autoload": {
+    },
+    "require": {
+    },
+    "require-dev": {
+    }
+}

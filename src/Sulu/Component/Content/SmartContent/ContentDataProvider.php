@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -23,6 +24,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
+use Sulu\Component\SmartContent\DataProviderAliasInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
@@ -30,7 +32,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 /**
  * DataProvider for content.
  */
-class ContentDataProvider implements DataProviderInterface
+class ContentDataProvider implements DataProviderInterface, DataProviderAliasInterface
 {
     /**
      * @var ContentQueryBuilderInterface
@@ -63,6 +65,11 @@ class ContentDataProvider implements DataProviderInterface
     private $session;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
      * @var bool
      */
     private $showDrafts;
@@ -73,6 +80,7 @@ class ContentDataProvider implements DataProviderInterface
         DocumentManagerInterface $documentManager,
         LazyLoadingValueHolderFactory $proxyFactory,
         SessionInterface $session,
+        ReferenceStoreInterface $referenceStore,
         $showDrafts
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
@@ -80,6 +88,7 @@ class ContentDataProvider implements DataProviderInterface
         $this->documentManager = $documentManager;
         $this->proxyFactory = $proxyFactory;
         $this->session = $session;
+        $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
     }
 
@@ -108,6 +117,7 @@ class ContentDataProvider implements DataProviderInterface
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableAudienceTargeting()
             ->enableDatasource(
                 'content-datasource@sulucontent',
                 [
@@ -193,18 +203,10 @@ class ContentDataProvider implements DataProviderInterface
             $page,
             $pageSize
         );
+
         $items = $this->decorateDataItems($items, $options['locale']);
 
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(
-                function (ContentDataItem $item) {
-                    return $item->getId();
-                },
-                $items
-            )
-        );
+        return new DataProviderResult($items, $hasNextPage);
     }
 
     /**
@@ -228,16 +230,7 @@ class ContentDataProvider implements DataProviderInterface
         );
         $items = $this->decorateResourceItems($items, $options['locale']);
 
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(
-                function (ArrayAccessItem $item) {
-                    return $item->getId();
-                },
-                $items
-            )
-        );
+        return new DataProviderResult($items, $hasNextPage);
     }
 
     /**
@@ -269,11 +262,18 @@ class ContentDataProvider implements DataProviderInterface
         $properties = array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
 
+        $excluded = $filters['excluded'];
+        if (array_key_exists('exclude_duplicates', $propertyParameter)
+            && $propertyParameter['exclude_duplicates']->getValue()
+        ) {
+            $excluded = array_merge($excluded, $this->referenceStore->getAll());
+        }
+
         $this->contentQueryBuilder->init(
             [
                 'config' => $filters,
                 'properties' => $properties,
-                'excluded' => $filters['excluded'],
+                'excluded' => $excluded,
                 'published' => !$this->showDrafts,
             ]
         );
@@ -374,6 +374,8 @@ class ContentDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
+                $this->referenceStore->add($item['uuid']);
+
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -405,5 +407,13 @@ class ContentDataProvider implements DataProviderInterface
                 return true;
             }
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlias()
+    {
+        return 'content';
     }
 }

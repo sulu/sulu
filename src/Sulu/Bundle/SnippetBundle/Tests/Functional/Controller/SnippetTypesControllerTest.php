@@ -101,16 +101,18 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals(null, $response['defaultTitle']);
 
         $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
+
         $response = json_decode($client->getResponse()->getContent(), true);
+        $responseAreas = $response['_embedded'];
 
         $this->assertEquals(2, $response['total']);
-        $this->assertEquals('car', $response['_embedded'][0]['template']);
-        $this->assertEquals('Car', $response['_embedded'][0]['title']);
-        $this->assertEquals(null, $response['_embedded'][0]['defaultTitle']);
-        $this->assertEquals(null, $response['_embedded'][0]['defaultUuid']);
-        $this->assertEquals('hotel', $response['_embedded'][1]['template']);
-        $this->assertEquals('Hotel', $response['_embedded'][1]['title']);
-        $this->assertEquals(null, $response['_embedded'][1]['defaultTitle']);
-        $this->assertEquals(null, $response['_embedded'][1]['defaultUuid']);
+        $this->assertEquals('car', $responseAreas[0]['template']);
+        $this->assertEquals('Car', $responseAreas[0]['title']);
+        $this->assertEquals(null, $responseAreas[0]['defaultTitle']);
+        $this->assertEquals(null, $responseAreas[0]['defaultUuid']);
+        $this->assertEquals('hotel', $responseAreas[1]['template']);
+        $this->assertEquals('Hotel', $responseAreas[1]['title']);
+        $this->assertEquals(null, $responseAreas[1]['defaultTitle']);
+        $this->assertEquals(null, $responseAreas[1]['defaultUuid']);
     }
 }

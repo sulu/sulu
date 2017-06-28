@@ -101,10 +101,12 @@ define([
             this.sandbox.dom.text('#changed', changedText);
         },
 
-        setAuthorChangelog = function(fullName, time) {
+        setAuthorChangelog = function(fullName, time, remove) {
             var authoredText, formattedTime = this.sandbox.date.format(time);
 
-            fullName = fullName || authorFullname;
+            if (!fullName && !remove) {
+                fullName = this.authorFullname;
+            }
 
             if (!!fullName) {
                 authorFullname = fullName;
@@ -116,6 +118,7 @@ define([
                     }
                 );
             } else {
+                this.authorFullname = null;
                 authoredText = this.sandbox.util.sprintf(
                     this.sandbox.translate('sulu.content.form.settings.changelog.authored-only'),
                     {
@@ -714,6 +717,7 @@ define([
                             el: $componentContainer,
                             locale: this.options.locale,
                             data: {author: this.data.author, authored: this.data.authored},
+                            nullableAuthor: !Config.get('sulu-content').defaultAuthor,
                             selectCallback: function(data) {
                                 this.setAuthor(data);
 
@@ -729,14 +733,14 @@ define([
             this.setHeaderBar(false);
 
             this.data.authored = data.authored;
+            this.data.author = data.author;
             if (!data.authorItem) {
-                setAuthorChangelog.call(this, null, new Date(data.authored));
+                setAuthorChangelog.call(this, null, new Date(data.authored), true);
 
                 return;
             }
 
             setAuthorChangelog.call(this, data.authorItem.firstName + ' ' + data.authorItem.lastName, new Date(data.authored));
-            this.data.author = data.author;
         }
     };
 });

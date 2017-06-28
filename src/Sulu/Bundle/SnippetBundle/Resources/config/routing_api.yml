@@ -6,6 +6,10 @@ sulu_snippet.snippet-types:
     type: rest
     resource: Sulu\Bundle\SnippetBundle\Controller\SnippetTypesController
 
+sulu_snippet.snippet-areas:
+    type: rest
+    resource: Sulu\Bundle\SnippetBundle\Controller\SnippetAreaController
+
 sulu_snippet.languages:
     type: rest
     resource: Sulu\Bundle\SnippetBundle\Controller\LanguageController

@@ -126,6 +126,7 @@
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
+            <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
         </service>
 
         <service id="sulu_media.type_manager" class="%sulu_media.type_manager.class%">
@@ -176,10 +177,6 @@
         </service>
 
         <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">
-            <argument>%sulu_media.disposition_type.default%</argument>
-            <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
-            <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>
-
             <tag name="twig.extension"/>
         </service>
 
@@ -258,9 +255,14 @@
         <service id="sulu_media.markup" class="Sulu\Bundle\MediaBundle\Markup\MediaTag">
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu_markup.tag" tag="media" type="html"/>
+        </service>
+
+        <service id="sulu_media.disposition_type.resolver" class="Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver">
+            <argument>%sulu_media.disposition_type.default%</argument>
+            <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
+            <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>
         </service>
     </services>
 </container>

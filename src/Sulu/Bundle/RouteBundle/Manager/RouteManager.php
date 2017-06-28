@@ -12,9 +12,10 @@
 namespace Sulu\Bundle\RouteBundle\Manager;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
-use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
+use Sulu\Bundle\RouteBundle\Exception\RouteIsNotUniqueException;
+use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
+use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
 /**
  * Manages routes.
@@ -22,19 +23,9 @@ use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 class RouteManager implements RouteManagerInterface
 {
     /**
-     * @var array
+     * @var ChainRouteGeneratorInterface
      */
-    private $mappings;
-
-    /**
-     * @var RouteGeneratorInterface
-     */
-    private $routeGenerators;
-
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
+    private $chainRouteGenerator;
 
     /**
      * @var ConflictResolverInterface
@@ -42,116 +33,78 @@ class RouteManager implements RouteManagerInterface
     private $conflictResolver;
 
     /**
-     * @param RouteGeneratorInterface[] $routeGenerators
-     * @param RouteRepositoryInterface $routeRepository
+     * @var RouteRepositoryInterface
+     */
+    private $routeRepository;
+
+    /**
+     * @param ChainRouteGeneratorInterface $chainRouteGenerator
      * @param ConflictResolverInterface $conflictResolver
-     * @param array $mappings
+     * @param RouteRepositoryInterface $routeRepository
      */
     public function __construct(
-        array $routeGenerators,
-        RouteRepositoryInterface $routeRepository,
+        ChainRouteGeneratorInterface $chainRouteGenerator,
         ConflictResolverInterface $conflictResolver,
-        array $mappings
+        RouteRepositoryInterface $routeRepository
     ) {
-        $this->routeGenerators = $routeGenerators;
-        $this->routeRepository = $routeRepository;
+        $this->chainRouteGenerator = $chainRouteGenerator;
         $this->conflictResolver = $conflictResolver;
-        $this->mappings = $mappings;
+        $this->routeRepository = $routeRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create(RoutableInterface $entity, $path = null)
+    public function create(RoutableInterface $entity, $path = null, $resolveConflict = true)
     {
         if (null !== $entity->getRoute()) {
             throw new RouteAlreadyCreatedException($entity);
         }
 
-        $config = $this->getClassMappingConfiguration(get_class($entity));
-
-        if (null === $path) {
-            $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
+        $route = $this->chainRouteGenerator->generate($entity, $path);
+        if ($resolveConflict) {
+            $route = $this->conflictResolver->resolve($route);
+        } elseif (!$this->isUnique($route)) {
+            throw new RouteIsNotUniqueException($route, $entity);
         }
 
-        $route = $this->routeRepository->createNew()
-            ->setPath($path)
-            ->setEntityClass(get_class($entity))
-            ->setEntityId($entity->getId())
-            ->setLocale($entity->getLocale());
-
-        $route = $this->conflictResolver->resolve($route);
         $entity->setRoute($route);
 
         return $route;
     }
 
     /**
-     * Get class mapping configuration by class name or inheritance chain.
-     *
-     * @param string $className
-     *
-     * @return array
-     *
-     * @throws MissingClassMappingConfigurationException
-     */
-    protected function getClassMappingConfiguration($className)
-    {
-        if (array_key_exists($className, $this->mappings)) {
-            return $this->mappings[$className];
-        }
-
-        $reflection = new \ReflectionClass($className);
-        while ($reflection = $reflection->getParentClass()) {
-            if (array_key_exists($reflection->getName(), $this->mappings)) {
-                return $this->mappings[$reflection->getName()];
-            }
-        }
-
-        throw new MissingClassMappingConfigurationException($className, array_keys($this->mappings));
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function update(RoutableInterface $entity, $path = null)
+    public function update(RoutableInterface $entity, $path = null, $resolveConflict = true)
     {
         if (null === $entity->getRoute()) {
             throw new RouteNotCreatedException($entity);
         }
 
-        $config = $this->getClassMappingConfiguration(get_class($entity));
-
-        if (null === $path) {
-            $path = $this->routeGenerators[$config['generator']]->generate($entity, $config['options']);
-        }
-
-        if ($path === $entity->getRoute()->getPath()) {
+        $route = $this->chainRouteGenerator->generate($entity, $path);
+        if ($route->getPath() === $entity->getRoute()->getPath()) {
             return $entity->getRoute();
         }
 
-        $route = $this->routeRepository->createNew()
-            ->setPath($path)
-            ->setEntityClass(get_class($entity))
-            ->setEntityId($entity->getId())
-            ->setLocale($entity->getLocale());
-        $route = $this->conflictResolver->resolve($route);
+        if ($resolveConflict) {
+            $route = $this->conflictResolver->resolve($route);
+        } else {
+            $route = $this->resolve($route, $entity);
+        }
 
         // path haven't changed after conflict resolving
         if ($route->getPath() === $entity->getRoute()->getPath()) {
             return $entity->getRoute();
         }
 
-        $historyRoute = $entity->getRoute()
-            ->setHistory(true)
-            ->setTarget($route);
+        $historyRoute = $entity->getRoute()->setHistory(true)->setTarget($route);
         $route->addHistory($historyRoute);
 
         foreach ($historyRoute->getHistories() as $historyRoute) {
             if ($historyRoute->getPath() === $route->getPath()) {
                 // the history route will be restored
-                $historyRoute->removeTarget()
-                    ->setHistory(false);
+                $historyRoute->removeTarget()->setHistory(false);
 
                 continue;
             }
@@ -163,5 +116,49 @@ class RouteManager implements RouteManagerInterface
         $entity->setRoute($route);
 
         return $route;
+    }
+
+    /**
+     * Returns true if route is unique.
+     *
+     * @param RouteInterface $route
+     *
+     * @return bool
+     */
+    private function isUnique(RouteInterface $route)
+    {
+        $persistedRoute = $this->routeRepository->findByPath($route->getPath(), $route->getLocale());
+
+        return !$persistedRoute;
+    }
+
+    /**
+     * Looks for the same route in the database.
+     * If no route was found the method returns the newly created route.
+     * If the route is a history route for given entity the history route will be returned.
+     * Else a RouteIsNotUniqueException will be thrown.
+     *
+     * @param RouteInterface $route
+     * @param RoutableInterface $entity
+     *
+     * @return RouteInterface
+     *
+     * @throws RouteIsNotUniqueException
+     */
+    private function resolve(RouteInterface $route, RoutableInterface $entity)
+    {
+        $persistedRoute = $this->routeRepository->findByPath($route->getPath(), $route->getLocale());
+
+        if (!$persistedRoute) {
+            return $route;
+        }
+
+        if ($persistedRoute->getEntityClass() === $route->getEntityClass()
+            && $persistedRoute->getEntityId() === $route->getEntityId()
+        ) {
+            return $persistedRoute;
+        }
+
+        throw new RouteIsNotUniqueException($route, $entity);
     }
 }

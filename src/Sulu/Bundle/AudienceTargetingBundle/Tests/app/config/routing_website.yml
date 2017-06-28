@@ -1,0 +1,11 @@
+sulu_category_api:
+    path: "/"
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        _requestAnalyzer: false
+        template: "::empty.html.twig"
+        maxAge: 60
+        sharedAge: 60
+
+sulu_audience_targeting:
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_website.xml"

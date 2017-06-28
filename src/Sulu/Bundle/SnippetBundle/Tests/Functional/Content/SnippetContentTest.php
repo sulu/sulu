@@ -17,11 +17,11 @@ use Prophecy\Argument;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 class SnippetContentTest extends BaseFunctionalTestCase
@@ -47,7 +47,12 @@ class SnippetContentTest extends BaseFunctionalTestCase
     protected $structureResolver;
 
     /**
-     * @var ContentTypeInterface
+     * @var ReferenceStoreInterface
+     */
+    protected $referenceStore;
+
+    /**
+     * @var SnippetContent
      */
     protected $contentType;
 
@@ -68,9 +73,11 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
 
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
+        $this->referenceStore = $this->getContainer()->get('sulu_snippet.reference_store.snippet');
         $this->contentType = new SnippetContent(
             $this->defaultSnippetManager->reveal(),
             $this->getContainer()->get('sulu_snippet.resolver'),
+            $this->referenceStore,
             true,
             'SomeTemplate.html.twig'
         );
@@ -150,12 +157,14 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
 
-    public function testGetReferencedUuids()
+    public function testPreResolve()
     {
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
         $property = $pageStructure->getProperty('hotels');
-        $uuids = $this->contentType->getReferencedUuids($property);
+        $this->contentType->preResolve($property);
+
+        $uuids = $this->referenceStore->getAll();
         $this->assertCount(2, $uuids);
         foreach ($uuids as $uuid) {
             $this->assertTrue(UUIDHelper::isUuid($uuid));
@@ -232,6 +241,31 @@ class SnippetContentTest extends BaseFunctionalTestCase
         );
 
         $this->defaultSnippetManager->loadIdentifier('sulu_io', 'test')->shouldBeCalledTimes(1)->willReturn(
+            $this->hotel1->getUuid()
+        );
+
+        $data = $this->contentType->getContentData($property->reveal());
+        $this->assertCount(1, $data);
+    }
+
+    public function testGetContentDataDefaultZone()
+    {
+        $structure = $this->prophesize(PageBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getIsShadow()->willReturn(false);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn([]);
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getParams()->willReturn(
+            [
+                'snippetType' => new PropertyParameter('snippetType', 'test'),
+                'default' => new PropertyParameter('default', 'sidebar.homepage'),
+            ]
+        );
+
+        $this->defaultSnippetManager->loadIdentifier('sulu_io', 'sidebar.homepage')->shouldBeCalledTimes(1)->willReturn(
             $this->hotel1->getUuid()
         );
 

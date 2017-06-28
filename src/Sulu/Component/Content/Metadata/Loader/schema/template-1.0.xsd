@@ -29,6 +29,7 @@
             <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
             <xs:element type="xs:string" name="internal" minOccurs="0" maxOccurs="1"/>
             <xs:element type="cacheLifetimeType" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="areasType" name="areas"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="meta">
@@ -50,6 +51,24 @@
             <xs:element type="langType" name="placeholder"/>
         </xs:choice>
         <xs:attributeGroup ref="defaultAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="areasType">
+        <xs:sequence>
+            <xs:element type="areaContextType" name="area" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="areaContextType">
+        <xs:sequence>
+            <xs:element name="meta">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element type="langType" name="title"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="langType">
@@ -100,6 +119,13 @@
 
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="type" use="required"/>
+        <xs:attribute name="onInvalid" use="optional">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="ignore"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
         <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>

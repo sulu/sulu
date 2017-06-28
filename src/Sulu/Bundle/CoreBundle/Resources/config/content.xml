@@ -180,6 +180,7 @@
                 <argument key="route">%sulu.content.node_names.route%</argument>
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
+            <argument type="service" id="sulu_content.structure.factory"/>
         </service>
 
         <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder">

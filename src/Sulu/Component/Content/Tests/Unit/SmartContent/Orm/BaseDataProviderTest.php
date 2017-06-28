@@ -265,7 +265,6 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $this->assertEquals($hasNextPage, $result->getHasNextPage());
         $this->assertEquals($items, $result->getItems());
-        $this->assertEquals([], $result->getReferencedUuids());
     }
 
     /**
@@ -324,7 +323,6 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $this->assertEquals($hasNextPage, $result->getHasNextPage());
-        $this->assertEquals([], $result->getReferencedUuids());
         $this->assertCount(count($items), $result->getItems());
 
         for ($i = 0, $len = count($items); $i < $len; ++$i) {

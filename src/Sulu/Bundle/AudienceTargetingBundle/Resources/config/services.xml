@@ -1,0 +1,139 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!--ADMIN-->
+        <service id="sulu_audience_targeting.admin"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument>%sulu_admin.name%</argument>
+
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="sulu_audience_targeting.admin.content_navigation_provider"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Admin\TargetGroupContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="target-group"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <!--SERIALIZER-->
+        <service id="sulu_audience_targeting.serializer.target_group_subscriber"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupSerializeSubscriber">
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="sulu_audience_targeting.serializer.target_group_rule_serializer"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupRuleSerializeSubscriber">
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <!--REQUEST-->
+        <service id="sulu_audience_targeting.request_processor.forwarded_url"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Request\ForwardedUrlRequestProcessor">
+            <argument>%sulu_audience_targeting.headers.url%</argument>
+            <tag name="sulu.request_attributes" priority="96"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="sulu_audience_targeting.device_detector" class="DeviceDetector\DeviceDetector"/>
+        <service id="sulu_audience_targeting.device_detector_subscriber"
+                 class="Sulu\Bundle\AudienceTargetingBundle\EventListener\DeviceDetectorSubscriber">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <tag name="sulu.context" context="website" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+        <!--RULES-->
+        <service id="sulu_audience_targeting.target_group_evaluator"
+                 class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator">
+            <argument type="service" id="sulu_audience_targeting.rules_collection"/>
+            <argument type="service" id="sulu.repository.target_group"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+        <service id="sulu_audience_targeting.rules_collection"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollection">
+            <argument type="collection"></argument>
+        </service>
+        <service id="sulu_audience_targeting.rules.locale"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\LocaleRule">
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="locale"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.referrer"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\ReferrerRule">
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
+            <argument>%sulu_audience_targeting.hit.headers.referrer%</argument>
+            <tag name="sulu.audience_target_rule" alias="referrer"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.query_string"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\QueryStringRule">
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
+            <argument>%sulu_audience_targeting.headers.url%</argument>
+            <tag name="sulu.audience_target_rule" alias="query_string"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.browser"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\BrowserRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="browser"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.os"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="os"/>
+        </service>
+        <service id="sulu_audience_targeting.rules.device"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Rule\DeviceTypeRule">
+            <argument type="service" id="sulu_audience_targeting.device_detector"/>
+            <argument type="service" id="translator"/>
+            <tag name="sulu.audience_target_rule" alias="device"/>
+        </service>
+        <!--CONTENT TYPES-->
+        <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups">
+            <tag name="sulu.content.type" alias="audience_targeting_groups"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+            <argument type="service" id="sulu.repository.target_group"/>
+        </service>
+        <!--JS CONFIG-->
+        <service id="sulu_audience_targeting.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+            <argument>sulu_audience_targeting</argument>
+            <argument type="collection">
+                <argument key="frequencies">%sulu_audience_targeting.frequencies%</argument>
+            </argument>
+            <tag name="sulu.js_config"/>
+        </service>
+        <!--TARGET GROUPS-->
+        <service id="sulu_audience_targeting.target_group_evaluation_controller"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController">
+            <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
+            <argument type="service" id="sulu.repository.target_group"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
+            <argument>%sulu_audience_targeting.headers.target_group%</argument>
+        </service>
+        <service id="sulu_audience_targeting.target_group_subscriber"
+                 class="Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber">
+            <argument type="service" id="twig"/>
+            <argument type="expression">container.hasParameter('sulu.preview') ? parameter('sulu.preview') : false</argument>
+            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
+            <argument type="service" id="sulu.repository.target_group"/>
+            <argument>%sulu_audience_targeting.url%</argument>
+            <argument>%sulu_audience_targeting.hit.url%</argument>
+            <argument>%sulu_audience_targeting.headers.url%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.referrer%</argument>
+            <argument>%sulu_audience_targeting.hit.headers.uuid%</argument>
+            <argument>%sulu_audience_targeting.headers.target_group%</argument>
+            <argument>%sulu_audience_targeting.cookies.target_group%</argument>
+            <argument>%sulu_audience_targeting.cookies.session%</argument>
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="website" />
+        </service>
+        <service id="sulu_audience_targeting.target_group_store"
+                 class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore">
+        </service>
+    </services>
+</container>

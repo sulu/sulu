@@ -25,6 +25,8 @@ use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 
 class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -45,6 +47,11 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
     private $propertyEncoder;
 
     /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
      * @var PublishSubscriber
      */
     private $publishSubscriber;
@@ -59,11 +66,13 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->liveSession = $this->prophesize(SessionInterface::class);
         $this->nodeHelper = $this->prophesize(NodeHelperInterface::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
+        $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
 
         $this->publishSubscriber = new PublishSubscriber(
             $this->liveSession->reveal(),
             $this->nodeHelper->reveal(),
-            $this->propertyEncoder->reveal()
+            $this->propertyEncoder->reveal(),
+            $this->metadataFactory->reveal()
         );
 
         $this->node = $this->prophesize(NodeInterface::class);
@@ -171,8 +180,13 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveNodeFromPublicWorkspace()
     {
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getSyncRemoveLive()->willReturn(true);
+
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu');
+
+        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($metadata->reveal());
 
         $event = $this->prophesize(RemoveEvent::class);
         $event->getDocument()->willReturn($document->reveal());
@@ -180,6 +194,23 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->liveSession->getNode('/cmf/sulu')->willReturn($this->node->reveal());
 
         $this->node->remove()->shouldBeCalled();
+
+        $this->publishSubscriber->removeNodeFromPublicWorkspace($event->reveal());
+    }
+
+    public function testRemoveNodeFromPublicWorkspaceMetadata()
+    {
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getSyncRemoveLive()->willReturn(false);
+
+        $document = $this->prophesize(PathBehavior::class);
+
+        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($metadata->reveal());
+
+        $event = $this->prophesize(RemoveEvent::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->liveSession->getNode(Argument::any())->shouldNotBeCalled();
 
         $this->publishSubscriber->removeNodeFromPublicWorkspace($event->reveal());
     }

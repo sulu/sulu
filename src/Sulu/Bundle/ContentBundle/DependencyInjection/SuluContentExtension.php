@@ -17,6 +17,7 @@ use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType;
 use Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -85,7 +86,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 [
                     'exception' => [
                         'codes' => [
-                            'Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException' => 409,
+                            ResourceLocatorAlreadyExistsException::class => 409,
                         ],
                     ],
                 ]
@@ -155,6 +156,14 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         if (array_key_exists('SuluAutomationBundle', $bundles)) {
             $loader->load('automation.xml');
         }
+
+        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+            $loader->load('rule.xml');
+        }
+
+        $this->appendDefaultAuthor($config, $container);
+
+        $container->setParameter('sulu_content.seo', $config['seo']);
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
@@ -221,5 +230,39 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     {
         $container->setParameter('sulu_content.search.mapping', $config['search']['mapping']);
         $loader->load('search.xml');
+    }
+
+    /**
+     * Append configuration for article "set_default_author".
+     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     */
+    private function appendDefaultAuthor(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('sulu_content.default_author', $config['default_author']);
+        if (!$container->hasParameter('sulu_document_manager.mapping')) {
+            $container->prependExtensionConfig(
+                'sulu_document_manager',
+                [
+                    'mapping' => [
+                        'page' => ['set_default_author' => $config['default_author']],
+                        'home' => ['set_default_author' => $config['default_author']],
+                    ],
+                ]
+            );
+
+            return;
+        }
+
+        $mapping = $container->getParameter('sulu_document_manager.mapping');
+
+        foreach ($mapping as $key => $item) {
+            if ($item['alias'] === 'page' || $item['alias'] === 'home') {
+                $mapping[$key]['set_default_author'] = $config['default_author'];
+            }
+        }
+
+        $container->setParameter('sulu_document_manager.mapping', $mapping);
     }
 }

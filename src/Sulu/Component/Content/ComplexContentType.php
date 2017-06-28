@@ -75,12 +75,4 @@ abstract class ComplexContentType implements ContentTypeInterface
     {
         return $property->getValue();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        return [];
-    }
 }

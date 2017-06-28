@@ -167,6 +167,7 @@ class WebspaceTest extends SuluTestCase
                     'tags' => [],
                     'icon' => '',
                     'images' => '',
+                    'audience_targeting_groups' => [],
                 ],
             ],
             [
@@ -178,6 +179,7 @@ class WebspaceTest extends SuluTestCase
                     'noIndex' => '1',
                     'noFollow' => '0',
                     'hideInSitemap' => '1',
+                    'audience_targeting_groups' => [],
                 ],
                 'excerpt' => [
                     'title' => 'Excerpt Test2',
@@ -187,6 +189,7 @@ class WebspaceTest extends SuluTestCase
                     'tags' => [],
                     'icon' => '',
                     'images' => '',
+                    'audience_targeting_groups' => [],
                 ],
             ],
         ];
@@ -348,6 +351,12 @@ class WebspaceTest extends SuluTestCase
                         'media_selection',
                         false,
                         $extensionData['excerpt']['icon']
+                    ),
+                    'audience_targeting_groups' => $this->createItemArray(
+                        'audience_targeting_groups',
+                        'audience_targeting_groups',
+                        false,
+                        $extensionData['excerpt']['audience_targeting_groups']
                     ),
                 ],
             ];

@@ -25,6 +25,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -48,14 +49,21 @@ class PublishSubscriber implements EventSubscriberInterface
      */
     private $propertyEncoder;
 
+    /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
     public function __construct(
         SessionInterface $liveSession,
         NodeHelperInterface $nodeHelper,
-        PropertyEncoder $propertyEncoder
+        PropertyEncoder $propertyEncoder,
+        MetadataFactoryInterface $metadataFactory
     ) {
         $this->liveSession = $liveSession;
         $this->nodeHelper = $nodeHelper;
         $this->propertyEncoder = $propertyEncoder;
+        $this->metadataFactory = $metadataFactory;
     }
 
     /**
@@ -111,7 +119,13 @@ class PublishSubscriber implements EventSubscriberInterface
      */
     public function removeNodeFromPublicWorkspace(RemoveEvent $event)
     {
-        $this->getLiveNode($event->getDocument())->remove();
+        $document = $event->getDocument();
+        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+        if (!$metadata->getSyncRemoveLive()) {
+            return;
+        }
+
+        $this->getLiveNode($document)->remove();
     }
 
     /**

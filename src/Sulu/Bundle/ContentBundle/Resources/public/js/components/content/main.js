@@ -16,8 +16,9 @@ define([
     'sulucontent/components/copy-locale-overlay/main',
     'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/user-manager',
-    'sulusecurity/services/security-checker'
-], function(config, Preview, Content, ContentManager, UserSettings, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
+    'sulusecurity/services/security-checker',
+    'services/sulucontent/smart-content-manager'
+], function(config, Preview, Content, ContentManager, UserSettings, CopyLocale, OpenGhost, UserManager, SecurityChecker, SmartContentManager) {
 
     'use strict';
 
@@ -90,6 +91,8 @@ define([
     return {
 
         initialize: function() {
+            SmartContentManager.initialize();
+
             this.saved = true;
 
             if (this.options.display === 'column') {

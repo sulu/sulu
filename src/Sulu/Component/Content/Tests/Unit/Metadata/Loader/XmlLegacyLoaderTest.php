@@ -19,7 +19,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function templateDataProvider()
     {
-        return [['page'], ['home'], ['article']];
+        return [['page'], ['home'], ['article'], ['snippet']];
     }
 
     /**
@@ -45,6 +45,20 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                 'title' => [
                     'de' => 'Das ist das Template 1',
                     'en' => 'That´s the template 1',
+                ],
+            ],
+            'areas' => [
+                [
+                    'key' => 'test',
+                    'title' => [
+                        'de' => 'Test DE',
+                    ],
+                ],
+                [
+                    'key' => 'hotel',
+                    'title' => [
+                        'en' => 'Hotel EN',
+                    ],
                 ],
             ],
             'properties' => [
@@ -88,6 +102,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'en' => 'Placeholder-Info-EN',
                         ],
                     ],
+                    'onInvalid' => null,
                 ],
                 'url' => [
                     'name' => 'url',
@@ -107,6 +122,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'article' => [
                     'name' => 'article',
@@ -126,6 +142,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'pages' => [
                     'name' => 'pages',
@@ -145,6 +162,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'article_number' => [
                     'name' => 'article_number',
@@ -158,6 +176,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'tags' => [],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'images' => [
                     'name' => 'images',
@@ -245,14 +264,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
         ];
 
         $result = $this->loadFixture('template.xml', $type);
         $this->assertEquals($template, $result);
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
     }
 
     public function testReadTitleInSection()
@@ -262,6 +280,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title_section' => [
                     'name' => 'title_section',
@@ -283,6 +302,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'tags' => [],
                             'params' => [],
                             'meta' => [],
+                            'onInvalid' => null,
                         ],
                     ],
                 ],
@@ -304,6 +324,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
             'tags' => [],
@@ -313,8 +334,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $result = $this->loadFixture('template_title_in_section.xml');
 
         $this->assertEquals($template, $result);
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
     }
 
     /**
@@ -335,6 +354,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'properties' => [],
             'tags' => [],
             'meta' => [],
+            'areas' => [],
         ];
 
         $this->setExpectedException(
@@ -360,6 +380,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 4800],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -379,6 +400,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'url' => [
                     'name' => 'url',
@@ -398,6 +420,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'article' => [
                     'name' => 'article',
@@ -411,6 +434,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'tags' => [],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'block1' => [
                     'name' => 'block1',
@@ -452,6 +476,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                                 'article1.1' => [
                                     'name' => 'article1.1',
@@ -465,6 +490,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                                 'block1.1' => [
                                     'name' => 'block1.1',
@@ -518,6 +544,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     ],
                                                                     'params' => [],
                                                                     'meta' => [],
+                                                                    'onInvalid' => null,
                                                                 ],
                                                                 'article2.1.2' => [
                                                                     'name' => 'article2.1.2',
@@ -531,6 +558,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     'tags' => [],
                                                                     'params' => [],
                                                                     'meta' => [],
+                                                                    'onInvalid' => null,
                                                                 ],
                                                                 'block1.1.3' => [
                                                                     'name' => 'block1.1.3',
@@ -561,6 +589,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                                     'tags' => [],
                                                                                     'params' => [],
                                                                                     'meta' => [],
+                                                                                    'onInvalid' => null,
                                                                                 ],
                                                                             ],
                                                                         ],
@@ -599,6 +628,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                                                     'tags' => [],
                                                                     'params' => [],
                                                                     'meta' => [],
+                                                                    'onInvalid' => null,
                                                                 ],
                                                             ],
                                                         ],
@@ -624,6 +654,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'tags' => [],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
             'tags' => [],
@@ -632,8 +663,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->loadFixture('template_block.xml');
         $this->assertEquals($template, $result);
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
     }
 
     public function testBlockMultipleTypes()
@@ -643,6 +672,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 4800],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -662,6 +692,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'url' => [
                     'name' => 'url',
@@ -681,6 +712,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'block1' => [
                     'name' => 'block1',
@@ -748,11 +780,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                                 'article' => [
                                     'name' => 'article',
                                     'type' => 'text_area',
-                                    'minOccurs' => 2,
+                                    'minOccurs' => '2',
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
@@ -761,6 +794,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                             ],
                         ],
@@ -793,11 +827,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                                 'name' => [
                                     'name' => 'name',
                                     'type' => 'text_line',
-                                    'minOccurs' => 2,
+                                    'minOccurs' => '2',
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
@@ -806,11 +841,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                                 'article' => [
                                     'name' => 'article',
                                     'type' => 'text_editor',
-                                    'minOccurs' => 2,
+                                    'minOccurs' => '2',
                                     'maxOccurs' => null,
                                     'colspan' => null,
                                     'cssClass' => null,
@@ -819,6 +855,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                     'tags' => [],
                                     'params' => [],
                                     'meta' => [],
+                                    'onInvalid' => null,
                                 ],
                             ],
                         ],
@@ -836,6 +873,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'tags' => [],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
             'tags' => [],
@@ -844,8 +882,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->loadFixture('template_block_types.xml');
         $this->assertEquals($template, $result);
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
     }
 
     public function testSections()
@@ -855,6 +891,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -887,6 +924,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'en' => 'Placeholder-Info-EN',
                         ],
                     ],
+                    'onInvalid' => null,
                 ],
                 'test' => [
                     'name' => 'test',
@@ -923,6 +961,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             ],
                             'params' => [],
                             'meta' => [],
+                            'onInvalid' => null,
                         ],
                         'article' => [
                             'name' => 'article',
@@ -942,6 +981,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             ],
                             'params' => [],
                             'meta' => [],
+                            'onInvalid' => null,
                         ],
                         'block' => [
                             'name' => 'block',
@@ -981,6 +1021,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                                             'tags' => [],
                                             'params' => [],
                                             'meta' => [],
+                                            'onInvalid' => null,
                                         ],
                                     ],
                                 ],
@@ -1006,13 +1047,14 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'images' => [
                     'name' => 'images',
                     'type' => 'image_selection',
-                    'minOccurs' => 0,
-                    'maxOccurs' => 2,
-                    'colspan' => 6,
+                    'minOccurs' => '0',
+                    'maxOccurs' => '2',
+                    'colspan' => '6',
                     'cssClass' => null,
                     'mandatory' => false,
                     'multilingual' => true,
@@ -1032,6 +1074,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
             'tags' => [],
@@ -1039,8 +1082,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $result = $this->loadFixture('template_sections.xml');
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
+        $this->assertEquals($template, $result);
     }
 
     public function testReservedName()
@@ -1059,6 +1101,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1086,6 +1129,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'url' => [
                     'name' => 'url',
@@ -1105,6 +1149,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
             'tags' => [],
@@ -1113,8 +1158,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->loadFixture('template_nesting_params.xml');
 
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
         $this->assertEquals($template, $result);
     }
 
@@ -1125,6 +1168,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
+            'areas' => [],
             'properties' => [
                 'title' => [
                     'name' => 'title',
@@ -1147,6 +1191,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'url' => [
                     'name' => 'url',
@@ -1166,6 +1211,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
             'tags' => [],
@@ -1310,6 +1356,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 2400],
             'tags' => [],
+            'areas' => [],
             'meta' => [
                 'title' => [
                     'de' => 'Das ist das Template 1',
@@ -1329,6 +1376,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'tags' => [],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
                 'url' => [
                     'name' => 'url',
@@ -1348,14 +1396,13 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'params' => [],
                     'meta' => [],
+                    'onInvalid' => null,
                 ],
             ],
         ];
 
         $result = $this->loadFixture('template_with_xinclude.xml');
         $this->assertEquals($template, $result);
-        $x = $this->arrayRecursiveDiff($result, $template);
-        $this->assertEquals(0, count($x));
     }
 
     public function testLoadCacheLifetimeExpression()
@@ -1391,30 +1438,6 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             ),
             'page'
         );
-    }
-
-    private function arrayRecursiveDiff($aArray1, $aArray2)
-    {
-        $aReturn = [];
-
-        foreach ($aArray1 as $mKey => $mValue) {
-            if (array_key_exists($mKey, $aArray2)) {
-                if (is_array($mValue)) {
-                    $aRecursiveDiff = $this->arrayRecursiveDiff($mValue, $aArray2[$mKey]);
-                    if (count($aRecursiveDiff)) {
-                        $aReturn[$mKey] = $aRecursiveDiff;
-                    }
-                } else {
-                    if ($mValue != $aArray2[$mKey]) {
-                        $aReturn[$mKey] = $mValue;
-                    }
-                }
-            } else {
-                $aReturn[$mKey] = $mValue;
-            }
-        }
-
-        return $aReturn;
     }
 
     private function loadFixture($name, $type = 'page')

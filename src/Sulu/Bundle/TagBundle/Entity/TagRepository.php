@@ -11,18 +11,14 @@
 
 namespace Sulu\Bundle\TagBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 class TagRepository extends EntityRepository implements TagRepositoryInterface
 {
     /**
-     * Finds the tag with the given ID.
-     *
-     * @param $id
-     *
-     * @return Tag
+     * {@inheritdoc}
      */
     public function findTagById($id)
     {
@@ -33,20 +29,14 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         $query->setParameter('id', $id);
 
         try {
-            $tag = $query->getSingleResult();
-
-            return $tag;
+            return $query->getSingleResult();
         } catch (NoResultException $nre) {
             return;
         }
     }
 
     /**
-     * Finds the tag with the given name.
-     *
-     * @param string $name
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function findTagByName($name)
     {
@@ -57,31 +47,17 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         $query->setParameter('name', $name);
 
         try {
-            $tag = $query->getSingleResult();
-
-            return $tag;
+            return $query->getSingleResult();
         } catch (NoResultException $nre) {
             return;
         }
     }
 
     /**
-     * Searches for all roles.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function findAllTags()
     {
-        try {
-            $qb = $this->createQueryBuilder('t');
-
-            $query = $qb->getQuery();
-
-            $result = $query->getResult();
-
-            return $result;
-        } catch (NoResultException $ex) {
-            return;
-        }
+        return $this->findAll();
     }
 }

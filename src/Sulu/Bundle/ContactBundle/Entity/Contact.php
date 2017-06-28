@@ -22,7 +22,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -122,6 +122,12 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      * @Groups({"fullContact"})
      */
     protected $faxes;
+
+    /**
+     * @var Collection
+     * @Groups({"fullContact"})
+     */
+    protected $socialMediaProfiles;
 
     /**
      * @var int
@@ -241,6 +247,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->addresses = new ArrayCollection();
         $this->phones = new ArrayCollection();
         $this->faxes = new ArrayCollection();
+        $this->socialMediaProfiles = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->accountContacts = new ArrayCollection();
@@ -595,6 +602,32 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    {
+        $this->socialMediaProfiles[] = $socialMediaProfile;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    {
+        $this->socialMediaProfiles->removeElement($socialMediaProfile);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSocialMediaProfiles()
+    {
+        return $this->socialMediaProfiles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addUrl(Url $url)
     {
         $this->urls[] = $url;
@@ -657,7 +690,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function addTag(Tag $tag)
+    public function addTag(TagInterface $tag)
     {
         $this->tags[] = $tag;
 
@@ -667,7 +700,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeTag(Tag $tag)
+    public function removeTag(TagInterface $tag)
     {
         $this->tags->removeElement($tag);
     }

@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
@@ -37,28 +40,94 @@ class SnippetDocument implements
     WorkflowStageBehavior,
     UuidBehavior,
     PathBehavior,
-    LocalizedTitleBehavior
+    LocalizedTitleBehavior,
+    ExtensionBehavior
 {
+    /**
+     * @var \DateTime
+     */
     private $created;
+
+    /**
+     * @var \DateTime
+     */
     private $changed;
+
+    /**
+     * @var int
+     */
     private $creator;
+
+    /**
+     * @var int
+     */
     private $changer;
+
+    /**
+     * @var object
+     */
     private $parent;
+
+    /**
+     * @var string
+     */
     private $title;
+
+    /**
+     * @var int
+     */
     private $workflowStage;
+
+    /**
+     * @var \DateTime
+     */
     private $published;
+
+    /**
+     * @var string
+     */
     private $uuid;
+
+    /**
+     * @var string
+     */
     private $structureType;
+
+    /**
+     * @var StructureInterface
+     */
     private $structure;
+
+    /**
+     * @var string
+     */
     private $locale;
+
+    /**
+     * @var string
+     */
     private $originalLocale;
+
+    /**
+     * @var string
+     */
     private $path;
+
+    /**
+     * @var string
+     */
     private $nodeName;
+
+    /**
+     * @var ExtensionContainer
+     */
+    private $extensions;
 
     public function __construct()
     {
         $this->workflowStage = WorkflowStage::TEST;
         $this->structure = new Structure();
+        $this->extensions = new ExtensionContainer();
     }
 
     /**
@@ -227,5 +296,29 @@ class SnippetDocument implements
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionsData()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExtensionsData($extensions)
+    {
+        $this->extensions = $extensions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExtension($name, $data)
+    {
+        $this->extensions[$name] = $data;
     }
 }

@@ -32,5 +32,14 @@ class SuluWebsiteBundle extends Bundle
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass('sulu_website.sitemap.pool', 'sulu.sitemap.provider', 0, 'alias')
         );
+
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass(
+                'sulu_website.reference_store_pool',
+                'sulu_website.reference_store',
+                0,
+                'alias'
+            )
+        );
     }
 }

@@ -304,11 +304,11 @@
             </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
                 <source>sulu.content.seo.title.note</source>
-                <target>Der Meta-Title ist auf 55 Zeichen limitiert.</target>
+                <target>Der Meta-Title ist auf %s Zeichen limitiert.</target>
             </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>
-                <target>Die Meta-Beschreibung ist auf 155 Zeichen limitiert.</target>
+                <target>Die Meta-Beschreibung ist auf %s Zeichen limitiert.</target>
             </trans-unit>
             <trans-unit id="e50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.characters-left">
                 <source>sulu.content.seo.characters-left</source>
@@ -316,7 +316,7 @@
             </trans-unit>
             <trans-unit id="b50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords.note">
                 <source>sulu.content.seo.keywords.note</source>
-                <target>Bitte benutze max. 5 Keywords, abhängig vom Inhalt der Seite, getrennt durch Kommas.</target>
+                <target>Bitte benutze max. %s Keywords, abhängig vom Inhalt der Seite, getrennt durch Kommas.</target>
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
                 <source>sulu.content.seo.keywords-left</source>
@@ -846,6 +846,14 @@
             <trans-unit id="80" resname="sulu.content.form.settings.authored">
                  <source>sulu.content.form.settings.authored</source>
                  <target>Verfasst am</target>
+             </trans-unit>
+            <trans-unit id="81" resname="sulu_content.rules.page">
+                <source>sulu_content.rules.page</source>
+                <target>Seite</target>
+            </trans-unit>
+            <trans-unit id="82" resname="sulu.content.form.settings.no-author">
+                 <source>sulu.content.form.settings.no-author</source>
+                 <target>Kein Autor ausgewählt</target>
              </trans-unit>
         </body>
     </file>

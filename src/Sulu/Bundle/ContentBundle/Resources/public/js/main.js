@@ -13,6 +13,7 @@ require.config({
         sulucontentcss: '../../sulucontent/css',
 
         'services/sulucontent/user-settings-manager': '../../sulucontent/js/services/user-settings-manager',
+        'services/sulucontent/smart-content-manager': '../../sulucontent/js/services/smart-content-manager',
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',

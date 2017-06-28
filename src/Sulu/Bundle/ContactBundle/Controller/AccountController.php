@@ -626,6 +626,7 @@ class AccountController extends RestController implements ClassResourceInterface
         if (!($accountManager->processUrls($account, $request->get('urls', []))
             && $accountManager->processEmails($account, $request->get('emails', []))
             && $accountManager->processFaxes($account, $request->get('faxes', []))
+            && $accountManager->processSocialMediaProfiles($account, $request->get('socialMediaProfiles', []))
             && $accountManager->processPhones($account, $request->get('phones', []))
             && $accountManager->processAddresses($account, $request->get('addresses', []))
             && $accountManager->processTags($account, $request->get('tags', []))

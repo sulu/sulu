@@ -48,13 +48,14 @@ define([
                     }
 
                     var val = this.getValue(),
-                        part = App.dom.data($el, 'part');
+                        part = App.dom.data($el, 'part'),
+                        required = this.$el.data('validationRequired') || false;
 
-                    if (getInputType.call(this) === 'leaf' && !leafValidator.test(part)) {
-                        return false;
+                    if (getInputType.call(this) === 'leaf') {
+                        return (!required && part === '') || leafValidator.test(part);
                     }
 
-                    return part.length > 0 && val !== '/' && fullValidator.test(val);
+                    return (!required && part === '') || fullValidator.test(val);
                 }
             };
 

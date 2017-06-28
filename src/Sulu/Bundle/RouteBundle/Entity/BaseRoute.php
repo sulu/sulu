@@ -11,25 +11,50 @@
 
 namespace Sulu\Bundle\RouteBundle\Entity;
 
+use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route as HateoasRoute;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 
 /**
  * Represents a base route in the route-pool.
+ *
+ * @Relation(
+ *     "delete",
+ *     href = @HateoasRoute(
+ *         "delete_route",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
+ *
+ * @ExclusionPolicy("all")
  */
-abstract class BaseRoute implements RouteInterface
+abstract class BaseRoute implements RouteInterface, AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
+     *
+     * @Expose
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $path;
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $locale;
 
@@ -45,6 +70,8 @@ abstract class BaseRoute implements RouteInterface
 
     /**
      * @var bool
+     *
+     * @Expose
      */
     private $history = false;
 
@@ -57,6 +84,20 @@ abstract class BaseRoute implements RouteInterface
      * @var RouteInterface[]
      */
     protected $histories;
+
+    /**
+     * @param string $path
+     * @param string $entityId
+     * @param string $entityClass
+     * @param string $locale
+     */
+    public function __construct($path = null, $entityId = null, $entityClass = null, $locale = null)
+    {
+        $this->path = $path;
+        $this->entityId = $entityId;
+        $this->entityClass = $entityClass;
+        $this->locale = $locale;
+    }
 
     /**
      * {@inheritdoc}
@@ -167,7 +208,7 @@ abstract class BaseRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function setTarget(RouteInterface $target)
+    public function setTarget(RouteInterface $target = null)
     {
         $this->target = $target;
 
@@ -200,5 +241,15 @@ abstract class BaseRoute implements RouteInterface
         $this->histories[] = $history;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @VirtualProperty
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 }

@@ -11,8 +11,15 @@
 
 namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
@@ -25,6 +32,9 @@ use Sulu\Component\Content\SmartContent\QueryBuilder as SmartContentQueryBuilder
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @group functional
@@ -63,19 +73,29 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     private $languageNamespace;
 
     /**
-     * @var Tag
+     * @var TagRepositoryInterface
+     */
+    private $tagRepository;
+
+    /**
+     * @var TagInterface
      */
     private $tag1;
 
     /**
-     * @var Tag
+     * @var TagInterface
      */
     private $tag2;
 
     /**
-     * @var Tag
+     * @var TagInterface
      */
     private $tag3;
+
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $audienceTargetGroupRepository;
 
     public function setUp()
     {
@@ -89,25 +109,27 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->contentQuery = $this->getContainer()->get('sulu.content.query_executor');
+        $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
+        $this->audienceTargetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
 
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
 
-        $this->tag1 = new Tag();
+        $this->tag1 = $this->tagRepository->createNew();
         $this->tag1->setName('test1');
         $this->tag1->setCreator($user);
         $this->tag1->setChanger($user);
         $em->persist($this->tag1);
 
-        $this->tag2 = new Tag();
+        $this->tag2 = $this->tagRepository->createNew();
         $this->tag2->setName('test2');
         $this->tag2->setCreator($user);
         $this->tag2->setChanger($user);
         $em->persist($this->tag2);
 
-        $this->tag3 = new Tag();
+        $this->tag3 = $this->tagRepository->createNew();
         $this->tag3->setName('test3');
         $this->tag3->setCreator($user);
         $this->tag3->setChanger($user);
@@ -324,6 +346,235 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->assertEquals($expected->getPath(), '/cmf/sulu_io/contents' . $item['path']);
             $this->assertEquals($expected->getTitle(), $item['title']);
         }
+    }
+
+    public function testAudienceTargeting()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $request->headers->add(['Accept-Language' => 'en']);
+        $this->getContainer()->get('request_stack')->push($request);
+
+        /** @var PageDocument $familyDocument */
+        $familyDocument = $this->documentManager->create('page');
+        $familyDocument->setTitle('Family');
+        $familyDocument->setResourceSegment('/family');
+        $familyDocument->setExtensionsData(
+            [
+                'excerpt' => ['audience_targeting_groups' => [1]],
+            ]
+        );
+        $familyDocument->setStructureType('simple');
+        $familyDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($familyDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($familyDocument, 'en');
+
+        $singleDocument = $this->documentManager->create('page');
+        $singleDocument->setTitle('Single');
+        $singleDocument->setResourceSegment('/single');
+        $singleDocument->setExtensionsData(
+            [
+                'audience_targeting-groups' => [],
+            ]
+        );
+        $singleDocument->setStructureType('simple');
+        $singleDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($singleDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($singleDocument, 'en');
+
+        $this->documentManager->flush();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'targetGroupId' => 1,
+                'dataSource' => $root->getIdentifier(),
+                'includeSubFolders' => true,
+                'audienceTargeting' => true,
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertCount(1, $result);
+        $this->assertEquals('Family', $result[0]['title']);
+    }
+
+    public function testAudienceTargetingDeactivated()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+
+        /** @var TargetGroupInterface $targetGroup */
+        $targetGroup = $this->audienceTargetGroupRepository->createNew();
+        $targetGroup->setTitle('Test');
+        $targetGroup->setPriority(5);
+        $targetGroup->setActive(true);
+        $targetGroupWebspace = new TargetGroupWebspace();
+        $targetGroupWebspace->setWebspaceKey('sulu_io');
+        $targetGroupWebspace->setTargetGroup($targetGroup);
+        $targetGroupRule = new TargetGroupRule();
+        $targetGroupRule->setTitle('Test');
+        $targetGroupRule->setFrequency(TargetGroupRuleInterface::FREQUENCY_SESSION);
+        $targetGroupRule->setTargetGroup($targetGroup);
+        $targetGroupCondition = new TargetGroupCondition();
+        $targetGroupCondition->setType('locale');
+        $targetGroupCondition->setCondition(['locale' => 'en']);
+        $targetGroupCondition->setRule($targetGroupRule);
+        $this->getEntityManager()->persist($targetGroup);
+        $this->getEntityManager()->persist($targetGroupWebspace);
+        $this->getEntityManager()->persist($targetGroupRule);
+        $this->getEntityManager()->persist($targetGroupCondition);
+        $this->getEntityManager()->flush();
+
+        $this->getEntityManager()->clear();
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $request->headers->add(['Accept-Language' => 'en']);
+        $this->getContainer()->get('request_stack')->push($request);
+
+        /** @var PageDocument $familyDocument */
+        $familyDocument = $this->documentManager->create('page');
+        $familyDocument->setTitle('Family');
+        $familyDocument->setResourceSegment('/family');
+        $familyDocument->setExtensionsData(
+            [
+                'excerpt' => ['audience_targeting_groups' => [$targetGroup->getId()]],
+            ]
+        );
+        $familyDocument->setStructureType('simple');
+        $familyDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($familyDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($familyDocument, 'en');
+
+        $singleDocument = $this->documentManager->create('page');
+        $singleDocument->setTitle('Single');
+        $singleDocument->setResourceSegment('/single');
+        $singleDocument->setExtensionsData(
+            [
+                'audience_targeting-groups' => [],
+            ]
+        );
+        $singleDocument->setStructureType('simple');
+        $singleDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($singleDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($singleDocument, 'en');
+
+        $this->documentManager->flush();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'dataSource' => $root->getIdentifier(),
+                'includeSubFolders' => true,
+                'audienceTargeting' => false,
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertCount(2, $result);
+        $this->assertEquals('Family', $result[0]['title']);
+        $this->assertEquals('Single', $result[1]['title']);
+    }
+
+    public function testAudienceTargetingDeactivatedTargetGroupEvaluator()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+
+        /** @var TargetGroupInterface $targetGroup */
+        $targetGroup = $this->audienceTargetGroupRepository->createNew();
+        $targetGroup->setTitle('Test');
+        $targetGroup->setPriority(5);
+        $targetGroup->setActive(true);
+        $targetGroupWebspace = new TargetGroupWebspace();
+        $targetGroupWebspace->setWebspaceKey('sulu_io');
+        $targetGroupWebspace->setTargetGroup($targetGroup);
+        $targetGroupRule = new TargetGroupRule();
+        $targetGroupRule->setTitle('Test');
+        $targetGroupRule->setFrequency(TargetGroupRuleInterface::FREQUENCY_SESSION);
+        $targetGroupRule->setTargetGroup($targetGroup);
+        $targetGroupCondition = new TargetGroupCondition();
+        $targetGroupCondition->setType('locale');
+        $targetGroupCondition->setCondition(['locale' => 'en']);
+        $targetGroupCondition->setRule($targetGroupRule);
+        $this->getEntityManager()->persist($targetGroup);
+        $this->getEntityManager()->persist($targetGroupWebspace);
+        $this->getEntityManager()->persist($targetGroupRule);
+        $this->getEntityManager()->persist($targetGroupCondition);
+        $this->getEntityManager()->flush();
+
+        $this->getEntityManager()->clear();
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $request->headers->add(['Accept-Language' => 'en']);
+        $this->getContainer()->get('request_stack')->push($request);
+
+        /** @var PageDocument $familyDocument */
+        $familyDocument = $this->documentManager->create('page');
+        $familyDocument->setTitle('Family');
+        $familyDocument->setResourceSegment('/family');
+        $familyDocument->setExtensionsData(
+            [
+                'excerpt' => ['audience_targeting_groups' => [$targetGroup->getId()]],
+            ]
+        );
+        $familyDocument->setStructureType('simple');
+        $familyDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($familyDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($familyDocument, 'en');
+
+        $singleDocument = $this->documentManager->create('page');
+        $singleDocument->setTitle('Single');
+        $singleDocument->setResourceSegment('/single');
+        $singleDocument->setExtensionsData(
+            [
+                'audience_targeting-groups' => [],
+            ]
+        );
+        $singleDocument->setStructureType('simple');
+        $singleDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($singleDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($singleDocument, 'en');
+
+        $this->documentManager->flush();
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            null,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'dataSource' => $root->getIdentifier(),
+                'includeSubFolders' => true,
+                'audienceTargeting' => true,
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertCount(2, $result);
+        $this->assertEquals('Family', $result[0]['title']);
+        $this->assertEquals('Single', $result[1]['title']);
     }
 
     public function tagsProvider()

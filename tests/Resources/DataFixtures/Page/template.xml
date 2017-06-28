@@ -15,6 +15,20 @@
         <title lang="en">That´s the template 1</title>
     </meta>
 
+    <areas>
+        <area key="test">
+            <meta>
+                <title lang="de">Test DE</title>
+            </meta>
+        </area>
+
+        <area key="hotel">
+            <meta>
+                <title lang="en">Hotel EN</title>
+            </meta>
+        </area>
+    </areas>
+
     <tag name="some.random.structure.tag" foo="bar" bar="foo"/>
 
     <properties>

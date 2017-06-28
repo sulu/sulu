@@ -16,7 +16,6 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
@@ -41,17 +40,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
     {
         $this->categoryManager = $categoryManager;
         $this->template = $template;
-    }
-
-    /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE.
-     *
-     * @return int
-     */
-    public function getType()
-    {
-        return ContentTypeInterface::PRE_SAVE;
     }
 
     /**

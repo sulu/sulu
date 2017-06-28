@@ -149,6 +149,24 @@
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
         </many-to-many>
+        <many-to-many field="socialMediaProfiles"
+                      target-entity="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile"
+                      inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-table name="co_account_social_media_profiles">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idSocialMediaProfiles" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
         <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount" inversed-by="accounts">
             <cascade>
                 <cascade-persist/>
@@ -165,7 +183,7 @@
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
         </many-to-many>
-        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Tag\TagInterface">
             <join-table name="co_account_tags">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>

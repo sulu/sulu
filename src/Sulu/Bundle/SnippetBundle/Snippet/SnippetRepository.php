@@ -175,7 +175,7 @@ class SnippetRepository
      * @param string $uuid
      * @param int $userId
      * @param string $srcLocale
-     * @param string $destLocales
+     * @param array $destLocales
      *
      * @return SnippetBridge
      */

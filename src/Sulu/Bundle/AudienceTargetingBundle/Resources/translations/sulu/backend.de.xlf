@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="target-group-2">
+                <source>sulu_audience_targeting.target-groups</source>
+                <target>Zielgruppen</target>
+            </trans-unit>
+            <trans-unit id="target-group-3">
+                <source>sulu_audience_targeting.is-active</source>
+                <target>Aktiv</target>
+            </trans-unit>
+            <trans-unit id="target-group-4">
+                <source>sulu_audience_targeting.title</source>
+                <target>Zielgruppen Titel</target>
+            </trans-unit>
+            <trans-unit id="target-group-5">
+                <source>sulu_audience_targeting.webspaces</source>
+                <target>Webspaces</target>
+            </trans-unit>
+            <trans-unit id="target-group-6">
+                <source>sulu_audience_targeting.priority</source>
+                <target>Priorität</target>
+            </trans-unit>
+            <trans-unit id="target-group-7">
+                <source>sulu_audience_targeting.target-group-not-found</source>
+                <target>Zielgruppe konnte nicht gefunden werden.</target>
+            </trans-unit>
+            <trans-unit id="target-group-8">
+                <source>sulu_audience_targeting.rule-sets</source>
+                <target>Regeln</target>
+            </trans-unit>
+            <trans-unit id="target-group-9">
+                <source>sulu_audience_targeting.rule-sets-descriptions</source>
+                <target>Besucher die zumindest EINER dieser Regeln entsprechen werden der Zielgruppe hinzugefügt.</target>
+            </trans-unit>
+            <trans-unit id="target-group-10">
+                <source>sulu_audience_targeting.frequency</source>
+                <target>Zuweisung bei</target>
+            </trans-unit>
+            <trans-unit id="target-group-11">
+                <source>sulu_audience_targeting.conditions</source>
+                <target>Voraussetzung</target>
+            </trans-unit>
+            <trans-unit id="target-group-12">
+                <source>sulu_audience_targeting.rule-overlay-title</source>
+                <target>Regel konfigurieren</target>
+            </trans-unit>
+            <trans-unit id="target-group-13">
+                <source>sulu_audience_targeting.conditions-description</source>
+                <target>Besucher die ALLE diese Voraussetzungen erfüllen werden der Zielgruppe hinzugefügt.</target>
+            </trans-unit>
+            <trans-unit id="target-group-14">
+                <source>sulu_audience_targeting.condition-add</source>
+                <target>Voraussetzung hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="target-group-15" resname="sulu_audience_targeting.rules.locale">
+                <source>sulu_audience_targeting.rules.locale</source>
+                <target>Sprache</target>
+            </trans-unit>
+            <trans-unit id="target-group-16" resname="sulu_audience_targeting.rules.referrer">
+                <source>sulu_audience_targeting.rules.referrer</source>
+                <target>Referrer</target>
+            </trans-unit>
+            <trans-unit id="target-group-17">
+                <source>sulu_audience_targeting.no-target-groups-available</source>
+                <target>Keine Zielgruppen verfügbar</target>
+            </trans-unit>
+            <trans-unit id="target-group-18">
+                <source>smart-content.audience-targeting</source>
+                <target>Zielgruppen berücksichtigen</target>
+            </trans-unit>
+            <trans-unit id="target-group-20" resname="sulu_audience_targeting.rules.query_string">
+                <source>sulu_audience_targeting.rules.query_string</source>
+                <target>Query String</target>
+            </trans-unit>
+            <trans-unit id="target-group-21" resname="sulu_audience_targeting.rules.query_string_parameter">
+                <source>sulu_audience_targeting.rules.query_string_parameter</source>
+                <target>Parameter</target>
+            </trans-unit>
+            <trans-unit id="target-group-22" resname="sulu_audience_targeting.rules.query_string_value">
+                <source>sulu_audience_targeting.rules.query_string_value</source>
+                <target>Wert</target>
+            </trans-unit>
+            <trans-unit id="target-group-23" resname="sulu_audience_targeting.rules.browser">
+                <source>sulu_audience_targeting.rules.browser</source>
+                <target>Browser</target>
+            </trans-unit>
+            <trans-unit id="target-group-24" resname="sulu_audience_targeting.rules.operating_system">
+                <source>sulu_audience_targeting.rules.operating_system</source>
+                <target>Betriebssystem</target>
+            </trans-unit>
+            <trans-unit id="target-group-25" resname="sulu_audience_targeting.rules.device_type">
+                <source>sulu_audience_targeting.rules.device_type</source>
+                <target>Gerätetyp</target>
+            </trans-unit>
+            <trans-unit id="target-group-26" resname="sulu_audience_targeting.device_types.smartphone">
+                <source>sulu_audience_targeting.device_types.smartphone</source>
+                <target>Smartphone</target>
+            </trans-unit>
+            <trans-unit id="target-group-27" resname="sulu_audience_targeting.device_types.tablet">
+                <source>sulu_audience_targeting.device_types.tablet</source>
+                <target>Tablet</target>
+            </trans-unit>
+            <trans-unit id="target-group-28" resname="sulu_audience_targeting.device_types.desktop">
+                <source>sulu_audience_targeting.device_types.desktop</source>
+                <target>Desktop</target>
+            </trans-unit>
+            <trans-unit id="target-group-29" resname="sulu_audience_targeting.frequencies.hit">
+                <source>sulu_audience_targeting.frequencies.hit</source>
+                <target>jedem Seitenaufruf</target>
+            </trans-unit>
+            <trans-unit id="target-group-30" resname="sulu_audience_targeting.frequencies.session">
+                <source>sulu_audience_targeting.frequencies.session</source>
+                <target>jeder Sitzung</target>
+            </trans-unit>
+            <trans-unit id="target-group-31" resname="sulu_audience_targeting.frequencies.visitor">
+                <source>sulu_audience_targeting.frequencies.visitor</source>
+                <target>erstem Besuch</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -44,6 +44,7 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $configuration = $provider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+        $this->assertTrue($configuration->hasAudienceTargeting());
     }
 
     public function testGetDefaultParameter()
@@ -118,7 +119,6 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($hasNextPage, $result->getHasNextPage());
         $this->assertEquals($items, $result->getItems());
-        $this->assertEquals([], $result->getReferencedUuids());
     }
 
     public function resourceItemsDataProvider()
@@ -188,7 +188,6 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($hasNextPage, $result->getHasNextPage());
         $this->assertEquals($items, $result->getItems());
-        $this->assertEquals([], $result->getReferencedUuids());
     }
 
     public function testResolveDataSource()

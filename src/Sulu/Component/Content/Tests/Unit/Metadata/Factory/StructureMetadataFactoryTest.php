@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
 use Prophecy\Argument;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Loader\XmlLoader;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -169,11 +170,13 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetStructureWithApostrophe()
     {
+        $contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
+        $contentTypeManager->has(Argument::any())->willReturn(true);
         $cacheLifeTimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
         $cacheLifeTimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
 
-        $xmlLoader = new XmlLoader($cacheLifeTimeResolver->reveal());
+        $xmlLoader = new XmlLoader($contentTypeManager->reveal(), $cacheLifeTimeResolver->reveal());
 
         $loadResult = $xmlLoader->load($this->apostropheMappingFile, 'page');
 

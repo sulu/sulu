@@ -15,7 +15,7 @@ define([
     'use strict';
 
     var formSelector = '#contact-form',
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes'],
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'socialMediaProfiles'],
 
         constants = {
             tagsId: '#tags',
@@ -413,6 +413,11 @@ define([
                 id: null,
                 fax: '',
                 faxType: this.defaultTypes.faxType
+            });
+            contactJson.socialMediaProfiles = this.fillFields(contactJson.socialMediaProfiles, 0, {
+                id: null,
+                username: '',
+                socialMediaProfileType: this.defaultTypes.socialMediaProfileType
             });
             contactJson.notes = this.fillFields(contactJson.notes, 1, {
                 id: null,

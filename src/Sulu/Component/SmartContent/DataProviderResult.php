@@ -27,15 +27,13 @@ class DataProviderResult
     private $items;
 
     /**
-     * @var array
+     * @param array $items
+     * @param bool $hasNextPage
      */
-    private $referencedUuids;
-
-    public function __construct(array $items, $hasNextPage, array $referencedUuids = [])
+    public function __construct(array $items, $hasNextPage)
     {
-        $this->hasNextPage = $hasNextPage;
         $this->items = $items;
-        $this->referencedUuids = $referencedUuids;
+        $this->hasNextPage = $hasNextPage;
     }
 
     /**
@@ -52,13 +50,5 @@ class DataProviderResult
     public function getItems()
     {
         return $this->items;
-    }
-
-    /**
-     * @return array
-     */
-    public function getReferencedUuids()
-    {
-        return $this->referencedUuids;
     }
 }

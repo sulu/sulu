@@ -26,6 +26,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
     public function testLoad()
     {
         $this->container->setParameter('kernel.root_dir', __DIR__);
+        $this->container->setParameter('kernel.bundles', []);
 
         $this->load();
 

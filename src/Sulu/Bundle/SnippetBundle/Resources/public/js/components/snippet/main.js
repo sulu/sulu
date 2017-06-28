@@ -217,9 +217,17 @@ define([
             if (action === 'back') {
                 this.sandbox.emit('sulu.snippets.snippet.list');
             } else if (action === 'new') {
-                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
+                this.sandbox.emit(
+                    'sulu.router.navigate',
+                    'snippet/snippets/' + this.options.language + '/add',
+                    true,
+                    true
+                );
             } else if (!this.data.id) {
-                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
+                this.sandbox.emit(
+                    'sulu.router.navigate',
+                    'snippet/snippets/' + this.options.language + '/edit:' + data.id + '/details'
+                );
             }
         },
 
@@ -268,8 +276,9 @@ define([
             // TODO: show loading icon
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'snippet/snippets/' + language + '/edit:' + id,
-                undefined, undefined,
+                'snippet/snippets/' + language + '/edit:' + id + '/details',
+                undefined,
+                undefined,
                 forceReload
             );
         },

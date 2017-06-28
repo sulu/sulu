@@ -18,6 +18,7 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapUrl;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Provides sitemap for webspaces.
@@ -30,27 +31,43 @@ class PagesSitemapProvider implements SitemapProviderInterface
     private $contentRepository;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * @param ContentRepositoryInterface $contentRepository
      */
-    public function __construct(ContentRepositoryInterface $contentRepository)
-    {
+    public function __construct(
+        ContentRepositoryInterface $contentRepository,
+        WebspaceManagerInterface $webspaceManager
+    ) {
         $this->contentRepository = $contentRepository;
+        $this->webspaceManager = $webspaceManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function build($page, $portalKey, $locale)
+    public function build($page, $portalKey)
     {
-        $pages = $this->contentRepository->findAllByPortal(
-            $locale,
-            $portalKey,
-            MappingBuilder::create()
-                ->addProperties(['changed', 'seo-hideInSitemap'])
-                ->setResolveUrl(true)
-                ->setHydrateGhost(false)
-                ->getMapping()
-        );
+        $portal = $this->webspaceManager->findPortalByKey($portalKey);
+
+        $pages = [];
+        foreach ($portal->getLocalizations() as $localization) {
+            $pages = array_merge(
+                $this->contentRepository->findAllByPortal(
+                    $localization->getLocale(),
+                    $portalKey,
+                    MappingBuilder::create()
+                        ->addProperties(['changed', 'seo-hideInSitemap'])
+                        ->setResolveUrl(true)
+                        ->setHydrateGhost(false)
+                        ->getMapping()
+                ),
+                $pages
+            );
+        }
 
         $result = [];
         foreach ($pages as $contentPage) {
@@ -66,7 +83,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
                 $changed = new \DateTime($changed);
             }
 
-            $result[] = $sitemapUrl = new SitemapUrl($contentPage->getUrl(), $changed);
+            $result[] = $sitemapUrl = new SitemapUrl($contentPage->getUrl(), $contentPage->getLocale(), $changed);
             foreach ($contentPage->getUrls() as $urlLocale => $href) {
                 $sitemapUrl->addAlternateLink(new SitemapAlternateLink($href, $urlLocale));
             }

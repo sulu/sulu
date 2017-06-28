@@ -13,14 +13,17 @@ namespace Sulu\Bundle\ContentBundle\Teaser;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Teaser\Provider\TeaserProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
  * Provides content-type for selecting teasers.
  */
-class TeaserContentType extends SimpleContentType
+class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
      * @var string
@@ -38,20 +41,28 @@ class TeaserContentType extends SimpleContentType
     private $teaserManager;
 
     /**
+     * @var ReferenceStorePoolInterface
+     */
+    private $referenceStorePool;
+
+    /**
      * @param string $template
      * @param TeaserProviderPoolInterface $providerPool
      * @param TeaserManagerInterface $teaserManager
+     * @param ReferenceStorePoolInterface $referenceStorePool
      */
     public function __construct(
         $template,
         TeaserProviderPoolInterface $providerPool,
-        TeaserManagerInterface $teaserManager
+        TeaserManagerInterface $teaserManager,
+        ReferenceStorePoolInterface $referenceStorePool
     ) {
         parent::__construct('teaser_selection');
 
         $this->template = $template;
         $this->teaserProviderPool = $providerPool;
         $this->teaserManager = $teaserManager;
+        $this->referenceStorePool = $referenceStorePool;
     }
 
     /**
@@ -94,12 +105,12 @@ class TeaserContentType extends SimpleContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        $value = $this->getValue($property);
-        if (!is_array($value['items']) || 0 === count($value['items'])) {
+        $items = $this->getItems($property);
+        if (0 === count($items)) {
             return [];
         }
 
-        return $this->teaserManager->find($value['items'], $property->getStructure()->getLanguageCode());
+        return $this->teaserManager->find($items, $property->getStructure()->getLanguageCode());
     }
 
     /**
@@ -108,23 +119,6 @@ class TeaserContentType extends SimpleContentType
     public function getViewData(PropertyInterface $property)
     {
         return $this->getValue($property);
-    }
-
-    /**
-     * Returns property-value merged with defaults.
-     *
-     * @param PropertyInterface $property
-     *
-     * @return array
-     */
-    private function getValue(PropertyInterface $property)
-    {
-        $default = ['presentAs' => null, 'items' => []];
-        if (!is_array($property->getValue())) {
-            return $default;
-        }
-
-        return array_merge($default, $property->getValue());
     }
 
     /**
@@ -144,5 +138,53 @@ class TeaserContentType extends SimpleContentType
         }
 
         parent::importData($node, $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preResolve(PropertyInterface $property)
+    {
+        foreach ($this->getItems($property) as $item) {
+            try {
+                $this->referenceStorePool->getStore($item['type'])->add($item['id']);
+            } catch (ReferenceStoreNotExistsException $exception) {
+                // ignore not existing stores
+            }
+        }
+    }
+
+    /**
+     * Returns items.
+     *
+     * @param PropertyInterface $property
+     *
+     * @return array
+     */
+    private function getItems(PropertyInterface $property)
+    {
+        $value = $this->getValue($property);
+        if (!is_array($value['items']) || 0 === count($value['items'])) {
+            return [];
+        }
+
+        return $value['items'];
+    }
+
+    /**
+     * Returns property-value merged with defaults.
+     *
+     * @param PropertyInterface $property
+     *
+     * @return array
+     */
+    private function getValue(PropertyInterface $property)
+    {
+        $default = ['presentAs' => null, 'items' => []];
+        if (!is_array($property->getValue())) {
+            return $default;
+        }
+
+        return array_merge($default, $property->getValue());
     }
 }

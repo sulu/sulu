@@ -159,7 +159,23 @@
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
         </many-to-many>
-        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
+        <many-to-many field="socialMediaProfiles" target-entity="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile" inversed-by="contacts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-table name="co_contact_social_media_profiles">
+                <join-columns>
+                    <join-column name="idContacts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idSocialMediaProfiles" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Tag\TagInterface">
             <join-table name="co_contact_tags">
                 <join-columns>
                     <join-column name="idContacts" referenced-column-name="id"/>

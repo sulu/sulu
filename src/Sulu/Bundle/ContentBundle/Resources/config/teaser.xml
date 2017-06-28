@@ -26,6 +26,7 @@
             <argument>%sulu.content.type.teaser_selection.template%</argument>
             <argument type="service" id="sulu_content.teaser.provider_pool"/>
             <argument type="service" id="sulu_content.teaser.manager"/>
+            <argument type="service" id="sulu_website.reference_store_pool"/>
 
             <tag name="sulu.content.type" alias="teaser_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

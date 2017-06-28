@@ -150,9 +150,6 @@ class Environment
         $this->customUrls[] = $customUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $res = [];

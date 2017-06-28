@@ -17,7 +17,10 @@
 {% if params.has.categories %}
      data-aura-category-root='{{ params.category_root.value }}'
 {% endif %}
-     data-aura-url="/admin/api/items?{% if webspaceKey != '' %}webspace={{ webspaceKey }}&{% endif %}locale={{ languageCode }}&excluded=<%= options.id %>&provider={{ params.provider.value }}"
+     data-aura-url="/admin/api/items?{% if webspaceKey != '' %}webspace={{ webspaceKey }}&{% endif %}locale={{ languageCode }}&provider={{ params.provider.value }}"
+     data-aura-excluded="<%= options.id %>"
+     data-aura-alias="{{ params.alias }}"
+     data-aura-exclude-duplicates="{{ params.exclude_duplicates.value }}"
      data-aura-navigate-event="sulu.content.navigate"
      data-aura-tags-auto-complete-url="/admin/api/tags?flat=true&sortBy=name&searchFields=name"
      data-aura-sort-by='{{ sulu_parameter_to_select(params.sorting.value, userLocale) | json_encode }}'

@@ -12,12 +12,14 @@
 namespace Sulu\Component\SmartContent;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,6 +67,11 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     private $categoryRequestHandler;
 
     /**
+     * @var TargetGroupStoreInterface
+     */
+    private $targetGroupStore;
+
+    /**
      * SmartContentType constructor.
      *
      * @param DataProviderPoolInterface $dataProviderPool
@@ -73,6 +80,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param TagRequestHandlerInterface $tagRequestHandler
      * @param CategoryRequestHandlerInterface $categoryRequestHandler
      * @param string $template
+     * @param TargetGroupStoreInterface $targetGroupStore
      */
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
@@ -80,7 +88,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         RequestStack $requestStack,
         TagRequestHandlerInterface $tagRequestHandler,
         CategoryRequestHandlerInterface $categoryRequestHandler,
-        $template
+        $template,
+        TargetGroupStoreInterface $targetGroupStore = null
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
@@ -88,6 +97,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->tagRequestHandler = $tagRequestHandler;
         $this->categoryRequestHandler = $categoryRequestHandler;
         $this->template = $template;
+        $this->targetGroupStore = $targetGroupStore;
     }
 
     /**
@@ -159,6 +169,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         $defaults = [
             'provider' => new PropertyParameter('provider', 'content'),
+            'alias' => null,
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
             'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
@@ -185,10 +196,16 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 'sorting' => $configuration->hasSorting(),
                 'limit' => $configuration->hasLimit(),
                 'presentAs' => $configuration->hasPresentAs(),
+                'audienceTargeting' => $configuration->hasAudienceTargeting(),
             ],
             'datasource' => $configuration->getDatasource(),
             'deep_link' => new PropertyParameter('deep_link', $configuration->getDeepLink()),
+            'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
         ];
+
+        if ($provider instanceof DataProviderAliasInterface) {
+            $defaults['alias'] = $provider->getAlias();
+        }
 
         return array_merge(
             parent::getDefaultParams(),
@@ -203,14 +220,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     public function getTemplate()
     {
         return $this->template;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return self::PRE_SAVE;
     }
 
     /**
@@ -252,6 +261,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         );
         $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
+        if ($this->targetGroupStore && isset($filters['audienceTargeting']) && $filters['audienceTargeting']) {
+            $filters['targetGroupId'] = $this->targetGroupStore->getTargetGroupId();
+        }
+
         // resolve tags to id
         $this->resolveTags($filters, 'tags');
 
@@ -285,6 +298,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $page,
                 $pageSize
             );
+
+            if ($page > 1 && 0 === count($data->getItems())) {
+                throw new PageOutOfBoundsException($page);
+            }
         } else {
             $data = $provider->resolveResourceItems(
                 $filters,
@@ -297,7 +314,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         // append view data
         $filters['page'] = $page;
         $filters['hasNextPage'] = $data->getHasNextPage();
-        $filters['referencedUuids'] = $data->getReferencedUuids();
         $filters['paginated'] = $configuration->hasPagination();
         $property->setValue($filters);
 
@@ -332,7 +348,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 'page' => null,
                 'hasNextPage' => null,
                 'paginated' => false,
-                'referencedUuids' => [],
                 'categoryRoot' => $params['category_root']->getValue(),
                 'categoriesParameter' => $params['categories_parameter']->getValue(),
                 'tagsParameter' => $params['tags_parameter']->getValue(),
@@ -341,20 +356,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         );
 
         return $config;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReferencedUuids(PropertyInterface $property)
-    {
-        $value = $property->getValue();
-
-        if (!array_key_exists('referencedUuids', $value)) {
-            return [];
-        }
-
-        return $value['referencedUuids'];
     }
 
     /**
@@ -383,16 +384,21 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      * @param string $pageParameter
      *
      * @return int
+     *
+     * @throws PageOutOfBoundsException
      */
     private function getCurrentPage($pageParameter)
     {
-        if ($this->requestStack->getCurrentRequest() !== null) {
-            $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
-        } else {
-            $page = 1;
+        if ($this->requestStack->getCurrentRequest() === null) {
+            return 1;
         }
 
-        return intval($page);
+        $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+        if ($page < 1 || $page > PHP_INT_MAX) {
+            throw new PageOutOfBoundsException($page);
+        }
+
+        return $page;
     }
 
     /**

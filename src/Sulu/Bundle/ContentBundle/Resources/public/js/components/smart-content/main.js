@@ -37,6 +37,7 @@
  * @params {String} [options.sortMethodParameter] parameter for the sort method
  * @params {String} [options.presentAsParameter] parameter for the presentation-possibility id
  * @params {String} [options.limitResultParameter] parameter for the limit-result-value
+ * @params {String} [options.excludedParameter] parameter for the excluded-value
  * @params {String} [options.idKey] key for the id in the returning JSON-result
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
@@ -48,6 +49,9 @@
  * @params {Boolean} [options.translations.externalConfigs] if true component waits for external config object
  * @params {Boolean} [options.has] activates or deactivates features (default all false)
  * @params {Boolean} [options.datasource] name and options of datasource component
+ * @params {Boolean} [options.excluded] id of an excluded item
+ * @params {Boolean} [options.alias] alias of used provider
+ * @params {Boolean} [options.excludeDuplicate] if true duplicates will be excluded
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
  * @params {String} [options.translations.noContentFound] translation key
@@ -84,7 +88,7 @@
  * @params {String} [options.translations.chooseCategoriesOk] translation key
  * @params {String} [options.translations.chooseCategoriesCancel] translation key
  */
-define(['services/husky/util'], function(util) {
+define(['config', 'services/sulucontent/smart-content-manager'], function(config, manager) {
 
     'use strict';
 
@@ -106,6 +110,7 @@ define(['services/husky/util'], function(util) {
             instanceName: 'undefined',
             url: '',
             dataSourceParameter: 'dataSource',
+            audienceTargetingParameter: 'audienceTargeting',
             includeSubFolders: false,
             includeSubFoldersParameter: 'includeSubFolders',
             categoriesParameter: 'categories',
@@ -117,6 +122,7 @@ define(['services/husky/util'], function(util) {
             sortMethodParameter: 'sortMethod',
             presentAsParameter: 'presentAs',
             limitResultParameter: 'limitResult',
+            excludedParameter: 'excluded',
             limitResultDisabled: false,
             publishedStateKey: 'publishedState',
             publishedKey: 'published',
@@ -167,6 +173,7 @@ define(['services/husky/util'], function(util) {
             sourceSelector: '.source',
             buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
+            audienceTargetingSelector: '.audienceTargeting',
             tagListClass: 'tag-list',
             tagOperatorClass: 'tag-list-operator-dropdown',
             sortByDropdownClass: 'sort-by-dropdown',
@@ -254,6 +261,18 @@ define(['services/husky/util'], function(util) {
                     '            </label>',
                     '        </div>',
                     '    </div>',
+                    '</div>'
+                ].join(''),
+
+                audienceTargeting: [
+                    '<div class="grid-col-6 check">',
+                    '    <label>',
+                    '        <div class="custom-checkbox">',
+                    '            <input type="checkbox" class="audienceTargeting form-element"<%= value %>/>',
+                    '            <span class="icon"></span>',
+                    '        </div>',
+                    '        <span class="description"><%= label %></span>',
+                    '    </label>',
                     '</div>'
                 ].join(''),
 
@@ -468,6 +487,7 @@ define(['services/husky/util'], function(util) {
                 categoryButton: 'smart-content.categories.button',
                 categories: 'smart-content.categories',
                 includeSubFolders: 'smart-content.include-sub-folders',
+                audienceTargeting: 'smart-content.audience-targeting',
                 filterByTags: 'smart-content.filter-by-tags',
                 useAnyTag: 'smart-content.use-any-tag',
                 useAllTags: 'smart-content.use-all-tags',
@@ -506,6 +526,7 @@ define(['services/husky/util'], function(util) {
             this.$overlayContent = null;
             this.overlayData = {
                 dataSource: this.options.dataSource,
+                audienceTargeting: this.options.audienceTargeting,
                 includeSubFolders: this.options.includeSubFolders,
                 categories: this.options.categories || [],
                 categoryOperator: this.options.preSelectedCategoryOperator || [],
@@ -1120,7 +1141,19 @@ define(['services/husky/util'], function(util) {
                 }));
             }
 
-            if ($subContainer.find('> *').length > 0 ) {
+            if ($subContainer.find('> *').length >= 2) {
+                $container.append($subContainer);
+                $subContainer = $('<div class="grid-row"/>');
+            }
+
+            if (config.has('sulu_audience_targeting') && this.options.has.audienceTargeting) {
+                $subContainer.append(_.template(templates.overlayContent.audienceTargeting)({
+                    label: this.sandbox.translate(this.translations.audienceTargeting),
+                    value: (!!data.audienceTargeting) ? ' checked' : ''
+                }));
+            }
+
+            if ($subContainer.find('> *').length >= 0) {
                 $container.append($subContainer);
             }
 
@@ -1211,6 +1244,7 @@ define(['services/husky/util'], function(util) {
             var data = {};
 
             data[this.options.dataSourceParameter] = this.overlayData.dataSource;
+            data[this.options.audienceTargetingParameter] = this.overlayData.audienceTargeting;
             data[this.options.includeSubFoldersParameter] = this.overlayData.includeSubFolders;
             data[this.options.tagsParameter] = this.overlayData.tags;
             data[this.options.tagOperatorParameter] = this.overlayData.tagOperator;
@@ -1223,6 +1257,7 @@ define(['services/husky/util'], function(util) {
             data[this.options.categoryOperatorParameter] = this.overlayData.categoryOperator ||
                 this.options.preSelectedCategoryOperator;
             data[this.options.paramsParameter] = JSON.stringify(this.options.property.params);
+            data[this.options.excludedParameter] = [this.options.excluded, this.overlayData.dataSource];
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
@@ -1241,15 +1276,15 @@ define(['services/husky/util'], function(util) {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
+                var data = this.sandbox.util.deepCopy(this.URI.data);
+                delete data[this.options.audienceTargetingParameter];
+
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
-                this.sandbox.util.ajax({
-                    method: 'GET',
-                    url: this.URI.str,
-                    data: this.URI.data,
 
-                    success: function(data) {
+                manager.load(this.URI.str, this.URI.data, this.options.excludeDuplicates ? this.options.alias : null)
+                    .done(function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
                         if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
@@ -1261,12 +1296,10 @@ define(['services/husky/util'], function(util) {
                         this.items = data._embedded[this.options.resultKey];
                         this.updateSelectedCounter(this.items.length);
                         this.sandbox.emit(DATA_RETRIEVED.call(this));
-                    }.bind(this),
-
-                    error: function(error) {
+                    }.bind(this))
+                    .fail(function(error) {
                         this.sandbox.logger.log(error);
-                    }.bind(this)
-                });
+                    }.bind(this));
             }
         },
 
@@ -1285,6 +1318,12 @@ define(['services/husky/util'], function(util) {
         getOverlayData: function() {
             var tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
             tagsDef = tagOperatorDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
+
+            // audience targeting
+            this.overlayData.audienceTargeting = this.sandbox.dom.prop(
+                this.sandbox.dom.find(constants.audienceTargetingSelector, this.$overlayContent),
+                'checked'
+            );
 
             //include sub folders
             this.overlayData.includeSubFolders = this.sandbox.dom.prop(
@@ -1363,6 +1402,7 @@ define(['services/husky/util'], function(util) {
             this.overlayData = {
                 dataSource: '',
                 includeSubFolders: false,
+                audienceTargeting: false,
                 limitResult: null,
                 presentAs: null,
                 sortBy: [],

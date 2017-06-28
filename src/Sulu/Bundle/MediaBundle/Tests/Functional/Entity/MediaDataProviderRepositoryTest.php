@@ -12,6 +12,9 @@
 namespace Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -21,6 +24,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class MediaDataProviderRepositoryTest extends SuluTestCase
@@ -31,7 +35,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var Tag[]
+     * @var TagInterface[]
      */
     private $tags = [];
 
@@ -97,24 +101,10 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
 
-        foreach ($this->collectionData as $collection) {
-            $this->collections[] = $this->createCollection($collection[0], $collection[1]);
-        }
-        $this->em->flush();
-
         foreach ($this->mediaTypeData as $type) {
             $this->mediaTypes[$type] = $this->createType($type);
         }
-        $this->em->flush();
 
-        foreach ($this->tagData as $tag) {
-            $this->tags[] = $this->createTag($tag);
-        }
-        $this->em->flush();
-
-        foreach ($this->mediaData as $media) {
-            $this->medias[] = $this->createMediaWithTags($media[0], $media[1], $media[2], $media[3], $media[4]);
-        }
         $this->em->flush();
     }
 
@@ -145,6 +135,22 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $collection;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return TargetGroup
+     */
+    public function createTargetGroup($name)
+    {
+        $targetGroup = new TargetGroup();
+        $targetGroup->setTitle($name);
+        $targetGroup->setPriority(1);
+
+        $this->em->persist($targetGroup);
+
+        return $targetGroup;
+    }
+
     private function createType($name)
     {
         $type = new MediaType();
@@ -157,7 +163,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
     private function createTag($name)
     {
-        $tag = new Tag();
+        $tag = $this->em->getRepository('SuluTagBundle:Tag')->createNew();
         $tag->setName($name);
 
         $this->em->persist($tag);
@@ -165,7 +171,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $tag;
     }
 
-    private function createMediaWithTags($title, $collection, $mimeType, $type, $tags = [])
+    private function createMedia($title, $collection, $mimeType, $type, $tags = [], $targetGroups = [])
     {
         $media = new Media();
         $file = new File();
@@ -185,10 +191,14 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $file->setMedia($media);
         $media->addFile($file);
         $media->setType($this->mediaTypes[$type]);
-        $media->setCollection($this->collections[$collection]);
+        $media->setCollection($collection);
 
         foreach ($tags as $tag) {
             $fileVersion->addTag($this->tags[$tag]);
+        }
+
+        foreach ($targetGroups as $targetGroup) {
+            $fileVersion->addTargetGroup($targetGroup);
         }
 
         $this->em->persist($media);
@@ -507,8 +517,29 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     /**
      * @dataProvider findByProvider
      */
-    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
+    public function testFindByFilters($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
     {
+        foreach ($this->collectionData as $collection) {
+            $this->collections[] = $this->createCollection($collection[0], $collection[1]);
+        }
+
+        $this->em->flush();
+
+        foreach ($this->tagData as $tag) {
+            $this->tags[] = $this->createTag($tag);
+        }
+
+        foreach ($this->mediaData as $media) {
+            $this->medias[] = $this->createMedia(
+                $media[0],
+                $this->collections[$media[1]],
+                $media[2],
+                $media[3],
+                $media[4]
+            );
+        }
+        $this->em->flush();
+
         $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
 
         // if data-source isset replace the index with the id
@@ -549,5 +580,59 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 $this->assertContains($this->tags[$tag]->getName(), $existingTags);
             }
         }
+    }
+
+    public function provideFindByFiltersWithAudienceTargeting()
+    {
+        return [
+            [null, [0, 1, 2, 3]],
+            [0, [0, 2]],
+            [1, [1, 3]],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFindByFiltersWithAudienceTargeting
+     */
+    public function testFindByFiltersWithAudienceTargeting($targetGroupIndex, $expectedIndexes)
+    {
+        /** @var TargetGroupInterface[] $targetGroups */
+        $targetGroups = [];
+        $targetGroups[] = $this->createTargetGroup('Target Group 1');
+        $targetGroups[] = $this->createTargetGroup('Target Group 2');
+
+        $collection = $this->createCollection('Collection 1');
+        $this->em->flush();
+
+        $medias = [];
+        $medias[] = $this->createMedia('Media 1', $collection, 'image/jpg', 'image', [], [$targetGroups[0]]);
+        $medias[] = $this->createMedia('Media 2', $collection, 'image/jpg', 'image', [], [$targetGroups[1]]);
+        $medias[] = $this->createMedia('Media 3', $collection, 'image/jpg', 'image', [], [$targetGroups[0]]);
+        $medias[] = $this->createMedia('Media 4', $collection, 'image/jpg', 'image', [], [$targetGroups[1]]);
+
+        $this->em->flush();
+
+        $filters = [
+            'dataSource' => $collection->getId(),
+            'includeSubFolders' => true,
+        ];
+
+        if ($targetGroupIndex !== null) {
+            $filters['targetGroupId'] = $targetGroups[$targetGroupIndex]->getId();
+        }
+
+        $mediaResults = $this->getContainer()
+            ->get('sulu_media.smart_content.data_provider.media.repository')
+            ->findByFilters($filters, 1, 100, 100, 'de');
+
+        $mediaIds = array_map(function(MediaApi $media) {
+            return $media->getId();
+        }, $mediaResults);
+
+        $expectedMediaIds = array_map(function($expectedIndex) use ($medias) {
+            return $medias[$expectedIndex]->getId();
+        }, $expectedIndexes);
+
+        $this->assertEquals($expectedMediaIds, $mediaIds);
     }
 }

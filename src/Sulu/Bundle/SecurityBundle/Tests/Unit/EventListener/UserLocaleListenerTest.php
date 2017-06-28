@@ -18,14 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserLocaleListenerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var UserInterface
-     */
-    private $user;
-
     /**
      * @var TokenInterface
      */
@@ -35,6 +31,11 @@ class UserLocaleListenerTest extends \PHPUnit_Framework_TestCase
      * @var TokenStorageInterface
      */
     private $tokenStorage;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var Request
@@ -62,13 +63,16 @@ class UserLocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
 
-        $this->userLocaleListener = new UserLocaleListener($this->tokenStorage->reveal());
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+
+        $this->userLocaleListener = new UserLocaleListener($this->tokenStorage->reveal(), $this->translator->reveal());
     }
 
     public function testCopyUserLocaleToRequestWithoutUser()
     {
         $this->request->setLocale(Argument::any())->shouldNotBeCalled();
         $this->userLocaleListener->copyUserLocaleToRequest($this->event->reveal());
+        $this->translator->setLocale(Argument::any())->shouldNotBeCalled();
     }
 
     public function testCopyUserLocaleToRequest()
@@ -78,6 +82,7 @@ class UserLocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->token->getUser()->willReturn($user);
 
         $this->request->setLocale('de')->shouldBeCalled();
+        $this->translator->setLocale('de')->shouldBeCalled();
         $this->userLocaleListener->copyUserLocaleToRequest($this->event->reveal());
     }
 }

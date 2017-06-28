@@ -163,6 +163,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),
             WorkflowStage::TEST
         );
+
         $node->setProperty($this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, $locale), null);
     }
 
@@ -188,7 +189,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->setWorkflowStageOnNode($event->getNode(), $event->getLocale(), WorkflowStage::TEST, false);
+        $this->setWorkflowStageOnNode($event->getNode(), $event->getLocale(), WorkflowStage::TEST, null);
     }
 
     /**
@@ -250,17 +251,19 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
         $path = $this->documentInspector->getPath($document);
         $document->setWorkflowStage($workflowStage);
 
-        $updatePublished = !$document->getPublished() && $workflowStage === WorkflowStage::PUBLISHED;
-        if ($updatePublished) {
-            $accessor->set(self::PUBLISHED_FIELD, new \DateTime());
+        $publishDate = $document->getPublished();
+
+        if (!$publishDate && $workflowStage === WorkflowStage::PUBLISHED) {
+            $publishDate = new \DateTime();
+            $accessor->set(self::PUBLISHED_FIELD, $publishDate);
         }
 
         $defaultNode = $this->defaultSession->getNode($path);
-        $this->setWorkflowStageOnNode($defaultNode, $locale, $workflowStage, $updatePublished);
+        $this->setWorkflowStageOnNode($defaultNode, $locale, $workflowStage, $publishDate);
 
         if ($live) {
             $liveNode = $this->liveSession->getNode($path);
-            $this->setWorkflowStageOnNode($liveNode, $locale, $workflowStage, $updatePublished);
+            $this->setWorkflowStageOnNode($liveNode, $locale, $workflowStage, $publishDate);
         }
     }
 
@@ -270,19 +273,19 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
      * @param NodeInterface $node
      * @param string $locale
      * @param int $workflowStage
-     * @param bool $updatePublished
+     * @param \DateTime $publishDate
      */
-    private function setWorkflowStageOnNode(NodeInterface $node, $locale, $workflowStage, $updatePublished)
+    private function setWorkflowStageOnNode(NodeInterface $node, $locale, $workflowStage, \DateTime $publishDate = null)
     {
         $node->setProperty(
             $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),
             $workflowStage
         );
 
-        if ($updatePublished) {
+        if ($publishDate) {
             $node->setProperty(
                 $this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, $locale),
-                new \DateTime()
+                $publishDate
             );
         }
     }

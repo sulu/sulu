@@ -1,6 +1,69 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #3423 [ContentBundle]           Added config values for seo restrictions
+    * ENHANCEMENT #3416 [ContentBundle]           Changed skin of history-url to large
+    * BUGFIX      #3414 [MediaBundle]             Added check for null target-groups
+    * ENHANCEMENT #3411 [RouteBundle]             Allow to reset the route entity target to null
+    * FEATURE     #3385 [SnippetBundle]           Implement snippet areas to replace default snippets 
+    * BUGFIX      #3401 [WebsiteBundle]           Fixed localizatin of sitemaps
+    * FEATURE     #3410 [DocumentManagerBundle]   Added configuration for set-default-author
+    * BUGFIX      #3400 [PreviewBundle]           Added host to preview request
+    * BUGFIX      #3391 [SnippetBundle]           Snippet list: Changed field sortable; Fixed bug with copy locale functionality
+    * ENHANCEMENT #3393 [AudienceTargetingBundle] Added translations for frequencies
+    * BUGFIX      #3392 [ContentBundle]           Fixed smart-content out of range
+    * FEATURE     #3399 [MediaBundle]             Added support for audience targeting
+    * FEATURE     #3387 [AudienceTargetingBundle] Added rule for detecting device type
+    * BUGFIX      #3385 [SecurityBundle]          Fixed UserLocaleListener
+    * BUGFIX      #3384 [Webspace]                Fixed usage of Sulu with non-default HTTP port
+    * ENHANCEMENT #3343 [MediaBundle]             Use media disposition type config to serve media files
+    * ENHANCEMENT #3390 [RouteBundle]             Avoid BC break in content-type "route" form
+    * ENHANCEMENT #3383 [RouteBundle]             Added upgrade sql-statement to add changed and created column
+
+* 1.6.0-RC1 (2017-06-01)
+    * BUGFIX      #3381 [WebsiteBundle]         Fixed partial redirect
+    * BUGFIX      #3379 [All]                   Upgraded to Symfony 3.3
+    * BUGFIX      #3378 [ContentBundle]         Fixed smart-content-manager
+    * ENHANCEMENT #3359 [ContentBundle]         Added check for existence before redirect
+    * FEATURE     #3354 [ContactBundle]         Added social media profile field
+    * FEATURE     #3212 [CategoryBundle]        Added functionality to move categories
+    * BUGFIX      #3363 [MediaBundle]           Fixed compatibility with newest imagick version
+    * BUGFIX      #3369 [DocumentManagerBundle] Adapt to latest ProxyManager
+    * ENHANCEMENT #3361 [ContentBundle]         Replace "getReferencedUuids" with a reference-store 
+    * FEATURE     #3368 [ContentBundle]         Used reference-store to avoid duplicated content via smart-content 
+    * ENHANCEMENT #3360 [ContentBundle]         Removed get-type from content-type-interface 
+    * BUGFIX      #3350 [RouteBundle]           Fixed restore route when conflict resolver is disabled
+    * BUGFIX      #3352 [RouteBundle]           Added default value to route-created field
+    * ENHANCEMENT #3344 [ContentBundle]         Added possibility to add additional attributes to "sulu:link"-tag
+    * ENHANCEMENT #3345 [CustomUrlBundle]       Added redirect parameter of custom-url
+    * BUGFIX      #3342 [ContentBundle]         Fixed "sulu:content:types:dump" command
+    * BUGFIX      #3338 [ContentBundle]         Fixed overwrite data in content-serialization
+    * ENHANCEMENT #3329 [ContentBundle]         Added possibility to set the published date for documents
+    * ENHANCEMENT #3332 [RouteBundle]           Added parameter to disable conflict-resolver
+    * FEATURE     #3326 [RouteBundle]           Added auditable to route
+    * ENHANCEMENT #3310 [All]                   Fixed test setup to correct init all bundle tests correctly
+    * FEATURE     #3310 [ContentBundle]         Implemented `sulu:webspaces:copy` command
+    * BUGFIX      #3322 [ContentBundle]         Fixed validator for resource-locator 
+    * ENHANCEMENT #3312 [SecurityBundle]        Added configuration options to send reset password message 
+    * ENHANCEMENT #3317 [All]                   Fixed jackalope conflict in composer.json
+    * ENHANCEMENT #3315 [RouteBundle]           Added route-history controller
+    * ENHANCEMENT #3306 [DocumentManagerBundle] Adapted document-manager service definition for new NodeNameSlugifier
+    * ENHANCEMENT #3302 [ContentBundle]         Added metadata to configure remove-live
+    * FEATURE     #3300 [ContentBundle]         Added onInvalid flag with ignore option to properties
+    * BUGFIX      #3298 [WebsiteBundle]         Fixed sitemap index provider without items
+    * ENHANCEMENT #3299 [RouteBundle]           Added route-generator pool to combine different route-generators
+    * ENHANCEMENT #2944 [ContentBundle]         Added general class for sulu form highlight section
+    * BUGFIX      #3292 [WebsiteBundle]         Fixed visibility of our logo in the web developer toolbar
+    * ENHANCEMENT #3291 [TagBundle]             Added all parameters to tag manager
+    * BUGFIX      #3290 [TagBundle]             Fixed tag persistence with tag manager
+    * ENHANCEMENT #3284 [TagBundle]             Added persistence to tag-bundle
+    * ENHANCEMENT #3280 [AudienceTargetBundle]  Added rule evaluation
+    * ENHANCEMENT #3266 [ContentBundle]         Added locale parameter to teaser-selection-list
+    * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
+    * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
+    * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
 * 1.5.5 (2017-06-28)
     * HOTFIX      #3404 [DocumentManagerBundle] Remove exception for non-Sulu user
 

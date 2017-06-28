@@ -1,6 +1,6 @@
 {
   "name": "sulu-admin",
-  "version": "1.4.0",
+  "version": "1.6.0",
   "homepage": "https://github.com/sulu/sulu",
   "authors": [],
   "license": "MIT",
@@ -14,7 +14,7 @@
   "dependencies": {
     "backbone-relational": "0.8.*",
     "globalize": "0.1.*",
-    "husky": "0.29.*",
+    "husky": "0.30.*",
     "jquery": "1.10.*",
     "require-css": "~0.1.8",
     "clipboard": "^1.5.9"

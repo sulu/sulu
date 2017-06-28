@@ -1296,6 +1296,52 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
+    public function testMove()
+    {
+        $parentId = $this->category3->getId();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/categories/' . $this->category4->getId() . '?locale=en&action=move&parent=' . $parentId
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($parentId, $response['parent']);
+
+        $client->request(
+            'GET',
+            '/api/categories/' . $this->category4->getId() . '?locale=en'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($parentId, $response['parent']);
+    }
+
+    public function testMoveRoot()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/categories/' . $this->category4->getId() . '?locale=en&action=move&parent=null'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('parent', $response);
+
+        $client->request(
+            'GET',
+            '/api/categories/' . $this->category4->getId() . '?locale=en'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('parent', $response);
+    }
+
     protected function createImageType()
     {
         $imageType = new MediaType();

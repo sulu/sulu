@@ -16,6 +16,11 @@ use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
+ * @deprecated
+ *
+ * Load snippets over the sulu_snippet_load_default is deprecated
+ * and will be removed in 2.0 use sulu_snippet_load_by_area instead.
+ *
  * Provides default snippets.
  */
 class DefaultSnippetTwigExtension extends \Twig_Extension
@@ -57,11 +62,13 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
 
     public function getDefault($snippetType, $webspaceKey = null, $locale = null)
     {
+        @trigger_error('Load snippets over the sulu_snippet_load_default is deprecated and will be removed in 2.0 use sulu_snippet_load_by_area instead', E_USER_DEPRECATED);
+
         if (!$webspaceKey) {
             $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         }
         if (!$locale) {
-            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         }
 
         $ids = [

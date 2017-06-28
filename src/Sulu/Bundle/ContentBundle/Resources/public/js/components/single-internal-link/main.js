@@ -13,7 +13,7 @@
  * @class SingleInternalLink
  * @constructor
  */
-define([], function() {
+define(['services/suluwebsite/reference-store'], function(referenceStore) {
 
     'use strict';
 
@@ -243,6 +243,12 @@ define([], function() {
 
         getSingleUrl = function(url, data) {
             return url.replace('{/uuid}', (!!data ? '/' + data : ''));
+        },
+
+        prefillReferenceStore = function() {
+            if (!!this.data) {
+                referenceStore.add('content', this.data);
+            }
         };
 
     return {
@@ -251,6 +257,7 @@ define([], function() {
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
             render.call(this);
+            prefillReferenceStore.call(this);
         }
     };
 });

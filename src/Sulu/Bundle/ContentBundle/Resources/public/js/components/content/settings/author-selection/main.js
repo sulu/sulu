@@ -11,8 +11,12 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
 
     'use strict';
 
-    var defaults = {
+    var constants = {
+            instanceName: 'author-selection'
+        },
+        defaults = {
         options: {
+            nullableAuthor: false,
             data: {
                 authored: null,
                 author: null
@@ -22,7 +26,8 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             matchings: JSON.parse(fieldsResponse)
         },
         translations: {
-            authored: 'sulu.content.form.settings.authored'
+            authored: 'sulu.content.form.settings.authored',
+            noAuthor: 'sulu.content.form.settings.no-author'
         },
         templates: {
             skeleton: [
@@ -36,7 +41,17 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                 '       </div>',
                 '   </div>',
                 '   <div class="grid-row search-row">',
-                '       <div class="grid-col-8"/>',
+                '       <div class="grid-col-8">',
+                '<% if (nullableAuthor) { %>',
+                '           <label for="no-author" class="m-top-5">',
+                '               <div class="custom-radio">',
+                '                   <input id="no-author" type="radio" class="form-element">',
+                '                   <span class="icon"></span>',
+                '               </div>',
+                '               <%= translations.noAuthor %>',
+                '            </label>',
+                '<% } %>',
+                '       </div>',
                 '       <div class="grid-col-4 author-selection-search"/>',
                 '   </div>',
                 '   <div class="grid-row">',
@@ -57,6 +72,7 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
             this.bindCustomEvents();
             this.html($(this.templates.skeleton({
                 translations: this.translations,
+                nullableAuthor: this.options.nullableAuthor,
                 authored: this.options.data.authored ? this.options.data.authored : null
             })));
 
@@ -66,19 +82,19 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                     options: {
                         el: '.author-selection-search',
                         appearance: 'white small',
-                        instanceName: 'author-selection-search'
+                        instanceName: constants.instanceName + '-search'
                     }
                 },
                 {
                     name: 'datagrid@husky',
                     options: {
                         el: '.author-selection-list',
-                        instanceName: 'author-selection',
+                        instanceName: constants.instanceName,
                         url: '/admin/api/contacts?flat=true',
                         resultKey: 'contacts',
                         sortable: false,
                         selectedCounter: false,
-                        searchInstanceName: 'author-selection-search',
+                        searchInstanceName: constants.instanceName + '-search',
                         searchFields: ['fullName', 'mainEmail'],
                         preselected: !!this.options.data.author ? [this.options.data.author] : [],
                         paginationOptions: {
@@ -97,13 +113,17 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
                     }
                 }
             ]);
+
+            if (this.options.nullableAuthor) {
+                this.initializeNullableRadio();
+            }
         },
 
         bindCustomEvents: function() {
             this.sandbox.once('sulu.content.contents.get-author', function() {
                 this.data.authored = this.$el.find('.authored-component').data('value');
 
-                this.sandbox.emit('husky.datagrid.author-selection.items.get-selected', function(ids, items) {
+                this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.items.get-selected', function(ids, items) {
                     if (items.length > 0) {
                         this.data.author = ids[0];
                         this.data.authorItem = items[0];
@@ -111,6 +131,31 @@ define(['jquery', 'text!/admin/api/contacts/fields'], function($, fieldsResponse
 
                     this.options.selectCallback(this.data);
                 }.bind(this), true);
+            }.bind(this));
+        },
+
+        initializeNullableRadio: function() {
+            var $radio = this.$el.find('#no-author'),
+                selectedId = this.data.author;
+
+            if (!this.data.author) {
+                $radio.prop('checked', true);
+            }
+
+            this.sandbox.on('husky.datagrid.' + constants.instanceName + '.item.select', function(id) {
+                selectedId = id;
+                $radio.prop('checked', false);
+            }.bind(this));
+
+            $radio.on('click', function() {
+                if (!$radio.prop('checked')) {
+                    return;
+                }
+
+                this.sandbox.emit('husky.datagrid.' + constants.instanceName + '.deselect.item', selectedId);
+                this.data.author = null;
+                this.data.authorItem = null;
+                selectedId = null;
             }.bind(this));
         }
     };

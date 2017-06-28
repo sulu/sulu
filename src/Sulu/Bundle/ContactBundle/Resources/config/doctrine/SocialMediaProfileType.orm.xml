@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType" table="co_social_media_profile_types"
+            repository-class="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileTypeRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" type="string" column="name" length="100"/>
+        <one-to-many field="socialMediaProfiles"
+                     target-entity="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile"
+                     mapped-by="socialMediaProfileType"/>
+    </entity>
+</doctrine-mapping>

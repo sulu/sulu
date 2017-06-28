@@ -11,67 +11,66 @@
 
 namespace Sulu\Bundle\MediaBundle\Twig;
 
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetMediaUrlDefaultInline()
+    public function testGetMediaUrlWithoutForceDispositionType()
+    {
+        $this->assertEquals(
+            'http://sulu.lo/media/1',
+            $this->getExtensionGetMediaUrlResult($this->getMediaMock()->reveal())
+        );
+    }
+
+    public function testGetMediaUrlWithForceInlineDispositionType()
+    {
+        $this->assertEquals(
+            'http://sulu.lo/media/1?inline=1',
+            $this->getExtensionGetMediaUrlResult($this->getMediaMock()->reveal(), ResponseHeaderBag::DISPOSITION_INLINE)
+        );
+    }
+
+    public function testGetMediaUrlWithForceAttachmentDispositionType()
+    {
+        $this->assertEquals(
+            'http://sulu.lo/media/1?inline=0',
+            $this->getExtensionGetMediaUrlResult($this->getMediaMock()->reveal(), ResponseHeaderBag::DISPOSITION_ATTACHMENT)
+        );
+    }
+
+    public function testGetMediaUrlWithForceWrongDispositionType()
+    {
+        $this->assertEquals(
+            'http://sulu.lo/media/1',
+            $this->getExtensionGetMediaUrlResult($this->getMediaMock()->reveal(), 'foobar')
+        );
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
+    protected function getMediaMock()
     {
         $mediaMock = $this->prophesize(Media::class);
         $mediaMock->getMimeType()->willReturn('application/pdf');
         $mediaMock->getUrl()->willReturn('http://sulu.lo/media/1');
 
-        $extension = new DispositionTypeTwigExtension('inline', ['application/pdf'], []);
-
-        $result = $extension->getMediaUrl($mediaMock->reveal());
-        $this->assertEquals('http://sulu.lo/media/1?inline=1', $result);
+        return $mediaMock;
     }
 
-    public function testGetMediaUrlDefaultAttachment()
+    /**
+     * @param Media $media
+     * @param string $dispositionType
+     *
+     * @return string
+     */
+    protected function getExtensionGetMediaUrlResult(Media $media, $dispositionType = null)
     {
-        $mediaMock = $this->prophesize(Media::class);
-        $mediaMock->getMimeType()->willReturn('application/pdf');
-        $mediaMock->getUrl()->willReturn('http://sulu.lo/media/1');
+        $extension = new DispositionTypeTwigExtension();
 
-        $extension = new DispositionTypeTwigExtension('attachment', ['application/pdf'], []);
-
-        $result = $extension->getMediaUrl($mediaMock->reveal());
-        $this->assertEquals('http://sulu.lo/media/1?inline=1', $result);
-    }
-
-    public function testGetMediaUrlOtherMimeTypeDefaultInline()
-    {
-        $mediaMock = $this->prophesize(Media::class);
-        $mediaMock->getMimeType()->willReturn('application/pdf');
-        $mediaMock->getUrl()->willReturn('http://sulu.lo/media/1');
-
-        $extension = new DispositionTypeTwigExtension('inline', ['application/pdf'], []);
-
-        $result = $extension->getMediaUrl($mediaMock->reveal());
-        $this->assertEquals('http://sulu.lo/media/1?inline=1', $result);
-    }
-
-    public function testGetMediaUrlOtherMimeTypeDefaultAttachment()
-    {
-        $mediaMock = $this->prophesize(Media::class);
-        $mediaMock->getMimeType()->willReturn('application/html');
-        $mediaMock->getUrl()->willReturn('http://sulu.lo/media/1');
-
-        $extension = new DispositionTypeTwigExtension('attachment', ['application/pdf'], []);
-
-        $result = $extension->getMediaUrl($mediaMock->reveal());
-        $this->assertEquals('http://sulu.lo/media/1', $result);
-    }
-
-    public function testGetMediaUrlWithDispositionType()
-    {
-        $mediaMock = $this->prophesize(Media::class);
-        $mediaMock->getMimeType()->willReturn('application/pdf');
-        $mediaMock->getUrl()->willReturn('http://sulu.lo/media/1');
-
-        $extension = new DispositionTypeTwigExtension('inline', ['application/pdf'], []);
-
-        $result = $extension->getMediaUrl($mediaMock->reveal(), 'attachment');
-        $this->assertEquals('http://sulu.lo/media/1', $result);
+        return $extension->getMediaUrl($media, $dispositionType);
     }
 }

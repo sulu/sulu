@@ -32318,11 +32318,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 if (this.table.rows[id]) {
                     // ensure that checkboxes are unchecked
                     this.sandbox.dom.prop(
-                        this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el), 'checked', false
+                        this.sandbox.dom.find(
+                            '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                            this.table.rows[id].$el
+                        ),
+                        'checked',
+                        false
                     );
                     if (this.table.rows[id].selectedChildren > 0) {
                         this.sandbox.dom.prop(
-                            this.sandbox.dom.find('.' + constants.checkboxClass, this.table.rows[id].$el),
+                            this.sandbox.dom.find(
+                                '.' + constants.checkboxClass + ', .' + constants.radioClass,
+                                this.table.rows[id].$el
+                            ),
                             'indeterminate',
                             true
                         );
@@ -38516,7 +38524,8 @@ define('__component__$toolbar@husky',[],function() {
 
                                 // add items if present
                                 if (!!item.dropdownItems) {
-                                    data = data.concat(item.dropdownItems);
+                                    data = !!item.dropdownOptions.concatRequestedItemsFirst
+                                        ? item.dropdownItems.concat(data) : data.concat(item.dropdownItems);
                                 }
 
                                 handleRequestedItems.call(this, data, item.id);

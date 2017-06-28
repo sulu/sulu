@@ -995,6 +995,10 @@ class NodeController extends RestController implements ClassResourceInterface, S
         );
         $form->submit($data, false);
 
+        if (array_key_exists('author', $data) && null === $data['author']) {
+            $document->setAuthor(null);
+        }
+
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
         }

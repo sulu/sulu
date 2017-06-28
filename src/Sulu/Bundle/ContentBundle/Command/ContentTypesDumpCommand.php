@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Command;
 
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -38,12 +39,12 @@ class ContentTypesDumpCommand extends ContainerAwareCommand
         /** @var ContentTypeManagerInterface $contentTypeManager */
         $contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
 
-        $table = $this->getHelper('table');
+        $table = new Table($output);
         $table->setHeaders(['Alias', 'Service ID']);
 
         foreach ($contentTypeManager->getAll() as $alias => $service) {
             $table->addRow([$alias, $service['id']]);
         }
-        $table->render($output);
+        $table->render();
     }
 }

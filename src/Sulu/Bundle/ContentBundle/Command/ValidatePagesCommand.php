@@ -15,7 +15,7 @@ use Jackalope\Query\Row;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Helper\TableHelper;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -76,8 +76,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
 
         $completeHeader = array_merge(['invalid', 'path'], $headers, ['description']);
 
-        /** @var TableHelper $table */
-        $table = $this->getHelper('table');
+        $table = new Table($output);
         $table->setHeaders($completeHeader);
         $result = 0;
         $messages = [];
@@ -113,7 +112,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
 
             $table->addRow($tableRow);
         }
-        $table->render($output);
+        $table->render();
 
         $style = new OutputFormatterStyle('red', null, ['bold', 'blink']);
         $output->getFormatter()->setStyle('error', $style);

@@ -13,7 +13,12 @@
  * @class TeaserSelection
  * @constructor
  */
-define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, itemForm) {
+define([
+    'underscore',
+    'config',
+    'services/suluwebsite/reference-store',
+    'text!./item.html'
+], function(_, Config, referenceStore, item) {
 
     'use strict';
 
@@ -39,7 +44,6 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             templates: {
                 url: '/admin/api/teasers?ids=<%= ids.join(",") %>&locale=<%= locale %>',
                 item: item,
-                itemForm: itemForm,
                 presentAsButton: '<span class="fa-eye present-as icon right border"><span class="selected-text"></span><span class="dropdown-toggle"></span></span>'
             },
             translations: {
@@ -356,6 +360,8 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
         initialize: function() {
             this.$el.addClass('teaser-selection');
 
+            this.prefillReferenceStore();
+
             this.render();
             renderDropdown.call(this);
 
@@ -485,6 +491,17 @@ define(['underscore', 'config', 'text!./item.html'], function(_, Config, item, i
             this.setData(data, false);
 
             return this.getItem(id);
+        },
+
+        prefillReferenceStore: function() {
+            var data = this.getData(),
+                items = data.items || [];
+
+            for (var key in items) {
+                if (items.hasOwnProperty(key)) {
+                    referenceStore.add(items[key].type, items[key].id);
+                }
+            }
         }
     };
 });

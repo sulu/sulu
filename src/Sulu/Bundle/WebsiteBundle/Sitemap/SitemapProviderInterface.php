@@ -26,11 +26,10 @@ interface SitemapProviderInterface
      *
      * @param int $page
      * @param string $portalKey
-     * @param string $locale
      *
      * @return SitemapUrl[]
      */
-    public function build($page, $portalKey, $locale);
+    public function build($page, $portalKey);
 
     /**
      * Create sitemap.

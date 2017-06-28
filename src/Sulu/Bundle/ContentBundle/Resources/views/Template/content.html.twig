@@ -1,4 +1,4 @@
-<form id="content-form" class="grid">
+<form id="content-form" class="form grid">
 
     {# if first property is a section render it as the highlighted section#}
     {% set firstSection = null %}
@@ -17,7 +17,8 @@
                         'languageCode': languageCode,
                         'userLocale': userLocale,
                         'title': false,
-                        'uuid':uuid
+                        'uuid':uuid,
+                        'excludedProperties': excludedProperties
                         } only %}
                     </div>
                 </div>
@@ -27,7 +28,8 @@
 
     <div class="fixed-width">
         {% include 'SuluContentBundle:Template:macros/properties.html.twig' with {
-            'properties': firstSection ? template.properties|slice(1) : template.properties
+            'properties': firstSection ? template.properties|slice(1) : template.properties,
+            'excludedProperties': excludedProperties
         } %}
     </div>
 </form>

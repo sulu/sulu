@@ -20,24 +20,6 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 interface ContentTypeInterface
 {
     /**
-     * @deprecated All the ContentTypes should be of this type, so declaring it explicitly is not necessary
-     */
-    const PRE_SAVE = 1;
-
-    /**
-     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore
-     */
-    const POST_SAVE = 2;
-
-    /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE.
-     *
-     * @return int
-     */
-    public function getType();
-
-    /**
      * Reads the value for given property from the content repository then sets the value of the Sulu property.
      *
      * @param NodeInterface     $node
@@ -153,14 +135,4 @@ interface ContentTypeInterface
      * @return array
      */
     public function getContentData(PropertyInterface $property);
-
-    /**
-     * Return the UUIDs that are referenced by this content type for
-     * the given PropertyInterface instance.
-     *
-     * @param PropertyInterface $property
-     *
-     * @return array
-     */
-    public function getReferencedUuids(PropertyInterface $property);
 }

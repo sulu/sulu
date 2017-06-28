@@ -26,10 +26,11 @@ use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
 use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile as SocialMediaProfileEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -552,6 +553,51 @@ class Contact extends ApiWrapper
     }
 
     /**
+     * Add social media profile.
+     *
+     * @param SocialMediaProfileEntity $socialMediaProfile
+     *
+     * @return Contact
+     */
+    public function addSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
+    {
+        $this->entity->addSocialMediaProfile($fax);
+
+        return $this;
+    }
+
+    /**
+     * Remove social media profile.
+     *
+     * @param SocialMediaProfileEntity $socialMediaProfile
+     */
+    public function removeSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
+    {
+        $this->entity->removeSocialMediaProfile($socialMediaProfile);
+    }
+
+    /**
+     * Get social media profiles.
+     *
+     * @VirtualProperty
+     * @SerializedName("socialMediaProfiles")
+     * @Groups({"fullContact"})
+     *
+     * @return SocialMediaProfileEntity[]
+     */
+    public function getSocialMediaProfiles()
+    {
+        $socialMediaProfiles = [];
+        if ($this->entity->getSocialMediaProfiles()) {
+            foreach ($this->entity->getSocialMediaProfiles() as $socialMediaProfile) {
+                $socialMediaProfiles[] = $socialMediaProfile;
+            }
+        }
+
+        return $socialMediaProfiles;
+    }
+
+    /**
      * Add url.
      *
      * @param UrlEntity $url
@@ -687,11 +733,11 @@ class Contact extends ApiWrapper
     /**
      * Add tag.
      *
-     * @param TagEntity $tag
+     * @param TagInterface $tag
      *
      * @return Contact
      */
-    public function addTag(TagEntity $tag)
+    public function addTag(TagInterface $tag)
     {
         $this->entity->addTag($tag);
 
@@ -701,9 +747,9 @@ class Contact extends ApiWrapper
     /**
      * Remove tag.
      *
-     * @param TagEntity $tag
+     * @param TagInterface $tag
      */
-    public function removeTag(TagEntity $tag)
+    public function removeTag(TagInterface $tag)
     {
         $this->entity->removeTag($tag);
     }

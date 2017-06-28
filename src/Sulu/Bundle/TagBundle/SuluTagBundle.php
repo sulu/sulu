@@ -11,8 +11,28 @@
 
 namespace Sulu\Bundle\TagBundle;
 
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * Entry-point of tag-bundle.
+ */
 class SuluTagBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $this->buildPersistence(
+            [
+                TagInterface::class => 'sulu.model.tag.class',
+            ],
+            $container
+        );
+    }
 }

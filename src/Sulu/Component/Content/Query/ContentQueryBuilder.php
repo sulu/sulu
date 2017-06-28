@@ -78,6 +78,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     protected $excerpt = true;
 
+    protected static $mixinTypes = ['sulu:page', 'sulu:home'];
+
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
@@ -161,14 +163,18 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
         }
 
-        // build sql2 query string
+        $mixinTypeWhere = implode(' OR ', array_map(function($mixinType) {
+            return 'page.[jcr:mixinTypes] = "' . $mixinType . '"';
+        }, static::$mixinTypes));
+
         $sql2 = sprintf(
-            "SELECT %s
+            'SELECT %s
              FROM [nt:unstructured] AS page
-             WHERE (page.[jcr:mixinTypes] = 'sulu:page' OR page.[jcr:mixinTypes] = 'sulu:home')
+             WHERE (%s)
                 AND (%s)
-                %s %s",
+                %s %s',
             implode(', ', $select),
+            $mixinTypeWhere,
             $where,
             count($order) > 0 ? 'ORDER BY' : '',
             implode(', ', $order)

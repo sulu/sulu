@@ -20,8 +20,18 @@
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.redirect_exception_listener"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber">
+            <argument type="service" id="router"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.default_locale.provider"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
+
+            <tag name="kernel.event_subscriber"/>
 
             <tag name="sulu.context" context="website"/>
         </service>

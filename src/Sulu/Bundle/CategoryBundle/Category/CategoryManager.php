@@ -395,12 +395,11 @@ class CategoryManager implements CategoryManagerInterface
             $categoryWrapper->setMeta($metaEntities);
         }
         if (!$patch || $this->getProperty($data, 'parent')) {
+            $parentCategory = null;
             if ($this->getProperty($data, 'parent')) {
-                $parentEntity = $this->findById($this->getProperty($data, 'parent'));
-            } else {
-                $parentEntity = null;
+                $parentCategory = $this->findById($this->getProperty($data, 'parent'));
             }
-            $categoryWrapper->setParent($parentEntity);
+            $categoryWrapper->setParent($parentCategory);
         }
 
         if (!$categoryWrapper->getName()) {
@@ -441,6 +440,26 @@ class CategoryManager implements CategoryManagerInterface
         // throw a category.delete event
         $event = new CategoryDeleteEvent($entity);
         $this->eventDispatcher->dispatch(CategoryEvents::CATEGORY_DELETE, $event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function move($id, $parent)
+    {
+        if (!$category = $this->categoryRepository->findCategoryById($id)) {
+            throw new CategoryIdNotFoundException($id);
+        }
+
+        $parentCategory = null;
+        if ($parent && !$parentCategory = $this->categoryRepository->findCategoryById($parent)) {
+            throw new CategoryIdNotFoundException($parent);
+        }
+
+        $category->setParent($parentCategory);
+        $this->em->flush();
+
+        return $category;
     }
 
     /**
@@ -505,7 +524,7 @@ class CategoryManager implements CategoryManagerInterface
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(
-            __method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
+            __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
             E_USER_DEPRECATED
         );
 
@@ -522,7 +541,7 @@ class CategoryManager implements CategoryManagerInterface
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(
-            __method__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
+            __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
             E_USER_DEPRECATED
         );
 

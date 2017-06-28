@@ -110,6 +110,8 @@
                 <argument key="versioning" type="collection">
                     <argument key="enabled">%sulu_document_manager.versioning.enabled%</argument>
                 </argument>
+                <argument key="default_author">%sulu_content.default_author%</argument>
+                <argument key="seo">%sulu_content.seo%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
@@ -164,6 +166,12 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <tag name="massive_build.builder" />
+        </service>
+
+        <!-- reference-store -->
+        <service id="sulu_content.reference_store.content"
+                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="content"/>
         </service>
     </services>
 </container>

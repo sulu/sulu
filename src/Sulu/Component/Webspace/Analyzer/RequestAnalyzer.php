@@ -46,7 +46,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
             return;
         }
 
-        $attributes = new RequestAttributes(['host' => $request->getHost(), 'scheme' => $request->getScheme(), 'requestUri' => $request->getRequestUri()]);
+        $attributes = new RequestAttributes(['scheme' => $request->getScheme(), 'requestUri' => $request->getRequestUri()]);
         foreach ($this->requestProcessors as $requestProcessor) {
             $attributes = $attributes->merge($requestProcessor->process($request, $attributes));
         }

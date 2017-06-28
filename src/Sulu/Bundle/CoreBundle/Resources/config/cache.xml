@@ -15,5 +15,28 @@
             <argument type="service" id="sulu_core.cache.memoize.cache"/>
             <argument type="string">%sulu_core.cache.memoize.default_lifetime%</argument>
         </service>
+
+        <service id="sulu_core.proxy_manager.configuration" class="ProxyManager\Configuration" public="false">
+            <call method="setProxiesTargetDir">
+                <argument>%sulu_core.proxy_cache_dir%</argument>
+            </call>
+            <call method="setGeneratorStrategy">
+                <argument type="service" id="sulu_core.proxy_manager.file_writer_generator_strategy"/>
+            </call>
+        </service>
+
+        <service id="sulu_core.proxy_manager.file_writer_generator_strategy"
+                 class="ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy"
+                 public="false">
+            <argument type="service" id="sulu_core.proxy_manager.file_locator"/>
+        </service>
+
+        <service id="sulu_core.proxy_manager.file_locator"
+                 class="ProxyManager\FileLocator\FileLocator"
+                 public="false">
+            <argument type="expression">
+                service('sulu_core.proxy_manager.configuration').getProxiesTargetDir()
+            </argument>
+        </service>
     </services>
 </container>

@@ -49,6 +49,11 @@
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
+        <service id="sulu_document_manager.node_name_slugifier"
+                 class="Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier" public="false">
+            <argument type="service" id="sulu_document_manager.slugifier"/>
+        </service>
+
         <service id="sulu_document_manager.namespace_registry" class="Sulu\Component\DocumentManager\NamespaceRegistry" public="false">
             <argument>%sulu_document_manager.namespace_mapping%</argument>
         </service>
@@ -87,19 +92,8 @@
             <argument type="service" id="sulu_document_manager.metadata_factory" />
         </service>
 
-        <service id="sulu_document_manager.proxy_manager.configuration" class="ProxyManager\Configuration" public="false">
-            <call method="setProxiesTargetDir">
-                <argument>%sulu.cache_dir%/documents</argument>
-            </call>
-        </service>
-
-        <service id="sulu_document_manager.proxy_manager.cache_warmer" class="Sulu\Bundle\DocumentManagerBundle\CacheWarmer\ProxyCacheWarmer">
-            <argument type="service" id="sulu_document_manager.proxy_manager.configuration"/>
-            <tag name="kernel.cache_warmer"/>
-        </service>
-
         <service id="sulu_document_manager.proxy_manager.factory.ghost" class="ProxyManager\Factory\LazyLoadingGhostFactory">
-            <argument type="service" id="sulu_document_manager.proxy_manager.configuration"/>
+            <argument type="service" id="sulu_core.proxy_manager.configuration"/>
         </service>
 
         <!-- Initializer -->

@@ -10,10 +10,9 @@
         </service>
 
         <service id="sulu_route.manager.route_manager" class="Sulu\Bundle\RouteBundle\Manager\RouteManager">
-            <argument type="collection"/>
-            <argument type="service" id="sulu.repository.route"/>
+            <argument type="service" id="sulu_route.chain_generator"/>
             <argument type="service" id="sulu_route.manager.conflict_resolver.auto_increment"/>
-            <argument>%sulu_route.mappings%</argument>
+            <argument type="service" id="sulu.repository.route"/>
         </service>
     </services>
 </container>
