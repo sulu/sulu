@@ -5,6 +5,10 @@ class RouteStore {
     routes: RouteMap;
 
     constructor() {
+        this.clear();
+    }
+
+    clear() {
         this.routes = {};
     }
 

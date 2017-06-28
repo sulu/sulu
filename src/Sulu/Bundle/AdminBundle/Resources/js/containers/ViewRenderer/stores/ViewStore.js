@@ -1,21 +1,25 @@
 // @flow
 class ViewStore {
-    map: {[string]: ReactClass<*>};
+    views: {[string]: ReactClass<*>};
 
     constructor() {
-        this.map = {};
+        this.clear();
+    }
+
+    clear() {
+        this.views = {};
     }
 
     add(name: string, view: ReactClass<*>) {
-        if (name in this.map) {
+        if (name in this.views) {
             throw new Error('The key "' + name + '" has already been used for another view');
         }
 
-        this.map[name] = view;
+        this.views[name] = view;
     }
 
     get(name: string): ReactClass<*> {
-        return this.map[name];
+        return this.views[name];
     }
 }
 

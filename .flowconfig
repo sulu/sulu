@@ -3,4 +3,4 @@ esproposal.decorators=ignore
 unsafe.enable_getters_and_setters=true
 
 [ignore]
-.*/vendor/.*
+.*/vendor/symfony/symfony/.*

@@ -1,11 +1,21 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import originalViewStore from '../../stores/ViewStore';
+import viewStore from '../../stores/ViewStore';
 
-test('Add view to ViewRegistry', () => {
-    const viewStore = Object.create(originalViewStore);
-    viewStore.map = {};
+beforeEach(() => {
+    viewStore.clear();
+});
 
+test('Clear all view from ViewStore', () => {
+    const component1 = () => (<h1>Test1</h1>);
+    viewStore.add('test1', component1);
+    expect(Object.keys(viewStore.views)).toHaveLength(1);
+
+    viewStore.clear();
+    expect(Object.keys(viewStore.views)).toHaveLength(0);
+});
+
+test('Add view to ViewStore', () => {
     const component1 = () => (<h1>Test1</h1>);
     const component2 = () => (<h1>Test2</h1>);
     viewStore.add('test1', component1);
@@ -16,9 +26,6 @@ test('Add view to ViewRegistry', () => {
 });
 
 test('Add view with existing key should throw', () => {
-    const viewStore = Object.create(originalViewStore);
-    viewStore.map = {};
-
     const component1 = () => (<h1>Test1</h1>);
     viewStore.add('test1', component1);
     expect(() => viewStore.add('test1', 'test1 react component')).toThrow(/test1/);
