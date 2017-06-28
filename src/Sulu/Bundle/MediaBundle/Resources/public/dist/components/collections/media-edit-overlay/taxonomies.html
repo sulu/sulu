@@ -1,0 +1,51 @@
+<form id="media-categories" class="grid">
+    <div class="grid-row">
+        <div class="grid-col-12">
+            <div class="form-group">
+                <label for="categories"><%= translate('sulu.media.categories') %></label>
+
+                <div id="categories">
+                    <div data-form="true"
+                            data-mapper-property="categories"
+                            data-aura-instance-name="categories"
+                            data-aura-component="datagrid@husky"
+                            data-aura-url="/admin/api/categories?locale=<%= categoryLocale %>&flat=true&sortBy=name&sortOrder=asc"
+                            data-aura-result-key="categories"
+                            data-type="categoryList"
+                            data-aura-pagination="false"
+                            data-aura-children-property-name="hasChildren"
+                            data-aura-resize-listeners="false"
+                            data-aura-view-options='{"table":{"noItemsText":"sulu.category.no-categories-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
+                            data-aura-matchings='[{"name":"name","content":"Name"},{"name":"id","disabled":true},{"name":"children","disabled":true},{"name":"parent","disabled":true}]'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% if (hasAudienceTargeting) { %>
+        <div class="grid-row">
+            <div class="grid-col-12">
+                <div class="form-group">
+                    <label for="audience-targeting-groups"><%= translate('sulu.media.audience-target-groups') %></label>
+
+                    <div id="audience-targeting-groups">
+                        <div class="audience-targeting-groups-container"
+                             data-form="true"
+                             data-mapper-property="targetGroups"
+                             data-aura-instance-name="targetGroups"
+                             data-type-instance-name="targetGroups"
+                             data-aura-component="datagrid@husky"
+                             data-aura-url="/admin/api/target-groups?flat=true&sortBy=title&sortOrder=asc"
+                             data-aura-result-key="target-groups"
+                             data-type="audienceTargetingGroups"
+                             data-aura-pagination="false"
+                             data-aura-resize-listeners="false"
+                             data-aura-view-options='{"table":{"cropContents":false,"noItemsText":"sulu_audience_targeting.no-target-groups-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
+                             data-aura-matchings='[{"name":"title","content":"Title"},{"name":"id","disabled":true}]'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</form>
