@@ -2,6 +2,8 @@ sudo: false
 
 language: php
 
+php: 7.1
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -18,14 +20,12 @@ env:
 
 matrix:
   include:
-    - php: 5.5
-      env:
+    - env:
         - PHP=true
-        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
-    - php: 7.0
-      env:
+        - COMPOSER_FLAGS="--prefer-dist --no-interaction"
+    - env:
         - PHP=true
-        - COMPOSER_FLAGS="--prefer-dist --no-interaction
+        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
