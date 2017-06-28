@@ -25,10 +25,10 @@ export default class Router {
     }
 
     match(path: string) {
-        for (const key in routeStore.getAll()) {
-            const route = routeStore.get(key);
-            const keys = [];
-            const match = pathToRegexp(route.path, keys).exec(path);
+        for (const name in routeStore.getAll()) {
+            const route = routeStore.get(name);
+            const names = [];
+            const match = pathToRegexp(route.path, names).exec(path);
 
             if (!match) {
                 continue;
@@ -36,17 +36,17 @@ export default class Router {
 
             const parameters = {};
             for (let i= 1; i < match.length; i++) {
-                parameters[keys[i - 1].name] = match[i];
+                parameters[names[i - 1].name] = match[i];
             }
 
-            this.navigate(key, parameters);
+            this.navigate(name, parameters);
 
             break;
         }
     }
 
-    @action navigate(key: string, parameters: Object = {}) {
-        const currentRoute = routeStore.get(key);
+    @action navigate(name: string, parameters: Object = {}) {
+        const currentRoute = routeStore.get(name);
         const currentParameters = {...currentRoute.parameters, ...parameters};
 
         if (this.currentRoute
