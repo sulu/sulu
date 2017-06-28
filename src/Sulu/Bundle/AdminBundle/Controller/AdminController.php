@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
@@ -21,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -56,6 +59,11 @@ class AdminController
      * @var SerializerInterface
      */
     private $serializer;
+
+    /**
+     * @var ViewHandlerInterface
+     */
+    private $viewHandler;
 
     /**
      * @var EngineInterface
@@ -109,6 +117,7 @@ class AdminController
         AdminPool $adminPool,
         JsConfigPool $jsConfigPool,
         SerializerInterface $serializer,
+        ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
         $environment,
@@ -125,6 +134,7 @@ class AdminController
         $this->adminPool = $adminPool;
         $this->jsConfigPool = $jsConfigPool;
         $this->serializer = $serializer;
+        $this->viewHandler = $viewHandler;
         $this->engine = $engine;
         $this->environment = $environment;
         $this->adminName = $adminName;
@@ -183,6 +193,19 @@ class AdminController
     public function indexV2Action()
     {
         return $this->engine->renderResponse('SuluAdminBundle:Admin:main.html.twig');
+    }
+
+    /**
+     * Returns all the configuration for the admin interface.
+     */
+    public function configurationAction(): Response
+    {
+        $view = View::create([
+            'routes' => $this->adminPool->getRoutes(),
+        ]);
+        $view->setFormat('json');
+
+        return $this->viewHandler->handle($view);
     }
 
     /**

@@ -1,4 +1,5 @@
 **/node_modules/
+**/vendor/
 
 # TODO Remove these rules once the old code is removed
 Gruntfile.js

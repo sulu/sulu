@@ -47,3 +47,40 @@ test('Get routes from RouteStore', () => {
         route2: route2,
     });
 });
+
+test('Add a route collection to the RouteStore', () => {
+    const route1 = {
+        name: 'route1',
+        view: 'view1',
+        pattern: '/route/1',
+        parameters: {
+            test: 'value',
+        },
+    };
+
+    const route2 = {
+        name: 'route2',
+        view: 'view2',
+        pattern: '/route/2',
+        parameters: {
+            test2: 'value2',
+        },
+    };
+
+    routeStore.addCollection([route1, route2]);
+
+    expect(routeStore.get('route1')).toBe(route1);
+    expect(routeStore.get('route2')).toBe(route2);
+});
+
+test('Add route with existing key should throw', () => {
+    const route = {
+        name: 'test_route',
+        view: 'view',
+        pattern: '/route',
+    };
+
+    routeStore.add(route);
+
+    expect(() => routeStore.add(route)).toThrow('test_route');
+});

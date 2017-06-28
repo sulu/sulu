@@ -9,18 +9,14 @@ import Router, {routeStore} from './services/Router';
 
 useStrict(true);
 
-viewStore.add('hello_world', () => (<h1>Hello World!</h1>));
+viewStore.add('sulu_admin.list', () => (<h1>Hello World!</h1>));
 
-routeStore.add({
-    name: 'hello_world',
-    view: 'hello_world',
-    path: '/',
-});
+function startApplication() {
+    const router = new Router(createHistory());
+    render(<Application router={router} />, document.getElementById('application'));
+}
 
-const router = new Router(createHistory());
-router.navigate('hello_world');
-
-render(
-    <Application router={router} />,
-    document.getElementById('application')
-);
+fetch('/admin/configuration', {credentials: 'same-origin'})
+    .then((response) => response.json())
+    .then((json) => routeStore.addCollection(json.routes))
+    .then(startApplication);

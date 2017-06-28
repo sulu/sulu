@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
@@ -24,6 +25,16 @@ abstract class Admin
      * @var Navigation
      */
     protected $navigation;
+
+    /**
+     * Returns all the routes for the frontend admin interface.
+     *
+     * @return Route[]
+     */
+    public function getRoutes(): array
+    {
+        return [];
+    }
 
     /**
      * Sets the navigation containing the position of the admin in the navigation.
@@ -47,6 +58,8 @@ abstract class Admin
 
     /**
      * Returns the bundle name for the javascript main file.
+     *
+     * @deprecated Will not be used and removed in 2.0
      *
      * @return string
      */

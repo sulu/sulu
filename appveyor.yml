@@ -1,7 +1,7 @@
 build: false
 
 init:
-  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php;c:\cygwin\bin;%PATH%
+  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php71;c:\cygwin\bin;%PATH%
 
   # uncomment to allow remote desktop connection
   #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -28,11 +28,12 @@ cache:
 
 install:
   # install SSL and php
+  - ps: Set-Service wuauserv -StartupType Manual
   - cinst -y OpenSSL.Light
-  - cinst -y php --version 7.0.9 --allow-empty-checksums
+  - cinst -y php
 
   # configure PHP and enable extensions.
-  - cd c:\tools\php
+  - cd c:\tools\php71
   - copy php.ini-production php.ini /Y
   - echo date.timezone="UTC" >> php.ini
   - echo extension_dir=ext >> php.ini
@@ -46,13 +47,11 @@ install:
   - echo extension=php_fileinfo.dll >> php.ini
   - echo memory_limit=1G >> php.ini
   - appveyor DownloadFile https://phar.phpunit.de/phpunit.phar
-  - ps: echo ("@php c:\tools\php\phpunit.phar %*") | Out-File phpunit.bat -encoding ascii
+  - ps: echo ("@php c:\tools\php71\phpunit.phar %*") | Out-File phpunit.bat -encoding ascii
 
   # install and start jackrabbit
   - cd %APPVEYOR_BUILD_FOLDER%
-  - ls
   - if not exist jackrabbit-standalone-%JACKRABBIT_VERSION%.jar appveyor DownloadFile http://archive.apache.org/dist/jackrabbit/%JACKRABBIT_VERSION%/jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
-  - ls
   - ps: Start-Process ("jackrabbit-standalone-" + $env:JACKRABBIT_VERSION + ".jar")
 
   # install composer and phpunit
