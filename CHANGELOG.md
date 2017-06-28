@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.6.0 (2017-06-28)
     * ENHANCEMENT #3423 [ContentBundle]           Added config values for seo restrictions
     * ENHANCEMENT #3416 [ContentBundle]           Changed skin of history-url to large
     * BUGFIX      #3414 [MediaBundle]             Added check for null target-groups
