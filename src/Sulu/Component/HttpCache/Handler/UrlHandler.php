@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use FOS\HttpCache\ProxyClient\Invalidation\PurgeCapable;
+use FOS\HttpCache\ProxyClient\ProxyClient;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class UrlHandler implements HandlerInvalidatePathInterface, HandlerFlushInterface
 {
     /**
-     * @var ProxyClientInterface
+     * @var ProxyClient
      */
     private $proxyClient;
 
@@ -44,12 +44,12 @@ class UrlHandler implements HandlerInvalidatePathInterface, HandlerFlushInterfac
     private $pathsToInvalidate = [];
 
     /**
-     * @param ProxyClientInterface $proxyClient
+     * @param ProxyClient $proxyClient
      * @param RequestStack $requestStack
      * @param ReplacerInterface $replacer
      */
     public function __construct(
-        ProxyClientInterface $proxyClient,
+        ProxyClient $proxyClient,
         RequestStack $requestStack,
         ReplacerInterface $replacer
     ) {
@@ -72,7 +72,7 @@ class UrlHandler implements HandlerInvalidatePathInterface, HandlerFlushInterfac
      */
     public function flush()
     {
-        if (!$this->proxyClient instanceof PurgeInterface) {
+        if (!$this->proxyClient instanceof PurgeCapable) {
             return false;
         }
 

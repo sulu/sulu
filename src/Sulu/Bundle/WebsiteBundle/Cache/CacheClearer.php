@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Cache;
 
-use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use FOS\HttpCache\ProxyClient\Invalidation\BanCapable;
+use FOS\HttpCache\ProxyClient\ProxyClient;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -47,7 +47,7 @@ class CacheClearer implements CacheClearerInterface
     private $varDir;
 
     /**
-     * @var ProxyClientInterface
+     * @var ProxyClient
      */
     private $proxyClient;
 
@@ -57,7 +57,7 @@ class CacheClearer implements CacheClearerInterface
      * @param $kernelRootDir
      * @param RequestStack $requestStack
      * @param string $varDir
-     * @param ProxyClientInterface $proxyClient
+     * @param ProxyClient $proxyClient
      */
     public function __construct(
         Filesystem $filesystem,
@@ -65,7 +65,7 @@ class CacheClearer implements CacheClearerInterface
         $kernelRootDir,
         RequestStack $requestStack,
         $varDir = null,
-        ProxyClientInterface $proxyClient = null
+        ProxyClient $proxyClient = null
     ) {
         $this->kernelRootDir = $kernelRootDir;
         $this->kernelEnvironment = $kernelEnvironment;
@@ -80,15 +80,15 @@ class CacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        if ($this->proxyClient instanceof BanInterface) {
+        if ($this->proxyClient instanceof BanCapable) {
             $request = $this->requestStack->getCurrentRequest();
             if (!$request) {
                 return;
             }
 
             $this->proxyClient->banPath(
-                BanInterface::REGEX_MATCH_ALL,
-                BanInterface::CONTENT_TYPE_ALL,
+                BanCapable::REGEX_MATCH_ALL,
+                BanCapable::CONTENT_TYPE_ALL,
                 [$request->getHost()]
             );
 

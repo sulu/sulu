@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\HttpCache\Tests\Unit\Handler;
 
-use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
-use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use FOS\HttpCache\ProxyClient\Invalidation\PurgeCapable;
+use FOS\HttpCache\ProxyClient\ProxyClient;
 use Prophecy\Argument;
 use Sulu\Component\HttpCache\Handler\UrlHandler;
 use Sulu\Component\HttpCache\HandlerInterface;
@@ -28,7 +28,7 @@ class UrlHandlerTest extends \PHPUnit_Framework_TestCase
     private $handler;
 
     /**
-     * @var ProxyClientInterface
+     * @var ProxyClient
      */
     private $proxyClient;
 
@@ -54,7 +54,7 @@ class UrlHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->proxyClient = $this->prophesize(PurgeInterface::class);
+        $this->proxyClient = $this->prophesize(PurgeCapable::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->request = $this->prophesize(Request::class);
         $this->replacer = $this->prophesize(ReplacerInterface::class);
