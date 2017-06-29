@@ -7,9 +7,10 @@ beforeEach(() => {
 });
 
 test('Set toolbar items and let mobx react', () => {
-    toolbarStore.setItems([{title: 'Test'}]);
+    toolbarStore.setItems([{title: 'Test', icon: 'test'}]);
 
     expect(isObservable(toolbarStore.items)).toBe(true);
     expect(toolbarStore.items).toHaveLength(1);
     expect(toolbarStore.items[0].title).toBe('Test');
+    expect(toolbarStore.items[0].icon).toBe('test');
 });

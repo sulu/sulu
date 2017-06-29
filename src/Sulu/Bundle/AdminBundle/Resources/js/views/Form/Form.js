@@ -7,9 +7,11 @@ export default class Form extends React.PureComponent {
         toolbarStore.setItems([
             {
                 title: 'Save',
+                icon: 'floppy-o',
             },
             {
                 title: 'Delete',
+                icon: 'trash-o',
             },
         ]);
     }

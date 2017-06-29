@@ -4,10 +4,12 @@ $itemBorder: 1px #f5f5f5 solid;
     display: inline-block;
     padding: 0 30px;
     line-height: 60px;
+    height: 60px;
 
     background: #fcfcfc;
 
-    color: #010002;
+    color: #112a46;
+    font-size: 14px;
     text-align: center;
 
     &:first-child {
@@ -17,4 +19,16 @@ $itemBorder: 1px #f5f5f5 solid;
     &:last-child {
         border-right: $itemBorder;
     }
+}
+
+.icon {
+    vertical-align: middle;
+
+    font-size: 20px;
+}
+
+.title {
+    vertical-align: middle;
+
+    padding: 0 0 0 10px;
 }

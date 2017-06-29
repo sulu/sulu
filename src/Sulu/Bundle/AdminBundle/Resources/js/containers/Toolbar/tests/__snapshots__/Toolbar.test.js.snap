@@ -5,11 +5,29 @@ exports[`Render the items from the ToolbarStore 1`] = `
   className="toolbar"
 >
   <ul>
-    <li>
-      Save
+    <li
+      className="item"
+    >
+      <span
+        className="icon fa fa-save"
+      />
+      <span
+        className="title"
+      >
+        Save
+      </span>
     </li>
-    <li>
-      Delete
+    <li
+      className="item"
+    >
+      <span
+        className="icon fa fa-delete"
+      />
+      <span
+        className="title"
+      >
+        Delete
+      </span>
     </li>
   </ul>
 </header>

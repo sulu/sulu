@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon should render 1`] = `
+<span
+  className="fa fa-save"
+/>
+`;
+
+exports[`Icon should render with class names 1`] = `
+<span
+  className="test fa fa-edit"
+/>
+`;

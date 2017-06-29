@@ -7,9 +7,11 @@ export default class List extends React.PureComponent {
         toolbarStore.setItems([
             {
                 title: 'Add',
+                icon: 'plus-circle',
             },
             {
                 title: 'Delete',
+                icon: 'trash-o',
             },
         ]);
     }

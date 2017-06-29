@@ -10,9 +10,11 @@ test('Render the items from the ToolbarStore', () => {
     toolbarStore.items = [
         {
             title: 'Save',
+            icon: 'save',
         },
         {
             title: 'Delete',
+            icon: 'delete',
         },
     ];
     const view = ReactTestRenderer.create(<Toolbar />);
