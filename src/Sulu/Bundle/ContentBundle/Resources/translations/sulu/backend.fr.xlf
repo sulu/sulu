@@ -308,7 +308,7 @@
             </trans-unit>
             <trans-unit id="b50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords.note">
                 <source>sulu.content.seo.keywords.note</source>
-                <target>S'il vous plaît utiliser un maximum de 5 mots clés, en rapport avec le contenu de la page, séparés par des virgules.</target>
+                <target>S'il vous plaît utiliser un maximum de %s mots clés, en rapport avec le contenu de la page, séparés par des virgules.</target>
             </trans-unit>
             <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
                 <source>sulu.content.seo.keywords-left</source>
@@ -316,11 +316,11 @@
             </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
                 <source>sulu.content.seo.title.note</source>
-                <target>Le meta title est limitée à 55 caractères.</target>
+                <target>Le meta title est limitée à %s caractères.</target>
             </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>
-                <target>La meta description est limitée à 155 caractères.</target>
+                <target>La meta description est limitée à %s caractères.</target>
             </trans-unit>
             <trans-unit id="a945ccdbf95d2852ab6390cea24ebb6f" resname="content.contents.title">
                 <source>content.contents.title</source>
