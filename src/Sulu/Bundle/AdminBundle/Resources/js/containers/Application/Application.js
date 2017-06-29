@@ -5,6 +5,7 @@ import Router from '../../services/Router';
 import SplitView from '../SplitView';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
+import './application.scss';
 
 @observer
 export default class Application extends React.PureComponent {

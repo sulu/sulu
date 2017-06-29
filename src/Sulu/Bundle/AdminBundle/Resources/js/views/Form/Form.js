@@ -8,6 +8,9 @@ export default class Form extends React.PureComponent {
             {
                 title: 'Save',
             },
+            {
+                title: 'Delete',
+            },
         ]);
     }
 

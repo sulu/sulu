@@ -4,7 +4,14 @@ import {toolbarStore} from '../../containers/Toolbar';
 
 export default class List extends React.PureComponent {
     componentWillMount() {
-        toolbarStore.setItems([]);
+        toolbarStore.setItems([
+            {
+                title: 'Add',
+            },
+            {
+                title: 'Delete',
+            },
+        ]);
     }
 
     render() {
