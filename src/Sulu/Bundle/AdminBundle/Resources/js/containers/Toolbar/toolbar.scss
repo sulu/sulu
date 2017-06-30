@@ -1,7 +1,12 @@
+@import '../Application/colors.scss';
+
+$toolbarBackgroundColor: $white;
+$shadowColor: $mischka;
+
 .toolbar {
     height: 60px;
     margin: 0;
 
-    background: #fff;
-    box-shadow: 0 3px 2px #dee0e7;
+    background: $toolbarBackgroundColor;
+    box-shadow: 0 3px 2px $shadowColor;
 }

@@ -1,4 +1,9 @@
-$itemBorder: 1px #f5f5f5 solid;
+@import '../Application/colors.scss';
+
+$itemBackgroundColor: $alabaster;
+$itemTextColor: $blueZodiac;
+
+$itemBorder: 1px $wildSand solid;
 
 .item {
     display: inline-block;
@@ -6,9 +11,9 @@ $itemBorder: 1px #f5f5f5 solid;
     line-height: 60px;
     height: 60px;
 
-    background: #fcfcfc;
+    background: $itemBackgroundColor;
 
-    color: #112a46;
+    color: $itemTextColor;
     font-size: 14px;
     text-align: center;
     cursor: pointer;
