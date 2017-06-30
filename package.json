@@ -8,6 +8,7 @@
     },
     "devDependencies": {
         "babel-eslint": "^7.2.3",
+        "empty": "^0.10.1",
         "eslint": "^4.0.0",
         "eslint-plugin-class-property": "^1.0.6",
         "eslint-plugin-flowtype": "^2.34.0",

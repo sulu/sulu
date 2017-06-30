@@ -7,6 +7,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
   <ul>
     <li
       className="item"
+      onClick={[Function]}
     >
       <span
         className="icon fa fa-save"
@@ -19,6 +20,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
     </li>
     <li
       className="item"
+      onClick={[Function]}
     >
       <span
         className="icon fa fa-delete"

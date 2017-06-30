@@ -11,6 +11,7 @@ $itemBorder: 1px #f5f5f5 solid;
     color: #112a46;
     font-size: 14px;
     text-align: center;
+    cursor: pointer;
 
     &:first-child {
         border-left: $itemBorder;

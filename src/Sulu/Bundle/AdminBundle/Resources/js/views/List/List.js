@@ -8,10 +8,16 @@ export default class List extends React.PureComponent {
             {
                 title: 'Add',
                 icon: 'plus-circle',
+                onClick: () => {
+                    console.log('Add clicked');
+                },
             },
             {
                 title: 'Delete',
                 icon: 'trash-o',
+                onClick: () => {
+                    console.log('Delete clicked');
+                },
             },
         ]);
     }

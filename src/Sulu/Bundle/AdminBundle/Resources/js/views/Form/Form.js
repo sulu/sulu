@@ -8,10 +8,16 @@ export default class Form extends React.PureComponent {
             {
                 title: 'Save',
                 icon: 'floppy-o',
+                onClick: () => {
+                    console.log('Save clicked');
+                },
             },
             {
                 title: 'Delete',
                 icon: 'trash-o',
+                onClick: () => {
+                    console.log('Delete clicked');
+                },
             },
         ]);
     }
