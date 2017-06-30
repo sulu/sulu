@@ -8,11 +8,18 @@ export default class Item extends React.Component {
     props: {
         title: string,
         icon: string,
+        enabled: boolean,
         onClick: () => void,
     };
 
+    static defaultProps = {
+        enabled: true,
+    };
+
     handleClick = () => {
-        this.props.onClick();
+        if (this.props.enabled) {
+            this.props.onClick();
+        }
     };
 
     render() {
