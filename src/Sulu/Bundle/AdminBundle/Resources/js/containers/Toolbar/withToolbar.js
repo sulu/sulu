@@ -10,7 +10,9 @@ export default function withToolbar(Component: ReactClass<*>, toolbar: () => Arr
 
         setToolbarItems = (component: React$Element<*>) => {
             this.disposer = autorun(() => {
-                toolbarStore.setItems(toolbar.call(component));
+                if (component) {
+                    toolbarStore.setItems(toolbar.call(component));
+                }
             });
         };
 

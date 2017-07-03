@@ -1,23 +1,19 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import type {Item as ItemType} from './types';
 import Icon from '../../components/Icon';
 import itemStyles from './item.scss';
 
 export default class Item extends React.PureComponent {
-    props: {
-        title: string,
-        icon: string,
-        enabled: boolean,
-        onClick: () => void,
-    };
+    props: ItemType;
 
     static defaultProps = {
         enabled: true,
     };
 
     handleClick = () => {
-        if (this.props.enabled) {
+        if (this.props.enabled && this.props.onClick) {
             this.props.onClick();
         }
     };
