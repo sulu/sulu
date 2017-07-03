@@ -6,7 +6,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
 >
   <ul>
     <li
-      className="item"
+      className="item item-disabled"
       onClick={[Function]}
     >
       <span

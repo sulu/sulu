@@ -69,6 +69,7 @@
             "error",
             "multiline-multiprop"
         ],
+        "react/prop-types": "off",
         "flowtype/require-valid-file-annotation": [
             "error",
             "always",

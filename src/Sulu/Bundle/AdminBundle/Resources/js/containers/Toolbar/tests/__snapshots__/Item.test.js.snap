@@ -2,7 +2,7 @@
 
 exports[`Render disabled item 1`] = `
 <li
-  className="item"
+  className="item item-disabled"
   onClick={[Function]}
 >
   <span

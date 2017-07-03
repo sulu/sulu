@@ -1,30 +1,24 @@
 // @flow
 import React from 'react';
-import {toolbarStore} from '../../containers/Toolbar';
+import {withToolbar} from '../../containers/Toolbar';
 
-export default class List extends React.PureComponent {
-    componentWillMount() {
-        toolbarStore.setItems([
-            {
-                title: 'Add',
-                icon: 'plus-circle',
-                onClick: () => {
-                    console.log('Add clicked');
-                },
-            },
-            {
-                title: 'Delete',
-                icon: 'trash-o',
-                onClick: () => {
-                    console.log('Delete clicked');
-                },
-            },
-        ]);
-    }
-
+class List extends React.PureComponent {
     render() {
         return (
             <h1>List</h1>
         );
     }
 }
+
+export default withToolbar(List, function() {
+    return [
+        {
+            title: 'Add',
+            icon: 'plus-circle',
+        },
+        {
+            title: 'Delete',
+            icon: 'trash-o',
+        },
+    ];
+});
