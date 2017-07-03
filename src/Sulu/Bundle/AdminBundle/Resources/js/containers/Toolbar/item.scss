@@ -11,19 +11,17 @@ $itemBorder: 1px $wildSand solid;
     padding: 0 30px;
     line-height: 60px;
     height: 60px;
-
     background: $itemBackgroundColor;
-
     color: $itemTextColor;
     font-size: 14px;
     text-align: center;
     cursor: pointer;
 
-    &:first-child {
+    &:first-child {
         border-left: $itemBorder;
     }
 
-    &:last-child {
+    &:last-child {
         border-right: $itemBorder;
     }
 }
@@ -35,12 +33,10 @@ $itemBorder: 1px $wildSand solid;
 
 .icon {
     vertical-align: middle;
-
     font-size: 20px;
 }
 
 .title {
     vertical-align: middle;
-
     padding: 0 0 0 10px;
 }

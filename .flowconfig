@@ -5,3 +5,4 @@ module.name_mapper='.+\.s?css' -> 'empty/object'
 
 [ignore]
 .*/vendor/symfony/symfony/.*
+.*/node_modules/stylelint/.*
