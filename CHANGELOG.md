@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3425 [ContentBundle]           Fixed translations for seo restrictions in en/nl/fr
+
 * 1.6.0 (2017-06-28)
     * ENHANCEMENT #3423 [ContentBundle]           Added config values for seo restrictions
     * ENHANCEMENT #3416 [ContentBundle]           Changed skin of history-url to large
