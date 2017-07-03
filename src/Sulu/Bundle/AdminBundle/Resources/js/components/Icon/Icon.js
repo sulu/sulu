@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import fontAwesomeStyle from 'font-awesome/css/font-awesome.min.css';
 
-export default class Icon extends React.Component {
+export default class Icon extends React.PureComponent {
     props: {
         className: string,
         name: string,

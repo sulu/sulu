@@ -10,6 +10,7 @@ test('Render the items from the ToolbarStore', () => {
     toolbarStore.items = [
         {
             title: 'Save',
+            enabled: false,
             icon: 'save',
         },
         {

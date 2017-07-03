@@ -2,6 +2,7 @@
 
 $itemBackgroundColor: $alabaster;
 $itemTextColor: $blueZodiac;
+$itemTextColorDisabled: $silver;
 
 $itemBorder: 1px $wildSand solid;
 
@@ -25,6 +26,11 @@ $itemBorder: 1px $wildSand solid;
     &:last-child {
         border-right: $itemBorder;
     }
+}
+
+.item-disabled {
+    color: $itemTextColorDisabled;
+    cursor: default;
 }
 
 .icon {
