@@ -33,10 +33,6 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
 
         $attributes = ['requestUri' => $request->getUri()];
 
-        if (null !== $localization = $portalInformation->getLocalization()) {
-            $request->setLocale($localization->getLocale());
-        }
-
         $attributes['portalInformation'] = $portalInformation;
 
         $attributes['getParameter'] = $request->query->all();
@@ -55,8 +51,14 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         }
 
         $attributes['localization'] = $portalInformation->getLocalization();
+
+        if (!$attributes['localization'] && $portalInformation->getPortal()) {
+            $attributes['localization'] = $portalInformation->getPortal()->getDefaultLocalization();
+        }
+
         if ($attributes['localization']) {
             $attributes['locale'] = $attributes['localization']->getLocale();
+            $request->setLocale($attributes['locale']);
         }
 
         $attributes['segment'] = $portalInformation->getSegment();
