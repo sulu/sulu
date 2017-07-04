@@ -19,15 +19,15 @@ export default class Item extends React.PureComponent {
     };
 
     render() {
-        const liClassNames = {
+        const liClassNames = classNames({
             [`${itemStyles['item']}`]: true,
             [`${itemStyles['item-disabled']}`]: !this.props.enabled,
-        };
+        });
 
         return (
-            <li className={classNames(liClassNames)} onClick={this.handleClick}>
-                <Icon className={classNames(itemStyles.icon)} name={this.props.icon} />
-                <span className={classNames(itemStyles.title)}>{this.props.title}</span>
+            <li className={liClassNames} onClick={this.handleClick}>
+                <Icon className={itemStyles.icon} name={this.props.icon} />
+                <span className={itemStyles.title}>{this.props.title}</span>
             </li>
         );
     }
