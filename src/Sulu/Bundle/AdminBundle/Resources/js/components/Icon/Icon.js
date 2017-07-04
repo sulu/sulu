@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import fontAwesomeStyle from 'font-awesome/css/font-awesome.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 export default class Icon extends React.PureComponent {
     props: {
@@ -12,8 +12,8 @@ export default class Icon extends React.PureComponent {
     render() {
         const className = classNames(
             this.props.className,
-            fontAwesomeStyle['fa'],
-            fontAwesomeStyle['fa-' + this.props.name]
+            'fa',
+            'fa-' + this.props.name
         );
 
         return (
