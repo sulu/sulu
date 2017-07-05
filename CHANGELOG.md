@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3432 [SnippetBundle]           Fixed not working smart content in snippet bundle
     * HOTFIX      #3431 [MediaBundle]             Fixed file download url filename encoding
     * HOTFIX      #3430 [WebsiteBundle]           Fixed 404 page for none localized urls
 
