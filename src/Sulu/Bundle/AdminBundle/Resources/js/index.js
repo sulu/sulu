@@ -6,10 +6,13 @@ import createHistory from 'history/createHashHistory';
 import Application from './containers/Application';
 import {viewStore} from './containers/ViewRenderer';
 import Router, {routeStore} from './services/Router';
+import Form from './views/Form';
+import List from './views/List';
 
 useStrict(true);
 
-viewStore.add('sulu_admin.list', () => (<h1>Hello World!</h1>));
+viewStore.add('sulu_admin.list', List);
+viewStore.add('sulu_admin.form', Form);
 
 function startApplication() {
     const router = new Router(createHistory());

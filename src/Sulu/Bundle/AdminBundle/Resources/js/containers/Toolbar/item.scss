@@ -1,0 +1,41 @@
+@import '../Application/colors.scss';
+
+$itemBackgroundColor: $alabaster;
+$itemTextColor: $blueZodiac;
+$itemTextColorDisabled: $silver;
+
+$itemBorder: 1px $wildSand solid;
+
+.item {
+    padding: 0 30px;
+    border: none;
+    outline: none;
+    height: 60px;
+    background: $itemBackgroundColor;
+    color: $itemTextColor;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:first-child {
+        border-left: $itemBorder;
+    }
+
+    &:last-child {
+        border-right: $itemBorder;
+    }
+}
+
+.item-disabled {
+    color: $itemTextColorDisabled;
+    cursor: default;
+}
+
+.icon {
+    vertical-align: middle;
+    font-size: 20px;
+}
+
+.title {
+    vertical-align: middle;
+    padding: 0 0 0 10px;
+}

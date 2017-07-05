@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render the items from the ToolbarStore 1`] = `
+<header
+  className="toolbar"
+>
+  <nav>
+    <button
+      className="item item-disabled"
+      onClick={[Function]}
+    >
+      <span
+        className="icon fa fa-save"
+      />
+      <span
+        className="title"
+      >
+        Save
+      </span>
+    </button>
+    <button
+      className="item"
+      onClick={[Function]}
+    >
+      <span
+        className="icon fa fa-delete"
+      />
+      <span
+        className="title"
+      >
+        Delete
+      </span>
+    </button>
+  </nav>
+</header>
+`;

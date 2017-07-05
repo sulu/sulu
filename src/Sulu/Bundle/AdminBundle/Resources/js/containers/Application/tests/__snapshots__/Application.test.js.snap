@@ -2,7 +2,11 @@
 
 exports[`Application should not fail if current route does not exist 1`] = `
 <div>
-  <header />
+  <header
+    className="toolbar"
+  >
+    <nav />
+  </header>
   <main />
   <aside />
 </div>
@@ -10,7 +14,11 @@ exports[`Application should not fail if current route does not exist 1`] = `
 
 exports[`Application should render based on current route 1`] = `
 <div>
-  <header />
+  <header
+    className="toolbar"
+  >
+    <nav />
+  </header>
   <main>
     <h1>
       Test

@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {autorun} from 'mobx';
+import {isObservable} from 'mobx';
 import createHistory from 'history/createMemoryHistory';
 import Router from '../Router';
 import routeStore from '../stores/RouteStore';
@@ -29,6 +29,7 @@ test('Navigate to route using state', () => {
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
+    expect(isObservable(router.currentRoute)).toBe(true);
     expect(router.currentRoute.view).toBe('form');
     expect(router.currentRoute.parameters.type).toBe('page');
     expect(router.currentParameters.uuid).toBe('some-uuid');
@@ -93,35 +94,6 @@ test('Navigate to route changing only parameters', () => {
 
     router.navigate('page', {uuid: 'some-other-uuid'});
     expect(history.location.pathname).toBe('/pages/some-other-uuid');
-});
-
-test('Navigate to route using history and let mobx react', () => {
-    routeStore.getAll.mockReturnValue({
-        home: {
-            name: 'home',
-            view: 'home',
-            path: '/',
-        },
-        page: {
-            name: 'page',
-            view: 'page',
-            path: '/page',
-        },
-    });
-
-    const history = createHistory();
-    const router = new Router(history);
-
-    let reacted = false;
-    autorun(() => {
-        reacted = true;
-        router.currentRoute;
-    });
-    reacted = false;
-
-    history.push('/page');
-
-    expect(reacted).toBe(true);
 });
 
 test('Navigate to route and let history react', () => {

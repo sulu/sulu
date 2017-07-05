@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render disabled item 1`] = `
+<button
+  className="item item-disabled"
+  onClick={[Function]}
+>
+  <span
+    className="icon fa fa-undefined"
+  />
+  <span
+    className="title"
+  />
+</button>
+`;
+
+exports[`Render item 1`] = `
+<button
+  className="item"
+  onClick={[Function]}
+>
+  <span
+    className="icon fa fa-undefined"
+  />
+  <span
+    className="title"
+  />
+</button>
+`;
