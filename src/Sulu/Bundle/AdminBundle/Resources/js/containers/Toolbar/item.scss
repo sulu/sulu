@@ -9,6 +9,7 @@ $itemBorder: 1px $wildSand solid;
 .item {
     padding: 0 30px;
     border: none;
+    outline: none;
     height: 60px;
     background: $itemBackgroundColor;
     color: $itemTextColor;
