@@ -2,10 +2,11 @@
 <html>
     <head>
         <title>SULU</title>
+        <link rel="stylesheet" href="{{ preload(asset('main.css'), {as: 'style'}) }}">
     </head>
     <body>
         <div id="application">
         </div>
-        <script src="{{ asset('main.js')}}"></script>
+        <script src="{{ preload(asset('main.js'), {as: 'script'})}}"></script>
     </body>
 </html>
