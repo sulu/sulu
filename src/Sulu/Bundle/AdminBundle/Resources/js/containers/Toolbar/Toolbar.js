@@ -10,9 +10,9 @@ export default class Toolbar extends React.PureComponent {
     render() {
         return (
             <header className={toolbarStyles.toolbar}>
-                <ul>
+                <nav>
                     {toolbarStore.items.map((item) => (<Item key={item.title} {...item} />))}
-                </ul>
+                </nav>
             </header>
         );
     }

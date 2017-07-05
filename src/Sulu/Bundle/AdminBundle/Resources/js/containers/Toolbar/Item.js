@@ -25,10 +25,10 @@ export default class Item extends React.PureComponent {
         });
 
         return (
-            <li className={liClassNames} onClick={this.handleClick}>
+            <button className={liClassNames} onClick={this.handleClick}>
                 <Icon className={itemStyles.icon} name={this.props.icon} />
                 <span className={itemStyles.title}>{this.props.title}</span>
-            </li>
+            </button>
         );
     }
 }

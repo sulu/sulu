@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render disabled item 1`] = `
-<li
+<button
   className="item item-disabled"
   onClick={[Function]}
 >
@@ -11,11 +11,11 @@ exports[`Render disabled item 1`] = `
   <span
     className="title"
   />
-</li>
+</button>
 `;
 
 exports[`Render item 1`] = `
-<li
+<button
   className="item"
   onClick={[Function]}
 >
@@ -25,5 +25,5 @@ exports[`Render item 1`] = `
   <span
     className="title"
   />
-</li>
+</button>
 `;

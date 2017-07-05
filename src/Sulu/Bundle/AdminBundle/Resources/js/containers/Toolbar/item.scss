@@ -7,14 +7,12 @@ $itemTextColorDisabled: $silver;
 $itemBorder: 1px $wildSand solid;
 
 .item {
-    display: inline-block;
     padding: 0 30px;
-    line-height: 60px;
+    border: none;
     height: 60px;
     background: $itemBackgroundColor;
     color: $itemTextColor;
     font-size: 14px;
-    text-align: center;
     cursor: pointer;
 
     &:first-child {

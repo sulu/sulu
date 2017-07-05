@@ -1,12 +1,8 @@
+@import 'normalize.css/normalize.css';
 @import './colors.scss';
 
 $bodyBackgroundColor: $wildSand;
 $h1TextColor: $blueZodiac;
-
-* {
-    margin: 0;
-    padding: 0;
-}
 
 body {
     background: $bodyBackgroundColor;

@@ -4,8 +4,8 @@ exports[`Render the items from the ToolbarStore 1`] = `
 <header
   className="toolbar"
 >
-  <ul>
-    <li
+  <nav>
+    <button
       className="item item-disabled"
       onClick={[Function]}
     >
@@ -17,8 +17,8 @@ exports[`Render the items from the ToolbarStore 1`] = `
       >
         Save
       </span>
-    </li>
-    <li
+    </button>
+    <button
       className="item"
       onClick={[Function]}
     >
@@ -30,7 +30,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
       >
         Delete
       </span>
-    </li>
-  </ul>
+    </button>
+  </nav>
 </header>
 `;
