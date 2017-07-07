@@ -46,7 +46,7 @@ class DataCacheTest extends \PHPUnit_Framework_TestCase
 
     public function testWrite()
     {
-        $file = tempnam('/tmp', 'sulu-test');
+        $file = tempnam(sys_get_temp_dir(), 'sulu-test');
         $cache = new DataCache($file);
 
         $cache->write(['test' => 'test']);
