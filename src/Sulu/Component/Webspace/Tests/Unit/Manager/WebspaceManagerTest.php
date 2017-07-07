@@ -665,6 +665,30 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['https://sulu.lo/test'], $result);
     }
 
+    public function testFindUrlsByResourceLocatorRoot()
+    {
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart');
+
+        $this->assertCount(2, $result);
+        $this->assertContains('http://massiveart.lo/en-us/w', $result);
+        $this->assertContains('http://massiveart.lo/en-us/s', $result);
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'de_at', 'sulu_io');
+        $this->assertEquals(['http://sulu.lo/'], $result);
+    }
+
+    public function testFindUrlsByResourceLocatorRootWithScheme()
+    {
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart', null, 'https');
+
+        $this->assertCount(2, $result);
+        $this->assertContains('https://massiveart.lo/en-us/w', $result);
+        $this->assertContains('https://massiveart.lo/en-us/s', $result);
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'de_at', 'sulu_io', null, 'https');
+        $this->assertEquals(['https://sulu.lo/'], $result);
+    }
+
     public function testFindUrlByResourceLocator()
     {
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
