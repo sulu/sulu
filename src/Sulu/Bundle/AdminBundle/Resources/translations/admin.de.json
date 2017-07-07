@@ -1,4 +1,5 @@
 {
-    "sulu_admin.save": "Speichern",
-    "sulu_admin.delete": "Löschen"
+    "sulu_admin.add": "Hinzufügen",
+    "sulu_admin.delete": "Löschen",
+    "sulu_admin.save": "Speichern"
 }

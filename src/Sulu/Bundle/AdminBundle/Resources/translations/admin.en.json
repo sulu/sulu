@@ -1,4 +1,5 @@
 {
-    "sulu_admin.save": "Save",
-    "sulu_admin.delete": "Delete"
+    "sulu_admin.add": "Add",
+    "sulu_admin.delete": "Delete",
+    "sulu_admin.save": "Save"
 }

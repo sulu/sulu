@@ -204,6 +204,19 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resultTranslations, json_decode($response->getContent(), true));
     }
 
+    public function testTranslationActionWithoutFallback()
+    {
+        $request = new Request(['locale' => 'en']);
+
+        $catalogue = $this->prophesize(MessageCatalogueInterface::class);
+        $catalogue->all('admin')->willReturn(['save' => 'Save']);
+        $catalogue->getFallbackCatalogue()->willReturn(null);
+        $this->translator->getCatalogue('en')->willReturn($catalogue->reveal());
+
+        $response = $this->adminController->translationsAction($request);
+        $this->assertEquals(['save' => 'Save'], json_decode($response->getContent(), true));
+    }
+
     public function testContextsAction()
     {
         $request = $this->prophesize(Request::class);

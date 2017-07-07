@@ -223,10 +223,12 @@ class AdminController
         $catalogue = $this->translator->getCatalogue($request->query->get('locale'));
         $fallbackCatalogue = $catalogue->getFallbackCatalogue();
 
-        return new JsonResponse(array_replace(
-            $fallbackCatalogue->all(static::TRANSLATION_DOMAIN),
-            $catalogue->all(static::TRANSLATION_DOMAIN))
-        );
+        $translations = $catalogue->all(static::TRANSLATION_DOMAIN);
+        if ($fallbackCatalogue) {
+            $translations = array_replace($fallbackCatalogue->all(static::TRANSLATION_DOMAIN), $translations);
+        }
+
+        return new JsonResponse($translations);
     }
 
     /**
