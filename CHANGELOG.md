@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.1 (2017-07-10)
     * HOTFIX      #3437 [AdminBundle]             Added save url to storage for update-url event
     * HOTFIX      #3433 [ContentBundle]           Fixed url generation for domain root page
     * HOTFIX      #3432 [SnippetBundle]           Fixed not working smart content in snippet bundle
