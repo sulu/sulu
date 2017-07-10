@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3437 [AdminBundle]             Added save url to storage for update-url event
     * HOTFIX      #3433 [ContentBundle]           Fixed url generation for domain root page
     * HOTFIX      #3432 [SnippetBundle]           Fixed not working smart content in snippet bundle
     * HOTFIX      #3431 [MediaBundle]             Fixed file download url filename encoding
