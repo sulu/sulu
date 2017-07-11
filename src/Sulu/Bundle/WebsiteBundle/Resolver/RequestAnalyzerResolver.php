@@ -52,7 +52,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     {
         // determine default locale (if one exists)
         $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
-        $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
+        $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocale() : null;
 
         $currentLocale = null;
         $currentLocalization = $requestAnalyzer->getCurrentLocalization();

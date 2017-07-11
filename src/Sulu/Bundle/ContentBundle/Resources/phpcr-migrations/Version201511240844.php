@@ -107,13 +107,13 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
                 sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s"',
-                    $this->propertyEncoder->localizedSystemName('nodeType', $localization->getLocalization()),
+                    $this->propertyEncoder->localizedSystemName('nodeType', $localization->getLocale()),
                     RedirectType::EXTERNAL
                 ),
                 'JCR-SQL2'
             )->execute();
 
-            $name = $this->propertyEncoder->localizedSystemName('external', $localization->getLocalization());
+            $name = $this->propertyEncoder->localizedSystemName('external', $localization->getLocale());
             foreach ($rows->getNodes() as $node) {
                 /** @var NodeInterface $node */
                 $value = $node->getPropertyValue($name);
@@ -224,7 +224,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
                 sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s" OR [%s] = "%s"',
-                    $this->propertyEncoder->localizedSystemName('template', $localization->getLocalization()),
+                    $this->propertyEncoder->localizedSystemName('template', $localization->getLocale()),
                     $structureMetadata->getName(),
                     'template',
                     $structureMetadata->getName()
@@ -233,7 +233,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             )->execute();
 
             foreach ($rows->getNodes() as $node) {
-                $this->upgradeNode($node, $localization->getLocalization(), $properties, $addScheme);
+                $this->upgradeNode($node, $localization->getLocale(), $properties, $addScheme);
             }
         }
     }

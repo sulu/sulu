@@ -452,7 +452,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         return array_map(
             function (Localization $localization) {
-                return $localization->getLocalization();
+                return $localization->getLocale();
             },
             $webspace->getAllLocalizations()
         );
@@ -471,7 +471,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         return array_map(
             function (Localization $localization) {
-                return $localization->getLocalization();
+                return $localization->getLocale();
             },
             $portal->getLocalizations()
         );
@@ -486,7 +486,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         return array_map(
             function (Localization $localization) {
-                return $localization->getLocalization();
+                return $localization->getLocale();
             },
             $this->webspaceManager->getAllLocalizations()
         );

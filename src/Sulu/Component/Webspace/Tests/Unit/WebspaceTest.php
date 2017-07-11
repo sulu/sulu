@@ -148,16 +148,16 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->webspace->addLocalization($localeEn);
 
         $result = $this->webspace->getLocalization('de');
-        $this->assertEquals('de', $result->getLocalization());
+        $this->assertEquals('de', $result->getLocale());
 
         $result = $this->webspace->getLocalization('de_at');
-        $this->assertEquals('de_at', $result->getLocalization());
+        $this->assertEquals('de_at', $result->getLocale());
 
         $result = $this->webspace->getLocalization('de_ch');
-        $this->assertEquals('de_ch', $result->getLocalization());
+        $this->assertEquals('de_ch', $result->getLocale());
 
         $result = $this->webspace->getLocalization('en');
-        $this->assertEquals('en', $result->getLocalization());
+        $this->assertEquals('en', $result->getLocale());
 
         $result = $this->webspace->getLocalization('en_us');
         $this->assertEquals(null, $result);

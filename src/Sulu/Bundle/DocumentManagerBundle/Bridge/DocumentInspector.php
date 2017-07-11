@@ -314,7 +314,7 @@ class DocumentInspector extends BaseDocumentInspector
         $resourceLocatorProperty = $structure->getPropertyByTagName('sulu.rlp');
 
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $resolvedLocale = $localization->getLocalization();
+            $resolvedLocale = $localization->getLocale();
             $locale = $resolvedLocale;
 
             $shadowEnabledName = $this->encoder->localizedSystemName(

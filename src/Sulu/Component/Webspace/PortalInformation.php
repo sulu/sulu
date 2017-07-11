@@ -145,7 +145,7 @@ class PortalInformation implements ArrayableInterface
             return;
         }
 
-        return $this->localization->getLocalization();
+        return $this->localization->getLocale();
     }
 
     /**

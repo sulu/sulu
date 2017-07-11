@@ -172,7 +172,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
                 sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s" OR [%s] = "%s"',
-                    $this->propertyEncoder->localizedSystemName('template', $localization->getLocalization()),
+                    $this->propertyEncoder->localizedSystemName('template', $localization->getLocale()),
                     $structureMetadata->getName(),
                     'template',
                     $structureMetadata->getName()
@@ -181,7 +181,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
             )->execute();
 
             foreach ($rows->getNodes() as $node) {
-                $this->upgradeNode($node, $localization->getLocalization(), $properties, $up);
+                $this->upgradeNode($node, $localization->getLocale(), $properties, $up);
             }
         }
     }

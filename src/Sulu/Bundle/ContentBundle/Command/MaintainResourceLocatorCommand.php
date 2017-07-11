@@ -108,7 +108,7 @@ class MaintainResourceLocatorCommand extends Command
 
     private function upgradeLocale(Webspace $webspace, Localization $localization, OutputInterface $output)
     {
-        $output->writeln('  > Upgrade Locale: ' . $localization->getLocalization('-'));
+        $output->writeln('  > Upgrade Locale: ' . $localization->getLocale(Localization::DASH));
 
         $contentNode = $this->liveSession->getNode($this->sessionManager->getContentPath($webspace->getKey()));
 

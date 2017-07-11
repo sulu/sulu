@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,11 +40,11 @@ class LanguageController extends Controller implements ClassResourceInterface
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $i = 0;
             foreach ($webspace->getAllLocalizations() as $localization) {
-                if (!in_array($localization->getLocalization(), $locales)) {
-                    $locales[] = $localization->getLocalization();
+                if (!in_array($localization->getLocale(), $locales)) {
+                    $locales[] = $localization->getLocale();
                     $localizations[] = [
-                        'localization' => $localization->getLocalization(),
-                        'name' => $localization->getLocalization('-'),
+                        'localization' => $localization->getLocale(),
+                        'name' => $localization->getLocale(Localization::DASH),
                         'id' => $i++,
                     ];
                 }
