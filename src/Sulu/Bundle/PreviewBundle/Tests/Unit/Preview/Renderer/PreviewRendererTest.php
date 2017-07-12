@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Renderer;
 
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
@@ -129,17 +130,39 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
 
+        // render http
+        $this->render($object, false);
+        // render https
+        $this->render($object, true);
+    }
+
+    /**
+     * @param ObjectProphecy $object
+     * @param bool $withHttps
+     */
+    protected function render(ObjectProphecy $object, $withHttps = false)
+    {
+        $scheme = 'http';
+        $server = ['SERVER_NAME' => 'sulu.io', 'SERVER_PORT' => 8080];
+
+        if ($withHttps) {
+            $scheme = 'https';
+            $server['HTTPS'] = true;
+        }
+
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) {
-                    return $request->getHost() === 'sulu.io' && $request->getPort() === 8080;
+                function (Request $request) use ($scheme) {
+                    return $request->getHost() === 'sulu.io'
+                        && $request->getPort() === 8080
+                        && $request->getScheme() === $scheme;
                 }
             ),
             HttpKernelInterface::MASTER_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
-        $request = new Request([], [], [], [], [], ['SERVER_NAME' => 'sulu.io', 'SERVER_PORT' => 8080]);
+        $request = new Request([], [], [], [], [], $server);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
