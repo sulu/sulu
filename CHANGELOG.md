@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #XXXX [PreviewBundle] Fixed bug in preview when running on https
+    * HOTFIX      #3441 [PreviewBundle] Fixed bug in preview when running on https
 
 * 1.6.1 (2017-07-10)
     * HOTFIX      #3437 [AdminBundle]             Added save url to storage for update-url event
