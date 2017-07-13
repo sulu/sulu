@@ -178,7 +178,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
         foreach ($portal->getLocalizations() as $localization) {
             if ($webspaceDefaultLocalization
-                && $webspaceDefaultLocalization->getLocalization() == $localization->getLocalization()
+                && $webspaceDefaultLocalization->getLocale() == $localization->getLocale()
             ) {
                 $localization->setDefault(true);
                 $portal->setDefaultLocalization($localization);

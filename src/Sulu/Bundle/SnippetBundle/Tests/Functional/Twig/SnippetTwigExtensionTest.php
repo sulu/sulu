@@ -75,7 +75,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
                     [
                         'webspaceKey' => $webspace->getKey(),
                         'webspace' => $webspace,
-                        'locale' => $localization->getLocalization(),
+                        'locale' => $localization->getLocale(),
                         'localization' => $localization,
                     ]
                 ),

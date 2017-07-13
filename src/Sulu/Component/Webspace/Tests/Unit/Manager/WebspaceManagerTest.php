@@ -265,7 +265,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     public function testFindPortalInformationByUrl()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
-        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
+        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
         /** @var Webspace $webspace */
@@ -311,7 +311,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
 
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
-        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
+        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
         /* @var Portal $portal */
@@ -407,7 +407,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
 
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
-        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
+        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
         /* @var Portal $portal */
@@ -516,7 +516,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     public function testFindPortalInformationByUrlWithSegment()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
-        $this->assertEquals('en_us', $portalInformation->getLocalization()->getLocalization());
+        $this->assertEquals('en_us', $portalInformation->getLocalization()->getLocale());
         $this->assertEquals('winter', $portalInformation->getSegment()->getName());
 
         /** @var Portal $portal */

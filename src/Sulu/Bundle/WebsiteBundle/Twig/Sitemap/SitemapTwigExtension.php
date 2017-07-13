@@ -73,7 +73,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         }
 
         if ($locale === null) {
-            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         }
 
         return $this->webspaceManager->findUrlByResourceLocator(
@@ -94,7 +94,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         }
 
         if ($locale === null) {
-            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         }
 
         return $this->sitemapGenerator->generate($webspaceKey, $locale)->getSitemap();

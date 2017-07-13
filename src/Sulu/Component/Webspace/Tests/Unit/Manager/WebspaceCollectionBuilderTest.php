@@ -190,11 +190,11 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformations['sulu.de']->getType());
         $this->assertEquals('sulu.de', $portalInformations['sulu.de']->getUrl());
-        $this->assertEquals('de', $portalInformations['sulu.de']->getLocalization()->getLocalization());
+        $this->assertEquals('de', $portalInformations['sulu.de']->getLocalization()->getLocale());
 
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformations['sulu.us']->getType());
         $this->assertEquals('sulu.us', $portalInformations['sulu.us']->getUrl());
-        $this->assertEquals('en', $portalInformations['sulu.us']->getLocalization()->getLocalization());
+        $this->assertEquals('en', $portalInformations['sulu.us']->getLocalization()->getLocale());
     }
 
     public function testBuildWithMainUrl()

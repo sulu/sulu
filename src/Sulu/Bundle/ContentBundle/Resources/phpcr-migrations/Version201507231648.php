@@ -68,7 +68,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
         $node = $sessionManager->getContentNode($webspace->getKey());
 
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $locale = $localization->getLocalization();
+            $locale = $localization->getLocale();
             $propertyName = $this->getPropertyName(self::SHADOW_ON_PROPERTY, $locale);
 
             $this->upgradeNode($node, $propertyName, $locale);

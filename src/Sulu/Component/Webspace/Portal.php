@@ -142,7 +142,7 @@ class Portal
     public function getLocalization($locale)
     {
         foreach ($this->getLocalizations() as $localization) {
-            if ($locale === $localization->getLocalization()) {
+            if ($locale === $localization->getLocale()) {
                 return $localization;
             }
         }

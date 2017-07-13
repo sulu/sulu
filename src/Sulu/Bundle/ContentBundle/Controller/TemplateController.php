@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -188,8 +189,8 @@ class TemplateController extends Controller
         $i = 0;
         foreach ($webspace->getAllLocalizations() as $localization) {
             $localizations[] = [
-                'localization' => $localization->getLocalization(),
-                'name' => $localization->getLocalization('-'),
+                'localization' => $localization->getLocale(),
+                'name' => $localization->getLocale(Localization::DASH),
                 'id' => $i++,
             ];
         }
@@ -227,7 +228,7 @@ class TemplateController extends Controller
 
         $languages = [];
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $languages[] = $localization->getLocalization();
+            $languages[] = $localization->getLocale();
         }
 
         return $this->render(

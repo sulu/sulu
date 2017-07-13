@@ -154,7 +154,7 @@ class WebspaceManager implements WebspaceManagerInterface
             [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
         foreach ($portals as $portalInformation) {
-            $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
+            $sameLocalization = $portalInformation->getLocalization()->getLocale() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
@@ -188,7 +188,7 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($portals as $portalInformation) {
             $sameLocalization = (
                 $portalInformation->getLocalization() === null
-                || $portalInformation->getLocalization()->getLocalization() === $languageCode
+                || $portalInformation->getLocalization()->getLocale() === $languageCode
             );
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);

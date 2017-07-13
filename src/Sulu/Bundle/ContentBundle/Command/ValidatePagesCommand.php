@@ -47,9 +47,8 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $select = '';
         $headers = [];
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $select .= '[i18n:' . $localization->getLocalization() . '-template] as ' . $localization->getLocalization(
-                ) . ',';
-            $headers[] = $localization->getLocalization();
+            $select .= '[i18n:' . $localization->getLocale() . '-template] as ' . $localization->getLocale() . ',';
+            $headers[] = $localization->getLocale();
         }
         $select = rtrim($select, ',');
 

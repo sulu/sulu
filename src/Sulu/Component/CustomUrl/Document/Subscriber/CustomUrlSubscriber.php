@@ -158,7 +158,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $path = sprintf('%s/%s', $routesPath, $domain);
         $routeDocument = $this->findOrCreateRoute($path, $persistedLocale, $document, $domain);
         $routeDocument->setTargetDocument($document);
-        $routeDocument->setLocale($locale->getLocalization());
+        $routeDocument->setLocale($locale->getLocale());
         $routeDocument->setHistory(false);
 
         $this->documentManager->persist(
