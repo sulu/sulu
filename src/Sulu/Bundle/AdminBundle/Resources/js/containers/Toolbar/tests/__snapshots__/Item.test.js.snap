@@ -2,7 +2,8 @@
 
 exports[`Render disabled item 1`] = `
 <button
-  className="item item-disabled"
+  className="item"
+  disabled={true}
   onClick={[Function]}
 >
   <span
@@ -17,6 +18,7 @@ exports[`Render disabled item 1`] = `
 exports[`Render item 1`] = `
 <button
   className="item"
+  disabled={false}
   onClick={[Function]}
 >
   <span
