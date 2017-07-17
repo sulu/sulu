@@ -2,7 +2,7 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import {withToolbar} from '../../containers/Toolbar';
-import translator from '../../services/Translator';
+import {translate} from '../../services/Translator';
 
 class Form extends React.PureComponent {
     @observable dirty = false;
@@ -22,7 +22,7 @@ class Form extends React.PureComponent {
 export default withToolbar(Form, function() {
     return [
         {
-            title: translator.translate('sulu_admin.save'),
+            title: translate('sulu_admin.save'),
             icon: 'floppy-o',
             enabled: this.dirty,
             onClick: () => {
@@ -30,7 +30,7 @@ export default withToolbar(Form, function() {
             },
         },
         {
-            title: translator.translate('sulu_admin.delete'),
+            title: translate('sulu_admin.delete'),
             icon: 'trash-o',
             onClick: () => {
                 this.setDirty(true);

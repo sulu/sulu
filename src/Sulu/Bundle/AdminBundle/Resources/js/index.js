@@ -7,7 +7,7 @@ import Application from './containers/Application';
 import {viewStore} from './containers/ViewRenderer';
 import Requester from './services/Requester';
 import Router, {routeStore} from './services/Router';
-import translator from './services/Translator';
+import {setTranslations} from './services/Translator';
 import Form from './views/Form';
 import List from './views/List';
 
@@ -23,7 +23,7 @@ function startApplication() {
 
 const translationPromise = Requester.get('/admin/v2/translations?locale=en')
     .then((response) => response.json())
-    .then((json) => translator.set(json));
+    .then((json) => setTranslations(json));
 
 const configPromise = Requester.get('/admin/v2/config')
     .then((response) => response.json())

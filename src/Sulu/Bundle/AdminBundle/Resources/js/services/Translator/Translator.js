@@ -1,24 +1,22 @@
 // @flow
 import type {TranslationMap} from './types';
 
-class Translator {
-    translations: ?TranslationMap;
+let translationMap: ?TranslationMap;
 
-    set(translations: TranslationMap) {
-        this.translations = translations;
-    }
-
-    clear() {
-        this.translations = null;
-    }
-
-    translate(key: string) {
-        if (!this.translations || !(key in this.translations)) {
-            throw new Error('Translation for key "' + key + '" not found');
-        }
-
-        return this.translations[key];
-    }
+function setTranslations(translations: TranslationMap) {
+    translationMap = translations;
 }
 
-export default new Translator();
+function clearTranslations() {
+    translationMap = null;
+}
+
+function translate(key: string) {
+    if (!translationMap || !(key in translationMap)) {
+        throw new Error('Translation for key "' + key + '" not found');
+    }
+
+    return translationMap[key];
+}
+
+export {setTranslations, clearTranslations, translate};
