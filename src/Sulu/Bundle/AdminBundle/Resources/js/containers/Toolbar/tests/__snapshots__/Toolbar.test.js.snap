@@ -6,7 +6,8 @@ exports[`Render the items from the ToolbarStore 1`] = `
 >
   <nav>
     <button
-      className="item item-disabled"
+      className="item"
+      disabled={true}
       onClick={[Function]}
     >
       <span
@@ -20,6 +21,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
     </button>
     <button
       className="item"
+      disabled={false}
       onClick={[Function]}
     >
       <span

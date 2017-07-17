@@ -23,11 +23,11 @@ $itemBorder: 1px $wildSand solid;
     &:last-child {
         border-right: $itemBorder;
     }
-}
 
-.item-disabled {
-    color: $itemTextColorDisabled;
-    cursor: default;
+    &:disabled {
+        color: $itemTextColorDisabled;
+        cursor: default;
+    }
 }
 
 .icon {
