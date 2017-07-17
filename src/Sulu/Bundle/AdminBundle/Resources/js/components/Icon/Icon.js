@@ -17,7 +17,7 @@ export default class Icon extends React.PureComponent {
         );
 
         return (
-            <span className={className} />
+            <span className={className} aria-hidden={true} />
         );
     }
 }
