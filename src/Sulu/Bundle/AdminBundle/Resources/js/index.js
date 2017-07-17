@@ -22,11 +22,9 @@ function startApplication() {
 }
 
 const translationPromise = Requester.get('/admin/v2/translations?locale=en')
-    .then((response) => response.json())
-    .then((json) => setTranslations(json));
+    .then((response) => setTranslations(response));
 
 const configPromise = Requester.get('/admin/v2/config')
-    .then((response) => response.json())
-    .then((json) => routeStore.addCollection(json.routes));
+    .then((response) => routeStore.addCollection(response.routes));
 
 Promise.all([translationPromise, configPromise]).then(startApplication);

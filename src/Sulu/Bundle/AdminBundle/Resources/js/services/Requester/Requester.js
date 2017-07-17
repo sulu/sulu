@@ -2,7 +2,8 @@
 const defaultOptions = {credentials: 'same-origin'};
 
 export default class Requester {
-    static get(url: string): Promise<Response> {
-        return fetch(url, defaultOptions);
+    static get(url: string): Promise<Object> {
+        return fetch(url, defaultOptions)
+            .then((response) => response.json());
     }
 }

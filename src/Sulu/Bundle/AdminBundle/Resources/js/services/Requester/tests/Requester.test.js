@@ -3,16 +3,27 @@
 import Requester from '../Requester';
 
 test('Add credentials to fetch request', () => {
+    const promise = new Promise(() => 'test');
+
     global.fetch = jest.fn();
+    global.fetch.mockReturnValue(promise);
 
     Requester.get('/some-url');
 
     expect(global.fetch).toBeCalledWith('/some-url', {credentials: 'same-origin'});
 });
 
-test('Return value from fetch call', () => {
-    global.fetch = jest.fn();
-    global.fetch.mockReturnValue('test');
+test('Return json from fetch call', () => {
+    const request = {
+        json: jest.fn(),
+    };
+    request.json.mockReturnValue('test');
+    const promise = new Promise((resolve) => resolve(request));
 
-    expect(Requester.get('/some-url')).toBe('test');
+    global.fetch = jest.fn();
+    global.fetch.mockReturnValue(promise);
+
+    return Requester.get('/some-url').then(data => {
+        expect(data).toBe('test');
+    });
 });
