@@ -11,6 +11,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
       onClick={[Function]}
     >
       <span
+        aria-hidden={true}
         className="icon fa fa-save"
       />
       <span
@@ -25,6 +26,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
       onClick={[Function]}
     >
       <span
+        aria-hidden={true}
         className="icon fa fa-delete"
       />
       <span

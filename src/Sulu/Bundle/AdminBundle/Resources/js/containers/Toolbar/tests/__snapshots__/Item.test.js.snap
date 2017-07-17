@@ -7,6 +7,7 @@ exports[`Render disabled item 1`] = `
   onClick={[Function]}
 >
   <span
+    aria-hidden={true}
     className="icon fa fa-undefined"
   />
   <span
@@ -22,6 +23,7 @@ exports[`Render item 1`] = `
   onClick={[Function]}
 >
   <span
+    aria-hidden={true}
     className="icon fa fa-undefined"
   />
   <span

@@ -2,7 +2,8 @@
     "scripts": {
         "lint:js": "eslint .",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
-        "flow": "flow"
+        "flow": "flow",
+        "styleguide": "styleguidist server"
     },
     "dependencies": {
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js"
@@ -15,6 +16,8 @@
         "eslint-plugin-flowtype": "^2.34.0",
         "eslint-plugin-react": "^7.0.1",
         "flow-bin": "^0.48.0",
+        "null-loader": "^0.1.1",
+        "react-styleguidist": "^5.5.7",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0"
     }

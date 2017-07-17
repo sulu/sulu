@@ -4,5 +4,7 @@ unsafe.enable_getters_and_setters=true
 module.name_mapper='.+\.s?css' -> 'empty/object'
 
 [ignore]
-.*/vendor/symfony/symfony/.*
+.*/node_modules/findup/.*
+.*/node_modules/jss/.*
 .*/node_modules/stylelint/.*
+.*/vendor/symfony/symfony/.*
