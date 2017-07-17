@@ -59,9 +59,9 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testRoutes()
     {
-        $route1 = new Route('test1', 'test1', '/test1', ['value' => 'test1']);
-        $route2 = new Route('test2', 'test2', '/test2', ['value' => 'test2']);
-        $route3 = new Route('test3', 'test3', '/test3', ['value' => 'test3']);
+        $route1 = new Route('test1', '/test1', 'test1', ['value' => 'test1']);
+        $route2 = new Route('test2', '/test2', 'test2', ['value' => 'test2']);
+        $route3 = new Route('test3', '/test3', 'test3', ['value' => 'test3']);
         $this->admin1->getRoutes()->willReturn([$route1]);
         $this->admin2->getRoutes()->willReturn([$route2, $route3]);
 
