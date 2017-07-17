@@ -36,11 +36,11 @@ class Route
      */
     private $parameters;
 
-    public function __construct(string $name, string $view, string $path, array $parameters = [])
+    public function __construct(string $name, string $path, string $view, array $parameters = [])
     {
         $this->name = $name;
-        $this->view = $view;
         $this->path = $path;
+        $this->view = $view;
         $this->parameters = $parameters;
     }
 }
