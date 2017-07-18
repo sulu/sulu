@@ -16,6 +16,7 @@ type Props = {
 export default class Application extends React.PureComponent<Props> {
     render() {
         const {router} = this.props;
+
         return (
             <div>
                 <Toolbar />

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -58,6 +59,16 @@ class ContactAdmin extends Admin
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes(): array
+    {
+        return [
+            new Route('sulu_contact.list', '/contacts', 'sulu_admin.list', ['resourceKey' => 'contacts']),
+        ];
     }
 
     /**

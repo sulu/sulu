@@ -38,9 +38,14 @@ exports[`Application should render based on current route 1`] = `
   <main
     class="main"
   >
-    <h1>
-      Test
-    </h1>
+    <div>
+      <h1>
+        Test
+      </h1>
+      <h2>
+        test
+      </h2>
+    </div>
   </main>
   <aside />
 </div>

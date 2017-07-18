@@ -104,13 +104,11 @@ export default class Table extends React.PureComponent<Props> {
         let header;
 
         React.Children.forEach(children, (child: Element<typeof Header | typeof Body>) => {
-            const {name} = child.type;
-
-            switch (name) {
-                case Header.name:
+            switch (child.type) {
+                case Header:
                     header = child;
                     break;
-                case Body.name:
+                case Body:
                     body = child;
                     break;
                 default:

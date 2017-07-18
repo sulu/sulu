@@ -30,7 +30,6 @@ class Form extends React.PureComponent<ViewProps> {
         return (
             <div>
                 <h1>Form</h1>
-                <a href="#/snippets/">To the List</a>
             </div>
         );
     }
@@ -39,7 +38,10 @@ class Form extends React.PureComponent<ViewProps> {
 export default withToolbar(Form, function() {
     return {
         backButton: {
-            onClick: () => {},
+            onClick: () => {
+                const {router} = this.props;
+                router.navigate(router.route.options.backRoute);
+            },
         },
         icons: [
             'ban',

@@ -3,7 +3,7 @@ export type Route = {
     name: string,
     view: string,
     path: string,
-    options?: Object,
+    options: Object,
 };
 
 export type RouteMap = {[string]: Route};
