@@ -12,6 +12,9 @@ module.exports = { // eslint-disable-line
         });
     },
     webpackConfig: {
+        devServer: {
+            disableHostCheck: true,
+        },
         module: {
             loaders: [
                 {
@@ -28,6 +31,20 @@ module.exports = { // eslint-disable-line
                                 modules: false,
                             },
                         },
+                    ],
+                },
+                {
+                    test: /\.(scss)$/,
+                    use: [
+                        'style-loader',
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: true,
+                                importLoaders: 1,
+                            },
+                        },
+                        'postcss-loader',
                     ],
                 },
                 {
