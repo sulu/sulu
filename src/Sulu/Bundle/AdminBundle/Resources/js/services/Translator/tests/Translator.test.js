@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import * as log from 'loglevel';
+import log from 'loglevel';
 import {setTranslations, clearTranslations, translate} from '../Translator';
 
 jest.mock('loglevel', () => ({

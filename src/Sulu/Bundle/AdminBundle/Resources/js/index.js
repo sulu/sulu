@@ -2,6 +2,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {useStrict} from 'mobx';
+import log from 'loglevel';
 import createHistory from 'history/createHashHistory';
 import Application from './containers/Application';
 import {viewStore} from './containers/ViewRenderer';
@@ -12,6 +13,9 @@ import Form from './views/Form';
 import List from './views/List';
 
 useStrict(true);
+
+window.log = log;
+log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
 
 viewStore.add('sulu_admin.list', List);
 viewStore.add('sulu_admin.form', Form);
