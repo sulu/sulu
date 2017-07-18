@@ -1,4 +1,5 @@
 // @flow
+import * as log from 'loglevel';
 import type {TranslationMap} from './types';
 
 let translationMap: ?TranslationMap;
@@ -13,6 +14,7 @@ function clearTranslations() {
 
 function translate(key: string) {
     if (!translationMap || !(key in translationMap)) {
+        log.warn('The translation key "' + key + '" has not been translated. The key itself will be returned instead.');
         return key;
     }
 
