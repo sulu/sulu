@@ -4,6 +4,9 @@
         "es6": true,
         "jest": true
     },
+    "globals": {
+        "process": true
+    },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
