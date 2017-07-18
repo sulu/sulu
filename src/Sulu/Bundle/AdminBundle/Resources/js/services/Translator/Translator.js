@@ -13,7 +13,7 @@ function clearTranslations() {
 
 function translate(key: string) {
     if (!translationMap || !(key in translationMap)) {
-        throw new Error('Translation for key "' + key + '" not found');
+        return key;
     }
 
     return translationMap[key];
