@@ -27,9 +27,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
 class AdminController
 {
+    const TRANSLATION_DOMAIN = 'admin';
+
     /**
      * @var AuthorizationCheckerInterface
      */
@@ -71,6 +74,16 @@ class AdminController
     private $engine;
 
     /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    /**
+     * @var TranslatorBagInterface
+     */
+    private $translator;
+
+    /**
      * @var string
      */
     private $environment;
@@ -105,11 +118,6 @@ class AdminController
      */
     private $fallbackLocale;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         UrlGeneratorInterface $urlGenerator,
@@ -120,6 +128,7 @@ class AdminController
         ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
+        TranslatorBagInterface $translator,
         $environment,
         $adminName,
         array $locales,
@@ -136,6 +145,8 @@ class AdminController
         $this->serializer = $serializer;
         $this->viewHandler = $viewHandler;
         $this->engine = $engine;
+        $this->localizationManager = $localizationManager;
+        $this->translator = $translator;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -143,7 +154,6 @@ class AdminController
         $this->translatedLocales = $translatedLocales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
-        $this->localizationManager = $localizationManager;
     }
 
     /**
@@ -198,7 +208,7 @@ class AdminController
     /**
      * Returns all the configuration for the admin interface.
      */
-    public function configurationAction(): Response
+    public function configV2Action(): Response
     {
         $view = View::create([
             'routes' => $this->adminPool->getRoutes(),
@@ -206,6 +216,19 @@ class AdminController
         $view->setFormat('json');
 
         return $this->viewHandler->handle($view);
+    }
+
+    public function translationsAction(Request $request): Response
+    {
+        $catalogue = $this->translator->getCatalogue($request->query->get('locale'));
+        $fallbackCatalogue = $catalogue->getFallbackCatalogue();
+
+        $translations = $catalogue->all(static::TRANSLATION_DOMAIN);
+        if ($fallbackCatalogue) {
+            $translations = array_replace($fallbackCatalogue->all(static::TRANSLATION_DOMAIN), $translations);
+        }
+
+        return new JsonResponse($translations);
     }
 
     /**

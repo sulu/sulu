@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {withToolbar} from '../../containers/Toolbar';
+import {translate} from '../../services/Translator';
 
 class List extends React.PureComponent {
     render() {
@@ -13,11 +14,11 @@ class List extends React.PureComponent {
 export default withToolbar(List, function() {
     return [
         {
-            title: 'Add',
+            title: translate('sulu_admin.add'),
             icon: 'plus-circle',
         },
         {
-            title: 'Delete',
+            title: translate('sulu_admin.delete'),
             icon: 'trash-o',
         },
     ];

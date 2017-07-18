@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
 class AdminControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -74,6 +76,11 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
      * @var LocalizationManagerInterface
      */
     private $localizationManager;
+
+    /**
+     * @var TranslatorBagInterface
+     */
+    private $translator;
 
     /**
      * @var string
@@ -128,6 +135,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
+        $this->translator = $this->prophesize(TranslatorBagInterface::class);
 
         $this->adminController = new AdminController(
             $this->authorizationChecker->reveal(),
@@ -139,6 +147,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->localizationManager->reveal(),
+            $this->translator->reveal(),
             $this->environment,
             $this->adminName,
             $this->locales,
@@ -160,7 +169,52 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
             return $view->getFormat() === 'json' && $view->getData() === ['routes' => $data];
         }))->shouldBeCalled()->willReturn(new Response());
 
-        $this->adminController->configurationAction();
+        $this->adminController->configV2Action();
+    }
+
+    public function provideTranslationsAction()
+    {
+        return [
+            ['en', ['save' => 'Save'], [], ['save' => 'Save']],
+            ['de', ['save' => 'Speichern'], [], ['save' => 'Speichern']],
+            [
+                'de',
+                ['save' => 'Speichern'],
+                ['save' => 'Save', 'delete' => 'Delete'],
+                ['save' => 'Speichern', 'delete' => 'Delete'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTranslationsAction
+     */
+    public function testTranslationsAction($locale, $translations, $fallbackTranslations, $resultTranslations)
+    {
+        $request = new Request(['locale' => $locale]);
+
+        $catalogue = $this->prophesize(MessageCatalogueInterface::class);
+        $catalogue->all('admin')->willReturn($translations);
+        $fallbackCatalogue = $this->prophesize(MessageCatalogueInterface::class);
+        $fallbackCatalogue->all('admin')->willReturn($fallbackTranslations);
+        $catalogue->getFallbackCatalogue()->willReturn($fallbackCatalogue);
+        $this->translator->getCatalogue($locale)->willReturn($catalogue->reveal());
+
+        $response = $this->adminController->translationsAction($request);
+        $this->assertEquals($resultTranslations, json_decode($response->getContent(), true));
+    }
+
+    public function testTranslationActionWithoutFallback()
+    {
+        $request = new Request(['locale' => 'en']);
+
+        $catalogue = $this->prophesize(MessageCatalogueInterface::class);
+        $catalogue->all('admin')->willReturn(['save' => 'Save']);
+        $catalogue->getFallbackCatalogue()->willReturn(null);
+        $this->translator->getCatalogue('en')->willReturn($catalogue->reveal());
+
+        $response = $this->adminController->translationsAction($request);
+        $this->assertEquals(['save' => 'Save'], json_decode($response->getContent(), true));
     }
 
     public function testContextsAction()
