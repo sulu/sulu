@@ -7,6 +7,7 @@
         "classnames": "^2.2.5",
         "font-awesome": "^4.7.0",
         "history": "^4.6.3",
+        "loglevel": "^1.4.1",
         "mobx": "^3.1.16",
         "mobx-react": "^4.2.1",
         "normalize.css": "^7.0.0",
