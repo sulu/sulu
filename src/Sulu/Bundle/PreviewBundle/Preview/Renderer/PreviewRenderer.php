@@ -175,7 +175,7 @@ class PreviewRenderer implements PreviewRendererInterface
             $server['SERVER_PORT'] = $currentRequest->getPort();
 
             if ('https' === $currentRequest->getScheme()) {
-                $server['HTTPS'] = true;
+                $server['HTTPS'] = 'on';
             }
         }
 
