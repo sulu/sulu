@@ -2,35 +2,32 @@
 
 exports[`Render the items from the ToolbarStore 1`] = `
 <header
-  className="toolbar"
+  class="toolbar"
 >
   <nav>
     <button
-      className="item"
-      disabled={true}
-      onClick={[Function]}
+      class="item"
+      disabled=""
     >
       <span
-        aria-hidden={true}
-        className="icon fa fa-save"
+        aria-hidden="true"
+        class="icon fa fa-save"
       />
       <span
-        className="title"
+        class="title"
       >
         Save
       </span>
     </button>
     <button
-      className="item"
-      disabled={false}
-      onClick={[Function]}
+      class="item"
     >
       <span
-        aria-hidden={true}
-        className="icon fa fa-delete"
+        aria-hidden="true"
+        class="icon fa fa-delete"
       />
       <span
-        className="title"
+        class="title"
       >
         Delete
       </span>

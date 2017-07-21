@@ -2,32 +2,29 @@
 
 exports[`Render disabled item 1`] = `
 <button
-  className="item"
-  disabled={true}
-  onClick={[Function]}
+  class="item"
+  disabled=""
 >
   <span
-    aria-hidden={true}
-    className="icon fa fa-undefined"
+    aria-hidden="true"
+    class="icon fa fa-undefined"
   />
   <span
-    className="title"
+    class="title"
   />
 </button>
 `;
 
 exports[`Render item 1`] = `
 <button
-  className="item"
-  disabled={false}
-  onClick={[Function]}
+  class="item"
 >
   <span
-    aria-hidden={true}
-    className="icon fa fa-undefined"
+    aria-hidden="true"
+    class="icon fa fa-undefined"
   />
   <span
-    className="title"
+    class="title"
   />
 </button>
 `;

@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
+import {mount, render} from 'enzyme';
 import toolbarStore from '../stores/ToolbarStore';
 import withToolbar from '../withToolbar';
 
@@ -14,7 +14,7 @@ test('Pass props to rendered component', () => {
     const Component = (props) => (<h1>{props.title}</h1>);
     const ComponentWithToolbar = withToolbar(Component, () => []);
 
-    expect(ReactTestRenderer.create(<ComponentWithToolbar title="Test" />)).toMatchSnapshot();
+    expect(render(<ComponentWithToolbar title="Test" />)).toMatchSnapshot();
 });
 
 test('Bind toolbar method to component instance', () => {
@@ -36,8 +36,7 @@ test('Bind toolbar method to component instance', () => {
         }];
     });
 
-    expect(ReactTestRenderer.create(<ComponentWithToolbar />)).toMatchSnapshot();
-
+    mount(<ComponentWithToolbar />);
     expect(toolbarStore.setItems).toBeCalledWith([{
         title: 'Save',
         icon: 'save',

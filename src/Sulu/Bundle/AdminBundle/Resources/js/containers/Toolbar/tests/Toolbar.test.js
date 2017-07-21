@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
+import {render} from 'enzyme';
 import Toolbar from '../Toolbar';
 import toolbarStore from '../stores/ToolbarStore';
 
@@ -18,6 +18,6 @@ test('Render the items from the ToolbarStore', () => {
             icon: 'delete',
         },
     ];
-    const view = ReactTestRenderer.create(<Toolbar />);
+    const view = render(<Toolbar />);
     expect(view).toMatchSnapshot();
 });

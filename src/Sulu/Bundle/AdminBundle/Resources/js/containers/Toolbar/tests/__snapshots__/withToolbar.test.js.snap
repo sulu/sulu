@@ -1,11 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Bind toolbar method to component instance 1`] = `
-<h1>
-  Test
-</h1>
-`;
-
 exports[`Pass props to rendered component 1`] = `
 <h1>
   Test
