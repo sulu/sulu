@@ -2,14 +2,14 @@
 
 exports[`Icon should render 1`] = `
 <span
-  aria-hidden={true}
-  className="fa fa-save"
+  aria-hidden="true"
+  class="fa fa-save"
 />
 `;
 
 exports[`Icon should render with class names 1`] = `
 <span
-  aria-hidden={true}
-  className="test fa fa-edit"
+  aria-hidden="true"
+  class="test fa fa-edit"
 />
 `;
