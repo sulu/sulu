@@ -2,7 +2,10 @@
 import {mount, render} from 'enzyme';
 import React from 'react';
 import RectangleSelection from '../RectangleSelection';
+import {action} from 'mobx';
+import {observer} from 'mobx-react';
 
+@observer
 class MockedRectangleSelection extends RectangleSelection {
     constructor(props) {
         super(props);
@@ -17,11 +20,11 @@ class MockedRectangleSelection extends RectangleSelection {
         }
     }
 
-    readContainerDimensions = () => {
+    readContainerDimensions = action(() => {
         this.container = {clientWidth: 2000, clientHeight: 1000};
         this.containerHeight = this.container.clientHeight;
         this.containerWidth = this.container.clientWidth;
-    };
+    });
 }
 
 test('The component should render with children', () => {
