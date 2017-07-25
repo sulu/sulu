@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render} from 'enzyme';
 import ViewRenderer from '../ViewRenderer';
+import {render} from 'enzyme';
 import viewStore from '../stores/ViewStore';
 
 jest.mock('../stores/ViewStore', () => ({

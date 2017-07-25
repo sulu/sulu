@@ -1,11 +1,11 @@
 // @flow
+import './application.scss';
 import React from 'react';
-import {observer} from 'mobx-react';
 import Router from '../../services/Router';
 import SplitView from '../SplitView';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
-import './application.scss';
+import {observer} from 'mobx-react';
 
 @observer
 export default class Application extends React.PureComponent {

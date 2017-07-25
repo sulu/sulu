@@ -1,8 +1,8 @@
 // @flow
-import React from 'react';
 import {action, observable} from 'mobx';
-import {withToolbar} from '../../containers/Toolbar';
+import React from 'react';
 import {translate} from '../../services/Translator';
+import {withToolbar} from '../../containers/Toolbar';
 
 class Form extends React.PureComponent {
     @observable dirty = false;

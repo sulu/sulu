@@ -23,7 +23,7 @@ test('Return json from fetch call', () => {
     global.fetch = jest.fn();
     global.fetch.mockReturnValue(promise);
 
-    return Requester.get('/some-url').then(data => {
+    return Requester.get('/some-url').then((data) => {
         expect(data).toBe('test');
     });
 });
