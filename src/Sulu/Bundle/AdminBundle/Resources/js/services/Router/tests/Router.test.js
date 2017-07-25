@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {isObservable} from 'mobx';
-import createHistory from 'history/createMemoryHistory';
 import Router from '../Router';
+import createHistory from 'history/createMemoryHistory';
+import {isObservable} from 'mobx';
 import routeStore from '../stores/RouteStore';
 
 jest.mock('../stores/RouteStore', () => {

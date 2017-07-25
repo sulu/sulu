@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import {withToolbar} from '../../containers/Toolbar';
 import {translate} from '../../services/Translator';
+import {withToolbar} from '../../containers/Toolbar';
 
 class List extends React.PureComponent {
     render() {

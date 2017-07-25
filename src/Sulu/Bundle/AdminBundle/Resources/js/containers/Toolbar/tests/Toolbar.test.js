@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render} from 'enzyme';
 import Toolbar from '../Toolbar';
+import {render} from 'enzyme';
 import toolbarStore from '../stores/ToolbarStore';
 
 jest.mock('../stores/ToolbarStore', () => ({}));

@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import React from 'react';
 import {mount, render} from 'enzyme';
+import React from 'react';
 import toolbarStore from '../stores/ToolbarStore';
 import withToolbar from '../withToolbar';
 

@@ -1,6 +1,6 @@
 // @flow
-import log from 'loglevel';
 import type {TranslationMap} from './types';
+import log from 'loglevel';
 
 let translationMap: ?TranslationMap;
 

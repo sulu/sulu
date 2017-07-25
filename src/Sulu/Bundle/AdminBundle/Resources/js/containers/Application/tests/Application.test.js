@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
+import Application from '../Application';
 import React from 'react';
 import {render} from 'enzyme';
-import Application from '../Application';
 
 jest.mock('../../ViewRenderer', () => function Test() {
     return (<h1>Test</h1>);

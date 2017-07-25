@@ -1,16 +1,16 @@
 // @flow
-import React from 'react';
-import {render} from 'react-dom';
-import {useStrict} from 'mobx';
-import log from 'loglevel';
-import createHistory from 'history/createHashHistory';
-import Application from './containers/Application';
-import {viewStore} from './containers/ViewRenderer';
-import Requester from './services/Requester';
 import Router, {routeStore} from './services/Router';
-import {setTranslations} from './services/Translator';
+import Application from './containers/Application';
 import Form from './views/Form';
 import List from './views/List';
+import React from 'react';
+import Requester from './services/Requester';
+import createHistory from 'history/createHashHistory';
+import log from 'loglevel';
+import {render} from 'react-dom';
+import {setTranslations} from './services/Translator';
+import {useStrict} from 'mobx';
+import {viewStore} from './containers/ViewRenderer';
 
 useStrict(true);
 
