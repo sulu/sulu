@@ -11,7 +11,8 @@ class MockedRectangleSelection extends RectangleSelection {
         this.componentDidUpdate = () => {
             if (!this.spyed) {
                 this.spyed = true;
-                props.updateSpy();
+                // Move the update spy to the end of the execution queue, in order to see rendering changes
+                Promise.resolve().then(props.updateSpy);
             }
         };
     }

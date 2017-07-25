@@ -20,15 +20,12 @@ export default class RectangleSelection extends React.PureComponent {
         minHeight?: number,
         /** Determines whether or not the data gets rounded */
         round: boolean,
-        /** The component delays the initialization of the selection box until this promise is resolved. */
-        childrenFullyLoaded: () => Promise<void>,
         onChange?: (s: SelectionData) => void,
         children?: Children,
     };
 
     static defaultProps = {
         round: true,
-        childrenFullyLoaded: () => Promise.resolve(),
     };
 
     /** Normalizers process the data returned from the rectangle before it's set as the selection data*/
@@ -41,24 +38,17 @@ export default class RectangleSelection extends React.PureComponent {
     }
 
     @action initializeSelection() {
-        this.props.childrenFullyLoaded().then(
-            () => {
-                // Although the children are loaded at this point, the browser could still be in
-                // the process of rendering them (rendering is asynchronous). Wrapping the action
-                // in requestAnimationFrame takes care of this matter.
-                window.requestAnimationFrame(action(() => {
-                    this.initializeNormalizers();
-                    if (this.props.initialSelection) {
-                        this.setSelection(this.props.initialSelection);
-                    } else {
-                        this.maximizeSelection();
-                    }
-                }));
-            },
-            () => {
-                throw new Error('Children could not be loaded. The promise passed in the props has been rejected.');
+        // Although the children are loaded at this point, the browser could still be in
+        // the process of rendering them (rendering is asynchronous). Wrapping the action
+        // in requestAnimationFrame takes care of this matter.
+        window.requestAnimationFrame(action(() => {
+            this.initializeNormalizers();
+            if (this.props.initialSelection) {
+                this.setSelection(this.props.initialSelection);
+            } else {
+                this.maximizeSelection();
             }
-        );
+        }));
     }
 
     setSelection(selection: SelectionData) {

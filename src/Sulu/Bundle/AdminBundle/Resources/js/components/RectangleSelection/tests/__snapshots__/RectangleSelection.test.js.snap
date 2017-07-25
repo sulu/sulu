@@ -9,14 +9,14 @@ exports[`The component should center and maximize the selection when a minHeight
   </p>
   <div
     class="rectangle"
-    style="left: 0px; top: 0px; width: 0px; height: 0px;"
+    style="left: 0px; top: 250px; width: 2000px; height: 500px;"
   >
     <div
       class="resizeHandle"
     />
     <div
       class="backdrop"
-      style="outline-width: 0px;"
+      style="outline-width: 2000px;"
     />
   </div>
 </div>

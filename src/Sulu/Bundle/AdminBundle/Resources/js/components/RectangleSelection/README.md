@@ -13,36 +13,36 @@ A double click on the selection box centers it and maximizes its size.
 </RectangleSelection>
 ```
 
-As content to be selected is often loaded asynchronously, the component provides a mechanism to
-delay the initialization of the selection box till the desired content is fully loaded.
-To achieve this behaviour, a function returning a promise can be passed via the properties.
-The following example illustrates this functionality.
+Content placed inside the component is not allowed to change it's size after rendering.
+Otherwise, the behaviour will be undefined.
+For example when rendering images, they need to be preloaded before rendering the selection.
 
 ```
-let image;
-let imageLoaded = () => {
-    return new Promise((resolve, reject) => {
-        image.onload = resolve;
-        image.onerror = reject;
-    });
-};
-initialState = {selection: {}};
+// preload image
+let image = new Image();
+image.src = 'https://unsplash.it/800/500';
+if (!image.complete) {
+    image.onload = () => setState({imageLoaded: true});
+}
+initialState = {imageLoaded: image.complete, selection: {}};
 
-<div>
-    <RectangleSelection
-        minWidth={150}
-        minHeight={50}
-        childrenFullyLoaded={imageLoaded}
-        onChange={s => setState({selection: s})}
-        >
-        <img ref={el => image = el} src="https://unsplash.it/800/500" />
-    </RectangleSelection>
-    
-    <p>
-        Width: {state.selection.width}, 
-        Height: {state.selection.height}, 
-        Top: {state.selection.top}, 
-        Left: {state.selection.left}
-    </p>
-</div>
+if (state.imageLoaded) {
+    <div>
+        <RectangleSelection
+            minWidth={150}
+            minHeight={50}
+            onChange={s => setState({selection: s})} >
+            <img src="https://unsplash.it/800/500" />
+        </RectangleSelection>
+        
+        <p>
+            Width: {state.selection.width}, 
+            Height: {state.selection.height}, 
+            Top: {state.selection.top}, 
+            Left: {state.selection.left}
+        </p>
+    </div>
+} else {
+    null
+}
 ```
