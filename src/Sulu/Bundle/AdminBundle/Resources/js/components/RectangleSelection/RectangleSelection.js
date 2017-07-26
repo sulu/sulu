@@ -14,7 +14,7 @@ import selectionStyles from './rectangleSelection.scss';
 @observer
 export default class RectangleSelection extends React.PureComponent {
     props: {
-        /** Determines the position at which the selection box is rendered at the beginning. */
+        /** Determines the position at which the selection box is rendered at the beginning */
         initialSelection?: SelectionData,
         minWidth?: number,
         minHeight?: number,
@@ -31,41 +31,55 @@ export default class RectangleSelection extends React.PureComponent {
     /** Normalizers process the data returned from the rectangle before it's set as the selection data*/
     normalizers: Array<DataNormalizer> = [];
     container: HTMLElement;
+    @observable containerWidth: number;
+    @observable containerHeight: number;
     @observable selection: SelectionData = {top: 0, left: 0, width: 0, height: 0};
 
     componentDidMount() {
-        this.initializeSelection();
-    }
-
-    @action initializeSelection() {
         // Although the children are loaded at this point, the browser could still be in
         // the process of rendering them (rendering is asynchronous). Wrapping the action
         // in requestAnimationFrame takes care of this matter.
-        window.requestAnimationFrame(action(() => {
-            this.initializeNormalizers();
-            if (this.props.initialSelection) {
-                this.setSelection(this.props.initialSelection);
-            } else {
-                this.maximizeSelection();
-            }
-        }));
+        window.requestAnimationFrame(() => {
+            this.initializeContainer();
+            this.setInitialSelection();
+        });
+        window.addEventListener('resize', this.handleResize);
     }
 
-    setSelection(selection: SelectionData) {
-        this.selection = selection;
-        if (this.props.onChange) {
-            this.props.onChange(selection);
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+    }
+
+    setInitialSelection() {
+        if (this.props.initialSelection) {
+            this.setSelection(this.props.initialSelection);
+        } else {
+            this.maximizeSelection();
         }
     }
 
+    @action setSelection(selection: SelectionData) {
+        this.selection = this.normalize(selection);
+        if (this.props.onChange) {
+            this.props.onChange(this.selection);
+        }
+    }
+
+    @action initializeContainer() {
+        this.containerWidth = this.container.clientWidth;
+        this.containerHeight = this.container.clientHeight;
+        this.initializeNormalizers();
+    }
+
     initializeNormalizers() {
+        this.normalizers = [];
         this.normalizers.push(new SizeNormalizer(
-            this.container.clientWidth,
-            this.container.clientHeight,
+            this.containerWidth,
+            this.containerHeight,
             this.props.minWidth,
             this.props.minHeight
         ));
-        this.normalizers.push(new PositionNormalizer(this.container.clientWidth, this.container.clientHeight));
+        this.normalizers.push(new PositionNormalizer(this.containerWidth, this.containerHeight));
         if (this.props.minWidth && this.props.minHeight) {
             this.normalizers.push(new RatioNormalizer(this.props.minWidth, this.props.minHeight));
         }
@@ -78,46 +92,48 @@ export default class RectangleSelection extends React.PureComponent {
         return this.normalizers.reduce((data, normalizer) => normalizer.normalize(data), selection);
     }
 
-    @action applySelectionChange = (change: RectangleChange) => {
-        this.setSelection(this.normalize({
+    applySelectionChange = (change: RectangleChange) => {
+        this.setSelection({
             left: this.selection.left + change.left,
             top: this.selection.top + change.top,
             height: this.selection.height + change.height,
             width: this.selection.width + change.width,
-        }));
+        });
     };
 
-    @action maximizeSelection = () => {
+    maximizeSelection = () => {
         this.setSelection(this.centerSelection(this.normalize({
-            width: this.container.clientWidth,
-            height: this.container.clientHeight,
+            width: this.containerWidth,
+            height: this.containerHeight,
             left: 0,
             top: 0,
         })));
     };
 
     centerSelection(selection: SelectionData): SelectionData {
-        if (selection.width < this.container.clientWidth) {
-            selection.left = (this.container.clientWidth / 2) - (selection.width / 2);
+        if (selection.width < this.containerWidth) {
+            selection.left = (this.containerWidth / 2) - (selection.width / 2);
         }
-        if (selection.height < this.container.clientHeight) {
-            selection.top = (this.container.clientHeight / 2) - (selection.height / 2);
+        if (selection.height < this.containerHeight) {
+            selection.top = (this.containerHeight / 2) - (selection.height / 2);
         }
         
         return selection;
     }
 
-    setContainer = (el: HTMLElement) => {
-        this.container = el;
+    handleResize = () => {
+        this.initializeContainer();
+        this.setSelection(this.selection);
     };
 
+    setContainer = (el: HTMLElement) => this.container = el;
     handleRectangleDoubleClick = this.maximizeSelection;
     handleRectangleChange = this.applySelectionChange;
 
     render() {
         let backdropSize = 0;
-        if (this.container) {
-            backdropSize = Math.max(this.container.clientHeight, this.container.clientWidth);
+        if (this.containerHeight && this.containerWidth) {
+            backdropSize = Math.max(this.containerHeight, this.containerWidth);
         }
 
         return (

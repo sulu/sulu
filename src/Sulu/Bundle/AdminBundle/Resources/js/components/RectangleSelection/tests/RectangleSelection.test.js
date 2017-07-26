@@ -107,7 +107,7 @@ test('The component should not allow the selection to move over the borders', (d
     let selection = {};
     const setSelection = (s) => selection = s;
     const spy = () => {
-        view.instance().handleRectangleChange({width: 0, height: 0, left: 0, top: 0});
+        view.instance().handleRectangleChange({width: 0, height: 0, left: -10, top: -20});
         expect(selection).toEqual({width: 2000, height: 1000, top: 0, left: 0});
         done();
     };
