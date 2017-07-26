@@ -6,16 +6,22 @@ import RectangleSelection from '../RectangleSelection';
 class MockedRectangleSelection extends RectangleSelection {
     constructor(props) {
         super(props);
-        this.setContainer = () => this.container = {clientWidth: 2000, clientHeight: 1000};
         this.spyed = false;
-        this.componentDidUpdate = () => {
-            if (!this.spyed) {
-                this.spyed = true;
-                // Move the update spy to the end of the execution queue, in order to see rendering changes
-                Promise.resolve().then(props.updateSpy);
-            }
-        };
     }
+
+    componentDidUpdate() {
+        if (!this.spyed) {
+            this.spyed = true;
+            // Move the update spy to the end of the execution queue, in order to see rendering changes
+            Promise.resolve().then(this.props.updateSpy);
+        }
+    }
+
+    readContainerDimensions = () => {
+        this.container = {clientWidth: 2000, clientHeight: 1000};
+        this.containerHeight = this.container.clientHeight;
+        this.containerWidth = this.container.clientWidth;
+    };
 }
 
 test('The component should render with children', () => {

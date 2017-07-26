@@ -1,6 +1,6 @@
 // @flow
 import type {DataNormalizer, RectangleChange, SelectionData} from './types';
-import {action, observable} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import type {Children} from 'react';
 import ModifiableRectangle from './ModifiableRectangle';
 import PositionNormalizer from './dataNormalizers/PositionNormalizer';
@@ -40,14 +40,13 @@ export default class RectangleSelection extends React.PureComponent {
         // the process of rendering them (rendering is asynchronous). Wrapping the action
         // in requestAnimationFrame takes care of this matter.
         window.requestAnimationFrame(() => {
-            this.initializeContainer();
             this.setInitialSelection();
         });
-        window.addEventListener('resize', this.handleResize);
+        window.addEventListener('resize', this.handleWindowResize);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('resize', this.handleWindowResize);
     }
 
     setInitialSelection() {
@@ -65,13 +64,9 @@ export default class RectangleSelection extends React.PureComponent {
         }
     }
 
-    @action initializeContainer() {
-        this.containerWidth = this.container.clientWidth;
-        this.containerHeight = this.container.clientHeight;
-        this.initializeNormalizers();
-    }
+    setNormalizers = autorun(() => {
+        if (!this.containerWidth || !this.containerHeight) return;
 
-    initializeNormalizers() {
         this.normalizers = [];
         this.normalizers.push(new SizeNormalizer(
             this.containerWidth,
@@ -86,10 +81,19 @@ export default class RectangleSelection extends React.PureComponent {
         if (this.props.round) {
             this.normalizers.push(new RoundingNormalizer());
         }
-    }
+        // make sure the current selection is normalized
+        this.renormalizeSelection();
+    });
 
     normalize(selection: SelectionData): SelectionData {
         return this.normalizers.reduce((data, normalizer) => normalizer.normalize(data), selection);
+    }
+
+    renormalizeSelection() {
+        let selection = this.normalize(this.selection);
+        if (JSON.stringify(selection) !== JSON.stringify(this.selection)) {
+            this.setSelection(selection);
+        }
     }
 
     applySelectionChange = (change: RectangleChange) => {
@@ -121,12 +125,17 @@ export default class RectangleSelection extends React.PureComponent {
         return selection;
     }
 
-    handleResize = () => {
-        this.initializeContainer();
-        this.setSelection(this.selection);
+    readContainerDimensions = (container: HTMLElement) => {
+        window.requestAnimationFrame(() => {
+            this.container = container;
+            this.containerWidth = container.clientWidth;
+            this.containerHeight = container.clientHeight;
+        });
     };
 
-    setContainer = (el: HTMLElement) => this.container = el;
+    handleWindowResize = () => {
+        this.readContainerDimensions(this.container);
+    };
     handleRectangleDoubleClick = this.maximizeSelection;
     handleRectangleChange = this.applySelectionChange;
 
@@ -137,7 +146,7 @@ export default class RectangleSelection extends React.PureComponent {
         }
 
         return (
-            <div ref={this.setContainer} className={selectionStyles.selection}>
+            <div ref={this.readContainerDimensions} className={selectionStyles.selection}>
                 {this.props.children}
                 <ModifiableRectangle
                     onChange={this.handleRectangleChange}
