@@ -35,36 +35,45 @@ export default class RectangleSelection extends React.PureComponent {
     @observable containerHeight: number;
     @observable selection: SelectionData = {top: 0, left: 0, width: 0, height: 0};
 
+    static selectionsAreEqual(selection1: SelectionData, selection2: SelectionData) {
+        return selection1.width === selection2.width
+            && selection1.height === selection2.height
+            && selection1.top === selection2.top
+            && selection1.left === selection2.left;
+    }
+
     componentDidMount() {
         // Although the children are loaded at this point, the browser could still be in
         // the process of rendering them (rendering is asynchronous). Wrapping the action
         // in requestAnimationFrame takes care of this matter.
-        window.requestAnimationFrame(() => {
-            this.setInitialSelection();
-        });
+        window.requestAnimationFrame(this.setInitialSelection);
         window.addEventListener('resize', this.handleWindowResize);
     }
 
     componentWillUnmount() {
+        this.normalizersDisposer();
         window.removeEventListener('resize', this.handleWindowResize);
     }
 
-    setInitialSelection() {
+    setInitialSelection = () => {
         if (this.props.initialSelection) {
             this.setSelection(this.props.initialSelection);
         } else {
             this.maximizeSelection();
         }
-    }
+    };
 
     @action setSelection(selection: SelectionData) {
-        this.selection = this.normalize(selection);
+        selection = this.normalize(selection);
+        if (RectangleSelection.selectionsAreEqual(selection, this.selection)) return;
+
+        this.selection = selection;
         if (this.props.onChange) {
-            this.props.onChange(this.selection);
+            this.props.onChange(selection);
         }
     }
 
-    setNormalizers = autorun(() => {
+    normalizersDisposer = autorun(() => {
         if (!this.containerWidth || !this.containerHeight) return;
 
         this.normalizers = [];
@@ -82,18 +91,11 @@ export default class RectangleSelection extends React.PureComponent {
             this.normalizers.push(new RoundingNormalizer());
         }
         // make sure the current selection is normalized
-        this.renormalizeSelection();
+        this.setSelection(this.selection);
     });
 
     normalize(selection: SelectionData): SelectionData {
         return this.normalizers.reduce((data, normalizer) => normalizer.normalize(data), selection);
-    }
-
-    renormalizeSelection() {
-        let selection = this.normalize(this.selection);
-        if (JSON.stringify(selection) !== JSON.stringify(this.selection)) {
-            this.setSelection(selection);
-        }
     }
 
     applySelectionChange = (change: RectangleChange) => {
@@ -133,9 +135,7 @@ export default class RectangleSelection extends React.PureComponent {
         });
     };
 
-    handleWindowResize = () => {
-        this.readContainerDimensions(this.container);
-    };
+    handleWindowResize = () => this.readContainerDimensions(this.container);
     handleRectangleDoubleClick = this.maximizeSelection;
     handleRectangleChange = this.applySelectionChange;
 
