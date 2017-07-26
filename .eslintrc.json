@@ -59,6 +59,14 @@
             "error",
             "always"
         ],
+        "eol-last": [
+            "error",
+            "always"
+        ],
+        "no-multiple-empty-lines": [
+            "error",
+            {"max": 1}
+        ],
         "sort-imports": "error",
         "react/jsx-curly-spacing": [
             "error",

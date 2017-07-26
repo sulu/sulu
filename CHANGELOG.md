@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #3455 [AdminBundle]             Implemented rectangle selection frontend component
+
 * dev-master
     * HOTFIX      #3425 [ContentBundle]           Fixed translations for seo restrictions in en/nl/fr
 

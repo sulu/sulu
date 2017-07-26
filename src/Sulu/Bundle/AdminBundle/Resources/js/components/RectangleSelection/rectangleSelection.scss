@@ -1,0 +1,14 @@
+.selection {
+    display: inline-flex;
+    position: relative;
+    overflow: hidden;
+
+    &,
+    * {
+        user-select: none;
+    }
+
+    img {
+        pointer-events: none;
+    }
+}
