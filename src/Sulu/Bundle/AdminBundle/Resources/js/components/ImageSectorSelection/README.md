@@ -1,13 +1,15 @@
-This component builds upon the RectangleSelection and defines more specific functionality
+This component builds upon the RectangleSelection and defines more specific functionality,
 useful when dealing with large images.
-Imagine loading a large 1920x1080 image and scaling it down to 640x360 via CSS.
-When selecting a sector of the image, it is (depending on the use case) desired to
-get the coordinates of the selection (width, height, top and left) with respect to
-the original dimensions of the image and not the scaled down ones.
-This is exactly what this component does.
+Imagine loading a large 1920x1080 image.
+Most often you want the user to select a sector from a scaled down version of this large image.
+However, the data returned by the selection component should be with respect to the large image
+(e.g. for cropping the image in the backend).
+This is exactly the functionality of this component.
+This component loads an image, makes sure it takes up the maximum width and height provided by its container
+without distorting the image and renders a selection component on top of it.
 
 ```
-<div style={{width: 640, height: 360}}>
+<div style={{width: 500, height: 500, background: '#e8e8e8'}}>
     <ImageSectorSelection
         initialSelection={{width: 1000, height: 800, top: 200, left: 300}}
         imageSrc="https://unsplash.it/1920/1080" />
@@ -20,7 +22,7 @@ the ratio between this to is enforced on the selection.
 ```
 initialState = {selection: {}};
 <div>
-    <div style={{width: 640, height: 360}}>
+    <div style={{width: 800, height: 300, background: '#e8e8e8'}}>
         <ImageSectorSelection
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
             minWidth={100}

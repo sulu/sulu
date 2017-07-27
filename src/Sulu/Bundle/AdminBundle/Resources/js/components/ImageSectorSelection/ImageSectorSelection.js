@@ -69,6 +69,7 @@ export default class ImageSectorSelection extends React.PureComponent {
     };
 
     readContainerDimensions = (container: HTMLElement) => {
+        if (!container) return;
         window.requestAnimationFrame(action(() => {
             this.containerWidth = container.clientWidth;
             this.containerHeight = container.clientHeight;
@@ -99,17 +100,19 @@ export default class ImageSectorSelection extends React.PureComponent {
             initialSelection = this.converter.computedDataToReal(this.props.initialSelection);
         }
         return this.renderContainer(
-            <RectangleSelection
-                initialSelection={initialSelection}
-                minWidth={minWidth}
-                minHeight={minHeight}
-                onChange={this.handleRectangleSelectionChange}
-                round={false}>
-                <img
-                    width={this.imageResizedWidth}
-                    height={this.imageResizedHeight}
-                    src={this.props.imageSrc} />
-            </RectangleSelection>
+            <div>
+                <RectangleSelection
+                    initialSelection={initialSelection}
+                    minWidth={minWidth}
+                    minHeight={minHeight}
+                    onChange={this.handleRectangleSelectionChange}
+                    round={false}>
+                    <img
+                        width={this.imageResizedWidth}
+                        height={this.imageResizedHeight}
+                        src={this.props.imageSrc} />
+                </RectangleSelection>
+            </div>
         );
     }
 }

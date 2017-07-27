@@ -128,6 +128,7 @@ export default class RectangleSelection extends React.PureComponent {
     }
 
     readContainerDimensions = (container: HTMLElement) => {
+        if (!container) return;
         window.requestAnimationFrame(action(() => {
             this.container = container;
             this.containerWidth = container.clientWidth;
