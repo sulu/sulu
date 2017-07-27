@@ -38,7 +38,6 @@
 
         <service id="sulu_content.search.event_subscriber.structure" class="%sulu_content.search.event_subscriber.structure.class%">
             <argument type="service" id="massive_search.search_manager" />
-            <argument type="service" id="sulu_document_manager.metadata_factory" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 

@@ -120,7 +120,7 @@ class StructureProvider implements ProviderInterface
 
         $indexMeta = $this->factory->createIndexMetadata();
         $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
-        $indexMeta->setLocaleField($this->factory->createMetadataField('locale'));
+        $indexMeta->setLocaleField($this->factory->createMetadataField('originalLocale'));
 
         $indexName = 'page';
 
