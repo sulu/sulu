@@ -10,25 +10,27 @@ exports[`The component should render with initial selection 1`] = `
 <div
   class="selection"
 >
-  <div
-    class="selection"
-  >
-    <img
-      height="360"
-      src="//:0"
-      width="640"
-    />
+  <div>
     <div
-      class="rectangle"
-      style="left: 100px; top: 66.66666666666667px; width: 500px; height: 266.6666666666667px;"
+      class="selection"
     >
-      <div
-        class="resizeHandle"
+      <img
+        height="360"
+        src="//:0"
+        width="640"
       />
       <div
-        class="backdrop"
-        style="outline-width: 640px;"
-      />
+        class="rectangle"
+        style="left: 100px; top: 66.66666666666667px; width: 500px; height: 266.6666666666667px;"
+      >
+        <div
+          class="resizeHandle"
+        />
+        <div
+          class="backdrop"
+          style="outline-width: 640px;"
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -44,58 +46,60 @@ exports[`The component should render with minWidth and minHeight 1`] = `
   <div
     className="selection"
   >
-    <MockedRectangleSelection
-      minHeight={100}
-      minWidth={200}
-      onChange={[Function]}
-      round={false}
-    >
-      <div
-        className="selection"
+    <div>
+      <MockedRectangleSelection
+        minHeight={100}
+        minWidth={200}
+        onChange={[Function]}
+        round={false}
       >
-        <img
-          height={360}
-          src="//:0"
-          width={640}
-        />
-        <ModifiableRectangle
-          backdropSize={640}
-          height={320}
-          left={0}
-          onChange={[Function]}
-          onDoubleClick={[Function]}
-          top={20}
-          width={640}
+        <div
+          className="selection"
         >
-          <div
-            className="rectangle"
+          <img
+            height={360}
+            src="//:0"
+            width={640}
+          />
+          <ModifiableRectangle
+            backdropSize={640}
+            height={320}
+            left={0}
+            onChange={[Function]}
             onDoubleClick={[Function]}
-            onMouseDown={[Function]}
-            style={
-              Object {
-                "height": "320px",
-                "left": "0px",
-                "top": "20px",
-                "width": "640px",
-              }
-            }
+            top={20}
+            width={640}
           >
             <div
-              className="resizeHandle"
+              className="rectangle"
+              onDoubleClick={[Function]}
               onMouseDown={[Function]}
-            />
-            <div
-              className="backdrop"
               style={
                 Object {
-                  "outlineWidth": "640px",
+                  "height": "320px",
+                  "left": "0px",
+                  "top": "20px",
+                  "width": "640px",
                 }
               }
-            />
-          </div>
-        </ModifiableRectangle>
-      </div>
-    </MockedRectangleSelection>
+            >
+              <div
+                className="resizeHandle"
+                onMouseDown={[Function]}
+              />
+              <div
+                className="backdrop"
+                style={
+                  Object {
+                    "outlineWidth": "640px",
+                  }
+                }
+              />
+            </div>
+          </ModifiableRectangle>
+        </div>
+      </MockedRectangleSelection>
+    </div>
   </div>
 </MockedImageSelection>
 `;

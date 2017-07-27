@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render, shallow} from 'enzyme';
+import {mount, render} from 'enzyme';
 import ImageSectorSelection from '../ImageSectorSelection';
 import React from 'react';
 import {action} from 'mobx';
