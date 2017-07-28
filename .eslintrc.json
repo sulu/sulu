@@ -67,6 +67,7 @@
             "error",
             {"max": 1}
         ],
+        "curly": "error",
         "sort-imports": "error",
         "react/jsx-curly-spacing": [
             "error",
