@@ -127,7 +127,7 @@ export default class RectangleSelection extends React.PureComponent {
         if (selection.height < this.containerHeight) {
             selection.top = (this.containerHeight / 2) - (selection.height / 2);
         }
-        
+
         return selection;
     }
 
