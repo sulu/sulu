@@ -117,8 +117,6 @@ class MediaStreamController extends Controller
         $locale,
         $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
     ) {
-        $cleaner = $this->get('sulu.content.path_cleaner');
-
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
@@ -129,13 +127,11 @@ class MediaStreamController extends Controller
 
         $response = new BinaryFileResponse($path);
 
-        $pathInfo = pathinfo($fileName);
-
         // Prepare headers
         $disposition = $response->headers->makeDisposition(
             $dispositionType,
             $fileName,
-            $cleaner->cleanup($pathInfo['filename'], $locale) . '.' . $pathInfo['extension']
+            $this->cleanUpFileName($fileName, $locale)
         );
 
         // Set headers
@@ -184,6 +180,25 @@ class MediaStreamController extends Controller
         }
 
         return $currentFileVersion;
+    }
+
+    /**
+     * Cleaned up filename.
+     *
+     * @param string $fileName
+     * @param string $locale
+     *
+     * @return string
+     */
+    private function cleanUpFileName($fileName, $locale)
+    {
+        $pathInfo = pathinfo($fileName);
+        $cleanedFileName = $this->get('sulu.content.path_cleaner')->cleanup($pathInfo['filename'], $locale);
+        if (isset($pathInfo['extension'])) {
+            $cleanedFileName .= '.' . $pathInfo['extension'];
+        }
+
+        return $cleanedFileName;
     }
 
     /**

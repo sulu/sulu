@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3444 [MediaBundle]             Fixed error when download of media without extension
     * HOTFIX      #3441 [PreviewBundle]           Fixed bug in preview when running on https
     * HOTFIX      #3451 [ContentBundle]           Index correct language of shadow document
 
