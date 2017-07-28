@@ -1,6 +1,5 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import DimensionsConverter from './DimensionsConverter';
 import React from 'react';
 import RectangleSelection from '../RectangleSelection';
 import RoundingNormalizer from '../RectangleSelection/dataNormalizers/RoundingNormalizer';
@@ -27,20 +26,34 @@ export default class ImageSectorSelection extends React.PureComponent {
     @observable containerWidth: number;
     @observable containerHeight: number;
 
+    naturalHorizontalToReal = (h: number) => h * this.imageResizedWidth / this.image.naturalWidth;
+    realHorizontalToNatural = (h: number) => h * this.image.naturalWidth / this.imageResizedWidth;
+    naturalVerticalToReal = (v: number) => v * this.imageResizedHeight / this.image.naturalHeight;
+    realVerticalToNatural = (v: number) => v * this.image.naturalHeight / this.imageResizedHeight;
+
+    naturalDataToReal(data: SelectionData): SelectionData {
+        return {
+            width: this.naturalHorizontalToReal(data.width),
+            height: this.naturalVerticalToReal(data.height),
+            left: this.naturalHorizontalToReal(data.left),
+            top: this.naturalVerticalToReal(data.top),
+        };
+    }
+
+    realDataToNatural(data: SelectionData): SelectionData {
+        return {
+            width: this.realHorizontalToNatural(data.width),
+            height: this.realVerticalToNatural(data.height),
+            left: this.realHorizontalToNatural(data.left),
+            top: this.realVerticalToNatural(data.top),
+        };
+    }
+
     @action componentWillMount() {
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);
         this.image.onerror = () => log.error('Failed to preload image ' + this.props.src);
         this.image.src = this.props.src;
-    }
-
-    @computed get converter(): DimensionsConverter {
-        return new DimensionsConverter(
-            this.image.naturalWidth,
-            this.image.naturalHeight,
-            this.imageResizedWidth,
-            this.imageResizedHeight
-        );
     }
 
     @computed get imageResizedHeight(): number {
@@ -66,7 +79,7 @@ export default class ImageSectorSelection extends React.PureComponent {
     }
 
     handleRectangleSelectionChange = (data: SelectionData) => {
-        const computedData = this.rounding.normalize(this.converter.realDataToComputed(data));
+        const computedData = this.rounding.normalize(this.realDataToNatural(data));
         if (this.props.onChange) {
             this.props.onChange(computedData);
         }
@@ -87,13 +100,13 @@ export default class ImageSectorSelection extends React.PureComponent {
         if (this.imageLoaded && this.containerWidth && this.containerHeight) {
             let minWidth, minHeight, initialSelection;
             if (this.props.minWidth) {
-                minWidth = this.converter.computedHorizontalToReal(this.props.minWidth);
+                minWidth = this.naturalHorizontalToReal(this.props.minWidth);
             }
             if (this.props.minHeight) {
-                minHeight = this.converter.computedVerticalToReal(this.props.minHeight);
+                minHeight = this.naturalVerticalToReal(this.props.minHeight);
             }
             if (this.props.initialSelection) {
-                initialSelection = this.converter.computedDataToReal(this.props.initialSelection);
+                initialSelection = this.naturalDataToReal(this.props.initialSelection);
             }
             content = (
                 <div>
