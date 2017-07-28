@@ -93,8 +93,10 @@ test('The component should render with minWidth and minHeight', (done) => {
     window.requestAnimationFrame = jest.fn((cb) => cb());
 
     const spy = () => {
-        // don't render the view to see if the minWidth and the minHeight props get passed correctly
-        expect(view).toMatchSnapshot();
+        const rectangle = view.find('MockedRectangleSelection');
+        expect(rectangle.length).toBe(1);
+        expect(rectangle.props().minWidth).toBe(200);
+        expect(rectangle.props().minHeight).toBe(100);
         done();
     };
 

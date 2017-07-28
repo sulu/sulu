@@ -1,10 +1,8 @@
 This component builds upon the RectangleSelection and defines more specific functionality,
-useful when dealing with large images.
-Imagine loading a large 1920x1080 image.
+useful when dealing with large images. Imagine loading a large 1920x1080 image.
 Most often you want the user to select a sector from a scaled down version of this large image.
 However, the data returned by the selection component should be with respect to the large image
-(e.g. for cropping the image in the backend).
-This is exactly the functionality of this component.
+(e.g. for cropping the image in the backend). This is exactly the functionality of this component.
 This component loads an image, makes sure it takes up the maximum width and height provided by its container
 without distorting the image and renders a selection component on top of it.
 

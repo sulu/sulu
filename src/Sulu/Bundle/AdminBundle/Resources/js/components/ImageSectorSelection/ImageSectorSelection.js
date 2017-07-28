@@ -30,13 +30,17 @@ export default class ImageSectorSelection extends React.PureComponent {
     @action componentWillMount() {
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);
-        this.image.onerror = () => log.error('Failed to preload image');
+        this.image.onerror = () => log.error('Failed to preload image ' + this.props.src);
         this.image.src = this.props.src;
     }
 
     @computed get converter(): DimensionsConverter {
         return new DimensionsConverter(
-            this.image.naturalWidth, this.image.naturalHeight, this.imageResizedWidth, this.imageResizedHeight);
+            this.image.naturalWidth,
+            this.image.naturalHeight,
+            this.imageResizedWidth,
+            this.imageResizedHeight
+        );
     }
 
     @computed get imageResizedHeight(): number {
@@ -56,8 +60,8 @@ export default class ImageSectorSelection extends React.PureComponent {
     }
 
     imageTouchesHoriziontalBorders() {
-        let imageHeightToWidth = this.image.naturalHeight / this.image.naturalWidth;
-        let containerHeightToWidth = this.containerHeight / this.containerWidth;
+        const imageHeightToWidth = this.image.naturalHeight / this.image.naturalWidth;
+        const containerHeightToWidth = this.containerHeight / this.containerWidth;
         return imageHeightToWidth > containerHeightToWidth;
     }
 
@@ -69,7 +73,9 @@ export default class ImageSectorSelection extends React.PureComponent {
     };
 
     readContainerDimensions = (container: HTMLElement) => {
-        if (!container) return;
+        if (!container) {
+            return;
+        }
         window.requestAnimationFrame(action(() => {
             this.containerWidth = container.clientWidth;
             this.containerHeight = container.clientHeight;
@@ -77,42 +83,35 @@ export default class ImageSectorSelection extends React.PureComponent {
     };
 
     render() {
-        if (!this.imageLoaded || !this.containerWidth || !this.containerHeight) {
-            return this.renderContainer();
-        } else {
-            return this.renderSelection();
+        let content;
+        if (this.imageLoaded && this.containerWidth && this.containerHeight) {
+            let minWidth, minHeight, initialSelection;
+            if (this.props.minWidth) {
+                minWidth = this.converter.computedHorizontalToReal(this.props.minWidth);
+            }
+            if (this.props.minHeight) {
+                minHeight = this.converter.computedVerticalToReal(this.props.minHeight);
+            }
+            if (this.props.initialSelection) {
+                initialSelection = this.converter.computedDataToReal(this.props.initialSelection);
+            }
+            content = (
+                <div>
+                    <RectangleSelection
+                        initialSelection={initialSelection}
+                        minWidth={minWidth}
+                        minHeight={minHeight}
+                        onChange={this.handleRectangleSelectionChange}
+                        round={false}>
+                        <img
+                            width={this.imageResizedWidth}
+                            height={this.imageResizedHeight}
+                            src={this.props.src} />
+                    </RectangleSelection>
+                </div>
+            );
         }
-    }
 
-    renderContainer(content: ?React.Element<*>) {
         return <div ref={this.readContainerDimensions} className={selectionStyles.selection}>{content}</div>;
-    }
-
-    renderSelection() {
-        let minWidth, minHeight, initialSelection;
-        if (this.props.minWidth) {
-            minWidth = this.converter.computedHorizontalToReal(this.props.minWidth);
-        }
-        if (this.props.minHeight) {
-            minHeight = this.converter.computedVerticalToReal(this.props.minHeight);
-        }
-        if (this.props.initialSelection) {
-            initialSelection = this.converter.computedDataToReal(this.props.initialSelection);
-        }
-        return this.renderContainer(
-            <div>
-                <RectangleSelection
-                    initialSelection={initialSelection}
-                    minWidth={minWidth}
-                    minHeight={minHeight}
-                    onChange={this.handleRectangleSelectionChange}
-                    round={false}>
-                    <img
-                        width={this.imageResizedWidth}
-                        height={this.imageResizedHeight}
-                        src={this.props.src} />
-                </RectangleSelection>
-            </div>
-        );
     }
 }

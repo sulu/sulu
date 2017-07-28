@@ -65,7 +65,9 @@ export default class RectangleSelection extends React.PureComponent {
 
     @action setSelection(selection: SelectionData) {
         selection = this.normalize(selection);
-        if (RectangleSelection.selectionsAreEqual(selection, this.selection)) return;
+        if (RectangleSelection.selectionsAreEqual(selection, this.selection)) {
+            return;
+        }
 
         this.selection = selection;
         if (this.props.onChange) {
@@ -74,7 +76,9 @@ export default class RectangleSelection extends React.PureComponent {
     }
 
     normalizersDisposer = autorun(() => {
-        if (!this.containerWidth || !this.containerHeight) return;
+        if (!this.containerWidth || !this.containerHeight) {
+            return;
+        }
 
         this.normalizers = [];
         this.normalizers.push(new SizeNormalizer(
@@ -128,7 +132,9 @@ export default class RectangleSelection extends React.PureComponent {
     }
 
     readContainerDimensions = (container: HTMLElement) => {
-        if (!container) return;
+        if (!container) {
+            return;
+        }
         window.requestAnimationFrame(action(() => {
             this.container = container;
             this.containerWidth = container.clientWidth;
