@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #3441 [PreviewBundle] Fixed bug in preview when running on https
+    * HOTFIX      #3441 [PreviewBundle]           Fixed bug in preview when running on https
+    * HOTFIX      #3451 [ContentBundle]           Index correct language of shadow document
 
 * 1.6.1 (2017-07-10)
     * HOTFIX      #3437 [AdminBundle]             Added save url to storage for update-url event
