@@ -38,9 +38,9 @@ exports[`The component should render with initial selection 1`] = `
 
 exports[`The component should render with minWidth and minHeight 1`] = `
 <MockedImageSelection
-  imageSrc="//:0"
   minHeight={300}
   minWidth={600}
+  src="//:0"
   updateSpy={[Function]}
 >
   <div

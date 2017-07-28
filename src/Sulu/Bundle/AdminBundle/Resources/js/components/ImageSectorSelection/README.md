@@ -12,7 +12,7 @@ without distorting the image and renders a selection component on top of it.
 <div style={{width: 500, height: 500, background: '#e8e8e8'}}>
     <ImageSectorSelection
         initialSelection={{width: 1000, height: 800, top: 200, left: 300}}
-        imageSrc="https://unsplash.it/1920/1080" />
+        src="https://unsplash.it/1920/1080" />
 </div>
 ```
 
@@ -27,7 +27,7 @@ initialState = {selection: {}};
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
             minWidth={100}
             minHeight={60}
-            imageSrc="https://unsplash.it/1920/1080"
+            src="https://unsplash.it/1920/1080"
             onChange={s => setState({selection: s})}
         />
     </div>

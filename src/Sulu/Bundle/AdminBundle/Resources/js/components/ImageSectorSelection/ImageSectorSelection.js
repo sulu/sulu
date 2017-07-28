@@ -17,7 +17,7 @@ export default class ImageSectorSelection extends React.PureComponent {
         minWidth?: number,
         minHeight?: number,
         onChange?: (s: SelectionData) => void,
-        imageSrc: string,
+        src: string,
     };
 
     image: Image;
@@ -31,7 +31,7 @@ export default class ImageSectorSelection extends React.PureComponent {
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);
         this.image.onerror = () => log.error('Failed to preload image');
-        this.image.src = this.props.imageSrc;
+        this.image.src = this.props.src;
     }
 
     @computed get converter(): DimensionsConverter {
@@ -110,7 +110,7 @@ export default class ImageSectorSelection extends React.PureComponent {
                     <img
                         width={this.imageResizedWidth}
                         height={this.imageResizedHeight}
-                        src={this.props.imageSrc} />
+                        src={this.props.src} />
                 </RectangleSelection>
             </div>
         );

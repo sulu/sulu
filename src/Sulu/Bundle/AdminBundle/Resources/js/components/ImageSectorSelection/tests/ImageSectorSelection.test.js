@@ -50,7 +50,7 @@ jest.mock('../../RectangleSelection', () => {
 });
 
 test('The component should render with image source', () => {
-    const view = render(<ImageSectorSelection imageSrc="//:0" />);
+    const view = render(<ImageSectorSelection src="//:0" />);
     expect(view).toMatchSnapshot();
 });
 
@@ -65,7 +65,7 @@ test('The component should calculate the selection with respect to the image', (
     mount(
         <MockedImageSelection
             onChange={onChangeSpy}
-            imageSrc="//:0" />
+            src="//:0" />
     );
 });
 
@@ -84,7 +84,7 @@ test('The component should render with initial selection', (done) => {
         <MockedImageSelection
             onChange={onChangeSpy}
             updateSpy={spy}
-            imageSrc="//:0"
+            src="//:0"
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}} />
     );
 });
@@ -101,7 +101,7 @@ test('The component should render with minWidth and minHeight', (done) => {
     const view = mount(
         <MockedImageSelection
             updateSpy={spy}
-            imageSrc="//:0"
+            src="//:0"
             minHeight={300}
             minWidth={600} />
     );
