@@ -165,9 +165,21 @@ class PreviewRenderer implements PreviewRendererInterface
         $defaults['partial'] = $partial;
         $defaults['_sulu'] = $attributes;
 
-        $host = $currentRequest ? $currentRequest->getHost() : null;
-        $port = $currentRequest ? $currentRequest->getPort() : null;
-        $request = new Request($query, $request, $defaults, [], [], ['SERVER_NAME' => $host, 'SERVER_PORT' => $port]);
+        // get server parameters
+        $server = [
+            'SERVER_NAME' => null,
+            'SERVER_PORT' => null,
+        ];
+        if ($currentRequest) {
+            $server['SERVER_NAME'] = $currentRequest->getHost();
+            $server['SERVER_PORT'] = $currentRequest->getPort();
+
+            if ('https' === $currentRequest->getScheme()) {
+                $server['HTTPS'] = 'on';
+            }
+        }
+
+        $request = new Request($query, $request, $defaults, [], [], $server);
         $request->setLocale($locale);
 
         if ($this->targetGroupHeader && $targetGroupId) {

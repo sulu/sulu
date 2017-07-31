@@ -52,7 +52,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
         /** @var Webspace $webspace */
         foreach ($webspaces as $webspace) {
             foreach ($webspace->getAllLocalizations() as $localization) {
-                $locale = $localization->getLocalization();
+                $locale = $localization->getLocale();
 
                 $query = $queryManager->createQuery(
                     sprintf(

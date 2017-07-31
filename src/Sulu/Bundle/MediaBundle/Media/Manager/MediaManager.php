@@ -888,7 +888,7 @@ class MediaManager implements MediaManagerInterface
             ],
             [
                 $id,
-                $fileName,
+                rawurlencode($fileName),
             ],
             $this->downloadPath
         ) . '?v=' . $version;

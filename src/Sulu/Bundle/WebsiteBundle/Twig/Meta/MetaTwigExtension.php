@@ -76,7 +76,7 @@ class MetaTwigExtension extends \Twig_Extension
 
         $defaultLocale = null;
         if ($currentPortal !== null && ($defaultLocale = $currentPortal->getXDefaultLocalization()) !== null) {
-            $defaultLocale = $defaultLocale->getLocalization();
+            $defaultLocale = $defaultLocale->getLocale();
         }
 
         $result = [];

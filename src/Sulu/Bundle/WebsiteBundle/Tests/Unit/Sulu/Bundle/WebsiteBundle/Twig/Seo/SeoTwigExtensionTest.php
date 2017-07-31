@@ -97,7 +97,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         /** @var Localization $localization */
         $localization = $this->prophesize(Localization::class);
-        $localization->getLocalization()->willReturn($xDefaultLocale ?: $defaultLocale);
+        $localization->getLocale()->willReturn($xDefaultLocale ?: $defaultLocale);
 
         /** @var Portal $portal */
         $portal = $this->prophesize(Portal::class);

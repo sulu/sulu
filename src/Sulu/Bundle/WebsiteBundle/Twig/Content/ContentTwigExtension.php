@@ -76,7 +76,7 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
         $contentStructure = $this->contentMapper->load(
             $uuid,
             $this->requestAnalyzer->getWebspace()->getKey(),
-            $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
+            $this->requestAnalyzer->getCurrentLocalization()->getLocale()
         );
 
         return $this->structureResolver->resolve($contentStructure);

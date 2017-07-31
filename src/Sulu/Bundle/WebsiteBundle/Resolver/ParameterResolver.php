@@ -72,7 +72,7 @@ class ParameterResolver implements ParameterResolverInterface
 
         foreach ($allLocalizations as $localization) {
             /* @var Localization $localization */
-            $locale = $localization->getLocalization();
+            $locale = $localization->getLocale();
 
             if (array_key_exists($locale, $pageUrls)) {
                 $urls[$locale] = $pageUrls[$locale];

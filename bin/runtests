@@ -427,7 +427,7 @@ function init_bundle($phpunitPath)
     ));
 
     exec_cmd(sprintf(
-        'SYMFONY__PHPCR__TRANSPORT=' . getenv('SYMFONY__PHPCR__TRANSPORT') . ' php %s %s',
+        'php %s %s',
         $console,
         ' sulu:document:initialize --purge --force --ansi'
     ));

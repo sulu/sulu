@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config','services/sulucontent/smart-content-manager'], function(AppConfig,SmartContentManager) {
 
     'use strict';
 
@@ -20,6 +20,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         initialize: function() {
+            SmartContentManager.initialize();
             this.bindCustomEvents();
             this.config = AppConfig.getSection('sulu-snippet');
             this.defaultType = this.config.defaultType;
@@ -156,6 +157,8 @@ define(['app-config'], function(AppConfig) {
 
                     this.initSortableBlock();
                     this.bindFormEvents();
+
+                    this.sandbox.emit('sulu.content.initialized', data);
 
                     dfd.resolve();
                 }.bind(this));

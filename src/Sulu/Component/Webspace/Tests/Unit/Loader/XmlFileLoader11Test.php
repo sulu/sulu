@@ -71,7 +71,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('sulu', $webspace->getTheme());
         $this->assertEquals(
@@ -87,7 +87,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
         $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
         $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
 
@@ -153,7 +153,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getLocalizations()[2]->getShadow());
         $this->assertEquals(false, $webspace->getLocalizations()[2]->isDefault());
 
-        $this->assertEquals('fr_ca', $webspace->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('fr_ca', $webspace->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('w', $webspace->getSegments()[0]->getKey());
         $this->assertEquals('winter', $webspace->getSegments()[0]->getName());
@@ -190,7 +190,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('Footer', $webspace->getNavigation()->getContexts()[1]->getTitle('en'));
         $this->assertEquals('Footer', $webspace->getNavigation()->getContexts()[1]->getTitle('fr'));
 
-        $this->assertEquals('de', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('Massive Art US', $webspace->getPortals()[0]->getName());
 
@@ -223,7 +223,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('ca', $webspace->getPortals()[1]->getLocalizations()[1]->getCountry());
         $this->assertEquals(false, $webspace->getPortals()[1]->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('en_ca', $webspace->getPortals()[1]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('en_ca', $webspace->getPortals()[1]->getDefaultLocalization()->getLocale());
 
         $this->assertEquals(2, count($webspace->getPortals()[1]->getEnvironments()));
 
@@ -291,7 +291,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('sulu', $webspace->getTheme());
 
@@ -311,7 +311,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[2]->getShadow());
         $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[2]->isDefault());
 
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
         $this->assertCount(2, $webspace->getPortals()[0]->getEnvironments());
 
@@ -473,8 +473,8 @@ class XmlFileLoader11Test extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/xdefault/sulu.io_xdefault_locale.xml'
         );
 
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
-        $this->assertEquals('en_us', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
+        $this->assertEquals('en_us', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocale());
     }
 
     public function testXDefaulLocaleNotExists()
@@ -483,8 +483,8 @@ class XmlFileLoader11Test extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/xdefault/sulu.io_no_xdefault_locale.xml'
         );
 
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocale());
     }
 
     public function testInvalidCustomUrl()

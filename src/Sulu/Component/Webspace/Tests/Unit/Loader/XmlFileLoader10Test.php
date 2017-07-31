@@ -72,7 +72,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('sulu', $webspace->getTheme());
         $this->assertEquals(
@@ -87,7 +87,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
         $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
         $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
 

@@ -167,7 +167,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             [
                 'view' => 64,
             ],
-            '/',
+            '/download/{id}/media/{slug}',
             0,
             $this->targetGroupRepository->reveal()
         );
@@ -272,6 +272,14 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
 
         $this->assertEquals($fileName, $media->getName());
+    }
+
+    /**
+     * @dataProvider provideSpecialCharacterUrl
+     */
+    public function testSpecialCharacterUrl($id, $filename, $version, $expected)
+    {
+        $this->assertEquals($expected, $this->mediaManager->getUrl($id, $filename, $version));
     }
 
     public function testSaveWrongVersionType()
@@ -409,6 +417,15 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         return [
             ['aäüßa', 'aäüßa', 'aaeuesa', ''],
             ['aäüßa.mp4', 'aäüßa', 'aaeuesa', '.mp4'],
+        ];
+    }
+
+    public function provideSpecialCharacterUrl()
+    {
+        return [
+            [1, 'aäüßa.mp4', 2, '/download/1/media/a%C3%A4%C3%BC%C3%9Fa.mp4?v=2'],
+            [1, 'aäüßa', 2, '/download/1/media/a%C3%A4%C3%BC%C3%9Fa?v=2'],
+            [2, 'Sulu & Enterprise.doc', 2, '/download/2/media/Sulu%20%26%20Enterprise.doc?v=2'],
         ];
     }
 
