@@ -82,7 +82,7 @@ exports[`The component should render with children 1`] = `
     />
     <div
       class="backdrop"
-      style="outline-width:0px;"
+      style="outline-width:2000px;"
     />
   </div>
 </div>

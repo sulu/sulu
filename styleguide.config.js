@@ -2,9 +2,17 @@
 const glob = require('glob');
 const path = require('path');
 
+const firstLetterIsUppercase = (string) => {
+    const first = string.charAt(0);
+    return first === first.toUpperCase();
+};
+
 module.exports = { // eslint-disable-line
     components: function() {
-        const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+        let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+
+        // filter out higher order components
+        folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
 
         return folders.map((folder) => {
             const component = path.basename(folder);

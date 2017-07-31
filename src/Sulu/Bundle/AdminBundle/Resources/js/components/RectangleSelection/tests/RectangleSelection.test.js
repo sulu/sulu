@@ -1,37 +1,22 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
 import React from 'react';
-import RectangleSelection from '../RectangleSelection';
-import {action} from 'mobx';
-import {observer} from 'mobx-react';
+import {RectangleSelection} from '../RectangleSelection';
 
-@observer
+jest.mock('../../containerSizeAware/containerSizeAware');
+
 class MockedRectangleSelection extends RectangleSelection {
-    constructor(props) {
-        super(props);
-        this.spyed = false;
+    componentDidMount() {
+        this.containerDidMount();
+        Promise.resolve().then(this.props.mountSpy);
     }
-
-    componentDidUpdate() {
-        if (!this.spyed) {
-            this.spyed = true;
-            // Move the update spy to the end of the execution queue, in order to see rendering changes
-            Promise.resolve().then(this.props.updateSpy);
-        }
-    }
-
-    readContainerDimensions = action(() => {
-        this.container = {clientWidth: 2000, clientHeight: 1000};
-        this.containerHeight = this.container.clientHeight;
-        this.containerWidth = this.container.clientWidth;
-    });
 }
 
 test('The component should render with children', () => {
     const view = render(
-        <RectangleSelection>
+        <MockedRectangleSelection containerWidth={2000} containerHeight={1000}>
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </MockedRectangleSelection>
     );
 
     expect(view).toMatchSnapshot();
@@ -47,7 +32,11 @@ test('The component should render with initial selection', (done) => {
     };
 
     view = mount(
-        <MockedRectangleSelection updateSpy={spy} initialSelection={{width: 1, height: 2, top: 3, left: 4}}>
+        <MockedRectangleSelection
+            containerWidth={2000}
+            containerHeight={1000}
+            mountSpy={spy}
+            initialSelection={{width: 1, height: 2, top: 3, left: 4}}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -63,7 +52,7 @@ test('The component should maximize the selection when no initial values given',
     };
 
     view = mount(
-        <MockedRectangleSelection updateSpy={spy}>
+        <MockedRectangleSelection mountSpy={spy} containerWidth={2000} containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -79,12 +68,22 @@ test('The component should center and maximize the selection when a minHeight an
     };
 
     view = mount(
-        <MockedRectangleSelection updateSpy={spy} minHeight={200} minWidth={50}>
+        <MockedRectangleSelection
+            mountSpy={spy}
+            minHeight={200}
+            minWidth={50}
+            containerWidth={2000}
+            containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
     view = mount(
-        <MockedRectangleSelection updateSpy={spy} minHeight={50} minWidth={200}>
+        <MockedRectangleSelection
+            mountSpy={spy}
+            minHeight={50}
+            minWidth={200}
+            containerWidth={2000}
+            containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -103,7 +102,11 @@ test('The component should publish the new selection when the rectangle changes'
     };
 
     view = mount(
-        <MockedRectangleSelection updateSpy={spy} onChange={setSelection}>
+        <MockedRectangleSelection
+            mountSpy={spy}
+            onChange={setSelection}
+            containerWidth={2000}
+            containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -122,7 +125,7 @@ test('The component should not allow the selection to move over the borders', (d
     };
 
     view = mount(
-        <MockedRectangleSelection updateSpy={spy} onChange={setSelection}>
+        <MockedRectangleSelection mountSpy={spy} onChange={setSelection} containerWidth={2000} containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -141,7 +144,11 @@ test('The component should not allow the selection to be bigger than the contain
     };
 
     view = mount(
-        <MockedRectangleSelection updateSpy={spy} onChange={setSelection}>
+        <MockedRectangleSelection
+            mountSpy={spy}
+            onChange={setSelection}
+            containerWidth={2000}
+            containerHeight={1000}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -160,7 +167,13 @@ test('The component should enforce a ratio on the selection if minWidth and minH
     };
 
     view = mount(
-        <MockedRectangleSelection minWidth={10} minHeight={20} updateSpy={spy} onChange={setSelection}>
+        <MockedRectangleSelection
+            containerWidth={2000}
+            containerHeight={1000}
+            minWidth={10}
+            minHeight={20}
+            mountSpy={spy}
+            onChange={setSelection}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -182,7 +195,14 @@ test('The component should should not round if told by the properties', (done) =
     };
 
     mount(
-        <MockedRectangleSelection round={false} minWidth={3} minHeight={1} updateSpy={spy} onChange={setSelection}>
+        <MockedRectangleSelection
+            containerWidth={2000}
+            containerHeight={1000}
+            round={false}
+            minWidth={3}
+            minHeight={1}
+            mountSpy={spy}
+            onChange={setSelection}>
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
