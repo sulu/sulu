@@ -1,12 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
-import ImageSectorSelection from '../ImageSectorSelection';
+import ImageRectangleSelection from '../ImageRectangleSelection';
 import React from 'react';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 
 @observer
-class MockedImageSelection extends ImageSectorSelection {
+class MockedImageSelection extends ImageRectangleSelection {
     constructor(props) {
         super(props);
         this.spyed = false;
@@ -50,7 +50,7 @@ jest.mock('../../RectangleSelection', () => {
 });
 
 test('The component should render with image source', () => {
-    const view = render(<ImageSectorSelection src="//:0" />);
+    const view = render(<ImageRectangleSelection src="//:0" />);
     expect(view).toMatchSnapshot();
 });
 
