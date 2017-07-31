@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
 import {ImageRectangleSelection} from '../ImageRectangleSelection';
 import React from 'react';
+import {mount} from 'enzyme';
 
 jest.mock('../../containerSizeAware/containerSizeAware');
 
