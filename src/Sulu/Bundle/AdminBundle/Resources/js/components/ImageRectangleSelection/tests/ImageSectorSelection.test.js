@@ -1,57 +1,24 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-/*import {mount, render} from 'enzyme';
-import ImageRectangleSelection from '../ImageRectangleSelection';
+import {mount, render} from 'enzyme';
+import {ImageRectangleSelection} from '../ImageRectangleSelection';
 import React from 'react';
-import {action} from 'mobx';
-import {observer} from 'mobx-react';
 
-@observer
+jest.mock('../../containerSizeAware/containerSizeAware');
+
 class MockedImageSelection extends ImageRectangleSelection {
-    constructor(props) {
-        super(props);
-        this.spyed = false;
-    }
-
-    componentDidUpdate() {
-        if (!this.spyed && this.props.updateSpy) {
-            this.spyed = true;
-            // Move the update spy to the end of the execution queue, in order to see rendering changes
-            Promise.resolve().then(this.props.updateSpy);
-        }
-        super.componentDidUpdate();
+    componentDidMount() {
+        Promise.resolve().then(this.props.mountSpy);
     }
 
     componentWillMount() {
         this.image = {naturalWidth: 1920, naturalHeight: 1080};
         this.imageLoaded = true;
     }
-
-    readContainerDimensions = action(() => {
-        this.containerWidth = 640;
-        this.containerHeight = 360;
-    });
 }
 
-jest.mock('../../RectangleSelection', () => {
-    const RectangleSelection = require.requireActual('../../RectangleSelection').default;
-    const {observer} = require.requireActual('mobx-react');
-    const {action} = require.requireActual('mobx');
-
-    @observer
-    class MockedRectangleSelection extends RectangleSelection {
-        readContainerDimensions = action(() => {
-            this.container = {clientWidth: 640, clientHeight: 360};
-            this.containerHeight = this.container.clientHeight;
-            this.containerWidth = this.container.clientWidth;
-        });
-    }
-
-    return MockedRectangleSelection;
-});
-
 test('The component should render with image source', () => {
-    const view = render(<ImageRectangleSelection src="//:0" />);
-    expect(view).toMatchSnapshot();
+    const view = mount(<MockedImageSelection containerWidth={640} containerHeight={360} src="//:0" />);
+    expect(view.render()).toMatchSnapshot();
 });
 
 test('The component should calculate the selection with respect to the image', (done) => {
@@ -64,6 +31,8 @@ test('The component should calculate the selection with respect to the image', (
 
     mount(
         <MockedImageSelection
+            containerWidth={640}
+            containerHeight={360}
             onChange={onChangeSpy}
             src="//:0" />
     );
@@ -83,8 +52,10 @@ test('The component should render with initial selection', (done) => {
     const view = mount(
         <MockedImageSelection
             onChange={onChangeSpy}
-            updateSpy={spy}
+            mountSpy={spy}
             src="//:0"
+            containerWidth={640}
+            containerHeight={360}
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}} />
     );
 });
@@ -93,7 +64,7 @@ test('The component should render with minWidth and minHeight', (done) => {
     window.requestAnimationFrame = jest.fn((cb) => cb());
 
     const spy = () => {
-        const rectangle = view.find('MockedRectangleSelection');
+        const rectangle = view.find('RectangleSelection');
         expect(rectangle.length).toBe(1);
         expect(rectangle.props().minWidth).toBe(200);
         expect(rectangle.props().minHeight).toBe(100);
@@ -102,10 +73,11 @@ test('The component should render with minWidth and minHeight', (done) => {
 
     const view = mount(
         <MockedImageSelection
-            updateSpy={spy}
+            mountSpy={spy}
             src="//:0"
+            containerWidth={640}
+            containerHeight={360}
             minHeight={300}
             minWidth={600} />
     );
 });
-*/

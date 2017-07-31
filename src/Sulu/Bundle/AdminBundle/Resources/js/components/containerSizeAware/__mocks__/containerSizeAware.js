@@ -17,8 +17,8 @@ export default function containerSizeAware(Component: ReactClass<*>) {
         render() {
             const props = {
                 ...this.props,
-                containerWidth: 2000,
-                containerHeight: 1000,
+                containerWidth: 640,
+                containerHeight: 360,
                 ref: this.setComponent,
             };
 
