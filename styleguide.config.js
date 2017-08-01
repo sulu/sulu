@@ -8,17 +8,33 @@ const firstLetterIsUppercase = (string) => {
 };
 
 module.exports = { // eslint-disable-line
-    components: function() {
-        let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+    sections: [
+        {
+            name: 'Components',
+            components: function() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
 
-        // filter out higher order components
-        folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
+                // filter out higher order components
+                folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
 
-        return folders.map((folder) => {
-            const component = path.basename(folder);
-            return path.join(folder, component + '.js');
-        });
-    },
+                return folders.map((folder) => {
+                    const component = path.basename(folder);
+                    return path.join(folder, component + '.js');
+                });
+            },
+        },
+        {
+            name: 'Higher-order components',
+            sections: (function() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+                folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
+                return folders.map((folder) => {
+                    const component = path.basename(folder);
+                    return {name: component, content: folder + '/README.md'};
+                });
+            })(),
+        },
+    ],
     webpackConfig: {
         devServer: {
             disableHostCheck: true,

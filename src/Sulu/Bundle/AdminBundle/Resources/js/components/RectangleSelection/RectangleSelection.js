@@ -8,9 +8,9 @@ import RatioNormalizer from './dataNormalizers/RatioNormalizer';
 import React from 'react';
 import RoundingNormalizer from './dataNormalizers/RoundingNormalizer';
 import SizeNormalizer from './dataNormalizers/SizeNormalizer';
-import withContainerSize from '../withContainerSize';
 import {observer} from 'mobx-react';
 import styles from './rectangleSelection.scss';
+import withContainerSize from '../withContainerSize';
 
 @observer
 export class RectangleSelection extends React.PureComponent {

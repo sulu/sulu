@@ -5,16 +5,16 @@ import withContainerSize from '../withContainerSize';
 
 test('Pass props to rendered component', () => {
     const Component = (props) => (<h1>{props.title}</h1>);
-    const AwareComponent = withContainerSize(Component);
+    const WithSizeComponent = withContainerSize(Component);
 
-    expect(render(<AwareComponent title="Test" />)).toMatchSnapshot();
+    expect(render(<WithSizeComponent title="Test" />)).toMatchSnapshot();
 });
 
 test('Assign the passed class to the container', () => {
     const Component = () => (<h1>Component</h1>);
-    const AwareComponent = withContainerSize(Component, 'container-class');
+    const WithSizeComponent = withContainerSize(Component, 'container-class');
 
-    expect(render(<AwareComponent />)).toMatchSnapshot();
+    expect(render(<WithSizeComponent />)).toMatchSnapshot();
 });
 
 test('Pass the size of the container to the component via props', () => {
@@ -23,9 +23,9 @@ test('Pass the size of the container to the component via props', () => {
     class Component extends React.PureComponent {
         render = () => <h1>Component</h1>;
     }
-    const AwareComponent = withContainerSize(Component);
+    const WithSizeComponent = withContainerSize(Component);
 
-    const view = mount(<AwareComponent />);
+    const view = mount(<WithSizeComponent />);
     view.instance().readContainerDimensions({clientWidth: 500, clientHeight: 600});
     const component = view.find(Component);
 
@@ -45,9 +45,9 @@ test('The method containerDidMount should get called', () => {
         containerDidMount = funMock;
         render = () => <h1>Component</h1>;
     }
-    const AwareComponent = withContainerSize(Component);
+    const WithSizeComponent = withContainerSize(Component);
 
-    mount(<AwareComponent />);
+    mount(<WithSizeComponent />);
 
     expect(funMock).toHaveBeenCalledTimes(1);
 });
