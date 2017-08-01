@@ -4,10 +4,10 @@
 $bodyBackgroundColor: $wildSand;
 $h1TextColor: $blueZodiac;
 
-*, 
-*:after,
-*:before { 
-  box-sizing: border-box;
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
 }
 
 body {
