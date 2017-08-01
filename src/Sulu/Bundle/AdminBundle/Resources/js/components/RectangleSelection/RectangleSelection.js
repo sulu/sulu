@@ -9,7 +9,7 @@ import React from 'react';
 import RoundingNormalizer from './dataNormalizers/RoundingNormalizer';
 import SizeNormalizer from './dataNormalizers/SizeNormalizer';
 import {observer} from 'mobx-react';
-import styles from './rectangleSelection.scss';
+import rectangleSelectionStyles from './rectangleSelection.scss';
 import withContainerSize from '../withContainerSize';
 
 @observer
@@ -134,7 +134,7 @@ export class RectangleSelection extends React.PureComponent {
         }
 
         return (
-            <div className={styles.selection}>
+            <div className={rectangleSelectionStyles.selection}>
                 {this.props.children}
                 <ModifiableRectangle
                     onChange={this.handleRectangleChange}
@@ -149,4 +149,4 @@ export class RectangleSelection extends React.PureComponent {
     }
 }
 
-export default withContainerSize(RectangleSelection, styles.container);
+export default withContainerSize(RectangleSelection, rectangleSelectionStyles.container);

@@ -2,8 +2,8 @@
 import {action, observable} from 'mobx';
 import React from 'react';
 import type {RectangleChange} from './types';
+import modifiableRectangleStyles from './modifiableRectangle.scss';
 import {observer} from 'mobx-react';
-import rectangleStyles from './modifiableRectangle.scss';
 
 @observer
 export default class ModifiableRectangle extends React.PureComponent {
@@ -98,15 +98,15 @@ export default class ModifiableRectangle extends React.PureComponent {
 
         return (
             <div
-                className={rectangleStyles.rectangle}
+                className={modifiableRectangleStyles.rectangle}
                 onMouseDown={this.handleMoveMouseDown}
                 onDoubleClick={this.handleDoubleClick}
                 style={style}>
                 <div
-                    className={rectangleStyles.resizeHandle}
+                    className={modifiableRectangleStyles.resizeHandle}
                     onMouseDown={this.handleResizeMouseDown} />
                 <div
-                    className={rectangleStyles.backdrop}
+                    className={modifiableRectangleStyles.backdrop}
                     style={{outlineWidth: this.props.backdropSize + 'px'}} />
             </div>
         );

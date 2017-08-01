@@ -4,10 +4,10 @@ import React from 'react';
 import RectangleSelection from '../RectangleSelection';
 import RoundingNormalizer from '../RectangleSelection/dataNormalizers/RoundingNormalizer';
 import type {SelectionData} from '../RectangleSelection/types';
-import withContainerSize from '../withContainerSize';
+import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
-import styles from './imageRectangleSelection.scss';
+import withContainerSize from '../withContainerSize';
 
 @observer
 export class ImageRectangleSelection extends React.PureComponent {
@@ -110,4 +110,4 @@ export class ImageRectangleSelection extends React.PureComponent {
     }
 }
 
-export default withContainerSize(ImageRectangleSelection, styles.container);
+export default withContainerSize(ImageRectangleSelection, imageRectangleSelectionStyles.container);
