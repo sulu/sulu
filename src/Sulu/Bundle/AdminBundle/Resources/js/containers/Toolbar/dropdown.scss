@@ -1,0 +1,49 @@
+@import '../Application/colors.scss';
+
+$dropdownBackgroundColor: $wildSand;
+$itemTextActiveColor: $shakespeare;
+
+.container {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 1;
+    padding-right: 20px;
+    padding-left: 52px;
+    white-space: nowrap;
+    box-shadow: 0 0px 6px rgba(50, 50, 50, .25);
+    background-color: $dropdownBackgroundColor;
+
+    &.is-open {
+        display: block;
+    }
+}
+
+.items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    & > li {
+        margin: 10px 0;
+    }
+}
+
+.item {
+    -webkit-appearance: none;
+    display: block;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 12px;    
+
+    &:hover,
+    &:active {
+        color: $itemTextActiveColor;
+    }
+
+    &.is-selected {
+        font-weight: bold;
+    }
+}

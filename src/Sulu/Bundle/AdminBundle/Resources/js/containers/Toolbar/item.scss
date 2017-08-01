@@ -2,18 +2,34 @@
 
 $itemBackgroundColor: $alabaster;
 $itemTextColor: $blueZodiac;
+$itemTextActiveColor: $shakespeare;
 $itemTextColorDisabled: $silver;
+$itemActiveBackgroundColor: $wildSand;
 
 $itemBorder: 1px $wildSand solid;
 
+.container {
+    position: relative;
+    display: inline-block;
+
+    &.has-dropdown-open {
+        .item {
+            color: $itemTextActiveColor;
+            background-color: $itemActiveBackgroundColor;
+        }
+    }
+}
+
 .item {
+    position: relative;
+    z-index: 5;
     padding: 0 30px;
     border: none;
     outline: none;
     height: 60px;
     background: $itemBackgroundColor;
     color: $itemTextColor;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
 
     & > * {
@@ -33,6 +49,13 @@ $itemBorder: 1px $wildSand solid;
         color: $itemTextColorDisabled;
         cursor: default;
     }
+
+    &:not(:disabled) {
+        &:hover {
+            color: $itemTextActiveColor;
+            background-color: $itemActiveBackgroundColor;
+        }
+    }
 }
 
 .icon {
@@ -43,4 +66,9 @@ $itemBorder: 1px $wildSand solid;
 .title {
     vertical-align: middle;
     padding: 0 0 0 10px;
+}
+
+.dropdown-icon {
+    padding-left: 10px;
+    margin-right: -12px;
 }

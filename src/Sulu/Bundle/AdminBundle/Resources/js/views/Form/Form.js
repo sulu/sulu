@@ -25,9 +25,21 @@ export default withToolbar(Form, function() {
             title: translate('sulu_admin.save'),
             icon: 'floppy-o',
             enabled: this.dirty,
-            onClick: () => {
-                this.setDirty(false);
-            },
+            items: [
+                {
+                    title: 'Save as draft',
+                    icon: 'floppy-o',
+                    onClick: () => {
+                        this.setDirty(false);
+                    }
+                },
+                {
+                    title: 'Save and publish'
+                },
+                {
+                    title: 'Publish'
+                }
+            ]
         },
         {
             title: translate('sulu_admin.delete'),
