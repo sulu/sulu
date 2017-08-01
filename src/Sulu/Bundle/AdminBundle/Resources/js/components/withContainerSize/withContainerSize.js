@@ -1,5 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
+import type {Element} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
 import styles from './withContainerSize.scss';
@@ -7,7 +8,7 @@ import styles from './withContainerSize.scss';
 export default function withContainerSize(Component: ReactClass<*>, containerClass: string = styles.container) {
     @observer
     class WithContainerSizeComponent extends React.Component {
-        component: Component;
+        component: Element<*>;
         container: HTMLElement;
         @observable containerWidth: number = 0;
         @observable containerHeight: number = 0;
@@ -34,7 +35,7 @@ export default function withContainerSize(Component: ReactClass<*>, containerCla
             }));
         };
 
-        setComponent = (c: Component) => this.component = c;
+        setComponent = (c: Element<*>) => this.component = c;
         handleWindowResize = () => this.readContainerDimensions(this.container);
 
         render() {
