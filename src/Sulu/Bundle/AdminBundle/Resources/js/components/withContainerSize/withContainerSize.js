@@ -2,12 +2,12 @@
 import {action, observable} from 'mobx';
 import React from 'react';
 import {observer} from 'mobx-react';
-import styles from './containerSizeAware.scss';
+import styles from './withContainerSize.scss';
 
-export default function containerSizeAware(Component: ReactClass<*>, containerClass: string = styles.container) {
+export default function withContainerSize(Component: ReactClass<*>, containerClass: string = styles.container) {
     @observer
-    class ContainerSizeAwareComponent extends React.Component {
-        component: *;
+    class WithContainerSizeComponent extends React.Component {
+        component: Component;
         container: HTMLElement;
         @observable containerWidth: number = 0;
         @observable containerHeight: number = 0;
@@ -34,7 +34,7 @@ export default function containerSizeAware(Component: ReactClass<*>, containerCl
             }));
         };
 
-        setComponent = (c: *) => this.component = c;
+        setComponent = (c: Component) => this.component = c;
         handleWindowResize = () => this.readContainerDimensions(this.container);
 
         render() {
@@ -53,7 +53,7 @@ export default function containerSizeAware(Component: ReactClass<*>, containerCl
         }
     }
 
-    ContainerSizeAwareComponent.displayName = `containerSizeAware(${Component.displayName || Component.name})`;
+    WithContainerSizeComponent.displayName = `withContainerSize(${Component.displayName || Component.name})`;
 
-    return ContainerSizeAwareComponent;
+    return WithContainerSizeComponent;
 }

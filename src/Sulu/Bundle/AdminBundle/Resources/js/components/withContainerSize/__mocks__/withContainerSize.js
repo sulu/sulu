@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 
-export default function containerSizeAware(Component: ReactClass<*>) {
-    class ContainerSizeAwareComponent extends React.Component {
+export default function withContainerSize(Component: ReactClass<*>) {
+    class withContainerSizeComponent extends React.Component {
         component: *;
 
         componentDidMount() {
@@ -26,5 +26,5 @@ export default function containerSizeAware(Component: ReactClass<*>) {
         }
     }
 
-    return ContainerSizeAwareComponent;
+    return withContainerSizeComponent;
 }

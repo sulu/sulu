@@ -3,7 +3,7 @@ import {ImageRectangleSelection} from '../ImageRectangleSelection';
 import React from 'react';
 import {mount} from 'enzyme';
 
-jest.mock('../../containerSizeAware/containerSizeAware');
+jest.mock('../../withContainerSize/withContainerSize');
 
 class MockedImageSelection extends ImageRectangleSelection {
     componentDidMount() {

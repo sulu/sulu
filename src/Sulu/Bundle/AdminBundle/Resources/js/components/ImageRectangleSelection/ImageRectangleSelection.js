@@ -4,7 +4,7 @@ import React from 'react';
 import RectangleSelection from '../RectangleSelection';
 import RoundingNormalizer from '../RectangleSelection/dataNormalizers/RoundingNormalizer';
 import type {SelectionData} from '../RectangleSelection/types';
-import containerSizeAware from '../containerSizeAware';
+import withContainerSize from '../withContainerSize';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
 import styles from './imageRectangleSelection.scss';
@@ -26,17 +26,17 @@ export class ImageRectangleSelection extends React.PureComponent {
     rounding = new RoundingNormalizer();
     @observable imageLoaded = false;
 
-    naturalHorizontalToReal = (h: number) => h * this.imageResizedWidth / this.image.naturalWidth;
+    naturalHorizontalToScaled = (h: number) => h * this.imageResizedWidth / this.image.naturalWidth;
     scaledHorizontalToNatural = (h: number) => h * this.image.naturalWidth / this.imageResizedWidth;
-    naturalVerticalToReal = (v: number) => v * this.imageResizedHeight / this.image.naturalHeight;
+    naturalVerticalToScaled = (v: number) => v * this.imageResizedHeight / this.image.naturalHeight;
     scaledVerticalToNatural = (v: number) => v * this.image.naturalHeight / this.imageResizedHeight;
 
-    naturalDataToReal(data: SelectionData): SelectionData {
+    naturalDataToScaled(data: SelectionData): SelectionData {
         return {
-            width: this.naturalHorizontalToReal(data.width),
-            height: this.naturalVerticalToReal(data.height),
-            left: this.naturalHorizontalToReal(data.left),
-            top: this.naturalVerticalToReal(data.top),
+            width: this.naturalHorizontalToScaled(data.width),
+            height: this.naturalVerticalToScaled(data.height),
+            left: this.naturalHorizontalToScaled(data.left),
+            top: this.naturalVerticalToScaled(data.top),
         };
     }
 
@@ -90,16 +90,10 @@ export class ImageRectangleSelection extends React.PureComponent {
             return null;
         }
 
-        let minWidth, minHeight, initialSelection;
-        if (this.props.minWidth) {
-            minWidth = this.naturalHorizontalToReal(this.props.minWidth);
-        }
-        if (this.props.minHeight) {
-            minHeight = this.naturalVerticalToReal(this.props.minHeight);
-        }
-        if (this.props.initialSelection) {
-            initialSelection = this.naturalDataToReal(this.props.initialSelection);
-        }
+        const minWidth = this.props.minWidth ? this.naturalHorizontalToScaled(this.props.minWidth) : null;
+        const minHeight = this.props.minHeight ? this.naturalVerticalToScaled(this.props.minHeight) : null;
+        const initialSelection = this.props.initialSelection ?
+            this.naturalDataToScaled(this.props.initialSelection) : null;
         return (
             <RectangleSelection
                 initialSelection={initialSelection}
@@ -116,4 +110,4 @@ export class ImageRectangleSelection extends React.PureComponent {
     }
 }
 
-export default containerSizeAware(ImageRectangleSelection, styles.container);
+export default withContainerSize(ImageRectangleSelection, styles.container);

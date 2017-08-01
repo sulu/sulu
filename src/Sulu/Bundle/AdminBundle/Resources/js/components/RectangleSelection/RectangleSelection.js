@@ -8,7 +8,7 @@ import RatioNormalizer from './dataNormalizers/RatioNormalizer';
 import React from 'react';
 import RoundingNormalizer from './dataNormalizers/RoundingNormalizer';
 import SizeNormalizer from './dataNormalizers/SizeNormalizer';
-import containerSizeAware from '../containerSizeAware';
+import withContainerSize from '../withContainerSize';
 import {observer} from 'mobx-react';
 import styles from './rectangleSelection.scss';
 
@@ -149,4 +149,4 @@ export class RectangleSelection extends React.PureComponent {
     }
 }
 
-export default containerSizeAware(RectangleSelection, styles.container);
+export default withContainerSize(RectangleSelection, styles.container);

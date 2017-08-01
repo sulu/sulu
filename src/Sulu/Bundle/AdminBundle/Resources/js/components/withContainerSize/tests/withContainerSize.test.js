@@ -1,18 +1,18 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
 import React from 'react';
-import containerSizeAware from '../containerSizeAware';
+import withContainerSize from '../withContainerSize';
 
 test('Pass props to rendered component', () => {
     const Component = (props) => (<h1>{props.title}</h1>);
-    const AwareComponent = containerSizeAware(Component);
+    const AwareComponent = withContainerSize(Component);
 
     expect(render(<AwareComponent title="Test" />)).toMatchSnapshot();
 });
 
 test('Assign the passed class to the container', () => {
     const Component = () => (<h1>Component</h1>);
-    const AwareComponent = containerSizeAware(Component, 'container-class');
+    const AwareComponent = withContainerSize(Component, 'container-class');
 
     expect(render(<AwareComponent />)).toMatchSnapshot();
 });
@@ -23,7 +23,7 @@ test('Pass the size of the container to the component via props', () => {
     class Component extends React.PureComponent {
         render = () => <h1>Component</h1>;
     }
-    const AwareComponent = containerSizeAware(Component);
+    const AwareComponent = withContainerSize(Component);
 
     const view = mount(<AwareComponent />);
     view.instance().readContainerDimensions({clientWidth: 500, clientHeight: 600});
@@ -45,7 +45,7 @@ test('The method containerDidMount should get called', () => {
         containerDidMount = funMock;
         render = () => <h1>Component</h1>;
     }
-    const AwareComponent = containerSizeAware(Component);
+    const AwareComponent = withContainerSize(Component);
 
     mount(<AwareComponent />);
 
