@@ -12,7 +12,7 @@ export default class Dropdown extends React.PureComponent {
 
     handleClick(item) {
         const {onClick} = item;
-        const {onSelected} = this.props;
+        const {onItemSelected} = this.props;
 
         if (onClick) {
             onClick();
@@ -24,7 +24,7 @@ export default class Dropdown extends React.PureComponent {
     render() {
         const {isOpen, items} = this.props;
         const dropdownContainerClasses = classNames({
-            [dropdownStyles.container]: true,
+            [dropdownStyles.dropdown]: true,
             [dropdownStyles.isOpen]: isOpen,
         });
 

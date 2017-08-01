@@ -73,7 +73,7 @@ export default class Item extends React.PureComponent<ItemType> {
                 </button>
                 {
                     this.hasSubItems && 
-                    <Dropdown items={this.props.items} isOpen={this.hasDropdownOpen} onSelected={this.onSubItemSelected} />
+                    <Dropdown items={this.props.items} isOpen={this.hasDropdownOpen} onItemSelected={this.onSubItemSelected} />
                 }
             </div>
         );
