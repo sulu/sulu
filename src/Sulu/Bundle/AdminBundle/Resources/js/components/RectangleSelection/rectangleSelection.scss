@@ -1,7 +1,11 @@
-.selection {
+.container {
     display: inline-flex;
+}
+
+.selection {
     position: relative;
     overflow: hidden;
+    display: inline-flex;
 
     &,
     * {
