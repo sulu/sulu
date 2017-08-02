@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The modal should be rendered when the button got clicked 1`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <div class=\\"modal\\">
+      <p>Modal content</p>
+    </div>
+    <div class=\\"backdrop\\"></div>
+  </div>
+</div>"
+`;
+
+exports[`The modal should close again when backdrop got clicked 1`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <div class=\\"modal\\">
+      <p>Modal content</p>
+    </div>
+    <div class=\\"backdrop\\"></div>
+  </div>
+</div>"
+`;
+
+exports[`The modal should initially not be rendered 1`] = `
+<div>
+  <button>
+    Open modal
+  </button>
+</div>
+`;

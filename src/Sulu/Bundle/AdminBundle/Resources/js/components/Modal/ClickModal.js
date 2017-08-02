@@ -18,7 +18,7 @@ export default class ClickModal extends React.PureComponent {
         this.modalOpen = true;
     };
 
-    @action handleModalRequestClose = () => {
+    @action handleRequestClose = () => {
         this.modalOpen = false;
     };
 
@@ -26,7 +26,7 @@ export default class ClickModal extends React.PureComponent {
         return (
             <div className={this.props.className}>
                 {React.cloneElement(this.props.clickElement, {onClick: this.handleElementClick})}
-                <Modal isOpen={this.modalOpen} onRequestClose={this.handleModalRequestClose}>
+                <Modal isOpen={this.modalOpen} onRequestClose={this.handleRequestClose}>
                     {this.props.children}
                 </Modal>
             </div>

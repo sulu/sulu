@@ -1,0 +1,32 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+import {mount, shallow} from 'enzyme';
+import Modal from '../Modal';
+import React from 'react';
+import pretty from 'pretty';
+
+afterEach(() => document.body.innerHTML = '');
+
+test('The component should render in body when open', () => {
+    const body = document.body;
+    const view = mount(<Modal isOpen={true}><p>Modal content</p></Modal>).render();
+    expect(view.html()).toBe(null);
+    expect(pretty(body.innerHTML)).toMatchSnapshot();
+});
+
+test('The component should not render in body when closed', () => {
+    const body = document.body;
+    const view = mount(<Modal isOpen={false}><p>Modal content</p></Modal>).render();
+    expect(view.html()).toBe(null);
+    expect(body.innerHTML).toBe('');
+});
+
+test('The component should request to be closed on click on backdrop', () => {
+    const requestCloseSpy = jest.fn();
+    const view = shallow(<Modal isOpen={false} onRequestClose={requestCloseSpy}><p>Modal content</p></Modal>);
+    const backdrop = view.find('.backdrop');
+    expect(backdrop.length).toBe(1);
+
+    expect(requestCloseSpy).toHaveBeenCalledTimes(0);
+    backdrop.simulate('click');
+    expect(requestCloseSpy).toHaveBeenCalledTimes(1);
+});

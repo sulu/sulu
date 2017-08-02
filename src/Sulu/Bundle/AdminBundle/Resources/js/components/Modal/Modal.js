@@ -7,7 +7,7 @@ export default class Modal extends React.PureComponent {
     props: {
         isOpen: boolean,
         children: React.Element<*>,
-        onRequestClose: () => void,
+        onRequestClose?: () => void,
     };
 
     static defaultProps = {
@@ -15,7 +15,9 @@ export default class Modal extends React.PureComponent {
     };
 
     requestClose = () => {
-        this.props.onRequestClose();
+        if (this.props.onRequestClose) {
+            this.props.onRequestClose();
+        }
     };
 
     handleBackdropClick = this.requestClose;
