@@ -168,7 +168,7 @@ define([
 
                 if ($field.is('textarea')) {
                     if (!!$field.data('element').getValue()) {
-                        $block.find('.collapsed-container .text').html($field.data('element').getValue());
+                        $block.find('.collapsed-container .text').text($field.data('element').getValue());
                         return true;
                     }
                 }
