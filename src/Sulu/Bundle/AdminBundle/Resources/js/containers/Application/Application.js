@@ -7,7 +7,6 @@ import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
 import applicationStyles from './application.scss';
 import {observer} from 'mobx-react';
-import applicationStyles from './application.scss';
 
 @observer
 export default class Application extends React.PureComponent {
