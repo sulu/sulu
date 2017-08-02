@@ -55,6 +55,40 @@ define([
             }
         },
 
+        /**
+         * namespace for events
+         * @type {string}
+         */
+        eventNamespace = 'sulu_content.teaser-selection.',
+
+        /**
+         * Raised when OK button of slide was clicked.
+         *
+         * @event sulu_content.teaser-selection.<instance-name>.ok-button.clicked
+         */
+        SLIDE_OK_BUTTON = function() {
+            return createEventName.call(this, 'ok-button.clicked');
+        },
+
+        /**
+         * Raised when OK button of slide was clicked.
+         *
+         * @event sulu_content.teaser-selection.<instance-name>.cancel-button.clicked
+         */
+        SLIDE_CANCEL_BUTTON = function() {
+            return createEventName.call(this, 'cancel-button.clicked');
+        },
+
+        /**
+         * Returns normalized event names
+         *
+         * @param {string} postFix
+         * @returns {string}
+         */
+        createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        },
+
         renderDropdown = function() {
             var $container = $('<div/>');
             this.$addButton.parent().append($container);
@@ -117,7 +151,22 @@ define([
         addByType = function(type) {
             var $container = $('<div class="teaser-selection"/>'),
                 $componentContainer = $('<div/>'),
-                data = this.getData().items || [];
+                data = this.getData().items || [],
+                additionalSlides = _.map(type.additionalSlides, function(slide) {
+                    slide.okCallback = function() {
+                        this.sandbox.emit(SLIDE_OK_BUTTON.call(this), slide);
+
+                        return false;
+                    }.bind(this);
+
+                    slide.cancelCallback = function() {
+                        this.sandbox.emit(SLIDE_CANCEL_BUTTON.call(this), slide);
+
+                        return false;
+                    }.bind(this);
+
+                    return slide;
+                }.bind(this));
 
             this.$el.append($container);
 
@@ -144,7 +193,7 @@ define([
                                     this.sandbox.stop($componentContainer);
                                 }.bind(this)
                             }
-                        ]
+                        ].concat(additionalSlides)
                     }
                 }
             ]);

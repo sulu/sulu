@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * ENHANCEMENT #3464 [ContentBundle]           Added additional-slides configuration for teaser-provider
+    
 * 1.6.2 (2017-07-31)
     * HOTFIX      #3444 [MediaBundle]             Fixed error when download of media without extension
     * HOTFIX      #3441 [PreviewBundle]           Fixed bug in preview when running on https
