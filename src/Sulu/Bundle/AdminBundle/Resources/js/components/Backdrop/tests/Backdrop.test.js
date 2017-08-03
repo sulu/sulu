@@ -1,6 +1,7 @@
-import {mount, render, shallow} from 'enzyme';
-import React from 'react';
+/* eslint-disable flowtype/require-valid-file-annotation */
+import {mount, shallow} from 'enzyme';
 import Backdrop from '../Backdrop';
+import React from 'react';
 import pretty from 'pretty';
 
 afterEach(() => document.body.innerHTML = '');
@@ -22,7 +23,7 @@ test('The component should not render in the body when closed', () => {
 test('The component should call a function when clicked', () => {
     const onClickSpy = jest.fn();
     const view = shallow(<Backdrop isOpen={false} onClick={onClickSpy} />);
-    
+
     expect(onClickSpy).toHaveBeenCalledTimes(0);
     view.find('.backdrop').simulate('click');
     expect(onClickSpy).toHaveBeenCalledTimes(1);

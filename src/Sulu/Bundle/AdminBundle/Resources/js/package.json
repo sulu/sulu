@@ -15,6 +15,7 @@
         "promise-polyfill": "^6.0.2",
         "react": "^15.6.0",
         "react-dom": "^15.6.0",
+        "react-portal": "^3.1.0",
         "whatwg-fetch": "^2.0.3"
     },
     "devDependencies": {
