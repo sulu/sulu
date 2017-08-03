@@ -6,26 +6,15 @@ $itemTextActiveColor: $shakespeare;
 $itemTextColorDisabled: $silver;
 $itemActiveBackgroundColor: $wildSand;
 
-$itemBorder: 1px $wildSand solid;
-
-.container {
+.button-container {
     position: relative;
     display: inline-block;
-
-    &.has-dropdown-open {
-        .item {
-            color: $itemTextActiveColor;
-            background-color: $itemActiveBackgroundColor;
-        }
-    }
 }
 
-.item {
+.button {
     position: relative;
-    z-index: 5;
-    padding: 0 30px;
+    padding: 0 20px;
     border: none;
-    outline: none;
     height: 60px;
     background: $itemBackgroundColor;
     color: $itemTextColor;
@@ -37,23 +26,20 @@ $itemBorder: 1px $wildSand solid;
         position: relative;
     }
 
-    &:first-child {
-        border-left: $itemBorder;
-    }
-
-    &:last-child {
-        border-right: $itemBorder;
-    }
-
     &:disabled {
         color: $itemTextColorDisabled;
         cursor: default;
     }
 
     &:not(:disabled) {
-        &:hover {
+        &:hover,
+        &.is-active {
             color: $itemTextActiveColor;
             background-color: $itemActiveBackgroundColor;
+        }
+
+        &.is-active {
+            z-index: 2;
         }
     }
 }
@@ -63,12 +49,11 @@ $itemBorder: 1px $wildSand solid;
     font-size: 20px;
 }
 
-.title {
+.value {
     vertical-align: middle;
     padding: 0 0 0 10px;
 }
 
 .dropdown-icon {
     padding-left: 10px;
-    margin-right: -12px;
 }

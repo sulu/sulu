@@ -5,33 +5,28 @@ $itemTextActiveColor: $shakespeare;
 
 .dropdown {
     display: none;
+    list-style: none;
     position: absolute;
     left: 0;
     top: 100%;
     z-index: 1;
+    margin: 0;
     padding-right: 20px;
-    padding-left: 52px;
+    padding-left: 40px;
     white-space: nowrap;
     box-shadow: 0 0px 6px rgba(50, 50, 50, .25);
     background-color: $dropdownBackgroundColor;
+
+    & > li {
+        margin: 10px 0;
+    }
 
     &.is-open {
         display: block;
     }
 }
 
-.items {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    & > li {
-        margin: 10px 0;
-    }
-}
-
-.item {
-    -webkit-appearance: none;
+.option {
     display: block;
     border: 0;
     background-color: transparent;

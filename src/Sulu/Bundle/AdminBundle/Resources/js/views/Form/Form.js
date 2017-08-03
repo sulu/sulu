@@ -20,33 +20,37 @@ class Form extends React.PureComponent<*> {
 }
 
 export default withToolbar(Form, function() {
-    return [
-        {
-            title: translate('sulu_admin.save'),
-            icon: 'floppy-o',
-            enabled: this.dirty,
-            items: [
-                {
-                    title: 'Save as draft',
-                    icon: 'floppy-o',
-                    onClick: () => {
+    return {
+        buttons: [
+            {
+                value: translate('sulu_admin.save'),
+                icon: 'floppy-o',
+                disabled: !this.dirty,
+                onChange: (item) => {
+                    if (item.value === 'Save as draft') {
                         this.setDirty(false);
                     }
                 },
-                {
-                    title: 'Save and publish'
-                },
-                {
-                    title: 'Publish'
-                }
-            ]
-        },
-        {
-            title: translate('sulu_admin.delete'),
-            icon: 'trash-o',
-            onClick: () => {
-                this.setDirty(true);
+                options: [
+                    {
+                        value: 'Save as draft',
+                    },
+                    {
+                        value: 'Save and publish',
+                        selected: true,
+                    },
+                    {
+                        value: 'Publish',
+                    },
+                ]
             },
-        },
-    ];
+            {
+                value: translate('sulu_admin.delete'),
+                icon: 'trash-o',
+                onClick: () => {
+                    this.setDirty(true);
+                },
+            },
+        ]
+    }
 });

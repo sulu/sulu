@@ -10,10 +10,10 @@ export default function withToolbar(Component: ComponentType<*>, toolbar: () => 
     const WithToolbarComponent = class extends React.Component<*> {
         disposer: Function;
 
-        setToolbarItems = (component: React$Element<*>) => {
+        setToolbarConfig = (component: React$Element<*>) => {
             this.disposer = autorun(() => {
                 if (component) {
-                    toolbarStore.setItems(toolbar.call(component));
+                    toolbarStore.setConfig(toolbar.call(component));
                 }
             });
         };
@@ -23,7 +23,7 @@ export default function withToolbar(Component: ComponentType<*>, toolbar: () => 
         }
 
         render() {
-            return <Component ref={this.setToolbarItems} {...this.props} />;
+            return <Component ref={this.setToolbarConfig} {...this.props} />;
         }
     };
 

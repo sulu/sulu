@@ -1,17 +1,25 @@
 // @flow
+import type {ToolbarConfig} from '../types';
 import {action, observable} from 'mobx';
-import type {Item} from '../types';
+
+const defaultConfig = {
+    buttons: [],
+};
 
 class ToolbarStore {
-    @observable items: Array<Item> = [];
+    @observable config: ToolbarConfig = defaultConfig;
 
-    @action setItems(items: Array<Item>) {
-        this.clearItems();
-        this.items.push(...items);
+    @action setConfig(config: ToolbarConfig) {
+        this.clearConfig();
+        this.config = {...defaultConfig, ...config};
     }
 
-    @action clearItems() {
-        this.items.length = 0;
+    @action clearConfig() {
+        this.config = defaultConfig;
+    }
+
+    getButtonsConfig() {
+        return this.config.buttons;
     }
 }
 

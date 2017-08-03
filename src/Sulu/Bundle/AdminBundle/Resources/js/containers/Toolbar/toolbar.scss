@@ -3,9 +3,17 @@
 $toolbarBackgroundColor: $white;
 $shadowColor: $mischka;
 
+$buttonsContainerBorder: 1px $gallery solid;
+
 .toolbar {
     height: 60px;
     margin: 0;
     background: $toolbarBackgroundColor;
     box-shadow: 0 3px 2px $shadowColor;
+}
+
+.buttons-container {
+    display: inline-block;
+    border-left: $buttonsContainerBorder;
+    border-right: $buttonsContainerBorder;
 }

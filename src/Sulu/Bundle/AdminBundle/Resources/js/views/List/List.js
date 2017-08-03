@@ -12,14 +12,18 @@ class List extends React.PureComponent<*> {
 }
 
 export default withToolbar(List, function() {
-    return [
-        {
-            title: translate('sulu_admin.add'),
-            icon: 'plus-circle',
-        },
-        {
-            title: translate('sulu_admin.delete'),
-            icon: 'trash-o',
-        },
-    ];
+    return {
+        buttons: [
+            {
+                value: translate('sulu_admin.add'),
+                icon: 'plus-circle',
+                onClick: () => {},
+            },
+            {
+                value: translate('sulu_admin.delete'),
+                icon: 'trash-o',
+                onClick: () => {},
+            },
+        ]
+    };
 });

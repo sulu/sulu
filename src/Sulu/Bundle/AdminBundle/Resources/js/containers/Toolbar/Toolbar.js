@@ -1,7 +1,8 @@
 // @flow
+import DefaultButton from './DefaultButton';
+import DropdownButton from './DropdownButton';
 import React from 'react';
 import {observer} from 'mobx-react';
-import Item from './Item';
 import toolbarStore from './stores/ToolbarStore';
 import toolbarStyles from './toolbar.scss';
 
@@ -11,11 +12,17 @@ export default class Toolbar extends React.PureComponent<*> {
         return (
             <header className={toolbarStyles.toolbar}>
                 <nav>
-                    {
-                    	toolbarStore.items.map((item) => (
-                    		<Item key={item.title} {...item} />
-                    	))
-                    }
+                    <div className={toolbarStyles.buttonsContainer}>
+                        {
+                            toolbarStore.getButtonsConfig().map((buttonConfig) => {
+                                if (buttonConfig.options) {
+                                    return <DropdownButton key={buttonConfig.value} {...buttonConfig} />;
+                                } else {
+                                    return <DefaultButton key={buttonConfig.value} {...buttonConfig} />;
+                                }
+                            })
+                        }
+                    </div>
                 </nav>
             </header>
         );
