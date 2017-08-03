@@ -6,14 +6,14 @@ import classNames from 'classnames';
 
 export default class Backdrop extends React.PureComponent {
     props: {
-        isOpen: boolean,
-        isVisible?: boolean,
+        isOpen: boolean, 
+        /** When set to false the backdrop renders transparent. */
+        isVisible: boolean,
         onClick?: () => void,
     };
 
     static defaultProps = {
         isVisible: true,
-        onClick: () => {},
     };
 
     render() {
