@@ -1,4 +1,5 @@
 // @flow
+import Backdrop from '../Backdrop';
 import Portal from 'react-portal';
 import React from 'react';
 import modalStyle from './modal.scss';
@@ -24,14 +25,14 @@ export default class Modal extends React.PureComponent {
 
     render() {
         return (
-            <Portal isOpened={this.props.isOpen}>
-                <div className={modalStyle.container}>
-                    <div className={modalStyle.modal}>
-                        {this.props.children}
+            <div>
+                <Portal isOpened={this.props.isOpen}>
+                    <div className={modalStyle.container}>
+                        <div className={modalStyle.modal}>{this.props.children}</div>
                     </div>
-                    <div onClick={this.handleBackdropClick} className={modalStyle.backdrop} />
-                </div>
-            </Portal>
+                </Portal>
+                <Backdrop isOpen={this.props.isOpen} onClick={this.handleBackdropClick} />
+            </div>
         );
     }
 }

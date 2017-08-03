@@ -1,12 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`The component should not render in body when closed 1`] = `
+<div>
+  
+</div>
+`;
+
 exports[`The component should render in body when open 1`] = `
+<div>
+  
+</div>
+`;
+
+exports[`The component should render in body when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <div class=\\"modal\\">
       <p>Modal content</p>
     </div>
-    <div class=\\"backdrop\\"></div>
   </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop isVisible\\"></div>
 </div>"
 `;

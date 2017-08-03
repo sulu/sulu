@@ -6,8 +6,10 @@ exports[`The modal should be rendered when the button got clicked 1`] = `
     <div class=\\"modal\\">
       <p>Modal content</p>
     </div>
-    <div class=\\"backdrop\\"></div>
   </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop isVisible\\"></div>
 </div>"
 `;
 
@@ -17,8 +19,10 @@ exports[`The modal should close again when backdrop got clicked 1`] = `
     <div class=\\"modal\\">
       <p>Modal content</p>
     </div>
-    <div class=\\"backdrop\\"></div>
   </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop isVisible\\"></div>
 </div>"
 `;
 
@@ -27,5 +31,8 @@ exports[`The modal should initially not be rendered 1`] = `
   <button>
     Open modal
   </button>
+  <div>
+    
+  </div>
 </div>
 `;

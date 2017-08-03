@@ -2,11 +2,11 @@ The modal component let's you display some content above everything else.
 It renders depending on the passed property and request being closed through a callback.
 
 ```
-initialState = {modalOpen: false};
+initialState = {open: false};
 
 <div>
-    <button onClick={() => setState({modalOpen: true})}>Open modal</button>
-    <Modal onRequestClose={() => setState({modalOpen: false})} isOpen={state.modalOpen}>
+    <button onClick={() => setState({open: true})}>Open modal</button>
+    <Modal onRequestClose={() => setState({open: false})} isOpen={state.open}>
         <div style={{width: '500px', height: '500px'}}>My modal content</div>
     </Modal>
 </div>
