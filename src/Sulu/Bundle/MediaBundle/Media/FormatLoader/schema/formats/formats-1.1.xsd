@@ -18,7 +18,7 @@
                     <xs:field xpath="@lang"/>
                 </xs:unique>
             </xs:element>
-            <xs:element name="scale" type="scaleType"/>
+            <xs:element name="scale" type="scaleType" minOccurs="0"/>
             <xs:element name="transformations" type="transformationsType" minOccurs="0"/>
             <xs:element type="optionsType" name="options" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
