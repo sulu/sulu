@@ -8,7 +8,7 @@ export type DefaultButtonType = {|
     isActive?: boolean,
 |};
 
-type OptionType = {
+export type OptionType = {
     value: string,
 };
 
@@ -17,7 +17,7 @@ export type DropdownButtonType = {|
     onChange: (selectedOption: OptionType) => void,
     options: Array<OptionType>,
     isOpen?: boolean,
-    setValueOnSelect?: boolean,
+    setValueOnChange?: boolean,
     defaultValue?: string,
     icon?: string,
     disabled?: boolean,

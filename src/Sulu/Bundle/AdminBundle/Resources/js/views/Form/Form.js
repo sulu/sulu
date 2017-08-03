@@ -26,6 +26,7 @@ export default withToolbar(Form, function() {
                 value: translate('sulu_admin.save'),
                 icon: 'floppy-o',
                 disabled: !this.dirty,
+                setValueOnChange: true,
                 onChange: (item) => {
                     if (item.value === 'Save as draft') {
                         this.setDirty(false);
@@ -34,6 +35,7 @@ export default withToolbar(Form, function() {
                 options: [
                     {
                         value: 'Save as draft',
+                        disabled: true,
                     },
                     {
                         value: 'Save and publish',

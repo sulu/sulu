@@ -2,13 +2,15 @@
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Backdrop from '../../components/Backdrop';
-import type {DropdownButtonType} from './types';
+import type {DropdownButtonType, OptionType} from './types';
 import DefaultButton from './DefaultButton';
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../../components/Icon';
 import buttonStyles from './button.scss';
 import dropdownStyles from './dropdown.scss';
+
+const ICON_CHECKMARK = 'check';
 
 @observer
 export default class ButtonDropdown extends React.PureComponent {
@@ -17,7 +19,13 @@ export default class ButtonDropdown extends React.PureComponent {
     static defaultProps = {
         disabled: false,
         defaultValue: '',
-        setValueOnSelect: false,
+        setValueOnChange: false,
+    };
+
+    @observable value = this.props.value;
+
+    @action updateValue = (value) => {
+        this.value = value;
     };
 
     @observable isOpen = this.props.isOpen;
@@ -38,12 +46,23 @@ export default class ButtonDropdown extends React.PureComponent {
         }
     };
 
+    handleOnChange = (option: OptionType) => {
+        const {onChange, setValueOnChange} = this.props;
+
+        onChange(option);
+
+        if (setValueOnChange) {
+            this.updateValue(option.value);
+        }
+
+        this.close();
+    };
+
     render() {
         const {
             icon,
             value,
             options,
-            onChange,
             disabled,
             defaultValue,
         } = this.props;
@@ -57,7 +76,7 @@ export default class ButtonDropdown extends React.PureComponent {
                 <DefaultButton 
                     icon={icon}
                     disabled={disabled}
-                    value={value || defaultValue} 
+                    value={this.value || defaultValue} 
                     onClick={this.toggle}
                     isActive={this.isOpen} 
                     hasOptions={true} 
@@ -65,8 +84,17 @@ export default class ButtonDropdown extends React.PureComponent {
                 <ul className={dropdownClasses}>
                     {
                         options.map((option) => (
-                            <li key={option.value}>
-                                <button className={dropdownStyles.option} onClick={() => onChange(option)}>
+                            <li key={option.value} className={classNames({
+                                [dropdownStyles.isSelected]: option.selected
+                            })}>
+                                {option.selected &&
+                                    <Icon name={ICON_CHECKMARK} className={dropdownStyles.optionSelectedIcon} />
+                                }
+                                <button 
+                                    disabled={option.disabled}
+                                    onClick={() => this.handleOnChange(option)}
+                                    className={dropdownStyles.option}
+                                >
                                     {option.value}
                                 </button>
                             </li>
