@@ -5,5 +5,6 @@ module.exports = { // eslint-disable-line
     'extends': 'stylelint-config-standard',
     'rules': {
         'indentation': 4,
+        'number-leading-zero': 'never',
     },
 };

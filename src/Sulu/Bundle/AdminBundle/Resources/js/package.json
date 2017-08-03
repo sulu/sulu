@@ -27,6 +27,7 @@
         "enzyme-to-json": "^1.5.1",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^20.0.4",
+        "pretty": "^2.0.0",
         "react-test-renderer": "^15.6.1"
     },
     "jest": {
