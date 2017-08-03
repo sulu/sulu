@@ -4,6 +4,7 @@ import React from 'react';
 import pretty from 'pretty';
 import Backdrop from '../Backdrop';
 
+
 afterEach(() => document.body.innerHTML = '');
 
 test('The component should render in body when open', () => {

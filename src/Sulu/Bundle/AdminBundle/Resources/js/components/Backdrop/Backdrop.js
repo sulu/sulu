@@ -16,11 +16,16 @@ export default class Backdrop extends React.PureComponent<Props> {
         isVisible: true,
     };
 
+    handleClick = () => {
+        if (this.props.onClick) {
+            this.props.onClick();
+        }
+    };
+
     render() {
         const {
             isOpen,
             isVisible,
-            onClick,
         } = this.props;
         const backdropClasses = classNames({
             [backdropStyles.backdrop]: true,
@@ -29,7 +34,9 @@ export default class Backdrop extends React.PureComponent<Props> {
 
         return (
             <Portal isOpened={isOpen}>
-                <div onClick={onClick} className={backdropClasses} />
+                <div
+                    onClick={this.handleClick}
+                    className={backdropClasses} />
             </Portal>
         );
     }
