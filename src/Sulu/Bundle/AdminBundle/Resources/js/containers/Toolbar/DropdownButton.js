@@ -1,31 +1,24 @@
 // @flow
-import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import type {DropdownButtonType, OptionConfigType} from './types';
+import {action, computed, observable} from 'mobx';
 import Backdrop from '../../components/Backdrop';
-import type {DropdownButtonType, OptionType} from './types';
+import ButtonSizes from './buttonSizes';
 import DefaultButton from './DefaultButton';
+import DropdownOption from './DropdownOption';
 import React from 'react';
-import classNames from 'classnames';
-import Icon from '../../components/Icon';
 import buttonStyles from './button.scss';
+import classNames from 'classnames';
 import dropdownStyles from './dropdown.scss';
-
-const ICON_CHECKMARK = 'check';
+import {observer} from 'mobx-react';
 
 @observer
 export default class ButtonDropdown extends React.PureComponent {
     props: DropdownButtonType;
 
     static defaultProps = {
+        label: '',
         disabled: false,
-        defaultValue: '',
         setValueOnChange: false,
-    };
-
-    @observable value = this.props.value;
-
-    @action updateValue = (value) => {
-        this.value = value;
     };
 
     @observable isOpen = this.props.isOpen;
@@ -38,6 +31,18 @@ export default class ButtonDropdown extends React.PureComponent {
         this.isOpen = !this.isOpen;
     };
 
+    @observable selectedValue = this.props.value;
+
+    @computed get selectedOption(): ?OptionConfigType {
+        return this.props.options.find((option) => {
+            return option.value === this.selectedValue;
+        });
+    }
+
+    @action selectValue = (value: string) => {
+        this.selectedValue = value;
+    };
+
     componentWillReceiveProps = (nextProps: DropdownButtonType) => {
         const {disabled} = nextProps;
 
@@ -46,62 +51,76 @@ export default class ButtonDropdown extends React.PureComponent {
         }
     };
 
-    handleOnChange = (option: OptionType) => {
+    handleButtonClick = () => {
+        this.toggle();
+    };
+
+    handleOnChange = (value: string) => {
         const {onChange, setValueOnChange} = this.props;
 
-        onChange(option);
+        if (!this.equalsSelectedOption(value)) {
+            onChange(value);
 
-        if (setValueOnChange) {
-            this.updateValue(option.value);
+            if (setValueOnChange) {
+                this.selectValue(value);
+            }
         }
 
         this.close();
     };
 
+    handleBackdropClick = () => {
+        this.close();
+    };
+
+    equalsSelectedOption = (value: string) => {
+        if (!this.selectedOption) {
+            return false;
+        }
+
+        return value === this.selectedOption.value;
+    };
+
     render() {
         const {
             icon,
-            value,
+            size,
+            label,
             options,
             disabled,
-            defaultValue,
         } = this.props;
+        const buttonSizeClass = size ? ButtonSizes.getClassName(size) : null;
         const dropdownClasses = classNames({
             [dropdownStyles.dropdown]: true,
             [dropdownStyles.isOpen]: this.isOpen,
+            [dropdownStyles[buttonSizeClass]]: buttonSizeClass,
         });
+        const buttonValue = this.selectedOption ? this.selectedOption.label : label;
 
         return (
             <div className={buttonStyles.buttonContainer}>
-                <DefaultButton 
+                <DefaultButton
                     icon={icon}
+                    size={size}
                     disabled={disabled}
-                    value={this.value || defaultValue} 
-                    onClick={this.toggle}
-                    isActive={this.isOpen} 
-                    hasOptions={true} 
-                />
+                    value={buttonValue}
+                    onClick={this.handleButtonClick}
+                    isActive={this.isOpen}
+                    hasOptions={true} />
                 <ul className={dropdownClasses}>
                     {
                         options.map((option) => (
-                            <li key={option.value} className={classNames({
-                                [dropdownStyles.isSelected]: option.selected
-                            })}>
-                                {option.selected &&
-                                    <Icon name={ICON_CHECKMARK} className={dropdownStyles.optionSelectedIcon} />
-                                }
-                                <button 
-                                    disabled={option.disabled}
-                                    onClick={() => this.handleOnChange(option)}
-                                    className={dropdownStyles.option}
-                                >
-                                    {option.value}
-                                </button>
-                            </li>
+                            <DropdownOption
+                                key={option.value}
+                                value={option.value}
+                                label={option.label}
+                                disabled={option.disabled}
+                                onClick={this.handleOnChange}
+                                selected={this.equalsSelectedOption(option.value)} />
                         ))
                     }
                 </ul>
-                <Backdrop isOpen={this.isOpen} onClick={this.close} opacity={0} />
+                <Backdrop isOpen={this.isOpen} onClick={this.handleBackdropClick} isVisible={false} />
             </div>
         );
     }

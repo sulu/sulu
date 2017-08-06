@@ -24,6 +24,6 @@ export default withToolbar(List, function() {
                 icon: 'trash-o',
                 onClick: () => {},
             },
-        ]
+        ],
     };
 });

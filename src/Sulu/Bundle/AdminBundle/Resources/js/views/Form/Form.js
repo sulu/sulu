@@ -21,30 +21,59 @@ class Form extends React.PureComponent<*> {
 
 export default withToolbar(Form, function() {
     return {
+        backButton: {
+            onClick: () => {},
+        },
+        icons: [
+            'ban',
+            'flag',
+        ],
+        locale: {
+            value: 'en',
+            onChange: () => {},
+            options: [
+                {
+                    value: 'de',
+                    label: 'de',
+                    disabled: true,
+                },
+                {
+                    value: 'en',
+                    label: 'en',
+                },
+                {
+                    value: 'fr',
+                    label: 'fr',
+                },
+            ],
+        },
         buttons: [
             {
                 value: translate('sulu_admin.save'),
+                label: 'Choose',
                 icon: 'floppy-o',
                 disabled: !this.dirty,
                 setValueOnChange: true,
-                onChange: (item) => {
-                    if (item.value === 'Save as draft') {
+                onChange: (optionVal) => {
+                    if (optionVal === 'save_publish') {
                         this.setDirty(false);
                     }
                 },
                 options: [
                     {
-                        value: 'Save as draft',
+                        value: 'save_draft',
+                        label: 'Save as draft',
                         disabled: true,
                     },
                     {
-                        value: 'Save and publish',
-                        selected: true,
+                        value: 'save_publish',
+                        label: 'Save and publish',
                     },
                     {
-                        value: 'Publish',
+                        value: 'publish',
+                        label: 'Publish',
                     },
-                ]
+                ],
             },
             {
                 value: translate('sulu_admin.delete'),
@@ -53,6 +82,6 @@ export default withToolbar(Form, function() {
                     this.setDirty(true);
                 },
             },
-        ]
-    }
+        ],
+    };
 });

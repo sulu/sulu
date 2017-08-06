@@ -5,6 +5,7 @@ import type {ComponentType} from 'react';
 import {buildHocDisplayName} from '../../services/react';
 import type {Item} from './types';
 import toolbarStore from './stores/ToolbarStore';
+import type {ToolbarConfig} from './types';
 
 export default function withToolbar(Component: ComponentType<*>, toolbar: () => Array<Item>) {
     const WithToolbarComponent = class extends React.Component<*> {

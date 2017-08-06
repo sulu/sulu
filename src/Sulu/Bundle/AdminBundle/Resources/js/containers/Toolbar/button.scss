@@ -1,23 +1,25 @@
 @import '../Application/colors.scss';
 
-$itemBackgroundColor: $alabaster;
-$itemTextColor: $blueZodiac;
-$itemTextActiveColor: $shakespeare;
-$itemTextColorDisabled: $silver;
-$itemActiveBackgroundColor: $wildSand;
+$buttonTextColor: $blueZodiac;
+$buttonTextColorActive: $shakespeare;
+$buttonTextColorDisabled: $silver;
+$buttonActiveBackgroundColor: $wildSand;
 
 .button-container {
     position: relative;
     display: inline-block;
 }
 
-.button {
+.button,
+.back-button {
+    display: inline-block;
+    min-width: 60px;
     position: relative;
     padding: 0 20px;
     border: none;
     height: 60px;
-    background: $itemBackgroundColor;
-    color: $itemTextColor;
+    background-color: transparent;
+    color: $buttonTextColor;
     font-size: 12px;
     cursor: pointer;
 
@@ -27,19 +29,35 @@ $itemActiveBackgroundColor: $wildSand;
     }
 
     &:disabled {
-        color: $itemTextColorDisabled;
+        color: $buttonTextColorDisabled;
         cursor: default;
     }
 
     &:not(:disabled) {
         &:hover,
         &.is-active {
-            color: $itemTextActiveColor;
-            background-color: $itemActiveBackgroundColor;
+            color: $buttonTextColorActive;
+            background-color: $buttonActiveBackgroundColor;
         }
 
         &.is-active {
             z-index: 2;
+        }
+    }
+
+    &.is-small {
+        padding: 0;
+
+        .dropdown-icon {
+            position: absolute;
+            left: 50%;
+            bottom: 8px;
+            margin-left: -6px;
+            padding: 0;
+        }
+
+        .label {
+            padding: 0;
         }
     }
 }
@@ -49,11 +67,15 @@ $itemActiveBackgroundColor: $wildSand;
     font-size: 20px;
 }
 
-.value {
+.label {
     vertical-align: middle;
     padding: 0 0 0 10px;
 }
 
 .dropdown-icon {
     padding-left: 10px;
+}
+
+.back-button {
+    font-size: 18px;
 }

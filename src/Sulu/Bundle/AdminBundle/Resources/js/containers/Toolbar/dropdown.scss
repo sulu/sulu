@@ -1,7 +1,9 @@
 @import '../Application/colors.scss';
 
 $dropdownBackgroundColor: $wildSand;
-$itemTextActiveColor: $shakespeare;
+$optionTextColor: $blueZodiac;
+$optionTextColorDisabled: $silver;
+$optionTextColorActive: $shakespeare;
 
 .dropdown {
     display: none;
@@ -11,38 +13,71 @@ $itemTextActiveColor: $shakespeare;
     top: 100%;
     z-index: 1;
     margin: 0;
-    padding-right: 20px;
-    padding-left: 40px;
+    padding: 0;
     white-space: nowrap;
-    box-shadow: 0 0px 6px rgba(50, 50, 50, .25);
+    box-shadow: 0 0 6px rgba(50, 50, 50, .25);
     background-color: $dropdownBackgroundColor;
-
-    & > li {
-        margin: 10px 0;
-    }
 
     &.is-open {
         display: block;
     }
+
+    &.is-small {
+        width: 100%;
+
+        button {
+            padding: 0;
+            text-align: center;
+        }
+
+        .option-selected-icon {
+            left: 6px;
+        }
+    }
 }
 
 .option {
-    display: block;
-    border: 0;
-    background-color: transparent;
-    cursor: pointer;
-    font-size: 12px;    
-
-    &:hover,
-    &:active {
-        color: $itemTextActiveColor;
-    }
+    position: relative;
+    padding: 10px 0;
+    font-size: 12px;
+    color: $optionTextColor;
 
     &.is-selected {
         font-weight: bold;
+
+        button:hover,
+        button:active,
+        button:focus {
+            cursor: inherit;
+            color: inherit;
+        }
+    }
+
+    button {
+        display: block;
+        width: 100%;
+        padding: 0 20px 0 40px;
+        text-align: left;
+        border: 0;
+        font-weight: inherit;
+        background-color: transparent;
+
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+            color: $optionTextColorActive;
+        }
+
+        &:disabled {
+            cursor: default;
+            color: $optionTextColorDisabled;
+        }
     }
 }
 
 .option-selected-icon {
-
+    position: absolute;
+    top: 10px;
+    left: 20px;
 }
