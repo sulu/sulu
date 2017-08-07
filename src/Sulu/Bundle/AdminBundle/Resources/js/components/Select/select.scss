@@ -30,14 +30,3 @@ $hoverColor: $shakespeare;
     font-size: $iconSize;
     padding-left: 10px;
 }
-
-.dropdown {
-    display: inline-block;
-    border-radius: 2px;
-    padding: 5px 0;
-    margin: 0;
-    border: 1px solid $borderColor;
-    font-size: 12px;
-    list-style-type: none;
-    box-shadow: 2px 6px 12px 0 rgba($silver, .22);
-}

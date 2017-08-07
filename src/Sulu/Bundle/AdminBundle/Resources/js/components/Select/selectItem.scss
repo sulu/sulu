@@ -1,0 +1,42 @@
+@import '../../containers/Application/colors.scss';
+
+$hoverColor: $shakespeare;
+
+.selectItem {
+    padding-left: 30px;
+    padding-right: 20px;
+    line-height: 20px;
+
+    button {
+        position: relative;
+        color: $blueZodiac;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    &:not(.disabled) {
+        button:hover {
+            color: $hoverColor;
+        }
+    }
+}
+
+.disabled {
+    button {
+        color: rgba($blueZodiac, .3);
+        cursor: default;
+    }
+}
+
+.selected {
+    button {
+        font-weight: bold;
+    }
+
+    .icon {
+        position: absolute;
+        left: -16px;
+    }
+}
