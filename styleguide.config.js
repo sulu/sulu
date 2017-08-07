@@ -65,6 +65,7 @@ module.exports = { // eslint-disable-line
                             loader: 'css-loader',
                             options: {
                                 modules: true,
+                                camelCase: true,
                                 importLoaders: 1,
                             },
                         },
