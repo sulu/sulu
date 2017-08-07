@@ -13,7 +13,6 @@ module.exports = { // eslint-disable-line
             name: 'Components',
             components: function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
-
                 // filter out higher order components
                 folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
 
