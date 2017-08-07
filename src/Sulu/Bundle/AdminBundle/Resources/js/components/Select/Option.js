@@ -9,6 +9,7 @@ export default class Option extends React.PureComponent {
     props: {
         selected: boolean,
         disabled: boolean,
+        focus: boolean,
         value?: string,
         children?: string,
         onClick?: (SelectData) => void,
@@ -17,7 +18,24 @@ export default class Option extends React.PureComponent {
     static defaultProps = {
         disabled: false,
         selected: false,
+        focus: false,
     };
+
+    element: HTMLElement;
+    button: HTMLButtonElement;
+
+    componentDidMount() {
+        if (this.props.focus) {
+            window.requestAnimationFrame(() => {
+                this.button.focus();
+            });
+        }
+    }
+
+    /** @public **/
+    getOffsetTop() {
+        return this.element.offsetTop;
+    }
 
     handleButtonClick = () => {
         if (this.props.onClick) {
@@ -28,6 +46,9 @@ export default class Option extends React.PureComponent {
         }
     };
 
+    setElement = (e: HTMLElement) => this.element = e;
+    setButton = (b: HTMLButtonElement) => this.button = b;
+
     render() {
         const classNames = classnames({
             [itemStyles.selectItem]: true,
@@ -36,8 +57,11 @@ export default class Option extends React.PureComponent {
         });
 
         return (
-            <li className={classNames}>
-                <button onClick={this.handleButtonClick} disabled={this.props.disabled}>
+            <li ref={this.setElement} className={classNames}>
+                <button
+                    ref={this.setButton}
+                    onClick={this.handleButtonClick}
+                    disabled={this.props.disabled}>
                     {this.props.selected ? <Icon className={itemStyles.icon} name="check" /> : ''}
                     {this.props.children}
                 </button>

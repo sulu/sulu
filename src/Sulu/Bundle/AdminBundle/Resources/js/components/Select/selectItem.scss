@@ -3,17 +3,16 @@
 $hoverColor: $shakespeare;
 
 .selectItem {
-    padding-left: 30px;
-    padding-right: 20px;
-    line-height: 20px;
-
     button {
+        width: 100%;
         position: relative;
+        line-height: 20px;
+        padding: 0 20px 0 30px;
         color: $blueZodiac;
         border: none;
         background: transparent;
         cursor: pointer;
-        padding: 0;
+        text-align: left;
     }
 
     &:not(.disabled) {
@@ -37,6 +36,8 @@ $hoverColor: $shakespeare;
 
     .icon {
         position: absolute;
-        left: -16px;
+        left: 10px;
+        line-height: 20px;
+        vertical-align: middle;
     }
 }

@@ -8,10 +8,18 @@ export default class Action extends React.PureComponent {
         disabled: boolean,
         children?: string,
         onClick: () => void,
+        afterAction?: () => void,
     };
 
     static defaultProps = {
         disabled: false,
+    };
+
+    handleButonClick = () => {
+        this.props.onClick();
+        if (this.props.afterAction) {
+            this.props.afterAction();
+        }
     };
 
     render() {
@@ -22,7 +30,7 @@ export default class Action extends React.PureComponent {
 
         return (
             <li className={classNames}>
-                <button onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</button>
+                <button onClick={this.handleButonClick} disabled={this.props.disabled}>{this.props.children}</button>
             </li>
         );
     }
