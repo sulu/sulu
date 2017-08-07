@@ -49,6 +49,7 @@ module.exports = { // eslint-disable-line
                 {
                     test: /\.css/,
                     use: [
+                        'style-loader',
                         {
                             loader: 'css-loader',
                             options: {
@@ -75,7 +76,7 @@ module.exports = { // eslint-disable-line
                     test:/\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
                     use: [
                         {
-                            loader: 'null-loader',
+                            loader: 'file-loader',
                         },
                     ],
                 },
