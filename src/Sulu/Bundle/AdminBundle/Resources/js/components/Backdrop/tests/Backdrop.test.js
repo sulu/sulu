@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
-import Backdrop from '../Backdrop';
 import React from 'react';
 import pretty from 'pretty';
+import Backdrop from '../Backdrop';
 
 afterEach(() => document.body.innerHTML = '');
 

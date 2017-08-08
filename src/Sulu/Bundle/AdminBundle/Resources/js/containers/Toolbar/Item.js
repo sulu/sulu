@@ -1,7 +1,7 @@
 // @flow
+import React from 'react';
 import Icon from '../../components/Icon';
 import type {Item as ItemType} from './types';
-import React from 'react';
 import itemStyles from './item.scss';
 
 export default class Item extends React.PureComponent {

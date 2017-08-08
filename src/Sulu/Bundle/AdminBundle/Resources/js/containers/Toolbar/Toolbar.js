@@ -1,7 +1,7 @@
 // @flow
-import Item from './Item';
 import React from 'react';
 import {observer} from 'mobx-react';
+import Item from './Item';
 import toolbarStore from './stores/ToolbarStore';
 import toolbarStyles from './toolbar.scss';
 

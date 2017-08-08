@@ -1,8 +1,8 @@
 // @flow
+import classNames from 'classnames';
 import Portal from 'react-portal';
 import React from 'react';
 import backdropStyles from './backdrop.scss';
-import classNames from 'classnames';
 
 export default class Backdrop extends React.PureComponent {
     props: {

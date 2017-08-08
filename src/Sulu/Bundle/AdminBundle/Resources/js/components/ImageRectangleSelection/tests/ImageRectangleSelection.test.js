@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {ImageRectangleSelection} from '../ImageRectangleSelection';
-import React from 'react';
 import {mount} from 'enzyme';
+import React from 'react';
+import {ImageRectangleSelection} from '../ImageRectangleSelection';
 
 jest.mock('../../withContainerSize/withContainerSize');
 

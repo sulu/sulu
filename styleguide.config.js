@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-const glob = require('glob');
+/* eslint-disable import/no-nodejs-modules */
 const path = require('path');
+const glob = require('glob');
 
 const firstLetterIsUppercase = (string) => {
     const first = string.charAt(0);
