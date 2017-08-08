@@ -1,10 +1,11 @@
 // @flow
-import './application.scss';
+import './global.scss';
 import React from 'react';
 import Router from '../../services/Router';
 import SplitView from '../SplitView';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
+import applicationStyles from './application.scss';
 import {observer} from 'mobx-react';
 
 @observer
@@ -17,7 +18,7 @@ export default class Application extends React.PureComponent {
         return (
             <div>
                 <Toolbar />
-                <main>
+                <main className={applicationStyles.main}>
                     {this.props.router.currentRoute &&
                         <ViewRenderer
                             key={this.props.router.currentRoute.name}

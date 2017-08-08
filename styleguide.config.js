@@ -8,12 +8,14 @@ const firstLetterIsUppercase = (string) => {
 };
 
 module.exports = { // eslint-disable-line
+    require: [
+        './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
+    ],
     sections: [
         {
             name: 'Components',
             components: function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
-
                 // filter out higher order components
                 folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
 
@@ -49,6 +51,7 @@ module.exports = { // eslint-disable-line
                 {
                     test: /\.css/,
                     use: [
+                        'style-loader',
                         {
                             loader: 'css-loader',
                             options: {
@@ -76,7 +79,7 @@ module.exports = { // eslint-disable-line
                     test:/\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
                     use: [
                         {
-                            loader: 'null-loader',
+                            loader: 'file-loader',
                         },
                     ],
                 },
