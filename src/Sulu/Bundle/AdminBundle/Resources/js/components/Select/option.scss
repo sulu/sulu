@@ -1,18 +1,20 @@
 @import '../../containers/Application/colors.scss';
 
 $hoverColor: $shakespeare;
+$fontColor: $blueZodiac;
 
-.selectItem {
+.option {
     button {
         width: 100%;
         position: relative;
         line-height: 20px;
         padding: 0 20px 0 30px;
-        color: $blueZodiac;
+        color: $fontColor;
         border: none;
         background: transparent;
         cursor: pointer;
         text-align: left;
+        font-size: 12px;
     }
 
     &:not(.disabled) {
@@ -24,7 +26,7 @@ $hoverColor: $shakespeare;
 
 .disabled {
     button {
-        color: rgba($blueZodiac, .3);
+        color: rgba($fontColor, .3);
         cursor: default;
     }
 }

@@ -1,27 +1,29 @@
 // @flow
-import Icon from '../Icon';
 import React from 'react';
-import type {SelectData} from './types';
 import classnames from 'classnames';
-import itemStyles from './selectItem.scss';
+import Icon from '../Icon';
+import optionStyles from './option.scss';
+
+const SELECTED_ICON = 'check';
 
 export default class Option extends React.PureComponent {
     props: {
         selected: boolean,
         disabled: boolean,
         focus: boolean,
-        value?: string,
+        value: string,
         children?: string,
-        onClick?: (SelectData) => void,
+        onClick?: (s: string) => void,
     };
 
     static defaultProps = {
         disabled: false,
         selected: false,
         focus: false,
+        value: '',
     };
 
-    element: HTMLElement;
+    item: HTMLElement;
     button: HTMLButtonElement;
 
     componentDidMount() {
@@ -34,35 +36,32 @@ export default class Option extends React.PureComponent {
 
     /** @public **/
     getOffsetTop() {
-        return this.element.offsetTop;
+        return this.item.offsetTop;
     }
 
     handleButtonClick = () => {
         if (this.props.onClick) {
-            this.props.onClick({
-                value: this.props.value || '',
-                label: this.props.children || '',
-            });
+            this.props.onClick(this.props.value);
         }
     };
 
-    setElement = (e: HTMLElement) => this.element = e;
+    setItem = (i: HTMLElement) => this.item = i;
     setButton = (b: HTMLButtonElement) => this.button = b;
 
     render() {
         const classNames = classnames({
-            [itemStyles.selectItem]: true,
-            [itemStyles.disabled]: this.props.disabled,
-            [itemStyles.selected]: this.props.selected,
+            [optionStyles.option]: true,
+            [optionStyles.disabled]: this.props.disabled,
+            [optionStyles.selected]: this.props.selected,
         });
 
         return (
-            <li ref={this.setElement} className={classNames}>
+            <li ref={this.setItem} className={classNames}>
                 <button
                     ref={this.setButton}
                     onClick={this.handleButtonClick}
                     disabled={this.props.disabled}>
-                    {this.props.selected ? <Icon className={itemStyles.icon} name="check" /> : ''}
+                    {this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : ''}
                     {this.props.children}
                 </button>
             </li>

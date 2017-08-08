@@ -1,32 +1,5 @@
 @import '../../containers/Application/colors.scss';
 
-$lineHeight: 24px;
-$fontSize: 12px;
-$color: $blueZodiac;
-$borderColor: $frenchGray;
-$iconSize: 10px;
-$hoverColor: $shakespeare;
-
-.button {
-    display: block;
-    border: 1px solid $borderColor;
-    padding: 0 20px;
-    border-radius: 3px;
-    background: transparent;
-    cursor: pointer;
-    text-align: left;
-    line-height: $lineHeight;
-    font-size: $fontSize;
-    color: $blueZodiac;
-
-    &:hover {
-        color: $hoverColor;
-    }
-}
-
-.icon {
-    position: relative;
-    top: -1px;
-    font-size: $iconSize;
-    padding-left: 10px;
+.select {
+    display: inline-block;
 }
