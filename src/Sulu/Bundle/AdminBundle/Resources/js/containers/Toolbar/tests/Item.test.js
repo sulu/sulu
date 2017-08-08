@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
+import React from 'react';
 import {render, shallow} from 'enzyme';
 import Item from '../Item';
-import React from 'react';
 
 test('Render item', () => {
     expect(render(<Item />)).toMatchSnapshot();

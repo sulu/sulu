@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render, shallow} from 'enzyme';
-import ModifiableRectangle from '../ModifiableRectangle';
 import React from 'react';
+import ModifiableRectangle from '../ModifiableRectangle';
 
 test('The component should render', () => {
     const view = render(<ModifiableRectangle width={200} height={100} />);

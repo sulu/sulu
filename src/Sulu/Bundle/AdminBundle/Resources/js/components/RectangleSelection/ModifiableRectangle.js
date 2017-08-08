@@ -1,9 +1,9 @@
 // @flow
 import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import React from 'react';
 import type {RectangleChange} from './types';
 import modifiableRectangleStyles from './modifiableRectangle.scss';
-import {observer} from 'mobx-react';
 
 @observer
 export default class ModifiableRectangle extends React.PureComponent {

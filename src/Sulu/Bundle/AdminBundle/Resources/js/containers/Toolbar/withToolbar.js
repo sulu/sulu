@@ -1,7 +1,7 @@
 // @flow
-import type {Item} from './types';
-import React from 'react';
 import {autorun} from 'mobx';
+import React from 'react';
+import type {Item} from './types';
 import toolbarStore from './stores/ToolbarStore';
 
 export default function withToolbar(Component: ReactClass<*>, toolbar: () => Array<Item>) {

@@ -21,6 +21,7 @@
         "sourceType": "module"
     },
     "plugins": [
+        "import",
         "react",
         "flowtype",
         "class-property"
@@ -69,7 +70,17 @@
         ],
         "no-trailing-spaces": "error",
         "curly": "error",
-        "sort-imports": "error",
+        "import/order": "error",
+        "import/no-dynamic-require": "error",
+        "import/no-webpack-loader-syntax": "error",
+        "import/export": "error",
+        "import/no-extraneous-dependencies": "error",
+        "import/no-nodejs-modules": "error",
+        "import/first": "error",
+        "import/no-duplicates": "error",
+        "import/no-absolute-path": "error",
+        "import/named": "error",
+        "import/default": "error",
         "react/jsx-curly-spacing": [
             "error",
             "never"

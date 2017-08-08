@@ -1,16 +1,16 @@
 // @flow
-import type {Normalizer, RectangleChange, SelectionData} from './types';
 import {action, observable} from 'mobx';
 import type {Children} from 'react';
+import {observer} from 'mobx-react';
+import React from 'react';
+import withContainerSize from '../withContainerSize';
+import type {Normalizer, RectangleChange, SelectionData} from './types';
 import ModifiableRectangle from './ModifiableRectangle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
 import RatioNormalizer from './normalizers/RatioNormalizer';
-import React from 'react';
 import RoundingNormalizer from './normalizers/RoundingNormalizer';
 import SizeNormalizer from './normalizers/SizeNormalizer';
-import {observer} from 'mobx-react';
 import rectangleSelectionStyles from './rectangleSelection.scss';
-import withContainerSize from '../withContainerSize';
 
 type Props = {
     /** Determines the position at which the selection box is rendered at the beginning */
