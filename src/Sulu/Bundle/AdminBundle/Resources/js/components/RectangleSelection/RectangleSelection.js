@@ -1,22 +1,20 @@
 // @flow
-import type {DataNormalizer, RectangleChange, SelectionData} from './types';
+import type {Normalizer, RectangleChange, SelectionData} from './types';
 import {action, observable} from 'mobx';
 import type {Children} from 'react';
 import ModifiableRectangle from './ModifiableRectangle';
-import PositionNormalizer from './dataNormalizers/PositionNormalizer';
-import RatioNormalizer from './dataNormalizers/RatioNormalizer';
+import PositionNormalizer from './normalizers/PositionNormalizer';
+import RatioNormalizer from './normalizers/RatioNormalizer';
 import React from 'react';
-import RoundingNormalizer from './dataNormalizers/RoundingNormalizer';
-import SizeNormalizer from './dataNormalizers/SizeNormalizer';
+import RoundingNormalizer from './normalizers/RoundingNormalizer';
+import SizeNormalizer from './normalizers/SizeNormalizer';
 import {observer} from 'mobx-react';
 import rectangleSelectionStyles from './rectangleSelection.scss';
 import withContainerSize from '../withContainerSize';
 
-@observer
-export class RectangleSelection extends React.PureComponent {
-    props: {
-        /** Determines the position at which the selection box is rendered at the beginning */
-        initialSelection?: SelectionData,
+type Props = {
+    /** Determines the position at which the selection box is rendered at the beginning */
+    initialSelection?: SelectionData,
         minWidth?: number,
         minHeight?: number,
         /** Determines whether or not the data gets rounded */
@@ -25,19 +23,55 @@ export class RectangleSelection extends React.PureComponent {
         children?: Children,
         containerHeight: number,
         containerWidth: number,
-    };
+};
+
+@observer
+export class RectangleSelection extends React.PureComponent {
+    props: Props;
 
     static defaultProps = {
         round: true,
     };
 
     @observable selection: SelectionData = {top: 0, left: 0, width: 0, height: 0};
+    normalizers: Array<Normalizer> = [];
 
     static selectionsAreEqual(selection1: SelectionData, selection2: SelectionData) {
         return selection1.width === selection2.width
             && selection1.height === selection2.height
             && selection1.top === selection2.top
             && selection1.left === selection2.left;
+    }
+
+    static createNormalizers(props: Props): Array<Normalizer> {
+        if (!props.containerWidth || !props.containerHeight) {
+            return [];
+        }
+
+        const normalizers = [];
+        normalizers.push(new SizeNormalizer(
+            props.containerWidth,
+            props.containerHeight,
+            props.minWidth,
+            props.minHeight
+        ));
+        normalizers.push(new PositionNormalizer(props.containerWidth, props.containerHeight));
+        if (props.minWidth && props.minHeight) {
+            normalizers.push(new RatioNormalizer(props.minWidth, props.minHeight));
+        }
+        if (props.round) {
+            normalizers.push(new RoundingNormalizer());
+        }
+
+        return normalizers;
+    }
+
+    componentWillMount() {
+        this.normalizers = RectangleSelection.createNormalizers(this.props);
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        this.normalizers = RectangleSelection.createNormalizers(nextProps);
     }
 
     containerDidMount = () => {
@@ -66,29 +100,6 @@ export class RectangleSelection extends React.PureComponent {
         if (this.props.onChange) {
             this.props.onChange(selection);
         }
-    }
-
-    get normalizers(): Array<DataNormalizer> {
-        if (!this.props.containerWidth || !this.props.containerHeight) {
-            return [];
-        }
-
-        const normalizers = [];
-        normalizers.push(new SizeNormalizer(
-            this.props.containerWidth,
-            this.props.containerHeight,
-            this.props.minWidth,
-            this.props.minHeight
-        ));
-        normalizers.push(new PositionNormalizer(this.props.containerWidth, this.props.containerHeight));
-        if (this.props.minWidth && this.props.minHeight) {
-            normalizers.push(new RatioNormalizer(this.props.minWidth, this.props.minHeight));
-        }
-        if (this.props.round) {
-            normalizers.push(new RoundingNormalizer());
-        }
-
-        return normalizers;
     }
 
     normalize(selection: SelectionData): SelectionData {

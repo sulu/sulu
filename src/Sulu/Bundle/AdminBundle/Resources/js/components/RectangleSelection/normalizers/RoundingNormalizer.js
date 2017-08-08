@@ -1,7 +1,7 @@
 // @flow
-import type {DataNormalizer, SelectionData} from '../types';
+import type {Normalizer, SelectionData} from '../types';
 
-export default class RoundingNormalizer implements DataNormalizer {
+export default class RoundingNormalizer implements Normalizer {
     normalize(data: SelectionData): SelectionData {
         return {
             width: Math.round(data.width),

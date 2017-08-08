@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import SizeNormalizer from '../../dataNormalizers/SizeNormalizer';
+import SizeNormalizer from '../../normalizers/SizeNormalizer';
 
 test('The SizeNormalizer should correctly constrain the selection downwards', () => {
     let size = new SizeNormalizer(1000, 500);

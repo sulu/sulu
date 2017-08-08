@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import RatioNormalizer from '../../dataNormalizers/RatioNormalizer';
+import RatioNormalizer from '../../normalizers/RatioNormalizer';
 
 test('The RatioNormalizer should only make the values smaller, never bigger', () => {
     const ratio = new RatioNormalizer(1, 2);
