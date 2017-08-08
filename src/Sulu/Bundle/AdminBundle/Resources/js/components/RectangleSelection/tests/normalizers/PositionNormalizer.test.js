@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import PositionNormalizer from '../../dataNormalizers/PositionNormalizer';
+import PositionNormalizer from '../../normalizers/PositionNormalizer';
 
 test('The PositionNormalizer should correctly constrain the selection downwards', () => {
     const position = new PositionNormalizer(200, 300);

@@ -2,7 +2,7 @@
 import {action, computed, observable} from 'mobx';
 import React from 'react';
 import RectangleSelection from '../RectangleSelection';
-import RoundingNormalizer from '../RectangleSelection/dataNormalizers/RoundingNormalizer';
+import RoundingNormalizer from '../RectangleSelection/normalizers/RoundingNormalizer';
 import type {SelectionData} from '../RectangleSelection/types';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 import log from 'loglevel';

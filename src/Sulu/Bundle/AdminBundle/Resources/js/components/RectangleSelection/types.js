@@ -1,5 +1,5 @@
 // @flow
-export interface DataNormalizer {
+export interface Normalizer {
     normalize(data: SelectionData): SelectionData,
 }
 

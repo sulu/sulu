@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import RoundingNormalizer from '../../dataNormalizers/RoundingNormalizer';
+import RoundingNormalizer from '../../normalizers/RoundingNormalizer';
 
 test('The RoundingNormalizer should round correctly', () => {
     let size = new RoundingNormalizer();

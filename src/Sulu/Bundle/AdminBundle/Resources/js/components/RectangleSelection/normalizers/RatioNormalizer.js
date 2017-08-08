@@ -1,7 +1,7 @@
 // @flow
-import type {DataNormalizer, SelectionData} from '../types';
+import type {Normalizer, SelectionData} from '../types';
 
-export default class RatioNormalizer implements DataNormalizer {
+export default class RatioNormalizer implements Normalizer {
     width: number;
     height: number;
 
