@@ -1,19 +1,21 @@
 // @flow
+import type {DropdownOptionConfig, SelectOptionConfig} from './types';
 import Backdrop from '../../components/Backdrop';
 import Option from './Option';
-import type {OptionListConfig} from './types';
 import React from 'react';
 import classNames from 'classnames';
 import optionListStyles from './optionList.scss';
 
 export default class OptionList extends React.PureComponent {
-    props: OptionListConfig;
+    props: {|
+        options: Array<DropdownOptionConfig | SelectOptionConfig>,
+        value?: string | number,
+        size?: string,
+        onClick?: (value?: string | number) => void,
+        onClose?: () => void,
+    |};
 
-    static defaultProps = {
-        onClick: () => {},
-    };
-
-    handleOptionClick = (value: string) => {
+    handleOptionClick = (value?: string | number) => {
         this.props.onClick(value);
     };
 
@@ -39,8 +41,12 @@ export default class OptionList extends React.PureComponent {
                         options.map((option, index) => {
                             const optionValue = option.value || index;
                             const isSelected = optionValue === value;
-                            const handleClick = (selectedOptionValue: string) => {
-                                (option.onClick || this.handleOptionClick)(selectedOptionValue);
+                            const handleClick = (selectedOptionValue?: string | number) => {
+                                if (!option.onClick) {
+                                    this.handleOptionClick(selectedOptionValue);
+                                } else {
+                                    option.onClick();
+                                }
 
                                 this.props.onClose();
                             };

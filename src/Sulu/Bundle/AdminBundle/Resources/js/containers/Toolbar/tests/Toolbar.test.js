@@ -7,17 +7,36 @@ import toolbarStore from '../stores/ToolbarStore';
 jest.mock('../stores/ToolbarStore', () => ({}));
 
 test('Render the items from the ToolbarStore', () => {
-    toolbarStore.items = [
-        {
-            title: 'Save',
-            enabled: false,
-            icon: 'save',
-        },
-        {
-            title: 'Delete',
-            icon: 'delete',
-        },
-    ];
+    toolbarStore.setConfig({
+        items: [
+            {
+                type: 'button',
+                label: 'Delete',
+                disabled: true,
+                icon: 'trash-o',
+            },
+            {
+                type: 'dropdown',
+                label: 'Save',
+                icon: 'floppy-more',
+                options: [
+                    {
+                        label: 'Save as draft',
+                        onClick: () => {},
+                    },
+                    {
+                        label: 'Publish',
+                        onClick: () => {},
+                    },
+                    {
+                        label: 'Save and publish',
+                        onClick: () => {},
+                    },
+                ],
+            },
+        ],
+    });
+
     const view = render(<Toolbar />);
     expect(view).toMatchSnapshot();
 });

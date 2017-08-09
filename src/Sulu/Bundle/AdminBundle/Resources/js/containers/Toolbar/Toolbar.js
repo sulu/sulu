@@ -1,5 +1,5 @@
 // @flow
-import {ToolbarItem, ToolbarItemTypes} from './types';
+import type {ItemConfig, ToolbarItem} from './types';
 import Button from './Button';
 import Dropdown from './Dropdown';
 import Icon from '../../components/Icon';
@@ -10,6 +10,13 @@ import toolbarStore from './stores/ToolbarStore';
 import toolbarStyles from './toolbar.scss';
 
 const BACK_BUTTON_ICON = 'arrow-left';
+const LOCALE_SELECT_SIZE = 'small';
+
+const ToolbarItemTypes = {
+    Button: 'button',
+    Select: 'select',
+    Dropdown: 'dropdown',
+};
 
 function getItemComponentByType(type: ToolbarItem, itemConfig: ItemConfig) {
     let item;
@@ -68,10 +75,10 @@ export default class Toolbar extends React.PureComponent<*> {
                         }
                         {toolbarStore.hasLocaleConfig() &&
                             <div className={toolbarStyles.locale}>
-                                <Select size={'small'} {...toolbarStore.getLocaleConfig()} />
+                                <Select size={LOCALE_SELECT_SIZE} {...toolbarStore.getLocaleConfig()} />
                             </div>
                         }
-                    </div> 
+                    </div>
                 </nav>
             </header>
         );

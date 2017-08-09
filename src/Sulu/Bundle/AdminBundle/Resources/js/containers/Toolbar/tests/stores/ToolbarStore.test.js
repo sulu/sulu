@@ -3,14 +3,23 @@ import {isObservable} from 'mobx';
 import toolbarStore from '../../stores/ToolbarStore';
 
 beforeEach(() => {
-    toolbarStore.clearItems();
+    toolbarStore.clearConfig();
 });
 
 test('Set toolbar items and let mobx react', () => {
-    toolbarStore.setItems([{title: 'Test', icon: 'test', onClick: () => {}}]);
+    toolbarStore.setConfig({
+        items: [
+            {
+                type: 'button',
+                value: 'Test',
+                icon: 'test',
+                onClick: () => {},
+            },
+        ],
+    });
 
-    expect(isObservable(toolbarStore.items)).toBe(true);
-    expect(toolbarStore.items).toHaveLength(1);
-    expect(toolbarStore.items[0].title).toBe('Test');
-    expect(toolbarStore.items[0].icon).toBe('test');
+    expect(isObservable(toolbarStore.config.items)).toBe(true);
+    expect(toolbarStore.config.items).toHaveLength(1);
+    expect(toolbarStore.config.items[0].value).toBe('Test');
+    expect(toolbarStore.config.items[0].icon).toBe('test');
 });

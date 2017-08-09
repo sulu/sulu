@@ -9,7 +9,7 @@ jest.mock('../stores/ToolbarStore', () => {
 });
 
 test('Pass props to rendered component', () => {
-    toolbarStore.setItems = jest.fn();
+    toolbarStore.setConfig = jest.fn();
 
     const Component = (props) => (<h1>{props.title}</h1>);
     const ComponentWithToolbar = withToolbar(Component, () => []);
@@ -18,7 +18,7 @@ test('Pass props to rendered component', () => {
 });
 
 test('Bind toolbar method to component instance', () => {
-    toolbarStore.setItems = jest.fn();
+    toolbarStore.setConfig = jest.fn();
 
     const Component = class Component extends React.Component {
         test = true;
@@ -29,17 +29,25 @@ test('Bind toolbar method to component instance', () => {
     };
 
     const ComponentWithToolbar = withToolbar(Component, function() {
-        return [{
-            title: 'Save',
-            icon: 'save',
-            enabled: this.test,
-        }];
+        return {
+            items: [
+                {
+                    label: 'Save',
+                    icon: 'save',
+                    disabled: true,
+                },
+            ],
+        };
     });
 
     mount(<ComponentWithToolbar />);
-    expect(toolbarStore.setItems).toBeCalledWith([{
-        title: 'Save',
-        icon: 'save',
-        enabled: true,
-    }]);
+    expect(toolbarStore.setConfig).toBeCalledWith({
+        items: [
+            {
+                label: 'Save',
+                icon: 'save',
+                disabled: true,
+            },
+        ],
+    });
 });

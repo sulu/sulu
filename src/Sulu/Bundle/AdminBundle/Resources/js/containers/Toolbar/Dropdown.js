@@ -1,16 +1,24 @@
 // @flow
 import {action, observable} from 'mobx';
 import Button from './Button';
-import type {DropdownConfig} from './types';
 import OptionList from './OptionList';
+import type {DropdownOptionConfig} from './types';
 import React from 'react';
 import classNames from 'classnames';
 import dropdownStyles from './dropdown.scss';
 import {observer} from 'mobx-react';
 
+type DropdownProps = {|
+    options: Array<DropdownOptionConfig>,
+    label?: string | number,
+    icon?: string,
+    size?: string,
+    disabled?: boolean,
+|};
+
 @observer
 export default class Dropdown extends React.PureComponent {
-    props: DropdownConfig;
+    props: DropdownProps;
 
     @observable isOpen: boolean = false;
 
@@ -26,7 +34,7 @@ export default class Dropdown extends React.PureComponent {
         this.isOpen = !this.isOpen;
     };
 
-    componentWillReceiveProps = (nextProps: DropdownType) => {
+    componentWillReceiveProps = (nextProps: DropdownProps) => {
         const {disabled} = nextProps;
 
         if (disabled) {

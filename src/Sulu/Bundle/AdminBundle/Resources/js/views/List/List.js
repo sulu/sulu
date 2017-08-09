@@ -13,13 +13,15 @@ class List extends React.PureComponent<*> {
 
 export default withToolbar(List, function() {
     return {
-        buttons: [
+        items: [
             {
+                type: 'button',
                 value: translate('sulu_admin.add'),
                 icon: 'plus-circle',
                 onClick: () => {},
             },
             {
+                type: 'button',
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
                 onClick: () => {},

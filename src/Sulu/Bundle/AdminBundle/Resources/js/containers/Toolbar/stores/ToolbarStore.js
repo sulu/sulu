@@ -1,5 +1,12 @@
 // @flow
-import type {BackButtonType, DefaultButtonType, DropdownButtonType, ToolbarConfig} from '../types';
+import type {
+    BackButtonConfig,
+    ButtonConfig,
+    DropdownConfig,
+    LocaleConfig,
+    SelectConfig,
+    ToolbarConfig,
+} from '../types';
 import {action, observable} from 'mobx';
 
 const defaultConfig = {
@@ -49,7 +56,7 @@ class ToolbarStore {
         return !!this.config.locale;
     }
 
-    getLocaleConfig(): ?DropdownButtonType {
+    getLocaleConfig(): ?LocaleConfig {
         return this.config.locale;
     }
 }

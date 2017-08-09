@@ -1,10 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {render, shallow} from 'enzyme';
-import Item from '../DefaultButton';
+import Button from '../Button';
 import React from 'react';
 
 test('Render item', () => {
-    expect(render(<DefaultButton />)).toMatchSnapshot();
+    const handleClick = () => {};
+
+    expect(render(
+        <Button
+            onClick={handleClick} />
+    )).toMatchSnapshot();
 });
 
 // test('Render disabled item', () => {

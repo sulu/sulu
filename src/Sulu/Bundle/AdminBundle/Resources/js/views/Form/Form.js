@@ -6,7 +6,10 @@ import {withToolbar} from '../../containers/Toolbar';
 
 class Form extends React.PureComponent<*> {
     @observable dirty = false;
+
     @observable selectValue;
+
+    @observable localeValue = 'en';
 
     @action setDirty(dirty: boolean) {
         this.dirty = dirty;
@@ -14,6 +17,10 @@ class Form extends React.PureComponent<*> {
 
     @action setSelectValue(value: string) {
         this.selectValue = value;
+    }
+
+    @action setLocaleValue(value: string) {
+        this.localeValue = value;
     }
 
     render() {
@@ -33,8 +40,10 @@ export default withToolbar(Form, function() {
             'flag',
         ],
         locale: {
-            value: 'en',
-            onChange: (value: string) => {},
+            value: this.localeValue,
+            onChange: (value: string | number) => {
+                this.setLocaleValue(value);
+            },
             options: [
                 {
                     value: 'de',
@@ -78,10 +87,8 @@ export default withToolbar(Form, function() {
                 type: 'select',
                 value: this.selectValue,
                 label: 'Choose',
-                onChange: (optionVal) => {
-                    console.log(optionVal);
-
-                    this.setSelectValue(optionVal)
+                onChange: (optionVal: string | number) => {
+                    this.setSelectValue(optionVal);
                 },
                 options: [
                     {
