@@ -1,0 +1,24 @@
+@import '../Application/colors.scss';
+
+$optionListBackgroundColor: $wildSand;
+
+.option-list {
+    list-style: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    box-shadow: 0 0 6px rgba(50, 50, 50, .25);
+    background-color: $optionListBackgroundColor;
+
+    &.is-open {
+        display: block;
+    }
+
+    &.small {
+        width: 100%;
+    }
+}

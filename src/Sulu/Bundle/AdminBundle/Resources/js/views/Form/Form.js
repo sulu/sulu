@@ -6,10 +6,14 @@ import {withToolbar} from '../../containers/Toolbar';
 
 class Form extends React.PureComponent<*> {
     @observable dirty = false;
+    @observable selectValue;
 
-    @action
-    setDirty(dirty: boolean) {
+    @action setDirty(dirty: boolean) {
         this.dirty = dirty;
+    }
+
+    @action setSelectValue(value: string) {
+        this.selectValue = value;
     }
 
     render() {
@@ -30,7 +34,7 @@ export default withToolbar(Form, function() {
         ],
         locale: {
             value: 'en',
-            onChange: () => {},
+            onChange: (value: string) => {},
             options: [
                 {
                     value: 'de',
@@ -47,40 +51,80 @@ export default withToolbar(Form, function() {
                 },
             ],
         },
-        buttons: [
+        items: [
             {
-                value: translate('sulu_admin.save'),
-                label: 'Choose',
-                icon: 'floppy-o',
+                type: 'dropdown',
+                label: 'Save',
+                icon: 'floppy-more',
                 disabled: !this.dirty,
-                setValueOnChange: true,
-                onChange: (optionVal) => {
-                    if (optionVal === 'save_publish') {
-                        this.setDirty(false);
-                    }
-                },
                 options: [
                     {
-                        value: 'save_draft',
                         label: 'Save as draft',
+                        onClick: () => {
+                            this.setDirty(false);
+                        },
+                    },
+                    {
+                        label: 'Save and publish',
                         disabled: true,
                     },
                     {
-                        value: 'save_publish',
-                        label: 'Save and publish',
-                    },
-                    {
-                        value: 'publish',
                         label: 'Publish',
+                        onClick: () => {},
                     },
                 ],
             },
             {
+                type: 'select',
+                value: this.selectValue,
+                label: 'Choose',
+                onChange: (optionVal) => {
+                    console.log(optionVal);
+
+                    this.setSelectValue(optionVal)
+                },
+                options: [
+                    {
+                        value: 1,
+                        label: '1',
+                    },
+                    {
+                        value: 2,
+                        label: '2',
+                    },
+                    {
+                        value: 3,
+                        label: '3',
+                    },
+                ],
+            },
+            {
+                type: 'button',
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
                 onClick: () => {
                     this.setDirty(true);
                 },
+            },
+            {
+                type: 'dropdown',
+                icon: 'ellipsis-h',
+                options: [
+                    {
+                        label: 'Export',
+                        onClick: () => {
+                            this.setDirty(false);
+                        },
+                    },
+                    {
+                        label: 'Import',
+                        disabled: true,
+                    },
+                    {
+                        label: 'Update',
+                        onClick: () => {},
+                    },
+                ],
             },
         ],
     };

@@ -45,7 +45,7 @@ $buttonActiveBackgroundColor: $wildSand;
         }
     }
 
-    &.is-small {
+    &.small {
         padding: 0;
 
         .dropdown-icon {
@@ -55,27 +55,22 @@ $buttonActiveBackgroundColor: $wildSand;
             margin-left: -6px;
             padding: 0;
         }
-
-        .label {
-            padding: 0;
-        }
     }
 }
 
 .icon {
     vertical-align: middle;
     font-size: 20px;
+
+    & + .label {
+        padding: 0 0 0 10px;
+    }
 }
 
 .label {
     vertical-align: middle;
-    padding: 0 0 0 10px;
 }
 
 .dropdown-icon {
-    padding-left: 10px;
-}
-
-.back-button {
-    font-size: 18px;
+    padding: 0 0 0 10px;
 }

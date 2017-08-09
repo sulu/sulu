@@ -2,15 +2,15 @@
 import Icon from '../../components/Icon';
 import React from 'react';
 import classNames from 'classnames';
-import dropdownStyles from './dropdown.scss';
+import optionStyles from './option.scss';
 
 const ICON_CHECKMARK = 'check';
 
-export default class DropdownOption extends React.PureComponent {
+export default class Option extends React.PureComponent {
     props: {
         value: string,
         label: string,
-        onClick: (optionValue: string) => void,
+        onClick: (value: string) => void,
         selected?: boolean,
         disabled?: boolean,
     };
@@ -23,21 +23,24 @@ export default class DropdownOption extends React.PureComponent {
 
     render() {
         const {
+            size,
             label,
             selected,
             disabled,
         } = this.props;
+        const optionClasses = classNames({
+            [optionStyles.option]: true,
+            [optionStyles[size]]: size,
+            [optionStyles.isSelected]: selected,
+        });
 
         return (
-            <li className={classNames({
-                [dropdownStyles.option]: true,
-                [dropdownStyles.isSelected]: selected,
-            })}>
+            <li className={optionClasses}>
                 <button
                     disabled={disabled}
                     onClick={this.handleOnClick}>
                     {selected &&
-                        <Icon name={ICON_CHECKMARK} className={dropdownStyles.optionSelectedIcon} />
+                        <Icon name={ICON_CHECKMARK} className={optionStyles.selectedIcon} />
                     }
                     {label}
                 </button>

@@ -5,7 +5,7 @@ import {action, observable} from 'mobx';
 const defaultConfig = {
     icons: [],
     locale: null,
-    buttons: [],
+    items: [],
     backButton: null,
 };
 
@@ -25,16 +25,16 @@ class ToolbarStore {
         return !!this.config.backButton;
     }
 
-    getBackButtonConfig(): ?BackButtonType {
+    getBackButtonConfig(): ?BackButtonConfig {
         return this.config.backButton || null;
     }
 
-    hasButtonsConfig(): boolean {
-        return !!this.config.buttons && !!this.config.buttons.length;
+    hasItemsConfig(): boolean {
+        return !!this.config.items && !!this.config.items.length;
     }
 
-    getButtonsConfig(): Array<DefaultButtonType | DropdownButtonType> {
-        return this.config.buttons || [];
+    getItemsConfig(): Array<ButtonConfig | DropdownConfig | SelectConfig> {
+        return this.config.items || [];
     }
 
     hasIconsConfig(): boolean {

@@ -1,10 +1,10 @@
 // @flow
 
-export type BackButtonType = {
+export type BackButtonConfig = {
     onClick: () => void,
 };
 
-export type DefaultButtonType = {|
+export type ButtonConfig = {|
     value: string,
     onClick: () => void,
     icon?: string,
@@ -14,30 +14,49 @@ export type DefaultButtonType = {|
     hasOptions?: boolean,
 |};
 
-// this is the type of the config object,
-// not the props type of the DropdownOption component
-export type OptionConfigType = {
-    value: string,
+export type DropdownOptionConfig = {
     label: string,
-    selected?: boolean,
+    onClick?: () => void,
     disabled?: boolean,
 };
 
-export type DropdownButtonType = {|
-    value: string,
-    onChange: (optionValue: string) => void,
-    options: Array<OptionConfigType>,
+export type DropdownConfig = {|
+    options: Array<DropdownOptionConfig>,
     label?: string,
     icon?: string,
     size?: string,
-    isOpen?: boolean,
     disabled?: boolean,
-    setValueOnChange?: boolean,
 |};
+
+// this is the type of the config object,
+// not the props type of the DropdownOption component
+export type SelectOptionConfig = {
+    value: string,
+    label: string,
+    disabled?: boolean,
+};
+
+export type SelectConfig = {|
+    value: string,
+    onChange: (optionValue: string) => void,
+    options: Array<SelectOptionConfig>,
+    label?: string,
+    icon?: string,
+    size?: string,
+    disabled?: boolean,
+|};
+
+export const ToolbarItemTypes = {
+    Button: 'button',
+    Dropdown: 'dropdown',
+    Select: 'select',
+};
+
+export type ToolbarItem = ToolbarItemTypes.Button | ToolbarItemTypes.Dropdown | ToolbarItemTypes.Select;
 
 export type ToolbarConfig = {
     icons?: Array<string>,
-    locale?: ?DropdownButtonType,
-    buttons?: Array<DefaultButtonType | DropdownButtonType>,
-    backButton?: ?BackButtonType,
+    locale?: ?DropdownConfig,
+    buttons?: Array<ButtonConfig | DropdownConfig | SelectConfig>,
+    backButton?: ?BackButtonConfig,
 };

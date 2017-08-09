@@ -1,0 +1,62 @@
+@import '../Application/colors.scss';
+
+$optionTextColor: $blueZodiac;
+$optionTextColorDisabled: $silver;
+$optionTextColorActive: $shakespeare;
+
+.option {
+    position: relative;
+    font-size: 12px;
+    color: $optionTextColor;
+
+    &.is-selected {
+        font-weight: bold;
+
+        button:hover,
+        button:active,
+        button:focus {
+            cursor: inherit;
+            color: inherit;
+        }
+    }
+
+    button {
+        display: block;
+        overflow: hidden;
+        width: 100%;
+        padding: 10px 20px 10px 40px;
+        text-align: left;
+        border: 0;
+        font-weight: inherit;
+        background-color: transparent;
+
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+            color: $optionTextColorActive;
+        }
+
+        &:disabled {
+            cursor: default;
+            color: $optionTextColorDisabled;
+        }
+    }
+
+    &.small {
+        button {
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .selected-icon {
+            left: 6px;
+        }
+    }
+}
+
+.selected-icon {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}

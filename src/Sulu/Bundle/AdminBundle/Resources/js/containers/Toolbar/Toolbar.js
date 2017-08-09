@@ -1,12 +1,32 @@
 // @flow
-import BackButton from './BackButton';
-import DefaultButton from './DefaultButton';
-import DropdownButton from './DropdownButton';
+import {ToolbarItem, ToolbarItemTypes} from './types';
+import Button from './Button';
+import Dropdown from './Dropdown';
 import Icon from '../../components/Icon';
 import React from 'react';
+import Select from './Select';
 import {observer} from 'mobx-react';
 import toolbarStore from './stores/ToolbarStore';
 import toolbarStyles from './toolbar.scss';
+
+const BACK_BUTTON_ICON = 'arrow-left';
+
+function getItemComponentByType(type: ToolbarItem, itemConfig: ItemConfig) {
+    let item;
+
+    switch (type) {
+    case ToolbarItemTypes.Select:
+        item = (<Select {...itemConfig} />);
+        break;
+    case ToolbarItemTypes.Dropdown:
+        item = (<Dropdown {...itemConfig} />);
+        break;
+    default:
+        item = (<Button {...itemConfig} />);
+    }
+
+    return () => item;
+}
 
 @observer
 export default class Toolbar extends React.PureComponent<*> {
@@ -14,23 +34,29 @@ export default class Toolbar extends React.PureComponent<*> {
         return (
             <header className={toolbarStyles.toolbar}>
                 <nav>
-                    <div className={toolbarStyles.pullLeft}>
+                    <div className={toolbarStyles.controlsLeft}>
                         {toolbarStore.hasBackButtonConfig() &&
-                            <BackButton {...toolbarStore.getBackButtonConfig()} />
+                            <Button {...toolbarStore.getBackButtonConfig()}>
+                                <Icon name={BACK_BUTTON_ICON} />
+                            </Button>
                         }
-                        <div className={toolbarStyles.buttons}>
-                            {toolbarStore.hasButtonsConfig() &&
-                                toolbarStore.getButtonsConfig().map((buttonConfig) => {
-                                    if (buttonConfig.options) {
-                                        return <DropdownButton key={buttonConfig.value} {...buttonConfig} />;
-                                    } else {
-                                        return <DefaultButton key={buttonConfig.value} {...buttonConfig} />;
-                                    }
-                                })
-                            }
-                        </div>
+                        {toolbarStore.hasItemsConfig() &&
+                            <ul className={toolbarStyles.items}>
+                                {
+                                    toolbarStore.getItemsConfig().map((itemConfig, index) => {
+                                        const Item = getItemComponentByType(itemConfig.type, itemConfig);
+
+                                        return (
+                                            <li key={index}>
+                                                <Item {...itemConfig} />
+                                            </li>
+                                        );
+                                    })
+                                }
+                            </ul>
+                        }
                     </div>
-                    <div className={toolbarStyles.pullRight}>
+                    <div className={toolbarStyles.controlsRight}>
                         {toolbarStore.hasIconsConfig() &&
                             <div className={toolbarStyles.icons}>
                                 {
@@ -42,13 +68,10 @@ export default class Toolbar extends React.PureComponent<*> {
                         }
                         {toolbarStore.hasLocaleConfig() &&
                             <div className={toolbarStyles.locale}>
-                                <DropdownButton
-                                    size={'small'}
-                                    setValueOnChange={true}
-                                    {...toolbarStore.getLocaleConfig()} />
+                                <Select size={'small'} {...toolbarStore.getLocaleConfig()} />
                             </div>
                         }
-                    </div>
+                    </div> 
                 </nav>
             </header>
         );

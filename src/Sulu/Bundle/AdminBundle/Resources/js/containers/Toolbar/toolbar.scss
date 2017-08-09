@@ -2,9 +2,9 @@
 
 $toolbarBackgroundColor: $white;
 $shadowColor: $mischka;
-$buttonsContainerBackgroundColor: $alabaster;
+$itemsBackgroundColor: $alabaster;
 
-$buttonsContainerBorder: 1px $gallery solid;
+$itemsContainerBorder: 1px $gallery solid;
 
 .toolbar {
     height: 60px;
@@ -13,19 +13,26 @@ $buttonsContainerBorder: 1px $gallery solid;
     box-shadow: 0 3px 2px $shadowColor;
 }
 
-.buttons {
+.items {
     display: inline-block;
-    border-left: $buttonsContainerBorder;
-    border-right: $buttonsContainerBorder;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: $itemsContainerBorder;
+    border-right: $itemsContainerBorder;
     vertical-align: top;
-    background-color: $buttonsContainerBackgroundColor;
+    background-color: $itemsBackgroundColor;
+
+    & > li {
+        display: inline-block;
+    }
 }
 
-.pull-left {
+.controls-left {
     float: left;
 }
 
-.pull-right {
+.controls-right {
     float: right;
 }
 
@@ -49,7 +56,5 @@ $buttonsContainerBorder: 1px $gallery solid;
 }
 
 .locale {
-    button {
-        border-left: $buttonsContainerBorder;
-    }
+    border-left: $itemsContainerBorder;
 }

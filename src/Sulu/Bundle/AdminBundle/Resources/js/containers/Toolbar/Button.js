@@ -1,6 +1,5 @@
 // @flow
-import ButtonSizes from './buttonSizes';
-import type {DefaultButtonType} from './types';
+import type {ButtonConfig} from './types';
 import Icon from '../../components/Icon';
 import React from 'react';
 import buttonStyles from './button.scss';
@@ -8,8 +7,8 @@ import classNames from 'classnames';
 
 const ICON_ARROW_DOWN = 'chevron-down';
 
-export default class DefaultButton extends React.PureComponent {
-    props: DefaultButtonType;
+export default class Button extends React.PureComponent {
+    props: ButtonConfig;
 
     static defaultProps = {
         disabled: false,
@@ -30,19 +29,24 @@ export default class DefaultButton extends React.PureComponent {
             isActive,
             hasOptions,
         } = this.props;
-        const buttonSizeClass = size ? ButtonSizes.getClassName(size) : null;
         const buttonClasses = classNames({
             [buttonStyles.button]: true,
             [buttonStyles.isActive]: isActive,
-            [buttonStyles[buttonSizeClass]]: buttonSizeClass,
+            [buttonStyles[size]]: size,
         });
 
         return (
-            <button disabled={disabled} className={buttonClasses} onClick={this.handleOnClick}>
+            <button 
+                disabled={disabled} 
+                className={buttonClasses} 
+                onClick={this.handleOnClick}
+                value={value}>
                 {icon &&
                     <Icon name={icon} className={buttonStyles.icon} />
                 }
-                <span className={buttonStyles.label}>{value}</span>
+                {(this.props.children || value) &&
+                    <span className={buttonStyles.label}>{this.props.children || value}</span>
+                }
                 {hasOptions &&
                     <Icon name={ICON_ARROW_DOWN} className={buttonStyles.dropdownIcon} />
                 }
