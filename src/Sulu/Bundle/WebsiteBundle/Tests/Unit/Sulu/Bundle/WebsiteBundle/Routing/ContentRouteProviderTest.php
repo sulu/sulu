@@ -37,6 +37,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class ContentRouteProviderTest extends TestCase
 {
@@ -785,8 +786,22 @@ class ContentRouteProviderTest extends TestCase
         $request->getRequestFormat()->willReturn('');
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request->reveal());
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest(
+            $request->reveal()
+        );
 
         $this->assertCount(0, $routes);
+    }
+
+    public function testGetRouteByRouteName()
+    {
+        $collection = new RouteCollection();
+        $route = new Route('/dummy');
+        $collection->add('dummy', $route);
+        $this->contentRouteProvider->setRouteCollection($collection);
+
+        // Test the route provider
+        $this->assertEquals($route, $this->contentRouteProvider->getRouteByName('dummy'));
+        $this->assertNull($this->contentRouteProvider->getRouteByName('unknown'));
     }
 }

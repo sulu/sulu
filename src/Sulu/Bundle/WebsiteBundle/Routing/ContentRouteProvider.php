@@ -54,6 +54,11 @@ class ContentRouteProvider implements RouteProviderInterface
     private $structureManager;
 
     /**
+     * @var RouteCollection
+     */
+    private $collection;
+
+    /**
      * @param DocumentManagerInterface $documentManager
      * @param DocumentInspector $documentInspector
      * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
@@ -76,7 +81,7 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request)
     {
-        $collection = new RouteCollection();
+        $collection = $this->getRouteCollection();
 
         if ('' === $request->getRequestFormat()) {
             return $collection;
@@ -203,7 +208,7 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     public function getRouteByName($name, $parameters = [])
     {
-        // TODO: Implement getRouteByName() method.
+        return $this->getRouteCollection()->get($name);
     }
 
     /**
@@ -281,5 +286,25 @@ class ContentRouteProvider implements RouteProviderInterface
         }
 
         return '/' . ltrim(rawurldecode($pathInfo), '/');
+    }
+
+    /**
+     * @param RouteCollection $collection
+     */
+    public function setRouteCollection(RouteCollection $collection)
+    {
+        $this->collection = $collection;
+    }
+
+    /**
+     * @return RouteCollection
+     */
+    public function getRouteCollection()
+    {
+        if (!$this->collection) {
+            $this->collection = new RouteCollection();
+        }
+
+        return $this->collection;
     }
 }
