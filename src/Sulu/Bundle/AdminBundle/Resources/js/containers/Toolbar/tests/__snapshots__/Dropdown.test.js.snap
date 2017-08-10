@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render disabled dropdown 1`] = `
+<div
+  class="dropdown"
+>
+  <button
+    class="button"
+    disabled=""
+    value="Click to open"
+  >
+    <span
+      class="label"
+    >
+      Click to open
+    </span>
+    <span
+      aria-hidden="true"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render dropdown 1`] = `
+<div
+  class="dropdown"
+>
+  <button
+    class="button"
+    value="Click to open"
+  >
+    <span
+      class="label"
+    >
+      Click to open
+    </span>
+    <span
+      aria-hidden="true"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render dropdown with a different size 1`] = `
+<div
+  class="dropdown small"
+>
+  <button
+    class="button small"
+    value="Click to open"
+  >
+    <span
+      class="label"
+    >
+      Click to open
+    </span>
+    <span
+      aria-hidden="true"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render dropdown with a prepended icon 1`] = `
+<div
+  class="dropdown"
+>
+  <button
+    class="button"
+    value="Click to open"
+  >
+    <span
+      aria-hidden="true"
+      class="icon fa fa-floppy-o"
+    />
+    <span
+      class="label"
+    >
+      Click to open
+    </span>
+    <span
+      aria-hidden="true"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;

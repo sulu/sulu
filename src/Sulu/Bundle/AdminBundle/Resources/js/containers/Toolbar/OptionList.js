@@ -46,7 +46,7 @@ export default class OptionList extends React.PureComponent {
                 <ul className={optionListClasses}>
                     {
                         options.map((option, index: number) => {
-                            const isSelected = option.value === value;
+                            const isSelected = option.value ? option.value === value : false;
 
                             return (
                                 <Option

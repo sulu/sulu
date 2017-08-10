@@ -1,5 +1,4 @@
 // @flow
-import type {DropdownOption, SelectOption} from './types';
 import Icon from '../../components/Icon';
 import React from 'react';
 import classNames from 'classnames';

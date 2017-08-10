@@ -39,6 +39,9 @@ jest.mock('../stores/ToolbarStore', () => ({
 }));
 
 test('Render the items from the ToolbarStore', () => {
+    toolbarStore.hasItemsConfig = jest.fn();
+    toolbarStore.hasItemsConfig.mockReturnValue(true);
+
     toolbarStore.config = {
         items: [
             {

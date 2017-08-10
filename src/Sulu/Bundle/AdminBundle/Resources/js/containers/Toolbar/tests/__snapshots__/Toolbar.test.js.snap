@@ -7,7 +7,47 @@ exports[`Render the items from the ToolbarStore 1`] = `
   <nav>
     <div
       class="controlsLeft"
-    />
+    >
+      <ul
+        class="items"
+      >
+        <li>
+          <button
+            class="button"
+            disabled=""
+          >
+            <span
+              aria-hidden="true"
+              class="icon fa fa-trash-o"
+            />
+          </button>
+        </li>
+        <li>
+          <div
+            class="dropdown"
+          >
+            <button
+              class="button"
+              value="Save"
+            >
+              <span
+                aria-hidden="true"
+                class="icon fa fa-floppy-more"
+              />
+              <span
+                class="label"
+              >
+                Save
+              </span>
+              <span
+                aria-hidden="true"
+                class="dropdownIcon fa fa-chevron-down"
+              />
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
     <div
       class="controlsRight"
     />

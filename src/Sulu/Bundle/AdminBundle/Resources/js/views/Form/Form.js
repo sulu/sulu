@@ -85,6 +85,7 @@ export default withToolbar(Form, function() {
             },
             {
                 type: 'select',
+                icon: 'star',
                 value: this.selectValue,
                 label: 'Choose',
                 onChange: (optionVal) => {
