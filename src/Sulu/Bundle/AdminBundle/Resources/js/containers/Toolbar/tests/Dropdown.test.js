@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
-import Dropdown from '../Dropdown';
 import React from 'react';
+import Dropdown from '../Dropdown';
 
 const dropdownPropsMock = {
     label: 'Click to open',

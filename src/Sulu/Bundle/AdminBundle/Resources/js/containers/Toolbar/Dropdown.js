@@ -1,12 +1,12 @@
 // @flow
-import type {DropdownOption, Dropdown as DropdownProps} from './types';
 import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
+import classNames from 'classnames';
+import React from 'react';
+import type {DropdownOption, Dropdown as DropdownProps} from './types';
 import Button from './Button';
 import OptionList from './OptionList';
-import React from 'react';
-import classNames from 'classnames';
 import dropdownStyles from './dropdown.scss';
-import {observer} from 'mobx-react';
 
 @observer
 export default class Dropdown extends React.PureComponent {

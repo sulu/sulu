@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render, shallow} from 'enzyme';
-import Button from '../Button';
 import React from 'react';
+import Button from '../Button';
 
 test('Render button', () => {
     expect(render(<Button>Click</Button>)).toMatchSnapshot();

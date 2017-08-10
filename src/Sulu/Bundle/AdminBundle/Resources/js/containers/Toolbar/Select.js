@@ -1,11 +1,11 @@
 // @flow
-import type {SelectOption, Select as SelectProps} from './types';
 import {action, computed, observable} from 'mobx';
-import Button from './Button';
-import OptionList from './OptionList';
-import React from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
+import React from 'react';
+import type {SelectOption, Select as SelectProps} from './types';
+import Button from './Button';
+import OptionList from './OptionList';
 import selectStyles from './select.scss';
 
 @observer

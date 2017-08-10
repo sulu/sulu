@@ -1,9 +1,9 @@
 // @flow
-import type {Button as ButtonProps} from './types';
-import Icon from '../../components/Icon';
-import React from 'react';
-import buttonStyles from './button.scss';
 import classNames from 'classnames';
+import React from 'react';
+import Icon from '../../components/Icon';
+import type {Button as ButtonProps} from './types';
+import buttonStyles from './button.scss';
 
 const ICON_ARROW_DOWN = 'chevron-down';
 

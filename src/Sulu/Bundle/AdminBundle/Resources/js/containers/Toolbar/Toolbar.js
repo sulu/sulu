@@ -1,10 +1,10 @@
 // @flow
+import {observer} from 'mobx-react';
+import React from 'react';
+import Icon from '../../components/Icon';
 import Button from './Button';
 import Dropdown from './Dropdown';
-import Icon from '../../components/Icon';
-import React from 'react';
 import Select from './Select';
-import {observer} from 'mobx-react';
 import toolbarStore from './stores/ToolbarStore';
 import toolbarStyles from './toolbar.scss';
 

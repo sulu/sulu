@@ -1,13 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
-<<<<<<< HEAD
-=======
-import Backdrop from '../Backdrop';
->>>>>>> fixed backdrop linting issues
 import React from 'react';
 import pretty from 'pretty';
 import Backdrop from '../Backdrop';
-
 
 afterEach(() => document.body.innerHTML = '');
 

@@ -1,8 +1,8 @@
 // @flow
+import classNames from 'classnames';
+import React from 'react';
 import Backdrop from '../../components/Backdrop';
 import Option from './Option';
-import React from 'react';
-import classNames from 'classnames';
 import optionListStyles from './optionList.scss';
 
 export default class OptionList extends React.PureComponent {
