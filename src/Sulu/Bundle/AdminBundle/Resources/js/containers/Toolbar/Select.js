@@ -1,22 +1,12 @@
 // @flow
+import type {SelectOption, Select as SelectProps} from './types';
 import {action, computed, observable} from 'mobx';
 import Button from './Button';
 import OptionList from './OptionList';
 import React from 'react';
-import type {SelectOptionConfig} from './types';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import selectStyles from './select.scss';
-
-type SelectProps = {|
-    value: string | number,
-    options: Array<SelectOptionConfig>,
-    onChange: (optionValue: string | number) => void,
-    label?: string | number,
-    icon?: string,
-    size?: string,
-    disabled?: boolean,
-|};
 
 @observer
 export default class Select extends React.PureComponent {
@@ -36,7 +26,7 @@ export default class Select extends React.PureComponent {
         this.isOpen = !this.isOpen;
     };
 
-    @computed get selectedOption(): ?SelectOptionConfig {
+    @computed get selectedOption(): ?any {
         return this.props.options.find((option) => {
             return option.value === this.props.value;
         });
@@ -54,8 +44,8 @@ export default class Select extends React.PureComponent {
         this.toggle();
     };
 
-    handleOptionListClick = (value?: string | number) => {
-        this.props.onChange(value);
+    handleOptionListClick = (option: SelectOption) => {
+        this.props.onChange(option.value);
     };
 
     handleOptionListClose = () => {
@@ -93,7 +83,7 @@ export default class Select extends React.PureComponent {
                         value={value}
                         options={options}
                         onClick={this.handleOptionListClick}
-                        onClose={this.handleOptionListClose} />
+                        onRequestClose={this.handleOptionListClose} />
                 }
             </div>
         );

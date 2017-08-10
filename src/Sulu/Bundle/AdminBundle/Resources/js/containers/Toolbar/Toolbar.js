@@ -1,5 +1,4 @@
 // @flow
-import type {ItemConfig, ToolbarItem} from './types';
 import Button from './Button';
 import Dropdown from './Dropdown';
 import Icon from '../../components/Icon';
@@ -18,7 +17,7 @@ const ToolbarItemTypes = {
     Dropdown: 'dropdown',
 };
 
-function getItemComponentByType(type: ToolbarItem, itemConfig: ItemConfig) {
+function getItemComponentByType(type, itemConfig) {
     let item;
 
     switch (type) {

@@ -5,33 +5,12 @@ exports[`Render the items from the ToolbarStore 1`] = `
   class="toolbar"
 >
   <nav>
-    <button
-      class="item"
-      disabled=""
-    >
-      <span
-        aria-hidden="true"
-        class="icon fa fa-save"
-      />
-      <span
-        class="title"
-      >
-        Save
-      </span>
-    </button>
-    <button
-      class="item"
-    >
-      <span
-        aria-hidden="true"
-        class="icon fa fa-delete"
-      />
-      <span
-        class="title"
-      >
-        Delete
-      </span>
-    </button>
+    <div
+      class="controlsLeft"
+    />
+    <div
+      class="controlsRight"
+    />
   </nav>
 </header>
 `;

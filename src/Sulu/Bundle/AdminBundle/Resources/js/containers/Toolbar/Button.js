@@ -1,4 +1,5 @@
 // @flow
+import type {Button as ButtonProps} from './types';
 import Icon from '../../components/Icon';
 import React from 'react';
 import buttonStyles from './button.scss';
@@ -7,15 +8,7 @@ import classNames from 'classnames';
 const ICON_ARROW_DOWN = 'chevron-down';
 
 export default class Button extends React.PureComponent {
-    props: {|
-        value: string | number,
-        onClick: () => void,
-        icon?: string,
-        size?: string,
-        disabled?: boolean,
-        isActive?: boolean,
-        hasOptions?: boolean,
-    |};
+    props: ButtonProps;
 
     static defaultProps = {
         disabled: false,

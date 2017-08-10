@@ -1,6 +1,6 @@
 // @flow
+import type {DropdownOption, SelectOption} from './types';
 import Icon from '../../components/Icon';
-import type {OptionProps} from './types';
 import React from 'react';
 import classNames from 'classnames';
 import optionStyles from './option.scss';
@@ -8,7 +8,14 @@ import optionStyles from './option.scss';
 const ICON_CHECKMARK = 'check';
 
 export default class Option extends React.PureComponent {
-    props: OptionProps;
+    props: {
+        label: string | number,
+        value: Object,
+        onClick: (value: Object) => void,
+        size?: string,
+        selected?: boolean,
+        disabled?: boolean,
+    };
 
     handleOnClick = () => {
         const {onClick} = this.props;

@@ -1,26 +1,18 @@
 // @flow
+import type {DropdownOption, Dropdown as DropdownProps} from './types';
 import {action, observable} from 'mobx';
 import Button from './Button';
 import OptionList from './OptionList';
-import type {DropdownOptionConfig} from './types';
 import React from 'react';
 import classNames from 'classnames';
 import dropdownStyles from './dropdown.scss';
 import {observer} from 'mobx-react';
 
-type DropdownProps = {|
-    options: Array<DropdownOptionConfig>,
-    label?: string | number,
-    icon?: string,
-    size?: string,
-    disabled?: boolean,
-|};
-
 @observer
 export default class Dropdown extends React.PureComponent {
     props: DropdownProps;
 
-    @observable isOpen: boolean = false;
+    @observable isOpen = false;
 
     @action open = () => {
         this.isOpen = true;
@@ -44,6 +36,12 @@ export default class Dropdown extends React.PureComponent {
 
     handleButtonClick = () => {
         this.toggle();
+    };
+
+    handleOptionListClick = (option: DropdownOption) => {
+        if (option.onClick) {
+            option.onClick();
+        }
     };
 
     handleOptionListClose = () => {
@@ -76,7 +74,8 @@ export default class Dropdown extends React.PureComponent {
                 {this.isOpen &&
                     <OptionList
                         options={options}
-                        onClose={this.handleOptionListClose} />
+                        onClick={this.handleOptionListClick}
+                        onRequestClose={this.handleOptionListClose} />
                 }
             </div>
         );

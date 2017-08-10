@@ -1,80 +1,60 @@
 // @flow
 
-export type ToolbarItem = 'button' | 'dropdown' | 'select';
-
-export type ButtonConfig = {|
-    type: ToolbarItem,
+export type Button = {
     onClick: () => void,
-    value?: string,
+    value?: string | number,
     icon?: string,
     size?: string,
     disabled?: boolean,
     isActive?: boolean,
     hasOptions?: boolean,
-|};
+};
 
-export type BackButtonConfig = {|
-    onClick: () => void,
-    value?: string,
-    icon?: string,
-    disabled?: boolean,
-|};
-
-export type OptionProps = {|
-    value: string | number,
-    label: string | number,
-    onClick: (value?: string | number) => void,
-    size?: string,
-    selected?: boolean,
-    disabled?: boolean,
-|};
-
-export type DropdownOptionConfig = {|
+export type DropdownOption = {
     label: string | number,
     onClick?: () => void,
     disabled?: boolean,
-|};
+};
 
-export type DropdownConfig = {|
-    type: ToolbarItem,
-    options: Array<DropdownOptionConfig>,
-    label?: string,
-    size?: string,
-    disabled?: boolean,
-|};
-
-export type SelectOptionConfig = {|
-    value: string | number,
+export type SelectOption = {
     label: string | number,
+    value: string | number,
     disabled?: boolean,
-|};
+};
 
-export type SelectConfig = {|
-    type: ToolbarItem,
-    onChange: (optionValue: string | number) => void,
-    options: Array<SelectOptionConfig>,
-    value?: string,
-    label?: string,
+export type Dropdown = {
+    options: Array<DropdownOption>,
+    label?: string | number,
     icon?: string,
     size?: string,
     disabled?: boolean,
-|};
+};
 
-export type LocaleConfig = {|
+export type Select = {
+    value: string | number,
+    options: Array<SelectOption>,
     onChange: (optionValue: string | number) => void,
-    options: Array<SelectOptionConfig>,
-    value?: string,
-    label?: string,
+    label?: string | number,
     icon?: string,
     size?: string,
     disabled?: boolean,
-|};
+};
 
-export type ItemConfig = ButtonConfig | DropdownConfig | SelectConfig;
+export type ButtonItem =
+    & Button
+    & { type: 'button' };
+
+export type DropdownItem =
+    & Dropdown
+    & { type: 'dropdown' };
+
+export type SelectItem =
+    & Select
+    & { type: 'select' };
 
 export type ToolbarConfig = {
     icons?: Array<string>,
-    locale?: ?LocaleConfig,
-    items?: ?Array<ItemConfig>,
-    backButton?: ?BackButtonConfig,
+    items?: Array<ButtonItem | DropdownItem | SelectItem>,
+    locale?: Select,
+    backButton?: Button,
 };

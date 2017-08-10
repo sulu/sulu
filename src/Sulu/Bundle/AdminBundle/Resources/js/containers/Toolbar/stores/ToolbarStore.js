@@ -1,12 +1,5 @@
 // @flow
-import type {
-    BackButtonConfig,
-    ButtonConfig,
-    DropdownConfig,
-    LocaleConfig,
-    SelectConfig,
-    ToolbarConfig,
-} from '../types';
+import type {ToolbarConfig} from '../types';
 import {action, observable} from 'mobx';
 
 const defaultConfig = {
@@ -17,7 +10,7 @@ const defaultConfig = {
 };
 
 class ToolbarStore {
-    @observable config: ToolbarConfig = defaultConfig;
+    @observable config = defaultConfig;
 
     @action setConfig(config: ToolbarConfig) {
         this.clearConfig();
@@ -32,7 +25,7 @@ class ToolbarStore {
         return !!this.config.backButton;
     }
 
-    getBackButtonConfig(): ?BackButtonConfig {
+    getBackButtonConfig() {
         return this.config.backButton || null;
     }
 
@@ -40,7 +33,7 @@ class ToolbarStore {
         return !!this.config.items && !!this.config.items.length;
     }
 
-    getItemsConfig(): Array<ButtonConfig | DropdownConfig | SelectConfig> {
+    getItemsConfig() {
         return this.config.items || [];
     }
 
@@ -48,7 +41,7 @@ class ToolbarStore {
         return !!this.config.icons && !!this.config.icons.length;
     }
 
-    getIconsConfig(): Array<string> {
+    getIconsConfig() {
         return this.config.icons || [];
     }
 
@@ -56,7 +49,7 @@ class ToolbarStore {
         return !!this.config.locale;
     }
 
-    getLocaleConfig(): ?LocaleConfig {
+    getLocaleConfig() {
         return this.config.locale;
     }
 }

@@ -1,5 +1,4 @@
 // @flow
-import type {DropdownOptionConfig, SelectOptionConfig} from './types';
 import Backdrop from '../../components/Backdrop';
 import Option from './Option';
 import React from 'react';
@@ -7,20 +6,28 @@ import classNames from 'classnames';
 import optionListStyles from './optionList.scss';
 
 export default class OptionList extends React.PureComponent {
-    props: {|
-        options: Array<DropdownOptionConfig | SelectOptionConfig>,
+    props: {
+        onClick: (option: Object) => void,
         value?: string | number,
         size?: string,
-        onClick?: (value?: string | number) => void,
-        onClose?: () => void,
-    |};
+        onRequestClose?: () => void,
+        options: Array<Object>,
+    };
 
-    handleOptionClick = (value?: string | number) => {
-        this.props.onClick(value);
+    handleOptionClick = (option: Object) => {
+        if (this.props.onClick) {
+            this.props.onClick(option);
+        }
+
+        if (this.props.onRequestClose) {
+            this.props.onRequestClose();
+        }
     };
 
     handleBackdropClick = () => {
-        this.props.onClose();
+        if (this.props.onRequestClose) {
+            this.props.onRequestClose();
+        }
     };
 
     render() {
@@ -38,28 +45,18 @@ export default class OptionList extends React.PureComponent {
             <div>
                 <ul className={optionListClasses}>
                     {
-                        options.map((option, index) => {
-                            const optionValue = option.value || index;
-                            const isSelected = optionValue === value;
-                            const handleClick = (selectedOptionValue?: string | number) => {
-                                if (!option.onClick) {
-                                    this.handleOptionClick(selectedOptionValue);
-                                } else {
-                                    option.onClick();
-                                }
-
-                                this.props.onClose();
-                            };
+                        options.map((option, index: number) => {
+                            const isSelected = option.value === value;
 
                             return (
                                 <Option
                                     key={index}
                                     size={size}
-                                    value={optionValue}
+                                    value={option}
                                     label={option.label}
                                     disabled={option.disabled}
                                     selected={isSelected}
-                                    onClick={handleClick} />
+                                    onClick={this.handleOptionClick} />
                             );
                         })
                     }

@@ -11,15 +11,15 @@ class Form extends React.PureComponent<*> {
 
     @observable localeValue = 'en';
 
-    @action setDirty(dirty: boolean) {
+    @action setDirty(dirty) {
         this.dirty = dirty;
     }
 
-    @action setSelectValue(value: string) {
+    @action setSelectValue(value) {
         this.selectValue = value;
     }
 
-    @action setLocaleValue(value: string) {
+    @action setLocaleValue(value) {
         this.localeValue = value;
     }
 
@@ -41,7 +41,7 @@ export default withToolbar(Form, function() {
         ],
         locale: {
             value: this.localeValue,
-            onChange: (value: string | number) => {
+            onChange: (value) => {
                 this.setLocaleValue(value);
             },
             options: [
@@ -64,7 +64,7 @@ export default withToolbar(Form, function() {
             {
                 type: 'dropdown',
                 label: 'Save',
-                icon: 'floppy-more',
+                icon: 'floppy-o',
                 disabled: !this.dirty,
                 options: [
                     {
@@ -87,7 +87,7 @@ export default withToolbar(Form, function() {
                 type: 'select',
                 value: this.selectValue,
                 label: 'Choose',
-                onChange: (optionVal: string | number) => {
+                onChange: (optionVal) => {
                     this.setSelectValue(optionVal);
                 },
                 options: [

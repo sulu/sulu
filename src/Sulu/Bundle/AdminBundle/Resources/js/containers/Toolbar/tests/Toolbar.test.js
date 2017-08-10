@@ -4,10 +4,42 @@ import {render} from 'enzyme';
 import Toolbar from '../Toolbar';
 import toolbarStore from '../stores/ToolbarStore';
 
-jest.mock('../stores/ToolbarStore', () => ({}));
+jest.mock('../stores/ToolbarStore', () => ({
+    hasBackButtonConfig() {
+        return false;
+    },
+
+    getBackButtonConfig() {
+        return this.config.backButton || null;
+    },
+
+    hasItemsConfig() {
+        return false;
+    },
+
+    getItemsConfig() {
+        return this.config.items || [];
+    },
+
+    hasIconsConfig() {
+        return false;
+    },
+
+    getIconsConfig() {
+        return this.config.icons || [];
+    },
+
+    hasLocaleConfig() {
+        return false;
+    },
+
+    getLocaleConfig() {
+        return this.config.locale;
+    },
+}));
 
 test('Render the items from the ToolbarStore', () => {
-    toolbarStore.setConfig({
+    toolbarStore.config = {
         items: [
             {
                 type: 'button',
@@ -35,7 +67,7 @@ test('Render the items from the ToolbarStore', () => {
                 ],
             },
         ],
-    });
+    };
 
     const view = render(<Toolbar />);
     expect(view).toMatchSnapshot();
