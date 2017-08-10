@@ -44,7 +44,7 @@ test('Render dropdown with a different size', () => {
 test('Open dropdown on click', () => {
     const dropdown = mount(<Dropdown {...dropdownPropsMock} />);
 
-    expect(dropdown.find('.optionList').length).toBe(0);    
+    expect(dropdown.find('.optionList').length).toBe(0);
     dropdown.find('.button').simulate('click');
     expect(dropdown.find('.optionList').length).toBe(1);
 });
@@ -56,7 +56,7 @@ test('Disabled dropdown won\'t open', () => {
             disabled={true} />
     );
 
-    expect(dropdown.find('.optionList').length).toBe(0);    
+    expect(dropdown.find('.optionList').length).toBe(0);
     dropdown.find('button').simulate('click');
     expect(dropdown.find('.optionList').length).toBe(0);
 });

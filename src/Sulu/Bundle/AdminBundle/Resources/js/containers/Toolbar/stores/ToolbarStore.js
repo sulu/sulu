@@ -1,6 +1,6 @@
 // @flow
-import type {ToolbarConfig} from '../types';
 import {action, observable} from 'mobx';
+import type {ToolbarConfig} from '../types';
 
 const defaultConfig = {
     icons: [],

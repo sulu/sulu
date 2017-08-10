@@ -45,7 +45,7 @@ test('Render select with a different size', () => {
 test('Open select on click', () => {
     const select = mount(<Select {...selectPropsMock} />);
 
-    expect(select.find('.optionList').length).toBe(0);    
+    expect(select.find('.optionList').length).toBe(0);
     select.find('.button').simulate('click');
     expect(select.find('.optionList').length).toBe(1);
 });
@@ -57,7 +57,7 @@ test('Disabled select won\'t open', () => {
             disabled={true} />
     );
 
-    expect(select.find('.optionList').length).toBe(0);    
+    expect(select.find('.optionList').length).toBe(0);
     select.find('button').simulate('click');
     expect(select.find('.optionList').length).toBe(0);
 });
