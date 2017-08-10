@@ -45,19 +45,19 @@ export default class Option extends React.PureComponent {
         }
     };
 
-    setItem = (i: HTMLElement) => this.item = i;
-    setButton = (b: HTMLButtonElement) => this.button = b;
+    setItem = (item: HTMLElement) => this.item = item;
+    setButton = (button: HTMLButtonElement) => this.button = button;
 
     render() {
         const classNames = classnames({
             [optionStyles.option]: true,
-            [optionStyles.disabled]: this.props.disabled,
             [optionStyles.selected]: this.props.selected,
         });
 
         return (
-            <li ref={this.setItem} className={classNames}>
+            <li ref={this.setItem}>
                 <button
+                    className={classNames}
                     ref={this.setButton}
                     onClick={this.handleButtonClick}
                     disabled={this.props.disabled}>

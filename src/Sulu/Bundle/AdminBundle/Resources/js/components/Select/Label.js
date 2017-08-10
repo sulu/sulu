@@ -20,7 +20,7 @@ export default class Label extends React.PureComponent {
         return this.button.getBoundingClientRect();
     }
 
-    setButton = (b: HTMLElement) => this.button = b;
+    setButton = (button: HTMLElement) => this.button = button;
 
     render() {
         const classNames = classnames({

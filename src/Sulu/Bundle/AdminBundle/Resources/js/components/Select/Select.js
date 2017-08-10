@@ -2,7 +2,6 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import classnames from 'classnames';
 import selectStyles from './select.scss';
 import Divider from './Divider';
 import OverlayList from './OverlayList';
@@ -13,7 +12,6 @@ import Label from './Label';
 export default class Select extends React.PureComponent {
     props: {
         value?: string,
-        className: string,
         onChange?: (s: string) => void,
         children: Array<Option | Divider>,
         icon?: string,
@@ -21,7 +19,6 @@ export default class Select extends React.PureComponent {
 
     static defaultProps = {
         children: [],
-        className: '',
     };
 
     label: Label;
@@ -58,18 +55,15 @@ export default class Select extends React.PureComponent {
 
     handleLabelClick = this.openList;
     handleListRequestClose = this.closeList;
-    setLabel = (l: Label) => this.label = l;
+    setLabel = (label: Label) => this.label = label;
 
     render() {
         const labelDimensions = this.label ? this.label.getDimensions() : {};
-        const {listChildren, centeredChildIndex} = this.renderListChildren();
-        const classNames = classnames({
-            [selectStyles.select]: true,
-            [this.props.className]: !!this.props.className,
-        });
+        const listChildren = this.renderListChildren();
+        const centeredChildIndex = this.getCenteredChildIndex(listChildren);
 
         return (
-            <div className={classNames}>
+            <div className={selectStyles.select}>
                 <Label
                     ref={this.setLabel}
                     icon={this.props.icon}
@@ -90,19 +84,21 @@ export default class Select extends React.PureComponent {
         );
     }
 
-    renderListChildren() {
-        let centeredChildIndex = 0;
-        let listChildren = React.Children.map(this.props.children, (child, index) => {
+    renderListChildren(): React.Children {
+        return React.Children.map(this.props.children, (child) => {
             if (child.type === Option) {
                 child = React.cloneElement(child, {
                     onClick: this.handleOptionClick,
                     selected: child.props.value === this.props.value && !child.props.disabled,
                 });
-                centeredChildIndex = child.props.selected ? index : centeredChildIndex;
             }
             return child;
         });
+    }
 
-        return {listChildren, centeredChildIndex};
+    getCenteredChildIndex(children: React.Children): number {
+        return React.Children.toArray(children).reduce(
+            (centeredChild, child, index) => child.props.selected ? index : centeredChild, 0
+        );
     }
 }

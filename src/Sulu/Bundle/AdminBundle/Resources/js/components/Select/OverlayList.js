@@ -67,7 +67,7 @@ export default class OverlayList extends React.PureComponent {
     };
 
     @computed get dimensions(): ?OverlayListDimensions {
-        if (!this.offsetHeight || !this.offsetHeight || !this.centeredChildRelativeTop) {
+        if (!this.props.isOpen || !this.offsetHeight || !this.offsetWidth || !this.centeredChildRelativeTop) {
             return null;
         }
         const positioner = new OverlayListPositioner(
@@ -102,12 +102,9 @@ export default class OverlayList extends React.PureComponent {
     };
 
     render() {
-        let style = {visibility: 'hidden'};
         const dimensions = this.dimensions;
-        if (dimensions) {
-            style = OverlayListPositioner.dimensionsToStyle(dimensions);
-            this.scrollTop = dimensions.scrollTop;
-        }
+        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {visibility: 'hidden'};
+        this.scrollTop = dimensions ? dimensions.scrollTop : 0;
 
         return (
             <div>

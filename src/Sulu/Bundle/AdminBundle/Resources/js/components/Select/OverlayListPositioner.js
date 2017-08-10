@@ -98,10 +98,11 @@ export default class OverlayListPositioner {
         let newDimensions = {...dimensions};
         let touchesTopBorder = false;
         let touchesBottomBorder = false;
+
         if (dimensions.top < PADDING_TO_WINDOW) {
             newDimensions.top = PADDING_TO_WINDOW;
             newDimensions.height = dimensions.height + dimensions.top - PADDING_TO_WINDOW;
-            newDimensions.scrollTop = dimensions.top * (-1) + PADDING_TO_WINDOW;
+            newDimensions.scrollTop = -dimensions.top + PADDING_TO_WINDOW;
             touchesTopBorder = true;
         }
         if (newDimensions.top + newDimensions.height > this.windowHeight - PADDING_TO_WINDOW) {

@@ -4,42 +4,34 @@ $hoverColor: $shakespeare;
 $fontColor: $blueZodiac;
 
 .option {
-    button {
-        width: 100%;
-        position: relative;
-        line-height: 20px;
-        padding: 0 20px 0 30px;
-        color: $fontColor;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        text-align: left;
-        font-size: 12px;
+    width: 100%;
+    position: relative;
+    line-height: 20px;
+    padding: 0 20px 0 30px;
+    color: $fontColor;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-size: 12px;
+
+    &:not(:disabled):hover {
+        color: $hoverColor;
     }
 
-    &:not(.disabled) {
-        button:hover {
-            color: $hoverColor;
-        }
-    }
-}
-
-.disabled {
-    button {
+    &:disabled {
         color: rgba($fontColor, .3);
         cursor: default;
     }
-}
 
-.selected {
-    button {
+    &.selected {
         font-weight: bold;
-    }
 
-    .icon {
-        position: absolute;
-        left: 10px;
-        line-height: 20px;
-        vertical-align: middle;
+        .icon {
+            position: absolute;
+            left: 10px;
+            line-height: 20px;
+            vertical-align: middle;
+        }
     }
 }
