@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The list should not render in body when not open 1`] = `
+<div>
+  
+</div>
+`;
+
+exports[`The list should not render in body when not open 2`] = `""`;
+
+exports[`The list should render in body when open 1`] = `
+<div>
+  
+</div>
+`;
+
+exports[`The list should render in body when open 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <ul class=\\"list\\" style=\\"visibility: hidden;\\">
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 5 -->
+          <!-- /react-text -->
+          <!-- react-text: 6 -->My option 1
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 9 -->
+          <!-- /react-text -->
+          <!-- react-text: 10 -->My option 2
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 13 -->
+          <!-- /react-text -->
+          <!-- react-text: 14 -->My option 3
+          <!-- /react-text -->
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>"
+`;
+
+exports[`The list should take its dimensions from the positioner 1`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <ul class=\\"list\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 5 -->
+          <!-- /react-text -->
+          <!-- react-text: 6 -->My option 1
+          <!-- /react-text -->
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>"
+`;

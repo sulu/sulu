@@ -31,6 +31,9 @@ export default class OverlayListPositioner {
     anchorWidth: number;
     anchorHeight: number;
 
+    windowWidth: number;
+    windowHeight: number;
+
     constructor(
         listHeight: number,
         listWidth: number,
@@ -39,6 +42,8 @@ export default class OverlayListPositioner {
         anchorLeft: number,
         anchorWidth: number,
         anchorHeight: number,
+        windowWidth: number = window.innerWidth,
+        windowHeight: number = window.innerHeight,
     ) {
         this.listHeight = listHeight;
         this.listWidth = listWidth;
@@ -47,6 +52,8 @@ export default class OverlayListPositioner {
         this.anchorLeft = anchorLeft;
         this.anchorWidth = anchorWidth;
         this.anchorHeight = anchorHeight;
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
     }
 
     static dimensionsToStyle(dimensions: OverlayListDimensions): OverlayListStyle {
@@ -97,8 +104,8 @@ export default class OverlayListPositioner {
             newDimensions.scrollTop = dimensions.top * (-1) + PADDING_TO_WINDOW;
             touchesTopBorder = true;
         }
-        if (newDimensions.top + newDimensions.height > window.innerHeight - PADDING_TO_WINDOW) {
-            newDimensions.height = window.innerHeight - newDimensions.top - PADDING_TO_WINDOW;
+        if (newDimensions.top + newDimensions.height > this.windowHeight - PADDING_TO_WINDOW) {
+            newDimensions.height = this.windowHeight - newDimensions.top - PADDING_TO_WINDOW;
             touchesBottomBorder = true;
         }
 
@@ -108,7 +115,7 @@ export default class OverlayListPositioner {
     cropHorizontalDimensions(dimensions: OverlayListDimensions): OverlayListDimensions {
         let newDimensions = {...dimensions};
         newDimensions.left = Math.max(PADDING_TO_WINDOW, newDimensions.left);
-        newDimensions.left = Math.min(window.innerWidth - this.listWidth - PADDING_TO_WINDOW, newDimensions.left);
+        newDimensions.left = Math.min(this.windowWidth - this.listWidth - PADDING_TO_WINDOW, newDimensions.left);
 
         return newDimensions;
     }

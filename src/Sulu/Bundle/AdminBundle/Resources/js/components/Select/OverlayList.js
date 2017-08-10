@@ -121,7 +121,7 @@ export default class OverlayList extends React.PureComponent {
                         </ul>
                     </div>
                 </Portal>
-                <Backdrop isVisible={false} isOpen={this.props.isOpen} onClick={this.props.onRequestClose} />
+                <Backdrop isVisible={false} isOpen={this.props.isOpen} onClick={this.requestClose} />
             </div>
         );
     }

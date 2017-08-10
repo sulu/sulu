@@ -38,6 +38,9 @@ export default class Select extends React.PureComponent {
     @computed get labelText(): string {
         let label = '';
         React.Children.forEach(this.props.children, (child) => {
+            if (child.type !== Option) {
+                return;
+            }
             if (!label || this.props.value === child.props.value) {
                 label = child.props.children;
             }

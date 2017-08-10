@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should open the list when the label is clicked 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="label"
+  >
+    Option 1
+    <span
+      aria-hidden="true"
+      class="toggle fa fa-chevron-down"
+    />
+  </button>
+  <div>
+    
+  </div>
+</div>
+`;
+
+exports[`The component should open the list when the label is clicked 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <ul class=\\"list\\" style=\\"visibility: hidden;\\">
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 5 -->
+          <!-- /react-text -->
+          <!-- react-text: 6 -->Option 1
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 9 -->
+          <!-- /react-text -->
+          <!-- react-text: 10 -->Option 2
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li class=\\"divider\\"></li>
+      <li>
+        <button class=\\"option\\">
+          <!-- react-text: 14 -->
+          <!-- /react-text -->
+          <!-- react-text: 15 -->Option 3
+          <!-- /react-text -->
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>"
+`;
+
+exports[`The component should render with an icon 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="label hasIcon"
+  >
+    <span
+      aria-hidden="true"
+      class="frontIcon fa fa-plus"
+    />
+    Option 1
+    <span
+      aria-hidden="true"
+      class="toggle fa fa-chevron-down"
+    />
+  </button>
+  <div>
+    
+  </div>
+</div>
+`;
+
+exports[`The component should render with the correct value 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="label"
+  >
+    Option 2
+    <span
+      aria-hidden="true"
+      class="toggle fa fa-chevron-down"
+    />
+  </button>
+  <div>
+    
+  </div>
+</div>
+`;
+
+exports[`The component should render with the list closed 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="label"
+  >
+    Option 1
+    <span
+      aria-hidden="true"
+      class="toggle fa fa-chevron-down"
+    />
+  </button>
+  <div>
+    
+  </div>
+</div>
+`;

@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<li>
+  <button
+    class="option"
+  >
+    My option
+  </button>
+</li>
+`;
+
+exports[`The component should render in disabled state 1`] = `
+<li>
+  <button
+    class="option"
+    disabled=""
+  >
+    My option
+  </button>
+</li>
+`;
+
+exports[`The component should render in selected state 1`] = `
+<li>
+  <button
+    class="option selected"
+  >
+    <span
+      aria-hidden="true"
+      class="icon fa fa-check"
+    />
+    My option
+  </button>
+</li>
+`;

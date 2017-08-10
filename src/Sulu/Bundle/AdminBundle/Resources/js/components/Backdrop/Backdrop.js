@@ -32,6 +32,15 @@ export default class Backdrop extends React.PureComponent<Props> {
             [backdropStyles.isVisible]: isVisible,
         });
 
+        const body = document.body;
+        if (body) {
+            if (isOpen) {
+                body.classList.add(backdropStyles.preventScrolling);
+            } else {
+                body.classList.remove(backdropStyles.preventScrolling);
+            }
+        }
+
         return (
             <Portal isOpened={isOpen}>
                 <div
