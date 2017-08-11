@@ -101,6 +101,8 @@ export default class OverlayList extends React.PureComponent {
         }));
     };
 
+    handleBackropClick = this.requestClose;
+
     render() {
         const dimensions = this.dimensions;
         const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {visibility: 'hidden'};
@@ -118,7 +120,7 @@ export default class OverlayList extends React.PureComponent {
                         </ul>
                     </div>
                 </Portal>
-                <Backdrop isVisible={false} isOpen={this.props.isOpen} onClick={this.requestClose} />
+                <Backdrop isVisible={false} isOpen={this.props.isOpen} onClick={this.handleBackropClick} />
             </div>
         );
     }

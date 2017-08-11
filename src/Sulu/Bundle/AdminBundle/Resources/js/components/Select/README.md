@@ -1,3 +1,7 @@
+The select component can be used to ask the user to select one out of many options.
+The component follows the recommendation of React for form components: The Select itself
+holds no internal state and is solely dependent on the passed properties. Moreover, it provides
+a possibility to pass a callback which gets called when the user selects an option.
 ```
 const Divider = require('./Divider').default;
 const Option = require('./Option').default;
@@ -15,6 +19,7 @@ const onChange = (value) => value !== 'action-create' ? setState({selectValue: v
 </Select>
 ```
 
+Also a lot of options are possible and correctly handled as well as neatly styled.
 ```
 const Divider = require('./Divider').default;
 const Option = require('./Option').default;
@@ -49,6 +54,8 @@ const onChange = (value) => setState({selectValue: value});
 </Select>
 ```
 
+Because the select doesn't change its label itself, its fairly straight forward to provide a select
+for which the lable never changes.
 ```
 const Divider = require('./Divider').default;
 const Option = require('./Option').default;
