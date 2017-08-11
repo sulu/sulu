@@ -41,6 +41,11 @@ class CustomUrlRouteProvider implements RouteProviderInterface
      */
     private $environment;
 
+    /**
+     * @var RouteCollection
+     */
+    private $collection;
+
     public function __construct(RequestAnalyzerInterface $requestAnalyzer, PathBuilder $pathBuilder, $environment)
     {
         $this->requestAnalyzer = $requestAnalyzer;
@@ -53,7 +58,7 @@ class CustomUrlRouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request)
     {
-        $collection = new RouteCollection();
+        $collection = $this->getRouteCollection();
 
         $routeDocument = $this->requestAnalyzer->getAttribute('customUrlRoute');
         $customUrlDocument = $this->requestAnalyzer->getAttribute('customUrl');
@@ -104,10 +109,14 @@ class CustomUrlRouteProvider implements RouteProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * The getRouteByName function will currently only return routes that
+     * exist in the route collection (ie. the route that was generated for the
+     * current request)
      */
     public function getRouteByName($name)
     {
-        // TODO: Implement getRouteByName() method.
+        return $this->getRouteCollection()->get($name);
     }
 
     /**
@@ -179,5 +188,25 @@ class CustomUrlRouteProvider implements RouteProviderInterface
     private function decodePathInfo($pathInfo)
     {
         return rawurldecode($pathInfo);
+    }
+
+    /**
+     * @param RouteCollection $collection
+     */
+    public function setRouteCollection(RouteCollection $collection)
+    {
+        $this->collection = $collection;
+    }
+
+    /**
+     * @return RouteCollection
+     */
+    public function getRouteCollection()
+    {
+        if (!$this->collection) {
+            $this->collection = new RouteCollection();
+        }
+
+        return $this->collection;
     }
 }

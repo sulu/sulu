@@ -205,6 +205,10 @@ class ContentRouteProvider implements RouteProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * The getRouteByName function will currently only return routes that
+     * exist in the route collection (ie. the route that was generated for the
+     * current request)
      */
     public function getRouteByName($name, $parameters = [])
     {
