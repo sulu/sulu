@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in checked state 1`] = `
+<span
+  class="checkbox"
+>
+  <input
+    checked=""
+    tabindex="-1"
+    type="checkbox"
+  />
+  <span>
+    <span
+      aria-hidden="true"
+      class="icon fa fa-check"
+    />
+  </span>
+</span>
+`;
+
+exports[`The component should render in unchecked state 1`] = `
+<span
+  class="checkbox"
+>
+  <input
+    tabindex="-1"
+    type="checkbox"
+  />
+  <span />
+</span>
+`;
+
+exports[`The component should render in with class 1`] = `
+<span
+  class="checkbox my-class"
+>
+  <input
+    tabindex="-1"
+    type="checkbox"
+  />
+  <span />
+</span>
+`;
+
+exports[`The component should render with skin 1`] = `
+<span
+  class="checkbox light"
+>
+  <input
+    tabindex="-1"
+    type="checkbox"
+  />
+  <span />
+</span>
+`;
