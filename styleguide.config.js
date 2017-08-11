@@ -37,6 +37,19 @@ module.exports = { // eslint-disable-line
                 });
             })(),
         },
+        {
+            name: 'Containers',
+            components: function() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/containers/*');
+                // filter out containers
+                folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
+
+                return folders.map((folder) => {
+                    const component = path.basename(folder);
+                    return path.join(folder, component + '.js');
+                });
+            },
+        },
     ],
     webpackConfig: {
         devServer: {
