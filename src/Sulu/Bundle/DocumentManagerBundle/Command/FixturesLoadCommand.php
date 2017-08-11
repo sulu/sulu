@@ -14,11 +14,16 @@ namespace Sulu\Bundle\DocumentManagerBundle\Command;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * This command loads data fixtures from your bundles DataFixtures/Document directory.
+ */
 class FixturesLoadCommand extends Command
 {
     /**
@@ -42,6 +47,7 @@ class FixturesLoadCommand extends Command
         KernelInterface $kernel
     ) {
         parent::__construct();
+
         $this->loader = $loader;
         $this->executor = $executor;
         $this->kernel = $kernel;
@@ -89,12 +95,14 @@ EOT
         $append = $input->getOption('append');
 
         if ($input->isInteractive() && !$append) {
-            $dialog = $this->getHelperSet()->get('dialog');
-            $confirmed = $dialog->askConfirmation(
-                $output,
-                '<question>Careful, database will be purged. Do you want to continue Y/N ?</question>',
+            /** @var QuestionHelper $helper */
+            $helper = $this->getHelperSet()->get('question');
+            $question = new ConfirmationQuestion(
+                '<question>Careful, database will be purged. Do you want to continue y/n ?</question>',
                 false
             );
+
+            $confirmed = $helper->ask($input, $output, $question);
 
             if (!$confirmed) {
                 return 0;

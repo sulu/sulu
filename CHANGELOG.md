@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3470 [DocumentManagerBundle]   Fixed document-manager load-fixtures command
     * HOTFIX      #3465 [ContentBundle]           Fixed interpretion of code in block preview
     * ENHANCEMENT #3464 [ContentBundle]           Added additional-slides configuration for teaser-provider
     
