@@ -52,6 +52,10 @@ export type SelectItem =
     & Select
     & { type: 'select' };
 
+export type ToolbarProps = {
+    storeKey?: string,
+};
+
 export type ToolbarConfig = {
     icons?: Array<string>,
     items?: Array<ButtonItem | DropdownItem | SelectItem>,

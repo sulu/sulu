@@ -7,7 +7,7 @@ import optionListStyles from './optionList.scss';
 
 export default class OptionList extends React.PureComponent {
     props: {
-        onClick: (option: Object) => void,
+        onOptionClick: (option: Object) => void,
         value?: string | number,
         size?: string,
         onRequestClose?: () => void,
@@ -15,8 +15,8 @@ export default class OptionList extends React.PureComponent {
     };
 
     handleOptionClick = (option: Object) => {
-        if (this.props.onClick) {
-            this.props.onClick(option);
+        if (this.props.onOptionClick) {
+            this.props.onOptionClick(option);
         }
 
         if (this.props.onRequestClose) {

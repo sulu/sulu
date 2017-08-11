@@ -34,6 +34,7 @@ export default class Button extends React.PureComponent {
             [buttonStyles.isActive]: isActive,
             [buttonStyles[size]]: size,
         });
+        const buttonContent = this.props.children || value;
 
         return (
             <button
@@ -44,8 +45,8 @@ export default class Button extends React.PureComponent {
                 {icon &&
                     <Icon name={icon} className={buttonStyles.icon} />
                 }
-                {(this.props.children || value) &&
-                    <span className={buttonStyles.label}>{this.props.children || value}</span>
+                {buttonContent &&
+                    <span className={buttonStyles.label}>{buttonContent}</span>
                 }
                 {hasOptions &&
                     <Icon name={ICON_ARROW_DOWN} className={buttonStyles.dropdownIcon} />

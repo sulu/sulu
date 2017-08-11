@@ -50,7 +50,7 @@ test('Open select on click', () => {
     expect(select.find('.optionList').length).toBe(1);
 });
 
-test('Disabled select won\'t open', () => {
+test('Disabled select will not open', () => {
     const select = mount(
         <Select
             {...selectPropsMock}
@@ -62,7 +62,7 @@ test('Disabled select won\'t open', () => {
     expect(select.find('.optionList').length).toBe(0);
 });
 
-test('Click on disabled option won\'t fire onChange', () => {
+test('Click on disabled option will not fire onChange', () => {
     const clickSpy = jest.fn();
     const propsMock = {
         label: 'Click to open',

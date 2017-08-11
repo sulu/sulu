@@ -5,8 +5,10 @@ import Icon from '../../components/Icon';
 import Button from './Button';
 import Dropdown from './Dropdown';
 import Select from './Select';
-import toolbarStore from './stores/ToolbarStore';
+import ToolbarStore from './stores/ToolbarStore';
+import toolbarStorePool from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
+import type {ToolbarProps} from './types';
 
 const BACK_BUTTON_ICON = 'arrow-left';
 const LOCALE_SELECT_SIZE = 'small';
@@ -36,20 +38,28 @@ function getItemComponentByType(type, itemConfig) {
 
 @observer
 export default class Toolbar extends React.PureComponent<*> {
+    props: ToolbarProps;
+
+    toolbarStore: ToolbarStore;
+
+    componentWillMount() {
+        this.toolbarStore = toolbarStorePool.createStore(this.props.storeKey);
+    }
+
     render() {
         return (
             <header className={toolbarStyles.toolbar}>
                 <nav>
                     <div className={toolbarStyles.controlsLeft}>
-                        {toolbarStore.hasBackButtonConfig() &&
-                            <Button {...toolbarStore.getBackButtonConfig()}>
+                        {this.toolbarStore.hasBackButtonConfig() &&
+                            <Button {...this.toolbarStore.getBackButtonConfig()}>
                                 <Icon name={BACK_BUTTON_ICON} />
                             </Button>
                         }
-                        {toolbarStore.hasItemsConfig() &&
+                        {this.toolbarStore.hasItemsConfig() &&
                             <ul className={toolbarStyles.items}>
                                 {
-                                    toolbarStore.getItemsConfig().map((itemConfig, index) => {
+                                    this.toolbarStore.getItemsConfig().map((itemConfig, index) => {
                                         const Item = getItemComponentByType(itemConfig.type, itemConfig);
 
                                         return (
@@ -63,18 +73,18 @@ export default class Toolbar extends React.PureComponent<*> {
                         }
                     </div>
                     <div className={toolbarStyles.controlsRight}>
-                        {toolbarStore.hasIconsConfig() &&
+                        {this.toolbarStore.hasIconsConfig() &&
                             <div className={toolbarStyles.icons}>
                                 {
-                                    toolbarStore.getIconsConfig().map((icon) => (
+                                    this.toolbarStore.getIconsConfig().map((icon) => (
                                         <Icon key={icon} name={icon} className={toolbarStyles.icon} />
                                     ))
                                 }
                             </div>
                         }
-                        {toolbarStore.hasLocaleConfig() &&
+                        {this.toolbarStore.hasLocaleConfig() &&
                             <div className={toolbarStyles.locale}>
-                                <Select size={LOCALE_SELECT_SIZE} {...toolbarStore.getLocaleConfig()} />
+                                <Select size={LOCALE_SELECT_SIZE} {...this.toolbarStore.getLocaleConfig()} />
                             </div>
                         }
                     </div>

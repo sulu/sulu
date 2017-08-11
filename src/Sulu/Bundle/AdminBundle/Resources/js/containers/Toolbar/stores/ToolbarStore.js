@@ -9,7 +9,7 @@ const defaultConfig = {
     backButton: null,
 };
 
-class ToolbarStore {
+export default class ToolbarStore {
     @observable config = defaultConfig;
 
     @action setConfig(config: ToolbarConfig) {
@@ -53,5 +53,3 @@ class ToolbarStore {
         return this.config.locale;
     }
 }
-
-export default new ToolbarStore();

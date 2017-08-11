@@ -1,6 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {isObservable} from 'mobx';
-import toolbarStore from '../../stores/ToolbarStore';
+import ToolbarStore from '../../stores/ToolbarStore';
+
+const toolbarStore = new ToolbarStore();
 
 beforeEach(() => {
     toolbarStore.clearConfig();

@@ -49,7 +49,7 @@ test('Open dropdown on click', () => {
     expect(dropdown.find('.optionList').length).toBe(1);
 });
 
-test('Disabled dropdown won\'t open', () => {
+test('Disabled dropdown will not open', () => {
     const dropdown = mount(
         <Dropdown
             {...dropdownPropsMock}
@@ -81,7 +81,7 @@ test('Click on option fires onClick', () => {
     expect(clickSpy).toBeCalled();
 });
 
-test('Click on disabled option won\'t fire onClick', () => {
+test('Click on disabled option will not fire onClick', () => {
     const clickSpy = jest.fn();
     const propsMock = {
         label: 'Click to open',

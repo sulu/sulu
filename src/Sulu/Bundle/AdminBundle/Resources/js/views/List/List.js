@@ -6,7 +6,10 @@ import {withToolbar} from '../../containers/Toolbar';
 class List extends React.PureComponent<*> {
     render() {
         return (
-            <h1>List</h1>
+            <div>
+                <h1>List</h1>
+                <a href="#/snippets/123">To the Form</a>
+            </div>
         );
     }
 }

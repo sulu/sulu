@@ -2,48 +2,47 @@
 import React from 'react';
 import {render} from 'enzyme';
 import Toolbar from '../Toolbar';
-import toolbarStore from '../stores/ToolbarStore';
+import toolbarStorePool from '../stores/ToolbarStorePool';
 
-jest.mock('../stores/ToolbarStore', () => ({
-    hasBackButtonConfig() {
-        return false;
-    },
+let toolbarStoreMock = {};
 
-    getBackButtonConfig() {
-        return this.config.backButton || null;
-    },
-
-    hasItemsConfig() {
-        return false;
-    },
-
-    getItemsConfig() {
-        return this.config.items || [];
-    },
-
-    hasIconsConfig() {
-        return false;
-    },
-
-    getIconsConfig() {
-        return this.config.icons || [];
-    },
-
-    hasLocaleConfig() {
-        return false;
-    },
-
-    getLocaleConfig() {
-        return this.config.locale;
-    },
+jest.mock('../stores/ToolbarStorePool', () => ({
+    createStore: jest.fn(),
+    getStore: jest.fn(),
 }));
 
-test('Render the items from the ToolbarStore', () => {
-    toolbarStore.hasItemsConfig = jest.fn();
-    toolbarStore.hasItemsConfig.mockReturnValue(true);
+beforeEach(() => {
+    toolbarStoreMock = {
+        hasBackButtonConfig: jest.fn(),
 
-    toolbarStore.config = {
-        items: [
+        getBackButtonConfig: jest.fn(),
+
+        hasItemsConfig: jest.fn(),
+
+        getItemsConfig: jest.fn(),
+
+        hasIconsConfig: jest.fn(),
+
+        getIconsConfig: jest.fn(),
+
+        hasLocaleConfig: jest.fn(),
+
+        getLocaleConfig: jest.fn(),
+    };
+});
+
+test('Render the items from the ToolbarStore', () => {
+    const storeKey = 'testStore';
+
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+
+    toolbarStoreMock.getItemsConfig.mockReturnValue(
+        [
             {
                 type: 'button',
                 label: 'Delete',
@@ -70,8 +69,9 @@ test('Render the items from the ToolbarStore', () => {
                 ],
             },
         ],
-    };
+    );
 
-    const view = render(<Toolbar />);
+    const view = render(<Toolbar storeKey={storeKey} />);
     expect(view).toMatchSnapshot();
+    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });

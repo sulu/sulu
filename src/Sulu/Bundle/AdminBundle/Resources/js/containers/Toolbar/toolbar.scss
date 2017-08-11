@@ -3,8 +3,9 @@
 $toolbarBackgroundColor: $white;
 $shadowColor: $mischka;
 $itemsBackgroundColor: $alabaster;
+$itemsContainerBorderColor: $gallery;
 
-$itemsContainerBorder: 1px $gallery solid;
+$itemsContainerBorder: 1px $itemsContainerBorderColor solid;
 
 .toolbar {
     height: 60px;

@@ -26,7 +26,7 @@ export default class Select extends React.PureComponent {
         this.isOpen = !this.isOpen;
     };
 
-    @computed get selectedOption(): ?any {
+    @computed get selectedOption(): ?Object {
         return this.props.options.find((option) => {
             return option.value === this.props.value;
         });
@@ -44,7 +44,7 @@ export default class Select extends React.PureComponent {
         this.toggle();
     };
 
-    handleOptionListClick = (option: SelectOption) => {
+    handleOptionClick = (option: SelectOption) => {
         this.props.onChange(option.value);
     };
 
@@ -82,7 +82,7 @@ export default class Select extends React.PureComponent {
                         size={size}
                         value={value}
                         options={options}
-                        onClick={this.handleOptionListClick}
+                        onOptionClick={this.handleOptionClick}
                         onRequestClose={this.handleOptionListClose} />
                 }
             </div>

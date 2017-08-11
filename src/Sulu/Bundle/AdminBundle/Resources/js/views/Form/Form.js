@@ -25,7 +25,10 @@ class Form extends React.PureComponent<*> {
 
     render() {
         return (
-            <h1>Form</h1>
+            <div>
+                <h1>Form</h1>
+                <a href="#/snippets/">To the List</a>
+            </div>
         );
     }
 }

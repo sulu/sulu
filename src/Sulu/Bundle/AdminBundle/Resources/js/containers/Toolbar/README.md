@@ -1,5 +1,5 @@
 The Toolbar is a configurable component which serves as a wrapper for multiple other component types. 
-The configuration can be set by using the `withToolbar` function which takes a React component as the first and a configuration object as the second argument.
+The configuration can be set by using the `withToolbar` function which takes a React component as the first, a configuration object as the second and optionally the `storeKey` of the store you want to use as the third argument. If you don't define a `storeKey` the default store will be used.
 In most cases the given component would be some kind of a page or view component in which the Toolbar will be placed.
 
 The configuration object describes how the Toolbar should be rendered and the kind of inputs and controls it should offer.
@@ -31,10 +31,10 @@ const PageWithToolbar = withToolbar(Page, function() {
             },
         ],
     };
-});
+}, 'toolbar-demo-1');
 
 <div>
-    <Toolbar />
+    <Toolbar storeKey="toolbar-demo-1" />
     <PageWithToolbar />
 </div>
 ```
@@ -112,10 +112,10 @@ const PageWithToolbar = withToolbar(Page, function() {
             },
         ],
     };
-});
+}, 'toolbar-demo-2');
 
 <div>
-    <Toolbar />
+    <Toolbar storeKey="toolbar-demo-2" />
     <PageWithToolbar />
 </div>
 ```
@@ -181,10 +181,10 @@ const PageWithToolbar = withToolbar(Page, function() {
             ],
         },
     };
-});
+}, 'toolbar-demo-3');
 
 <div>
-    <Toolbar />
+    <Toolbar storeKey="toolbar-demo-3" />
     <PageWithToolbar />
 </div>
 ```
