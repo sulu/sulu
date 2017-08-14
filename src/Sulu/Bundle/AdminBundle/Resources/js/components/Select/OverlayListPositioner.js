@@ -1,15 +1,9 @@
 // @flow
-import type {OverlayListDimensions, OverlayListStyle} from './types';
+import type {OverlayListDimensions, OverlayListStyle, VerticalCrop} from './types';
 
 const MIN_HEIGHT = 100;
 const INDENT_FROM_ANCHOR = 5;
 const PADDING_TO_WINDOW = 10;
-
-type VerticalCrop = {
-    dimensions: OverlayListDimensions,
-    touchesTopBorder: boolean,
-    touchesBottomBorder: boolean,
-};
 
 /**
  * The class is responsible for calculating the position of the overlay-list on the screen when opened.
@@ -84,7 +78,7 @@ export default class OverlayListPositioner {
         if (crop.touchesTopBorder) {
             dimensions.top = this.anchorTop + INDENT_FROM_ANCHOR;
         }
-        // If the bottom border is touched, it gets positioned form the anchor upwards.
+        // If the bottom border is touched, it gets positioned from the anchor upwards.
         if (crop.touchesBottomBorder) {
             dimensions.top = this.anchorTop + this.anchorHeight - this.listHeight - INDENT_FROM_ANCHOR;
         }

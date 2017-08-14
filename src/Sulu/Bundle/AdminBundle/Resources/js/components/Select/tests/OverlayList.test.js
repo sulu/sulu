@@ -85,8 +85,8 @@ test('The list should take its dimensions from the positioner', () => {
             <Option value="option-1">My option 1</Option>
         </OverlayList>
     );
-    list.instance().offsetHeight = 100;
-    list.instance().offsetWidth = 20;
+    list.instance().scrollHeight = 100;
+    list.instance().scrollWidth = 20;
     list.instance().centeredChildRelativeTop = 30;
     list.update();
     expect(pretty(body.innerHTML)).toMatchSnapshot();

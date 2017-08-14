@@ -8,19 +8,19 @@ const TOGGLE_ICON = 'chevron-down';
 
 export default class Label extends React.PureComponent {
     props: {
-        onClick?: () => void,
+        onClick: () => void,
         children: string,
         icon?: string,
     };
 
-    button: HTMLElement;
+    button: HTMLButtonElement;
 
     /** @public **/
     getDimensions(): ClientRect {
         return this.button.getBoundingClientRect();
     }
 
-    setButton = (button: HTMLElement) => this.button = button;
+    setButton = (button: HTMLButtonElement) => this.button = button;
 
     render() {
         const classNames = classnames({

@@ -25,11 +25,13 @@ test('A click on the component should fire the callback', () => {
     expect(clickSpy).toBeCalled();
 });
 
-test('The component should be focused when the corresponding property was set', () => {
-    window.requestAnimationFrame = (cb) => cb();
+test('The component should be focused when the corresponding property was set', (done) => {
     expect(document.activeElement.tagName).toBe('BODY');
     mount(<Option focus={true}>My option</Option>);
-    expect(document.activeElement.tagName).toBe('BUTTON');
+    setTimeout(() => {
+        expect(document.activeElement.tagName).toBe('BUTTON');
+        done();
+    });
 });
 
 test('The component should provide a method for getting its offset top', () => {

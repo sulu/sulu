@@ -11,3 +11,9 @@ export type OverlayListStyle = {
     left: string,
     height: string,
 }
+
+export type VerticalCrop = {
+    dimensions: OverlayListDimensions,
+    touchesTopBorder: boolean,
+    touchesBottomBorder: boolean,
+};

@@ -28,7 +28,7 @@ export default class Option extends React.PureComponent {
 
     componentDidMount() {
         if (this.props.focus) {
-            window.requestAnimationFrame(() => {
+            setTimeout(() => {
                 this.button.focus();
             });
         }

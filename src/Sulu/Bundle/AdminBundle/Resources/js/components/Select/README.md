@@ -1,6 +1,6 @@
 The select component can be used to ask the user to select one out of many options.
-The component follows the recommendation of React for form components: The Select itself
-holds no internal state and is solely dependent on the passed properties. Moreover, it provides
+The component follows the [recommendation of React for form components](https://facebook.github.io/react/docs/forms.html):
+The Select itself holds no internal state and is solely dependent on the passed properties. Moreover, it provides
 a possibility to pass a callback which gets called when the user selects an option.
 ```
 const Divider = require('./Divider').default;

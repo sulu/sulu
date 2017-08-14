@@ -36,11 +36,15 @@ export default class OverlayList extends React.PureComponent {
         anchorHeight: 0,
     };
 
-    @observable offsetHeight: number;
-    @observable offsetWidth: number;
+    @observable scrollHeight: number;
+    @observable scrollWidth: number;
     @observable centeredChildRelativeTop: number;
-    list: HTMLElement;
+    list: ?HTMLElement;
     scrollTop: number;
+
+    get listBorderWidth(): number {
+        return parseInt(window.getComputedStyle(this.list).borderWidth);
+    }
 
     componentDidMount() {
         window.addEventListener('blur', this.requestClose);
@@ -67,12 +71,12 @@ export default class OverlayList extends React.PureComponent {
     };
 
     @computed get dimensions(): ?OverlayListDimensions {
-        if (!this.props.isOpen || !this.offsetHeight || !this.offsetWidth || !this.centeredChildRelativeTop) {
+        if (!this.props.isOpen || !this.scrollHeight || !this.scrollWidth || !this.centeredChildRelativeTop) {
             return null;
         }
         const positioner = new OverlayListPositioner(
-            this.offsetHeight,
-            this.offsetWidth,
+            this.scrollHeight,
+            this.scrollWidth,
             this.centeredChildRelativeTop,
             this.props.anchorTop,
             this.props.anchorLeft,
@@ -82,22 +86,21 @@ export default class OverlayList extends React.PureComponent {
         return positioner.getCroppedDimensions();
     }
 
-    readCenteredChildRelativeTop = (option: Option) => {
-        if (option) {
-            window.requestAnimationFrame(action(() => {
+    readCenteredChildRelativeTop = (option: ?Option) => {
+        window.requestAnimationFrame(action(() => {
+            if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
-            }));
-        }
+            }
+        }));
     };
 
-    readOffsetDimensions = (list: HTMLElement) => {
+    readOffsetDimensions = (list: ?HTMLElement) => {
         this.list = list;
-        if (!list || this.offsetWidth || this.offsetHeight) {
-            return;
-        }
         window.requestAnimationFrame(action(() => {
-            this.offsetWidth = list.offsetWidth;
-            this.offsetHeight = list.offsetHeight;
+            if (list) {
+                this.scrollWidth = list.scrollWidth + 2 * this.listBorderWidth;
+                this.scrollHeight = list.scrollHeight + 2 * this.listBorderWidth;
+            }
         }));
     };
 
