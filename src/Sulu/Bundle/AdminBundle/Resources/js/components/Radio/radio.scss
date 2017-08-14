@@ -1,0 +1,35 @@
+@import '../../containers/Application/colors.scss';
+
+$radius: 8px;
+$color: $blueZodiac;
+
+.radio {
+    display: inline-block;
+    width: calc(2 * $radius);
+    height: calc(2 * $radius);
+    position: relative;
+
+    input {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    input + span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(2 * $radius);
+        height: calc(2 * $radius);
+        border-radius: $radius;
+        background: $wildSand;
+        border: 3px solid $white;
+    }
+
+    input:checked + span {
+        background: $color;
+    }
+}

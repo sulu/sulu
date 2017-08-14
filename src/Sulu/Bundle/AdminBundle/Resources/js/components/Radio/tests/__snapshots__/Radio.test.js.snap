@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in checked state 1`] = `
+<span
+  class="radio"
+>
+  <input
+    checked=""
+    tabindex="-1"
+    type="radio"
+  />
+  <span />
+</span>
+`;
+
+exports[`The component should render in unchecked state 1`] = `
+<span
+  class="radio"
+>
+  <input
+    tabindex="-1"
+    type="radio"
+  />
+  <span />
+</span>
+`;
