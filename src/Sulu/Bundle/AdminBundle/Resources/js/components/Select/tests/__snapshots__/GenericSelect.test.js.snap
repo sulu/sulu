@@ -7,7 +7,7 @@ exports[`The component should open the list when the label is clicked 1`] = `
   <button
     class="label"
   >
-    Option 1
+    My Label text
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
@@ -67,26 +67,7 @@ exports[`The component should render with an icon 1`] = `
       aria-hidden="true"
       class="frontIcon fa fa-plus"
     />
-    Option 1
-    <span
-      aria-hidden="true"
-      class="toggle fa fa-chevron-down"
-    />
-  </button>
-  <div>
-    
-  </div>
-</div>
-`;
-
-exports[`The component should render with the correct value 1`] = `
-<div
-  class="select"
->
-  <button
-    class="label"
-  >
-    Option 2
+    My Label text
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
@@ -105,7 +86,7 @@ exports[`The component should render with the list closed 1`] = `
   <button
     class="label"
   >
-    Option 1
+    My Label text
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
