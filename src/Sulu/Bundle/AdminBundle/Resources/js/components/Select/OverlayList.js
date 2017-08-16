@@ -15,15 +15,15 @@ export default class OverlayList extends React.PureComponent {
         isOpen: boolean,
         children?: React.Element<*>,
         onRequestClose?: () => void,
-        /** The top coordinate relative to which the list will be positioned **/
+        /** The top coordinate relative to which the list will be positioned */
         anchorTop: number,
-        /** The left coordinate relative to which the list will be positioned **/
+        /** The left coordinate relative to which the list will be positioned */
         anchorLeft: number,
-        /** The width of the element relative to which the list will be positioned **/
+        /** The width of the element relative to which the list will be positioned */
         anchorWidth: number,
-        /** The width of the element relative to which the list will be positioned **/
+        /** The width of the element relative to which the list will be positioned */
         anchorHeight: number,
-        /** The index of the child element which will be centered relative to the anchor **/
+        /** The index of the child element which will be centered relative to the anchor */
         centeredChildIndex: number,
     };
 
@@ -43,7 +43,7 @@ export default class OverlayList extends React.PureComponent {
     scrollTop: number;
 
     get listBorderWidth(): number {
-        return parseInt(window.getComputedStyle(this.list).borderWidth);
+        return parseInt(window.getComputedStyle(this.list).borderLeftWidth);
     }
 
     componentDidMount() {
@@ -108,7 +108,7 @@ export default class OverlayList extends React.PureComponent {
 
     render() {
         const dimensions = this.dimensions;
-        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {visibility: 'hidden'};
+        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {visibility: 'visible'};
         this.scrollTop = dimensions ? dimensions.scrollTop : 0;
 
         return (

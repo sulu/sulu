@@ -12,7 +12,7 @@ import Label from './Label';
 export default class Select extends React.PureComponent {
     props: {
         value?: string,
-        onChange?: (s: string) => void,
+        onChange?: (value: string) => void,
         children: Array<Option | Divider>,
         icon?: string,
     };
@@ -97,8 +97,7 @@ export default class Select extends React.PureComponent {
     }
 
     getCenteredChildIndex(children: React.Children): number {
-        return React.Children.toArray(children).reduce(
-            (centeredChild, child, index) => child.props.selected ? index : centeredChild, 0
-        );
+        const index = React.Children.toArray(children).findIndex((child) => child.props.selected);
+        return index === -1 ? 0 : index;
     }
 }

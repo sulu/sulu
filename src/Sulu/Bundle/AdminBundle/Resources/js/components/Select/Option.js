@@ -13,7 +13,7 @@ export default class Option extends React.PureComponent {
         focus: boolean,
         value: string,
         children?: string,
-        onClick?: (s: string) => void,
+        onClick?: (value: string) => void,
     };
 
     static defaultProps = {
@@ -25,14 +25,6 @@ export default class Option extends React.PureComponent {
 
     item: HTMLElement;
     button: HTMLButtonElement;
-
-    componentDidMount() {
-        if (this.props.focus) {
-            setTimeout(() => {
-                this.button.focus();
-            });
-        }
-    }
 
     /** @public **/
     getOffsetTop() {
@@ -46,7 +38,15 @@ export default class Option extends React.PureComponent {
     };
 
     setItem = (item: HTMLElement) => this.item = item;
-    setButton = (button: HTMLButtonElement) => this.button = button;
+    setButton = (button: ?HTMLButtonElement) => {
+        if (!button) {
+            return;
+        }
+        this.button = button;
+        if (this.props.focus) {
+            window.requestAnimationFrame(() => this.button.focus());
+        }
+    };
 
     render() {
         const classNames = classnames({
