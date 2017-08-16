@@ -25,6 +25,14 @@ $fontColor: $blueZodiac;
         cursor: default;
     }
 
+    .checkbox {
+        position: absolute;
+        left: 10px;
+        top: 4px;
+        line-height: 20px;
+        vertical-align: middle;
+    }
+
     &.selected {
         font-weight: bold;
 
@@ -34,5 +42,10 @@ $fontColor: $blueZodiac;
             line-height: 20px;
             vertical-align: middle;
         }
+    }
+
+    &.has-checkbox {
+        line-height: 25px;
+        padding-left: 35px;
     }
 }

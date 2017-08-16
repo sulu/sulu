@@ -34,3 +34,22 @@ exports[`The component should render in selected state 1`] = `
   </button>
 </li>
 `;
+
+exports[`The component should render with checkbox 1`] = `
+<li>
+  <button
+    class="option hasCheckbox"
+  >
+    <span
+      class="checkbox"
+    >
+      <input
+        tabindex="-1"
+        type="checkbox"
+      />
+      <span />
+    </span>
+    My option
+  </button>
+</li>
+`;

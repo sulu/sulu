@@ -13,7 +13,7 @@ import OverlayListPositioner from './OverlayListPositioner';
 
 type Props = {
     isOpen: boolean,
-    children?: ChildrenArray<*>,
+    children: ChildrenArray<*>,
     onRequestClose?: () => void,
     /** The top coordinate relative to which the list will be positioned */
     anchorTop: number,
@@ -41,7 +41,9 @@ export default class OverlayList extends React.PureComponent<Props> {
     @observable scrollHeight: number;
     @observable scrollWidth: number;
     @observable centeredChildRelativeTop: number;
+    @observable visible: boolean = false;
     list: ElementRef<'ul'>;
+    list: ?HTMLElement;
     scrollTop: number;
 
     get listBorderWidth(): number {
@@ -58,10 +60,16 @@ export default class OverlayList extends React.PureComponent<Props> {
         window.removeEventListener('resize', this.requestClose);
     }
 
+    @action componentWillReceiveProps(newProps: Props) {
+        if (this.props.isOpen && !newProps.isOpen) {
+            this.visible = false;
+        }
+    }
+
     componentDidUpdate() {
         afterElementsRendered(() => {
             if (this.list) {
-                this.list.scrollTop = this.scrollTop;
+                this.list.scrollTop = this.scrollTop || 0;
             }
         });
     }
@@ -72,10 +80,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         }
     };
 
-    @computed get dimensions(): ?OverlayListDimensions {
-        if (!this.props.isOpen || !this.scrollHeight || !this.scrollWidth || !this.centeredChildRelativeTop) {
-            return null;
-        }
+    @computed get dimensions(): OverlayListDimensions {
         return OverlayListPositioner.getCroppedDimensions(
             this.scrollHeight,
             this.scrollWidth,
@@ -91,6 +96,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         afterElementsRendered(action(() => {
             if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
+                this.visible = true;
             }
         }));
     };
@@ -108,9 +114,12 @@ export default class OverlayList extends React.PureComponent<Props> {
     handleBackropClick = this.requestClose;
 
     render() {
-        const dimensions = this.dimensions;
-        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {opacity: '0'};
-        this.scrollTop = dimensions ? dimensions.scrollTop : 0;
+        let style = {opacity: '0'};
+        if (this.visible) {
+            const dimensions = this.dimensions;
+            style = OverlayListPositioner.dimensionsToStyle(dimensions);
+            this.scrollTop = dimensions.scrollTop;
+        }
 
         return (
             <div>

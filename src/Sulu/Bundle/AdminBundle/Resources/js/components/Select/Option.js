@@ -4,6 +4,8 @@ import type {ElementRef} from 'react';
 import classnames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Icon from '../Icon';
+import Checkbox from '../Checkbox';
+import type {OptionSelectedVisualization} from './types';
 import optionStyles from './option.scss';
 
 type Props = {
@@ -13,6 +15,7 @@ type Props = {
     value: string,
     children: string,
     onClick?: (value: string) => void,
+    selectedVisualization: OptionSelectedVisualization,
 };
 
 const SELECTED_ICON = 'check';
@@ -22,6 +25,7 @@ export default class Option extends React.PureComponent<Props> {
         disabled: false,
         selected: false,
         focus: false,
+        selectedVisualization: 'icon',
         value: '',
     };
 
@@ -54,6 +58,7 @@ export default class Option extends React.PureComponent<Props> {
         const classNames = classnames({
             [optionStyles.option]: true,
             [optionStyles.selected]: this.props.selected,
+            [optionStyles.hasCheckbox]: this.props.selectedVisualization === 'checkbox',
         });
 
         return (
@@ -63,10 +68,23 @@ export default class Option extends React.PureComponent<Props> {
                     ref={this.setButton}
                     onClick={this.handleButtonClick}
                     disabled={this.props.disabled}>
-                    {this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : ''}
+                    {this.renderSelectedVisualization()}
                     {this.props.children}
                 </button>
             </li>
         );
+    }
+
+    renderSelectedVisualization() {
+        if (this.props.selectedVisualization === 'icon') {
+            return this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : null;
+        } else {
+            return (
+                <Checkbox
+                    onChange={this.handleButtonClick}
+                    className={optionStyles.checkbox}
+                    checked={this.props.selected} />
+            );
+        }
     }
 }

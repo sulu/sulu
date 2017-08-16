@@ -22,5 +22,7 @@ export type VerticalCrop = {
     touchesBottomBorder: boolean,
 };
 
+export type OptionSelectedVisualization = 'icon' | 'checkbox';
+
 export type SelectChild = Element<typeof Option> | Element<typeof Divider>;
 export type SelectChildren = ChildrenArray<SelectChild>;

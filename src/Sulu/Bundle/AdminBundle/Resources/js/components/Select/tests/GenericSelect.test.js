@@ -109,6 +109,7 @@ test('The component should pass the centered child index to the overlay list', (
             <Option value="option-3">Option 3</Option>
         </GenericSelect>
     );
+    select.instance().openList();
     const overlayList = select.find('OverlayList');
     expect(overlayList.props().centeredChildIndex).toBe(3);
 });

@@ -3,7 +3,7 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {SelectChildren} from './types';
+import type {OptionSelectedVisualization, SelectChildren} from './types';
 import OverlayList from './OverlayList';
 import Option from './Option';
 import Label from './Label';
@@ -14,15 +14,23 @@ type Props = {
     icon?: string,
     onSelect: (values: string) => void,
     getLabelText: () => string,
+    closeOnSelect: boolean,
     optionIsSelected: (option: Element<typeof Option>) => boolean,
+    selectedVisualization: OptionSelectedVisualization,
 };
 
 @observer
 export default class GenericSelect extends React.PureComponent<Props> {
+    static defaultProps = {
+        closeOnSelect: true,
+    };
+
     label: ?ElementRef<typeof Label>;
+    centeredChildIndex: number;
     @observable isOpen: boolean;
 
     @action openList = () => {
+        this.centeredChildIndex = this.getCenteredChildIndex();
         this.isOpen = true;
     };
 
@@ -32,7 +40,9 @@ export default class GenericSelect extends React.PureComponent<Props> {
 
     handleOptionClick = (value: string) => {
         this.props.onSelect(value);
-        this.closeList();
+        if (this.props.closeOnSelect) {
+            this.closeList();
+        }
     };
 
     handleLabelClick = this.openList;
@@ -42,7 +52,6 @@ export default class GenericSelect extends React.PureComponent<Props> {
     render() {
         const labelDimensions = this.label ? this.label.getDimensions() : {};
         const listChildren = this.renderListChildren();
-        const centeredChildIndex = this.getCenteredChildIndex(listChildren);
 
         return (
             <div className={genericSelectStyles.select}>
@@ -58,7 +67,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     anchorWidth={labelDimensions.width}
                     anchorHeight={labelDimensions.height}
                     isOpen={this.isOpen}
-                    centeredChildIndex={centeredChildIndex}
+                    centeredChildIndex={this.centeredChildIndex}
                     onRequestClose={this.handleListRequestClose}>
                     {listChildren}
                 </OverlayList>
@@ -72,14 +81,17 @@ export default class GenericSelect extends React.PureComponent<Props> {
                 child = React.cloneElement(child, {
                     onClick: this.handleOptionClick,
                     selected: this.props.optionIsSelected(child),
+                    selectedVisualization: this.props.selectedVisualization,
                 });
             }
             return child;
         });
     }
 
-    getCenteredChildIndex(children: SelectChildren): number {
-        const index = React.Children.toArray(children).findIndex((child: any) => child.props.selected);
+    getCenteredChildIndex(): number {
+        const index = React.Children.toArray(this.props.children).findIndex(
+            (child: any) => child.type === Option && this.props.optionIsSelected(child)
+        );
         return index === -1 ? 0 : index;
     }
 }
