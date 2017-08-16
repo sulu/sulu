@@ -1,0 +1,66 @@
+@import '../../containers/Application/colors.scss';
+
+$headerTextColor: $white;
+$headerCellBackgroundColor: $blueZodiac;
+$cellTextColor: $blueZodiac;
+$cellBackgroundColor: $white;
+$cellBorderColor: $cellBackgroundColor;
+$cellBorderColorActive: $shakespeare;
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    background: #e5e5e5;
+}
+
+.header {
+    color: $headerTextColor;
+}
+
+.header-cell {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    background-color: $headerCellBackgroundColor;
+
+    &:first-child {
+        border-radius: 3px 0 0 3px;
+    }
+
+    &:last-child {
+        border-radius: 0 3px 3px 0;
+    }
+}
+
+.cell {
+    margin: 0;
+    padding: 9px;
+    text-align: center;
+    font-size: 12px;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: $cellBorderColor;
+    color: $cellTextColor;
+    background-color: $cellBackgroundColor;
+
+    &:first-child {
+        border-radius: 3px 0 0 3px;
+
+        .is-active & {
+            border-width: 1px 0 1px 1px;
+        }
+    }
+
+    &:last-child {
+        border-radius: 0 3px 3px 0;
+
+        .is-active & {
+            border-width: 1px 1px 1px 0;
+        }
+    }
+
+    .is-active & {
+        border-color: $cellBorderColorActive;
+    }
+}
