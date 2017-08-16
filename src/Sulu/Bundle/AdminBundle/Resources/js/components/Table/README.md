@@ -10,7 +10,7 @@ const HeaderCell = require('./HeaderCell').default;
     <Header>
         <Row>
             <HeaderCell>
-                <Icon name="pen" />
+                <Icon name="pencil" />
             </HeaderCell>
             <HeaderCell>
                 <Icon name="floppy-o" />
@@ -36,10 +36,22 @@ const HeaderCell = require('./HeaderCell').default;
             <HeaderCell>
                 Dateigröße
             </HeaderCell>
+            <HeaderCell>
+                Uploadgröße
+            </HeaderCell>
+            <HeaderCell>
+                Dateigröße
+            </HeaderCell>
+            <HeaderCell>
+                Uploadgröße
+            </HeaderCell>
+            <HeaderCell>
+                Dateigröße
+            </HeaderCell>
         </Row>
     </Header>
     <Body>
-        <Row isActive={true}>
+        <Row selectable={true}>
             <Cell></Cell>
             <Cell>
                 <Icon name="floppy-o" />
@@ -56,7 +68,11 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>
             <Cell></Cell>
             <Cell></Cell>
-            <Cell></Cell>        
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
+            <Cell></Cell>   
         </Row>
         <Row>
             <Cell></Cell>
@@ -75,10 +91,14 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>
             <Cell></Cell>
             <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
             <Cell></Cell>        
         </Row>
         <Row>
-            <Cell></Cell>
+             <Cell></Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>
@@ -94,10 +114,14 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>
             <Cell></Cell>
             <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
             <Cell></Cell>        
         </Row>
         <Row>
-            <Cell></Cell>
+             <Cell></Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>
@@ -112,6 +136,56 @@ const HeaderCell = require('./HeaderCell').default;
             </Cell>
             <Cell></Cell>
             <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
+            <Cell></Cell>        
+        </Row>
+        <Row>
+             <Cell></Cell>
+            <Cell>
+                <Icon name="floppy-o" />
+            </Cell>
+            <Cell>
+                Blog
+            </Cell>
+            <Cell>
+                Meine ersten 100 Tage MASSIVE ART
+            </Cell>
+            <Cell>
+                Adrian Sieber
+            </Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
+            <Cell></Cell>        
+        </Row>
+        <Row>
+             <Cell></Cell>
+            <Cell>
+                <Icon name="floppy-o" />
+            </Cell>
+            <Cell>
+                Blog
+            </Cell>
+            <Cell>
+                Meine ersten 100 Tage MASSIVE ART
+            </Cell>
+            <Cell>
+                Adrian Sieber
+            </Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
             <Cell></Cell>
             <Cell></Cell>        
         </Row>

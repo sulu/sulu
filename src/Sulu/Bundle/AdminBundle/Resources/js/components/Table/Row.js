@@ -9,15 +9,16 @@ import tableStyles from './table.scss';
 export default class Row extends React.PureComponent {
     props: {
         children: Element<Cell | HeaderCell>,
-        isActive?: boolean,
+        selectable?: boolean,
     };
 
     render() {
         const {
-            isActive,
+            selectable,
         } = this.props;
         const rowClasses = classNames({
-            [tableStyles.isActive]: isActive,
+            [tableStyles.row]: true,
+            [tableStyles.selectable]: selectable,
         });
 
         return (

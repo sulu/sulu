@@ -7,9 +7,17 @@ $cellBackgroundColor: $white;
 $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 
+.tableContainer {
+    overflow: scroll;
+}
+
 .table {
     border-collapse: separate;
     border-spacing: 0 5px;
+    margin: -5px 0;
+    overflow: hidden;
+    
+    /* Remove the following lines */
     background: #e5e5e5;
 }
 
@@ -33,6 +41,24 @@ $cellBorderColorActive: $shakespeare;
     }
 }
 
+.row {
+    &.selectable {
+        &:hover {
+            .cell {
+                border-color: $cellBorderColorActive;
+    
+                &:first-child {
+                    border-width: 1px 0 1px 1px;
+                }
+    
+                &:last-child {
+                    border-width: 1px 1px 1px 0;
+                }
+            }
+        }
+    }
+}
+
 .cell {
     margin: 0;
     padding: 9px;
@@ -43,24 +69,16 @@ $cellBorderColorActive: $shakespeare;
     border-color: $cellBorderColor;
     color: $cellTextColor;
     background-color: $cellBackgroundColor;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 250px;
 
     &:first-child {
         border-radius: 3px 0 0 3px;
-
-        .is-active & {
-            border-width: 1px 0 1px 1px;
-        }
     }
 
     &:last-child {
         border-radius: 0 3px 3px 0;
-
-        .is-active & {
-            border-width: 1px 1px 1px 0;
-        }
-    }
-
-    .is-active & {
-        border-color: $cellBorderColorActive;
     }
 }

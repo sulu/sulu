@@ -12,9 +12,11 @@ export default class Table extends React.PureComponent {
 
     render() {
         return (
-            <table className={tableStyles.table}>
-                {this.props.children}
-            </table>
+            <div className={tableStyles.tableContainer}>
+                <table className={tableStyles.table}>
+                    {this.props.children}
+                </table>
+            </div>
         );
     }
 }
