@@ -23,10 +23,10 @@ class ToolbarStorePool {
         if (this.hasStore(key)) {
             return this.stores[key];
         } else {
-            throw new Error(`
-                Store with the key '${key}' not found! Calling 'withToolbar' before 
-                initializing the 'Toolbar' component can be a cause for this error.
-            `);
+            throw new Error(
+                'Store with the key ´' + key + '´ not found! Calling ´withToolbar´ before ' +
+                'initializing the ´Toolbar´ component can be a cause for this error.'
+            );
         }
     };
 
