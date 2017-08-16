@@ -8,6 +8,8 @@ import tableStyles from './table.scss';
 export default class Table extends React.PureComponent {
     props: {
         children: Element<Header | Body>,
+        editable?: boolean,
+        selectable?: boolean,
     };
 
     render() {

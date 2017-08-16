@@ -52,7 +52,9 @@ const HeaderCell = require('./HeaderCell').default;
     </Header>
     <Body>
         <Row selectable={true}>
-            <Cell></Cell>
+            <Cell onClick={() => {}}>
+                <Icon name="pencil" />
+            </Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>
@@ -75,30 +77,9 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>   
         </Row>
         <Row>
-            <Cell></Cell>
-            <Cell>
-                <Icon name="floppy-o" />
+            <Cell onClick={() => {}}>
+                <Icon name="pencil" />
             </Cell>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-        <Row>
-             <Cell></Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>
@@ -121,7 +102,9 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>        
         </Row>
         <Row>
-             <Cell></Cell>
+            <Cell onClick={() => {}}>
+                <Icon name="pencil" />
+            </Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>
@@ -144,7 +127,9 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>        
         </Row>
         <Row>
-             <Cell></Cell>
+            <Cell onClick={() => {}}>
+                <Icon name="pencil" />
+            </Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>
@@ -167,7 +152,34 @@ const HeaderCell = require('./HeaderCell').default;
             <Cell></Cell>        
         </Row>
         <Row>
-             <Cell></Cell>
+            <Cell onClick={() => {}}>
+                <Icon name="pencil" />
+            </Cell>
+            <Cell>
+                <Icon name="floppy-o" />
+            </Cell>
+            <Cell>
+                Blog
+            </Cell>
+            <Cell>
+                Meine ersten 100 Tage MASSIVE ART
+            </Cell>
+            <Cell>
+                Adrian Sieber
+            </Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
+            <Cell></Cell>        
+        </Row>
+        <Row>
+            <Cell onClick={() => {}}>
+                <Icon name="pencil" />
+            </Cell>
             <Cell>
                 <Icon name="floppy-o" />
             </Cell>

@@ -9,20 +9,27 @@ import tableStyles from './table.scss';
 export default class Row extends React.PureComponent {
     props: {
         children: Element<Cell | HeaderCell>,
-        selectable?: boolean,
+        className?: string,
+        onDoubleClick?: () => void,
+    };
+
+    handleDoubleClick = () => {
+        if (this.props.onDoubleClick) {
+            this.props.onDoubleClick();
+        }
     };
 
     render() {
-        const {
-            selectable,
-        } = this.props;
-        const rowClasses = classNames({
-            [tableStyles.row]: true,
-            [tableStyles.selectable]: selectable,
-        });
+        const {className} = this.props;
+        const rowClass = classNames(
+            tableStyles.row,
+            className,
+        );
 
         return (
-            <tr className={rowClasses}>
+            <tr
+                className={rowClass}
+                onDoubleClick={this.handleDoubleClick}>
                 {this.props.children}
             </tr>
         );
