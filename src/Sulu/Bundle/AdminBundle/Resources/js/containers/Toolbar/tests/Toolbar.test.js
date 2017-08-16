@@ -9,6 +9,7 @@ let toolbarStoreMock = {};
 jest.mock('../stores/ToolbarStorePool', () => ({
     createStore: jest.fn(),
     getStore: jest.fn(),
+    hasStore: jest.fn(),
 }));
 
 beforeEach(() => {

@@ -6,7 +6,7 @@ import Button from './Button';
 import Dropdown from './Dropdown';
 import Select from './Select';
 import ToolbarStore from './stores/ToolbarStore';
-import toolbarStorePool from './stores/ToolbarStorePool';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
 import type {ToolbarProps} from './types';
 
@@ -52,8 +52,12 @@ export default class Toolbar extends React.PureComponent<*> {
         }
     }
 
-    setStore = (storeKey?: string) => {
-        this.toolbarStore = toolbarStorePool.createStore(storeKey);
+    setStore = (storeKey: string = DEFAULT_STORE_KEY) => {
+        if (toolbarStorePool.hasStore(storeKey)) {
+            this.toolbarStore = toolbarStorePool.getStore(storeKey);
+        } else {
+            this.toolbarStore = toolbarStorePool.createStore(storeKey);
+        }
     };
 
     render() {

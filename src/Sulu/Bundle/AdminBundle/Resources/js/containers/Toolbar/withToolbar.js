@@ -3,10 +3,14 @@ import {autorun} from 'mobx';
 import React from 'react';
 import type {ComponentType} from 'react';
 import {buildHocDisplayName} from '../../services/react';
-import toolbarStorePool from './stores/ToolbarStorePool';
 import type {ToolbarConfig} from './types';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 
-export default function withToolbar(Component: ComponentType<*>, toolbar: () => ToolbarConfig, toolbarStoreKey?: string) {
+export default function withToolbar(
+    Component: ComponentType<*>,
+    toolbar: () => ToolbarConfig,
+    toolbarStoreKey: string = DEFAULT_STORE_KEY,
+) {
     const WithToolbarComponent = class extends React.Component<*> {
         disposer: Function;
 
