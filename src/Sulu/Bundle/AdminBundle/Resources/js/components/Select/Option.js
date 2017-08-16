@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import classnames from 'classnames';
+import {afterElementsRendered} from '../../services/DOM';
 import Icon from '../Icon';
 import optionStyles from './option.scss';
 
@@ -44,7 +45,9 @@ export default class Option extends React.PureComponent {
         }
         this.button = button;
         if (this.props.focus) {
-            window.requestAnimationFrame(() => this.button.focus());
+            afterElementsRendered(() => {
+                this.button.focus();
+            });
         }
     };
 

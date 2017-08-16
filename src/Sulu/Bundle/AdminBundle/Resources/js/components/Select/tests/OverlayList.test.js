@@ -5,6 +5,8 @@ import React from 'react';
 import OverlayList from '../OverlayList';
 import Option from '../Option';
 
+jest.mock('../../../services/DOM/afterElementsRendered');
+
 jest.mock('../OverlayListPositioner', () => {
     const OverlayListPositioner = require.requireActual('../OverlayListPositioner').default;
 
@@ -23,7 +25,6 @@ jest.mock('../OverlayListPositioner', () => {
 afterEach(() => document.body.innerHTML = '');
 
 test('The list should render in body when open', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const body = document.body;
     const view = mount(
         <OverlayList isOpen={true}>
@@ -37,7 +38,6 @@ test('The list should render in body when open', () => {
 });
 
 test('The list should not render in body when not open', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const body = document.body;
     const view = mount(
         <OverlayList isOpen={false}>
@@ -51,7 +51,6 @@ test('The list should not render in body when not open', () => {
 });
 
 test('The list should request to be closed when the backdrop is clicked', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const onRequestCloseSpy = jest.fn();
     const list = shallow(
         <OverlayList isOpen={true} onRequestClose={onRequestCloseSpy}>
@@ -63,7 +62,6 @@ test('The list should request to be closed when the backdrop is clicked', () => 
 });
 
 test('The list should request to be closed when the window is blurred', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const windowListeners = {};
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
     const onRequestCloseSpy = jest.fn();
@@ -78,7 +76,6 @@ test('The list should request to be closed when the window is blurred', () => {
 });
 
 test('The list should take its dimensions from the positioner', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const body = document.body;
     const list = mount(
         <OverlayList isOpen={true}>

@@ -17,7 +17,7 @@ exports[`The list should render in body when open 1`] = `
 exports[`The list should render in body when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <ul class=\\"list\\" style=\\"visibility: hidden;\\">
+    <ul class=\\"list\\" style=\\"opacity: 0;\\">
       <li>
         <button class=\\"option\\">
           <!-- react-text: 5 -->

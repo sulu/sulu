@@ -3,6 +3,7 @@ import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {action, computed, observable} from 'mobx';
+import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import Option from './Option';
 import overlayListStyles from './overlayList.scss';
@@ -57,7 +58,7 @@ export default class OverlayList extends React.PureComponent {
     }
 
     componentDidUpdate() {
-        window.requestAnimationFrame(() => {
+        afterElementsRendered(() => {
             if (this.list) {
                 this.list.scrollTop = this.scrollTop;
             }
@@ -87,7 +88,7 @@ export default class OverlayList extends React.PureComponent {
     }
 
     readCenteredChildRelativeTop = (option: ?Option) => {
-        window.requestAnimationFrame(action(() => {
+        afterElementsRendered(action(() => {
             if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
             }
@@ -96,7 +97,7 @@ export default class OverlayList extends React.PureComponent {
 
     readOffsetDimensions = (list: ?HTMLElement) => {
         this.list = list;
-        window.requestAnimationFrame(action(() => {
+        afterElementsRendered(action(() => {
             if (list) {
                 this.scrollWidth = list.scrollWidth + 2 * this.listBorderWidth;
                 this.scrollHeight = list.scrollHeight + 2 * this.listBorderWidth;
@@ -108,7 +109,7 @@ export default class OverlayList extends React.PureComponent {
 
     render() {
         const dimensions = this.dimensions;
-        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {visibility: 'visible'};
+        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {opacity: '0'};
         this.scrollTop = dimensions ? dimensions.scrollTop : 0;
 
         return (

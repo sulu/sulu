@@ -3,6 +3,8 @@ import {render, mount, shallow} from 'enzyme';
 import React from 'react';
 import Option from '../Option';
 
+jest.mock('../../../services/DOM/afterElementsRendered');
+
 test('The component should render', () => {
     const option = render(<Option value="my-option">My option</Option>);
     expect(option).toMatchSnapshot();
@@ -35,7 +37,6 @@ test('The component should be focused when the corresponding property was set', 
 });
 
 test('The component should provide a method for getting its offset top', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const option = mount(<Option focus={true}>My option</Option>);
     option.instance().item = {offsetTop: 7};
     expect(option.instance().getOffsetTop()).toBe(7);

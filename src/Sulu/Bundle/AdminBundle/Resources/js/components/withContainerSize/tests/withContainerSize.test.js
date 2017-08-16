@@ -3,6 +3,8 @@ import {mount, render} from 'enzyme';
 import React from 'react';
 import withContainerSize from '../withContainerSize';
 
+jest.mock('../../../services/DOM/afterElementsRendered');
+
 test('Pass props to rendered component', () => {
     const Component = (props) => (<h1>{props.title}</h1>);
     const WithSizeComponent = withContainerSize(Component);
@@ -18,8 +20,6 @@ test('Assign the passed class to the container', () => {
 });
 
 test('Pass the size of the container to the component via props', () => {
-    window.requestAnimationFrame = (cb) => cb();
-
     class Component extends React.PureComponent {
         render = () => <h1>Component</h1>;
     }
@@ -34,7 +34,6 @@ test('Pass the size of the container to the component via props', () => {
 });
 
 test('The method containerDidMount should get called', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const funMock = jest.fn();
 
     class Component extends React.PureComponent {

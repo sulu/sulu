@@ -6,6 +6,8 @@ import Select from '../Select';
 import Divider from '../Divider';
 import Option from '../Option';
 
+jest.mock('../../../services/DOM/afterElementsRendered');
+
 afterEach(() => document.body.innerHTML = '');
 
 test('The component should render with the list closed', () => {
@@ -51,7 +53,6 @@ test('The component should render with the correct value', () => {
 });
 
 test('The component should open the list when the label is clicked', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const body = document.body;
     const select = mount(
         <Select>
@@ -67,7 +68,6 @@ test('The component should open the list when the label is clicked', () => {
 });
 
 test('The component should trigger the change callback and close the list when an option is clicked', () => {
-    window.requestAnimationFrame = (cb) => cb();
     const body = document.body;
     const onChangeSpy = jest.fn();
     const select = mount(

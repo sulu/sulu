@@ -4,6 +4,7 @@ import type {ComponentType, Element, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
 import {buildHocDisplayName} from '../../services/react';
+import {afterElementsRendered} from '../../services/DOM';
 import styles from './withContainerSize.scss';
 
 export default function withContainerSize(Component: ComponentType<*>, containerClass: string = styles.container) {
@@ -16,8 +17,8 @@ export default function withContainerSize(Component: ComponentType<*>, container
 
         componentDidMount() {
             window.addEventListener('resize', this.handleWindowResize);
-            if (this.component.containerDidMount) {
-                window.requestAnimationFrame(this.component.containerDidMount);
+            if (typeof this.component.containerDidMount === 'function') {
+                afterElementsRendered(this.component.containerDidMount);
             }
         }
 
@@ -29,7 +30,7 @@ export default function withContainerSize(Component: ComponentType<*>, container
             if (!container) {
                 return;
             }
-            window.requestAnimationFrame(action(() => {
+            afterElementsRendered(action(() => {
                 this.container = container;
                 this.containerWidth = container.clientWidth;
                 this.containerHeight = container.clientHeight;
