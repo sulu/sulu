@@ -43,8 +43,18 @@ export default class Toolbar extends React.PureComponent<*> {
     toolbarStore: ToolbarStore;
 
     componentWillMount() {
-        this.toolbarStore = toolbarStorePool.createStore(this.props.storeKey);
+        this.setStore(this.props.storeKey);
     }
+
+    componentWillUpdate(nextProps: ToolbarProps) {
+        if (nextProps.storeKey) {
+            this.setStore(nextProps.storeKey);
+        }
+    }
+
+    setStore = (storeKey?: string) => {
+        this.toolbarStore = toolbarStorePool.createStore(storeKey);
+    };
 
     render() {
         return (

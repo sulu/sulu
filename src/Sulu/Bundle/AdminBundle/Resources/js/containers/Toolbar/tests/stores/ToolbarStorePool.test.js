@@ -43,4 +43,3 @@ test('Set the config of the store', () => {
 
     expect(toolbarStorePool.getStore(storeKey).config.items[0].value).toBe('Test');
 });
-
