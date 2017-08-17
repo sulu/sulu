@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3484 [TestBundle]              Fix doctrine errors for mysql older than 5.7
     * HOTFIX      #3475 [ContentBundle]           Added possibility to set default value for single-select
     * HOTFIX      #3470 [DocumentManagerBundle]   Fixed document-manager load-fixtures command
     * HOTFIX      #3465 [ContentBundle]           Fixed interpretation of code in block preview
