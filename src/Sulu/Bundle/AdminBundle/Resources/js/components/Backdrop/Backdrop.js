@@ -4,14 +4,14 @@ import Portal from 'react-portal';
 import React from 'react';
 import backdropStyles from './backdrop.scss';
 
-export default class Backdrop extends React.PureComponent {
-    props: {
-        isOpen: boolean,
-        /** When set to false the backdrop renders transparent. */
-        isVisible: boolean,
-        onClick?: () => void,
-    };
+type Props = {
+    isOpen: boolean,
+    /** When set to false the backdrop renders transparent. */
+    isVisible: boolean,
+    onClick?: () => void,
+};
 
+export default class Backdrop extends React.PureComponent<Props> {
     static defaultProps = {
         isVisible: true,
     };

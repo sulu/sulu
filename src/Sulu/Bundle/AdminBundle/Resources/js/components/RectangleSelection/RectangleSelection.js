@@ -1,6 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {Children} from 'react';
+import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import React from 'react';
 import withContainerSize from '../withContainerSize';
@@ -15,20 +15,18 @@ import rectangleSelectionStyles from './rectangleSelection.scss';
 type Props = {
     /** Determines the position at which the selection box is rendered at the beginning */
     initialSelection?: SelectionData,
-        minWidth?: number,
-        minHeight?: number,
-        /** Determines whether or not the data gets rounded */
-        round: boolean,
-        onChange?: (s: SelectionData) => void,
-        children?: Children,
-        containerHeight: number,
-        containerWidth: number,
+    minWidth?: number,
+    minHeight?: number,
+    /** Determines whether or not the data gets rounded */
+    round: boolean,
+    onChange?: (s: SelectionData) => void,
+    children?: Node,
+    containerHeight: number,
+    containerWidth: number,
 };
 
 @observer
-export class RectangleSelection extends React.PureComponent {
-    props: Props;
-
+export class RectangleSelection extends React.PureComponent<Props> {
     static defaultProps = {
         round: true,
     };

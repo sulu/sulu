@@ -9,19 +9,19 @@ import type {SelectionData} from '../RectangleSelection/types';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 
-@observer
-export class ImageRectangleSelection extends React.PureComponent {
-    props: {
-        /** Determines the position at which the selection box is rendered at the beginning. */
-        initialSelection?: SelectionData,
-        minWidth?: number,
-        minHeight?: number,
-        onChange?: (s: SelectionData) => void,
-        src: string,
-        containerWidth: number,
-        containerHeight: number,
-    };
+type Props = {
+    /** Determines the position at which the selection box is rendered at the beginning. */
+    initialSelection?: SelectionData,
+    minWidth?: number,
+    minHeight?: number,
+    onChange?: (s: SelectionData) => void,
+    src: string,
+    containerWidth: number,
+    containerHeight: number,
+};
 
+@observer
+export class ImageRectangleSelection extends React.PureComponent<Props> {
     image: Image;
     rounding = new RoundingNormalizer();
     @observable imageLoaded = false;

@@ -1,13 +1,13 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {Element} from 'react';
+import type {ComponentType, Element, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
 import styles from './withContainerSize.scss';
 
-export default function withContainerSize(Component: ReactClass<*>, containerClass: string = styles.container) {
+export default function withContainerSize(Component: ComponentType<*>, containerClass: string = styles.container) {
     @observer
-    class WithContainerSizeComponent extends React.Component {
+    class WithContainerSizeComponent extends React.Component<*> {
         component: Element<*>;
         container: HTMLElement;
         @observable containerWidth: number = 0;
@@ -24,7 +24,7 @@ export default function withContainerSize(Component: ReactClass<*>, containerCla
             window.removeEventListener('resize', this.handleWindowResize);
         }
 
-        readContainerDimensions = (container: HTMLElement) => {
+        readContainerDimensions = (container: ElementRef<'div'>) => {
             if (!container) {
                 return;
             }
@@ -35,7 +35,7 @@ export default function withContainerSize(Component: ReactClass<*>, containerCla
             }));
         };
 
-        setComponent = (c: Element<*>) => this.component = c;
+        setComponent = (component: Element<*>) => this.component = component;
         handleWindowResize = () => this.readContainerDimensions(this.container);
 
         render() {
@@ -54,7 +54,15 @@ export default function withContainerSize(Component: ReactClass<*>, containerCla
         }
     }
 
-    WithContainerSizeComponent.displayName = `withContainerSize(${Component.displayName || Component.name})`;
+    const componentName = (typeof Component.displayName === 'string'
+        ? Component.displayName
+        : (typeof Component.name === 'string'
+            ? Component.name
+            : ''
+        )
+    );
+
+    WithContainerSizeComponent.displayName = `withContainerSize(${componentName})`;
 
     return WithContainerSizeComponent;
 }

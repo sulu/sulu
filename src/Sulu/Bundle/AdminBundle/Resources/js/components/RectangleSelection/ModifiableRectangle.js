@@ -5,18 +5,18 @@ import React from 'react';
 import type {RectangleChange} from './types';
 import modifiableRectangleStyles from './modifiableRectangle.scss';
 
-@observer
-export default class ModifiableRectangle extends React.PureComponent {
-    props: {
-        left: number,
-        top: number,
-        width: number,
-        height: number,
-        backdropSize: number,
-        onChange?: (r: RectangleChange) => void,
-        onDoubleClick?: () => void,
-    };
+type Props = {
+    left: number,
+    top: number,
+    width: number,
+    height: number,
+    backdropSize: number,
+    onChange?: (r: RectangleChange) => void,
+    onDoubleClick?: () => void,
+};
 
+@observer
+export default class ModifiableRectangle extends React.PureComponent<Props> {
     static defaultProps = {
         left: 0,
         top: 0,

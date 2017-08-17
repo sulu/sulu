@@ -24,7 +24,7 @@
         "eslint-plugin-import": "^2.7.0",
         "eslint-plugin-react": "^7.0.1",
         "file-loader": "^0.11.2",
-        "flow-bin": "^0.48.0",
+        "flow-bin": "^0.53.0",
         "glob": "^7.1.2",
         "null-loader": "^0.1.1",
         "postcss-hexrgba": "^1.0.0",
