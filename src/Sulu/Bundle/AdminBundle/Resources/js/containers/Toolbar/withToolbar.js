@@ -2,6 +2,7 @@
 import {autorun} from 'mobx';
 import React from 'react';
 import type {ComponentType} from 'react';
+import {buildHocDisplayName} from '../../services/react';
 import type {Item} from './types';
 import toolbarStore from './stores/ToolbarStore';
 
@@ -26,15 +27,7 @@ export default function withToolbar(Component: ComponentType<*>, toolbar: () => 
         }
     };
 
-    const componentName = (typeof Component.displayName === 'string'
-        ? Component.displayName
-        : (typeof Component.name === 'string'
-            ? Component.name
-            : ''
-        )
-    );
-
-    WithToolbarComponent.displayName = `withToolbar(${componentName})`;
+    WithToolbarComponent.displayName = buildHocDisplayName('withToolbar', Component);
 
     return WithToolbarComponent;
 }

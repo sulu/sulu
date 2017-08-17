@@ -18,7 +18,7 @@ export default class Item extends React.PureComponent<ItemType> {
     render() {
         return (
             <button className={itemStyles.item} disabled={!this.props.enabled} onClick={this.handleClick}>
-                <Icon className={itemStyles.icon} name={this.props.icon}/>
+                <Icon className={itemStyles.icon} name={this.props.icon} />
                 <span className={itemStyles.title}>{this.props.title}</span>
             </button>
         );

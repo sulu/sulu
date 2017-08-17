@@ -3,6 +3,7 @@ import {action, observable} from 'mobx';
 import type {ComponentType, Element, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
+import {buildHocDisplayName} from '../../services/react';
 import styles from './withContainerSize.scss';
 
 export default function withContainerSize(Component: ComponentType<*>, containerClass: string = styles.container) {
@@ -54,15 +55,7 @@ export default function withContainerSize(Component: ComponentType<*>, container
         }
     }
 
-    const componentName = (typeof Component.displayName === 'string'
-        ? Component.displayName
-        : (typeof Component.name === 'string'
-            ? Component.name
-            : ''
-        )
-    );
-
-    WithContainerSizeComponent.displayName = `withContainerSize(${componentName})`;
+    WithContainerSizeComponent.displayName = buildHocDisplayName('withContainerSize', Component);
 
     return WithContainerSizeComponent;
 }
