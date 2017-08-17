@@ -3,11 +3,12 @@ The component follows the [recommendation of React for form components](https://
 The Select itself holds no internal state and is solely dependent on the passed properties. Moreover, it provides
 a possibility to pass a callback which gets called when the user selects an option.
 ```
+const Action = require('./Action').default;
 const Divider = require('./Divider').default;
 const Option = require('./Option').default;
 
 initialState = {selectValue: 'page-1'};
-const onChange = (value) => value !== 'action-create' ? setState({selectValue: value}) : false;
+const onChange = (selectValue) => setState({selectValue});
 
 <Select value={state.selectValue} onChange={onChange}>
     <Option value="page-1">Page 1 of 4</Option>
@@ -15,7 +16,7 @@ const onChange = (value) => value !== 'action-create' ? setState({selectValue: v
     <Option value="page-3">Page 3 of 4</Option>
     <Option value="page-4">Page 4 of 4</Option>
     <Divider />
-    <Option value="action-create">Create new page</Option>
+    <Action onClick={() => {/* do stuff */}}>Create new page</Action>
 </Select>
 ```
 
@@ -51,22 +52,5 @@ const onChange = (value) => setState({selectValue: value});
     <Option value="20">Susan Bones</Option>
     <Option value="21">Marvolo Gaunt</Option>
     <Option value="22">Godric Gryffindor</Option>
-</Select>
-```
-
-Because the select doesn't change its label itself, its fairly straight forward to provide a select
-for which the lable never changes.
-```
-const Divider = require('./Divider').default;
-const Option = require('./Option').default;
-
-const onChange = (action) => {/* do something */};
-
-<Select icon="plus" onChange={onChange}>
-    <Option disabled>Add something</Option>
-    <Option value="action-page">Add a page</Option>
-    <Option value="action-person">Add a person</Option>
-    <Option value="action-image">Add an image</Option>
-    <Option value="action-salt">Add salt</Option>
 </Select>
 ```

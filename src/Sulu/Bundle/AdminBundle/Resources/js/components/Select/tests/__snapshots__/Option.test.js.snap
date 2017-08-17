@@ -41,10 +41,9 @@ exports[`The component should render with checkbox 1`] = `
     class="option hasCheckbox"
   >
     <span
-      class="checkbox"
+      class="checkbox dark"
     >
       <input
-        tabindex="-1"
         type="checkbox"
       />
       <span />

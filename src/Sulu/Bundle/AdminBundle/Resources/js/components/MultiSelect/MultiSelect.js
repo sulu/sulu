@@ -1,22 +1,23 @@
 // @flow
 import React from 'react';
-import {GenericSelect, Option, Divider} from '../Select';
+import type {Element} from 'react';
+import type {SelectChildren} from '../Select/types';
+import {GenericSelect, Option} from '../Select';
 
-export default class MultiSelect extends React.PureComponent {
-    props: {
-        values: Array<string>,
-        label: string,
-        onChange: (values: Array<string>) => void,
-        children: Array<Option | Divider>,
-        icon?: string,
-    };
+type Props = {
+    values: Array<string>,
+    label: string,
+    onChange: (values: Array<string>) => void,
+    children: SelectChildren,
+    icon?: string,
+};
 
+export default class MultiSelect extends React.PureComponent<Props> {
     static defaultProps = {
-        children: [],
         values: [],
     };
 
-    optionIsSelected = (option: React.Element<*>): boolean => {
+    optionIsSelected = (option: Element<typeof Option>): boolean => {
         return this.props.values.indexOf(option.props.value) !== -1;
     };
 

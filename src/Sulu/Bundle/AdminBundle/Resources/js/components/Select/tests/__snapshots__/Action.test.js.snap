@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<li>
+  <button
+    class="action"
+  >
+    My action
+  </button>
+</li>
+`;

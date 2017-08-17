@@ -5,6 +5,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {OptionSelectedVisualization, SelectChildren} from './types';
 import OverlayList from './OverlayList';
+import Action from './Action';
 import Option from './Option';
 import Label from './Label';
 import genericSelectStyles from './genericSelect.scss';
@@ -16,7 +17,7 @@ type Props = {
     getLabelText: () => string,
     closeOnSelect: boolean,
     optionIsSelected: (option: Element<typeof Option>) => boolean,
-    selectedVisualization: OptionSelectedVisualization,
+    selectedVisualization?: OptionSelectedVisualization,
 };
 
 @observer
@@ -82,6 +83,11 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     onClick: this.handleOptionClick,
                     selected: this.props.optionIsSelected(child),
                     selectedVisualization: this.props.selectedVisualization,
+                });
+            }
+            if (child.type === Action) {
+                child = React.cloneElement(child, {
+                    afterAction: this.closeList,
                 });
             }
             return child;
