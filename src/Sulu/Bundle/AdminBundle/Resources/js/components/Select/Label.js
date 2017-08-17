@@ -1,26 +1,27 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import classnames from 'classnames';
 import Icon from '../Icon';
 import labelStyles from './label.scss';
 
+type Props = {
+    onClick: () => void,
+    children: string,
+    icon?: string,
+};
+
 const TOGGLE_ICON = 'chevron-down';
 
-export default class Label extends React.PureComponent {
-    props: {
-        onClick: () => void,
-        children: string,
-        icon?: string,
-    };
-
-    button: HTMLButtonElement;
+export default class Label extends React.PureComponent<Props> {
+    button: ElementRef<'button'>;
 
     /** @public **/
     getDimensions(): ClientRect {
         return this.button.getBoundingClientRect();
     }
 
-    setButton = (button: HTMLButtonElement) => this.button = button;
+    setButton = (button: ElementRef<'button'>) => this.button = button;
 
     render() {
         const classNames = classnames({

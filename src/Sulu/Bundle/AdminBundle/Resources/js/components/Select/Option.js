@@ -1,22 +1,23 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import classnames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Icon from '../Icon';
 import optionStyles from './option.scss';
 
+type Props = {
+    selected: boolean,
+    disabled: boolean,
+    focus: boolean,
+    value: string,
+    children: string,
+    onClick?: (value: string) => void,
+};
+
 const SELECTED_ICON = 'check';
 
-export default class Option extends React.PureComponent {
-    props: {
-        selected: boolean,
-        disabled: boolean,
-        focus: boolean,
-        value: string,
-        children?: string,
-        onClick?: (value: string) => void,
-    };
-
+export default class Option extends React.PureComponent<Props> {
     static defaultProps = {
         disabled: false,
         selected: false,
@@ -24,8 +25,7 @@ export default class Option extends React.PureComponent {
         value: '',
     };
 
-    item: HTMLElement;
-    button: HTMLButtonElement;
+    item: ElementRef<'li'>;
 
     /** @public **/
     getOffsetTop() {
@@ -38,15 +38,14 @@ export default class Option extends React.PureComponent {
         }
     };
 
-    setItem = (item: HTMLElement) => this.item = item;
-    setButton = (button: ?HTMLButtonElement) => {
+    setItem = (item: ElementRef<'li'>) => this.item = item;
+    setButton = (button: ElementRef<'button'>) => {
         if (!button) {
             return;
         }
-        this.button = button;
         if (this.props.focus) {
             afterElementsRendered(() => {
-                this.button.focus();
+                button.focus();
             });
         }
     };

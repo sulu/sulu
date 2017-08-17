@@ -1,7 +1,8 @@
 // @flow
+import React from 'react';
+import type {ElementRef, ChildrenArray} from 'react';
 import Portal from 'react-portal';
 import {observer} from 'mobx-react';
-import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
@@ -10,24 +11,24 @@ import overlayListStyles from './overlayList.scss';
 import type {OverlayListDimensions} from './types';
 import OverlayListPositioner from './OverlayListPositioner';
 
-@observer
-export default class OverlayList extends React.PureComponent {
-    props: {
-        isOpen: boolean,
-        children?: React.Element<*>,
-        onRequestClose?: () => void,
-        /** The top coordinate relative to which the list will be positioned */
-        anchorTop: number,
-        /** The left coordinate relative to which the list will be positioned */
-        anchorLeft: number,
-        /** The width of the element relative to which the list will be positioned */
-        anchorWidth: number,
-        /** The width of the element relative to which the list will be positioned */
-        anchorHeight: number,
-        /** The index of the child element which will be centered relative to the anchor */
-        centeredChildIndex: number,
-    };
+type Props = {
+    isOpen: boolean,
+    children?: ChildrenArray<*>,
+    onRequestClose?: () => void,
+    /** The top coordinate relative to which the list will be positioned */
+    anchorTop: number,
+    /** The left coordinate relative to which the list will be positioned */
+    anchorLeft: number,
+    /** The width of the element relative to which the list will be positioned */
+    anchorWidth: number,
+    /** The width of the element relative to which the list will be positioned */
+    anchorHeight: number,
+    /** The index of the child element which will be centered relative to the anchor */
+    centeredChildIndex: number,
+};
 
+@observer
+export default class OverlayList extends React.PureComponent<Props> {
     static defaultProps = {
         isOpen: false,
         centeredChildIndex: 0,
@@ -40,7 +41,7 @@ export default class OverlayList extends React.PureComponent {
     @observable scrollHeight: number;
     @observable scrollWidth: number;
     @observable centeredChildRelativeTop: number;
-    list: ?HTMLElement;
+    list: ElementRef<'ul'>;
     scrollTop: number;
 
     get listBorderWidth(): number {
@@ -87,7 +88,7 @@ export default class OverlayList extends React.PureComponent {
         return positioner.getCroppedDimensions();
     }
 
-    readCenteredChildRelativeTop = (option: ?Option) => {
+    readCenteredChildRelativeTop = (option: ElementRef<typeof Option>) => {
         afterElementsRendered(action(() => {
             if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
@@ -95,7 +96,7 @@ export default class OverlayList extends React.PureComponent {
         }));
     };
 
-    readOffsetDimensions = (list: ?HTMLElement) => {
+    readOffsetDimensions = (list: ElementRef<'ul'>) => {
         this.list = list;
         afterElementsRendered(action(() => {
             if (list) {

@@ -1,27 +1,24 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import selectStyles from './select.scss';
-import Divider from './Divider';
 import OverlayList from './OverlayList';
 import Option from './Option';
 import Label from './Label';
+import type {SelectChildren} from './types';
+
+type Props = {
+    value?: string,
+    onChange?: (value: string) => void,
+    children: SelectChildren,
+    icon?: string,
+};
 
 @observer
-export default class Select extends React.PureComponent {
-    props: {
-        value?: string,
-        onChange?: (value: string) => void,
-        children: Array<Option | Divider>,
-        icon?: string,
-    };
-
-    static defaultProps = {
-        children: [],
-    };
-
-    label: Label;
+export default class Select extends React.PureComponent<Props> {
+    label: ?ElementRef<typeof Label>;
     @observable isOpen: boolean;
 
     @action openList = () => {
@@ -35,7 +32,7 @@ export default class Select extends React.PureComponent {
     @computed get labelText(): string {
         let label = '';
         React.Children.forEach(this.props.children, (child) => {
-            if (child.type !== Option) {
+            if (!child.props.value || !child.props.children) {
                 return;
             }
             if (!label || this.props.value === child.props.value) {
@@ -55,7 +52,7 @@ export default class Select extends React.PureComponent {
 
     handleLabelClick = this.openList;
     handleListRequestClose = this.closeList;
-    setLabel = (label: Label) => this.label = label;
+    setLabel = (label: ?ElementRef<typeof Label>) => this.label = label;
 
     render() {
         const labelDimensions = this.label ? this.label.getDimensions() : {};
@@ -84,8 +81,8 @@ export default class Select extends React.PureComponent {
         );
     }
 
-    renderListChildren(): React.Children {
-        return React.Children.map(this.props.children, (child) => {
+    renderListChildren() {
+        return React.Children.map(this.props.children, (child: any) => {
             if (child.type === Option) {
                 child = React.cloneElement(child, {
                     onClick: this.handleOptionClick,
@@ -96,7 +93,7 @@ export default class Select extends React.PureComponent {
         });
     }
 
-    getCenteredChildIndex(children: React.Children): number {
+    getCenteredChildIndex(children: any): number {
         const index = React.Children.toArray(children).findIndex((child) => child.props.selected);
         return index === -1 ? 0 : index;
     }
