@@ -6,7 +6,7 @@ import toolbarStore from './stores/ToolbarStore';
 import toolbarStyles from './toolbar.scss';
 
 @observer
-export default class Toolbar extends React.PureComponent {
+export default class Toolbar extends React.PureComponent<*> {
     render() {
         return (
             <header className={toolbarStyles.toolbar}>

@@ -8,12 +8,12 @@ import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
 import applicationStyles from './application.scss';
 
-@observer
-export default class Application extends React.PureComponent {
-    props: {
-        router: Router,
-    };
+type Props = {
+    router: Router,
+};
 
+@observer
+export default class Application extends React.PureComponent<Props> {
     render() {
         return (
             <div>

@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
+import type {ComponentType} from 'react';
 
-export default function withContainerSize(Component: ReactClass<*>) {
-    class withContainerSizeComponent extends React.Component {
+export default function withContainerSize(Component: ComponentType<*>) {
+    class withContainerSizeComponent extends React.Component<*> {
         component: *;
 
         componentDidMount() {

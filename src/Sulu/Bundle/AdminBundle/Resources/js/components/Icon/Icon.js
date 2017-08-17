@@ -3,12 +3,12 @@ import 'font-awesome/css/font-awesome.min.css';
 import React from 'react';
 import classNames from 'classnames';
 
-export default class Icon extends React.PureComponent {
-    props: {
-        className: string,
-        name: string,
-    };
+type Props = {
+    className: string,
+    name: string,
+};
 
+export default class Icon extends React.PureComponent<Props> {
     render() {
         const className = classNames(
             this.props.className,

@@ -3,7 +3,7 @@ import React from 'react';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 
-class List extends React.PureComponent {
+class List extends React.PureComponent<*> {
     render() {
         return (
             <h1>List</h1>

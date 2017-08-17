@@ -2,12 +2,12 @@
 import React from 'react';
 import viewStore from './stores/ViewStore';
 
-export default class ViewRenderer extends React.PureComponent {
-    props: {
-        name: string,
-        parameters?: Object,
-    };
+type Props = {
+    name: string,
+    parameters: Object,
+};
 
+export default class ViewRenderer extends React.PureComponent<Props> {
     render() {
         const view = viewStore.get(this.props.name);
         if (!view) {

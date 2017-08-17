@@ -4,9 +4,7 @@ import Icon from '../../components/Icon';
 import type {Item as ItemType} from './types';
 import itemStyles from './item.scss';
 
-export default class Item extends React.PureComponent {
-    props: ItemType;
-
+export default class Item extends React.PureComponent<ItemType> {
     static defaultProps = {
         enabled: true,
     };
