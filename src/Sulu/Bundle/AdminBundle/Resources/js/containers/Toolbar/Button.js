@@ -7,9 +7,7 @@ import buttonStyles from './button.scss';
 
 const ICON_ARROW_DOWN = 'chevron-down';
 
-export default class Button extends React.PureComponent {
-    props: ButtonProps;
-
+export default class Button extends React.PureComponent<ButtonProps> {
     static defaultProps = {
         disabled: false,
         hasOptions: false,

@@ -6,16 +6,16 @@ import optionStyles from './option.scss';
 
 const ICON_CHECKMARK = 'check';
 
-export default class Option extends React.PureComponent {
-    props: {
-        label: string | number,
-        value: Object,
-        onClick: (value: Object) => void,
-        size?: string,
-        selected?: boolean,
-        disabled?: boolean,
-    };
+type Props = {
+    label: string | number,
+    value: Object,
+    onClick: (value: Object) => void,
+    size?: string,
+    selected?: boolean,
+    disabled?: boolean,
+};
 
+export default class Option extends React.PureComponent<Props> {
     handleOnClick = () => {
         const {onClick} = this.props;
 

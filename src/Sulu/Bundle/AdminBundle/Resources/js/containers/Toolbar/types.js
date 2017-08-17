@@ -1,6 +1,8 @@
 // @flow
+import type {Node} from 'react';
 
 export type Button = {
+    children?: Node,
     onClick: () => void,
     value?: string | number,
     icon?: string,

@@ -5,15 +5,15 @@ import Backdrop from '../../components/Backdrop';
 import Option from './Option';
 import optionListStyles from './optionList.scss';
 
-export default class OptionList extends React.PureComponent {
-    props: {
-        onOptionClick: (option: Object) => void,
-        value?: string | number,
-        size?: string,
-        onRequestClose?: () => void,
-        options: Array<Object>,
-    };
+type Props = {
+    onOptionClick: (option: Object) => void,
+    value?: string | number,
+    size?: string,
+    onRequestClose?: () => void,
+    options: Array<Object>,
+};
 
+export default class OptionList extends React.PureComponent<Props> {
     handleOptionClick = (option: Object) => {
         if (this.props.onOptionClick) {
             this.props.onOptionClick(option);
