@@ -6,7 +6,29 @@ const Row = require('./Row').default;
 const Cell = require('./Cell').default;
 const HeaderCell = require('./HeaderCell').default;
 
-<Table>
+const controlItems = [
+    {
+        icon: 'pencil',
+        onClick: (rowId) => {}
+    },
+    {
+        icon: 'pencil',
+        onClick: (rowId) => {}
+    }
+];
+
+handleRowClick = (rowId) => {
+
+};
+
+handleRowSelection = (rowIds) => {
+
+};
+
+<Table 
+    controls={controlItems}
+    selectable={true}
+    onRowSelection={handleRowSelection}>
     <Header>
         <Row>
             <HeaderCell>
