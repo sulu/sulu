@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
-import Modal from '../Modal';
 import React from 'react';
 import pretty from 'pretty';
+import Modal from '../Modal';
 
 afterEach(() => document.body.innerHTML = '');
 

@@ -1,17 +1,18 @@
 // @flow
-import {action, observable} from 'mobx';
-import Modal from './Modal';
 import React from 'react';
+import type {Element, Node} from 'react';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import Modal from './Modal';
+
+type Props = {
+    className?: string,
+    clickElement: Element<*>,
+    children: Node,
+};
 
 @observer
-export default class ClickModal extends React.PureComponent {
-    props: {
-        className?: string,
-        clickElement: React.Element<*>,
-        children: React.Element<*>,
-    };
-
+export default class ClickModal extends React.PureComponent<Props> {
     @observable modalOpen = false;
 
     @action handleElementClick = () => {

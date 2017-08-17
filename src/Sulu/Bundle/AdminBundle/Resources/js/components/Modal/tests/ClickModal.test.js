@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import ClickModal from '../ClickModal';
 import React from 'react';
 import {mount} from 'enzyme';
 import pretty from 'pretty';
+import ClickModal from '../ClickModal';
 
 afterEach(() => document.body.innerHTML = '');
 

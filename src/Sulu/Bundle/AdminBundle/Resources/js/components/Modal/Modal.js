@@ -1,16 +1,17 @@
 // @flow
-import Backdrop from '../Backdrop';
-import Portal from 'react-portal';
 import React from 'react';
+import type {Node} from 'react';
+import Portal from 'react-portal';
+import Backdrop from '../Backdrop';
 import modalStyle from './modal.scss';
 
-export default class Modal extends React.PureComponent {
-    props: {
-        isOpen: boolean,
-        children: React.Element<*>,
-        onRequestClose?: () => void,
-    };
+type Props = {
+    isOpen: boolean,
+    children: Node,
+    onRequestClose?: () => void,
+};
 
+export default class Modal extends React.PureComponent<Props> {
     static defaultProps = {
         isOpen: false,
     };
