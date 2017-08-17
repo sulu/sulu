@@ -1,6 +1,13 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.3 (2017-08-17)
+    * HOTFIX      #3484 [TestBundle]              Fix doctrine errors for mysql older than 5.7
+    * HOTFIX      #3475 [ContentBundle]           Added possibility to set default value for single-select
+    * HOTFIX      #3470 [DocumentManagerBundle]   Fixed document-manager load-fixtures command
+    * HOTFIX      #3465 [ContentBundle]           Fixed interpretation of code in block preview
+    * ENHANCEMENT #3464 [ContentBundle]           Added additional-slides configuration for teaser-provider
+    
 * 1.6.2 (2017-07-31)
     * HOTFIX      #3444 [MediaBundle]             Fixed error when download of media without extension
     * HOTFIX      #3441 [PreviewBundle]           Fixed bug in preview when running on https

@@ -17,6 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -24,6 +25,41 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var DocumentFixtureLoader
+     */
+    private $loader;
+
+    /**
+     * @var DocumentExecutor
+     */
+    private $executor;
+
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
+
+    /**
+     * @var BundleInterface
+     */
+    private $fixtures;
+
+    /**
+     * @var DocumentFixtureInterface
+     */
+    private $fixture1;
+
+    /**
+     * @var FixturesLoadCommand
+     */
+    private $command;
+
+    /**
+     * @var CommandTester
+     */
+    private $commandTester;
+
     public function setUp()
     {
         $this->loader = $this->prophesize(DocumentFixtureLoader::class);
@@ -38,8 +74,8 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
             $this->executor->reveal(),
             $this->kernel->reveal()
         ));
-        $command = $application->find('sulu:document:fixtures:load');
-        $this->commandTester = new CommandTester($command);
+        $this->command = $application->find('sulu:document:fixtures:load');
+        $this->commandTester = new CommandTester($this->command);
 
         $this->kernel->getBundles()->willReturn([
             $this->fixtures->reveal(),
@@ -162,10 +198,27 @@ class FixturesLoadCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $tester->getStatusCode());
     }
 
-    private function execute(array $args)
+    /**
+     * It should show a message if no fixtures are found.
+     */
+    public function testNoFixturesInteraction()
+    {
+        $helper = $this->prophesize(QuestionHelper::class);
+        $helper->setHelperSet(Argument::cetera())->willReturn(null);
+        $helper->getName()->willReturn('question');
+        $helper->ask(Argument::cetera())->shouldBeCalled()->willReturn(true);
+
+        $this->command->getHelperSet()->set($helper->reveal(), 'question');
+
+        $this->kernel->getBundles()->willReturn([]);
+        $tester = $this->execute([], true);
+        $this->assertContains('Could not find any candidate fixture paths', $tester->getDisplay());
+    }
+
+    private function execute(array $args, $interactive = false)
     {
         $this->commandTester->execute($args, [
-            'interactive' => false,
+            'interactive' => $interactive,
         ]);
 
         return $this->commandTester;

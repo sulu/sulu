@@ -8,7 +8,11 @@
                    value="{{ value.name }}"
                    data-property='{{ property|json_encode }}'
                    data-mapper-property="{{ property.name }}"
-                   class="preview-update trigger-save-button form-element"/>
+                   class="preview-update trigger-save-button form-element"
+                    {% if value.name == params.default_value.value|default() %}
+                        checked
+                    {% endif %}
+            />
             <span class="icon"></span>
         </div>
         {{ value.getTitle(userLocale) }}
