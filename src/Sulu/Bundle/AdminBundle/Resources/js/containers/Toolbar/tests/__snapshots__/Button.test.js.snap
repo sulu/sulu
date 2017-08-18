@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render an active button 1`] = `
+<button
+  class="button isActive"
+/>
+`;
+
+exports[`Render button 1`] = `
+<button
+  class="button"
+>
+  <span
+    class="label"
+  >
+    Click
+  </span>
+</button>
+`;
+
+exports[`Render button with a different size 1`] = `
+<button
+  class="button small"
+/>
+`;
+
+exports[`Render button with a prepended icon 1`] = `
+<button
+  class="button"
+>
+  <span
+    aria-hidden="true"
+    class="icon fa fa-trash-o"
+  />
+</button>
+`;
+
+exports[`Render button with dropdown indicator 1`] = `
+<button
+  class="button"
+>
+  <span
+    aria-hidden="true"
+    class="dropdownIcon fa fa-chevron-down"
+  />
+</button>
+`;
+
+exports[`Render button with value 1`] = `
+<button
+  class="button"
+  value="Click"
+>
+  <span
+    class="label"
+  >
+    Click
+  </span>
+</button>
+`;
+
+exports[`Render disabled button 1`] = `
+<button
+  class="button"
+  disabled=""
+/>
+`;

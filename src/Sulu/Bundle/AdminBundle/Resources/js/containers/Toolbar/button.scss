@@ -1,0 +1,76 @@
+@import '../Application/colors.scss';
+
+$buttonTextColor: $blueZodiac;
+$buttonTextColorActive: $shakespeare;
+$buttonTextColorDisabled: $silver;
+$buttonActiveBackgroundColor: $wildSand;
+
+.button-container {
+    position: relative;
+    display: inline-block;
+}
+
+.button,
+.back-button {
+    display: inline-block;
+    min-width: 60px;
+    position: relative;
+    padding: 0 20px;
+    border: none;
+    height: 60px;
+    background-color: transparent;
+    color: $buttonTextColor;
+    font-size: 12px;
+    cursor: pointer;
+
+    & > * {
+        /* IE11 will emulate 3D effect while clicking button without this */
+        position: relative;
+    }
+
+    &:disabled {
+        color: $buttonTextColorDisabled;
+        cursor: default;
+    }
+
+    &:not(:disabled) {
+        &:hover,
+        &.is-active {
+            color: $buttonTextColorActive;
+            background-color: $buttonActiveBackgroundColor;
+        }
+
+        &.is-active {
+            z-index: 2;
+        }
+    }
+
+    &.small {
+        padding: 0;
+
+        .dropdown-icon {
+            position: absolute;
+            left: 50%;
+            bottom: 8px;
+            margin-left: -6px;
+            padding: 0;
+        }
+    }
+}
+
+.icon {
+    vertical-align: middle;
+    font-size: 20px;
+
+    & + .label {
+        padding: 0 0 0 10px;
+    }
+}
+
+.label {
+    vertical-align: middle;
+}
+
+.dropdown-icon {
+    padding: 0 0 0 10px;
+}

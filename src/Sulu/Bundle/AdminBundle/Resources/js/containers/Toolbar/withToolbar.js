@@ -3,17 +3,21 @@ import {autorun} from 'mobx';
 import React from 'react';
 import type {ComponentType} from 'react';
 import {buildHocDisplayName} from '../../services/react';
-import type {Item} from './types';
-import toolbarStore from './stores/ToolbarStore';
+import type {ToolbarConfig} from './types';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 
-export default function withToolbar(Component: ComponentType<*>, toolbar: () => Array<Item>) {
+export default function withToolbar(
+    Component: ComponentType<*>,
+    toolbar: () => ToolbarConfig,
+    toolbarStoreKey: string = DEFAULT_STORE_KEY,
+) {
     const WithToolbarComponent = class extends React.Component<*> {
         disposer: Function;
 
-        setToolbarItems = (component: React$Element<*>) => {
+        setToolbarConfig = (component: React$Element<*>) => {
             this.disposer = autorun(() => {
                 if (component) {
-                    toolbarStore.setItems(toolbar.call(component));
+                    toolbarStorePool.setToolbarConfig(toolbarStoreKey, toolbar.call(component));
                 }
             });
         };
@@ -23,7 +27,7 @@ export default function withToolbar(Component: ComponentType<*>, toolbar: () => 
         }
 
         render() {
-            return <Component ref={this.setToolbarItems} {...this.props} />;
+            return <Component ref={this.setToolbarConfig} {...this.props} />;
         }
     };
 

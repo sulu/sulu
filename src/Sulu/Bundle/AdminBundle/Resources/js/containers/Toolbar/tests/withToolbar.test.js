@@ -1,24 +1,22 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
 import React from 'react';
-import toolbarStore from '../stores/ToolbarStore';
+import toolbarStorePool from '../stores/ToolbarStorePool';
 import withToolbar from '../withToolbar';
 
-jest.mock('../stores/ToolbarStore', () => {
-    return {};
-});
+jest.mock('../stores/ToolbarStorePool', () => ({
+    setToolbarConfig: jest.fn(),
+}));
 
 test('Pass props to rendered component', () => {
-    toolbarStore.setItems = jest.fn();
-
     const Component = (props) => (<h1>{props.title}</h1>);
-    const ComponentWithToolbar = withToolbar(Component, () => []);
+    const ComponentWithToolbar = withToolbar(Component, () => {});
 
     expect(render(<ComponentWithToolbar title="Test" />)).toMatchSnapshot();
 });
 
 test('Bind toolbar method to component instance', () => {
-    toolbarStore.setItems = jest.fn();
+    const storeKey = 'testKey';
 
     const Component = class Component extends React.Component {
         test = true;
@@ -29,17 +27,25 @@ test('Bind toolbar method to component instance', () => {
     };
 
     const ComponentWithToolbar = withToolbar(Component, function() {
-        return [{
-            title: 'Save',
-            icon: 'save',
-            enabled: this.test,
-        }];
-    });
+        return {
+            items: [
+                {
+                    label: 'Save',
+                    icon: 'save',
+                    disabled: true,
+                },
+            ],
+        };
+    }, storeKey);
 
     mount(<ComponentWithToolbar />);
-    expect(toolbarStore.setItems).toBeCalledWith([{
-        title: 'Save',
-        icon: 'save',
-        enabled: true,
-    }]);
+    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(storeKey, {
+        items: [
+            {
+                label: 'Save',
+                icon: 'save',
+                disabled: true,
+            },
+        ],
+    });
 });
