@@ -15,7 +15,7 @@ test('The positioner should return the correct dimensions when the list fits int
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 300, left: 695, height: 500, scrollTop: 0});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 302, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list needs to be cropped at the top', () => {
@@ -31,7 +31,7 @@ test('The positioner should return the correct dimensions when the list needs to
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 10, left: 695, height: 240, scrollTop: 260});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 10, left: 480, height: 242, scrollTop: 258});
 });
 
 test('The positioner should return the correct dimensions when the list undercuts the min height at the top', () => {
@@ -47,7 +47,7 @@ test('The positioner should return the correct dimensions when the list undercut
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 55, left: 695, height: 500, scrollTop: 0});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 52, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list needs to be cropped at the bottom', () => {
@@ -63,7 +63,7 @@ test('The positioner should return the correct dimensions when the list needs to
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 620, left: 695, height: 370, scrollTop: 0});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 622, left: 480, height: 368, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list undercuts the min height at the bottom', () => {
@@ -79,7 +79,7 @@ test('The positioner should return the correct dimensions when the list undercut
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 445, left: 695, height: 500, scrollTop: 0});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 448, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list overflows to the left', () => {
@@ -95,7 +95,7 @@ test('The positioner should return the correct dimensions when the list overflow
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 300, left: 10, height: 500, scrollTop: 0});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 302, left: 10, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list overflows to the right', () => {
@@ -111,5 +111,5 @@ test('The positioner should return the correct dimensions when the list overflow
         1000, // window height
     );
 
-    expect(positioner.getCroppedDimensions()).toEqual({top: 300, left: 1310, height: 500, scrollTop: 0});
+    expect(positioner.getCroppedDimensions()).toEqual({top: 302, left: 1310, height: 500, scrollTop: 0});
 });

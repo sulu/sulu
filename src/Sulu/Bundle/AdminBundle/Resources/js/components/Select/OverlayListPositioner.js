@@ -2,8 +2,9 @@
 import type {OverlayListDimensions, OverlayListStyle, VerticalCrop} from './types';
 
 const MIN_HEIGHT = 100;
-const INDENT_FROM_ANCHOR = 5;
 const PADDING_TO_WINDOW = 10;
+const LEFT_OFFSET = -20;
+const TOP_OFFSET = 2;
 
 /**
  * The class is responsible for calculating the position of the overlay-list on the screen when opened.
@@ -61,8 +62,8 @@ export default class OverlayListPositioner {
     getCroppedDimensions(): OverlayListDimensions {
         // First, the list is positioned without taking the screen borders or the minimum height into account.
         let dimensions = {
-            top: this.anchorTop - this.centeredChildRelativeTop,
-            left: this.anchorLeft - (this.listWidth - this.anchorWidth) - INDENT_FROM_ANCHOR,
+            top: this.anchorTop - this.centeredChildRelativeTop + TOP_OFFSET,
+            left: this.anchorLeft + LEFT_OFFSET,
             height: this.listHeight,
             scrollTop: 0,
         };
@@ -76,11 +77,11 @@ export default class OverlayListPositioner {
         // If the minimum height is undercut and the top border of the screen is touched, the list gets
         // positioned from the anchor downwards.
         if (crop.touchesTopBorder) {
-            dimensions.top = this.anchorTop + INDENT_FROM_ANCHOR;
+            dimensions.top = this.anchorTop + TOP_OFFSET;
         }
         // If the bottom border is touched, it gets positioned from the anchor upwards.
         if (crop.touchesBottomBorder) {
-            dimensions.top = this.anchorTop + this.anchorHeight - this.listHeight - INDENT_FROM_ANCHOR;
+            dimensions.top = this.anchorTop + this.anchorHeight - this.listHeight - TOP_OFFSET;
         }
 
         // After moving the list it has to be made sure one more time that the list does not overflow the borders.

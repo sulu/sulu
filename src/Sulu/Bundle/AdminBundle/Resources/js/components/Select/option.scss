@@ -14,6 +14,7 @@ $fontColor: $blueZodiac;
     cursor: pointer;
     text-align: left;
     font-size: 12px;
+    outline: 0;
 
     &:not(:disabled):hover {
         color: $hoverColor;
