@@ -5,7 +5,9 @@ import React from 'react';
 import tableStyles from './table.scss';
 
 type Props = {
+    /** Child nodes of a header cell */
     children: Node,
+    /** CSS classes to apply custom styles */
     className?: string,
 };
 

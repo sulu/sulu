@@ -5,7 +5,9 @@ import classNames from 'classnames';
 import tableStyles from './table.scss';
 
 type Props = {
+    /** Child nodes of a cell */
     children: Node,
+    /** CSS classes to apply custom styles */
     className?: string,
 };
 
