@@ -42,17 +42,11 @@ export type Select = {
     disabled?: boolean,
 };
 
-export type ButtonItem =
-    & Button
-    & { type: 'button' };
+export type ButtonItem = Button & { type: 'button' };
 
-export type DropdownItem =
-    & Dropdown
-    & { type: 'dropdown' };
+export type DropdownItem = Dropdown & { type: 'dropdown' };
 
-export type SelectItem =
-    & Select
-    & { type: 'select' };
+export type SelectItem = Select & { type: 'select' };
 
 export type ToolbarProps = {
     storeKey?: string,
