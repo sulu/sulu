@@ -65,10 +65,10 @@ $controlCellBorderColor: $white;
         }
 
         .control-cell {
-            background-color: $cellBackgroundColorActive;
-    
             button {
                 visibility: visible;
+                background-color: $cellBackgroundColorActive;
+                border-right: 1px solid $controlCellBorderColor;
             }
         }
     }
@@ -98,21 +98,17 @@ $controlCellBorderColor: $white;
         border-radius: 0 3px 3px 0;
         border-width: 1px 1px 1px 0;
     }
-
-    &.control-cell {
-        border-right-width: 1px;
-    }
 }
 
 .control-cell {
+    padding: 0;
     background-color: $cellBackgroundColor;
     color: $cellTextColorActive;
-    border-right-color: $controlCellBorderColor;
 
     button {
         visibility: hidden;
-        width: 100%;
-        height: 100%;
+        width: 55px;
+        height: 40px;
         border: none;
         color: inherit;
         cursor: pointer;
