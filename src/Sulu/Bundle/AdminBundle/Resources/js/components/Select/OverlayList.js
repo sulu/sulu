@@ -76,7 +76,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         if (!this.props.isOpen || !this.scrollHeight || !this.scrollWidth || !this.centeredChildRelativeTop) {
             return null;
         }
-        const positioner = new OverlayListPositioner(
+        return OverlayListPositioner.getCroppedDimensions(
             this.scrollHeight,
             this.scrollWidth,
             this.centeredChildRelativeTop,
@@ -85,7 +85,6 @@ export default class OverlayList extends React.PureComponent<Props> {
             this.props.anchorWidth,
             this.props.anchorHeight,
         );
-        return positioner.getCroppedDimensions();
     }
 
     readCenteredChildRelativeTop = (option: ElementRef<typeof Option>) => {

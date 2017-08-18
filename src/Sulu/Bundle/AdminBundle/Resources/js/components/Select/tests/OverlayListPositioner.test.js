@@ -3,7 +3,7 @@
 import OverlayListPositioner from '../OverlayListPositioner';
 
 test('The positioner should return the correct dimensions when the list fits into the screen', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         300, //  list width
         100, //  centered child relative top
@@ -13,13 +13,11 @@ test('The positioner should return the correct dimensions when the list fits int
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 302, left: 480, height: 500, scrollTop: 0});
+    )).toEqual({top: 302, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list needs to be cropped at the top', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         300, //  list width
         300, //  centered child relative top
@@ -29,13 +27,11 @@ test('The positioner should return the correct dimensions when the list needs to
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 10, left: 480, height: 242, scrollTop: 258});
+    )).toEqual({top: 10, left: 480, height: 242, scrollTop: 258});
 });
 
 test('The positioner should return the correct dimensions when the list undercuts the min height at the top', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         300, //  list width
         450, //  centered child relative top
@@ -45,13 +41,11 @@ test('The positioner should return the correct dimensions when the list undercut
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 52, left: 480, height: 500, scrollTop: 0});
+    )).toEqual({top: 52, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list needs to be cropped at the bottom', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         300, //  list width
         300, //  centered child relative top
@@ -61,13 +55,11 @@ test('The positioner should return the correct dimensions when the list needs to
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 622, left: 480, height: 368, scrollTop: 0});
+    )).toEqual({top: 622, left: 480, height: 368, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list undercuts the min height at the bottom', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         300, //  list width
         10, //   centered child relative top
@@ -77,13 +69,11 @@ test('The positioner should return the correct dimensions when the list undercut
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 448, left: 480, height: 500, scrollTop: 0});
+    )).toEqual({top: 448, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list overflows to the left', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         600, //  list width
         100, //  centered child relative top
@@ -93,13 +83,11 @@ test('The positioner should return the correct dimensions when the list overflow
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 302, left: 10, height: 500, scrollTop: 0});
+    )).toEqual({top: 302, left: 10, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the list overflows to the right', () => {
-    const positioner = new OverlayListPositioner(
+    expect(OverlayListPositioner.getCroppedDimensions(
         500, //  list height
         600, //  list width
         100, //  centered child relative top
@@ -109,7 +97,5 @@ test('The positioner should return the correct dimensions when the list overflow
         30, //   anchor height
         1920, // window width
         1000, // window height
-    );
-
-    expect(positioner.getCroppedDimensions()).toEqual({top: 302, left: 1310, height: 500, scrollTop: 0});
+    )).toEqual({top: 302, left: 1310, height: 500, scrollTop: 0});
 });

@@ -31,8 +31,8 @@ export default class Select extends React.PureComponent<Props> {
 
     @computed get labelText(): string {
         let label = '';
-        React.Children.forEach(this.props.children, (child) => {
-            if (!child.props.value || !child.props.children) {
+        React.Children.forEach(this.props.children, (child: any) => {
+            if (child.type !== Option) {
                 return;
             }
             if (!label || this.props.value === child.props.value) {

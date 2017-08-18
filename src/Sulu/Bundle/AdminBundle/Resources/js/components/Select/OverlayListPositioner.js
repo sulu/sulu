@@ -17,19 +17,15 @@ const TOP_OFFSET = 2;
  * the list overflows the bottom or top border of the screen.
  */
 export default class OverlayListPositioner {
-    listHeight: number;
-    listWidth: number;
-    centeredChildRelativeTop: number;
+    static dimensionsToStyle(dimensions: OverlayListDimensions): OverlayListStyle {
+        return {
+            top: dimensions.top + 'px',
+            height: dimensions.height + 'px',
+            left: dimensions.left + 'px',
+        };
+    }
 
-    anchorTop: number;
-    anchorLeft: number;
-    anchorWidth: number;
-    anchorHeight: number;
-
-    windowWidth: number;
-    windowHeight: number;
-
-    constructor(
+    static getCroppedDimensions(
         listHeight: number,
         listWidth: number,
         centeredChildRelativeTop: number,
@@ -39,57 +35,37 @@ export default class OverlayListPositioner {
         anchorHeight: number,
         windowWidth: number = window.innerWidth,
         windowHeight: number = window.innerHeight,
-    ) {
-        this.listHeight = listHeight;
-        this.listWidth = listWidth;
-        this.centeredChildRelativeTop = centeredChildRelativeTop;
-        this.anchorTop = anchorTop;
-        this.anchorLeft = anchorLeft;
-        this.anchorWidth = anchorWidth;
-        this.anchorHeight = anchorHeight;
-        this.windowWidth = windowWidth;
-        this.windowHeight = windowHeight;
-    }
-
-    static dimensionsToStyle(dimensions: OverlayListDimensions): OverlayListStyle {
-        return {
-            top: dimensions.top + 'px',
-            height: dimensions.height + 'px',
-            left: dimensions.left + 'px',
-        };
-    }
-
-    getCroppedDimensions(): OverlayListDimensions {
+    ): OverlayListDimensions {
         // First, the list is positioned without taking the screen borders or the minimum height into account.
         let dimensions = {
-            top: this.anchorTop - this.centeredChildRelativeTop + TOP_OFFSET,
-            left: this.anchorLeft + LEFT_OFFSET,
-            height: this.listHeight,
+            top: anchorTop - centeredChildRelativeTop + TOP_OFFSET,
+            left: anchorLeft + LEFT_OFFSET,
+            height: listHeight,
             scrollTop: 0,
         };
-        let crop = this.cropVerticalDimensions(dimensions);
+        let crop = OverlayListPositioner.cropVerticalDimensions(dimensions, windowHeight);
         // If after making sure, the list does not overflow the top and the bottom border of the screen, the
         // list succeeds the minimum height, no more steps have to be taken.
         if (crop.dimensions.height >= MIN_HEIGHT) {
-            return this.cropHorizontalDimensions(crop.dimensions);
+            return OverlayListPositioner.cropHorizontalDimensions(crop.dimensions, windowWidth, listWidth);
         }
 
         // If the minimum height is undercut and the top border of the screen is touched, the list gets
         // positioned from the anchor downwards.
         if (crop.touchesTopBorder) {
-            dimensions.top = this.anchorTop + TOP_OFFSET;
+            dimensions.top = anchorTop + TOP_OFFSET;
         }
         // If the bottom border is touched, it gets positioned from the anchor upwards.
         if (crop.touchesBottomBorder) {
-            dimensions.top = this.anchorTop + this.anchorHeight - this.listHeight - TOP_OFFSET;
+            dimensions.top = anchorTop + anchorHeight - listHeight - TOP_OFFSET;
         }
 
         // After moving the list it has to be made sure one more time that the list does not overflow the borders.
-        crop = this.cropVerticalDimensions(dimensions);
-        return this.cropHorizontalDimensions(crop.dimensions);
+        crop = OverlayListPositioner.cropVerticalDimensions(dimensions, windowHeight);
+        return OverlayListPositioner.cropHorizontalDimensions(crop.dimensions, windowWidth, listWidth);
     }
 
-    cropVerticalDimensions(dimensions: OverlayListDimensions): VerticalCrop {
+    static cropVerticalDimensions(dimensions: OverlayListDimensions, windowHeight: number): VerticalCrop {
         let newDimensions = {...dimensions};
         let touchesTopBorder = false;
         let touchesBottomBorder = false;
@@ -100,18 +76,22 @@ export default class OverlayListPositioner {
             newDimensions.scrollTop = -dimensions.top + PADDING_TO_WINDOW;
             touchesTopBorder = true;
         }
-        if (newDimensions.top + newDimensions.height > this.windowHeight - PADDING_TO_WINDOW) {
-            newDimensions.height = this.windowHeight - newDimensions.top - PADDING_TO_WINDOW;
+        if (newDimensions.top + newDimensions.height > windowHeight - PADDING_TO_WINDOW) {
+            newDimensions.height = windowHeight - newDimensions.top - PADDING_TO_WINDOW;
             touchesBottomBorder = true;
         }
 
         return {dimensions: newDimensions, touchesTopBorder, touchesBottomBorder};
     }
 
-    cropHorizontalDimensions(dimensions: OverlayListDimensions): OverlayListDimensions {
+    static cropHorizontalDimensions(
+        dimensions: OverlayListDimensions,
+        windowWidth: number,
+        listWidth: number,
+    ): OverlayListDimensions {
         let newDimensions = {...dimensions};
         newDimensions.left = Math.max(PADDING_TO_WINDOW, newDimensions.left);
-        newDimensions.left = Math.min(this.windowWidth - this.listWidth - PADDING_TO_WINDOW, newDimensions.left);
+        newDimensions.left = Math.min(windowWidth - listWidth - PADDING_TO_WINDOW, newDimensions.left);
 
         return newDimensions;
     }

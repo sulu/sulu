@@ -11,7 +11,7 @@ jest.mock('../OverlayListPositioner', () => {
     const OverlayListPositioner = require.requireActual('../OverlayListPositioner').default;
 
     return class extends OverlayListPositioner {
-        getCroppedDimensions() {
+        static getCroppedDimensions() {
             return {
                 top: 1,
                 left: 2,

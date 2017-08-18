@@ -6,7 +6,7 @@ a possibility to pass a callback which gets called when the user selects an opti
 const Divider = require('./Divider').default;
 const Option = require('./Option').default;
 
-initialState = {selectValue: null};
+initialState = {selectValue: 'page-1'};
 const onChange = (value) => value !== 'action-create' ? setState({selectValue: value}) : false;
 
 <Select value={state.selectValue} onChange={onChange}>
