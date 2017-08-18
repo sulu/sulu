@@ -4,9 +4,9 @@ following example:
 ```
 initialState = {value: '1'};
 <div>
-    <Radio checked={state.value === '1'} onChange={() => setState({value: '1'})} />
-    <Radio checked={state.value === '2'} onChange={() => setState({value: '2'})} />
-    <Radio checked={state.value === '3'} onChange={() => setState({value: '3'})} />
+    <Radio checked={state.value === '1'} onChange={() => setState({value: '1'})}>Radio 1</Radio>
+    <Radio checked={state.value === '2'} onChange={() => setState({value: '2'})}>Radio 2</Radio>
+    <Radio checked={state.value === '3'} onChange={() => setState({value: '3'})}>Radio 3</Radio>
 </div>
 ```
 
@@ -18,8 +18,8 @@ const RadioGroup = require('./RadioGroup').default;
 initialState = {value: '1'};
 
 <RadioGroup value={state.value} onChange={(value) => setState({value})}>
-    <Radio value="1" />
-    <Radio value="2" />
-    <Radio value="3" />
+    <Radio value="1">Radio 1</Radio>
+    <Radio value="2">Radio 2</Radio>
+    <Radio value="3">Radio 3</Radio>
 </RadioGroup>
 ```

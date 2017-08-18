@@ -1,24 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render in checked state 1`] = `
-<span
+<label
   class="radio"
 >
-  <input
-    checked=""
-    type="radio"
-  />
-  <span />
-</span>
+  <span>
+    <input
+      checked=""
+      type="radio"
+    />
+    <span />
+  </span>
+  <span>
+    My radio
+  </span>
+</label>
 `;
 
 exports[`The component should render in unchecked state 1`] = `
-<span
+<label
   class="radio"
 >
-  <input
-    type="radio"
-  />
-  <span />
-</span>
+  <span>
+    <input
+      type="radio"
+    />
+    <span />
+  </span>
+  <span>
+    My radio
+  </span>
+</label>
+`;
+
+exports[`The component should render without children 1`] = `
+<label
+  class="radio"
+>
+  <span>
+    <input
+      checked=""
+      type="radio"
+    />
+    <span />
+  </span>
+</label>
 `;

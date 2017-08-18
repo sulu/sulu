@@ -4,12 +4,27 @@ $radius: 8px;
 $color: $blueZodiac;
 $borderWidth: 3px;
 $borderColor: $white;
+$marginBottom: 10px;
+$fontSize: 12px;
 
 .radio {
-    display: inline-block;
-    width: calc(2 * $radius);
-    height: calc(2 * $radius);
-    position: relative;
+    display: flex;
+    margin-bottom: $marginBottom;
+    align-items: center;
+    cursor: pointer;
+
+    & > span:nth-child(1) {
+        display: block;
+        width: calc(2 * $radius);
+        height: calc(2 * $radius);
+        position: relative;
+    }
+
+    & > span:nth-child(2) {
+        display: block;
+        margin-left: 10px;
+        font-size: $fontSize;
+    }
 
     input {
         position: relative;

@@ -38,20 +38,6 @@ test('The component should check the correct radio', () => {
     expect(radios.get(2).props.checked).toBe(false);
 });
 
-test('The component should check the correct radio of nested radios', () => {
-    const group = mount(
-        <RadioGroup value="2">
-            <div><Radio value="1" /></div>
-            <div><div><Radio value="2" /></div></div>
-            <Radio value="3" />
-        </RadioGroup>
-    );
-    const radios = group.find(Radio);
-    expect(radios.get(0).props.checked).toBe(false);
-    expect(radios.get(1).props.checked).toBe(true);
-    expect(radios.get(2).props.checked).toBe(false);
-});
-
 test('The component should pass the change callback to the radios', () => {
     const onChange = () => 'my-on-change';
     const group = mount(
