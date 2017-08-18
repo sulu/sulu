@@ -1,14 +1,11 @@
 // @flow
 import type {Element, ChildrenArray} from 'react';
 import React from 'react';
+import Icon from '../Icon';
 import HeaderCell from './HeaderCell';
 import Row from './Row';
-import type {SelectMode} from './types';
+import type {ControlItems, ControlConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
-
-function formatHeaderCellKey(cellIndex) {
-    return `header-${cellIndex}`;
-}
 
 type Props = {
     /** Child nodes of the header */
@@ -17,7 +14,7 @@ type Props = {
      * List of buttons to apply action handlers to every row (e.g. edit row).
      * The header will display the icons.
      */
-    controls?: Array<any>,
+    controls?: ControlItems,
     /** CSS classes to apply custom styles */
     className?: string,
     /** Can be set to "single" or "multiple". Defaults is "none". */
@@ -49,14 +46,24 @@ export default class Header extends React.PureComponent<Props> {
             throw new Error(`Expected one header row, got ${rows.length}`);
         }
 
+        const {controls} = this.props;
         const row = rows[0];
+        const prependCells = [];
         const cells = this.createHeaderCells(row.props.children);
 
-        if (this.isMultipleSelect()) {
-            cells.unshift(this.createCheckboxCell());
-        } else if (this.isSingleSelect()) {
-            cells.unshift(this.createEmptyCell());
+        if (controls && controls.length > 0) {
+            const controlCells = this.createHeaderControlCells();
+
+            prependCells.push(...controlCells);
         }
+
+        if (this.isMultipleSelect()) {
+            prependCells.push(this.createCheckboxCell());
+        } else if (this.isSingleSelect()) {
+            prependCells.push(this.createEmptyCell());
+        }
+
+        cells.unshift(...prependCells);
 
         return React.cloneElement(
             row,
@@ -66,28 +73,54 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createHeaderCells = (headerCells: ChildrenArray<Element<typeof HeaderCell>>) => {
-        return React.Children.map(headerCells, (headerCell: Element<typeof HeaderCell>, index: number) => {
+        return React.Children.map(headerCells, (headerCell: Element<typeof HeaderCell>, index) => {
+            const key = `header-${index}`;
+
             return React.cloneElement(
                 headerCell,
                 {
+                    key,
                     ...headerCell.props,
-                    key: formatHeaderCellKey(index),
                 },
             );
         });
     };
 
+    createHeaderControlCells = () => {
+        const {controls} = this.props;
+
+        if (!controls) {
+            return null;
+        }
+
+        return controls.map((controlItem: ControlConfig, index: number) => {
+            const key = `header-control-${index}`;
+
+            return (
+                <HeaderCell
+                    key={key}
+                    className={tableStyles.headerControlCell}>
+                    <Icon name={controlItem.icon} />
+                </HeaderCell>
+            );
+        });
+    };
+
     createCheckboxCell = () => {
+        const key = 'header-checkbox';
+
         return (
-            <HeaderCell>
+            <HeaderCell key={key}>
                 Checkbox
             </HeaderCell>
         );
     };
 
     createEmptyCell = () => {
+        const key = 'header-empty';
+
         return (
-            <HeaderCell />
+            <HeaderCell key={key} />
         );
     };
 

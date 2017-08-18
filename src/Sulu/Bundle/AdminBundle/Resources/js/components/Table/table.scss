@@ -2,12 +2,15 @@
 
 $headerTextColor: $white;
 $headerCellBackgroundColor: $blueZodiac;
+$headerControlCellTextColor: rgba($silverChalice, .25);
+$headerControlCellBorderColor: rgba($silverChalice, .25);
 $cellTextColor: $blueZodiac;
 $cellTextColorActive: $white;
 $cellBackgroundColor: $white;
 $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
+$controlCellBorderColor: $white;
 
 .tableContainer {
     overflow: scroll;
@@ -21,6 +24,7 @@ $cellBackgroundColorActive: $shakespeare;
     
     /* Remove the following lines */
     background: #e5e5e5;
+    padding: 10px;
 }
 
 .header {
@@ -47,12 +51,25 @@ $cellBackgroundColorActive: $shakespeare;
     }
 }
 
+.header-control-cell {
+    border-right: 1px solid $headerControlCellBorderColor;
+    color: $headerControlCellTextColor;
+}
+
 .row {
     height: 40px;
 
     &:hover {
         .cell {
             border-color: $cellBorderColorActive;
+        }
+
+        .control-cell {
+            background-color: $cellBackgroundColorActive;
+    
+            button {
+                visibility: visible;
+            }
         }
     }
 }
@@ -80,5 +97,25 @@ $cellBackgroundColorActive: $shakespeare;
     &:last-child {
         border-radius: 0 3px 3px 0;
         border-width: 1px 1px 1px 0;
+    }
+
+    &.control-cell {
+        border-right-width: 1px;
+    }
+}
+
+.control-cell {
+    background-color: $cellBackgroundColor;
+    color: $cellTextColorActive;
+    border-right-color: $controlCellBorderColor;
+
+    button {
+        visibility: hidden;
+        width: 100%;
+        height: 100%;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        background-color: transparent;
     }
 }

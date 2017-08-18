@@ -12,7 +12,7 @@ const controlItems = [
         onClick: (rowId) => {}
     },
     {
-        icon: 'pencil',
+        icon: 'plus',
         onClick: (rowId) => {}
     }
 ];
