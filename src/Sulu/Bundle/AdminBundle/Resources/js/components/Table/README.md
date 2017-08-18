@@ -25,9 +25,7 @@ handleRowSelection = (rowIds) => {
 
 };
 
-<Table 
-    controls={controlItems}
-    onRowSelection={handleRowSelection}>
+<Table>
     <Header>
         <Row>
             <HeaderCell>
