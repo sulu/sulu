@@ -1,7 +1,7 @@
 @import '../Application/colors.scss';
 
 $optionListBackgroundColor: $wildSand;
-$optionListShadowColor: $mineShaft;
+$optionListShadowColor: $silver;
 
 .option-list {
     list-style: none;
@@ -12,7 +12,7 @@ $optionListShadowColor: $mineShaft;
     margin: 0;
     padding: 0;
     white-space: nowrap;
-    box-shadow: 0 0 6px rgba($optionListShadowColor, .25);
+    box-shadow: 2px 6px 12px 0 rgba($optionListShadowColor, .5);
     background-color: $optionListBackgroundColor;
 
     &.is-open {
