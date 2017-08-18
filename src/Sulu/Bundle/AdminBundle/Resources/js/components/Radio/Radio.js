@@ -1,5 +1,6 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
+import type {ElementRef} from 'react';
 import radioStyles from './radio.scss';
 
 type Props = {
@@ -14,7 +15,7 @@ export default class Radio extends React.PureComponent<Props> {
         checked: false,
     };
 
-    input: React.ElementRef<'input'>;
+    input: ElementRef<'input'>;
 
     handleChange = () => {
         if (this.props.onChange) {
@@ -22,13 +23,13 @@ export default class Radio extends React.PureComponent<Props> {
         }
     };
 
-    handleButtonClick = () => this.input.click();
+    handleClick = () => this.input.click();
     handleInputClick = (event: Event) => event.stopPropagation();
-    setInput = (input: React.ElementRef<'input'>) => this.input = input;
+    setInput = (input: ElementRef<'input'>) => this.input = input;
 
     render() {
         return (
-            <span onClick={this.handleButtonClick} className={radioStyles.radio}>
+            <span onClick={this.handleClick} className={radioStyles.radio}>
                 <input
                     ref={this.setInput}
                     type="radio"

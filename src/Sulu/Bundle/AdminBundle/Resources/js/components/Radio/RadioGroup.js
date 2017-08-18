@@ -1,16 +1,17 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
+import type {ChildrenArray} from 'react';
 import Radio from './Radio';
 
 type Props = {
     value: string,
     onChange?: () => void,
     className?: string,
-    children?: React.ChildrenArray<*>,
+    children?: ChildrenArray<*>,
 };
 
 export default class RadioGroup extends React.PureComponent<Props> {
-    addPropsToRadioChildren(children: React.ChildrenArray<*>) {
+    addPropsToRadioChildren(children: ChildrenArray<*>) {
         return React.Children.map(children, (child) => {
             if (child.type === Radio) {
                 return React.cloneElement(child, {

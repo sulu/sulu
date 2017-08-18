@@ -6,7 +6,6 @@ exports[`The component should render in checked state 1`] = `
 >
   <input
     checked=""
-    tabindex="-1"
     type="radio"
   />
   <span />
@@ -18,7 +17,6 @@ exports[`The component should render in unchecked state 1`] = `
   class="radio"
 >
   <input
-    tabindex="-1"
     type="radio"
   />
   <span />

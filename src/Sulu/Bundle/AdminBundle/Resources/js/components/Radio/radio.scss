@@ -2,6 +2,8 @@
 
 $radius: 8px;
 $color: $blueZodiac;
+$borderWidth: 3px;
+$borderColor: $white;
 
 .radio {
     display: inline-block;
@@ -22,11 +24,11 @@ $color: $blueZodiac;
         position: absolute;
         top: 0;
         left: 0;
-        width: calc(2 * $radius);
-        height: calc(2 * $radius);
+        width: 100%;
+        height: 100%;
         border-radius: $radius;
         background: $wildSand;
-        border: 3px solid $white;
+        border: $borderWidth solid $borderColor;
     }
 
     input:checked + span {
