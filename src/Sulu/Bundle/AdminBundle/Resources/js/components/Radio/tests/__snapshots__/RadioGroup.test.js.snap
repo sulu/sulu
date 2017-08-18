@@ -3,5 +3,15 @@
 exports[`The component should render 1`] = `
 <div
   class="my-group"
-/>
+>
+  <p>
+    My radio mock
+  </p>
+  <p>
+    My radio mock
+  </p>
+  <p>
+    My radio mock
+  </p>
+</div>
 `;
