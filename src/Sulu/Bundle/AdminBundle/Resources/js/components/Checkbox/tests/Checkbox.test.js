@@ -18,7 +18,7 @@ test('The component should render in with class', () => {
     expect(checkbox).toMatchSnapshot();
 });
 
-test('The component should render with skin', () => {
+test('The component should render with light skin', () => {
     const checkbox = render(<Checkbox checked={false} skin="light" />);
     expect(checkbox).toMatchSnapshot();
 });
@@ -26,8 +26,8 @@ test('The component should render with skin', () => {
 test('A click on the checkbox should trigger the change callback', () => {
     const onChangeSpy = jest.fn();
     const checkbox = shallow(<Checkbox checked={false} onChange={onChangeSpy} />);
-    checkbox.find('input').simulate('change', {target: {checked: true}});
+    checkbox.find('input').simulate('change', {currentTarget: {checked: true}});
     expect(onChangeSpy).toHaveBeenCalledWith(true);
-    checkbox.find('input').simulate('change', {target: {checked: false}});
+    checkbox.find('input').simulate('change', {currentTarget: {checked: false}});
     expect(onChangeSpy).toHaveBeenCalledWith(false);
 });

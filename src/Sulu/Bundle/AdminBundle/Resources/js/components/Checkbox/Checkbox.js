@@ -1,5 +1,6 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
+import type {ElementRef} from 'react';
 import classnames from 'classnames';
 import Icon from '../Icon';
 import checkboxStyles from './checkbox.scss';
@@ -12,32 +13,32 @@ type Props = {
 };
 
 export default class Checkbox extends React.PureComponent<Props> {
-    input: React.ElementRef<'input'>;
+    input: ElementRef<'input'>;
 
     static defaultProps = {
         skin: 'dark',
         className: '',
     };
 
-    handleChange = (event: Event) => {
-        if (this.props.onChange && typeof event.target.checked === 'boolean') {
-            this.props.onChange(event.target.checked);
+    handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
+        if (this.props.onChange) {
+            this.props.onChange(event.currentTarget.checked);
         }
     };
 
-    handleButtonClick = () => this.input.click();
+    handleClick = () => this.input.click();
     handleInputClick = (event: Event) => event.stopPropagation();
-    setInput = (input: React.ElementRef<'input'>) => this.input = input;
+    setInput = (input: ElementRef<'input'>) => this.input = input;
 
     render() {
         const classNames = classnames({
             [checkboxStyles.checkbox]: true,
-            [checkboxStyles.light]: this.props.skin === 'light',
+            [checkboxStyles[this.props.skin]]: true,
             [this.props.className]: !!this.props.className,
         });
 
         return (
-            <span onClick={this.handleButtonClick} className={classNames}>
+            <span onClick={this.handleClick} className={classNames}>
                 <input
                     ref={this.setInput}
                     type="checkbox"
@@ -45,7 +46,7 @@ export default class Checkbox extends React.PureComponent<Props> {
                     onClick={this.handleInputClick}
                     onChange={this.handleChange} />
                 <span>
-                    {this.props.checked ? <Icon className={checkboxStyles.icon} name="check" /> : ''}
+                    {this.props.checked && <Icon className={checkboxStyles.icon} name="check" />}
                 </span>
             </span>
         );

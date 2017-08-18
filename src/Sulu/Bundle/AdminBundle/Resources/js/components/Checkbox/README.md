@@ -1,4 +1,5 @@
 The custom checkbox has no internal state and has to be managed, like shown in the following example.
+
 ```
 initialState = {checked: false};
 onChange = (checked) => setState({checked});
@@ -6,6 +7,7 @@ onChange = (checked) => setState({checked});
 ```
 
 The checkbox also comes with a light skin.
+
 ```
 initialState = {checked: false};
 onChange = (checked) => setState({checked});

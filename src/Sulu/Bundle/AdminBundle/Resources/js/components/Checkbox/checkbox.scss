@@ -1,7 +1,8 @@
 @import '../../containers/Application/colors.scss';
 
 $length: 16px;
-$color: $blueZodiac;
+$primaryColor: $blueZodiac;
+$secondaryColor: $white;
 
 .checkbox {
     display: inline-block;
@@ -27,8 +28,8 @@ $color: $blueZodiac;
         top: 0;
         left: 0;
         border-radius: 2px;
-        border: 1px solid $color;
-        color: $white;
+        border: 1px solid $primaryColor;
+        color: $secondaryColor;
         text-align: center;
         line-height: $length;
 
@@ -41,17 +42,17 @@ $color: $blueZodiac;
     }
 
     input:checked + span {
-        background: $color;
+        background: $primaryColor;
     }
 }
 
 .checkbox.light {
     input + span {
-        border-color: $white;
-        color: $color;
+        border-color: $secondaryColor;
+        color: $primaryColor;
     }
 
     input:checked + span {
-        background: $white;
+        background: $secondaryColor;
     }
 }
