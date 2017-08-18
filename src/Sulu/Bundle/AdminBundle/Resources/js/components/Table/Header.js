@@ -6,7 +6,7 @@ import Row from './Row';
 import type {SelectMode} from './types';
 import tableStyles from './table.scss';
 
-function formatHeaderCellKey(rowIndex, cellIndex) {
+function formatHeaderCellKey(cellIndex) {
     return `header-${cellIndex}`;
 }
 
@@ -30,6 +30,18 @@ type Props = {
 };
 
 export default class Header extends React.PureComponent<Props> {
+    static defaultProps = {
+        selectMode: 'none',
+    };
+
+    isMultipleSelect = () => {
+        return this.props.selectMode === 'multiple';
+    };
+
+    isSingleSelect = () => {
+        return this.props.selectMode === 'single';
+    };
+
     createHeaderRow = (originalRows: ChildrenArray<Element<typeof Row>>) => {
         const rows = React.Children.toArray(originalRows);
 
@@ -40,6 +52,12 @@ export default class Header extends React.PureComponent<Props> {
         const row = rows[0];
         const cells = this.createHeaderCells(row.props.children);
 
+        if (this.isMultipleSelect()) {
+            cells.unshift(this.createCheckboxCell());
+        } else if (this.isSingleSelect()) {
+            cells.unshift(this.createEmptyCell());
+        }
+
         return React.cloneElement(
             row,
             {},
@@ -48,12 +66,29 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createHeaderCells = (headerCells: ChildrenArray<Element<typeof HeaderCell>>) => {
-        return React.Children.map(headerCells, (headerCell: Element<typeof HeaderCell>) => {
+        return React.Children.map(headerCells, (headerCell: Element<typeof HeaderCell>, index: number) => {
             return React.cloneElement(
                 headerCell,
-                {...headerCell.props},
+                {
+                    ...headerCell.props,
+                    key: formatHeaderCellKey(index),
+                },
             );
         });
+    };
+
+    createCheckboxCell = () => {
+        return (
+            <HeaderCell>
+                Checkbox
+            </HeaderCell>
+        );
+    };
+
+    createEmptyCell = () => {
+        return (
+            <HeaderCell />
+        );
     };
 
     render() {

@@ -36,7 +36,9 @@ export default class Body extends React.PureComponent<Props> {
     };
 
     isSelectable = () => {
-        return this.props.selectMode === 'single' || 'multiple';
+        const {selectMode} = this.props;
+
+        return selectMode === 'single' || selectMode === 'multiple';
     };
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
@@ -79,7 +81,7 @@ export default class Body extends React.PureComponent<Props> {
 
         const clonedCells = this.cloneCells(cells, rowIndex, cellIndex);
 
-        clonedCells.unshift.apply(clonedCells, prependedCells);
+        clonedCells.unshift(...prependedCells);
 
         return clonedCells;
     };

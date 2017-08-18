@@ -27,16 +27,9 @@ handleRowSelection = (rowIds) => {
 
 <Table 
     controls={controlItems}
-    selectable={true}
     onRowSelection={handleRowSelection}>
     <Header>
         <Row>
-            <HeaderCell>
-                <Icon name="pencil" />
-            </HeaderCell>
-            <HeaderCell>
-                <Icon name="floppy-o" />
-            </HeaderCell>
             <HeaderCell>
                 Type
             </HeaderCell>
@@ -74,12 +67,6 @@ handleRowSelection = (rowIds) => {
     </Header>
     <Body>
         <Row selectable={true}>
-            <Cell onClick={() => {}}>
-                <Icon name="pencil" />
-            </Cell>
-            <Cell>
-                <Icon name="floppy-o" />
-            </Cell>
             <Cell>
                 Blog
             </Cell>
@@ -99,37 +86,6 @@ handleRowSelection = (rowIds) => {
             <Cell></Cell>   
         </Row>
         <Row>
-            <Cell onClick={() => {}}>
-                <Icon name="pencil" />
-            </Cell>
-            <Cell>
-                <Icon name="floppy-o" />
-            </Cell>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-        <Row>
-            <Cell onClick={() => {}}>
-                <Icon name="pencil" />
-            </Cell>
-            <Cell>
-                <Icon name="floppy-o" />
-            </Cell>
             <Cell>
                 Blog
             </Cell>
@@ -149,12 +105,6 @@ handleRowSelection = (rowIds) => {
             <Cell></Cell>        
         </Row>
         <Row>
-            <Cell onClick={() => {}}>
-                <Icon name="pencil" />
-            </Cell>
-            <Cell>
-                <Icon name="floppy-o" />
-            </Cell>
             <Cell>
                 Blog
             </Cell>
@@ -174,12 +124,6 @@ handleRowSelection = (rowIds) => {
             <Cell></Cell>        
         </Row>
         <Row>
-            <Cell onClick={() => {}}>
-                <Icon name="pencil" />
-            </Cell>
-            <Cell>
-                <Icon name="floppy-o" />
-            </Cell>
             <Cell>
                 Blog
             </Cell>
@@ -199,12 +143,25 @@ handleRowSelection = (rowIds) => {
             <Cell></Cell>        
         </Row>
         <Row>
-            <Cell onClick={() => {}}>
-                <Icon name="pencil" />
+            <Cell>
+                Blog
             </Cell>
             <Cell>
-                <Icon name="floppy-o" />
+                Meine ersten 100 Tage MASSIVE ART
             </Cell>
+            <Cell>
+                Adrian Sieber
+            </Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+            <Cell></Cell>   
+            <Cell></Cell>
+            <Cell></Cell>        
+        </Row>
+        <Row>
             <Cell>
                 Blog
             </Cell>
