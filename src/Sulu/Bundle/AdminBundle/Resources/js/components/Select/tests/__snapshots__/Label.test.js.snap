@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<button
+  class="label"
+>
+  My label
+  <span
+    aria-hidden="true"
+    class="toggle fa fa-chevron-down"
+  />
+</button>
+`;
+
+exports[`The component should render with an icon 1`] = `
+<button
+  class="label hasIcon"
+>
+  <span
+    aria-hidden="true"
+    class="frontIcon fa fa-plus"
+  />
+  My label
+  <span
+    aria-hidden="true"
+    class="toggle fa fa-chevron-down"
+  />
+</button>
+`;

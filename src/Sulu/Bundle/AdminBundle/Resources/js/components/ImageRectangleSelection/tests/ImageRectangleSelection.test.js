@@ -3,6 +3,8 @@ import {mount} from 'enzyme';
 import React from 'react';
 import {ImageRectangleSelection} from '../ImageRectangleSelection';
 
+jest.mock('../../../services/DOM/afterElementsRendered');
+
 jest.mock('../../withContainerSize/withContainerSize');
 
 class MockedImageSelection extends ImageRectangleSelection {
@@ -22,8 +24,6 @@ test('The component should render with image source', () => {
 });
 
 test('The component should calculate the selection with respect to the image', (done) => {
-    window.requestAnimationFrame = jest.fn((cb) => cb());
-
     const onChangeSpy = (data) => {
         expect(data).toEqual({width: 1920, height: 1080, top: 0, left: 0});
         done();
@@ -39,8 +39,6 @@ test('The component should calculate the selection with respect to the image', (
 });
 
 test('The component should render with initial selection', (done) => {
-    window.requestAnimationFrame = jest.fn((cb) => cb());
-
     const spy = () => {
         expect(view.render()).toMatchSnapshot();
         done();
@@ -61,8 +59,6 @@ test('The component should render with initial selection', (done) => {
 });
 
 test('The component should render with minWidth and minHeight', (done) => {
-    window.requestAnimationFrame = jest.fn((cb) => cb());
-
     const spy = () => {
         const rectangle = view.find('RectangleSelection');
         expect(rectangle.length).toBe(1);
