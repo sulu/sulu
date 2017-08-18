@@ -1,27 +1,28 @@
 // @flow
 import React from 'react';
+import type {Element} from 'react';
 import classNames from 'classnames';
 import Header from './Header';
 import Body from './Body';
 import type {SelectMode, SelectedRows, TableChildren} from './types';
 import tableStyles from './table.scss';
 
-export default class Table extends React.PureComponent {
-    props: {
-        /** Child nodes of the table */
-        children: TableChildren,
-        /** List of buttons to apply action handlers to every row (e.g. edit row) */
-        controls?: Array<any>,
-        /** CSS classes to apply custom styles */
-        className?: string,
-        /** Can be set to "single" or "multiple". Defaults is "none". */
-        selectMode?: SelectMode,
-        /** Callback function to notify about the selected row(s) */
-        onRowSelection?: (rowId: SelectedRows) => void,
-        /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
-        onSelectAll?: (checked: boolean) => void,
-    };
+type Props = {
+    /** Child nodes of the table */
+    children: TableChildren,
+    /** List of buttons to apply action handlers to every row (e.g. edit row) */
+    controls?: Array<any>,
+    /** CSS classes to apply custom styles */
+    className?: string,
+    /** Can be set to "single" or "multiple". Defaults is "none". */
+    selectMode?: SelectMode,
+    /** Callback function to notify about the selected row(s) */
+    onRowSelection?: (rowId: SelectedRows) => void,
+    /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
+    onSelectAll?: (checked: boolean) => void,
+};
 
+export default class Table extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
     };
@@ -30,7 +31,7 @@ export default class Table extends React.PureComponent {
         let body;
         let header;
 
-        React.Children.forEach(children, (child) => {
+        React.Children.forEach(children, (child: TableChildren) => {
             const {name} = child.type;
 
             switch (name) {
@@ -51,17 +52,18 @@ export default class Table extends React.PureComponent {
         return {body, header};
     };
 
-    cloneHeader = (originalHeader: Element<Header>) => {
+    cloneHeader = (originalHeader: Element<typeof Header>) => {
         return React.cloneElement(
             originalHeader,
             {
+                controls: this.props.controls,
                 onSelectAll: this.onSelectAll,
                 selectMode: this.props.selectMode,
             }
         );
     };
 
-    cloneBody = (originalBody: Element<Body>) => {
+    cloneBody = (originalBody: Element<typeof Body>) => {
         return React.cloneElement(
             originalBody,
             {

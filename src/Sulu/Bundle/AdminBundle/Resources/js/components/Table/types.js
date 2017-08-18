@@ -1,13 +1,13 @@
 // @flow
-import type {Element} from 'react';
+import type {ChildrenArray, Element} from 'react';
 import Body from './Body';
 import Header from './Header';
 import Cell from './Cell';
 import HeaderCell from './HeaderCell';
 
-export type TableChildren = Element<Header | Body>;
+export type TableChildren = ChildrenArray<Element<typeof Header | typeof Body>>;
 
-export type RowChildren = Element<Cell>;
+export type RowChildren = ChildrenArray<Element<Cell>>;
 
 export type SelectMode = 'none' | 'single' | 'multi';
 
@@ -15,7 +15,7 @@ export type SelectedRows = string | number | Array<string | number>;
 
 export type RowProps = {
     /** Child nodes of the table row */
-    children: Element<HeaderCell | Cell>,
+    children: ChildrenArray<Element<typeof HeaderCell | typeof Cell>>,
     /** 
      * @ignore 
      * List of buttons to apply action handlers to every row (e.g. edit row) forwarded from table body 

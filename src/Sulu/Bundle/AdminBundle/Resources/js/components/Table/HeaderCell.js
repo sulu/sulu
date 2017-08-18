@@ -1,13 +1,13 @@
 // @flow
-import type {Element} from 'react';
+import type {Node} from 'react';
 import React from 'react';
 import tableStyles from './table.scss';
 
-export default class HeaderCell extends React.PureComponent {
-    props: {
-        children: Element<*>,
-    };
+type Props = {
+    children: Node,
+};
 
+export default class HeaderCell extends React.PureComponent<Props> {
     render() {
         return (
             <th className={tableStyles.headerCell}>

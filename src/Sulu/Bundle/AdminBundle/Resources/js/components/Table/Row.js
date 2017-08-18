@@ -4,9 +4,7 @@ import classNames from 'classnames';
 import tableStyles from './table.scss';
 import type {RowProps} from './types';
 
-export default class Row extends React.PureComponent {
-    props: RowProps;
-
+export default class Row extends React.PureComponent<RowProps> {
     static defaultProps = {
         selected: false,
     };

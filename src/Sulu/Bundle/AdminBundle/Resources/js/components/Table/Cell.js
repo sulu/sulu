@@ -1,17 +1,18 @@
 // @flow
-import type {Element} from 'react';
+import type {Node} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import tableStyles from './table.scss';
 
-export default class Cell extends React.PureComponent {
-    props: {
-        children: Element<*>,
-        className?: string,
-    };
+type Props = {
+    children: Node,
+    className?: string,
+};
 
+export default class Cell extends React.PureComponent<Props> {
     render() {
         const {
+            children,
             className,
         } = this.props;
         const cellClass = classNames(
@@ -21,7 +22,7 @@ export default class Cell extends React.PureComponent {
 
         return (
             <td className={cellClass}>
-                {this.props.children}
+                {children}
             </td>
         );
     }
