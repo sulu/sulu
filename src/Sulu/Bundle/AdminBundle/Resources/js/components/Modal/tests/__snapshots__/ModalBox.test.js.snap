@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<div
+  class="box"
+>
+  <div
+    class="header"
+  >
+    My title
+    <span
+      aria-hidden="true"
+      class="icon fa fa-times"
+    />
+  </div>
+  <div
+    class="content"
+  >
+    <p>
+      My modal content
+    </p>
+  </div>
+  <div
+    class="footer"
+  >
+    <div
+      class="actions"
+    >
+      <button
+        class="action"
+      >
+        Action 1
+      </button>
+      <button
+        class="action"
+      >
+        Action 2
+      </button>
+    </div>
+    <button
+      class="confirmButton"
+    >
+      Alright mate!
+    </button>
+  </div>
+</div>
+`;

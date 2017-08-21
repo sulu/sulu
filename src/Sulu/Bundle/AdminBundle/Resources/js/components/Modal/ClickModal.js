@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import type {Element, Node} from 'react';
+import type {Element} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import type {ModalProps} from './types';
 import Modal from './Modal';
 
-type Props = {
+type Props = ModalProps & {
     className?: string,
     clickElement: Element<*>,
-    children: Node,
 };
 
 @observer
@@ -24,10 +24,14 @@ export default class ClickModal extends React.PureComponent<Props> {
     };
 
     render() {
+        const {className, clickElement, ...modalProps} = this.props;
         return (
-            <div className={this.props.className}>
-                {React.cloneElement(this.props.clickElement, {onClick: this.handleElementClick})}
-                <Modal isOpen={this.modalOpen} onRequestClose={this.handleRequestClose}>
+            <div className={className}>
+                {React.cloneElement(clickElement, {onClick: this.handleElementClick})}
+                <Modal
+                    isOpen={this.modalOpen}
+                    onRequestClose={this.handleRequestClose}
+                    {...modalProps} >
                     {this.props.children}
                 </Modal>
             </div>

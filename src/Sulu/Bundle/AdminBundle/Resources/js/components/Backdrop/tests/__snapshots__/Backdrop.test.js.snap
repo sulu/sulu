@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`The component should not render in body when property is set 1`] = `
+<div
+  class="backdrop isVisible"
+/>
+`;
+
 exports[`The component should render in body when open 1`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"backdrop isVisible\\"></div>

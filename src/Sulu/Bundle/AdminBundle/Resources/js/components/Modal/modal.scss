@@ -1,38 +1,39 @@
-@import '../../containers/Application/colors.scss';
-
-$backdropColor: rgba($black, .4);
-$borderRadius: 4px;
-$backgroundColor: $white;
-$modalShadow: 0 0 25px 0 rgba($black, .25);
+$transitionDuration: 300ms;
 
 .container {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
+
+    & > * {
+        opacity: 0;
+        transition: opacity $transitionDuration;
+    }
+}
+
+.box {
+    position: relative;
+    top: -100%;
+    opacity: 0;
+    transition: top $transitionDuration, opacity $transitionDuration;
     z-index: 1;
     pointer-events: none;
+
+    & > * {
+        pointer-events: auto;
+    }
 }
 
-.backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: $backdropColor;
-}
+.is-down {
+    & > * {
+        opacity: 1;
+    }
 
-.modal {
-    display: inline-flex;
-    overflow: auto;
-    max-height: 100vh;
-    background: $backgroundColor;
-    border-radius: $borderRadius;
-    z-index: 1;
-    box-shadow: $modalShadow;
+    .box {
+        top: 0;
+    }
 }

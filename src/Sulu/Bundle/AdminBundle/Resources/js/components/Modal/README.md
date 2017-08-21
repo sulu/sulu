@@ -3,11 +3,22 @@ It renders depending on the passed property and request being closed through a c
 
 ```
 initialState = {open: false};
+const actions = [
+    {title: 'Destroy world', handleAction: () => {/* destroy world */}},
+    {title: 'Save world', handleAction: () => {/* save world */}},
+];
 
 <div>
     <button onClick={() => setState({open: true})}>Open modal</button>
-    <Modal onRequestClose={() => setState({open: false})} isOpen={state.open}>
-        <div style={{width: '500px', height: '500px'}}>My modal content</div>
+    <Modal
+        title="Njan Njan Njan"
+        onRequestClose={() => setState({open: false})}
+        actions={actions}
+        confirmText="Apply"
+        isOpen={state.open} >
+        <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <img src="http://www.nyan.cat/cats/original.gif" />
+        </div>
     </Modal>
 </div>
 ```
@@ -19,9 +30,18 @@ of the modal internally.
 
 ```
 const ClickModal = require('./ClickModal').default;
+const actions = [
+    {title: 'Save Gotham', handleAction: () => {/* save gotham */}},
+];
 
 const button = (<button>Open modal</button>);
-<ClickModal clickElement={button}>
-    <div style={{width: '500px', height: '1000px'}}>My modal content</div>
+<ClickModal
+    clickElement={button}
+    title="Nana Nana Nana"
+    actions={actions}
+    confirmText="Ok" >
+    <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <img src="https://media.giphy.com/media/NmhVw98IHkQtq/source.gif" />
+    </div>
 </ClickModal>
 ```

@@ -1,0 +1,95 @@
+@import '../../containers/Application/colors.scss';
+
+$primaryBackground: $concrete;
+$secondaryBackground: $white;
+$borderRadius: 3px;
+$boxShadow: 0 10px 18px 0 rgba($mineShaft, .5);
+
+$headerHeight: 60px;
+$footerHeight: 90px;
+
+$titleColor: $black;
+$titleSize: 22px;
+
+$iconFontSize: 14px;
+$iconSize: ($iconFontSize + 10px);
+
+$actionFontSize: 14px;
+$actionColor: $black;
+
+$confirmBackground: $shakespeare;
+$confirmColor: $white;
+$confirmFontSize: 12px;
+$confirmBorderRadius: 3px;
+$confirmHeight: 30px;
+
+.box {
+    border-radius: 0 0 $borderRadius $borderRadius;
+    overflow: hidden;
+    box-shadow: $boxShadow;
+
+    .header {
+        background: $secondaryBackground;
+        height: $headerHeight;
+        color: $titleColor;
+        font-size: $titleSize;
+        font-weight: bold;
+        text-align: center;
+        line-height: $headerHeight;
+    }
+
+    .content {
+        max-height: calc(100vh - $headerHeight - $footerHeight);
+        overflow: auto;
+        background: $primaryBackground;
+    }
+
+    .footer {
+        background: $secondaryBackground;
+        height: $footerHeight;
+        padding: 0 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .icon {
+        position: absolute;
+        top: calc(($headerHeight - $iconSize) / 2);
+        right: 30px;
+        font-size: $iconFontSize;
+        width: calc($iconSize);
+        height: calc($iconSize);
+        line-height: calc($iconSize);
+        text-align: center;
+        cursor: pointer;
+    }
+}
+
+.actions {
+    line-height: $footerHeight;
+}
+
+.action {
+    padding: 0;
+    margin: 0 10px 0 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: $actionFontSize;
+    color: $actionColor;
+}
+
+.confirm-button {
+    background: $confirmBackground;
+    color: $confirmColor;
+    font-size: $confirmFontSize;
+    border: none;
+    border-radius: $confirmBorderRadius;
+    line-height: $confirmHeight;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;
+    padding: 0 40px;
+}

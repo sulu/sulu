@@ -10,14 +10,11 @@ type Props = {
 
 export default class Icon extends React.PureComponent<Props> {
     render() {
-        const className = classNames(
-            this.props.className,
-            'fa',
-            'fa-' + this.props.name
-        );
+        const {className, name, ...otherProps} = this.props;
+        const classes = classNames(className, 'fa', 'fa-' + name);
 
         return (
-            <span className={className} aria-hidden={true} />
+            <span className={classes} aria-hidden={true} {...otherProps} />
         );
     }
 }

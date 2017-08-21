@@ -13,6 +13,11 @@ test('The component should render in body when open', () => {
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 
+test('The component should not render in body when property is set', () => {
+    const view = mount(<Backdrop inPortal={false} />).render();
+    expect(view).toMatchSnapshot();
+});
+
 test('The component should not render in the body when closed', () => {
     const body = document.body;
     const view = mount(<Backdrop isOpen={false} />).render();
