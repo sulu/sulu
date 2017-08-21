@@ -1,3 +1,6 @@
 .main {
-    margin: 60px 100px;
+    /* 100% of the window height - the toolbar height */
+    height: calc(100vh - 60px);
+    padding: 60px 100px;
+    overflow: auto;
 }
