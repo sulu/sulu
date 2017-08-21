@@ -1,7 +1,6 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import classNames from 'classnames';
 import tableStyles from './table.scss';
 
 type Props = {

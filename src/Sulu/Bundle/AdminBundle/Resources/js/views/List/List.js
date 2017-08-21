@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {observable} from 'mobx';
 import React from 'react';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
@@ -53,7 +53,7 @@ class List extends React.PureComponent<*> {
                                             })
                                         }
                                     </Row>
-                                )
+                                );
                             })
                         }
                     </Body>

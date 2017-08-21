@@ -1,6 +1,5 @@
 // @flow
 import type {Node} from 'react';
-import classNames from 'classnames';
 import React from 'react';
 import tableStyles from './table.scss';
 

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
 import tableStyles from './table.scss';
 import type {RowProps} from './types';
 
