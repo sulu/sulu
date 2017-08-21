@@ -4,13 +4,8 @@ import React from 'react';
 import RadioGroup from '../RadioGroup';
 import Radio from '../Radio';
 
-jest.mock('../Radio', () => {
-    const {PureComponent} = require.requireActual('react');
-    return class Radio extends PureComponent {
-        render () {
-            return <p>My radio mock</p>;
-        }
-    };
+jest.mock('../Radio', () => function Radio() {
+    return <p>My radio mock</p>;
 });
 
 test('The component should render', () => {
