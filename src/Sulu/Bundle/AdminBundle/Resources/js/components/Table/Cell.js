@@ -7,23 +7,16 @@ import tableStyles from './table.scss';
 type Props = {
     /** Child nodes of a cell */
     children?: Node,
-    /** CSS classes to apply custom styles */
-    className?: string,
 };
 
 export default class Cell extends React.PureComponent<Props> {
     render() {
         const {
             children,
-            className,
         } = this.props;
-        const cellClass = classNames(
-            tableStyles.cell,
-            className,
-        );
 
         return (
-            <td className={cellClass}>
+            <td className={tableStyles.cell}>
                 {children}
             </td>
         );

@@ -14,4 +14,3 @@ export {
     Cell,
     HeaderCell,
 };
-

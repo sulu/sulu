@@ -6,178 +6,51 @@ const Row = require('./Row').default;
 const Cell = require('./Cell').default;
 const HeaderCell = require('./HeaderCell').default;
 
-const controlItems = [
-    {
-        icon: 'pencil',
-        onClick: (rowId) => {}
-    },
-    {
-        icon: 'plus',
-        onClick: (rowId) => {}
-    }
-];
-
-handleRowClick = (rowId) => {
-
-};
-
-handleRowSelection = (rowIds) => {
-
+const tableData = {
+    header: ['Type', 'Name', 'Author', 'Date', 'Subversion', 'Uploadgröße', 'Dateigröße'],
+    body: [
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+        ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+    ],
 };
 
 <Table>
     <Header>
         <Row>
-            <HeaderCell>
-                Type
-            </HeaderCell>
-            <HeaderCell>
-                Name
-            </HeaderCell>
-            <HeaderCell>
-                Author
-            </HeaderCell>
-            <HeaderCell>
-                Date
-            </HeaderCell>
-            <HeaderCell>
-                Subversion
-            </HeaderCell>
-            <HeaderCell>
-                Uploadgröße
-            </HeaderCell>
-            <HeaderCell>
-                Dateigröße
-            </HeaderCell>
-            <HeaderCell>
-                Uploadgröße
-            </HeaderCell>
-            <HeaderCell>
-                Dateigröße
-            </HeaderCell>
-            <HeaderCell>
-                Uploadgröße
-            </HeaderCell>
-            <HeaderCell>
-                Dateigröße
-            </HeaderCell>
+            {
+                tableData.header.map((headerCell, index) => {
+                    return (
+                        <HeaderCell key={index}>
+                            {headerCell}
+                        </HeaderCell>
+                    );
+                })
+            }
         </Row>
     </Header>
     <Body>
-        <Row selectable={true}>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>   
-        </Row>
-        <Row>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-        <Row>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-        <Row>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-        <Row>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-        <Row>
-            <Cell>
-                Blog
-            </Cell>
-            <Cell>
-                Meine ersten 100 Tage MASSIVE ART
-            </Cell>
-            <Cell>
-                Adrian Sieber
-            </Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>
-            <Cell></Cell>   
-            <Cell></Cell>
-            <Cell></Cell>        
-        </Row>
-    </Body>    
+        {
+            tableData.body.map((row, index) => {
+                return (
+                    <Row key={index}>
+                        {
+                            row.map((cell, index) => {
+                                return (
+                                    <Cell key={index}>
+                                        {cell}
+                                    </Cell>
+                                );
+                            })
+                        }
+                    </Row>
+                )
+            })
+        }
+    </Body>
 </Table>
 ```

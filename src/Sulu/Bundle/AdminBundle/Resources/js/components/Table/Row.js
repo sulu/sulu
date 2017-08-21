@@ -8,15 +8,10 @@ export default class Row extends React.PureComponent<RowProps> {
     render() {
         const {
             children,
-            className,
         } = this.props;
-        const rowClass = classNames(
-            tableStyles.row,
-            className,
-        );
 
         return (
-            <tr className={rowClass}>
+            <tr className={tableStyles.row}>
                 {children}
             </tr>
         );
