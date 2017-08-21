@@ -1,0 +1,39 @@
+$lineHeight: 1.2em;
+
+.cropped-text {
+    width: 100%;
+    max-height: $lineHeight;
+    line-height: $lineHeight;
+    overflow: hidden;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    position: relative;
+
+    .whole {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: transparent;
+    }
+
+    .front {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: content;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: pre;
+    }
+
+    .back {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: content;
+        overflow: hidden;
+
+        span {
+            float: right;
+            white-space: pre;
+        }
+    }
+}
