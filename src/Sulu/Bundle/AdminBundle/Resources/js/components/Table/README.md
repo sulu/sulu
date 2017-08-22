@@ -73,3 +73,144 @@ const HeaderCell = require('./HeaderCell').default;
     </Body>
 </Table>
 ```
+
+
+```
+const Table = require('./Table').default;
+const Header = require('./Header').default;
+const Body = require('./Body').default;
+const Row = require('./Row').default;
+const Cell = require('./Cell').default;
+const HeaderCell = require('./HeaderCell').default;
+
+initialState = { 
+    selectedRows: {},
+};
+
+const isSelected = (id) => {
+    return !!state.selectedRows[id];
+};
+
+const tableProps = {
+    selectMode: 'multiple',
+    controls: [
+        {
+            icon: 'pencil',
+            onClick: (rowId) => {}
+        },
+    ],
+    onRowSelectionChange: (rowId, selected) => {
+        setState({
+            selectedRows: Object.assign({}, state.selectedRows, {
+                [rowId]: selected,
+            }),
+        });
+    },
+};
+
+const tableData = {
+    header: [
+        { 
+            data: 'Type',
+            sortMode: 'ascending',
+            onClick: () => {
+
+            },
+        },
+        { 
+            data: 'Name',
+        },
+        { 
+            data: 'Author',
+        },
+        { 
+            data: 'Date',
+            sortMode: 'descending',
+            onClick: () => {
+                console.log('hello');
+            },
+        },
+        { 
+            data: 'Subversion',
+        },
+        { 
+            data: 'Uploadgröße',
+            onClick: () => {
+
+            },
+        },
+    ],
+    body: [
+        {
+            id: 1,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+        {
+            id: 2,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+        {
+            id: 3,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+        {
+            id: 4,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+        {
+            id: 5,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+        {
+            id: 6,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+        {
+            id: 7,
+            data: ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB'],
+        },
+    ],
+};
+
+<Table {...tableProps} selectAllChecked={state.allSelected}>
+    <Header>
+        <Row>
+            {
+                tableData.header.map((headerCell, index) => {
+                    const handleOnClick = headerCell.onClick;
+                    return (
+                        <HeaderCell 
+                            key={index}
+                            sortMode={headerCell.sortMode}
+                            onClick={handleOnClick}>
+                            {headerCell.data}
+                        </HeaderCell>
+                    );
+                })
+            }
+        </Row>
+    </Header>
+    <Body>
+        {
+            tableData.body.map((row, index) => {
+                return (
+                    <Row 
+                        key={index}
+                        id={row.id}
+                        selected={isSelected(row.id)}>
+                        {
+                            row.data.map((cell, index) => {
+                                return (
+                                    <Cell key={index}>
+                                        {cell}
+                                    </Cell>
+                                );
+                            })
+                        }
+                    </Row>
+                )
+            })
+        }
+    </Body>
+</Table>
+```

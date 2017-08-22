@@ -2,18 +2,27 @@
 
 $headerTextColor: $white;
 $headerCellBackgroundColor: $blueZodiac;
+$headerControlCellTextColor: rgba($silverChalice, .25);
+$headerControlCellBorderColor: rgba($silverChalice, .25);
 $cellTextColor: $blueZodiac;
 $cellTextColorActive: $white;
 $cellBackgroundColor: $white;
 $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
+$controlCellBorderColor: $white;
+
+.tableContainer {
+    overflow: scroll;
+}
 
 .table {
     border-collapse: separate;
     border-spacing: 0 5px;
     margin: -5px 0;
     overflow: hidden;
+    background: #e5e5e5;
+    padding: 20px;
 }
 
 .header {
@@ -25,7 +34,7 @@ $cellBackgroundColorActive: $shakespeare;
 }
 
 .header-cell {
-    padding: 20px;
+    padding: 0;
     text-align: center;
     font-size: 12px;
     font-weight: normal;
@@ -38,6 +47,18 @@ $cellBackgroundColorActive: $shakespeare;
     &:last-child {
         border-radius: 0 3px 3px 0;
     }
+
+    & > button {
+        height: 60px;
+        padding: 20px;
+        color: inherit;
+        border: none;
+        background: none;
+
+        &:not(:disabled) {
+            cursor: pointer;
+        }
+    }
 }
 
 .cell,
@@ -46,6 +67,15 @@ $cellBackgroundColorActive: $shakespeare;
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 250px;
+}
+
+.header-cell-sort-icon {
+    padding-left: 10px;
+}
+
+.header-control-cell {
+    border-right: 1px solid $headerControlCellBorderColor;
+    color: $headerControlCellTextColor;
 }
 
 .row {
@@ -77,5 +107,29 @@ $cellBackgroundColorActive: $shakespeare;
     &:last-child {
         border-radius: 0 3px 3px 0;
         border-right-width: 1px;
+    }
+}
+
+.control-cell {
+    padding: 0;
+    background-color: $cellBackgroundColor;
+    color: $cellTextColorActive;
+
+    &:hover {
+        button {
+            visibility: visible;
+            background-color: $cellBackgroundColorActive;
+            border-right: 1px solid $controlCellBorderColor;
+        }
+    }
+
+    button {
+        visibility: hidden;
+        width: 55px;
+        height: 38px;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        background-color: transparent;
     }
 }

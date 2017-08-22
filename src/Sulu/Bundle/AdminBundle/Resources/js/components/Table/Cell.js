@@ -1,20 +1,37 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
+import classNames from 'classnames';
 import tableStyles from './table.scss';
 
 type Props = {
     children?: Node,
+    /**
+     * @ignore 
+     * If set to true, the cell appears as a control-cell 
+     */
+    isControl?: boolean,
 };
 
 export default class Cell extends React.PureComponent<Props> {
+    static defaultProps = {
+        isControl: false,
+    };
+
     render() {
         const {
             children,
+            isControl,
         } = this.props;
+        const cellClass = classNames(
+            tableStyles.cell,
+            {
+                [tableStyles.controlCell]: isControl,
+            }
+        );
 
         return (
-            <td className={tableStyles.cell}>
+            <td className={cellClass}>
                 {children}
             </td>
         );
