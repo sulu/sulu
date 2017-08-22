@@ -5,7 +5,6 @@ import Row from './Row';
 import tableStyles from './table.scss';
 
 type Props = {
-    /** Child nodes of the header */
     children: ChildrenArray<Element<typeof Row>>,
 };
 

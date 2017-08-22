@@ -4,7 +4,6 @@ import type {TableChildren} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    /** Child nodes of the table */
     children: TableChildren,
 };
 

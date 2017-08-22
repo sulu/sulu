@@ -4,7 +4,6 @@ import React from 'react';
 import Row from './Row';
 
 type Props = {
-    /** Child nodes of the table body */
     children: ChildrenArray<Element<typeof Row>>,
 };
 

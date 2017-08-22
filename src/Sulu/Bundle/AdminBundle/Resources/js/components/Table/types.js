@@ -10,6 +10,5 @@ export type TableChildren = ChildrenArray<Element<typeof Header | typeof Body>>;
 export type RowChildren = ChildrenArray<Element<typeof Cell>>;
 
 export type RowProps = {
-    /** Child nodes of the table row */
     children: ChildrenArray<Element<typeof HeaderCell | typeof Cell>>,
 };
