@@ -31,3 +31,12 @@ test('A click on the checkbox should trigger the change callback', () => {
     checkbox.find('input').simulate('change', {currentTarget: {checked: false}});
     expect(onChangeSpy).toHaveBeenCalledWith(false);
 });
+
+test('A click on the checkbox should trigger the change callback with the value', () => {
+    const onChangeSpy = jest.fn();
+    const checkbox = shallow(<Checkbox checked={false} value="my-value" onChange={onChangeSpy} />);
+    checkbox.find('input').simulate('change', {currentTarget: {checked: true}});
+    expect(onChangeSpy).toHaveBeenCalledWith('my-value');
+    checkbox.find('input').simulate('change', {currentTarget: {checked: false}});
+    expect(onChangeSpy).toHaveBeenCalledWith(false);
+});

@@ -31,6 +31,6 @@ test('Input should render with value', () => {
 test('Input should call the callback when the input changes', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} />);
-    input.find('input').simulate('change', {target: {value: 'my-value'}});
+    input.find('input').simulate('change', {currentTarget: {value: 'my-value'}});
     expect(onChange).toHaveBeenCalledWith('my-value');
 });
