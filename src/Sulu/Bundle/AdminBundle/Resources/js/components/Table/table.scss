@@ -1,0 +1,81 @@
+@import '../../containers/Application/colors.scss';
+
+$headerTextColor: $white;
+$headerCellBackgroundColor: $blueZodiac;
+$cellTextColor: $blueZodiac;
+$cellTextColorActive: $white;
+$cellBackgroundColor: $white;
+$cellBorderColor: $cellBackgroundColor;
+$cellBorderColorActive: $shakespeare;
+$cellBackgroundColorActive: $shakespeare;
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    margin: -5px 0;
+    overflow: hidden;
+}
+
+.header {
+    color: $headerTextColor;
+
+    .row {
+        height: 60px;
+    }
+}
+
+.header-cell {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    background-color: $headerCellBackgroundColor;
+
+    &:first-child {
+        border-radius: 3px 0 0 3px;
+    }
+
+    &:last-child {
+        border-radius: 0 3px 3px 0;
+    }
+}
+
+.cell,
+.header-cell {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 250px;
+}
+
+.row {
+    height: 40px;
+
+    &:hover {
+        .cell {
+            border-color: $cellBorderColorActive;
+        }
+    }
+}
+
+.cell {
+    margin: 0;
+    padding: 9px;
+    text-align: center;
+    font-size: 12px;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: $cellBorderColor;
+    color: $cellTextColor;
+    background-color: $cellBackgroundColor;
+
+    &:first-child {
+        border-radius: 3px 0 0 3px;
+        border-left-width: 1px;
+    }
+
+    &:last-child {
+        border-radius: 0 3px 3px 0;
+        border-right-width: 1px;
+    }
+}
