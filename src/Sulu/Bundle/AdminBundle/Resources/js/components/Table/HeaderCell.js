@@ -4,7 +4,6 @@ import React from 'react';
 import tableStyles from './table.scss';
 
 type Props = {
-    /** Child nodes of a header cell */
     children?: Node,
 };
 
