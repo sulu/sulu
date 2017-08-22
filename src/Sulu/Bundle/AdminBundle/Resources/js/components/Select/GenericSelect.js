@@ -14,9 +14,9 @@ type Props = {
     children: SelectChildren,
     icon?: string,
     onSelect: (values: string) => void,
-    getLabelText: () => string,
+    labelText: string,
     closeOnSelect: boolean,
-    optionIsSelected: (option: Element<typeof Option>) => boolean,
+    isOptionSelected: (option: Element<typeof Option>) => boolean,
     selectedVisualization?: OptionSelectedVisualization,
 };
 
@@ -60,7 +60,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     ref={this.setLabel}
                     icon={this.props.icon}
                     onClick={this.handleLabelClick}>
-                    {this.props.getLabelText()}
+                    {this.props.labelText}
                 </Label>
                 <OverlayList
                     anchorTop={labelDimensions.top}
@@ -81,7 +81,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
             if (child.type === Option) {
                 child = React.cloneElement(child, {
                     onClick: this.handleOptionClick,
-                    selected: this.props.optionIsSelected(child),
+                    selected: this.props.isOptionSelected(child),
                     selectedVisualization: this.props.selectedVisualization,
                 });
             }
@@ -96,7 +96,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
 
     getCenteredChildIndex(): number {
         const index = React.Children.toArray(this.props.children).findIndex(
-            (child: any) => child.type === Option && this.props.optionIsSelected(child)
+            (child: any) => child.type === Option && this.props.isOptionSelected(child)
         );
         return index === -1 ? 0 : index;
     }

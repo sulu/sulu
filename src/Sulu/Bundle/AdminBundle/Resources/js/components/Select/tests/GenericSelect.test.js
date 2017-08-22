@@ -12,14 +12,13 @@ afterEach(() => document.body.innerHTML = '');
 
 test('The component should render with the list closed', () => {
     const body = document.body;
-    const optionIsSelected = () => false;
-    const getLabelText = () => 'My Label text';
+    const isOptionSelected = () => false;
     const onSelect = () => {};
     const select = mount(
         <GenericSelect
             onSelect={onSelect}
-            optionIsSelected={optionIsSelected}
-            getLabelText={getLabelText} >
+            isOptionSelected={isOptionSelected}
+            labelText="My Label text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -32,15 +31,14 @@ test('The component should render with the list closed', () => {
 
 test('The component should render with an icon', () => {
     const body = document.body;
-    const optionIsSelected = () => false;
-    const getLabelText = () => 'My Label text';
+    const isOptionSelected = () => false;
     const onSelect = () => {};
     const select = mount(
         <GenericSelect
             icon="plus"
             onSelect={onSelect}
-            optionIsSelected={optionIsSelected}
-            getLabelText={getLabelText} >
+            isOptionSelected={isOptionSelected}
+            labelText="My Label text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -53,14 +51,13 @@ test('The component should render with an icon', () => {
 
 test('The component should open the list when the label is clicked', () => {
     const body = document.body;
-    const optionIsSelected = () => false;
-    const getLabelText = () => 'My Label text';
+    const isOptionSelected = () => false;
     const onSelect = () => {};
     const select = mount(
         <GenericSelect
             onSelect={onSelect}
-            optionIsSelected={optionIsSelected}
-            getLabelText={getLabelText} >
+            isOptionSelected={isOptionSelected}
+            labelText="My Label text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -75,13 +72,12 @@ test('The component should open the list when the label is clicked', () => {
 test('The component should trigger the select callback and close the list when an option is clicked', () => {
     const body = document.body;
     const onSelectSpy = jest.fn();
-    const optionIsSelected = () => false;
-    const getLabelText = () => 'My Label text';
+    const isOptionSelected = () => false;
     const select = mount(
         <GenericSelect
             onSelect={onSelectSpy}
-            optionIsSelected={optionIsSelected}
-            getLabelText={getLabelText} >
+            isOptionSelected={isOptionSelected}
+            labelText="My Label text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -95,14 +91,13 @@ test('The component should trigger the select callback and close the list when a
 });
 
 test('The component should pass the centered child index to the overlay list', () => {
-    const getLabelText = () => 'My Label text';
     const onSelect = () => {};
-    const optionIsSelected = (child) => child.props.value === 'option-3';
+    const isOptionSelected = (child) => child.props.value === 'option-3';
     const select = shallow(
         <GenericSelect
             onSelect={onSelect}
-            optionIsSelected={optionIsSelected}
-            getLabelText={getLabelText} >
+            isOptionSelected={isOptionSelected}
+            labelText="My Label text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -115,14 +110,13 @@ test('The component should pass the centered child index to the overlay list', (
 });
 
 test('The component should pass the selected property to the options', () => {
-    const optionIsSelected = () => true;
-    const getLabelText = () => 'My Label text';
+    const isOptionSelected = () => true;
     const onSelect = () => {};
     const select = shallow(
         <GenericSelect
             onSelect={onSelect}
-            optionIsSelected={optionIsSelected}
-            getLabelText={getLabelText} >
+            isOptionSelected={isOptionSelected}
+            labelText="My Label text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />

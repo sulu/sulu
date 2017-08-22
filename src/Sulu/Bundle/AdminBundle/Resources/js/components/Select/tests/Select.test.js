@@ -29,7 +29,7 @@ test('The component should return the first option as default label', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const label = select.find(GenericSelect).props().getLabelText();
+    const label = select.find(GenericSelect).props().labelText;
     expect(label).toBe('Option 1');
 });
 
@@ -42,7 +42,7 @@ test('The component should return the correct label', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const label = select.find(GenericSelect).props().getLabelText();
+    const label = select.find(GenericSelect).props().labelText;
     expect(label).toBe('Option 2');
 });
 
@@ -55,10 +55,10 @@ test('The component should select the correct option', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const optionIsSelected = select.find(GenericSelect).props().optionIsSelected;
-    expect(optionIsSelected({props: {value: 'option-1', disabled: false}})).toBe(false);
-    expect(optionIsSelected({props: {value: 'option-2', disabled: false}})).toBe(true);
-    expect(optionIsSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
+    const isOptionSelected = select.find(GenericSelect).props().isOptionSelected;
+    expect(isOptionSelected({props: {value: 'option-1', disabled: false}})).toBe(false);
+    expect(isOptionSelected({props: {value: 'option-2', disabled: false}})).toBe(true);
+    expect(isOptionSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
 });
 
 test('The component should trigger the change callback on select', () => {

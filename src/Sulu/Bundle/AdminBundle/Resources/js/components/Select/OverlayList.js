@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ElementRef, ChildrenArray} from 'react';
+import type {ElementRef} from 'react';
 import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
@@ -8,12 +8,12 @@ import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import Option from './Option';
 import overlayListStyles from './overlayList.scss';
-import type {OverlayListDimensions} from './types';
+import type {OverlayListDimensions, SelectChildren} from './types';
 import OverlayListPositioner from './OverlayListPositioner';
 
 type Props = {
     isOpen: boolean,
-    children: ChildrenArray<*>,
+    children: SelectChildren,
     onRequestClose?: () => void,
     /** The top coordinate relative to which the list will be positioned */
     anchorTop: number,
@@ -139,11 +139,11 @@ export default class OverlayList extends React.PureComponent<Props> {
     }
 
     renderChildrenWithFocusSet() {
-        const children = React.Children.toArray(this.props.children);
+        const children: any = React.Children.toArray(this.props.children);
         const centeredChildIsDisabled = children[this.props.centeredChildIndex].props.disabled;
         let focus = true;
 
-        return React.Children.map(this.props.children, (child, index) => {
+        return React.Children.map(this.props.children, (child: any, index) => {
             const props = {};
 
             if (index === this.props.centeredChildIndex) {

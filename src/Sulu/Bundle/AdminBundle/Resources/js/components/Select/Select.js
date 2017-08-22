@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default class Select extends React.PureComponent<Props> {
-    getLabelText = (): string => {
+    get labelText(): string {
         let label = '';
         React.Children.forEach(this.props.children, (child: any) => {
             if (child.type !== Option) {
@@ -25,9 +25,9 @@ export default class Select extends React.PureComponent<Props> {
         });
 
         return label;
-    };
+    }
 
-    optionIsSelected = (option: Element<typeof Option>): boolean => {
+    isOptionSelected = (option: Element<typeof Option>): boolean => {
         return option.props.value === this.props.value && !option.props.disabled;
     };
 
@@ -42,8 +42,8 @@ export default class Select extends React.PureComponent<Props> {
             <GenericSelect
                 icon={this.props.icon}
                 onSelect={this.handleSelect}
-                getLabelText={this.getLabelText}
-                optionIsSelected={this.optionIsSelected}>
+                labelText={this.labelText}
+                isOptionSelected={this.isOptionSelected}>
                 {this.props.children}
             </GenericSelect>
         );

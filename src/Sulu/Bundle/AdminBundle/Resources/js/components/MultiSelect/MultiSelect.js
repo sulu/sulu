@@ -17,12 +17,12 @@ export default class MultiSelect extends React.PureComponent<Props> {
         values: [],
     };
 
-    optionIsSelected = (option: Element<typeof Option>): boolean => {
-        return this.props.values.indexOf(option.props.value) !== -1;
+    isOptionSelected = (option: Element<typeof Option>): boolean => {
+        return this.props.values.includes(option.props.value);
     };
 
     handleSelect = (value: string) => {
-        let newValues = [...this.props.values];
+        const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
         if (index === -1) {
             newValues.push(value);
@@ -32,17 +32,15 @@ export default class MultiSelect extends React.PureComponent<Props> {
         this.props.onChange(newValues);
     };
 
-    getLabelText = () => this.props.label;
-
     render() {
         return (
             <GenericSelect
                 icon={this.props.icon}
                 onSelect={this.handleSelect}
                 closeOnSelect={false}
-                getLabelText={this.getLabelText}
+                labelText={this.props.label}
                 selectedVisualization="checkbox"
-                optionIsSelected={this.optionIsSelected}>
+                isOptionSelected={this.isOptionSelected}>
                 {this.props.children}
             </GenericSelect>
         );

@@ -29,7 +29,7 @@ test('The component should pass the correct label', () => {
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const label = select.find(GenericSelect).props().getLabelText();
+    const label = select.find(GenericSelect).props().labelText;
     expect(label).toBe('My label');
 });
 
@@ -43,10 +43,10 @@ test('The component should select the correct option', () => {
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const optionIsSelected = select.find(GenericSelect).props().optionIsSelected;
-    expect(optionIsSelected({props: {value: 'option-1'}})).toBe(true);
-    expect(optionIsSelected({props: {value: 'option-2'}})).toBe(true);
-    expect(optionIsSelected({props: {value: 'option-3'}})).toBe(false);
+    const isOptionSelected = select.find(GenericSelect).props().isOptionSelected;
+    expect(isOptionSelected({props: {value: 'option-1'}})).toBe(true);
+    expect(isOptionSelected({props: {value: 'option-2'}})).toBe(true);
+    expect(isOptionSelected({props: {value: 'option-3'}})).toBe(false);
 });
 
 test('The component should trigger the change callback on select with an added value', () => {

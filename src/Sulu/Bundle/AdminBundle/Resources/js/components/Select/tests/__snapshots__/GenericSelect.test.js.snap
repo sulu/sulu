@@ -24,20 +24,20 @@ exports[`The component should open the list when the label is clicked 2`] = `
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"list\\" style=\\"top: 10px;\\">
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 5 -->Option 1
           <!-- /react-text -->
         </button>
       </li>
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 8 -->Option 2
           <!-- /react-text -->
         </button>
       </li>
       <li class=\\"divider\\"></li>
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 12 -->Option 3
           <!-- /react-text -->
         </button>

@@ -3,7 +3,7 @@
 exports[`The component should render 1`] = `
 <li>
   <button
-    class="option"
+    class="option icon"
   >
     My option
   </button>
@@ -13,7 +13,7 @@ exports[`The component should render 1`] = `
 exports[`The component should render in disabled state 1`] = `
 <li>
   <button
-    class="option"
+    class="option icon"
     disabled=""
   >
     My option
@@ -24,7 +24,7 @@ exports[`The component should render in disabled state 1`] = `
 exports[`The component should render in selected state 1`] = `
 <li>
   <button
-    class="option selected"
+    class="option icon selected"
   >
     <span
       aria-hidden="true"
@@ -38,7 +38,7 @@ exports[`The component should render in selected state 1`] = `
 exports[`The component should render with checkbox 1`] = `
 <li>
   <button
-    class="option hasCheckbox"
+    class="option checkbox"
   >
     <span
       class="checkbox dark"

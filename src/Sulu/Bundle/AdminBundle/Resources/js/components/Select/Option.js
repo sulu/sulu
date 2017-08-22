@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Icon from '../Icon';
 import Checkbox from '../Checkbox';
@@ -55,21 +55,22 @@ export default class Option extends React.PureComponent<Props> {
     };
 
     render() {
-        const classNames = classnames({
+        const {selected, selectedVisualization, disabled, children} = this.props;
+        const optionClass = classNames({
             [optionStyles.option]: true,
-            [optionStyles.selected]: this.props.selected,
-            [optionStyles.hasCheckbox]: this.props.selectedVisualization === 'checkbox',
+            [optionStyles[selectedVisualization]]: true,
+            [optionStyles.selected]: selected,
         });
 
         return (
             <li ref={this.setItem}>
                 <button
-                    className={classNames}
+                    className={optionClass}
                     ref={this.setButton}
                     onClick={this.handleButtonClick}
-                    disabled={this.props.disabled}>
+                    disabled={disabled}>
                     {this.renderSelectedVisualization()}
-                    {this.props.children}
+                    {children}
                 </button>
             </li>
         );
@@ -78,13 +79,13 @@ export default class Option extends React.PureComponent<Props> {
     renderSelectedVisualization() {
         if (this.props.selectedVisualization === 'icon') {
             return this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : null;
-        } else {
-            return (
-                <Checkbox
-                    onChange={this.handleButtonClick}
-                    className={optionStyles.checkbox}
-                    checked={this.props.selected} />
-            );
         }
+
+        return (
+            <Checkbox
+                onChange={this.handleButtonClick}
+                className={optionStyles.checkbox}
+                checked={this.props.selected} />
+        );
     }
 }

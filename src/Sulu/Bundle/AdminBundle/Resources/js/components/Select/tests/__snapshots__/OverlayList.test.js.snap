@@ -19,19 +19,19 @@ exports[`The list should render in body when open 2`] = `
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"list\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 5 -->My option 1
           <!-- /react-text -->
         </button>
       </li>
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 8 -->My option 2
           <!-- /react-text -->
         </button>
       </li>
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 11 -->My option 3
           <!-- /react-text -->
         </button>
@@ -49,7 +49,7 @@ exports[`The list should take its dimensions from the positioner 1`] = `
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"list\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
       <li>
-        <button class=\\"option\\">
+        <button class=\\"option icon\\">
           <!-- react-text: 5 -->My option 1
           <!-- /react-text -->
         </button>
