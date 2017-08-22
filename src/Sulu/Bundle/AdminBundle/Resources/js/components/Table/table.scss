@@ -9,10 +9,6 @@ $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
 
-.tableContainer {
-    overflow: scroll;
-}
-
 .table {
     border-collapse: separate;
     border-spacing: 0 5px;
@@ -44,6 +40,14 @@ $cellBackgroundColorActive: $shakespeare;
     }
 }
 
+.cell,
+.header-cell {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 250px;
+}
+
 .row {
     height: 40px;
 
@@ -64,18 +68,14 @@ $cellBackgroundColorActive: $shakespeare;
     border-color: $cellBorderColor;
     color: $cellTextColor;
     background-color: $cellBackgroundColor;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 250px;
 
     &:first-child {
         border-radius: 3px 0 0 3px;
-        border-width: 1px 0 1px 1px;
+        border-left-width: 1px;
     }
 
     &:last-child {
         border-radius: 0 3px 3px 0;
-        border-width: 1px 1px 1px 0;
+        border-right-width: 1px;
     }
 }
