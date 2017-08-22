@@ -21,18 +21,15 @@ type Props = {
      * Called when the "select all" checkbox was clicked. The checkbox only shows up on "selectMode: 'multiple'"
      * Returns the checked state.
      */
-    onSelectAllChange?: (checked: boolean) => void,
-    /**
-     * @ignore
-     * If true the "select all" checkbox is checked.
-     */
-    selectAllChecked?: boolean,
+    onAllSelectionChange?: (checked: boolean) => void,
+    /** If true the "select all" checkbox is checked. */
+    allSelected?: boolean,
 };
 
 export default class Header extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
-        selectAllChecked: false,
+        allSelected: false,
     };
 
     isMultipleSelect = () => {
@@ -117,8 +114,8 @@ export default class Header extends React.PureComponent<Props> {
             <HeaderCell key={key}>
                 <input
                     type="checkbox"
-                    checked={this.props.selectAllChecked}
-                    onChange={this.handleOnSelectAllChange} />
+                    checked={this.props.allSelected}
+                    onChange={this.handleAllSelectionChange} />
             </HeaderCell>
         );
     };
@@ -131,11 +128,11 @@ export default class Header extends React.PureComponent<Props> {
         );
     };
 
-    handleOnSelectAllChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        if (this.props.onSelectAllChange) {
+    handleAllSelectionChange = (event: SyntheticEvent<HTMLInputElement>) => {
+        if (this.props.onAllSelectionChange) {
             const currentTarget = event.currentTarget;
 
-            this.props.onSelectAllChange(currentTarget.checked);
+            this.props.onAllSelectionChange(currentTarget.checked);
         }
     };
 

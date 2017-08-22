@@ -1,4 +1,6 @@
 // @flow
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import React from 'react';
 import type {Element} from 'react';
 import Header from './Header';
@@ -7,7 +9,6 @@ import type {ControlItems, SelectMode, TableChildren} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    /** Child nodes of the table */
     children: TableChildren,
     /** List of buttons to apply action handlers to every row (e.g. edit row) */
     controls?: ControlItems,
@@ -19,15 +20,19 @@ type Props = {
      */
     onRowSelectionChange?: (rowId: string | number, selected: boolean) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
-    onSelectAllChange?: (checked: boolean) => void,
-    /** If true the "select all" checkbox is checked. */
-    selectAllChecked?: boolean,
+    onAllSelectionChange?: (checked: boolean) => void,
 };
 
+@observer
 export default class Table extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
-        selectAllChecked: false,
+    };
+
+    @observable allSelected = false;
+
+    @action setAllSelected = (allSelected: boolean) => {
+        this.allSelected = allSelected;
     };
 
     getTableComponents = (children: TableChildren) => {
@@ -59,10 +64,10 @@ export default class Table extends React.PureComponent<Props> {
         return React.cloneElement(
             originalHeader,
             {
+                allSelected: this.allSelected,
                 controls: this.props.controls,
                 selectMode: this.props.selectMode,
-                selectAllChecked: this.props.selectAllChecked,
-                onSelectAllChange: this.onSelectAllChange,
+                onAllSelectionChange: this.handleAllSelectionChange,
             }
         );
     };
@@ -73,18 +78,23 @@ export default class Table extends React.PureComponent<Props> {
             {
                 controls: this.props.controls,
                 selectMode: this.props.selectMode,
-                onRowSelectionChange: this.onRowSelectionChange,
+                onRowSelectionChange: this.handleRowSelectionChange,
+                onAllRowsSelectedChange: this.handleAllRowsSelectedChange,
             }
         );
     };
 
-    onSelectAllChange = (checked: boolean) => {
-        if (this.props.onSelectAllChange) {
-            this.props.onSelectAllChange(checked);
+    handleAllRowsSelectedChange = (allSelected: boolean) => {
+        this.setAllSelected(allSelected);
+    };
+
+    handleAllSelectionChange = (checked: boolean) => {
+        if (this.props.onAllSelectionChange) {
+            this.props.onAllSelectionChange(checked);
         }
     };
 
-    onRowSelectionChange = (rowId: string | number, selected: boolean) => {
+    handleRowSelectionChange = (rowId: string | number, selected: boolean) => {
         if (this.props.onRowSelectionChange) {
             this.props.onRowSelectionChange(rowId, selected);
         }

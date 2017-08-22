@@ -84,11 +84,11 @@ const Cell = require('./Cell').default;
 const HeaderCell = require('./HeaderCell').default;
 
 initialState = { 
-    selectedRows: {},
+    selectedRows: [],
 };
 
 const isSelected = (id) => {
-    return !!state.selectedRows[id];
+    return state.selectedRows.indexOf(id) > -1;
 };
 
 const tableProps = {
@@ -100,11 +100,26 @@ const tableProps = {
         },
     ],
     onRowSelectionChange: (rowId, selected) => {
-        setState({
-            selectedRows: Object.assign({}, state.selectedRows, {
-                [rowId]: selected,
-            }),
-        });
+        if (selected) {
+            setState({
+                selectedRows: [...state.selectedRows, rowId]
+            });
+        } else {
+            setState({
+                selectedRows: state.selectedRows.filter((selectedRowId) => selectedRowId !== rowId)
+            });
+        }
+    },
+    onAllSelectionChange: (allSelected) => {
+        if (allSelected) {
+            setState({
+                selectedRows: tableData.body.map((row) => row.id),
+            });
+        } else {
+            setState({
+                selectedRows: [],
+            });
+        }
     },
 };
 

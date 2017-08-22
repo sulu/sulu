@@ -8,7 +8,6 @@ import type {ControlItems, ControlConfig, RowProps, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    /** Child nodes of the table body */
     children: ChildrenArray<Element<typeof Row>>,
     /** 
      * @ignore 
@@ -21,9 +20,15 @@ type Props = {
      */
     selectMode?: SelectMode,
     /** 
-     * @ignore Callback function to notify about selection and deselection of a row
+     * @ignore 
+     * Callback function to notify about selection and deselection of a row
      */
     onRowSelectionChange?: (rowId: string | number, selected: boolean) => void,
+    /**
+     * @ignore
+     * Called when all the rows got selected or when all rows are selected and one gets deselected.
+     */
+    onAllRowsSelectedChange?: (allRowsSelected: boolean) => void,
 };
 
 export default class Body extends React.PureComponent<Props> {
@@ -38,21 +43,27 @@ export default class Body extends React.PureComponent<Props> {
     };
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
-        return React.Children.map(originalRows, (row, index) => {
+        const rowSelections = [];
+        const clonedRows = React.Children.map(originalRows, (row, index) => {
             if (React.isValidElement(row)) {
                 const cells = this.createCells(row.props.children, row.props, index);
+
+                rowSelections.push(row.props.selected);
 
                 return React.cloneElement(
                     row,
                     {
                         key: `body-row-${index}`,
-                        selected: this.props.selectedAll,
                         ...row.props,
                     },
                     cells,
                 );
             }
         });
+
+        this.handleAllRowSelectedChange(rowSelections);
+
+        return clonedRows;
     };
 
     createCells = (cells: ChildrenArray<Element<typeof Cell>>, rowProps: RowProps, rowIndex: number) => {
@@ -131,6 +142,15 @@ export default class Body extends React.PureComponent<Props> {
         });
     };
 
+    handleAllRowSelectedChange = (rowSelections: Array<boolean>) => {
+        const {onAllRowsSelectedChange} = this.props;
+        const allRowsSelected = !rowSelections.includes(false);
+
+        if (onAllRowsSelectedChange) {
+            onAllRowsSelectedChange(allRowsSelected);
+        }
+    };
+
     handleRowSelectionChange = (rowId: string | number, selected: boolean) => {
         if (this.props.onRowSelectionChange) {
             this.props.onRowSelectionChange(rowId, selected);
@@ -141,7 +161,7 @@ export default class Body extends React.PureComponent<Props> {
         const {
             children,
         } = this.props;
-        const rows = this.cloneRows(children);
+        const rows = this.cloneRows(children);     
 
         return (
             <tbody>

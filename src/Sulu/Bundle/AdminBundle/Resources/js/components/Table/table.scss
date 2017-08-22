@@ -12,17 +12,11 @@ $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
 $controlCellBorderColor: $white;
 
-.tableContainer {
-    overflow: scroll;
-}
-
 .table {
     border-collapse: separate;
     border-spacing: 0 5px;
     margin: -5px 0;
     overflow: hidden;
-    background: #e5e5e5;
-    padding: 20px;
 }
 
 .header {
@@ -35,7 +29,6 @@ $controlCellBorderColor: $white;
 
 .header-cell {
     padding: 0;
-    text-align: center;
     font-size: 12px;
     font-weight: normal;
     background-color: $headerCellBackgroundColor;
@@ -67,6 +60,7 @@ $controlCellBorderColor: $white;
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 250px;
+    text-align: left;
 }
 
 .header-cell-sort-icon {
@@ -76,6 +70,7 @@ $controlCellBorderColor: $white;
 .header-control-cell {
     border-right: 1px solid $headerControlCellBorderColor;
     color: $headerControlCellTextColor;
+    text-align: center;
 }
 
 .row {
@@ -90,8 +85,7 @@ $controlCellBorderColor: $white;
 
 .cell {
     margin: 0;
-    padding: 9px;
-    text-align: center;
+    padding: 9px 20px;
     font-size: 12px;
     border-width: 1px 0;
     border-style: solid;
@@ -114,6 +108,7 @@ $controlCellBorderColor: $white;
     padding: 0;
     background-color: $cellBackgroundColor;
     color: $cellTextColorActive;
+    text-align: center;
 
     &:hover {
         button {
