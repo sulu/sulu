@@ -2,15 +2,12 @@
 
 $headerTextColor: $white;
 $headerCellBackgroundColor: $blueZodiac;
-$headerControlCellTextColor: rgba($silverChalice, .25);
-$headerControlCellBorderColor: rgba($silverChalice, .25);
 $cellTextColor: $blueZodiac;
 $cellTextColorActive: $white;
 $cellBackgroundColor: $white;
 $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
-$controlCellBorderColor: $white;
 
 .tableContainer {
     overflow: scroll;
@@ -47,25 +44,12 @@ $controlCellBorderColor: $white;
     }
 }
 
-.header-control-cell {
-    border-right: 1px solid $headerControlCellBorderColor;
-    color: $headerControlCellTextColor;
-}
-
 .row {
     height: 40px;
 
     &:hover {
         .cell {
             border-color: $cellBorderColorActive;
-        }
-
-        .control-cell {
-            button {
-                visibility: visible;
-                background-color: $cellBackgroundColorActive;
-                border-right: 1px solid $controlCellBorderColor;
-            }
         }
     }
 }
@@ -93,21 +77,5 @@ $controlCellBorderColor: $white;
     &:last-child {
         border-radius: 0 3px 3px 0;
         border-width: 1px 1px 1px 0;
-    }
-}
-
-.control-cell {
-    padding: 0;
-    background-color: $cellBackgroundColor;
-    color: $cellTextColorActive;
-
-    button {
-        visibility: hidden;
-        width: 55px;
-        height: 40px;
-        border: none;
-        color: inherit;
-        cursor: pointer;
-        background-color: transparent;
     }
 }

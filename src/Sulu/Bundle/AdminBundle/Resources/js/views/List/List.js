@@ -7,15 +7,15 @@ import {Table, Body, Header, Cell, HeaderCell, Row} from '../../components/Table
 
 class List extends React.PureComponent<*> {
     @observable tableData = {
-        header: ['Type', 'Name', 'Author', 'Date', 'Subversion', 'Uploadgröße', 'Dateigröße'],
+        header: ['Type', 'Name', 'Author', 'Date', 'Subversion', 'Uploadgröße', 'Dateigröße', 'Dateigröße', 'Dateigröße', 'Dateigröße', 'Dateigröße', 'Dateigröße', 'Dateigröße', 'Dateigröße'],
         body: [
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
-            ['Blog', 'Meine ersten 100 Tage MASSIVE ART', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
+            ['Blog', 'My first 100 day in Vorarlberg', 'Adrian Sieber', '24.12.2017', 'Github', '20 MB', 'Test', 'Test', 'Test', 'Github', '20 MB', 'Test', 'Test', 'Test'],
         ],
     };
 
