@@ -1,75 +1,71 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the Table component 1`] = `
-<div
-  class="tableContainer"
+<table
+  class="table"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr
+      class="row"
     >
-      <tr
-        class="row"
+      <th
+        class="headerCell"
       >
-        <th
-          class="headerCell"
-        >
-          Column Title
-        </th>
-        <th
-          class="headerCell"
-        >
-          Column Title
-        </th>
-        <th
-          class="headerCell"
-        >
-          Column Title
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+        Column Title
+      </th>
+      <th
+        class="headerCell"
       >
-        <td
-          class="cell"
-        >
-          Column Text
-        </td>
-        <td
-          class="cell"
-        >
-          Column Text
-        </td>
-        <td
-          class="cell"
-        >
-          Column Text
-        </td>
-      </tr>
-      <tr
-        class="row"
+        Column Title
+      </th>
+      <th
+        class="headerCell"
       >
-        <td
-          class="cell"
-        >
-          Column Text
-        </td>
-        <td
-          class="cell"
-        >
-          Column Text
-        </td>
-        <td
-          class="cell"
-        >
-          Column Text
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        Column Title
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        Column Text
+      </td>
+      <td
+        class="cell"
+      >
+        Column Text
+      </td>
+      <td
+        class="cell"
+      >
+        Column Text
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        Column Text
+      </td>
+      <td
+        class="cell"
+      >
+        Column Text
+      </td>
+      <td
+        class="cell"
+      >
+        Column Text
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
