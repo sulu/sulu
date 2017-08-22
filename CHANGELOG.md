@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3492 [ContentBundle]           Fixed smart-content categories load
+
 * 1.6.3 (2017-08-17)
     * HOTFIX      #3484 [TestBundle]              Fix doctrine errors for mysql older than 5.7
     * HOTFIX      #3475 [ContentBundle]           Added possibility to set default value for single-select
