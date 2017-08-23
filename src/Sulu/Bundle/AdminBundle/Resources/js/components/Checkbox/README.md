@@ -1,11 +1,10 @@
 The custom checkbox has no internal state and has to be managed, like shown in the following example.
-The change callback receives the value property when the checkbox is checked (default is `true`) or `false`
-if the checkbox gets unchecked.
+The change callback receives the value as an optional second parameter.
 
 ```
 initialState = {checked: false};
-onChange = (checked) => setState({checked});
-<Checkbox checked={state.checked} onChange={onChange} />
+onChange = (checked, value) => setState({checked});
+<Checkbox value="my-value" checked={state.checked} onChange={onChange} />
 ```
 
 The checkbox also comes with a light skin.

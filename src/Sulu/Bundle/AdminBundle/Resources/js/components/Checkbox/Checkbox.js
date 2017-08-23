@@ -7,25 +7,24 @@ import checkboxStyles from './checkbox.scss';
 
 type Props = {
     checked: boolean,
-    value: string | true,
+    value: string,
     skin: 'dark' | 'light',
     className: string,
-    onChange?: (value: string | boolean) => void,
+    onChange?: (checked: boolean, value?: string) => void,
 };
 
 export default class Checkbox extends React.PureComponent<Props> {
     input: ElementRef<'input'>;
 
     static defaultProps = {
-        value: true,
+        value: '',
         skin: 'dark',
         className: '',
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
         if (this.props.onChange) {
-            const value = event.currentTarget.checked ? this.props.value : false;
-            this.props.onChange(value);
+            this.props.onChange(event.currentTarget.checked, this.props.value);
         }
     };
 
