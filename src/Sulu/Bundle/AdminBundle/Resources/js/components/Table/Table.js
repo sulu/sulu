@@ -21,7 +21,7 @@ type Props = {
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
-    onRowSelectionChange?: (rowId: string | number, selected: boolean) => void,
+    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
     onAllSelectionChange?: (checked: boolean) => void,
     /** Text shown when the table has no entries */
@@ -110,7 +110,7 @@ export default class Table extends React.PureComponent<Props> {
         }
     };
 
-    handleRowSelectionChange = (rowId: string | number, selected: boolean) => {
+    handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
         if (this.props.onRowSelectionChange) {
             this.props.onRowSelectionChange(rowId, selected);
         }

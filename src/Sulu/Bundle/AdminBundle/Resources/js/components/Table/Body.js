@@ -24,7 +24,7 @@ type Props = {
      * @ignore 
      * Callback function to notify about selection and deselection of a row
      */
-    onRowSelectionChange?: (rowId: string | number, selected: boolean) => void,
+    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     /**
      * @ignore
      * Called when all the rows got selected or when all rows are selected and one gets deselected.
@@ -38,7 +38,9 @@ export default class Body extends React.PureComponent<Props> {
     };
 
     componentWillReceiveProps = (nextProps: Props) => {
-        this.handleAllRowSelectedChange(nextProps.children);
+        if (this.isMultipleSelect()) {
+            this.handleAllRowSelectedChange(nextProps.children);
+        }
     };
 
     isMultipleSelect = () => {
@@ -104,38 +106,31 @@ export default class Body extends React.PureComponent<Props> {
 
     createRadioCell = (rowProps: RowProps, rowIndex: number) => {
         const key = `body-radio-${rowIndex}`;
-        const handleOnChange = (value: string) => {
-            const identifier = rowProps.id || rowIndex;
-
-            this.handleRowSelectionChange(identifier, !!value);
-        };
+        const identifier = rowProps.id || rowIndex;
 
         return (
             <Cell key={key}>
                 <Radio
                     skin="dark"
-                    value={true}
+                    value={identifier}
+                    name="test"
                     checked={rowProps.selected}
-                    onChange={handleOnChange} />
+                    onChange={this.handleRowSingleSelectionChange} />
             </Cell>
         );
     };
 
     createCheckboxCell = (rowProps: RowProps, rowIndex: number) => {
         const key = `body-checkbox-${rowIndex}`;
-        const handleOnChange = (value: string | true) => {
-            const identifier = rowProps.id || rowIndex;
-
-            this.handleRowSelectionChange(identifier, !!value);
-        };
+        const identifier = rowProps.id || rowIndex;
 
         return (
             <Cell key={key}>
                 <Checkbox
                     skin="dark"
-                    value={true}
-                    checked={rowProps.selected}
-                    onChange={handleOnChange} />
+                    value={identifier}
+                    checked={!!rowProps.selected}
+                    onChange={this.handleRowMultipleSelectionChange} />
             </Cell>
         );
     };
@@ -172,9 +167,15 @@ export default class Body extends React.PureComponent<Props> {
         }
     };
 
-    handleRowSelectionChange = (rowId: string | number, selected: boolean) => {
+    handleRowSingleSelectionChange = (rowId: string | number) => {
         if (this.props.onRowSelectionChange) {
-            this.props.onRowSelectionChange(rowId, selected);
+            this.props.onRowSelectionChange(rowId);
+        }
+    };
+
+    handleRowMultipleSelectionChange = (checked: boolean, rowId: string | number) => {
+        if (this.props.onRowSelectionChange) {
+            this.props.onRowSelectionChange(rowId, checked);
         }
     };
 

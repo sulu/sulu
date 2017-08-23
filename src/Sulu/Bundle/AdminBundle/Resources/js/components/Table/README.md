@@ -92,7 +92,7 @@ const isSelected = (id) => {
 };
 
 const tableProps = {
-    selectMode: 'single',
+    selectMode: 'multiple',
     controls: [
         {
             icon: 'pencil',

@@ -114,9 +114,8 @@ export default class Header extends React.PureComponent<Props> {
         return (
             <HeaderCell key={key}>
                 <Checkbox
-                    value={true}
                     skin="light"
-                    checked={this.props.allSelected}
+                    checked={!!this.props.allSelected}
                     onChange={this.handleAllSelectionChange} />
             </HeaderCell>
         );
