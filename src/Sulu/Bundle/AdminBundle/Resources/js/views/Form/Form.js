@@ -17,9 +17,20 @@ class Form extends React.PureComponent<ViewProps> {
     };
 
     render() {
+        const schema = {
+            title: {
+                label: 'Title',
+                type: 'text',
+            },
+            url: {
+                label: 'URL',
+                type: 'text',
+            },
+        };
+
         return (
             <div>
-                <FormContainer ref={this.setForm} onSubmit={this.handleSubmit} />
+                <FormContainer ref={this.setForm} onSubmit={this.handleSubmit} schema={schema} />
             </div>
         );
     }

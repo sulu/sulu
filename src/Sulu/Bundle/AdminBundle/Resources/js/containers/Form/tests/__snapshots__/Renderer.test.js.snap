@@ -9,3 +9,29 @@ exports[`Should render a form tag 1`] = `
   </button>
 </form>
 `;
+
+exports[`Should render field types based on schema 1`] = `
+<form>
+  <div>
+    <label>
+      Text
+    </label>
+    <input
+      type="text"
+    />
+  </div>
+  <div>
+    <label>
+      Datetime
+    </label>
+    <input
+      type="datetime"
+    />
+  </div>
+  <button
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

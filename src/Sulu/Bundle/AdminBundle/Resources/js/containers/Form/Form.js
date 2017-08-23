@@ -2,8 +2,10 @@
 import type {ElementRef} from 'react';
 import React from 'react';
 import Renderer from './Renderer';
+import type {Schema} from './types';
 
 type Props = {
+    schema: Schema,
     onSubmit: () => void,
 };
 
@@ -28,6 +30,12 @@ export default class Form extends React.PureComponent<Props> {
     };
 
     render() {
-        return <Renderer ref={this.setRenderer} onSubmit={this.handleSubmit} />;
+        const {schema} = this.props;
+        return (
+            <Renderer
+                ref={this.setRenderer}
+                onSubmit={this.handleSubmit}
+                schema={schema} />
+        );
     }
 }
