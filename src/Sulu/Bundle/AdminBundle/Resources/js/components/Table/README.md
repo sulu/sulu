@@ -11,7 +11,7 @@ const Row = require('./Row').default;
 const Cell = require('./Cell').default;
 const HeaderCell = require('./HeaderCell').default;
 
-<Table placeholderText="This list is empty">
+<Table>
     <Header>
         <Row>
             <HeaderCell>Column 1</HeaderCell>
@@ -26,7 +26,50 @@ const HeaderCell = require('./HeaderCell').default;
         </Row>
     </Header>
     <Body>
-        
+        <Row>
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+            <Cell>Content 6</Cell>
+            <Cell>Content 7</Cell>
+            <Cell>Content 8</Cell>
+            <Cell>Content 9</Cell>
+        </Row>
+        <Row>
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+            <Cell>Content 6</Cell>
+            <Cell>Content 7</Cell>
+            <Cell>Content 8</Cell>
+            <Cell>Content 9</Cell>
+        </Row>
+        <Row>
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+            <Cell>Content 6</Cell>
+            <Cell>Content 7</Cell>
+            <Cell>Content 8</Cell>
+            <Cell>Content 9</Cell>
+        </Row>
+        <Row>
+            <Cell>Content 1</Cell>
+            <Cell>Content 2</Cell>
+            <Cell>Content 3</Cell>
+            <Cell>Content 4</Cell>
+            <Cell>Content 5</Cell>
+            <Cell>Content 6</Cell>
+            <Cell>Content 7</Cell>
+            <Cell>Content 8</Cell>
+            <Cell>Content 9</Cell>
+        </Row>
     </Body>
 </Table>
 ```
