@@ -11,6 +11,11 @@ $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
 $controlCellBorderColor: $white;
+$emptyMessageColor: $silver;
+
+.tableContainer {
+    display: inline-block;
+}
 
 .table {
     border-collapse: separate;
@@ -127,4 +132,20 @@ $controlCellBorderColor: $white;
         cursor: pointer;
         background-color: transparent;
     }
+}
+
+.table-placeholder-area {
+    color: $emptyMessageColor;
+    text-align: center;
+    padding: 40px;
+}
+
+.table-placeholder-icon {
+    font-size: 38px;
+}
+
+.table-placeholder-text {
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: bold;
 }

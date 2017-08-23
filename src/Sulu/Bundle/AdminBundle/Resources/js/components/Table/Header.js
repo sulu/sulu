@@ -2,6 +2,7 @@
 import type {Element, ChildrenArray} from 'react';
 import React from 'react';
 import Icon from '../Icon';
+import Checkbox from '../Checkbox';
 import HeaderCell from './HeaderCell';
 import Row from './Row';
 import type {ControlItems, ControlConfig, SelectMode} from './types';
@@ -44,7 +45,7 @@ export default class Header extends React.PureComponent<Props> {
         const rows = React.Children.toArray(originalRows);
 
         if (rows.length > 1) {
-            throw new Error(`Expected one header row, got ${rows.length}`);
+            throw new Error(`Expected one row inside the header but found ${rows.length}`);
         }
 
         const {controls} = this.props;
@@ -112,8 +113,9 @@ export default class Header extends React.PureComponent<Props> {
 
         return (
             <HeaderCell key={key}>
-                <input
-                    type="checkbox"
+                <Checkbox
+                    value={true}
+                    skin="light"
                     checked={this.props.allSelected}
                     onChange={this.handleAllSelectionChange} />
             </HeaderCell>
@@ -128,11 +130,9 @@ export default class Header extends React.PureComponent<Props> {
         );
     };
 
-    handleAllSelectionChange = (event: SyntheticEvent<HTMLInputElement>) => {
+    handleAllSelectionChange = (checked: boolean) => {
         if (this.props.onAllSelectionChange) {
-            const currentTarget = event.currentTarget;
-
-            this.props.onAllSelectionChange(currentTarget.checked);
+            this.props.onAllSelectionChange(checked);
         }
     };
 

@@ -11,6 +11,7 @@ type Props = {
      * If set to true, the cell appears as a control-cell 
      */
     isControl?: boolean,
+    colspan?: number,
 };
 
 export default class Cell extends React.PureComponent<Props> {
@@ -20,6 +21,7 @@ export default class Cell extends React.PureComponent<Props> {
 
     render() {
         const {
+            colspan,
             children,
             isControl,
         } = this.props;
@@ -31,7 +33,9 @@ export default class Cell extends React.PureComponent<Props> {
         );
 
         return (
-            <td className={cellClass}>
+            <td 
+                colSpan={colspan}
+                className={cellClass}>
                 {children}
             </td>
         );

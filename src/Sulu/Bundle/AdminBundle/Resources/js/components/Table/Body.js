@@ -1,14 +1,15 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
+import Checkbox from '../Checkbox';
+import Radio from '../Radio';
 import Icon from '../Icon';
 import Cell from './Cell';
 import Row from './Row';
 import type {ControlItems, ControlConfig, RowProps, SelectMode} from './types';
-import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Row>>,
+    children?: ChildrenArray<Element<typeof Row>>,
     /** 
      * @ignore 
      * List of buttons to apply action handlers to every row (e.g. edit row) forwarded from table 
@@ -36,19 +37,22 @@ export default class Body extends React.PureComponent<Props> {
         selectMode: 'none',
     };
 
-    isSelectable = () => {
-        const {selectMode} = this.props;
+    componentWillReceiveProps = (nextProps: Props) => {
+        this.handleAllRowSelectedChange(nextProps.children);
+    };
 
-        return selectMode === 'single' || selectMode === 'multiple';
+    isMultipleSelect = () => {
+        return this.props.selectMode === 'multiple';
+    };
+
+    isSingleSelect = () => {
+        return this.props.selectMode === 'single';
     };
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
-        const rowSelections = [];
-        const clonedRows = React.Children.map(originalRows, (row, index) => {
+        return React.Children.map(originalRows, (row, index) => {
             if (React.isValidElement(row)) {
                 const cells = this.createCells(row.props.children, row.props, index);
-
-                rowSelections.push(row.props.selected);
 
                 return React.cloneElement(
                     row,
@@ -60,10 +64,6 @@ export default class Body extends React.PureComponent<Props> {
                 );
             }
         });
-
-        this.handleAllRowSelectedChange(rowSelections);
-
-        return clonedRows;
     };
 
     createCells = (cells: ChildrenArray<Element<typeof Cell>>, rowProps: RowProps, rowIndex: number) => {
@@ -76,7 +76,9 @@ export default class Body extends React.PureComponent<Props> {
             prependedCells.push(...createdItems);
         }
 
-        if (this.isSelectable()) {
+        if (this.isSingleSelect()) {
+            prependedCells.push(this.createRadioCell(rowProps, rowIndex));
+        } else if (this.isMultipleSelect()) {
             prependedCells.push(this.createCheckboxCell(rowProps, rowIndex));
         }
 
@@ -100,19 +102,38 @@ export default class Body extends React.PureComponent<Props> {
         });
     };
 
-    createCheckboxCell = (rowProps: RowProps, rowIndex: number) => {
-        const key = `body-checkbox-${rowIndex}`;
-        const handleOnChange = (event: SyntheticEvent<HTMLInputElement>) => {
-            const currentTarget = event.currentTarget;
+    createRadioCell = (rowProps: RowProps, rowIndex: number) => {
+        const key = `body-radio-${rowIndex}`;
+        const handleOnChange = (value: string) => {
             const identifier = rowProps.id || rowIndex;
 
-            this.handleRowSelectionChange(identifier, currentTarget.checked);
+            this.handleRowSelectionChange(identifier, !!value);
         };
 
         return (
             <Cell key={key}>
-                <input
-                    type="checkbox"
+                <Radio
+                    skin="dark"
+                    value={true}
+                    checked={rowProps.selected}
+                    onChange={handleOnChange} />
+            </Cell>
+        );
+    };
+
+    createCheckboxCell = (rowProps: RowProps, rowIndex: number) => {
+        const key = `body-checkbox-${rowIndex}`;
+        const handleOnChange = (value: string | true) => {
+            const identifier = rowProps.id || rowIndex;
+
+            this.handleRowSelectionChange(identifier, !!value);
+        };
+
+        return (
+            <Cell key={key}>
+                <Checkbox
+                    skin="dark"
+                    value={true}
                     checked={rowProps.selected}
                     onChange={handleOnChange} />
             </Cell>
@@ -142,12 +163,12 @@ export default class Body extends React.PureComponent<Props> {
         });
     };
 
-    handleAllRowSelectedChange = (rowSelections: Array<boolean>) => {
-        const {onAllRowsSelectedChange} = this.props;
+    handleAllRowSelectedChange = (rows: ChildrenArray<Element<typeof Row>>) => {
+        const rowSelections = rows.map((row) => row.props.selected);
         const allRowsSelected = !rowSelections.includes(false);
 
-        if (onAllRowsSelectedChange) {
-            onAllRowsSelectedChange(allRowsSelected);
+        if (this.props.onAllRowsSelectedChange) {
+            this.props.onAllRowsSelectedChange(allRowsSelected);
         }
     };
 
@@ -158,10 +179,8 @@ export default class Body extends React.PureComponent<Props> {
     };
 
     render() {
-        const {
-            children,
-        } = this.props;
-        const rows = this.cloneRows(children);     
+        const {children} = this.props;
+        const rows = this.cloneRows(children);
 
         return (
             <tbody>

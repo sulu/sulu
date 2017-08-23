@@ -3,10 +3,13 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import type {Element} from 'react';
+import Icon from '../Icon';
 import Header from './Header';
 import Body from './Body';
 import type {ControlItems, SelectMode, TableChildren} from './types';
 import tableStyles from './table.scss';
+
+const PLACEHOLDER_ICON = 'battery-quarter';
 
 type Props = {
     children: TableChildren,
@@ -21,6 +24,8 @@ type Props = {
     onRowSelectionChange?: (rowId: string | number, selected: boolean) => void,
     /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
     onAllSelectionChange?: (checked: boolean) => void,
+    /** Text shown when the table has no entries */
+    placeholderText?: string,
 };
 
 @observer
@@ -79,13 +84,24 @@ export default class Table extends React.PureComponent<Props> {
                 controls: this.props.controls,
                 selectMode: this.props.selectMode,
                 onRowSelectionChange: this.handleRowSelectionChange,
-                onAllRowsSelectedChange: this.handleAllRowsSelectedChange,
+                onAllRowsSelectedChange: this.setAllSelected,
             }
         );
     };
 
-    handleAllRowsSelectedChange = (allSelected: boolean) => {
-        this.setAllSelected(allSelected);
+    createTablePlaceholderArea = () => {
+        const {placeholderText} = this.props;
+
+        return (
+            <div className={tableStyles.tablePlaceholderArea}>
+                <Icon name={PLACEHOLDER_ICON} className={tableStyles.tablePlaceholderIcon} />
+                {placeholderText &&
+                    <div className={tableStyles.tablePlaceholderText}>
+                        {placeholderText}
+                    </div>
+                }
+            </div>
+        );
     };
 
     handleAllSelectionChange = (checked: boolean) => {
@@ -101,16 +117,20 @@ export default class Table extends React.PureComponent<Props> {
     };
 
     render() {
-        const {
-            children,
-        } = this.props;
+        const {children} = this.props;
         const {body, header} = this.getTableComponents(children);
+        const rowsCount = (body) ? React.Children.count(body.props.children) : 0;
 
         return (
-            <table className={tableStyles.table}>
-                {header}
-                {body}
-            </table>
+            <div className={tableStyles.tableContainer}>
+                <table className={tableStyles.table}>
+                    {header}
+                    {body}
+                </table>
+                {!rowsCount &&
+                    this.createTablePlaceholderArea()
+                }
+            </div>
         );
     }
 }
