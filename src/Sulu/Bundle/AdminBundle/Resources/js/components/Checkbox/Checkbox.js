@@ -48,6 +48,7 @@ export default class Checkbox extends React.PureComponent<Props> {
                 <input
                     ref={this.setInput}
                     type="checkbox"
+                    checked={checked}
                     onClick={this.handleInputClick}
                     onChange={this.handleChange} />
                 <span>

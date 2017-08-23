@@ -5,6 +5,7 @@ exports[`The component should render in checked state 1`] = `
   class="checkbox dark"
 >
   <input
+    checked=""
     type="checkbox"
   />
   <span>
