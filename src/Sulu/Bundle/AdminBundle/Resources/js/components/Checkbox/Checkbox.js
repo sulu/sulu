@@ -1,25 +1,23 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import Icon from '../Icon';
 import checkboxStyles from './checkbox.scss';
 
 type Props = {
     checked: boolean,
-    value: string,
-    skin: 'dark' | 'light',
-    className: string,
-    onChange?: (checked: boolean, value?: string) => void,
+    skin?: 'dark' | 'light',
+    value?: string | number,
+    onChange?: (checked: boolean, value?: string | number) => void,
+    className?: string,
 };
 
 export default class Checkbox extends React.PureComponent<Props> {
     input: ElementRef<'input'>;
 
     static defaultProps = {
-        value: '',
         skin: 'dark',
-        className: '',
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -29,26 +27,31 @@ export default class Checkbox extends React.PureComponent<Props> {
     };
 
     handleClick = () => this.input.click();
+
     handleInputClick = (event: Event) => event.stopPropagation();
+
     setInput = (input: ElementRef<'input'>) => this.input = input;
 
     render() {
-        const classNames = classnames({
-            [checkboxStyles.checkbox]: true,
-            [checkboxStyles[this.props.skin]]: true,
-            [this.props.className]: !!this.props.className,
-        });
+        const {
+            checked,
+            className,
+        } = this.props;
+        const checkboxClass = classNames(
+            className,
+            checkboxStyles.checkbox,
+            checkboxStyles[this.props.skin],
+        );
 
         return (
-            <span onClick={this.handleClick} className={classNames}>
+            <span onClick={this.handleClick} className={checkboxClass}>
                 <input
                     ref={this.setInput}
                     type="checkbox"
-                    checked={this.props.checked}
                     onClick={this.handleInputClick}
                     onChange={this.handleChange} />
                 <span>
-                    {this.props.checked && <Icon className={checkboxStyles.icon} name="check" />}
+                    {checked && <Icon className={checkboxStyles.icon} name="check" />}
                 </span>
             </span>
         );
