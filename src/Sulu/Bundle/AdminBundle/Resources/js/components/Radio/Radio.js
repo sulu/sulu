@@ -1,4 +1,5 @@
 // @flow
+import type {Node} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import radioStyles from './radio.scss';
