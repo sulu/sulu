@@ -1,22 +1,24 @@
 // @flow
+import type {Node} from 'react';
 import React from 'react';
-import type {ElementRef, Node} from 'react';
+import classNames from 'classnames';
 import radioStyles from './radio.scss';
 
 type Props = {
     checked: boolean,
-    value: string,
-    onChange?: (value: string) => void,
-    children: Node,
+    value: string | number,
+    skin: 'dark' | 'light',
+    name?: string,
+    onChange?: (value: string | number) => void,
+    children?: Node,
+    className?: string,
 };
 
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {
-        value: 'on',
+        skin: 'dark',
         checked: false,
     };
-
-    input: ElementRef<'input'>;
 
     handleChange = () => {
         if (this.props.onChange) {
@@ -24,32 +26,36 @@ export default class Radio extends React.PureComponent<Props> {
         }
     };
 
-    handleClick = () => this.input.click();
-    handleInputClick = (event: Event) => event.stopPropagation();
-    setInput = (input: ElementRef<'input'>) => this.input = input;
-
     render() {
+        const {
+            skin,
+            name,
+            checked,
+            children,
+            className,
+        } = this.props;
+        const radioClass = classNames(
+            className,
+            radioStyles.radio,
+            radioStyles[skin],
+        );
+
         return (
-            <label className={radioStyles.radio}>
-                <span onClick={this.handleClick}>
+            <label className={radioClass}>
+                <span className={radioStyles.customRadioContainer}>
                     <input
-                        ref={this.setInput}
                         type="radio"
-                        checked={this.props.checked}
-                        onClick={this.handleInputClick}
+                        name={name}
+                        checked={checked}
                         onChange={this.handleChange} />
-                    <span />
+                    <span className={radioStyles.customRadio} />
                 </span>
-                {this.renderChildren()}
+                {children &&
+                    <span className={radioStyles.labelText}>
+                        {children}
+                    </span>
+                }
             </label>
         );
-    }
-
-    renderChildren() {
-        if (this.props.children) {
-            return <span>{this.props.children}</span>;
-        }
-
-        return null;
     }
 }

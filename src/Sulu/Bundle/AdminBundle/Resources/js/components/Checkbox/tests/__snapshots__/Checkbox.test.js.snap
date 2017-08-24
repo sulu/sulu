@@ -30,7 +30,7 @@ exports[`The component should render in unchecked state 1`] = `
 
 exports[`The component should render in with class 1`] = `
 <span
-  class="checkbox dark my-class"
+  class="my-class checkbox dark"
 >
   <input
     type="checkbox"

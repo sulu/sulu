@@ -4,6 +4,7 @@ import Icon from '../Icon';
 import inputStyles from './input.scss';
 
 type Props = {
+    name?: string,
     icon?: string,
     type: string,
     value?: string,
@@ -21,15 +22,24 @@ export default class Input extends React.PureComponent<Props> {
     };
 
     render() {
+        const {
+            name,
+            icon,
+            type,
+            value,
+            placeholder,
+        } = this.props;
+
         return (
             <label className={inputStyles.input}>
-                {this.props.icon &&
-                    <Icon className={inputStyles.icon} name={this.props.icon} />
+                {icon &&
+                    <Icon className={inputStyles.icon} name={icon} />
                 }
                 <input
-                    type={this.props.type}
-                    value={this.props.value}
-                    placeholder={this.props.placeholder}
+                    name={name}
+                    type={type}
+                    value={value}
+                    placeholder={placeholder}
                     onChange={this.handleChange} />
             </label>
         );

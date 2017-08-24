@@ -27,9 +27,9 @@ test('A click on the checkbox should trigger the change callback', () => {
     const onChangeSpy = jest.fn();
     const checkbox = shallow(<Checkbox checked={false} onChange={onChangeSpy} />);
     checkbox.find('input').simulate('change', {currentTarget: {checked: true}});
-    expect(onChangeSpy).toHaveBeenCalledWith(true, '');
+    expect(onChangeSpy).toHaveBeenCalledWith(true, undefined);
     checkbox.find('input').simulate('change', {currentTarget: {checked: false}});
-    expect(onChangeSpy).toHaveBeenCalledWith(false, '');
+    expect(onChangeSpy).toHaveBeenCalledWith(false, undefined);
 });
 
 test('A click on the checkbox should trigger the change callback with the value', () => {

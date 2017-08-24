@@ -2,16 +2,22 @@
 
 exports[`The component should render in checked state 1`] = `
 <label
-  class="radio"
+  class="radio dark"
 >
-  <span>
+  <span
+    class="customRadioContainer"
+  >
     <input
       checked=""
       type="radio"
     />
-    <span />
+    <span
+      class="customRadio"
+    />
   </span>
-  <span>
+  <span
+    class="labelText"
+  >
     My radio
   </span>
 </label>
@@ -19,15 +25,21 @@ exports[`The component should render in checked state 1`] = `
 
 exports[`The component should render in unchecked state 1`] = `
 <label
-  class="radio"
+  class="radio dark"
 >
-  <span>
+  <span
+    class="customRadioContainer"
+  >
     <input
       type="radio"
     />
-    <span />
+    <span
+      class="customRadio"
+    />
   </span>
-  <span>
+  <span
+    class="labelText"
+  >
     My radio
   </span>
 </label>
@@ -35,14 +47,18 @@ exports[`The component should render in unchecked state 1`] = `
 
 exports[`The component should render without children 1`] = `
 <label
-  class="radio"
+  class="radio dark"
 >
-  <span>
+  <span
+    class="customRadioContainer"
+  >
     <input
       checked=""
       type="radio"
     />
-    <span />
+    <span
+      class="customRadio"
+    />
   </span>
 </label>
 `;
