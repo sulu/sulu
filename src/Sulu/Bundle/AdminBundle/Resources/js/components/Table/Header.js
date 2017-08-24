@@ -41,7 +41,7 @@ export default class Header extends React.PureComponent<Props> {
         return this.props.selectMode === 'single';
     };
 
-    createHeaderRow = (originalRows: ChildrenArray<Element<typeof Row>>) => {
+    createHeaderRow = (originalRows: any) => {
         const rows = React.Children.toArray(originalRows);
 
         if (rows.length > 1) {
@@ -56,7 +56,9 @@ export default class Header extends React.PureComponent<Props> {
         if (controls && controls.length > 0) {
             const controlCells = this.createHeaderControlCells();
 
-            prependCells.push(...controlCells);
+            if (controlCells) {
+                prependCells.push(...controlCells);
+            }
         }
 
         if (this.isMultipleSelect()) {
@@ -74,7 +76,7 @@ export default class Header extends React.PureComponent<Props> {
         );
     };
 
-    createHeaderCells = (headerCells: ChildrenArray<Element<typeof HeaderCell>>) => {
+    createHeaderCells = (headerCells: any) => {
         return React.Children.map(headerCells, (headerCell: Element<typeof HeaderCell>, index) => {
             const key = `header-${index}`;
 

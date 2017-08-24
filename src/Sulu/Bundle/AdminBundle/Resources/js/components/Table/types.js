@@ -13,7 +13,7 @@ export type SelectMode = 'none' | 'single' | 'multiple';
 
 export type ControlConfig = {
     icon: string,
-    onClick: () => void,
+    onClick: (string | number) => void,
 };
 
 export type ControlItems = Array<ControlConfig>
@@ -33,5 +33,5 @@ export type RowProps = {
      * @ignore 
      * Callback function to notify about the selected row(s) 
      */
-    onRowSelection?: (rowId: SelectedRows) => void,
+    onRowSelection?: (rowId: string | number) => void,
 };

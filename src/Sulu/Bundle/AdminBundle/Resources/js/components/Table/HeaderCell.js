@@ -18,13 +18,13 @@ type Props = {
     /** Called when column was clicked */
     onClick?: () => void,
     /** If set, an indicator will show up */
-    sortMode?: ? 'ascending' | 'descending',
+    sortMode: 'ascending' | 'descending',
 };
 
 export default class HeaderCell extends React.PureComponent<Props> {
     static defaultProps = {
         isControl: false,
-        sortMode: 'default',
+        sortMode: 'ascending',
     };
 
     getSortModeIcon = () => {

@@ -44,7 +44,7 @@ export default class Table extends React.PureComponent<Props> {
         let body;
         let header;
 
-        React.Children.forEach(children, (child: TableChildren) => {
+        React.Children.forEach(children, (child: any) => {
             const {name} = child.type;
 
             switch (name) {

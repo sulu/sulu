@@ -37,8 +37,10 @@ test('Render the Table component', () => {
 });
 
 test('Render an empty table', () => {
+    const placeholderText = 'No entries';
+
     expect(render(
-        <Table>
+        <Table placeholderText={placeholderText}>
             <Header>
                 <Row>
                     <HeaderCell>Column Title</HeaderCell>
@@ -204,7 +206,7 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                 </Row>
-                <Row id={rowIdTwo} selected={true}>
+                <Row id={rowIdTwo}>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
@@ -214,8 +216,70 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
     );
 
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
-    table.find('Row').at(0).find('Checkbox input').simulate();
-    expect(onChangeSpy).toHaveBeenCalledWith(true, rowIdOne);
-    // table.find({ prop: rowIdTwo }).find('Checkbox input').simulate('change');
-    // expect(onChangeSpy).toHaveBeenCalledWith(false, rowIdTwo);
+
+    const checkboxOne = table.find('Row').at(1).find('Checkbox input');
+    checkboxOne.get(0).checked = true;
+
+    checkboxOne.simulate('change');
+    expect(onChangeSpy).toHaveBeenCalledWith(rowIdOne, true);
+});
+
+test('Clicking the select-all checkbox should call the onAllSelectionChange callback', () => {
+    const onChangeSpy = jest.fn();
+    const props = {
+        selectMode: 'multiple',
+        onAllSelectionChange: onChangeSpy,
+    };
+    const table = mount(
+        <Table {...props}>
+            <Header>
+                <Row>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                </Row>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    const allCheckbox = table.find('Row').at(0).find('Checkbox input');
+    allCheckbox.get(0).checked = true;
+
+    allCheckbox.simulate('change');
+    expect(onChangeSpy).toHaveBeenCalledWith(true);
+});
+
+test('Header cells with an attacked onClick handler should be clickable', () => {
+    const onClickSpy = jest.fn();
+
+    const table = mount(
+        <Table>
+            <Header>
+                <Row>
+                    <HeaderCell onClick={onClickSpy}>
+                        Column Title
+                    </HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                </Row>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    table.find('HeaderCell').at(0).find('button').simulate('click');
+    expect(onClickSpy).toHaveBeenCalledTimes(1);
 });

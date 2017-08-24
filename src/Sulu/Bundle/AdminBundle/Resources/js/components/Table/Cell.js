@@ -33,7 +33,7 @@ export default class Cell extends React.PureComponent<Props> {
         );
 
         return (
-            <td 
+            <td
                 colSpan={colspan}
                 className={cellClass}>
                 {children}

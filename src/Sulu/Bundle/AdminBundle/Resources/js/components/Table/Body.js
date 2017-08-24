@@ -51,7 +51,7 @@ export default class Body extends React.PureComponent<Props> {
         return this.props.selectMode === 'single';
     };
 
-    cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
+    cloneRows = (originalRows: any) => {
         return React.Children.map(originalRows, (row, index) => {
             if (React.isValidElement(row)) {
                 const cells = this.createCells(row.props.children, row.props, index);
@@ -68,14 +68,16 @@ export default class Body extends React.PureComponent<Props> {
         });
     };
 
-    createCells = (cells: ChildrenArray<Element<typeof Cell>>, rowProps: RowProps, rowIndex: number) => {
+    createCells = (cells: any, rowProps: RowProps, rowIndex: number) => {
         const {controls} = this.props;
         const prependedCells = [];
 
         if (controls && controls.length > 0) {
             const createdItems = this.createControlCells(rowProps, rowIndex);
 
-            prependedCells.push(...createdItems);
+            if (createdItems) {
+                prependedCells.push(...createdItems);
+            }
         }
 
         if (this.isSingleSelect()) {
@@ -91,7 +93,7 @@ export default class Body extends React.PureComponent<Props> {
         return clonedCells;
     };
 
-    cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>, rowIndex: number) => {
+    cloneCells = (originalCells: any, rowIndex: number) => {
         return React.Children.map(originalCells, (cell, index) => {
             if (React.isValidElement(cell)) {
                 return React.cloneElement(
@@ -143,7 +145,9 @@ export default class Body extends React.PureComponent<Props> {
 
         return controls.map((controlItem: ControlConfig, index) => {
             const key = `body-control-${rowIndex}-${index}`;
-            const handleControlClick = controlItem.onClick;
+            const handleControlClick = () => {
+                controlItem.onClick(rowProps.id || rowIndex);
+            };
 
             return (
                 <Cell
@@ -157,7 +161,7 @@ export default class Body extends React.PureComponent<Props> {
         });
     };
 
-    handleAllRowSelectedChange = (rows: ChildrenArray<Element<typeof Row>>) => {
+    handleAllRowSelectedChange = (rows: any) => {
         const rowSelections = rows.map((row) => row.props.selected);
         const allRowsSelected = !rowSelections.includes(false);
 

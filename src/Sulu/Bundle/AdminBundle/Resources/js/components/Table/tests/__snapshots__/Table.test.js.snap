@@ -140,6 +140,11 @@ exports[`Render an empty table 1`] = `
       aria-hidden="true"
       class="tablePlaceholderIcon fa fa-battery-quarter"
     />
+    <div
+      class="tablePlaceholderText"
+    >
+      No entries
+    </div>
   </div>
 </div>
 `;
