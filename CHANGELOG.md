@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #3501 [AdminBundle]             Updated husky to avoid html/js injection
     * HOTFIX      #3492 [ContentBundle]           Fixed smart-content categories load
+    * HOTFIX      #3499 [MediaBundle]             Fixed deindex of medias
 
 * 1.6.3 (2017-08-17)
     * HOTFIX      #3484 [TestBundle]              Fix doctrine errors for mysql older than 5.7

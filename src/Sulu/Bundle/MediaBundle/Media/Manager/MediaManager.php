@@ -355,6 +355,7 @@ class MediaManager implements MediaManagerInterface
             /** @var FileVersion $fileVersion */
             if ($version == $fileVersion->getVersion()) {
                 $currentFileVersion = $fileVersion;
+
                 break;
             }
         }
@@ -552,39 +553,51 @@ class MediaManager implements MediaManagerInterface
                 switch ($attribute) {
                     case 'size':
                         $media->setSize($value);
+
                         break;
                     case 'title':
                         $media->setTitle($value);
+
                         break;
                     case 'description':
                         $media->setDescription($value);
+
                         break;
                     case 'copyright':
                         $media->setCopyright($value);
+
                         break;
                     case 'credits':
                         $media->setCredits($value);
+
                         break;
                     case 'version':
                         $media->setVersion($value);
+
                         break;
                     case 'name':
                         $media->setName($value);
+
                         break;
                     case 'url':
                         $media->setUrl($value);
+
                         break;
                     case 'formats':
                         $media->setFormats($value);
+
                         break;
                     case 'storageOptions':
                         $media->setStorageOptions($value);
+
                         break;
                     case 'publishLanguages':
                         $media->setPublishLanguages($value);
+
                         break;
                     case 'contentLanguages':
                         $media->setContentLanguages($value);
+
                         break;
                     case 'tags':
                         $media->removeTags();
@@ -594,12 +607,15 @@ class MediaManager implements MediaManagerInterface
                                 $media->addTag($tagEntity);
                             }
                         }
+
                         break;
                     case 'properties':
                         $media->setProperties($value);
+
                         break;
                     case 'changed':
                         $media->setChanged($value);
+
                         break;
                     case 'created':
                         break;
@@ -607,14 +623,17 @@ class MediaManager implements MediaManagerInterface
                         if ($value instanceof UserInterface) {
                             $media->setChanger($value);
                         }
+
                         break;
                     case 'creator':
                         if ($value instanceof UserInterface) {
                             $media->setCreator($value);
                         }
+
                         break;
                     case 'mimeType':
                         $media->setMimeType($value);
+
                         break;
                     case 'collection':
                         $collectionEntity = $this->getCollectionById($value);
@@ -625,6 +644,7 @@ class MediaManager implements MediaManagerInterface
                             $type = $this->typeManager->get($value['id']);
                             $media->setType($type);
                         }
+
                         break;
                     case 'categories':
                         $categoryIds = $value;
@@ -638,6 +658,7 @@ class MediaManager implements MediaManagerInterface
                                 $media->addCategory($category);
                             }
                         }
+
                         break;
                     case 'targetGroups':
                         $targetGroupIds = $value;
@@ -650,12 +671,15 @@ class MediaManager implements MediaManagerInterface
                                 $media->addTargetGroup($targetGroup);
                             }
                         }
+
                         break;
                     case 'focusPointX':
                         $media->setFocusPointX($value);
+
                         break;
                     case 'focusPointY':
                         $media->setFocusPointY($value);
+
                         break;
                 }
             }
@@ -712,6 +736,11 @@ class MediaManager implements MediaManagerInterface
                 );
 
                 $this->storage->remove($fileVersion->getStorageOptions());
+
+                foreach ($fileVersion->getMeta() as $fileVersionMeta) {
+                    // this will trigger massive-search deindex
+                    $this->em->remove($fileVersionMeta);
+                }
             }
         }
 
