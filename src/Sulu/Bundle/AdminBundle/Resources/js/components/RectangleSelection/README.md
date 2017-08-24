@@ -31,7 +31,7 @@ if (state.imageLoaded) {
         <RectangleSelection
             minWidth={150}
             minHeight={50}
-            onChange={s => setState({selection: s})} >
+            onChange={s => setState({selection: s})}>
             <img src="https://unsplash.it/800/500" />
         </RectangleSelection>
         

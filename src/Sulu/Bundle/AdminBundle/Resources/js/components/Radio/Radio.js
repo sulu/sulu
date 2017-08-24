@@ -1,61 +1,43 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
 import classNames from 'classnames';
+import Switch from '../Switch';
+import type {SwitchProps} from '../Switch/types';
 import radioStyles from './radio.scss';
 
-type Props = {
-    checked: boolean,
-    value: string | number,
+type Props = SwitchProps & {
     skin: 'dark' | 'light',
-    name?: string,
-    onChange?: (value: string | number) => void,
-    children?: Node,
-    className?: string,
+    onChange?: (value?: string | number) => void,
 };
 
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {
         skin: 'dark',
-        checked: false,
     };
 
-    handleChange = () => {
+    handleChange = (checked: boolean, value?: string | number) => {
         if (this.props.onChange) {
-            this.props.onChange(this.props.value);
+            this.props.onChange(value);
         }
     };
 
     render() {
-        const {
-            skin,
-            name,
-            checked,
-            children,
-            className,
-        } = this.props;
         const radioClass = classNames(
-            className,
             radioStyles.radio,
-            radioStyles[skin],
+            radioStyles[this.props.skin],
         );
+        const {checked, value, name, children} = this.props;
 
         return (
-            <label className={radioClass}>
-                <span className={radioStyles.customRadioContainer}>
-                    <input
-                        type="radio"
-                        name={name}
-                        checked={checked}
-                        onChange={this.handleChange} />
-                    <span className={radioStyles.customRadio} />
-                </span>
-                {children &&
-                    <span className={radioStyles.labelText}>
-                        {children}
-                    </span>
-                }
-            </label>
+            <Switch
+                className={radioClass}
+                checked={checked}
+                value={value}
+                name={name}
+                onChange={this.handleChange}
+                type="radio">
+                {children}
+            </Switch>
         );
     }
 }

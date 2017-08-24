@@ -1,74 +1,45 @@
 @import '../../containers/Application/colors.scss';
 
 $radius: 8px;
-$radioBackgroundColor: $wildSand;
-$radioBackgroundColorChecked: $blueZodiac;
-$innerBorderWidth: 3px;
-$innerBorderColor: $white;
-$labelTextFontSize: 12px;
-$darkRadioBackgroundColor: $white;
-$darkOuterBorderColor: $blueZodiac;
-$darkInnerBorderColorChecked: $blueZodiac;
+$primaryColor: $blueZodiac;
+$secondaryColor: $white;
 
 .radio {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    & + .radio {
-        margin-top: 10px;
-    }
-
-    &.dark {
-        .custom-radio-container {
-            border: 1px solid $darkOuterBorderColor;
-        }
-
-        .custom-radio {
-            background-color: $darkRadioBackgroundColor;
-        }
-
-        input:checked + .custom-radio {
-            background-color: $darkRadioBackgroundColor;
-            border-color: $darkInnerBorderColorChecked;
-        }
-    }
-
-    input {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 1;
-    }
-
-    input:checked + .custom-radio {
-        background: $radioBackgroundColorChecked;
-    }
-}
-
-.custom-radio-container {
-    display: block;
     width: calc(2 * $radius);
     height: calc(2 * $radius);
-    position: relative;
     border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input + span {
+        border-radius: 50%;
+    }
 }
 
-.custom-radio {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: $radius;
-    background: $radioBackgroundColor;
-    border: $innerBorderWidth solid $innerBorderColor;
+.radio.dark {
+    border: 1px solid $primaryColor;
+
+    input + span {
+        width: calc(2 * $radius - 2px);
+        height: calc(2 * $radius - 2px);
+    }
+
+    input:checked + span {
+        border: 3px solid $primaryColor;
+    }
 }
 
-.label-text {
-    display: block;
-    font-size: $labelTextFontSize;
-    margin-left: 10px;
+.radio.light {
+    border: 2px solid $secondaryColor;
+
+    input + span {
+        width: calc(2 * $radius - 4px);
+        height: calc(2 * $radius - 4px);
+    }
+
+    input:checked + span {
+        border: 1px solid $secondaryColor;
+        background: $primaryColor;
+    }
 }

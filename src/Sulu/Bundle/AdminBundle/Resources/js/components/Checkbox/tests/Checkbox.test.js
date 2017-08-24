@@ -13,7 +13,6 @@ test('The component should render in dark skin', () => {
     expect(checkbox).toMatchSnapshot();
 });
 
-
 test('The component pass the props correctly to the generic checkbox', () => {
     const onChange = () => 'my-on-change';
     const checkbox = shallow(

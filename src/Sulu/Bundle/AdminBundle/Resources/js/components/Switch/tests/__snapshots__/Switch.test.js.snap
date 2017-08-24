@@ -31,7 +31,7 @@ exports[`The component should render in unchecked state 1`] = `
 </label>
 `;
 
-exports[`The component should render in with class 1`] = `
+exports[`The component should render with class 1`] = `
 <label
   class="label"
 >
@@ -46,7 +46,23 @@ exports[`The component should render in with class 1`] = `
 </label>
 `;
 
-exports[`The component should render in with type 1`] = `
+exports[`The component should render with name 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch"
+  >
+    <input
+      name="my-name"
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render with radio type 1`] = `
 <label
   class="label"
 >

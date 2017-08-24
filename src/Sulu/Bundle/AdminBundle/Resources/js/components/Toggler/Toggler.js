@@ -6,14 +6,15 @@ import togglerStyles from './toggler.scss';
 
 export default class Toggler extends React.PureComponent<SwitchProps> {
     render() {
+        const {checked, value, name, onChange, children} = this.props;
         return (
             <Switch
                 className={togglerStyles.toggler}
-                checked={this.props.checked}
-                value={this.props.value}
-                name={this.props.name}
-                onChange={this.props.onChange}>
-                {this.props.children}
+                checked={checked}
+                value={value}
+                name={name}
+                onChange={onChange}>
+                {children}
             </Switch>
         );
     }

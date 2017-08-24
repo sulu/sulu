@@ -23,24 +23,25 @@ export default class Switch extends React.PureComponent<Props> {
     };
 
     render() {
+        const {className, type, name, checked, icon, children} = this.props;
         const switchClasses = classNames(
             switchStyles.switch,
-            this.props.className
+            className
         );
 
         return (
             <label className={switchStyles.label}>
                 <span className={switchClasses}>
                     <input
-                        type={this.props.type}
-                        name={this.props.name}
-                        checked={this.props.checked}
+                        type={type}
+                        name={name}
+                        checked={checked}
                         onChange={this.handleChange} />
                     <span>
-                        {this.props.icon && <Icon name={this.props.icon} />}
+                        {icon && <Icon name={icon} />}
                     </span>
                 </span>
-                {this.props.children && <span>{this.props.children}</span>}
+                {children && <span>{children}</span>}
             </label>
         );
     }

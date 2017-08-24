@@ -3,24 +3,36 @@ import {shallow, render} from 'enzyme';
 import React from 'react';
 import Radio from '../Radio';
 
-test('The component should render in unchecked state', () => {
-    const radio = render(<Radio checked={false}>My radio</Radio>);
+test('The component should render in light skin', () => {
+    const radio = render(<Radio skin="light" />);
     expect(radio).toMatchSnapshot();
 });
 
-test('The component should render in checked state', () => {
-    const radio = render(<Radio checked={true}>My radio</Radio>);
+test('The component should render in dark skin', () => {
+    const radio = render(<Radio skin="dark" />);
     expect(radio).toMatchSnapshot();
 });
 
-test('The component should render without children', () => {
-    const radio = render(<Radio checked={true} />);
-    expect(radio).toMatchSnapshot();
+test('The component pass the props correctly to the generic checkbox', () => {
+    const checkbox = shallow(
+        <Radio
+            value="my-value"
+            name="my-name"
+            checked={true}>My label</Radio>
+    );
+    const switchComponent = checkbox.find('Switch');
+    expect(switchComponent.props().value).toBe('my-value');
+    expect(switchComponent.props().name).toBe('my-name');
+    expect(switchComponent.props().checked).toBe(true);
+    expect(switchComponent.props().children).toBe('My label');
 });
 
-test('A click on the button should trigger the change callback', () => {
-    const onChangeSpy = jest.fn();
-    const radio = shallow(<Radio value="my-radio" checked={false} onChange={onChangeSpy}>My radio</Radio>);
-    radio.find('input').simulate('change');
-    expect(onChangeSpy).toHaveBeenCalledWith('my-radio');
+test('The component pass the the value to the change callback', () => {
+    const onChange = jest.fn();
+    const checkbox = shallow(
+        <Radio onChange={onChange} value="my-value">My label</Radio>
+    );
+    const switchComponent = checkbox.find('Switch');
+    switchComponent.props().onChange(true, 'my-value');
+    expect(onChange).toHaveBeenCalledWith('my-value');
 });

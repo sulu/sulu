@@ -17,8 +17,8 @@ $secondaryColor: $white;
         top: 0;
         left: 0;
         border-radius: 2px;
-        border: 1px solid $primaryColor;
-        color: $secondaryColor;
+        border-width: 1px;
+        border-style: solid;
         text-align: center;
         line-height: $length;
 
@@ -28,6 +28,13 @@ $secondaryColor: $white;
             left: -1px;
             font-size: $length;
         }
+    }
+}
+
+.checkbox.dark {
+    input + span {
+        border-color: $primaryColor;
+        color: $secondaryColor;
     }
 
     input:checked + span {

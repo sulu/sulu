@@ -13,12 +13,17 @@ test('The component should render in checked state', () => {
     expect(component).toMatchSnapshot();
 });
 
-test('The component should render in with class', () => {
+test('The component should render with class', () => {
     const component = render(<Switch className="my-class" checked={false} />);
     expect(component).toMatchSnapshot();
 });
 
-test('The component should render in with type', () => {
+test('The component should render with name', () => {
+    const component = render(<Switch name="my-name" checked={false} />);
+    expect(component).toMatchSnapshot();
+});
+
+test('The component should render with radio type', () => {
     const component = render(<Switch type="radio" className="my-class" checked={false} />);
     expect(component).toMatchSnapshot();
 });

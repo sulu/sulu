@@ -21,16 +21,17 @@ export default class Checkbox extends React.PureComponent<Props> {
             checkboxStyles.checkbox,
             checkboxStyles[this.props.skin]
         );
+        const {checked, value, name, onChange, children} = this.props;
 
         return (
             <Switch
                 className={checkboxClass}
-                checked={this.props.checked}
-                value={this.props.value}
-                name={this.props.name}
-                icon={this.props.checked ? CHECKED_ICON : undefined}
-                onChange={this.props.onChange}>
-                {this.props.children}
+                checked={checked}
+                value={value}
+                name={name}
+                icon={checked ? CHECKED_ICON : undefined}
+                onChange={onChange}>
+                {children}
             </Switch>
         );
     }
