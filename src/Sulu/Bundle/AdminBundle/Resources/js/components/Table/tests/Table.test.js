@@ -129,7 +129,7 @@ test('Render the Table component in single selection mode', () => {
     )).toMatchSnapshot();
 });
 
-test('Table should implement onRowSelectionChange method which has the id of the selected row', () => {
+test('Table should implement onRowSelectionChange method which has the id of the selected row in the arguments', () => {
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'single',
@@ -158,4 +158,25 @@ test('Table should implement onRowSelectionChange method which has the id of the
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
     table.find('Row Radio input').simulate('change');
     expect(onChangeSpy).toHaveBeenCalledWith(rowId, undefined);
+});
+
+test('Render the Table component in multiple selection mode', () => {
+    expect(render(
+        <Table selectMode="multiple">
+            <Header>
+                <Row>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                </Row>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
 });
