@@ -15,7 +15,7 @@ type Props = {
 
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {
-        skin: 'light',
+        skin: 'dark',
         checked: false,
     };
 
