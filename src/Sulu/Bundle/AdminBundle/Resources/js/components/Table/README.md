@@ -92,7 +92,7 @@ const isSelected = (id) => {
 };
 
 const tableProps = {
-    selectMode: 'multiple',
+    selectMode: 'single',
     controls: [
         {
             icon: 'pencil',
@@ -100,15 +100,9 @@ const tableProps = {
         },
     ],
     onRowSelectionChange: (rowId, selected) => {
-        if (selected) {
-            setState({
-                selectedRows: [...state.selectedRows, rowId]
-            });
-        } else {
-            setState({
-                selectedRows: state.selectedRows.filter((selectedRowId) => selectedRowId !== rowId)
-            });
-        }
+        setState({
+            selectedRows: [rowId]
+        });
     },
     onAllSelectionChange: (allSelected) => {
         if (allSelected) {

@@ -113,7 +113,6 @@ export default class Body extends React.PureComponent<Props> {
                 <Radio
                     skin="dark"
                     value={identifier}
-                    name="test"
                     checked={rowProps.selected}
                     onChange={this.handleRowSingleSelectionChange} />
             </Cell>

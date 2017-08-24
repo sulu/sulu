@@ -1,71 +1,323 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render the Table component 1`] = `
-<table
-  class="table"
+exports[`Render a table with control buttons 1`] = `
+<div
+  class="tableContainer"
 >
-  <thead
-    class="header"
+  <table
+    class="table"
   >
-    <tr
-      class="row"
+    <thead
+      class="header"
     >
-      <th
-        class="headerCell"
+      <tr
+        class="row"
       >
-        Column Title
-      </th>
-      <th
-        class="headerCell"
+        <th
+          class="headerCell headerControlCell"
+        >
+          <button
+            disabled=""
+          >
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
       >
-        Column Title
-      </th>
-      <th
-        class="headerCell"
-      >
-        Column Title
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr
-      class="row"
+        <td
+          class="cell controlCell"
+        >
+          <button>
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </button>
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render an empty table 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
     >
-      <td
-        class="cell"
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-      <td
-        class="cell"
-      >
-        Column Text
-      </td>
-      <td
-        class="cell"
-      >
-        Column Text
-      </td>
-    </tr>
-    <tr
-      class="row"
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+  <div
+    class="tablePlaceholderArea"
+  >
+    <span
+      aria-hidden="true"
+      class="tablePlaceholderIcon fa fa-battery-quarter"
+    />
+  </div>
+</div>
+`;
+
+exports[`Render the Table component 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
     >
-      <td
-        class="cell"
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-      <td
-        class="cell"
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-      <td
-        class="cell"
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-    </tr>
-  </tbody>
-</table>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render the Table component in single selection mode 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr
+        class="row"
+      >
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          />
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <label
+            class="radio dark"
+          >
+            <span
+              class="customRadioContainer"
+            >
+              <input
+                type="radio"
+              />
+              <span
+                class="customRadio"
+              />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 `;
