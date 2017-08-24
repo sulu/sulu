@@ -12,10 +12,10 @@ test('The component pass the props correctly to the generic checkbox', () => {
             name="my-name"
             checked={true}>My label</Toggler>
     );
-    const genericCheckbox = toggler.find('GenericCheckbox');
-    expect(genericCheckbox.props().value).toBe('my-value');
-    expect(genericCheckbox.props().name).toBe('my-name');
-    expect(genericCheckbox.props().checked).toBe(true);
-    expect(genericCheckbox.props().children).toBe('My label');
-    expect(genericCheckbox.props().onChange()).toBe('my-on-change');
+    const switchComponent = toggler.find('Switch');
+    expect(switchComponent.props().value).toBe('my-value');
+    expect(switchComponent.props().name).toBe('my-name');
+    expect(switchComponent.props().checked).toBe(true);
+    expect(switchComponent.props().children).toBe('My label');
+    expect(switchComponent.props().onChange()).toBe('my-on-change');
 });

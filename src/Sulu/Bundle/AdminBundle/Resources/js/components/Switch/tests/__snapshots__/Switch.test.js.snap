@@ -2,10 +2,10 @@
 
 exports[`The component should render in checked state 1`] = `
 <label
-  class="genericCheckbox"
+  class="label"
 >
   <span
-    class="checkbox"
+    class="switch"
   >
     <input
       checked=""
@@ -18,10 +18,10 @@ exports[`The component should render in checked state 1`] = `
 
 exports[`The component should render in unchecked state 1`] = `
 <label
-  class="genericCheckbox"
+  class="label"
 >
   <span
-    class="checkbox"
+    class="switch"
   >
     <input
       type="checkbox"
@@ -33,13 +33,28 @@ exports[`The component should render in unchecked state 1`] = `
 
 exports[`The component should render in with class 1`] = `
 <label
-  class="genericCheckbox"
+  class="label"
 >
   <span
-    class="checkbox my-class"
+    class="switch my-class"
   >
     <input
       type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render in with type 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch my-class"
+  >
+    <input
+      type="radio"
     />
     <span />
   </span>

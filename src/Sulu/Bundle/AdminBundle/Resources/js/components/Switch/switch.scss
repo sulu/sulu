@@ -1,7 +1,7 @@
 $fontSize: 12px;
 $marginBottom: 10px;
 
-.generic-checkbox {
+.label {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -12,12 +12,12 @@ $marginBottom: 10px;
         font-size: $fontSize;
     }
 
-    & + .generic-checkbox {
+    & + .label {
         margin-top: $marginBottom;
     }
 }
 
-.checkbox {
+.switch {
     display: inline-block;
     position: relative;
 

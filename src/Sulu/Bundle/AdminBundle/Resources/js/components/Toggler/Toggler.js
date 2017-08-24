@@ -1,20 +1,20 @@
 // @flow
 import React from 'react';
-import type {CheckboxProps} from '../Checkbox/types';
-import {GenericCheckbox} from '../Checkbox';
+import Switch from '../Switch';
+import type {SwitchProps} from '../Switch/types';
 import togglerStyles from './toggler.scss';
 
-export default class Toggler extends React.PureComponent<CheckboxProps> {
+export default class Toggler extends React.PureComponent<SwitchProps> {
     render() {
         return (
-            <GenericCheckbox
+            <Switch
                 className={togglerStyles.toggler}
                 checked={this.props.checked}
                 value={this.props.value}
                 name={this.props.name}
                 onChange={this.props.onChange}>
                 {this.props.children}
-            </GenericCheckbox>
+            </Switch>
         );
     }
 }

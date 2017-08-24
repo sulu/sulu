@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type {CheckboxProps} from './types';
+import Switch from '../Switch';
+import type {SwitchProps} from '../Switch/types';
 import checkboxStyles from './checkbox.scss';
-import GenericCheckbox from './GenericCheckbox';
 
-type Props = CheckboxProps & {
+type Props = SwitchProps & {
     skin: 'dark' | 'light',
 };
 
@@ -17,13 +17,13 @@ export default class Checkbox extends React.PureComponent<Props> {
     };
 
     render() {
-        const checkboxClass = classNames({
-            [checkboxStyles.checkbox]: true,
-            [checkboxStyles[this.props.skin]]: true,
-        });
+        const checkboxClass = classNames(
+            checkboxStyles.checkbox,
+            checkboxStyles[this.props.skin]
+        );
 
         return (
-            <GenericCheckbox
+            <Switch
                 className={checkboxClass}
                 checked={this.props.checked}
                 value={this.props.value}
@@ -31,7 +31,7 @@ export default class Checkbox extends React.PureComponent<Props> {
                 icon={this.props.checked ? CHECKED_ICON : undefined}
                 onChange={this.props.onChange}>
                 {this.props.children}
-            </GenericCheckbox>
+            </Switch>
         );
     }
 }

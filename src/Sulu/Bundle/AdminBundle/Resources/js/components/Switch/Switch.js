@@ -1,18 +1,19 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import Icon from '../Icon';
-import type {CheckboxProps} from './types';
-import genericCheckboxStyles from './genericCheckbox.scss';
+import Icon from '../Icon/index';
+import type {SwitchProps} from './types';
+import switchStyles from './switch.scss';
 
-type Props = CheckboxProps & {
-    className: string,
+type Props = SwitchProps & {
+    className?: string,
     icon?: string,
+    type: string,
 };
 
-export default class GenericCheckbox extends React.PureComponent<Props> {
+export default class Switch extends React.PureComponent<Props> {
     static defaultProps = {
-        className: '',
+        type: 'checkbox',
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -22,16 +23,16 @@ export default class GenericCheckbox extends React.PureComponent<Props> {
     };
 
     render() {
-        const checkboxClass = classNames({
-            [genericCheckboxStyles.checkbox]: true,
-            [this.props.className]: !!this.props.className,
-        });
+        const switchClasses = classNames(
+            switchStyles.switch,
+            this.props.className
+        );
 
         return (
-            <label className={genericCheckboxStyles.genericCheckbox}>
-                <span className={checkboxClass}>
+            <label className={switchStyles.label}>
+                <span className={switchClasses}>
                     <input
-                        type="checkbox"
+                        type={this.props.type}
                         name={this.props.name}
                         checked={this.props.checked}
                         onChange={this.handleChange} />
