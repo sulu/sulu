@@ -2,7 +2,7 @@
 
 exports[`The component should render in checked state 1`] = `
 <label
-  class="radio light"
+  class="radio dark"
 >
   <span
     class="customRadioContainer"
@@ -25,7 +25,7 @@ exports[`The component should render in checked state 1`] = `
 
 exports[`The component should render in unchecked state 1`] = `
 <label
-  class="radio light"
+  class="radio dark"
 >
   <span
     class="customRadioContainer"
@@ -47,7 +47,7 @@ exports[`The component should render in unchecked state 1`] = `
 
 exports[`The component should render without children 1`] = `
 <label
-  class="radio light"
+  class="radio dark"
 >
   <span
     class="customRadioContainer"
