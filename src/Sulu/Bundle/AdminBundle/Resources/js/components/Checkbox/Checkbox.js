@@ -1,54 +1,37 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import Icon from '../Icon';
+import type {CheckboxProps} from './types';
 import checkboxStyles from './checkbox.scss';
+import GenericCheckbox from './GenericCheckbox';
 
-type Props = {
-    checked: boolean,
+type Props = CheckboxProps & {
     skin: 'dark' | 'light',
-    name?: string,
-    value?: string | number,
-    onChange?: (checked: boolean, value?: string | number) => void,
-    className?: string,
 };
+
+const CHECKED_ICON = 'check';
 
 export default class Checkbox extends React.PureComponent<Props> {
     static defaultProps = {
         skin: 'dark',
     };
 
-    handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        if (this.props.onChange) {
-            this.props.onChange(event.currentTarget.checked, this.props.value);
-        }
-    };
-
     render() {
-        const {
-            name,
-            checked,
-            className,
-        } = this.props;
-        const checkboxClass = classNames(
-            className,
-            checkboxStyles.checkbox,
-            checkboxStyles[this.props.skin],
-        );
+        const checkboxClass = classNames({
+            [checkboxStyles.checkbox]: true,
+            [checkboxStyles[this.props.skin]]: true,
+        });
 
         return (
-            <span className={checkboxClass}>
-                <input
-                    type="checkbox"
-                    name={name}
-                    checked={checked}
-                    onChange={this.handleChange} />
-                <span>
-                    {checked &&
-                        <Icon className={checkboxStyles.icon} name="check" />
-                    }
-                </span>
-            </span>
+            <GenericCheckbox
+                className={checkboxClass}
+                checked={this.props.checked}
+                value={this.props.value}
+                name={this.props.name}
+                icon={this.props.checked ? CHECKED_ICON : undefined}
+                onChange={this.props.onChange}>
+                {this.props.children}
+            </GenericCheckbox>
         );
     }
 }

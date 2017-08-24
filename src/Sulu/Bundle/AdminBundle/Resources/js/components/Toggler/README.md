@@ -2,7 +2,10 @@ The toggler is an boolean input element and has no internal state. It has to be 
 like shown in the following example:
 
 ```
-initialState = {checked: false};
-onChange = (checked) => setState({checked});
-<Toggler checked={state.checked} onChange={onChange} />
+initialState = {checked1: false, checked2: true};
+onChange = (checked, value) => setState({['checked' + value]: checked});
+<div>
+    <Toggler value="1" checked={state.checked1} onChange={onChange}>Airplane mode</Toggler>
+    <Toggler value="2" checked={state.checked2} onChange={onChange}>Night mode</Toggler>
+</div>
 ```

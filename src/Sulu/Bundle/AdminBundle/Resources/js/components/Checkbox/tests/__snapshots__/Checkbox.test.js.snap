@@ -1,51 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should render in checked state 1`] = `
-<span
-  class="checkbox dark"
+exports[`The component should render in dark skin 1`] = `
+<label
+  class="genericCheckbox"
 >
-  <input
-    checked=""
-    type="checkbox"
-  />
-  <span>
-    <span
-      aria-hidden="true"
-      class="icon fa fa-check"
+  <span
+    class="checkbox checkbox dark"
+  >
+    <input
+      type="checkbox"
     />
+    <span />
   </span>
-</span>
+</label>
 `;
 
-exports[`The component should render in unchecked state 1`] = `
-<span
-  class="checkbox dark"
+exports[`The component should render in light skin 1`] = `
+<label
+  class="genericCheckbox"
 >
-  <input
-    type="checkbox"
-  />
-  <span />
-</span>
-`;
-
-exports[`The component should render in with class 1`] = `
-<span
-  class="my-class checkbox dark"
->
-  <input
-    type="checkbox"
-  />
-  <span />
-</span>
-`;
-
-exports[`The component should render with light skin 1`] = `
-<span
-  class="checkbox light"
->
-  <input
-    type="checkbox"
-  />
-  <span />
-</span>
+  <span
+    class="checkbox checkbox light"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
 `;
