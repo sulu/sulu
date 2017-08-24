@@ -1,21 +1,19 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import checkboxStyles from './checkbox.scss';
 
 type Props = {
     checked: boolean,
-    skin?: 'dark' | 'light',
+    skin: 'dark' | 'light',
+    name?: string,
     value?: string | number,
     onChange?: (checked: boolean, value?: string | number) => void,
     className?: string,
 };
 
 export default class Checkbox extends React.PureComponent<Props> {
-    input: ElementRef<'input'>;
-
     static defaultProps = {
         skin: 'dark',
     };
@@ -26,14 +24,9 @@ export default class Checkbox extends React.PureComponent<Props> {
         }
     };
 
-    handleClick = () => this.input.click();
-
-    handleInputClick = (event: Event) => event.stopPropagation();
-
-    setInput = (input: ElementRef<'input'>) => this.input = input;
-
     render() {
         const {
+            name,
             checked,
             className,
         } = this.props;
@@ -44,15 +37,16 @@ export default class Checkbox extends React.PureComponent<Props> {
         );
 
         return (
-            <span onClick={this.handleClick} className={checkboxClass}>
+            <span className={checkboxClass}>
                 <input
-                    ref={this.setInput}
                     type="checkbox"
+                    name={name}
                     checked={checked}
-                    onClick={this.handleInputClick}
                     onChange={this.handleChange} />
                 <span>
-                    {checked && <Icon className={checkboxStyles.icon} name="check" />}
+                    {checked &&
+                        <Icon className={checkboxStyles.icon} name="check" />
+                    }
                 </span>
             </span>
         );
