@@ -14,7 +14,7 @@ Radio buttons come with two different styles which can be set through the `skin`
 The "light" style looks like as in the following example:
 
 ```
-<div>
+<div style={{ backgroundColor: '#888', padding: '10px' }}>
     <Radio skin="light" checked={state.value === '1'} onChange={() => setState({value: '1'})}>Radio 1</Radio>
     <Radio skin="light" checked={state.value === '2'} onChange={() => setState({value: '2'})}>Radio 2</Radio>
     <Radio skin="light" checked={state.value === '3'} onChange={() => setState({value: '3'})}>Radio 3</Radio>
