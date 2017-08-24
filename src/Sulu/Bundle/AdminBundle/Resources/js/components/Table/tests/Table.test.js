@@ -129,7 +129,7 @@ test('Render the Table component in single selection mode', () => {
     )).toMatchSnapshot();
 });
 
-test('Table should implement onRowSelectionChange method which has the id of the selected row in the arguments', () => {
+test('Clicking on the radio button should call onRowSelectionChange with the row-id', () => {
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'single',
@@ -179,4 +179,43 @@ test('Render the Table component in multiple selection mode', () => {
             </Body>
         </Table>
     )).toMatchSnapshot();
+});
+
+test('Clicking a checkbox should call onRowSelectionChange with the selection state and row-id', () => {
+    const onChangeSpy = jest.fn();
+    const props = {
+        selectMode: 'multiple',
+        onRowSelectionChange: onChangeSpy,
+    };
+    const rowIdOne = 'test-row-id-1';
+    const rowIdTwo = 'test-row-id-2';
+    const table = mount(
+        <Table {...props}>
+            <Header>
+                <Row>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                    <HeaderCell>Column Title</HeaderCell>
+                </Row>
+            </Header>
+            <Body>
+                <Row id={rowIdOne}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row id={rowIdTwo} selected={true}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    expect(onChangeSpy).toHaveBeenCalledTimes(0);
+    table.find('Row').at(0).find('Checkbox input').simulate();
+    expect(onChangeSpy).toHaveBeenCalledWith(true, rowIdOne);
+    // table.find({ prop: rowIdTwo }).find('Checkbox input').simulate('change');
+    // expect(onChangeSpy).toHaveBeenCalledWith(false, rowIdTwo);
 });

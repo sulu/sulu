@@ -230,6 +230,101 @@ exports[`Render the Table component 1`] = `
 </div>
 `;
 
+exports[`Render the Table component in multiple selection mode 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr
+        class="row"
+      >
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            <span
+              class="checkbox light"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <button
+            disabled=""
+          >
+            Column Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <span
+            class="checkbox dark"
+          >
+            <input
+              type="checkbox"
+            />
+            <span />
+          </span>
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Render the Table component in single selection mode 1`] = `
 <div
   class="tableContainer"
