@@ -7,7 +7,7 @@ intialState = {open: false};
 
 <div>
     <button onClick={() => setState({open: true})}>Open Backdrop</button>
-    <Backdrop isOpen={state.open} onClick={() => setState({open: false})} />
+    <Backdrop isOpen={!!state.open} onClick={() => setState({open: false})} />
 </div>
 ```
 
@@ -18,6 +18,6 @@ intialState = {open: false};
 
 <div>
     <button onClick={() => setState({open: true})}>Open Backdrop</button>
-    <Backdrop isVisible={false} isOpen={state.open} onClick={() => setState({open: false})} />
+    <Backdrop isVisible={false} isOpen={!!state.open} onClick={() => setState({open: false})} />
 </div>
 ```

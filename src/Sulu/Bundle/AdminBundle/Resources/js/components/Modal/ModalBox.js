@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import Icon from '../Icon';
-import type {ModalProps, Action} from './types';
+import type {ModalProps} from './types';
+import Actions from './Actions';
 import modalBoxStyles from './modalBox.scss';
 
 type Props = ModalProps & {
@@ -16,44 +17,20 @@ export default class ModalBox extends React.PureComponent<Props> {
     };
 
     render() {
-        return (
-            <div className={modalBoxStyles.box}>
-                <div className={modalBoxStyles.header}>
-                    {this.props.title}
-                    <Icon
-                        name={CLOSE_ICON}
-                        className={modalBoxStyles.icon}
-                        onClick={this.props.onRequestClose} />
-                </div>
-                <div className={modalBoxStyles.content}>
-                    {this.props.children}
-                </div>
-                <div className={modalBoxStyles.footer}>
-                    {ModalBox.renderActions(this.props.actions)}
-                    <button
-                        className={modalBoxStyles.confirmButton}
-                        onClick={this.props.onConfirm}>{this.props.confirmText}</button>
-                </div>
-            </div>
-        );
-    }
+        const {title, onRequestClose, children, actions, onConfirm, confirmText} = this.props;
 
-    static renderActions(actions: Array<Action>) {
-        if (actions.length > 0) {
-            return (
-                <div className={modalBoxStyles.actions}>
-                    {actions.map(ModalBox.renderAction)}
-                </div>
-            );
-        }
-    }
-
-    static renderAction(action: Action, index: number) {
         return (
-            <button
-                key={index}
-                className={modalBoxStyles.action}
-                onClick={action.handleAction}>{action.title}</button>
+            <section className={modalBoxStyles.box}>
+                <header>
+                    {title}
+                    <Icon name={CLOSE_ICON} className={modalBoxStyles.icon} onClick={onRequestClose} />
+                </header>
+                <article>{children}</article>
+                <footer>
+                    <Actions actions={actions} />
+                    <button className={modalBoxStyles.confirmButton} onClick={onConfirm}>{confirmText}</button>
+                </footer>
+            </section>
         );
     }
 }

@@ -1,28 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<div
+<section
   class="box"
 >
-  <div
-    class="header"
-  >
+  <header>
     My title
     <span
       aria-hidden="true"
       class="icon fa fa-times"
     />
-  </div>
-  <div
-    class="content"
-  >
+  </header>
+  <article>
     <p>
       My modal content
     </p>
-  </div>
-  <div
-    class="footer"
-  >
+  </article>
+  <footer>
     <div
       class="actions"
     >
@@ -42,6 +36,6 @@ exports[`The component should render 1`] = `
     >
       Alright mate!
     </button>
-  </div>
-</div>
+  </footer>
+</section>
 `;

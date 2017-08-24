@@ -14,9 +14,6 @@ $titleSize: 22px;
 $iconFontSize: 14px;
 $iconSize: ($iconFontSize + 10px);
 
-$actionFontSize: 14px;
-$actionColor: $black;
-
 $confirmBackground: $shakespeare;
 $confirmColor: $white;
 $confirmFontSize: 12px;
@@ -28,7 +25,7 @@ $confirmHeight: 30px;
     overflow: hidden;
     box-shadow: $boxShadow;
 
-    .header {
+    header {
         background: $secondaryBackground;
         height: $headerHeight;
         color: $titleColor;
@@ -38,13 +35,13 @@ $confirmHeight: 30px;
         line-height: $headerHeight;
     }
 
-    .content {
+    article {
         max-height: calc(100vh - $headerHeight - $footerHeight);
         overflow: auto;
         background: $primaryBackground;
     }
 
-    .footer {
+    footer {
         background: $secondaryBackground;
         height: $footerHeight;
         padding: 0 60px;
@@ -64,21 +61,6 @@ $confirmHeight: 30px;
         text-align: center;
         cursor: pointer;
     }
-}
-
-.actions {
-    line-height: $footerHeight;
-}
-
-.action {
-    padding: 0;
-    margin: 0 10px 0 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: $actionFontSize;
-    color: $actionColor;
 }
 
 .confirm-button {

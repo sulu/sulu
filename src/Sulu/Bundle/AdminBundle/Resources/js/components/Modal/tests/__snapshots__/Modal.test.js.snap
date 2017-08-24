@@ -1,32 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when closed 1`] = `
-<div>
-  
-</div>
-`;
+exports[`The component should not render in body when closed 1`] = `null`;
 
-exports[`The component should render in body when open 1`] = `
-<div>
-  
-</div>
-`;
+exports[`The component should render in body when open 1`] = `null`;
 
 exports[`The component should render in body when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <div class=\\"box\\">
-      <div class=\\"box\\">
-        <div class=\\"header\\">
+      <section class=\\"box\\">
+        <header>
           <!-- react-text: 5 -->My modal title
-          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></div>
-        <div class=\\"content\\">
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+        <article>
           <p>My modal content</p>
-        </div>
-        <div class=\\"footer\\">
+        </article>
+        <footer>
+          <!-- react-empty: 10 -->
           <button class=\\"confirmButton\\">Apply</button>
-        </div>
-      </div>
+        </footer>
+      </section>
     </div>
     <div class=\\"backdrop isVisible\\"></div>
   </div>

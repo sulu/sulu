@@ -8,7 +8,8 @@ type Props = {
     isOpen: boolean,
     /** When set to false the backdrop renders transparent. */
     isVisible: boolean,
-    inPortal: boolean,
+    /** If true, the backdrop gets rendered in the placed element and not in the body. */
+    local: boolean,
     onClick?: () => void,
 };
 
@@ -16,7 +17,7 @@ export default class Backdrop extends React.PureComponent<Props> {
     static defaultProps = {
         isOpen: true,
         isVisible: true,
-        inPortal: true,
+        local: false,
     };
 
     handleClick = () => {
@@ -35,7 +36,7 @@ export default class Backdrop extends React.PureComponent<Props> {
             [backdropStyles.isVisible]: isVisible,
         });
         const backdrop = <div onClick={this.handleClick} className={backdropClasses} />;
-        if (!this.props.inPortal) {
+        if (this.props.local) {
             return backdrop;
         }
         return <Portal isOpened={isOpen}>{backdrop}</Portal>;

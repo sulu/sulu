@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when property is set 1`] = `
+exports[`The component should not render in body when local property is set 1`] = `
 <div
   class="backdrop isVisible"
 />

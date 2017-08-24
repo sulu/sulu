@@ -14,7 +14,7 @@ test('The modal should initially not be rendered', () => {
         <ClickModal
             clickElement={<button>Open modal</button>}
             title="My modal title"
-            confirmText="Apply" >
+            confirmText="Apply">
             <p>My modal content</p>
         </ClickModal>
     ).render();
@@ -28,7 +28,7 @@ test('The modal should be rendered when the button got clicked', () => {
         <ClickModal
             clickElement={<button>Open modal</button>}
             title="My modal title"
-            confirmText="Apply" >
+            confirmText="Apply">
             <p>My modal content</p>
         </ClickModal>
     );
@@ -44,7 +44,7 @@ test('The modal should be gone when the modal requests to be closed', () => {
         <ClickModal
             clickElement={<button>Open modal</button>}
             title="My modal title"
-            confirmText="Apply" >
+            confirmText="Apply">
             <p>My modal content</p>
         </ClickModal>
     );

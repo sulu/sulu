@@ -3,7 +3,7 @@ import type {Node} from 'react';
 
 export type Action = {
     title: string,
-    handleAction: () => void,
+    onClick: () => void,
 };
 
 export type ModalProps = {

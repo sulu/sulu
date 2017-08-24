@@ -72,27 +72,26 @@ export default class Modal extends React.PureComponent<Props> {
             [modalStyles.container]: true,
             [modalStyles.isDown]: this.isVisible,
         });
+        const {isOpen, title, actions, onRequestClose, onConfirm, confirmText, children} = this.props;
 
         return (
-            <div>
-                <Portal isOpened={this.props.isOpen || this.isOpenHasChanged}>
-                    <div
-                        className={containerClasses}
-                        onTransitionEnd={this.handleTransitionEnd} >
-                        <div className={modalStyles.box}>
-                            <ModalBox
-                                title={this.props.title}
-                                actions={this.props.actions}
-                                onRequestClose={this.props.onRequestClose}
-                                onConfirm={this.props.onConfirm}
-                                confirmText={this.props.confirmText} >
-                                {this.props.children}
-                            </ModalBox>
-                        </div>
-                        <Backdrop inPortal={false} onClick={this.props.onRequestClose} />
+            <Portal isOpened={isOpen || this.isOpenHasChanged}>
+                <div
+                    className={containerClasses}
+                    onTransitionEnd={this.handleTransitionEnd}>
+                    <div className={modalStyles.box}>
+                        <ModalBox
+                            title={title}
+                            actions={actions}
+                            onRequestClose={onRequestClose}
+                            onConfirm={onConfirm}
+                            confirmText={confirmText}>
+                            {children}
+                        </ModalBox>
                     </div>
-                </Portal>
-            </div>
+                    <Backdrop local={true} onClick={this.props.onRequestClose} />
+                </div>
+            </Portal>
         );
     }
 }

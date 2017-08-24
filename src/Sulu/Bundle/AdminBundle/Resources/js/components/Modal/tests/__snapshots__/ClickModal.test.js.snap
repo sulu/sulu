@@ -4,17 +4,18 @@ exports[`The modal should be rendered when the button got clicked 1`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container isDown\\">
     <div class=\\"box\\">
-      <div class=\\"box\\">
-        <div class=\\"header\\">
+      <section class=\\"box\\">
+        <header>
           <!-- react-text: 5 -->My modal title
-          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></div>
-        <div class=\\"content\\">
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+        <article>
           <p>My modal content</p>
-        </div>
-        <div class=\\"footer\\">
+        </article>
+        <footer>
+          <!-- react-empty: 10 -->
           <button class=\\"confirmButton\\">Apply</button>
-        </div>
-      </div>
+        </footer>
+      </section>
     </div>
     <div class=\\"backdrop isVisible\\"></div>
   </div>
@@ -26,8 +27,5 @@ exports[`The modal should initially not be rendered 1`] = `
   <button>
     Open modal
   </button>
-  <div>
-    
-  </div>
 </div>
 `;

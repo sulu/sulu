@@ -7,8 +7,8 @@ test('The component should render', () => {
     const onRequestClose = () => {};
     const onConfirm = () => {};
     const actions = [
-        {title: 'Action 1', handleAction: () => {}},
-        {title: 'Action 2', handleAction: () => {}},
+        {title: 'Action 1', onClick: () => {}},
+        {title: 'Action 2', onClick: () => {}},
     ];
     const box = render(
         <ModalBox
@@ -53,26 +53,4 @@ test('The component should call the callback when the confirm button is clicked'
     );
     box.find('.confirmButton').simulate('click');
     expect(onConfirm).toBeCalled();
-});
-
-test('The component should call the corresponding callback when an action is clicked', () => {
-    const onRequestClose = () => {};
-    const onConfirm = () => {};
-    const actions = [
-        {title: 'Action 1', handleAction: jest.fn()},
-        {title: 'Action 2', handleAction: jest.fn()},
-    ];
-    const box = shallow(
-        <ModalBox
-            title="My title"
-            actions={actions}
-            onRequestClose={onRequestClose}
-            onConfirm={onConfirm}
-            confirmText="Alright mate!" >
-            <p>My modal content</p>
-        </ModalBox>
-    );
-    box.find('.actions button').first().simulate('click');
-    expect(actions[0].handleAction).toBeCalled();
-    expect(actions[1].handleAction).not.toBeCalled();
 });

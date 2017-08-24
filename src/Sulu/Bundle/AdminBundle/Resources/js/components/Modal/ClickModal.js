@@ -31,7 +31,7 @@ export default class ClickModal extends React.PureComponent<Props> {
                 <Modal
                     isOpen={this.modalOpen}
                     onRequestClose={this.handleRequestClose}
-                    {...modalProps} >
+                    {...modalProps}>
                     {this.props.children}
                 </Modal>
             </div>

@@ -4,8 +4,8 @@ It renders depending on the passed property and request being closed through a c
 ```
 initialState = {open: false};
 const actions = [
-    {title: 'Destroy world', handleAction: () => {/* destroy world */}},
-    {title: 'Save world', handleAction: () => {/* save world */}},
+    {title: 'Destroy world', onClick: () => {/* destroy world */}},
+    {title: 'Save world', onClick: () => {/* save world */}},
 ];
 
 <div>
@@ -31,7 +31,7 @@ of the modal internally.
 ```
 const ClickModal = require('./ClickModal').default;
 const actions = [
-    {title: 'Save Gotham', handleAction: () => {/* save gotham */}},
+    {title: 'Save Gotham', onClick: () => {/* save gotham */}},
 ];
 
 const button = (<button>Open modal</button>);
