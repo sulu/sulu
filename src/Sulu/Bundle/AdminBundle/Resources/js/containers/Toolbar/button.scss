@@ -23,11 +23,6 @@ $buttonActiveBackgroundColor: $wildSand;
     font-size: 12px;
     cursor: pointer;
 
-    & > * {
-        /* IE11 will emulate 3D effect while clicking button without this */
-        position: relative;
-    }
-
     &:disabled {
         color: $buttonTextColorDisabled;
         cursor: default;

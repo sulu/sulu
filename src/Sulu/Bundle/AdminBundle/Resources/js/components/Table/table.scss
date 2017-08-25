@@ -33,7 +33,7 @@ $emptyMessageColor: $silver;
 }
 
 .header-cell {
-    padding: 0;
+    padding: 20px;
     font-size: 12px;
     font-weight: normal;
     background-color: $headerCellBackgroundColor;
@@ -46,15 +46,19 @@ $emptyMessageColor: $silver;
         border-radius: 0 3px 3px 0;
     }
 
-    & > button {
-        height: 60px;
-        padding: 20px;
-        color: inherit;
-        border: none;
-        background: none;
+    &.clickable {
+        padding: 0;
 
-        &:not(:disabled) {
-            cursor: pointer;
+        & > button {
+            height: 60px;
+            padding: 20px;
+            color: inherit;
+            border: none;
+            background: none;
+
+            &:not(:disabled) {
+                cursor: pointer;
+            }
         }
     }
 }

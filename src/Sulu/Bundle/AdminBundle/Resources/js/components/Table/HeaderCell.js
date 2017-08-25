@@ -18,13 +18,13 @@ type Props = {
     /** Called when column was clicked */
     onClick?: () => void,
     /** If set, an indicator will show up */
-    sortMode: 'ascending' | 'descending',
+    sortMode: 'default' | 'ascending' | 'descending',
 };
 
 export default class HeaderCell extends React.PureComponent<Props> {
     static defaultProps = {
         isControl: false,
-        sortMode: 'ascending',
+        sortMode: 'default',
     };
 
     getSortModeIcon = () => {
@@ -56,17 +56,22 @@ export default class HeaderCell extends React.PureComponent<Props> {
             tableStyles.headerCell,
             {
                 [tableStyles.headerControlCell]: isControl,
+                [tableStyles.clickable]: !!onClick,
             }
         );
 
         return (
             <th className={headerCellClass}>
-                <button
-                    disabled={!onClick}
-                    onClick={this.handleOnClick}>
-                    {children}
-                    {this.getSortModeIcon()}
-                </button>
+                {!onClick &&
+                    <span>{children}</span>
+                }
+                {onClick &&
+                    <button
+                        onClick={this.handleOnClick}>
+                        <span>{children}</span>
+                        {this.getSortModeIcon()}
+                    </button>
+                }
             </th>
         );
     }

@@ -27,3 +27,10 @@ body {
 h1 {
     color: $h1TextColor;
 }
+
+button {
+    & > * {
+        /* IE11 will emulate 3D effect while clicking button without this */
+        position: relative;
+    }
+}

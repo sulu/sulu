@@ -16,41 +16,33 @@ exports[`Render a table with control buttons 1`] = `
         <th
           class="headerCell headerControlCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             <span
               aria-hidden="true"
               class="fa fa-pencil"
             />
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
       </tr>
     </thead>
@@ -105,29 +97,23 @@ exports[`Render an empty table 1`] = `
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
       </tr>
     </thead>
@@ -165,29 +151,23 @@ exports[`Render the Table component 1`] = `
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
       </tr>
     </thead>
@@ -251,9 +231,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             <span
               class="checkbox light"
             >
@@ -262,34 +240,28 @@ exports[`Render the Table component in multiple selection mode 1`] = `
               />
               <span />
             </span>
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
       </tr>
     </thead>
@@ -346,36 +318,28 @@ exports[`Render the Table component in single selection mode 1`] = `
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          />
+          <span />
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
         <th
           class="headerCell"
         >
-          <button
-            disabled=""
-          >
+          <span>
             Column Title
-          </button>
+          </span>
         </th>
       </tr>
     </thead>
