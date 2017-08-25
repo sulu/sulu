@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
-import Option from './Option';
+import Option from '../Option';
 import overlayListStyles from './overlayList.scss';
 import type {OverlayListDimensions, SelectChildren} from './types';
 import OverlayListPositioner from './OverlayListPositioner';
@@ -43,7 +43,6 @@ export default class OverlayList extends React.PureComponent<Props> {
     @observable centeredChildRelativeTop: number;
     @observable isVisible: boolean = false;
     list: ElementRef<'ul'>;
-    list: ?HTMLElement;
     scrollTop: number;
 
     get listBorderWidth(): number {

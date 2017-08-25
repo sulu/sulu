@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import type {Element} from 'react';
-import type {SelectProps} from './types';
-import Option from './Option';
-import GenericSelect from './GenericSelect';
+import type {SelectProps} from '../GenericSelect/types';
+import Option from '../Option';
+import GenericSelect from '../GenericSelect';
 
 type Props = SelectProps & {
     value?: string,

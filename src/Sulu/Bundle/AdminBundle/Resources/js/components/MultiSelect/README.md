@@ -5,7 +5,10 @@ The component itself holds no internal state and is solely dependent on the pass
 Moreover, it provides a possibility to pass a callback which gets called when the user changes an option.
 
 ```
-const {Action, Option, Divider} = require('../Select');
+const Action = require('../Action').default;
+const Divider = require('../Divider').default;
+const Option = require('../Option').default;
+
 initialState = {contributors: []};
 const onChange = (contributors) => setState({contributors});
 

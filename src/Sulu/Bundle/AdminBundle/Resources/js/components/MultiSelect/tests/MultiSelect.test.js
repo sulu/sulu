@@ -1,10 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {shallow} from 'enzyme';
 import React from 'react';
-import {GenericSelect, Divider, Option} from '../../Select';
+import Divider from '../../Divider';
+import Option from '../../Option';
+import GenericSelect from '../../GenericSelect';
 import MultiSelect from '../MultiSelect';
 
-jest.mock('../../Select/GenericSelect');
+jest.mock('../../GenericSelect');
 
 test('The component should render a generic select', () => {
     const onChange = () => {};

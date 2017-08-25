@@ -1,12 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {shallow} from 'enzyme';
 import React from 'react';
-import GenericSelect from '../GenericSelect';
+import GenericSelect from '../../GenericSelect';
 import Select from '../Select';
-import Divider from '../Divider';
-import Option from '../Option';
+import Divider from '../../Divider';
+import Option from '../../Option';
 
-jest.mock('../GenericSelect');
+jest.mock('../../GenericSelect');
 
 test('The component should render a generic select', () => {
     const select = shallow(

@@ -3,10 +3,10 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import Action from '../Action';
+import Option from '../Option';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
 import OverlayList from './OverlayList';
-import Action from './Action';
-import Option from './Option';
 import Label from './Label';
 import genericSelectStyles from './genericSelect.scss';
 

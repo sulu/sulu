@@ -40,14 +40,18 @@ exports[`The component should render with checkbox 1`] = `
   <button
     class="option checkbox"
   >
-    <span
-      class="checkbox dark"
+    <label
+      class="label"
     >
-      <input
-        type="checkbox"
-      />
-      <span />
-    </span>
+      <span
+        class="switch checkbox dark"
+      >
+        <input
+          type="checkbox"
+        />
+        <span />
+      </span>
+    </label>
     My option
   </button>
 </li>
