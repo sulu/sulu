@@ -41,7 +41,7 @@ export default class OverlayList extends React.PureComponent<Props> {
     @observable scrollHeight: number;
     @observable scrollWidth: number;
     @observable centeredChildRelativeTop: number;
-    @observable visible: boolean = false;
+    @observable isVisible: boolean = false;
     list: ElementRef<'ul'>;
     list: ?HTMLElement;
     scrollTop: number;
@@ -62,7 +62,7 @@ export default class OverlayList extends React.PureComponent<Props> {
 
     @action componentWillReceiveProps(newProps: Props) {
         if (this.props.isOpen && !newProps.isOpen) {
-            this.visible = false;
+            this.isVisible = false;
         }
     }
 
@@ -96,7 +96,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         afterElementsRendered(action(() => {
             if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
-                this.visible = true;
+                this.isVisible = true;
             }
         }));
     };
@@ -115,7 +115,7 @@ export default class OverlayList extends React.PureComponent<Props> {
 
     render() {
         let style = {opacity: '0'};
-        if (this.visible) {
+        if (this.isVisible) {
             const dimensions = this.dimensions;
             style = OverlayListPositioner.dimensionsToStyle(dimensions);
             this.scrollTop = dimensions.scrollTop;

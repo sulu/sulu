@@ -10,9 +10,10 @@ type Props = {
 
 export default class Action extends React.PureComponent<Props> {
     handleButtonClick = () => {
-        this.props.onClick();
-        if (this.props.afterAction) {
-            this.props.afterAction();
+        const {onClick, afterAction} = this.props;
+        onClick();
+        if (afterAction) {
+            afterAction();
         }
     };
 

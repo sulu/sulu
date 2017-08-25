@@ -1,15 +1,13 @@
 // @flow
 import React from 'react';
 import type {Element} from 'react';
-import type {SelectChildren} from '../Select/types';
+import type {SelectProps} from '../Select/types';
 import {GenericSelect, Option} from '../Select';
 
-type Props = {
+type Props = SelectProps & {
     values: Array<string>,
     label: string,
     onChange: (values: Array<string>) => void,
-    children: SelectChildren,
-    icon?: string,
 };
 
 export default class MultiSelect extends React.PureComponent<Props> {
@@ -33,15 +31,17 @@ export default class MultiSelect extends React.PureComponent<Props> {
     };
 
     render() {
+        const {icon, label, children} = this.props;
+
         return (
             <GenericSelect
-                icon={this.props.icon}
+                icon={icon}
                 onSelect={this.handleSelect}
                 closeOnSelect={false}
-                labelText={this.props.label}
+                labelText={label}
                 selectedVisualization="checkbox"
                 isOptionSelected={this.isOptionSelected}>
-                {this.props.children}
+                {children}
             </GenericSelect>
         );
     }

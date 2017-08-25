@@ -3,16 +3,14 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {OptionSelectedVisualization, SelectChildren} from './types';
+import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
 import OverlayList from './OverlayList';
 import Action from './Action';
 import Option from './Option';
 import Label from './Label';
 import genericSelectStyles from './genericSelect.scss';
 
-type Props = {
-    children: SelectChildren,
-    icon?: string,
+type Props = SelectProps & {
     onSelect: (values: string) => void,
     labelText: string,
     closeOnSelect: boolean,
@@ -51,6 +49,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
     setLabel = (label: ?ElementRef<typeof Label>) => this.label = label;
 
     render() {
+        const {icon, labelText} = this.props;
         const labelDimensions = this.label ? this.label.getDimensions() : {};
         const listChildren = this.renderListChildren();
 
@@ -58,9 +57,9 @@ export default class GenericSelect extends React.PureComponent<Props> {
             <div className={genericSelectStyles.select}>
                 <Label
                     ref={this.setLabel}
-                    icon={this.props.icon}
+                    icon={icon}
                     onClick={this.handleLabelClick}>
-                    {this.props.labelText}
+                    {labelText}
                 </Label>
                 <OverlayList
                     anchorTop={labelDimensions.top}

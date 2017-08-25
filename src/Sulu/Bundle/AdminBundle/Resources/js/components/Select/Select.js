@@ -1,15 +1,13 @@
 // @flow
 import React from 'react';
 import type {Element} from 'react';
-import type {SelectChildren} from './types';
+import type {SelectProps} from './types';
 import Option from './Option';
 import GenericSelect from './GenericSelect';
 
-type Props = {
+type Props = SelectProps & {
     value?: string,
     onChange?: (value: string) => void,
-    children: SelectChildren,
-    icon?: string,
 };
 
 export default class Select extends React.PureComponent<Props> {
@@ -38,13 +36,15 @@ export default class Select extends React.PureComponent<Props> {
     };
 
     render() {
+        const {icon, children} = this.props;
+
         return (
             <GenericSelect
-                icon={this.props.icon}
+                icon={icon}
                 onSelect={this.handleSelect}
                 labelText={this.labelText}
                 isOptionSelected={this.isOptionSelected}>
-                {this.props.children}
+                {children}
             </GenericSelect>
         );
     }
