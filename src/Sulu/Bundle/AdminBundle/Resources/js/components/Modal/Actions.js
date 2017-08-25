@@ -9,10 +9,11 @@ type Props = {
 
 export default class Actions extends React.PureComponent<Props> {
     render() {
-        if (this.props.actions.length > 0) {
+        const {actions} = this.props;
+        if (actions.length > 0) {
             return (
                 <div className={actionsStyles.actions}>
-                    {this.props.actions.map((action, index) => {
+                    {actions.map((action, index) => {
                         const handleButtonClick = action.onClick;
                         return (
                             <button

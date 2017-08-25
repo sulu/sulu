@@ -7,6 +7,10 @@ const actions = [
     {title: 'Destroy world', onClick: () => {/* destroy world */}},
     {title: 'Save world', onClick: () => {/* save world */}},
 ];
+const onConfirm = () => {
+    /* do confirm things */
+    setState({open: false});
+};
 
 <div>
     <button onClick={() => setState({open: true})}>Open modal</button>
@@ -15,6 +19,7 @@ const actions = [
         onRequestClose={() => setState({open: false})}
         actions={actions}
         confirmText="Apply"
+        onConfirm={onConfirm}
         isOpen={state.open}>
         <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <img src="http://www.nyan.cat/cats/original.gif" />
@@ -33,12 +38,16 @@ const ClickModal = require('./ClickModal').default;
 const actions = [
     {title: 'Save Gotham', onClick: () => {/* save gotham */}},
 ];
+const onConfirm = () => {
+    /* do confirm things */
+};
 
 const button = (<button>Open modal</button>);
 <ClickModal
     clickElement={button}
     title="Nana Nana Nana"
     actions={actions}
+    onConfirm={onConfirm}
     confirmText="Ok">
     <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <img src="https://media.giphy.com/media/NmhVw98IHkQtq/source.gif" />

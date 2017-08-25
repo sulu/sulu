@@ -52,3 +52,20 @@ test('The modal should be gone when the modal requests to be closed', () => {
     view.find('Modal').props().onRequestClose();
     expect(view.find('Modal').props().isOpen).toBe(false);
 });
+
+test('The modal should be gone and call the confirm callback when the modal is confirmed', () => {
+    const onConfirm = jest.fn();
+    const view = mount(
+        <ClickModal
+            clickElement={<button>Open modal</button>}
+            title="My modal title"
+            onConfirm={onConfirm}
+            confirmText="Apply">
+            <p>My modal content</p>
+        </ClickModal>
+    );
+    view.find('button').simulate('click');
+    view.find('Modal').props().onConfirm();
+    expect(view.find('Modal').props().isOpen).toBe(false);
+    expect(onConfirm).toBeCalled();
+});

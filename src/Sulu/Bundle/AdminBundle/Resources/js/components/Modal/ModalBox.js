@@ -21,14 +21,16 @@ export default class ModalBox extends React.PureComponent<Props> {
         this.props.onRequestClose();
     }
 
+    handleIconClick = () => this.requestClose();
+
     render() {
-        const {title, onRequestClose, children, actions, onConfirm, confirmText} = this.props;
+        const {title, children, actions, onConfirm, confirmText} = this.props;
 
         return (
             <section className={modalBoxStyles.box}>
                 <header>
                     {title}
-                    <Icon name={CLOSE_ICON} className={modalBoxStyles.icon} onClick={onRequestClose} />
+                    <Icon name={CLOSE_ICON} className={modalBoxStyles.icon} onClick={this.handleIconClick} />
                 </header>
                 <article>{children}</article>
                 <footer>
