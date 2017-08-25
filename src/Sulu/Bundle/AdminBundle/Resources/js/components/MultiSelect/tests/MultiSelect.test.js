@@ -9,7 +9,10 @@ jest.mock('../../Select/GenericSelect');
 test('The component should render a generic select', () => {
     const onChange = () => {};
     const select = shallow(
-        <MultiSelect label="My label" onChange={onChange}>
+        <MultiSelect
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -19,10 +22,13 @@ test('The component should render a generic select', () => {
     expect(select.node.type).toBe(GenericSelect);
 });
 
-test('The component should pass the correct label', () => {
+test('The component should pass the correct label if nothing is selected', () => {
     const onChange = () => {};
     const select = shallow(
-        <MultiSelect label="My label" onChange={onChange}>
+        <MultiSelect
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -30,13 +36,53 @@ test('The component should pass the correct label', () => {
         </MultiSelect>
     );
     const label = select.find(GenericSelect).props().labelText;
-    expect(label).toBe('My label');
+    expect(label).toBe('None selected');
+});
+
+test('The component should pass the correct label if everything is selected', () => {
+    const onChange = () => {};
+    const select = shallow(
+        <MultiSelect
+            values={['option-1', 'option-2', 'option-3']}
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChange}>
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </MultiSelect>
+    );
+    const label = select.find(GenericSelect).props().labelText;
+    expect(label).toBe('All selected');
+});
+
+test('The component should pass the correct label if some options are selected', () => {
+    const onChange = () => {};
+    const select = shallow(
+        <MultiSelect
+            values={['option-1', 'option-2']}
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChange}>
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </MultiSelect>
+    );
+    const label = select.find(GenericSelect).props().labelText;
+    expect(label).toBe('Option 1, Option 2');
 });
 
 test('The component should select the correct option', () => {
     const onChange = () => {};
     const select = shallow(
-        <MultiSelect values={['option-1', 'option-2']} label="My label" onChange={onChange}>
+        <MultiSelect
+            values={['option-1', 'option-2']}
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -52,7 +98,11 @@ test('The component should select the correct option', () => {
 test('The component should trigger the change callback on select with an added value', () => {
     const onChangeSpy = jest.fn();
     const select = shallow(
-        <MultiSelect values={['option-1', 'option-2']} label="My label" onChange={onChangeSpy}>
+        <MultiSelect
+            values={['option-1', 'option-2']}
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChangeSpy}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -66,7 +116,11 @@ test('The component should trigger the change callback on select with an added v
 test('The component should trigger the change callback on select with a removed value', () => {
     const onChangeSpy = jest.fn();
     const select = shallow(
-        <MultiSelect values={['option-1', 'option-2']} label="My label" onChange={onChangeSpy}>
+        <MultiSelect
+            values={['option-1', 'option-2']}
+            noneSelectedLabel="None selected"
+            allSelectedLabel="All selected"
+            onChange={onChangeSpy}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
