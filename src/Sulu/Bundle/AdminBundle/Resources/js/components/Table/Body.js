@@ -111,7 +111,9 @@ export default class Body extends React.PureComponent<Props> {
         const identifier = rowProps.id || rowIndex;
 
         return (
-            <Cell key={key}>
+            <Cell
+                key={key}
+                isSmall={true}>
                 <Radio
                     skin="dark"
                     value={identifier}
@@ -126,7 +128,9 @@ export default class Body extends React.PureComponent<Props> {
         const identifier = rowProps.id || rowIndex;
 
         return (
-            <Cell key={key}>
+            <Cell
+                key={key}
+                isSmall={true}>
                 <Checkbox
                     skin="dark"
                     value={identifier}

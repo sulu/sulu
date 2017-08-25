@@ -13,15 +13,12 @@ $cellBackgroundColorActive: $shakespeare;
 $controlCellBorderColor: $white;
 $emptyMessageColor: $silver;
 
-.tableContainer {
-    display: inline-block;
-}
-
 .table {
     border-collapse: separate;
     border-spacing: 0 5px;
     margin: -5px 0;
     overflow: hidden;
+    min-width: 100%;
 }
 
 .header {
@@ -111,6 +108,10 @@ $emptyMessageColor: $silver;
         border-radius: 0 3px 3px 0;
         border-right-width: 1px;
     }
+
+    &.small {
+        width: 1%;
+    }
 }
 
 .control-cell {
@@ -118,6 +119,7 @@ $emptyMessageColor: $silver;
     background-color: $cellBackgroundColor;
     color: $cellTextColorActive;
     text-align: center;
+    width: 1%;
 
     &:hover {
         button {

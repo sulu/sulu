@@ -270,7 +270,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
         class="row"
       >
         <td
-          class="cell"
+          class="cell small"
         >
           <span
             class="checkbox dark"
@@ -348,7 +348,7 @@ exports[`Render the Table component in single selection mode 1`] = `
         class="row"
       >
         <td
-          class="cell"
+          class="cell small"
         >
           <label
             class="radio dark"

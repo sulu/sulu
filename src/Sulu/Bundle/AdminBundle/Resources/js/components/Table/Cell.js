@@ -11,16 +11,20 @@ type Props = {
      * If set to true, the cell appears as a control-cell 
      */
     isControl?: boolean,
+    /** If set to true, the cell will not stretch and stay at minimal width */
+    isSmall: boolean,
     colspan?: number,
 };
 
 export default class Cell extends React.PureComponent<Props> {
     static defaultProps = {
+        isSmall: false,
         isControl: false,
     };
 
     render() {
         const {
+            isSmall,
             colspan,
             children,
             isControl,
@@ -29,6 +33,7 @@ export default class Cell extends React.PureComponent<Props> {
             tableStyles.cell,
             {
                 [tableStyles.controlCell]: isControl,
+                [tableStyles.small]: isSmall,
             }
         );
 

@@ -199,11 +199,6 @@ const handleRowSelectionChange = (rowId) => {
             <HeaderCell>Column 2</HeaderCell>
             <HeaderCell>Column 3</HeaderCell>
             <HeaderCell>Column 4</HeaderCell>
-            <HeaderCell>Column 5</HeaderCell>
-            <HeaderCell>Column 6</HeaderCell>
-            <HeaderCell>Column 7</HeaderCell>
-            <HeaderCell>Column 8</HeaderCell>
-            <HeaderCell>Column 9</HeaderCell>
         </Row>
     </Header>
     <Body>
@@ -218,11 +213,6 @@ const handleRowSelectionChange = (rowId) => {
                         <Cell>Content 2</Cell>
                         <Cell>Content 3</Cell>
                         <Cell>Content 4</Cell>
-                        <Cell>Content 5</Cell>
-                        <Cell>Content 6</Cell>
-                        <Cell>Content 7</Cell>
-                        <Cell>Content 8</Cell>
-                        <Cell>Content 9</Cell>
                     </Row>
                 )
             })
