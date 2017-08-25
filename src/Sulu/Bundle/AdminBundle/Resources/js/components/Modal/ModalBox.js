@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import keydown from 'react-keydown';
 import Icon from '../Icon';
 import type {ModalProps} from './types';
 import Actions from './Actions';
@@ -15,6 +16,10 @@ export default class ModalBox extends React.PureComponent<Props> {
     static defaultProps = {
         actions: [],
     };
+
+    @keydown('esc') requestClose() {
+        this.props.onRequestClose();
+    }
 
     render() {
         const {title, onRequestClose, children, actions, onConfirm, confirmText} = this.props;

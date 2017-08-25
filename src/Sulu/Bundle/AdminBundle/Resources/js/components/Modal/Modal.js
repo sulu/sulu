@@ -3,7 +3,7 @@ import React from 'react';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import Portal from 'react-portal';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import ModalBox from './ModalBox';
@@ -14,8 +14,6 @@ type Props = ModalProps & {
     isOpen: boolean,
     onRequestClose: () => void,
 };
-
-const ESC_KEY = 27;
 
 @observer
 export default class Modal extends React.PureComponent<Props> {
@@ -31,12 +29,7 @@ export default class Modal extends React.PureComponent<Props> {
     }
 
     componentDidMount() {
-        window.addEventListener('keydown', this.handleKeyDown);
         this.toggleModal();
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
     @action componentWillReceiveProps(newProps: Props) {
@@ -55,12 +48,6 @@ export default class Modal extends React.PureComponent<Props> {
         }));
     }
 
-    handleKeyDown = (event: KeyboardEvent) => {
-        if (event.keyCode === ESC_KEY) {
-            this.props.onRequestClose();
-        }
-    };
-
     @action handleTransitionEnd = () => {
         afterElementsRendered(action(() => {
             this.isOpenHasChanged = false;
@@ -68,7 +55,7 @@ export default class Modal extends React.PureComponent<Props> {
     };
 
     render() {
-        const containerClasses = classnames({
+        const containerClass = classNames({
             [modalStyles.container]: true,
             [modalStyles.isDown]: this.isVisible,
         });
@@ -77,7 +64,7 @@ export default class Modal extends React.PureComponent<Props> {
         return (
             <Portal isOpened={isOpen || this.isOpenHasChanged}>
                 <div
-                    className={containerClasses}
+                    className={containerClass}
                     onTransitionEnd={this.handleTransitionEnd}>
                     <div className={modalStyles.box}>
                         <ModalBox

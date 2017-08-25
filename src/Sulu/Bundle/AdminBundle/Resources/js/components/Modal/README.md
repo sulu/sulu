@@ -15,7 +15,7 @@ const actions = [
         onRequestClose={() => setState({open: false})}
         actions={actions}
         confirmText="Apply"
-        isOpen={state.open} >
+        isOpen={state.open}>
         <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <img src="http://www.nyan.cat/cats/original.gif" />
         </div>
@@ -39,7 +39,7 @@ const button = (<button>Open modal</button>);
     clickElement={button}
     title="Nana Nana Nana"
     actions={actions}
-    confirmText="Ok" >
+    confirmText="Ok">
     <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <img src="https://media.giphy.com/media/NmhVw98IHkQtq/source.gif" />
     </div>

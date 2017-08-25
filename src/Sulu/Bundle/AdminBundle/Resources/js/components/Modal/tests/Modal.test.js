@@ -14,7 +14,7 @@ test('The component should render in body when open', () => {
             title="My modal title"
             onRequestClose={onRequestClose}
             confirmText="Apply"
-            isOpen={true} >
+            isOpen={true}>
             <p>My modal content</p>
         </Modal>
     ).render();
@@ -30,7 +30,7 @@ test('The component should not render in body when closed', () => {
             title="My modal title"
             onRequestClose={onRequestClose}
             confirmText="Apply"
-            isOpen={false} >
+            isOpen={false}>
             <p>My modal content</p>
         </Modal>
     ).render();
@@ -45,7 +45,7 @@ test('The component should request to be closed on click on backdrop', () => {
             title="My modal title"
             onRequestClose={requestCloseSpy}
             confirmText="Apply"
-            isOpen={true} >
+            isOpen={true}>
             <p>My modal content</p>
         </Modal>
     );

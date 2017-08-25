@@ -24,7 +24,7 @@ export default class ClickModal extends React.PureComponent<Props> {
     };
 
     render() {
-        const {className, clickElement, ...modalProps} = this.props;
+        const {className, clickElement, children, ...modalProps} = this.props;
         return (
             <div className={className}>
                 {React.cloneElement(clickElement, {onClick: this.handleElementClick})}
@@ -32,7 +32,7 @@ export default class ClickModal extends React.PureComponent<Props> {
                     isOpen={this.modalOpen}
                     onRequestClose={this.handleRequestClose}
                     {...modalProps}>
-                    {this.props.children}
+                    {children}
                 </Modal>
             </div>
         );

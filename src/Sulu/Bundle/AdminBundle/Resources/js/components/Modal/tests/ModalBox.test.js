@@ -16,7 +16,7 @@ test('The component should render', () => {
             actions={actions}
             onRequestClose={onRequestClose}
             onConfirm={onConfirm}
-            confirmText="Alright mate!" >
+            confirmText="Alright mate!">
             <p>My modal content</p>
         </ModalBox>
     );
@@ -31,7 +31,7 @@ test('The component should request to be closed when the close icon is clicked',
             title="My title"
             onRequestClose={onRequestClose}
             onConfirm={onConfirm}
-            confirmText="Alright mate!" >
+            confirmText="Alright mate!">
             <p>My modal content</p>
         </ModalBox>
     );
@@ -47,7 +47,7 @@ test('The component should call the callback when the confirm button is clicked'
             title="My title"
             onRequestClose={onRequestClose}
             onConfirm={onConfirm}
-            confirmText="Alright mate!" >
+            confirmText="Alright mate!">
             <p>My modal content</p>
         </ModalBox>
     );
