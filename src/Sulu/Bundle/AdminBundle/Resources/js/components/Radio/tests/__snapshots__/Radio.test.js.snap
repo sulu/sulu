@@ -1,64 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should render in checked state 1`] = `
+exports[`The component should render in dark skin 1`] = `
 <label
-  class="radio dark"
+  class="label"
 >
   <span
-    class="customRadioContainer"
+    class="switch radio dark"
   >
     <input
-      checked=""
       type="radio"
     />
-    <span
-      class="customRadio"
-    />
-  </span>
-  <span
-    class="labelText"
-  >
-    My radio
+    <span />
   </span>
 </label>
 `;
 
-exports[`The component should render in unchecked state 1`] = `
+exports[`The component should render in light skin 1`] = `
 <label
-  class="radio dark"
+  class="label"
 >
   <span
-    class="customRadioContainer"
+    class="switch radio light"
   >
     <input
       type="radio"
     />
-    <span
-      class="customRadio"
-    />
-  </span>
-  <span
-    class="labelText"
-  >
-    My radio
-  </span>
-</label>
-`;
-
-exports[`The component should render without children 1`] = `
-<label
-  class="radio dark"
->
-  <span
-    class="customRadioContainer"
-  >
-    <input
-      checked=""
-      type="radio"
-    />
-    <span
-      class="customRadio"
-    />
+    <span />
   </span>
 </label>
 `;

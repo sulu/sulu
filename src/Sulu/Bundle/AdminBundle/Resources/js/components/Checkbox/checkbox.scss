@@ -5,19 +5,8 @@ $primaryColor: $blueZodiac;
 $secondaryColor: $white;
 
 .checkbox {
-    display: inline-block;
     width: $length;
     height: $length;
-    position: relative;
-
-    input {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 1;
-    }
 
     input + span {
         display: block;
@@ -28,17 +17,24 @@ $secondaryColor: $white;
         top: 0;
         left: 0;
         border-radius: 2px;
-        border: 1px solid $primaryColor;
-        color: $secondaryColor;
+        border-width: 1px;
+        border-style: solid;
         text-align: center;
         line-height: $length;
 
-        .icon {
+        & > * {
             position: relative;
             top: -1px;
             left: -1px;
             font-size: $length;
         }
+    }
+}
+
+.checkbox.dark {
+    input + span {
+        border-color: $primaryColor;
+        color: $secondaryColor;
     }
 
     input:checked + span {

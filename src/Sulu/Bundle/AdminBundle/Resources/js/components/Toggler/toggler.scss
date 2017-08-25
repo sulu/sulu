@@ -1,0 +1,50 @@
+@import '../../containers/Application/colors.scss';
+
+$color: $blueZodiac;
+$width: 37px;
+$height: 20px;
+$borderWidth: 1px;
+$border: $borderWidth solid $silver;
+$transitionDuration: 200ms;
+
+.toggler {
+    width: $width;
+    height: $height;
+
+    input + span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: $white;
+        border: $border;
+        border-radius: calc($height / 2);
+        transition: background $transitionDuration, border-color $transitionDuration;
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: -$borderWidth;
+            left: -$borderWidth;
+            display: block;
+            width: $height;
+            height: $height;
+            border-radius: calc($height / 2);
+            background: $white;
+            border: $border;
+            transition: left $transitionDuration, border-color $transitionDuration;
+        }
+    }
+
+    input:checked + span {
+        background: $color;
+        border-color: $color;
+
+        &::after {
+            border-color: $color;
+            left: calc($width - $height - $borderWidth);
+        }
+    }
+}

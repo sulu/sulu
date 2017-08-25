@@ -1,28 +1,18 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {shallow, render} from 'enzyme';
+import {shallow} from 'enzyme';
 import React from 'react';
-import Checkbox from '../Checkbox';
-
-test('The component should render in light skin', () => {
-    const checkbox = render(<Checkbox skin="light" />);
-    expect(checkbox).toMatchSnapshot();
-});
-
-test('The component should render in dark skin', () => {
-    const checkbox = render(<Checkbox skin="dark" />);
-    expect(checkbox).toMatchSnapshot();
-});
+import Toggler from '../Toggler';
 
 test('The component pass the props correctly to the generic checkbox', () => {
     const onChange = () => 'my-on-change';
-    const checkbox = shallow(
-        <Checkbox
+    const toggler = shallow(
+        <Toggler
             onChange={onChange}
             value="my-value"
             name="my-name"
-            checked={true}>My label</Checkbox>
+            checked={true}>My label</Toggler>
     );
-    const switchComponent = checkbox.find('Switch');
+    const switchComponent = toggler.find('Switch');
     expect(switchComponent.props().value).toBe('my-value');
     expect(switchComponent.props().name).toBe('my-name');
     expect(switchComponent.props().checked).toBe(true);
