@@ -7,10 +7,10 @@ import classNames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import ModalBox from './ModalBox';
-import type {ModalProps} from './types';
+import type {OverlayProps} from './types';
 import modalStyles from './modal.scss';
 
-type Props = ModalProps & {
+type Props = OverlayProps & {
     isOpen: boolean,
     onRequestClose: () => void,
 };

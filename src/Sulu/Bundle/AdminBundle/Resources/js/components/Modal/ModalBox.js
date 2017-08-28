@@ -2,11 +2,11 @@
 import React from 'react';
 import keydown from 'react-keydown';
 import Icon from '../Icon';
-import type {ModalProps} from './types';
+import type {OverlayProps} from './types';
 import Actions from './Actions';
 import modalBoxStyles from './modalBox.scss';
 
-type Props = ModalProps & {
+type Props = OverlayProps & {
     onRequestClose: () => void,
 }
 

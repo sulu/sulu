@@ -6,7 +6,7 @@ export type Action = {
     onClick: () => void,
 };
 
-export type ModalProps = {
+export type OverlayProps = {
     title: string,
     children: Node,
     actions: Array<Action>,
