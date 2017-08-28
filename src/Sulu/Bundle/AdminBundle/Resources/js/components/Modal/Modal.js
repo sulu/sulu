@@ -10,8 +10,7 @@ import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import type {Action} from './types';
 import Actions from './Actions';
-import modalStyles from './modal.scss';
-import modalBoxStyles from './modalBox.scss';
+import overlayStyles from './overlay.scss';
 
 type Props = {
     title: string,
@@ -75,8 +74,8 @@ export default class Modal extends React.PureComponent<Props> {
 
     render() {
         const containerClass = classNames({
-            [modalStyles.container]: true,
-            [modalStyles.isDown]: this.isVisible,
+            [overlayStyles.container]: true,
+            [overlayStyles.isDown]: this.isVisible,
         });
         const {isOpen, title, actions, onConfirm, confirmText, children} = this.props;
 
@@ -85,19 +84,19 @@ export default class Modal extends React.PureComponent<Props> {
                 <div
                     className={containerClass}
                     onTransitionEnd={this.handleTransitionEnd}>
-                    <div className={modalStyles.box}>
-                        <section className={modalBoxStyles.box}>
+                    <div className={overlayStyles.overlay}>
+                        <section className={overlayStyles.content}>
                             <header>
                                 {title}
                                 <Icon
                                     name={CLOSE_ICON}
-                                    className={modalBoxStyles.icon}
+                                    className={overlayStyles.icon}
                                     onClick={this.handleIconClick} />
                             </header>
                             <article>{children}</article>
                             <footer>
                                 <Actions actions={actions} />
-                                <button className={modalBoxStyles.confirmButton} onClick={onConfirm}>
+                                <button className={overlayStyles.confirmButton} onClick={onConfirm}>
                                     {confirmText}
                                 </button>
                             </footer>

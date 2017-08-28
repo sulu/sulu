@@ -7,8 +7,8 @@ exports[`The component should render in body when open 1`] = `null`;
 exports[`The component should render in body when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <div class=\\"box\\">
-      <section class=\\"box\\">
+    <div class=\\"overlay\\">
+      <section class=\\"content\\">
         <header>
           <!-- react-text: 5 -->My modal title
           <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
@@ -31,8 +31,8 @@ exports[`The component should render in body with actions when open 1`] = `null`
 exports[`The component should render in body with actions when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <div class=\\"box\\">
-      <section class=\\"box\\">
+    <div class=\\"overlay\\">
+      <section class=\\"content\\">
         <header>
           <!-- react-text: 5 -->My modal title
           <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
