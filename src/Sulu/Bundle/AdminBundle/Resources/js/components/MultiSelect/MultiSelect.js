@@ -7,8 +7,8 @@ import GenericSelect from '../GenericSelect';
 
 type Props = SelectProps & {
     values: Array<string>,
-    noneSelectedLabel: string,
-    allSelectedLabel: string,
+    noneSelectedText: string,
+    allSelectedText: string,
     onChange: (values: Array<string>) => void,
 };
 
@@ -31,10 +31,10 @@ export default class MultiSelect extends React.PureComponent<Props> {
         });
 
         if (selectedLabels.length === 0) {
-            return this.props.noneSelectedLabel;
+            return this.props.noneSelectedText;
         }
         if (selectedLabels.length === countOptions) {
-            return this.props.allSelectedLabel;
+            return this.props.allSelectedText;
         }
 
         return selectedLabels.join(', ');

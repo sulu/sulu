@@ -14,8 +14,8 @@ const onChange = (contributors) => setState({contributors});
 
 <MultiSelect
     values={state.contributors}
-    noneSelectedLabel="Choose contributors"
-    allSelectedLabel="All"
+    noneSelectedText="Choose contributors"
+    allSelectedText="All"
     onChange={onChange}>
     <Option value="page-1">Linus Torvald</Option>
     <Option value="page-2">Dennis Ritchie</Option>

@@ -12,8 +12,8 @@ test('The component should render a generic select', () => {
     const onChange = () => {};
     const select = shallow(
         <MultiSelect
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -28,8 +28,8 @@ test('The component should pass the correct label if nothing is selected', () =>
     const onChange = () => {};
     const select = shallow(
         <MultiSelect
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -46,8 +46,8 @@ test('The component should pass the correct label if everything is selected', ()
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2', 'option-3']}
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -64,8 +64,8 @@ test('The component should pass the correct label if some options are selected',
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2']}
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -82,8 +82,8 @@ test('The component should select the correct option', () => {
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2']}
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChange}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -102,8 +102,8 @@ test('The component should trigger the change callback on select with an added v
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2']}
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChangeSpy}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -120,8 +120,8 @@ test('The component should trigger the change callback on select with a removed 
     const select = shallow(
         <MultiSelect
             values={['option-1', 'option-2']}
-            noneSelectedLabel="None selected"
-            allSelectedLabel="All selected"
+            noneSelectedText="None selected"
+            allSelectedText="All selected"
             onChange={onChangeSpy}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
