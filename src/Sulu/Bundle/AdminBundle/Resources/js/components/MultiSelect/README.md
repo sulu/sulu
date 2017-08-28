@@ -12,16 +12,18 @@ const Option = require('../Option').default;
 initialState = {contributors: []};
 const onChange = (contributors) => setState({contributors});
 
-<MultiSelect
-    values={state.contributors}
-    noneSelectedText="Choose contributors"
-    allSelectedText="All"
-    onChange={onChange}>
-    <Option value="page-1">Linus Torvald</Option>
-    <Option value="page-2">Dennis Ritchie</Option>
-    <Option value="page-3">Larry Page</Option>
-    <Option value="page-4">Bill Gates</Option>
-    <Divider />
-    <Action onClick={() => {/* do something */}}>Add new contributor</Action>
-</MultiSelect>
+<div style={{maxWidth: '200px'}}>
+    <MultiSelect
+        values={state.contributors}
+        noneSelectedText="Choose contributors"
+        allSelectedText="All"
+        onChange={onChange}>
+        <Option value="page-1">Linus Torvald</Option>
+        <Option value="page-2">Dennis Ritchie</Option>
+        <Option value="page-3">Larry Page</Option>
+        <Option value="page-4">Bill Gates</Option>
+        <Divider />
+        <Action onClick={() => {/* do something */}}>Add new contributor</Action>
+    </MultiSelect>
+</div>
 ```
