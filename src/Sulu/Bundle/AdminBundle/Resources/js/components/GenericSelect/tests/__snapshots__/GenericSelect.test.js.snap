@@ -7,7 +7,31 @@ exports[`The component should open the list when the display value is clicked 1`
   <button
     class="displayValue"
   >
-    My text
+    <div
+      aria-label="My text"
+      class="croppedText"
+      title="My text"
+    >
+      <div
+        class="whole"
+      >
+        My text
+      </div>
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My t
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          ext
+        </span>
+      </div>
+    </div>
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
@@ -61,7 +85,31 @@ exports[`The component should render with an icon 1`] = `
       aria-hidden="true"
       class="frontIcon fa fa-plus"
     />
-    My text
+    <div
+      aria-label="My text"
+      class="croppedText"
+      title="My text"
+    >
+      <div
+        class="whole"
+      >
+        My text
+      </div>
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My t
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          ext
+        </span>
+      </div>
+    </div>
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
@@ -80,7 +128,31 @@ exports[`The component should render with the list closed 1`] = `
   <button
     class="displayValue"
   >
-    My text
+    <div
+      aria-label="My text"
+      class="croppedText"
+      title="My text"
+    >
+      <div
+        class="whole"
+      >
+        My text
+      </div>
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My t
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          ext
+        </span>
+      </div>
+    </div>
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"

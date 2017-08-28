@@ -4,7 +4,31 @@ exports[`The component should render 1`] = `
 <button
   class="displayValue"
 >
-  My value
+  <div
+    aria-label="My value"
+    class="croppedText"
+    title="My value"
+  >
+    <div
+      class="whole"
+    >
+      My value
+    </div>
+    <div
+      aria-hidden="true"
+      class="front"
+    >
+      My v
+    </div>
+    <div
+      aria-hidden="true"
+      class="back"
+    >
+      <span>
+        alue
+      </span>
+    </div>
+  </div>
   <span
     aria-hidden="true"
     class="toggle fa fa-chevron-down"
@@ -20,7 +44,31 @@ exports[`The component should render with an icon 1`] = `
     aria-hidden="true"
     class="frontIcon fa fa-plus"
   />
-  My value
+  <div
+    aria-label="My value"
+    class="croppedText"
+    title="My value"
+  >
+    <div
+      class="whole"
+    >
+      My value
+    </div>
+    <div
+      aria-hidden="true"
+      class="front"
+    >
+      My v
+    </div>
+    <div
+      aria-hidden="true"
+      class="back"
+    >
+      <span>
+        alue
+      </span>
+    </div>
+  </div>
   <span
     aria-hidden="true"
     class="toggle fa fa-chevron-down"

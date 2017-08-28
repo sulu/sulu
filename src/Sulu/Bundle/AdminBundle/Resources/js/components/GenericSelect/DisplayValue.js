@@ -2,6 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import classNames from 'classnames';
+import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
 
@@ -36,7 +37,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
                 onClick={onClick}
                 className={displayValueClass}>
                 {icon ? <Icon className={displayValueStyles.frontIcon} name={icon} /> : null}
-                {children}
+                <CroppedText>{children}</CroppedText>
                 <Icon className={displayValueStyles.toggle} name={TOGGLE_ICON} />
             </button>
         );
