@@ -24,7 +24,7 @@ test('The component should render a generic select', () => {
     expect(select.node.type).toBe(GenericSelect);
 });
 
-test('The component should pass the correct label if nothing is selected', () => {
+test('The component should pass the correct display value if nothing is selected', () => {
     const onChange = () => {};
     const select = shallow(
         <MultiSelect
@@ -37,11 +37,11 @@ test('The component should pass the correct label if nothing is selected', () =>
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const label = select.find(GenericSelect).props().labelText;
-    expect(label).toBe('None selected');
+    const displayValue = select.find(GenericSelect).props().displayValue;
+    expect(displayValue).toBe('None selected');
 });
 
-test('The component should pass the correct label if everything is selected', () => {
+test('The component should pass the correct display value if everything is selected', () => {
     const onChange = () => {};
     const select = shallow(
         <MultiSelect
@@ -55,11 +55,11 @@ test('The component should pass the correct label if everything is selected', ()
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const label = select.find(GenericSelect).props().labelText;
-    expect(label).toBe('All selected');
+    const displayValue = select.find(GenericSelect).props().displayValue;
+    expect(displayValue).toBe('All selected');
 });
 
-test('The component should pass the correct label if some options are selected', () => {
+test('The component should pass the correct display value if some options are selected', () => {
     const onChange = () => {};
     const select = shallow(
         <MultiSelect
@@ -73,8 +73,8 @@ test('The component should pass the correct label if some options are selected',
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const label = select.find(GenericSelect).props().labelText;
-    expect(label).toBe('Option 1, Option 2');
+    const displayValue = select.find(GenericSelect).props().displayValue;
+    expect(displayValue).toBe('Option 1, Option 2');
 });
 
 test('The component should select the correct option', () => {

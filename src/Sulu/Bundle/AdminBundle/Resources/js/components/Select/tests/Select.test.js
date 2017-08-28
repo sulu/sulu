@@ -20,7 +20,7 @@ test('The component should render a generic select', () => {
     expect(select.node.type).toBe(GenericSelect);
 });
 
-test('The component should return the first option as default label', () => {
+test('The component should return the first option as default display value', () => {
     const select = shallow(
         <Select>
             <Option value="option-1">Option 1</Option>
@@ -29,11 +29,11 @@ test('The component should return the first option as default label', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const label = select.find(GenericSelect).props().labelText;
-    expect(label).toBe('Option 1');
+    const displayValue = select.find(GenericSelect).props().displayValue;
+    expect(displayValue).toBe('Option 1');
 });
 
-test('The component should return the correct label', () => {
+test('The component should return the correct displayValue', () => {
     const select = shallow(
         <Select value="option-2">
             <Option value="option-1">Option 1</Option>
@@ -42,8 +42,8 @@ test('The component should return the correct label', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const label = select.find(GenericSelect).props().labelText;
-    expect(label).toBe('Option 2');
+    const displayValue = select.find(GenericSelect).props().displayValue;
+    expect(displayValue).toBe('Option 2');
 });
 
 test('The component should select the correct option', () => {

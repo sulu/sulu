@@ -11,18 +11,18 @@ type Props = SelectProps & {
 };
 
 export default class Select extends React.PureComponent<Props> {
-    get labelText(): string {
-        let label = '';
+    get displayValue(): string {
+        let displayValue = '';
         React.Children.forEach(this.props.children, (child: any) => {
             if (child.type !== Option) {
                 return;
             }
-            if (!label || this.props.value === child.props.value) {
-                label = child.props.children;
+            if (!displayValue || this.props.value === child.props.value) {
+                displayValue = child.props.children;
             }
         });
 
-        return label;
+        return displayValue;
     }
 
     isOptionSelected = (option: Element<typeof Option>): boolean => {
@@ -42,7 +42,7 @@ export default class Select extends React.PureComponent<Props> {
             <GenericSelect
                 icon={icon}
                 onSelect={this.handleSelect}
-                labelText={this.labelText}
+                displayValue={this.displayValue}
                 isOptionSelected={this.isOptionSelected}>
                 {children}
             </GenericSelect>

@@ -12,7 +12,7 @@ import genericSelectStyles from './genericSelect.scss';
 
 type Props = SelectProps & {
     onSelect: (values: string) => void,
-    labelText: string,
+    displayValue: string,
     closeOnSelect: boolean,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
     selectedVisualization?: OptionSelectedVisualization,
@@ -24,7 +24,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
         closeOnSelect: true,
     };
 
-    label: ?ElementRef<typeof Label>;
+    displayValue: ?ElementRef<typeof DisplayValue>;
     centeredChildIndex: number;
     @observable isOpen: boolean;
 
@@ -44,28 +44,28 @@ export default class GenericSelect extends React.PureComponent<Props> {
         }
     };
 
-    handleLabelClick = this.openList;
+    handleDisplayValueClick = this.openList;
     handleListRequestClose = this.closeList;
-    setLabel = (label: ?ElementRef<typeof Label>) => this.label = label;
+    setDisplayValue = (displayValue: ?ElementRef<typeof DisplayValue>) => this.displayValue = displayValue;
 
     render() {
-        const {icon, labelText} = this.props;
-        const labelDimensions = this.label ? this.label.getDimensions() : {};
+        const {icon, displayValue} = this.props;
+        const displayValueDimensions = this.displayValue ? this.displayValue.getDimensions() : {};
         const listChildren = this.renderListChildren();
 
         return (
             <div className={genericSelectStyles.select}>
                 <DisplayValue
-                    ref={this.setLabel}
+                    ref={this.setDisplayValue}
                     icon={icon}
-                    onClick={this.handleLabelClick}>
-                    {labelText}
+                    onClick={this.handleDisplayValueClick}>
+                    {displayValue}
                 </DisplayValue>
                 <OverlayList
-                    anchorTop={labelDimensions.top}
-                    anchorLeft={labelDimensions.left}
-                    anchorWidth={labelDimensions.width}
-                    anchorHeight={labelDimensions.height}
+                    anchorTop={displayValueDimensions.top}
+                    anchorLeft={displayValueDimensions.left}
+                    anchorWidth={displayValueDimensions.width}
+                    anchorHeight={displayValueDimensions.height}
                     isOpen={this.isOpen}
                     centeredChildIndex={this.centeredChildIndex}
                     onRequestClose={this.handleListRequestClose}>

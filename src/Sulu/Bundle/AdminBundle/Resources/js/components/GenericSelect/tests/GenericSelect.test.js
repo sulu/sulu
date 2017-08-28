@@ -18,7 +18,7 @@ test('The component should render with the list closed', () => {
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            labelText="My Label text">
+            displayValue="My text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -38,7 +38,7 @@ test('The component should render with an icon', () => {
             icon="plus"
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            labelText="My Label text">
+            displayValue="My text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -49,7 +49,7 @@ test('The component should render with an icon', () => {
     expect(body.innerHTML).toBe('');
 });
 
-test('The component should open the list when the label is clicked', () => {
+test('The component should open the list when the display value is clicked', () => {
     const body = document.body;
     const isOptionSelected = () => false;
     const onSelect = () => {};
@@ -57,14 +57,14 @@ test('The component should open the list when the label is clicked', () => {
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            labelText="My Label text">
+            displayValue="My text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </GenericSelect>
     );
-    select.instance().handleLabelClick();
+    select.instance().handleDisplayValueClick();
     expect(select.render()).toMatchSnapshot();
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
@@ -77,14 +77,14 @@ test('The component should trigger the select callback and close the list when a
         <GenericSelect
             onSelect={onSelectSpy}
             isOptionSelected={isOptionSelected}
-            labelText="My Label text">
+            displayValue="My text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </GenericSelect>
     );
-    select.instance().handleLabelClick();
+    select.instance().handleDisplayValueClick();
     body.getElementsByTagName('button')[2].click();
     expect(onSelectSpy).toHaveBeenCalledWith('option-3');
     expect(body.innerHTML).toBe('');
@@ -97,7 +97,7 @@ test('The component should pass the centered child index to the overlay list', (
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            labelText="My Label text">
+            displayValue="My text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -116,7 +116,7 @@ test('The component should pass the selected property to the options', () => {
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            labelText="My Label text">
+            displayValue="My text">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />

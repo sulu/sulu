@@ -17,8 +17,8 @@ export default class MultiSelect extends React.PureComponent<Props> {
         values: [],
     };
 
-    get labelText(): string {
-        let selectedLabels = [];
+    get displayValue(): string {
+        let selectedValues = [];
         let countOptions = 0;
         React.Children.forEach(this.props.children, (child: any) => {
             if (child.type !== Option) {
@@ -26,18 +26,18 @@ export default class MultiSelect extends React.PureComponent<Props> {
             }
             countOptions += 1;
             if (this.isOptionSelected(child)) {
-                selectedLabels.push(child.props.children);
+                selectedValues.push(child.props.children);
             }
         });
 
-        if (selectedLabels.length === 0) {
+        if (selectedValues.length === 0) {
             return this.props.noneSelectedText;
         }
-        if (selectedLabels.length === countOptions) {
+        if (selectedValues.length === countOptions) {
             return this.props.allSelectedText;
         }
 
-        return selectedLabels.join(', ');
+        return selectedValues.join(', ');
     }
 
     isOptionSelected = (option: Element<typeof Option>): boolean => {
@@ -63,7 +63,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
                 icon={icon}
                 onSelect={this.handleSelect}
                 closeOnSelect={false}
-                labelText={this.labelText}
+                displayValue={this.displayValue}
                 selectedVisualization="checkbox"
                 isOptionSelected={this.isOptionSelected}>
                 {children}

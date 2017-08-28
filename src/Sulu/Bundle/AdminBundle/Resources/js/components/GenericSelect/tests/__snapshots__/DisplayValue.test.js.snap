@@ -2,9 +2,9 @@
 
 exports[`The component should render 1`] = `
 <button
-  class="label"
+  class="displayValue"
 >
-  My label
+  My value
   <span
     aria-hidden="true"
     class="toggle fa fa-chevron-down"
@@ -14,13 +14,13 @@ exports[`The component should render 1`] = `
 
 exports[`The component should render with an icon 1`] = `
 <button
-  class="label hasIcon"
+  class="displayValue hasIcon"
 >
   <span
     aria-hidden="true"
     class="frontIcon fa fa-plus"
   />
-  My label
+  My value
   <span
     aria-hidden="true"
     class="toggle fa fa-chevron-down"

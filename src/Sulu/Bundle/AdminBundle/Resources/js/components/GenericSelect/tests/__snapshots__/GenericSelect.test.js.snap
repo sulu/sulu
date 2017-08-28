@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should open the list when the label is clicked 1`] = `
+exports[`The component should open the list when the display value is clicked 1`] = `
 <div
   class="select"
 >
   <button
-    class="label"
+    class="displayValue"
   >
-    My Label text
+    My text
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
@@ -19,7 +19,7 @@ exports[`The component should open the list when the label is clicked 1`] = `
 </div>
 `;
 
-exports[`The component should open the list when the label is clicked 2`] = `
+exports[`The component should open the list when the display value is clicked 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"list\\" style=\\"top: 10px;\\">
@@ -55,13 +55,13 @@ exports[`The component should render with an icon 1`] = `
   class="select"
 >
   <button
-    class="label hasIcon"
+    class="displayValue hasIcon"
   >
     <span
       aria-hidden="true"
       class="frontIcon fa fa-plus"
     />
-    My Label text
+    My text
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
@@ -78,9 +78,9 @@ exports[`The component should render with the list closed 1`] = `
   class="select"
 >
   <button
-    class="label"
+    class="displayValue"
   >
-    My Label text
+    My text
     <span
       aria-hidden="true"
       class="toggle fa fa-chevron-down"
