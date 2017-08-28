@@ -17,9 +17,9 @@ export default class CroppedText extends React.PureComponent<Props> {
                 title={this.props.children}
                 aria-label={this.props.children}
                 className={croppedTextStyle.croppedText}>
-                <div className={croppedTextStyle.whole}>{this.props.children}</div>
                 <div className={croppedTextStyle.front} aria-hidden={true}>{frontText}</div>
                 <div className={croppedTextStyle.back} aria-hidden={true}><span>{backText}</span></div>
+                <div className={croppedTextStyle.whole}>{this.props.children}</div>
             </div>
         );
     }

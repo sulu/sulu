@@ -10,11 +10,6 @@ exports[`The component should render 1`] = `
     title="My value"
   >
     <div
-      class="whole"
-    >
-      My value
-    </div>
-    <div
       aria-hidden="true"
       class="front"
     >
@@ -27,6 +22,11 @@ exports[`The component should render 1`] = `
       <span>
         alue
       </span>
+    </div>
+    <div
+      class="whole"
+    >
+      My value
     </div>
   </div>
   <span
@@ -50,11 +50,6 @@ exports[`The component should render with an icon 1`] = `
     title="My value"
   >
     <div
-      class="whole"
-    >
-      My value
-    </div>
-    <div
       aria-hidden="true"
       class="front"
     >
@@ -67,6 +62,11 @@ exports[`The component should render with an icon 1`] = `
       <span>
         alue
       </span>
+    </div>
+    <div
+      class="whole"
+    >
+      My value
     </div>
   </div>
   <span

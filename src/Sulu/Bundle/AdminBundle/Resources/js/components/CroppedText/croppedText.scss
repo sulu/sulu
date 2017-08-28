@@ -3,7 +3,6 @@ $lineHeight: 1.2em;
 .cropped-text {
     width: 100%;
     max-height: $lineHeight;
-    line-height: $lineHeight;
     overflow: hidden;
     display: inline-flex;
     flex-wrap: nowrap;
@@ -14,6 +13,7 @@ $lineHeight: 1.2em;
         top: 0;
         left: 0;
         color: transparent;
+        white-space: nowrap;
     }
 
     .front {
@@ -23,6 +23,7 @@ $lineHeight: 1.2em;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: pre;
+        user-select: none;
     }
 
     .back {
@@ -30,6 +31,7 @@ $lineHeight: 1.2em;
         flex-shrink: 1;
         flex-basis: content;
         overflow: hidden;
+        user-select: none;
 
         span {
             float: right;

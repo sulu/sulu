@@ -13,11 +13,6 @@ exports[`The component should open the list when the display value is clicked 1`
       title="My text"
     >
       <div
-        class="whole"
-      >
-        My text
-      </div>
-      <div
         aria-hidden="true"
         class="front"
       >
@@ -30,6 +25,11 @@ exports[`The component should open the list when the display value is clicked 1`
         <span>
           ext
         </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My text
       </div>
     </div>
     <span
@@ -91,11 +91,6 @@ exports[`The component should render with an icon 1`] = `
       title="My text"
     >
       <div
-        class="whole"
-      >
-        My text
-      </div>
-      <div
         aria-hidden="true"
         class="front"
       >
@@ -108,6 +103,11 @@ exports[`The component should render with an icon 1`] = `
         <span>
           ext
         </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My text
       </div>
     </div>
     <span
@@ -134,11 +134,6 @@ exports[`The component should render with the list closed 1`] = `
       title="My text"
     >
       <div
-        class="whole"
-      >
-        My text
-      </div>
-      <div
         aria-hidden="true"
         class="front"
       >
@@ -151,6 +146,11 @@ exports[`The component should render with the list closed 1`] = `
         <span>
           ext
         </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My text
       </div>
     </div>
     <span
