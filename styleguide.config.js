@@ -86,6 +86,7 @@ module.exports = { // eslint-disable-line
                                 modules: true,
                                 camelCase: true,
                                 importLoaders: 1,
+                                localIdentName: '[local]--[hash:base64:10]',
                             },
                         },
                         'postcss-loader',
