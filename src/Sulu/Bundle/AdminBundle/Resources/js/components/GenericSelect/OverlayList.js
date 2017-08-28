@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ElementRef, ChildrenArray} from 'react';
+import type {ElementRef} from 'react';
 import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
@@ -8,12 +8,12 @@ import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import Option from './Option';
 import overlayListStyles from './overlayList.scss';
-import type {OverlayListDimensions} from './types';
+import type {OverlayListDimensions, SelectChildren} from './types';
 import OverlayListPositioner from './OverlayListPositioner';
 
 type Props = {
     isOpen: boolean,
-    children?: ChildrenArray<*>,
+    children: SelectChildren,
     onRequestClose?: () => void,
     /** The top coordinate relative to which the list will be positioned */
     anchorTop: number,
@@ -41,6 +41,7 @@ export default class OverlayList extends React.PureComponent<Props> {
     @observable scrollHeight: number;
     @observable scrollWidth: number;
     @observable centeredChildRelativeTop: number;
+    @observable isVisible: boolean = false;
     list: ElementRef<'ul'>;
     scrollTop: number;
 
@@ -58,10 +59,16 @@ export default class OverlayList extends React.PureComponent<Props> {
         window.removeEventListener('resize', this.requestClose);
     }
 
+    @action componentWillReceiveProps(newProps: Props) {
+        if (this.props.isOpen && !newProps.isOpen) {
+            this.isVisible = false;
+        }
+    }
+
     componentDidUpdate() {
         afterElementsRendered(() => {
             if (this.list) {
-                this.list.scrollTop = this.scrollTop;
+                this.list.scrollTop = this.scrollTop || 0;
             }
         });
     }
@@ -72,10 +79,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         }
     };
 
-    @computed get dimensions(): ?OverlayListDimensions {
-        if (!this.props.isOpen || !this.scrollHeight || !this.scrollWidth || !this.centeredChildRelativeTop) {
-            return null;
-        }
+    @computed get dimensions(): OverlayListDimensions {
         return OverlayListPositioner.getCroppedDimensions(
             this.scrollHeight,
             this.scrollWidth,
@@ -91,6 +95,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         afterElementsRendered(action(() => {
             if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
+                this.isVisible = true;
             }
         }));
     };
@@ -108,9 +113,12 @@ export default class OverlayList extends React.PureComponent<Props> {
     handleBackropClick = this.requestClose;
 
     render() {
-        const dimensions = this.dimensions;
-        const style = dimensions ? OverlayListPositioner.dimensionsToStyle(dimensions) : {opacity: '0'};
-        this.scrollTop = dimensions ? dimensions.scrollTop : 0;
+        let style = {opacity: '0'};
+        if (this.isVisible) {
+            const dimensions = this.dimensions;
+            style = OverlayListPositioner.dimensionsToStyle(dimensions);
+            this.scrollTop = dimensions.scrollTop;
+        }
 
         return (
             <div>
@@ -130,11 +138,11 @@ export default class OverlayList extends React.PureComponent<Props> {
     }
 
     renderChildrenWithFocusSet() {
-        const children = React.Children.toArray(this.props.children);
+        const children: any = React.Children.toArray(this.props.children);
         const centeredChildIsDisabled = children[this.props.centeredChildIndex].props.disabled;
         let focus = true;
 
-        return React.Children.map(this.props.children, (child, index) => {
+        return React.Children.map(this.props.children, (child: any, index) => {
             const props = {};
 
             if (index === this.props.centeredChildIndex) {

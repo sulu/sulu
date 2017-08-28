@@ -7,6 +7,7 @@ import checkboxStyles from './checkbox.scss';
 
 type Props = SwitchProps & {
     skin: 'dark' | 'light',
+    className?: string,
 };
 
 const CHECKED_ICON = 'check';
@@ -17,11 +18,12 @@ export default class Checkbox extends React.PureComponent<Props> {
     };
 
     render() {
+        const {checked, value, name, onChange, children, className, skin} = this.props;
         const checkboxClass = classNames(
             checkboxStyles.checkbox,
-            checkboxStyles[this.props.skin]
+            checkboxStyles[skin],
+            className,
         );
-        const {checked, value, name, onChange, children} = this.props;
 
         return (
             <Switch

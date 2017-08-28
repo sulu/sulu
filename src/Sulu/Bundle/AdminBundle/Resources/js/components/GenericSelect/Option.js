@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Icon from '../Icon';
+import Checkbox from '../Checkbox';
+import type {OptionSelectedVisualization} from '../GenericSelect/types';
 import optionStyles from './option.scss';
 
 type Props = {
@@ -13,6 +15,7 @@ type Props = {
     value: string,
     children: string,
     onClick?: (value: string) => void,
+    selectedVisualization: OptionSelectedVisualization,
 };
 
 const SELECTED_ICON = 'check';
@@ -22,6 +25,7 @@ export default class Option extends React.PureComponent<Props> {
         disabled: false,
         selected: false,
         focus: false,
+        selectedVisualization: 'icon',
         value: '',
     };
 
@@ -51,22 +55,37 @@ export default class Option extends React.PureComponent<Props> {
     };
 
     render() {
-        const classNames = classnames({
+        const {selected, selectedVisualization, disabled, children} = this.props;
+        const optionClass = classNames({
             [optionStyles.option]: true,
-            [optionStyles.selected]: this.props.selected,
+            [optionStyles[selectedVisualization]]: true,
+            [optionStyles.selected]: selected,
         });
 
         return (
             <li ref={this.setItem}>
                 <button
-                    className={classNames}
+                    className={optionClass}
                     ref={this.setButton}
                     onClick={this.handleButtonClick}
-                    disabled={this.props.disabled}>
-                    {this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : ''}
-                    {this.props.children}
+                    disabled={disabled}>
+                    {this.renderSelectedVisualization()}
+                    {children}
                 </button>
             </li>
+        );
+    }
+
+    renderSelectedVisualization() {
+        if (this.props.selectedVisualization === 'icon') {
+            return this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : null;
+        }
+
+        return (
+            <Checkbox
+                onChange={this.handleButtonClick}
+                className={optionStyles.input}
+                checked={this.props.selected} />
         );
     }
 }

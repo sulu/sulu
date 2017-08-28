@@ -1,6 +1,6 @@
 // @flow
 import {Action, Divider, Option} from '../GenericSelect';
-import Select from './Select';
+import MultiSelect from './MultiSelect';
 
 export {Action, Divider, Option};
-export default Select;
+export default MultiSelect;

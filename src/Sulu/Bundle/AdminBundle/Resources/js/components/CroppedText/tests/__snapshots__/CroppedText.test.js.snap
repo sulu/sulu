@@ -7,11 +7,6 @@ exports[`CroppedText should render 1`] = `
   title="This is a text which will get cropped."
 >
   <div
-    class="whole"
-  >
-    This is a text which will get cropped.
-  </div>
-  <div
     aria-hidden="true"
     class="front"
   >
@@ -24,6 +19,11 @@ exports[`CroppedText should render 1`] = `
     <span>
       h will get cropped.
     </span>
+  </div>
+  <div
+    class="whole"
+  >
+    This is a text which will get cropped.
   </div>
 </div>
 `;

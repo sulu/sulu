@@ -17,28 +17,22 @@ exports[`The list should render in body when open 1`] = `
 exports[`The list should render in body when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <ul class=\\"list\\" style=\\"opacity: 0;\\">
+    <ul class=\\"list\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
       <li>
-        <button class=\\"option\\">
-          <!-- react-text: 5 -->
-          <!-- /react-text -->
-          <!-- react-text: 6 -->My option 1
+        <button class=\\"option icon\\">
+          <!-- react-text: 5 -->My option 1
           <!-- /react-text -->
         </button>
       </li>
       <li>
-        <button class=\\"option\\">
-          <!-- react-text: 9 -->
-          <!-- /react-text -->
-          <!-- react-text: 10 -->My option 2
+        <button class=\\"option icon\\">
+          <!-- react-text: 8 -->My option 2
           <!-- /react-text -->
         </button>
       </li>
       <li>
-        <button class=\\"option\\">
-          <!-- react-text: 13 -->
-          <!-- /react-text -->
-          <!-- react-text: 14 -->My option 3
+        <button class=\\"option icon\\">
+          <!-- react-text: 11 -->My option 3
           <!-- /react-text -->
         </button>
       </li>
@@ -55,10 +49,8 @@ exports[`The list should take its dimensions from the positioner 1`] = `
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"list\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
       <li>
-        <button class=\\"option\\">
-          <!-- react-text: 5 -->
-          <!-- /react-text -->
-          <!-- react-text: 6 -->My option 1
+        <button class=\\"option icon\\">
+          <!-- react-text: 5 -->My option 1
           <!-- /react-text -->
         </button>
       </li>
