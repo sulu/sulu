@@ -27,30 +27,3 @@ const onConfirm = () => {
     </Modal>
 </div>
 ```
-
-If you don't want to handle the open/close state yourself and want to just open the modal
-when a specific element is clicked, `ClickModal` is the right choice.
-It renders the element which triggers the modal on click and handles the whole opening and closing
-of the modal internally.
-
-```
-const ClickModal = require('./ClickModal').default;
-const actions = [
-    {title: 'Save Gotham', onClick: () => {/* save gotham */}},
-];
-const onConfirm = () => {
-    /* do confirm things */
-};
-
-const button = (<button>Open modal</button>);
-<ClickModal
-    clickElement={button}
-    title="Nana Nana Nana"
-    actions={actions}
-    onConfirm={onConfirm}
-    confirmText="Ok">
-    <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <img src="https://media.giphy.com/media/NmhVw98IHkQtq/source.gif" />
-    </div>
-</ClickModal>
-```
