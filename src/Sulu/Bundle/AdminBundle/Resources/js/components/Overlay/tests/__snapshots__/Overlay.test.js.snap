@@ -10,10 +10,10 @@ exports[`The component should render in body when open 2`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <!-- react-text: 5 -->My modal title
+          <!-- react-text: 5 -->My overlay title
           <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
         <article>
-          <p>My modal content</p>
+          <p>My overlay content</p>
         </article>
         <footer>
           <!-- react-empty: 10 -->
@@ -34,10 +34,10 @@ exports[`The component should render in body with actions when open 2`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <!-- react-text: 5 -->My modal title
+          <!-- react-text: 5 -->My overlay title
           <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
         <article>
-          <p>My modal content</p>
+          <p>My overlay content</p>
         </article>
         <footer>
           <div class=\\"actions\\">

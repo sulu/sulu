@@ -25,7 +25,7 @@ type Props = {
 const CLOSE_ICON = 'times';
 
 @observer
-export default class Modal extends React.PureComponent<Props> {
+export default class Overlay extends React.PureComponent<Props> {
     static defaultProps = {
         isOpen: false,
         actions: [],
@@ -39,7 +39,7 @@ export default class Modal extends React.PureComponent<Props> {
     }
 
     componentDidMount() {
-        this.toggleModal();
+        this.toggle();
     }
 
     @action componentWillReceiveProps(newProps: Props) {
@@ -47,14 +47,14 @@ export default class Modal extends React.PureComponent<Props> {
     }
 
     componentDidUpdate() {
-        this.toggleModal();
+        this.toggle();
     }
 
     close() {
         this.props.onRequestClose();
     }
 
-    @action toggleModal() {
+    @action toggle() {
         afterElementsRendered(action(() => {
             if (this.isOpenHasChanged) {
                 this.isVisible = this.props.isOpen;
