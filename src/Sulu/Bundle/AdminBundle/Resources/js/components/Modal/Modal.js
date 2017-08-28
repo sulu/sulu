@@ -1,24 +1,35 @@
 // @flow
 import React from 'react';
+import type {Node} from 'react';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import Portal from 'react-portal';
 import classNames from 'classnames';
+import Icon from '../Icon';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
-import ModalBox from './ModalBox';
-import type {OverlayProps} from './types';
+import type {Action} from './types';
+import Actions from './Actions';
 import modalStyles from './modal.scss';
+import modalBoxStyles from './modalBox.scss';
 
-type Props = OverlayProps & {
+type Props = {
+    title: string,
+    children: Node,
+    actions: Array<Action>,
+    confirmText: string,
+    onConfirm: () => void,
     isOpen: boolean,
     onRequestClose: () => void,
 };
+
+const CLOSE_ICON = 'times';
 
 @observer
 export default class Modal extends React.PureComponent<Props> {
     static defaultProps = {
         isOpen: false,
+        actions: [],
     };
 
     @observable isVisible: boolean = false;
@@ -40,6 +51,10 @@ export default class Modal extends React.PureComponent<Props> {
         this.toggleModal();
     }
 
+    close() {
+        this.props.onRequestClose();
+    }
+
     @action toggleModal() {
         afterElementsRendered(action(() => {
             if (this.isOpenHasChanged) {
@@ -54,12 +69,16 @@ export default class Modal extends React.PureComponent<Props> {
         }));
     };
 
+    handleIconClick = () => {
+        this.close();
+    };
+
     render() {
         const containerClass = classNames({
             [modalStyles.container]: true,
             [modalStyles.isDown]: this.isVisible,
         });
-        const {isOpen, title, actions, onRequestClose, onConfirm, confirmText, children} = this.props;
+        const {isOpen, title, actions, onConfirm, confirmText, children} = this.props;
 
         return (
             <Portal isOpened={isOpen || this.isOpenHasChanged}>
@@ -67,14 +86,22 @@ export default class Modal extends React.PureComponent<Props> {
                     className={containerClass}
                     onTransitionEnd={this.handleTransitionEnd}>
                     <div className={modalStyles.box}>
-                        <ModalBox
-                            title={title}
-                            actions={actions}
-                            onRequestClose={onRequestClose}
-                            onConfirm={onConfirm}
-                            confirmText={confirmText}>
-                            {children}
-                        </ModalBox>
+                        <section className={modalBoxStyles.box}>
+                            <header>
+                                {title}
+                                <Icon
+                                    name={CLOSE_ICON}
+                                    className={modalBoxStyles.icon}
+                                    onClick={this.handleIconClick} />
+                            </header>
+                            <article>{children}</article>
+                            <footer>
+                                <Actions actions={actions} />
+                                <button className={modalBoxStyles.confirmButton} onClick={onConfirm}>
+                                    {confirmText}
+                                </button>
+                            </footer>
+                        </section>
                     </div>
                     <Backdrop local={true} onClick={this.props.onRequestClose} />
                 </div>

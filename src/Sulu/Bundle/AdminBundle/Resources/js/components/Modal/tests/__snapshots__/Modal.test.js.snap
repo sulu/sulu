@@ -25,3 +25,30 @@ exports[`The component should render in body when open 2`] = `
   </div>
 </div>"
 `;
+
+exports[`The component should render in body with actions when open 1`] = `null`;
+
+exports[`The component should render in body with actions when open 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <div class=\\"box\\">
+      <section class=\\"box\\">
+        <header>
+          <!-- react-text: 5 -->My modal title
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+        <article>
+          <p>My modal content</p>
+        </article>
+        <footer>
+          <div class=\\"actions\\">
+            <button class=\\"action\\">Action 1</button>
+            <button class=\\"action\\">Action 2</button>
+          </div>
+          <button class=\\"confirmButton\\">Apply</button>
+        </footer>
+      </section>
+    </div>
+    <div class=\\"backdrop isVisible\\"></div>
+  </div>
+</div>"
+`;
