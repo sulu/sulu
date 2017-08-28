@@ -1,10 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {shallow} from 'enzyme';
 import React from 'react';
-import Divider from '../../Divider';
-import Option from '../../Option';
 import GenericSelect from '../../GenericSelect';
-import MultiSelect from '../MultiSelect';
+import MultiSelect, {Divider, Option} from '../../MultiSelect';
 
 jest.mock('../../GenericSelect');
 

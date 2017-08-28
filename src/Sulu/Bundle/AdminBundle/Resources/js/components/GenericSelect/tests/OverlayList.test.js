@@ -3,7 +3,7 @@ import {mount, shallow} from 'enzyme';
 import pretty from 'pretty';
 import React from 'react';
 import OverlayList from '../OverlayList';
-import Option from '../../Option';
+import Option from '../Option';
 
 jest.mock('../../../services/DOM/afterElementsRendered');
 

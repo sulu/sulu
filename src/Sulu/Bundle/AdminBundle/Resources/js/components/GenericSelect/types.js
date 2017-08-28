@@ -1,8 +1,8 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
-import Action from '../Action';
-import Divider from '../Divider';
-import Option from '../Option';
+import Action from './Action';
+import Divider from './Divider';
+import Option from './Option';
 
 export type OverlayListDimensions = {
     top: number,

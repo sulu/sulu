@@ -3,9 +3,9 @@ The component follows the [recommendation of React for form components](https://
 The Select itself holds no internal state and is solely dependent on the passed properties. Moreover, it provides
 a possibility to pass a callback which gets called when the user selects an option.
 ```
-const Action = require('../Action').default;
-const Divider = require('../Divider').default;
-const Option = require('../Option').default;
+const Action = require('../Select').Action;
+const Divider = require('../Select').Divider;
+const Option = require('../Select').Option;
 
 initialState = {selectValue: 'page-1'};
 const onChange = (selectValue) => setState({selectValue});
@@ -22,8 +22,8 @@ const onChange = (selectValue) => setState({selectValue});
 
 Also a lot of options are possible and correctly handled as well as neatly styled.
 ```
-const Divider = require('../Divider').default;
-const Option = require('../Option').default;
+const Divider = require('../Select').Divider;
+const Option = require('../Select').Option;
 
 initialState = {selectValue: null};
 const onChange = (value) => setState({selectValue: value});

@@ -3,8 +3,8 @@ import {mount, shallow} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
 import GenericSelect from '../GenericSelect';
-import Divider from '../../Divider';
-import Option from '../../Option';
+import Divider from '../Divider';
+import Option from '../Option';
 
 jest.mock('../../../services/DOM/afterElementsRendered');
 
