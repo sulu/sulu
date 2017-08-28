@@ -7,7 +7,7 @@ import Action from '../Action';
 import Option from '../Option';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
 import OverlayList from './OverlayList';
-import Label from './Label';
+import DisplayValue from './DisplayValue';
 import genericSelectStyles from './genericSelect.scss';
 
 type Props = SelectProps & {
@@ -55,12 +55,12 @@ export default class GenericSelect extends React.PureComponent<Props> {
 
         return (
             <div className={genericSelectStyles.select}>
-                <Label
+                <DisplayValue
                     ref={this.setLabel}
                     icon={icon}
                     onClick={this.handleLabelClick}>
                     {labelText}
-                </Label>
+                </DisplayValue>
                 <OverlayList
                     anchorTop={labelDimensions.top}
                     anchorLeft={labelDimensions.left}
