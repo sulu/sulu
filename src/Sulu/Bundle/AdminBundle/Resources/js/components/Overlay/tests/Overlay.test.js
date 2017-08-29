@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
+import Mousetrap from 'mousetrap';
 import React from 'react';
 import pretty from 'pretty';
 import Overlay from '../Overlay';
@@ -94,6 +95,23 @@ test('The component should request to be closed when the close icon is clicked',
 
     expect(requestCloseSpy).not.toBeCalled();
     view.find('Icon').simulate('click');
+    expect(requestCloseSpy).toBeCalled();
+});
+
+test('The component should request to be closed when the esc key is pressed', () => {
+    const requestCloseSpy = jest.fn();
+    mount(
+        <Overlay
+            title="My overlay title"
+            onRequestClose={requestCloseSpy}
+            confirmText="Apply"
+            isOpen={true}>
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
+    expect(requestCloseSpy).not.toBeCalled();
+    Mousetrap.trigger('esc');
     expect(requestCloseSpy).toBeCalled();
 });
 

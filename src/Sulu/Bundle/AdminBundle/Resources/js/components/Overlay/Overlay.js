@@ -1,10 +1,11 @@
 // @flow
-import React from 'react';
-import type {Node} from 'react';
+import classNames from 'classnames';
+import Mousetrap from 'mousetrap';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
+import type {Node} from 'react';
+import React from 'react';
 import Portal from 'react-portal';
-import classNames from 'classnames';
 import Icon from '../Icon';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
@@ -35,7 +36,12 @@ export default class Overlay extends React.PureComponent<Props> {
     @observable isOpenHasChanged: boolean = false;
 
     @action componentWillMount() {
+        Mousetrap.bind('esc', this.close);
         this.isOpenHasChanged = this.props.isOpen;
+    }
+
+    componentWillUnmount() {
+        Mousetrap.unbind('esc', this.close);
     }
 
     componentDidMount() {
@@ -50,9 +56,9 @@ export default class Overlay extends React.PureComponent<Props> {
         this.toggle();
     }
 
-    close() {
+    close = () => {
         this.props.onRequestClose();
-    }
+    };
 
     @action toggle() {
         afterElementsRendered(action(() => {
