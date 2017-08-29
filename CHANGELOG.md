@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #3501 [AdminBundle]             Updated husky to avoid html/js injection
     * HOTFIX      #3492 [ContentBundle]           Fixed smart-content categories load
 
 * 1.6.3 (2017-08-17)
