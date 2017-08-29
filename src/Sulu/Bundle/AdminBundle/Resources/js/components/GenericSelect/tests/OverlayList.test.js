@@ -51,28 +51,28 @@ test('The list should not render in body when not open', () => {
 });
 
 test('The list should request to be closed when the backdrop is clicked', () => {
-    const onRequestCloseSpy = jest.fn();
+    const onCloseSpy = jest.fn();
     const list = shallow(
-        <OverlayList isOpen={true} onRequestClose={onRequestCloseSpy}>
+        <OverlayList isOpen={true} onClose={onCloseSpy}>
             <Option value="option-1">My option 1</Option>
         </OverlayList>
     );
     list.find('Backdrop').simulate('click');
-    expect(onRequestCloseSpy).toBeCalled();
+    expect(onCloseSpy).toBeCalled();
 });
 
 test('The list should request to be closed when the window is blurred', () => {
     const windowListeners = {};
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
-    const onRequestCloseSpy = jest.fn();
+    const onCloseSpy = jest.fn();
     mount(
-        <OverlayList isOpen={true} onRequestClose={onRequestCloseSpy}>
+        <OverlayList isOpen={true} onClose={onCloseSpy}>
             <Option value="option-1">My option 1</Option>
         </OverlayList>
     ).render();
     expect(windowListeners.blur).toBeDefined();
     windowListeners.blur();
-    expect(onRequestCloseSpy).toBeCalled();
+    expect(onCloseSpy).toBeCalled();
 });
 
 test('The list should take its dimensions from the positioner', () => {

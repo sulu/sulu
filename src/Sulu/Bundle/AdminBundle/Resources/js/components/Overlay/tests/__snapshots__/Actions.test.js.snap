@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<div
+  class="actions"
+>
+  <button
+    class="action"
+  >
+    Action 1
+  </button>
+  <button
+    class="action"
+  >
+    Action 2
+  </button>
+</div>
+`;

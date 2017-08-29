@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should not render in body when closed 1`] = `null`;
+
+exports[`The component should render in body when open 1`] = `null`;
+
+exports[`The component should render in body when open 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <div class=\\"overlay\\">
+      <section class=\\"content\\">
+        <header>
+          <!-- react-text: 5 -->My overlay title
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+        <article>
+          <p>My overlay content</p>
+        </article>
+        <footer>
+          <!-- react-empty: 10 -->
+          <button class=\\"confirmButton\\">Apply</button>
+        </footer>
+      </section>
+    </div>
+    <div class=\\"backdrop isVisible\\"></div>
+  </div>
+</div>"
+`;
+
+exports[`The component should render in body with actions when open 1`] = `null`;
+
+exports[`The component should render in body with actions when open 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <div class=\\"overlay\\">
+      <section class=\\"content\\">
+        <header>
+          <!-- react-text: 5 -->My overlay title
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+        <article>
+          <p>My overlay content</p>
+        </article>
+        <footer>
+          <div class=\\"actions\\">
+            <button class=\\"action\\">Action 1</button>
+            <button class=\\"action\\">Action 2</button>
+          </div>
+          <button class=\\"confirmButton\\">Apply</button>
+        </footer>
+      </section>
+    </div>
+    <div class=\\"backdrop isVisible\\"></div>
+  </div>
+</div>"
+`;

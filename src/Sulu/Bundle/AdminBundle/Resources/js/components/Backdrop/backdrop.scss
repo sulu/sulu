@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$backdropBackground: $black;
+$backdropBackground: rgba($dustyGray, .9);
 
 .backdrop {
     position: fixed;
@@ -8,10 +8,9 @@ $backdropBackground: $black;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: $backdropBackground;
-    opacity: 0;
+    background: transparent;
 
     &.is-visible {
-        opacity: .4;
+        background: $backdropBackground;
     }
 }

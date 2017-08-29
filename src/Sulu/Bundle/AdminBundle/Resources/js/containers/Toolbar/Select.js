@@ -81,7 +81,7 @@ export default class Select extends React.PureComponent<SelectProps> {
                         value={value}
                         options={options}
                         onOptionClick={this.handleOptionClick}
-                        onRequestClose={this.handleOptionListClose} />
+                        onClose={this.handleOptionListClose} />
                 }
             </div>
         );
