@@ -10,3 +10,8 @@ module.name_mapper='.+\.s?css' -> 'empty/object'
 .*/node_modules/npmconf/.*
 .*/node_modules/stylelint/.*
 .*/vendor/symfony/.*
+
+[untyped]
+; https://github.com/facebook/draft-js/issues/1621
+.*/node_modules/draft-js/lib/ContentBlock.js.flow
+.*/node_modules/draft-js/lib/ContentBlockNode.js.flow
