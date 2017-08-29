@@ -4,7 +4,11 @@ import Switch from '../Switch';
 import type {SwitchProps} from '../Switch/types';
 import togglerStyles from './toggler.scss';
 
-export default class Toggler extends React.PureComponent<SwitchProps> {
+type Props = SwitchProps & {
+    onChange?: (checked: boolean, value?: string | number) => void,
+};
+
+export default class Toggler extends React.PureComponent<Props> {
     render() {
         const {checked, value, name, onChange, children} = this.props;
         return (

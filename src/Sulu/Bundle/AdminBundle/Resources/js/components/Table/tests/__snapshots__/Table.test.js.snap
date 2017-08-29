@@ -232,14 +232,18 @@ exports[`Render the Table component in multiple selection mode 1`] = `
           class="headerCell"
         >
           <span>
-            <span
-              class="checkbox light"
+            <label
+              class="label"
             >
-              <input
-                type="checkbox"
-              />
-              <span />
-            </span>
+              <span
+                class="switch checkbox light"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span />
+              </span>
+            </label>
           </span>
         </th>
         <th
@@ -272,14 +276,18 @@ exports[`Render the Table component in multiple selection mode 1`] = `
         <td
           class="cell small"
         >
-          <span
-            class="checkbox dark"
+          <label
+            class="label"
           >
-            <input
-              type="checkbox"
-            />
-            <span />
-          </span>
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
         </td>
         <td
           class="cell"
@@ -351,17 +359,15 @@ exports[`Render the Table component in single selection mode 1`] = `
           class="cell small"
         >
           <label
-            class="radio dark"
+            class="label"
           >
             <span
-              class="customRadioContainer"
+              class="switch radio dark"
             >
               <input
                 type="radio"
               />
-              <span
-                class="customRadio"
-              />
+              <span />
             </span>
           </label>
         </td>

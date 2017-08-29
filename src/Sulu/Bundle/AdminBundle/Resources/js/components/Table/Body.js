@@ -2,7 +2,7 @@
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import Checkbox from '../Checkbox';
-import Radio from '../Radio';
+import {Radio} from '../Radio';
 import Icon from '../Icon';
 import Cell from './Cell';
 import Row from './Row';
@@ -117,7 +117,7 @@ export default class Body extends React.PureComponent<Props> {
                 <Radio
                     skin="dark"
                     value={identifier}
-                    checked={rowProps.selected}
+                    checked={!!rowProps.selected}
                     onChange={this.handleRowSingleSelectionChange} />
             </Cell>
         );
@@ -174,14 +174,14 @@ export default class Body extends React.PureComponent<Props> {
         }
     };
 
-    handleRowSingleSelectionChange = (rowId: string | number) => {
-        if (this.props.onRowSelectionChange) {
+    handleRowSingleSelectionChange = (rowId?: string | number) => {
+        if (this.props.onRowSelectionChange && rowId) {
             this.props.onRowSelectionChange(rowId);
         }
     };
 
-    handleRowMultipleSelectionChange = (checked: boolean, rowId: string | number) => {
-        if (this.props.onRowSelectionChange) {
+    handleRowMultipleSelectionChange = (checked: boolean, rowId?: string | number) => {
+        if (this.props.onRowSelectionChange && rowId) {
             this.props.onRowSelectionChange(rowId, checked);
         }
     };
