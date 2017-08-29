@@ -9,6 +9,9 @@ import masonryStyles from './masonry.scss';
 const masonryDefaultOptions = {
     horizontalOrder: true,
     itemSelector: 'li',
+    transitionDuration: 250,
+    columnWidth: 200,
+    gutter: 10,
 };
 
 type Props = {
@@ -20,11 +23,15 @@ export default class Masonry extends React.PureComponent<Props> {
 
     masonry: MasonryLayout;
 
+    latestKnownChildNodes: Element<'li'>;
+
     componentDidMount() {
         this.initMasonryLayout();
     }
 
     componentWillUnmount() {
+        this.latestKnownChildNodes = null;
+
         if (this.masonry) {
             this.masonry.destroy();
 
@@ -32,10 +39,42 @@ export default class Masonry extends React.PureComponent<Props> {
         }
     }
 
-    componentDidUpdate(prevProps: Props) {
-        // const knownDOMChildren = React.children.map();
-        React.Children.map(prevProps.children, (child) => {
-            console.log(child.ref);
+    componentDidUpdate() {
+        const currentChildNodes = this.getChildNodes();
+        const knownChildNodes = [];
+        const newChildNodes = [];
+
+        currentChildNodes.forEach((childNode) => {
+            if (this.latestKnownChildNodes.includes(childNode)) {
+                knownChildNodes.push(childNode);
+            } else {
+                newChildNodes.push(childNode);
+            }
+        });
+
+        this.masonry.appended(newChildNodes);
+
+        this.latestKnownChildNodes = currentChildNodes;
+
+        this.masonry.reloadItems();
+        this.masonry.layout();
+    }
+
+    getChildNodes() {
+        const containerNode = this.elementRef;
+        const childNodes = containerNode.children;
+
+        return Array.from(childNodes);
+    }
+
+    cloneItems(originalItems: any) {
+        return React.Children.map(originalItems, (item, index) => {
+            return React.cloneElement(
+                item,
+                {
+                    key: index,
+                },
+            );
         });
     }
 
@@ -44,6 +83,8 @@ export default class Masonry extends React.PureComponent<Props> {
             this.elementRef,
             masonryDefaultOptions,
         );
+
+        this.latestKnownChildNodes = this.getChildNodes();
     }
 
     setLayoutElementRef = (ref: ElementRef<'ul'>) => {
@@ -54,20 +95,13 @@ export default class Masonry extends React.PureComponent<Props> {
         const {
             children,
         } = this.props;
+        const clonedItems = this.cloneItems(children);
 
         return (
             <ul
                 ref={this.setLayoutElementRef}
                 className={masonryStyles.masonry}>
-                {
-                    children.map((child, index) => {
-                        return (
-                            <li key={index} ref={(ref) => {console.log(ref);}}>
-                                {child.props.children}
-                            </li>
-                        );
-                    })
-                }
+                {clonedItems}
             </ul>
         );
     }
