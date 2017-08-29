@@ -1,0 +1,11 @@
+@import '../Application/colors.scss';
+
+$labelColor: $scorpion;
+
+.label {
+    display: block;
+    color: $labelColor;
+    font-size: 14px;
+    line-height: 19px;
+    margin: 30px 0 10px;
+}

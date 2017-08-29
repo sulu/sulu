@@ -2,7 +2,9 @@
 
 exports[`Render correct label with correct field type 1`] = `
 <div>
-  <label>
+  <label
+    class="label"
+  >
     label1
   </label>
   <input
@@ -13,7 +15,9 @@ exports[`Render correct label with correct field type 1`] = `
 
 exports[`Render correct label with correct field type 2`] = `
 <div>
-  <label>
+  <label
+    class="label"
+  >
     label2
   </label>
   <input

@@ -1,8 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render a form tag 1`] = `
-<form>
+<form
+  class="form"
+>
   <button
+    class="submit"
     type="submit"
   >
     Submit
@@ -11,9 +14,13 @@ exports[`Should render a form tag 1`] = `
 `;
 
 exports[`Should render field types based on schema 1`] = `
-<form>
+<form
+  class="form"
+>
   <div>
-    <label>
+    <label
+      class="label"
+    >
       Text
     </label>
     <input
@@ -21,7 +28,9 @@ exports[`Should render field types based on schema 1`] = `
     />
   </div>
   <div>
-    <label>
+    <label
+      class="label"
+    >
       Datetime
     </label>
     <input
@@ -29,6 +38,7 @@ exports[`Should render field types based on schema 1`] = `
     />
   </div>
   <button
+    class="submit"
     type="submit"
   >
     Submit

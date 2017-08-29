@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import fieldStore from './stores/FieldStore';
+import fieldStyles from './field.scss';
 import type {SchemaEntry} from './types';
 
 type Props = {
@@ -14,7 +15,7 @@ export default class Field extends React.PureComponent<Props> {
 
         return (
             <div>
-                <label>{label}</label>
+                <label className={fieldStyles.label}>{label}</label>
                 <FieldType />
             </div>
         );

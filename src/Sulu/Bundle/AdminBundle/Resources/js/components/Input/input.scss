@@ -16,10 +16,12 @@ $inputFontSize: 12px;
     display: inline-flex;
     align-items: center;
     height: $inputHeight;
+    width: 100%;
 
     input {
         flex-grow: 1;
         border: none;
+        border-radius: $borderRadius;
         line-height: calc($inputHeight - 2 * $borderWidth);
         height: calc($inputHeight - 2 * $borderWidth);
         padding-left: 10px;
