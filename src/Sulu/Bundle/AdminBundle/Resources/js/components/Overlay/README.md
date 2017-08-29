@@ -16,7 +16,7 @@ const onConfirm = () => {
     <button onClick={() => setState({open: true})}>Open overlay</button>
     <Overlay
         title="Njan Njan Njan"
-        onRequestClose={() => setState({open: false})}
+        onClose={() => setState({open: false})}
         actions={actions}
         confirmText="Apply"
         onConfirm={onConfirm}

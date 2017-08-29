@@ -45,7 +45,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
     };
 
     handleDisplayValueClick = this.openList;
-    handleListRequestClose = this.closeList;
+    handleListClose = this.closeList;
     setDisplayValue = (displayValue: ?ElementRef<typeof DisplayValue>) => this.displayValue = displayValue;
 
     render() {
@@ -68,7 +68,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     anchorHeight={displayValueDimensions.height}
                     isOpen={this.isOpen}
                     centeredChildIndex={this.centeredChildIndex}
-                    onRequestClose={this.handleListRequestClose}>
+                    onClose={this.handleListClose}>
                     {listChildren}
                 </OverlayList>
             </div>

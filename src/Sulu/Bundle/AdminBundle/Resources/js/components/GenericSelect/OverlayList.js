@@ -14,7 +14,7 @@ import OverlayListPositioner from './OverlayListPositioner';
 type Props = {
     isOpen: boolean,
     children: SelectChildren,
-    onRequestClose?: () => void,
+    onClose?: () => void,
     /** The top coordinate relative to which the list will be positioned */
     anchorTop: number,
     /** The left coordinate relative to which the list will be positioned */
@@ -50,13 +50,13 @@ export default class OverlayList extends React.PureComponent<Props> {
     }
 
     componentDidMount() {
-        window.addEventListener('blur', this.requestClose);
-        window.addEventListener('resize', this.requestClose);
+        window.addEventListener('blur', this.close);
+        window.addEventListener('resize', this.close);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('blur', this.requestClose);
-        window.removeEventListener('resize', this.requestClose);
+        window.removeEventListener('blur', this.close);
+        window.removeEventListener('resize', this.close);
     }
 
     @action componentWillReceiveProps(newProps: Props) {
@@ -73,9 +73,9 @@ export default class OverlayList extends React.PureComponent<Props> {
         });
     }
 
-    requestClose = () => {
-        if (this.props.isOpen && this.props.onRequestClose) {
-            this.props.onRequestClose();
+    close = () => {
+        if (this.props.isOpen && this.props.onClose) {
+            this.props.onClose();
         }
     };
 
@@ -110,7 +110,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         }));
     };
 
-    handleBackropClick = this.requestClose;
+    handleBackropClick = this.close;
 
     render() {
         let style = {opacity: '0'};

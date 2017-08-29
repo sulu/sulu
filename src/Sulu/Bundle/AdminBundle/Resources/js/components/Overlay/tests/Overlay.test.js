@@ -9,11 +9,11 @@ afterEach(() => document.body.innerHTML = '');
 
 test('The component should render in body when open', () => {
     const body = document.body;
-    const onRequestClose = () => {};
+    const onClose = () => {};
     const view = mount(
         <Overlay
             title="My overlay title"
-            onRequestClose={onRequestClose}
+            onClose={onClose}
             confirmText="Apply"
             isOpen={true}>
             <p>My overlay content</p>
@@ -30,11 +30,11 @@ test('The component should render in body with actions when open', () => {
         {title: 'Action 2', onClick: () => {}},
     ];
     const body = document.body;
-    const onRequestClose = () => {};
+    const onClose = () => {};
     const view = mount(
         <Overlay
             title="My overlay title"
-            onRequestClose={onRequestClose}
+            onClose={onClose}
             confirmText="Apply"
             actions={actions}
             isOpen={true}>
@@ -48,11 +48,11 @@ test('The component should render in body with actions when open', () => {
 
 test('The component should not render in body when closed', () => {
     const body = document.body;
-    const onRequestClose = () => {};
+    const onClose = () => {};
     const view = mount(
         <Overlay
             title="My overlay title"
-            onRequestClose={onRequestClose}
+            onClose={onClose}
             confirmText="Apply"
             isOpen={false}>
             <p>My overlay content</p>
@@ -63,11 +63,11 @@ test('The component should not render in body when closed', () => {
 });
 
 test('The component should request to be closed on click on backdrop', () => {
-    const requestCloseSpy = jest.fn();
+    const closeSpy = jest.fn();
     const view = shallow(
         <Overlay
             title="My overlay title"
-            onRequestClose={requestCloseSpy}
+            onClose={closeSpy}
             confirmText="Apply"
             isOpen={true}>
             <p>My overlay content</p>
@@ -76,52 +76,52 @@ test('The component should request to be closed on click on backdrop', () => {
     const backdrop = view.find('Backdrop');
     expect(backdrop.length).toBe(1);
 
-    expect(requestCloseSpy).not.toBeCalled();
+    expect(closeSpy).not.toBeCalled();
     backdrop.props().onClick();
-    expect(requestCloseSpy).toBeCalled();
+    expect(closeSpy).toBeCalled();
 });
 
 test('The component should request to be closed when the close icon is clicked', () => {
-    const requestCloseSpy = jest.fn();
+    const closeSpy = jest.fn();
     const view = shallow(
         <Overlay
             title="My overlay title"
-            onRequestClose={requestCloseSpy}
+            onClose={closeSpy}
             confirmText="Apply"
             isOpen={true}>
             <p>My overlay content</p>
         </Overlay>
     );
 
-    expect(requestCloseSpy).not.toBeCalled();
+    expect(closeSpy).not.toBeCalled();
     view.find('Icon').simulate('click');
-    expect(requestCloseSpy).toBeCalled();
+    expect(closeSpy).toBeCalled();
 });
 
 test('The component should request to be closed when the esc key is pressed', () => {
-    const requestCloseSpy = jest.fn();
+    const closeSpy = jest.fn();
     mount(
         <Overlay
             title="My overlay title"
-            onRequestClose={requestCloseSpy}
+            onClose={closeSpy}
             confirmText="Apply"
             isOpen={true}>
             <p>My overlay content</p>
         </Overlay>
     );
 
-    expect(requestCloseSpy).not.toBeCalled();
+    expect(closeSpy).not.toBeCalled();
     Mousetrap.trigger('esc');
-    expect(requestCloseSpy).toBeCalled();
+    expect(closeSpy).toBeCalled();
 });
 
 test('The component should call the callback when the confirm button is clicked', () => {
-    const onRequestClose = () => {};
+    const onClose = () => {};
     const onConfirm = jest.fn();
     const view = shallow(
         <Overlay
             title="My title"
-            onRequestClose={onRequestClose}
+            onClose={onClose}
             onConfirm={onConfirm}
             confirmText="Alright mate!">
             <p>My overlay content</p>

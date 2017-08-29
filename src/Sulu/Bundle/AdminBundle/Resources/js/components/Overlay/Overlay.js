@@ -20,7 +20,7 @@ type Props = {
     confirmText: string,
     onConfirm: () => void,
     isOpen: boolean,
-    onRequestClose: () => void,
+    onClose: () => void,
 };
 
 const CLOSE_ICON = 'times';
@@ -57,7 +57,7 @@ export default class Overlay extends React.PureComponent<Props> {
     }
 
     close = () => {
-        this.props.onRequestClose();
+        this.props.onClose();
     };
 
     @action toggle() {
@@ -108,7 +108,7 @@ export default class Overlay extends React.PureComponent<Props> {
                             </footer>
                         </section>
                     </div>
-                    <Backdrop local={true} onClick={this.props.onRequestClose} />
+                    <Backdrop local={true} onClick={this.props.onClose} />
                 </div>
             </Portal>
         );

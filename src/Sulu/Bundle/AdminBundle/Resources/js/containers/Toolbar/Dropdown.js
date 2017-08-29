@@ -73,7 +73,7 @@ export default class Dropdown extends React.PureComponent<DropdownProps> {
                     <OptionList
                         options={options}
                         onOptionClick={this.handleOptionListClick}
-                        onRequestClose={this.handleOptionListClose} />
+                        onClose={this.handleOptionListClose} />
                 }
             </div>
         );

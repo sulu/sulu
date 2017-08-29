@@ -9,7 +9,7 @@ type Props = {
     onOptionClick: (option: Object) => void,
     value?: string | number,
     size?: string,
-    onRequestClose?: () => void,
+    onClose?: () => void,
     options: Array<Object>,
 };
 
@@ -19,14 +19,14 @@ export default class OptionList extends React.PureComponent<Props> {
             this.props.onOptionClick(option);
         }
 
-        if (this.props.onRequestClose) {
-            this.props.onRequestClose();
+        if (this.props.onClose) {
+            this.props.onClose();
         }
     };
 
     handleBackdropClick = () => {
-        if (this.props.onRequestClose) {
-            this.props.onRequestClose();
+        if (this.props.onClose) {
+            this.props.onClose();
         }
     };
 
