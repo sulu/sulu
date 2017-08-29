@@ -1,7 +1,10 @@
 The Table component consists out of six parts: Table, Header, Body, Row, Cell and HeaderCell. All of them has to be
 imported in order to build a table.
 
-Here is an example of a simple table. The structure of the Table component is identical to a normal HTML table.
+Here is an example of a simple table. The structure of the Table component is almost identical to a normal HTML table.
+The only difference can be seen in the header section where you have to omit the table row and add the HeaderCell 
+components as direct children. This is due to the fact that the Table component expects only one row inside the its 
+header.
 
 ```
 const Table = require('./Table').default;
@@ -13,17 +16,15 @@ const HeaderCell = require('./HeaderCell').default;
 
 <Table>
     <Header>
-        <Row>
-            <HeaderCell>Column 1</HeaderCell>
-            <HeaderCell>Column 2</HeaderCell>
-            <HeaderCell>Column 3</HeaderCell>
-            <HeaderCell>Column 4</HeaderCell>
-            <HeaderCell>Column 5</HeaderCell>
-            <HeaderCell>Column 6</HeaderCell>
-            <HeaderCell>Column 7</HeaderCell>
-            <HeaderCell>Column 8</HeaderCell>
-            <HeaderCell>Column 9</HeaderCell>
-        </Row>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
+        <HeaderCell>Column 5</HeaderCell>
+        <HeaderCell>Column 6</HeaderCell>
+        <HeaderCell>Column 7</HeaderCell>
+        <HeaderCell>Column 8</HeaderCell>
+        <HeaderCell>Column 9</HeaderCell>
     </Header>
     <Body>
         <Row>
@@ -74,7 +75,7 @@ const HeaderCell = require('./HeaderCell').default;
 </Table>
 ```
 
-An empty table components will be rendered as follows. You can set a `placeholderText`.
+An empty table component will be rendered as follows. You can set a `placeholderText`.
 
 ```
 const Table = require('./Table').default;
@@ -86,26 +87,24 @@ const HeaderCell = require('./HeaderCell').default;
 
 <Table placeholderText="Awwww, this little fella has no entries...">
     <Header>
-        <Row>
-            <HeaderCell>Column 1</HeaderCell>
-            <HeaderCell>Column 2</HeaderCell>
-            <HeaderCell>Column 3</HeaderCell>
-            <HeaderCell>Column 4</HeaderCell>
-            <HeaderCell>Column 5</HeaderCell>
-            <HeaderCell>Column 6</HeaderCell>
-            <HeaderCell>Column 7</HeaderCell>
-            <HeaderCell>Column 8</HeaderCell>
-            <HeaderCell>Column 9</HeaderCell>
-        </Row>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
+        <HeaderCell>Column 5</HeaderCell>
+        <HeaderCell>Column 6</HeaderCell>
+        <HeaderCell>Column 7</HeaderCell>
+        <HeaderCell>Column 8</HeaderCell>
+        <HeaderCell>Column 9</HeaderCell>
     </Header>
     <Body></Body>
 </Table>
 ```
 
-You can add control elements to the table which will always be prepended as the first cell in every row.
-The control elements are basically buttons on which you can set the `onclick` handler and the icon name by passing an 
-array to the `controls` property. Hover the first cell and click on the button to change the boring text inside each 
-row.
+You can add buttons to the table which will always be prepended as the first cell in every row.
+You can set an `onclick` handler and the icon name of a button by passing an array of objects to the `buttons` prop
+like it is done in the example below. 
+Hover the first cell and click on the button to change the boring text inside each row.
 
 ```
 const Table = require('./Table').default;
@@ -123,9 +122,10 @@ initialState = {
     ],
 };
 
-const controls = [{
+const buttons = [{
     icon: 'heart',
     onClick: (rowId) => {
+        console.log(rowId);
         state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
         const newRows = state.rows;
 
@@ -135,15 +135,13 @@ const controls = [{
     },
 }];
 
-<Table controls={controls}>
+<Table buttons={buttons}>
     <Header>
-        <Row>
-            <HeaderCell>Column 1</HeaderCell>
-            <HeaderCell>Column 2</HeaderCell>
-            <HeaderCell>Column 3</HeaderCell>
-            <HeaderCell>Column 4</HeaderCell>
-            <HeaderCell>Column 5</HeaderCell>
-        </Row>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
+        <HeaderCell>Column 5</HeaderCell>
     </Header>
     <Body>
         {
@@ -194,12 +192,10 @@ const handleRowSelectionChange = (rowId) => {
 
 <Table selectMode="single" onRowSelectionChange={handleRowSelectionChange}>
     <Header>
-        <Row>
-            <HeaderCell>Column 1</HeaderCell>
-            <HeaderCell>Column 2</HeaderCell>
-            <HeaderCell>Column 3</HeaderCell>
-            <HeaderCell>Column 4</HeaderCell>
-        </Row>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
     </Header>
     <Body>
         {
@@ -270,17 +266,15 @@ const handleAllSelectionChange = (allSelected) => {
     onRowSelectionChange={handleRowSelectionChange}
     onAllSelectionChange={handleAllSelectionChange}>
     <Header>
-        <Row>
-            <HeaderCell>Column 1</HeaderCell>
-            <HeaderCell>Column 2</HeaderCell>
-            <HeaderCell>Column 3</HeaderCell>
-            <HeaderCell>Column 4</HeaderCell>
-            <HeaderCell>Column 5</HeaderCell>
-            <HeaderCell>Column 6</HeaderCell>
-            <HeaderCell>Column 7</HeaderCell>
-            <HeaderCell>Column 8</HeaderCell>
-            <HeaderCell>Column 9</HeaderCell>
-        </Row>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
+        <HeaderCell>Column 5</HeaderCell>
+        <HeaderCell>Column 6</HeaderCell>
+        <HeaderCell>Column 7</HeaderCell>
+        <HeaderCell>Column 8</HeaderCell>
+        <HeaderCell>Column 9</HeaderCell>
     </Header>
     <Body>
         {
@@ -344,11 +338,9 @@ const handleSortColumnA = () => {
 
 <Table>
     <Header>
-        <Row>
-            <HeaderCell onClick={handleSortColumnA} sortMode={state.sortMode}>Column 1</HeaderCell>
-            <HeaderCell>Column 2</HeaderCell>
-            <HeaderCell>Column 3</HeaderCell>
-        </Row>
+        <HeaderCell onClick={handleSortColumnA} sortMode={state.sortMode}>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
     </Header>
     <Body>
         {
@@ -367,3 +359,85 @@ const handleSortColumnA = () => {
     </Body>
 </Table>
 ```
+
+Here a more complex example of the Table component with most of its features:
+
+```
+const Table = require('./Table').default;
+const Header = require('./Header').default;
+const Body = require('./Body').default;
+const Row = require('./Row').default;
+const Cell = require('./Cell').default;
+const HeaderCell = require('./HeaderCell').default;
+
+initialState = {
+    rows: [1, 2, 3, 4, 5],
+    selectedRowIds: [],
+};
+
+function isSelected(rowId) {
+    return state.selectedRowIds.includes(rowId);
+}
+
+const handleRowSelectionChange = (rowId, checked) => {
+    if (checked) {
+        setState({
+            selectedRowIds: [...state.selectedRowIds, rowId],
+        });
+    } else {
+        setState({
+            selectedRowIds: state.selectedRowIds.filter((selectedRowId) => selectedRowId !== rowId),
+        });
+    }
+};
+
+const handleAllSelectionChange = (allSelected) => {
+    if (allSelected) {
+        setState({
+            selectedRowIds: [...state.rows],
+        });
+    } else {
+        setState({
+            selectedRowIds: [],
+        });
+    }
+};
+
+const buttons = [{
+    icon: 'pencil',
+    onClick: (rowId) => {
+        alert(`You selected the row with the id ${rowId}. Imagine you could edit this row now... Mind = blown!`);
+    },
+}];
+
+<Table 
+    selectMode="multiple"
+    buttons={buttons}
+    onRowSelectionChange={handleRowSelectionChange}
+    onAllSelectionChange={handleAllSelectionChange}>
+    <Header>
+        <HeaderCell>Column 1</HeaderCell>
+        <HeaderCell>Column 2</HeaderCell>
+        <HeaderCell>Column 3</HeaderCell>
+        <HeaderCell>Column 4</HeaderCell>
+    </Header>
+    <Body>
+        {
+            state.rows.map((rowId, index) => {
+                return (
+                    <Row 
+                        key={index}
+                        id={rowId}
+                        selected={isSelected(rowId)}>
+                        <Cell>Content 1</Cell>
+                        <Cell>Content 2</Cell>
+                        <Cell>Content 3</Cell>
+                        <Cell>Content 4</Cell>
+                    </Row>
+                )
+            })
+        }
+    </Body>
+</Table>
+```
+`

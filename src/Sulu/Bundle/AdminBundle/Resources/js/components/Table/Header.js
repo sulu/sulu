@@ -1,21 +1,24 @@
 // @flow
 import type {Element, ChildrenArray} from 'react';
 import React from 'react';
-import Icon from '../Icon';
 import Checkbox from '../Checkbox';
+import Icon from '../Icon';
 import HeaderCell from './HeaderCell';
-import Row from './Row';
-import type {ControlItems, ControlConfig, SelectMode} from './types';
+import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Row>>,
-    /** 
+    children: ChildrenArray<Element<typeof HeaderCell>>,
+    /**
+     * @ignore
      * List of buttons to apply action handlers to every row (e.g. edit row).
-     * The header will display the icons.
+     * The header will just display the icons.
      */
-    controls?: ControlItems,
-    /** Can be set to "single" or "multiple". Defaults is "none". */
+    buttons?: Array<ButtonConfig>,
+    /** 
+     * @ignore
+     * Can be set to "single" or "multiple". Defaults is "none". 
+     */
     selectMode?: SelectMode,
     /**
      * @ignore
@@ -41,23 +44,16 @@ export default class Header extends React.PureComponent<Props> {
         return this.props.selectMode === 'single';
     };
 
-    createHeaderRow = (originalRows: any) => {
-        const rows = React.Children.toArray(originalRows);
-
-        if (rows.length > 1) {
-            throw new Error(`Expected one row inside the header but found ${rows.length}`);
-        }
-
-        const {controls} = this.props;
-        const row = rows[0];
+    createHeader = (originalCells: any) => {
+        const {buttons} = this.props;
         const prependCells = [];
-        const cells = this.createHeaderCells(row.props.children);
+        const cells = this.createHeaderCells(originalCells);
 
-        if (controls && controls.length > 0) {
-            const controlCells = this.createHeaderControlCells();
+        if (buttons && buttons.length > 0) {
+            const buttonCells = this.createHeaderButtonCells();
 
-            if (controlCells) {
-                prependCells.push(...controlCells);
+            if (buttonCells) {
+                prependCells.push(...buttonCells);
             }
         }
 
@@ -69,42 +65,38 @@ export default class Header extends React.PureComponent<Props> {
 
         cells.unshift(...prependCells);
 
-        return React.cloneElement(
-            row,
-            {},
-            cells,
-        );
+        return cells;
     };
 
     createHeaderCells = (headerCells: any) => {
-        return React.Children.map(headerCells, (headerCell: Element<typeof HeaderCell>, index) => {
+        return React.Children.map(headerCells, (headerCell: any, index) => {
             const key = `header-${index}`;
 
             return React.cloneElement(
                 headerCell,
                 {
-                    key,
                     ...headerCell.props,
+                    key,
                 },
             );
         });
     };
 
-    createHeaderControlCells = () => {
-        const {controls} = this.props;
+    createHeaderButtonCells = () => {
+        const {buttons} = this.props;
 
-        if (!controls) {
+        if (!buttons) {
             return null;
         }
 
-        return controls.map((controlItem: ControlConfig, index: number) => {
-            const key = `header-control-${index}`;
+        return buttons.map((button: ButtonConfig, index: number) => {
+            const key = `header-button-${index}`;
 
             return (
                 <HeaderCell
                     key={key}
-                    isControl={true}>
-                    <Icon name={controlItem.icon} />
+                    className={tableStyles.headerButtonCell}>
+                    <Icon name={button.icon} />
                 </HeaderCell>
             );
         });
@@ -141,11 +133,13 @@ export default class Header extends React.PureComponent<Props> {
         const {
             children,
         } = this.props;
-        const cells = this.createHeaderRow(children);
+        const cells = this.createHeader(children);
 
         return (
             <thead className={tableStyles.header}>
-                {cells}
+                <tr>
+                    {cells}
+                </tr>
             </thead>
         );
     }

@@ -2,15 +2,15 @@
 
 $headerTextColor: $white;
 $headerCellBackgroundColor: $blueZodiac;
-$headerControlCellTextColor: rgba($silverChalice, .25);
-$headerControlCellBorderColor: rgba($silverChalice, .25);
+$headerButtonCellTextColor: rgba($silverChalice, .25);
+$headerButtonCellBorderColor: rgba($silverChalice, .25);
 $cellTextColor: $blueZodiac;
 $cellTextColorActive: $white;
 $cellBackgroundColor: $white;
 $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
-$controlCellBorderColor: $white;
+$buttonCellBorderColor: $white;
 $emptyMessageColor: $silver;
 
 .table {
@@ -73,9 +73,9 @@ $emptyMessageColor: $silver;
     padding-left: 10px;
 }
 
-.header-control-cell {
-    border-right: 1px solid $headerControlCellBorderColor;
-    color: $headerControlCellTextColor;
+.header-button-cell {
+    border-right: 1px solid $headerButtonCellBorderColor;
+    color: $headerButtonCellTextColor;
     text-align: center;
 }
 
@@ -89,7 +89,8 @@ $emptyMessageColor: $silver;
     }
 }
 
-.cell {
+.cell,
+.button-cell {
     margin: 0;
     padding: 9px 20px;
     font-size: 12px;
@@ -110,22 +111,22 @@ $emptyMessageColor: $silver;
     }
 
     &.small {
-        width: 1%;
+        width: 1px;
     }
 }
 
-.control-cell {
+.button-cell {
     padding: 0;
     background-color: $cellBackgroundColor;
     color: $cellTextColorActive;
     text-align: center;
-    width: 1%;
+    width: 1px;
 
     &:hover {
         button {
             visibility: visible;
             background-color: $cellBackgroundColorActive;
-            border-right: 1px solid $controlCellBorderColor;
+            border-right: 1px solid $buttonCellBorderColor;
         }
     }
 

@@ -6,34 +6,35 @@ import tableStyles from './table.scss';
 
 type Props = {
     children?: Node,
+    className?: string,
     /**
      * @ignore 
      * If set to true, the cell appears as a control-cell 
      */
     isControl?: boolean,
     /** If set to true, the cell will not stretch and stay at minimal width */
-    isSmall: boolean,
+    small: boolean,
     colspan?: number,
 };
 
 export default class Cell extends React.PureComponent<Props> {
     static defaultProps = {
-        isSmall: false,
+        small: false,
         isControl: false,
     };
 
     render() {
         const {
-            isSmall,
+            small,
             colspan,
             children,
-            isControl,
+            className,
         } = this.props;
         const cellClass = classNames(
+            className,
             tableStyles.cell,
             {
-                [tableStyles.controlCell]: isControl,
-                [tableStyles.small]: isSmall,
+                [tableStyles.small]: small,
             }
         );
 

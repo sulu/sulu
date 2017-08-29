@@ -14,11 +14,9 @@ test('Render the Table component', () => {
     expect(render(
         <Table>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -42,31 +40,27 @@ test('Render an empty table', () => {
     expect(render(
         <Table placeholderText={placeholderText}>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body></Body>
         </Table>
     )).toMatchSnapshot();
 });
 
-test('Render a table with control buttons', () => {
-    const controls = [{
+test('Render a table with buttons', () => {
+    const buttons = [{
         icon: 'pencil',
         onClick: jest.fn(),
     }];
 
     expect(render(
-        <Table controls={controls}>
+        <Table buttons={buttons}>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -79,21 +73,19 @@ test('Render a table with control buttons', () => {
     )).toMatchSnapshot();
 });
 
-test('Table controls should implement an onClick handler', () => {
+test('Table buttons should implement an onClick handler', () => {
     const onClickSpy = jest.fn();
-    const controls = [{
+    const buttons = [{
         icon: 'pencil',
         onClick: onClickSpy,
     }];
 
     const table = mount(
-        <Table controls={controls}>
+        <Table buttons={buttons}>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -106,7 +98,7 @@ test('Table controls should implement an onClick handler', () => {
     );
 
     expect(onClickSpy).toHaveBeenCalledTimes(0);
-    table.find('.controlCell > button').simulate('click');
+    table.find('.buttonCell > button').simulate('click');
     expect(onClickSpy).toHaveBeenCalledTimes(1);
 });
 
@@ -114,11 +106,9 @@ test('Render the Table component in single selection mode', () => {
     expect(render(
         <Table selectMode="single">
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -141,11 +131,9 @@ test('Clicking on the radio button should call onRowSelectionChange with the row
     const table = mount(
         <Table {...props}>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row id={rowId}>
@@ -166,11 +154,9 @@ test('Render the Table component in multiple selection mode', () => {
     expect(render(
         <Table selectMode="multiple">
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -194,11 +180,9 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
     const table = mount(
         <Table {...props}>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row id={rowIdOne}>
@@ -217,7 +201,7 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
 
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
 
-    const checkboxOne = table.find('Row').at(1).find('Checkbox input');
+    const checkboxOne = table.find('Row').at(0).find('Checkbox input');
     checkboxOne.get(0).checked = true;
 
     checkboxOne.simulate('change');
@@ -233,11 +217,9 @@ test('Clicking the select-all checkbox should call the onAllSelectionChange call
     const table = mount(
         <Table {...props}>
             <Header>
-                <Row>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>
@@ -249,7 +231,7 @@ test('Clicking the select-all checkbox should call the onAllSelectionChange call
         </Table>
     );
 
-    const allCheckbox = table.find('Row').at(0).find('Checkbox input');
+    const allCheckbox = table.find('Header').find('Checkbox input');
     allCheckbox.get(0).checked = true;
 
     allCheckbox.simulate('change');
@@ -262,13 +244,11 @@ test('Header cells with an attacked onClick handler should be clickable', () => 
     const table = mount(
         <Table>
             <Header>
-                <Row>
-                    <HeaderCell onClick={onClickSpy}>
-                        Column Title
-                    </HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                    <HeaderCell>Column Title</HeaderCell>
-                </Row>
+                <HeaderCell onClick={onClickSpy}>
+                    Column Title
+                </HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
                 <Row>

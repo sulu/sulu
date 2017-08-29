@@ -10,33 +10,28 @@ const DESCENDING_ICON = 'chevron-down';
 
 type Props = {
     children?: Node,
-    /**
-     * @ignore 
-     * If set to true, the cell appears as a header-control-cell
-     */
-    isControl?: boolean,
+    className?: string,
     /** Called when column was clicked */
     onClick?: () => void,
     /** If set, an indicator will show up */
-    sortMode: 'default' | 'ascending' | 'descending',
+    sortMode: 'none' | 'ascending' | 'descending',
 };
 
 export default class HeaderCell extends React.PureComponent<Props> {
     static defaultProps = {
-        isControl: false,
-        sortMode: 'default',
+        sortMode: 'none',
     };
 
     getSortModeIcon = () => {
         const {sortMode} = this.props;
 
         switch (sortMode) {
-        case 'ascending':
-            return (<Icon name={ASCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
-        case 'descending':
-            return (<Icon name={DESCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
-        default:
-            return null;
+            case 'ascending':
+                return (<Icon name={ASCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
+            case 'descending':
+                return (<Icon name={DESCENDING_ICON} className={tableStyles.headerCellSortIcon} />);
+            default:
+                return null;
         }
     };
 
@@ -50,12 +45,12 @@ export default class HeaderCell extends React.PureComponent<Props> {
         const {
             onClick,
             children,
-            isControl,
+            className,
         } = this.props;
         const headerCellClass = classNames(
+            className,
             tableStyles.headerCell,
             {
-                [tableStyles.headerControlCell]: isControl,
                 [tableStyles.clickable]: !!onClick,
             }
         );

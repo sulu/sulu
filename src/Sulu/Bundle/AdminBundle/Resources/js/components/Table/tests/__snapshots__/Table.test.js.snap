@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a table with control buttons 1`] = `
+exports[`Render a table with buttons 1`] = `
 <div
   class="tableContainer"
 >
@@ -10,11 +10,9 @@ exports[`Render a table with control buttons 1`] = `
     <thead
       class="header"
     >
-      <tr
-        class="row"
-      >
+      <tr>
         <th
-          class="headerCell headerControlCell"
+          class="headerButtonCell headerCell"
         >
           <span>
             <span
@@ -51,7 +49,7 @@ exports[`Render a table with control buttons 1`] = `
         class="row"
       >
         <td
-          class="cell controlCell"
+          class="buttonCell cell"
         >
           <button>
             <span
@@ -91,9 +89,7 @@ exports[`Render an empty table 1`] = `
     <thead
       class="header"
     >
-      <tr
-        class="row"
-      >
+      <tr>
         <th
           class="headerCell"
         >
@@ -145,9 +141,7 @@ exports[`Render the Table component 1`] = `
     <thead
       class="header"
     >
-      <tr
-        class="row"
-      >
+      <tr>
         <th
           class="headerCell"
         >
@@ -225,9 +219,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
     <thead
       class="header"
     >
-      <tr
-        class="row"
-      >
+      <tr>
         <th
           class="headerCell"
         >
@@ -320,9 +312,7 @@ exports[`Render the Table component in single selection mode 1`] = `
     <thead
       class="header"
     >
-      <tr
-        class="row"
-      >
+      <tr>
         <th
           class="headerCell"
         >

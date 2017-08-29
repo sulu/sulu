@@ -1,12 +1,11 @@
 // @flow
-import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import type {Element} from 'react';
 import Icon from '../Icon';
 import Header from './Header';
 import Body from './Body';
-import type {ControlItems, SelectMode, TableChildren} from './types';
+import type {ButtonConfig, SelectMode, TableChildren} from './types';
 import tableStyles from './table.scss';
 
 const PLACEHOLDER_ICON = 'battery-quarter';
@@ -14,7 +13,7 @@ const PLACEHOLDER_ICON = 'battery-quarter';
 type Props = {
     children: TableChildren,
     /** List of buttons to apply action handlers to every row (e.g. edit row) */
-    controls?: ControlItems,
+    buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
     selectMode?: SelectMode,
     /** 
@@ -34,59 +33,59 @@ export default class Table extends React.PureComponent<Props> {
         selectMode: 'none',
     };
 
-    @observable allSelected = false;
-
-    @action setAllSelected = (allSelected: boolean) => {
-        this.allSelected = allSelected;
-    };
-
     getTableComponents = (children: TableChildren) => {
         let body;
         let header;
 
-        React.Children.forEach(children, (child: any) => {
+        React.Children.forEach(children, (child: Element<typeof Header | typeof Body>) => {
             const {name} = child.type;
 
             switch (name) {
-            case Header.name:
-                header = this.cloneHeader(child);
-                break;
-            case Body.name:
-                body = this.cloneBody(child);
-                break;
-            default:
-                throw new Error(
-                    'The Table component only accepts the following children types: ' +
-                    [Header.name, Body.name].join(', ')
-                );
+                case Header.name:
+                    header = child;
+                    break;
+                case Body.name:
+                    body = child;
+                    break;
+                default:
+                    throw new Error(
+                        'The Table component only accepts the following children types: ' +
+                        [Header.name, Body.name].join(', ')
+                    );
             }
         });
 
         return {body, header};
     };
 
-    cloneHeader = (originalHeader: Element<typeof Header>) => {
+    cloneHeader = (originalHeader: any, allSelected: boolean) => {
         return React.cloneElement(
             originalHeader,
             {
-                allSelected: this.allSelected,
-                controls: this.props.controls,
+                allSelected: allSelected,
+                buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
                 onAllSelectionChange: this.handleAllSelectionChange,
             }
         );
     };
 
-    cloneBody = (originalBody: Element<typeof Body>) => {
+    cloneBody = (originalBody: any) => {
         return React.cloneElement(
             originalBody,
             {
-                controls: this.props.controls,
+                buttons: this.props.buttons,
                 selectMode: this.props.selectMode,
                 onRowSelectionChange: this.handleRowSelectionChange,
-                onAllRowsSelectedChange: this.setAllSelected,
             }
         );
+    };
+
+    checkAllRowsSelected = (body: any) => {
+        const rows = body.props.children;
+        const rowSelections = React.Children.map(rows, (row) => row.props.selected);
+
+        return !rowSelections.includes(false);
     };
 
     createTablePlaceholderArea = () => {
@@ -119,15 +118,18 @@ export default class Table extends React.PureComponent<Props> {
     render() {
         const {children} = this.props;
         const {body, header} = this.getTableComponents(children);
-        const rowsCount = (body) ? React.Children.count(body.props.children) : 0;
+        const clonedBody = this.cloneBody(body);
+        const emptyBody = (body && React.Children.count(body.props.children) === 0) ?  true : false;
+        const allRowsSelected = (!emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
+        const clonedHeader = this.cloneHeader(header, allRowsSelected);
 
         return (
             <div className={tableStyles.tableContainer}>
                 <table className={tableStyles.table}>
-                    {header}
-                    {body}
+                    {clonedHeader}
+                    {clonedBody}
                 </table>
-                {!rowsCount &&
+                {emptyBody &&
                     this.createTablePlaceholderArea()
                 }
             </div>
