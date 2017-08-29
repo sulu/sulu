@@ -20,11 +20,15 @@ class Form extends React.PureComponent<ViewProps> {
         const schema = {
             title: {
                 label: 'Title',
-                type: 'text',
+                type: 'text_line',
             },
             url: {
                 label: 'URL',
-                type: 'text',
+                type: 'text_line',
+            },
+            important: {
+                label: 'Important?',
+                type: 'checkbox',
             },
         };
 

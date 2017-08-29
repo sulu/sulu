@@ -7,6 +7,7 @@ import {useStrict} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeStore} from './services/Router';
 import {setTranslations} from './services/Translator';
+import Checkbox from './components/Checkbox';
 import Input from './components/Input';
 import Application from './containers/Application';
 import {fieldStore} from './containers/Form';
@@ -23,7 +24,8 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 viewStore.add('sulu_admin.list', List);
 viewStore.add('sulu_admin.form', Form);
 
-fieldStore.add('text', Input);
+fieldStore.add('text_line', Input);
+fieldStore.add('checkbox', Checkbox);
 
 function startApplication() {
     const router = new Router(createHistory());
