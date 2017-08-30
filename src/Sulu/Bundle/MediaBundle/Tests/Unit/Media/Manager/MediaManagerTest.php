@@ -228,7 +228,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
 
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
-        $fileVersion->getMeta()->willReturn($fileVersionMeta);
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
 
         $media = $this->prophesize(Media::class);
         $media->getCollection()->willReturn($collection);
