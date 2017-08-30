@@ -1,5 +1,5 @@
 // @flow
-import type {Element, ChildrenArray} from 'react';
+import type {ChildrenArray} from 'react';
 import React from 'react';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
@@ -8,7 +8,7 @@ import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof HeaderCell>>,
+    children: ChildrenArray<*>,
     /**
      * @ignore
      * List of buttons to apply action handlers to every row (e.g. edit row).
@@ -17,7 +17,7 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** 
      * @ignore
-     * Can be set to "single" or "multiple". Defaults is "none". 
+     * Can be set to "single" or "multiple". Default is "none". 
      */
     selectMode?: SelectMode,
     /**
@@ -44,7 +44,7 @@ export default class Header extends React.PureComponent<Props> {
         return this.props.selectMode === 'single';
     };
 
-    createHeader = (originalCells: any) => {
+    createHeader = (originalCells: ChildrenArray<*>) => {
         const {buttons} = this.props;
         const prependCells = [];
         const cells = this.createHeaderCells(originalCells);
@@ -68,8 +68,8 @@ export default class Header extends React.PureComponent<Props> {
         return cells;
     };
 
-    createHeaderCells = (headerCells: any) => {
-        return React.Children.map(headerCells, (headerCell: any, index) => {
+    createHeaderCells = (headerCells: ChildrenArray<*>) => {
+        return React.Children.map(headerCells, (headerCell, index) => {
             const key = `header-${index}`;
 
             return React.cloneElement(

@@ -1,17 +1,17 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import type {Element} from 'react';
+import type {ChildrenArray, Element} from 'react';
 import Icon from '../Icon';
 import Header from './Header';
 import Body from './Body';
-import type {ButtonConfig, SelectMode, TableChildren} from './types';
+import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 const PLACEHOLDER_ICON = 'battery-quarter';
 
 type Props = {
-    children: TableChildren,
+    children: ChildrenArray<Element<typeof Header | typeof Body>>,
     /** List of buttons to apply action handlers to every row (e.g. edit row) */
     buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
@@ -33,32 +33,11 @@ export default class Table extends React.PureComponent<Props> {
         selectMode: 'none',
     };
 
-    getTableComponents = (children: TableChildren) => {
-        let body;
-        let header;
+    cloneHeader = (originalHeader?: any, allSelected: boolean) => {
+        if (!originalHeader) {
+            return null;
+        }
 
-        React.Children.forEach(children, (child: Element<typeof Header | typeof Body>) => {
-            const {name} = child.type;
-
-            switch (name) {
-                case Header.name:
-                    header = child;
-                    break;
-                case Body.name:
-                    body = child;
-                    break;
-                default:
-                    throw new Error(
-                        'The Table component only accepts the following children types: ' +
-                        [Header.name, Body.name].join(', ')
-                    );
-            }
-        });
-
-        return {body, header};
-    };
-
-    cloneHeader = (originalHeader: any, allSelected: boolean) => {
         return React.cloneElement(
             originalHeader,
             {
@@ -70,7 +49,11 @@ export default class Table extends React.PureComponent<Props> {
         );
     };
 
-    cloneBody = (originalBody: any) => {
+    cloneBody = (originalBody?: any) => {
+        if (!originalBody) {
+            return null;
+        }
+
         return React.cloneElement(
             originalBody,
             {
@@ -117,7 +100,27 @@ export default class Table extends React.PureComponent<Props> {
 
     render() {
         const {children} = this.props;
-        const {body, header} = this.getTableComponents(children);
+        let body;
+        let header;
+
+        React.Children.forEach(children, (child: Element<typeof Header | typeof Body>) => {
+            const {name} = child.type;
+
+            switch (name) {
+                case Header.name:
+                    header = child;
+                    break;
+                case Body.name:
+                    body = child;
+                    break;
+                default:
+                    throw new Error(
+                        'The Table component only accepts the following children types: ' +
+                        [Header.name, Body.name].join(', ')
+                    );
+            }
+        });
+
         const clonedBody = this.cloneBody(body);
         const emptyBody = (body && React.Children.count(body.props.children) === 0) ?  true : false;
         const allRowsSelected = (!emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;

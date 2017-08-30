@@ -1,13 +1,39 @@
 // @flow
 import React from 'react';
+import type {ChildrenArray} from 'react';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
-import type {ButtonConfig, RowProps} from './types';
+import type {ButtonConfig, SelectMode} from './types';
 import Cell from './Cell';
 import ButtonCell from './ButtonCell';
 import tableStyles from './table.scss';
 
-export default class Row extends React.PureComponent<RowProps> {
+type Props = {
+    children: ChildrenArray<*>,
+    /** The index of the row inside the body */
+    rowIndex: number,
+    /** The id will be used to mark the selected row inside the onRowSelection callback. */
+    id?: string | number,
+    /** 
+     * @ignore 
+     * List of buttons to apply action handlers to every row (e.g. edit row) forwarded from table body 
+     */
+    buttons?: Array<ButtonConfig>,
+    /**
+     * @ignore
+     * Can be set to "single" or "multiple". Defaults is "none".
+     */
+    selectMode?: SelectMode,
+    /** If set to true the row is selected */
+    selected?: boolean,
+    /** 
+     * @ignore 
+     * Callback function to notify about the selected row(s)
+     */
+    onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
+};
+
+export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
         rowIndex: 0,
@@ -21,7 +47,7 @@ export default class Row extends React.PureComponent<RowProps> {
         return this.props.selectMode === 'single';
     };
 
-    createCells = (cells: any) => {
+    createCells = (cells: ChildrenArray<*>) => {
         const {buttons} = this.props;
         const prependedCells = [];
 
@@ -46,7 +72,7 @@ export default class Row extends React.PureComponent<RowProps> {
         return clonedCells;
     };
 
-    cloneCells = (originalCells: any) => {
+    cloneCells = (originalCells: ChildrenArray<*>) => {
         const {rowIndex} = this.props;
 
         return React.Children.map(originalCells, (cell, index) => {
@@ -119,14 +145,14 @@ export default class Row extends React.PureComponent<RowProps> {
     };
 
     handleSingleSelectionChange = (rowId?: string | number) => {
-        if (this.props.onSingleSelectionChange && rowId) {
-            this.props.onSingleSelectionChange(rowId);
+        if (this.props.onSelectionChange && rowId) {
+            this.props.onSelectionChange(rowId);
         }
     };
 
     handleMultipleSelectionChange = (checked: boolean, rowId?: string | number) => {
-        if (this.props.onMultipleSelectionChange && rowId) {
-            this.props.onMultipleSelectionChange(checked, rowId);
+        if (this.props.onSelectionChange && rowId) {
+            this.props.onSelectionChange(rowId, checked);
         }
     };
 

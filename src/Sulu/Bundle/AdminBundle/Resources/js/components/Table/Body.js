@@ -1,11 +1,10 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
+import type {ChildrenArray} from 'react';
 import React from 'react';
-import Row from './Row';
 import type {ButtonConfig, SelectMode} from './types';
 
 type Props = {
-    children?: ChildrenArray<Element<typeof Row>>,
+    children?: ChildrenArray<*>,
     /** 
      * @ignore 
      * List of buttons to apply action handlers to every row (e.g. edit row) forwarded from table 
@@ -28,7 +27,7 @@ export default class Body extends React.PureComponent<Props> {
         selectMode: 'none',
     };
 
-    cloneRows = (originalRows: any) => {
+    cloneRows = (originalRows: ChildrenArray<*>) => {
         const {buttons, selectMode} = this.props;
         return React.Children.map(originalRows, (row, index) => {
             return React.cloneElement(
@@ -39,22 +38,15 @@ export default class Body extends React.PureComponent<Props> {
                     rowIndex: index,
                     buttons: buttons,
                     selectMode: selectMode,
-                    onSingleSelectionChange: this.handleRowSingleSelectionChange,
-                    onMultipleSelectionChange: this.handleRowMultipleSelectionChange,
+                    onSelectionChange: this.handleRowSelectionChange,
                 },
             );
         });
     };
 
-    handleRowSingleSelectionChange = (rowId: string | number) => {
+    handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
         if (this.props.onRowSelectionChange) {
-            this.props.onRowSelectionChange(rowId);
-        }
-    };
-
-    handleRowMultipleSelectionChange = (checked: boolean, rowId: string | number) => {
-        if (this.props.onRowSelectionChange) {
-            this.props.onRowSelectionChange(rowId, checked);
+            this.props.onRowSelectionChange(rowId, selected);
         }
     };
 
