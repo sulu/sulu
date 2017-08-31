@@ -1,64 +1,105 @@
 // @flow
-import type {ChildrenArray, Element, ElementRef} from 'react';
+import type {ChildrenArray, Node, ElementRef} from 'react';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import MasonryLayout from 'masonry-layout';
-import MasonryItem from './MasonryItem';
 import masonryStyles from './masonry.scss';
 
-const masonryDefaultOptions = {
-    horizontalOrder: true,
-    itemSelector: 'li',
-    transitionDuration: 250,
-    columnWidth: 200,
-    gutter: 10,
-};
-
 type Props = {
-    children?: any,
+    children?: ChildrenArray<*>,
+    /** Called when an item gets selected or deselected */
+    onItemClick?: (rowId: string | number) => void,
+    /** Called when an item gets selected or deselected */
+    onItemSelectionChange?: (rowId: string | number, checked: boolean) => void,
+    /** 
+     * Specifies which child elements will be used as item elements in the layout. 
+     * Should always be set cause of performance reasons. 
+     */
+    itemSelector?: string,
+    /** The time it takes for every animation. Set to "0" to disable animations */
+    transitionDuration: number,
+    /** Adds horizontal space between item. To set vertical space between elements, use margin in CSS */
+    gutter: number,
 };
 
 export default class Masonry extends React.PureComponent<Props> {
-    elementRef: ElementRef<'ul'>;
+    static defaultProps = {
+        gutter: 15,
+        transitionDuration: 250,
+    };
+
+    elementRef: ElementRef<'div'>;
 
     masonry: MasonryLayout;
 
-    latestKnownChildNodes: Element<'li'>;
+    latestKnownChildNodes: Node[];
 
     componentDidMount() {
         this.initMasonryLayout();
     }
 
     componentWillUnmount() {
-        this.latestKnownChildNodes = null;
+        this.latestKnownChildNodes = [];
 
-        if (this.masonry) {
-            this.masonry.destroy();
-
-            this.masonry = null;
-        }
+        this.destroyMasonry();
     }
 
     componentDidUpdate() {
         const currentChildNodes = this.getChildNodes();
-        const knownChildNodes = [];
-        const newChildNodes = [];
 
-        currentChildNodes.forEach((childNode) => {
-            if (this.latestKnownChildNodes.includes(childNode)) {
-                knownChildNodes.push(childNode);
-            } else {
-                newChildNodes.push(childNode);
-            }
+        const knownChildNodes = currentChildNodes.filter((currentChildNode) => {
+            return this.latestKnownChildNodes.includes(currentChildNode);
         });
 
-        this.masonry.appended(newChildNodes);
+        const newChildNodes = currentChildNodes.filter((currentChildNode) => {
+            return !knownChildNodes.includes(currentChildNode);
+        });
+
+        const removedChildNodes = knownChildNodes.filter((knownChildNode) => {
+            return !currentChildNodes.includes(knownChildNode);
+        });
+
+        let beginningIndex = 0;
+        const prependedChildNodes = newChildNodes.filter((newChildNode) => {
+            const isPrepended = (beginningIndex === currentChildNodes.indexOf(newChildNode));
+
+            if (isPrepended) {
+                beginningIndex++;
+            }
+
+            return isPrepended;
+        });
+
+        const appendedChildNodes = newChildNodes.filter((newChildNode) => {
+            return !prependedChildNodes.includes(newChildNode);
+        });
+
+        if (removedChildNodes.length > 0) {
+            this.masonry.remove(removedChildNodes);
+            this.masonry.reloadItems();
+        }
+
+        if (appendedChildNodes.length > 0) {
+            this.masonry.appended(appendedChildNodes);
+            this.masonry.reloadItems();
+
+            if (prependedChildNodes.length === 0) {
+                this.masonry.reloadItems();
+            }
+        }
+
+        if (prependedChildNodes.length > 0) {
+            this.masonry.prepended(prependedChildNodes);
+            this.masonry.reloadItems();
+        }
 
         this.latestKnownChildNodes = currentChildNodes;
 
-        this.masonry.reloadItems();
         this.masonry.layout();
     }
+
+    setLayoutElementRef = (ref: ElementRef<'ul'>) => {
+        this.elementRef = ref;
+    };
 
     getChildNodes() {
         const containerNode = this.elementRef;
@@ -67,28 +108,58 @@ export default class Masonry extends React.PureComponent<Props> {
         return Array.from(childNodes);
     }
 
-    cloneItems(originalItems: any) {
-        return React.Children.map(originalItems, (item, index) => {
-            return React.cloneElement(
-                item,
-                {
-                    key: index,
-                },
-            );
-        });
-    }
-
     initMasonryLayout() {
+        const {
+            gutter,
+            itemSelector,
+            transitionDuration,
+        } = this.props;
+        const options = {
+            gutter,
+            itemSelector,
+            transitionDuration,
+            horizontalOrder: true,
+        };
+
         this.masonry = new MasonryLayout(
             this.elementRef,
-            masonryDefaultOptions,
+            options,
         );
 
         this.latestKnownChildNodes = this.getChildNodes();
     }
 
-    setLayoutElementRef = (ref: ElementRef<'ul'>) => {
-        this.elementRef = ref;
+    destroyMasonry() {
+        if (this.masonry) {
+            this.masonry.destroy();
+
+            this.masonry = null;
+        }
+    }
+
+    cloneItems(originalItems: any) {
+        return React.Children.map(originalItems, (item) => {
+            return React.cloneElement(
+                item,
+                {
+                    key: item.key,
+                    onClick: this.handleItemClick,
+                    onSelectionChange: this.handleItemSelect,
+                },
+            );
+        });
+    }
+
+    handleItemClick = (itemId: string | number) => {
+        if (this.props.onItemClick) {
+            this.props.onItemClick(itemId);
+        }
+    };
+
+    handleItemSelect = (itemId: string | number, checked: boolean) => {
+        if (this.props.onItemSelectionChange) {
+            this.props.onItemSelectionChange(itemId, checked);
+        }
     };
 
     render() {
@@ -98,11 +169,11 @@ export default class Masonry extends React.PureComponent<Props> {
         const clonedItems = this.cloneItems(children);
 
         return (
-            <ul
+            <div
                 ref={this.setLayoutElementRef}
                 className={masonryStyles.masonry}>
                 {clonedItems}
-            </ul>
+            </div>
         );
     }
 }
