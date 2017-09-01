@@ -5,20 +5,11 @@ import type {ButtonConfig, SelectMode} from './types';
 
 type Props = {
     children?: ChildrenArray<*>,
-    /** 
-     * @ignore 
-     * List of buttons to apply action handlers to every row (e.g. edit row) forwarded from table 
-     */
+    /** @ignore */
     buttons?: Array<ButtonConfig>,
-    /**
-     * @ignore
-     * Can be set to "single" or "multiple". Defaults is "none".
-     */
+    /** @ignore */
     selectMode?: SelectMode,
-    /** 
-     * @ignore 
-     * Callback function to notify about selection and deselection of a row
-     */
+    /** @ignore */
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
 };
 

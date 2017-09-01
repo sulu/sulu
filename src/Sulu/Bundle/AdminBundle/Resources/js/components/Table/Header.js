@@ -11,20 +11,12 @@ type Props = {
     children: ChildrenArray<*>,
     /**
      * @ignore
-     * List of buttons to apply action handlers to every row (e.g. edit row).
      * The header will just display the icons.
      */
     buttons?: Array<ButtonConfig>,
-    /** 
-     * @ignore
-     * Can be set to "single" or "multiple". Default is "none". 
-     */
+    /** @ignore */
     selectMode?: SelectMode,
-    /**
-     * @ignore
-     * Called when the "select all" checkbox was clicked. The checkbox only shows up on "selectMode: 'multiple'"
-     * Returns the checked state.
-     */
+    /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
     /** If true the "select all" checkbox is checked. */
     allSelected?: boolean,

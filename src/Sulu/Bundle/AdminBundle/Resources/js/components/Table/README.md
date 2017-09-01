@@ -125,7 +125,6 @@ initialState = {
 const buttons = [{
     icon: 'heart',
     onClick: (rowId) => {
-        console.log(rowId);
         state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
         const newRows = state.rows;
 

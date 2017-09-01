@@ -7,11 +7,6 @@ import tableStyles from './table.scss';
 type Props = {
     children?: Node,
     className?: string,
-    /**
-     * @ignore 
-     * If set to true, the cell appears as a control-cell 
-     */
-    isControl?: boolean,
     /** If set to true, the cell will not stretch and stay at minimal width */
     small: boolean,
     colspan?: number,
@@ -20,7 +15,6 @@ type Props = {
 export default class Cell extends React.PureComponent<Props> {
     static defaultProps = {
         small: false,
-        isControl: false,
     };
 
     render() {

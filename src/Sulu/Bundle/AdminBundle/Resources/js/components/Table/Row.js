@@ -14,22 +14,13 @@ type Props = {
     rowIndex: number,
     /** The id will be used to mark the selected row inside the onRowSelection callback. */
     id?: string | number,
-    /** 
-     * @ignore 
-     * List of buttons to apply action handlers to every row (e.g. edit row) forwarded from table body 
-     */
+    /** @ignore */
     buttons?: Array<ButtonConfig>,
-    /**
-     * @ignore
-     * Can be set to "single" or "multiple". Defaults is "none".
-     */
+    /** @ignore */
     selectMode?: SelectMode,
     /** If set to true the row is selected */
     selected?: boolean,
-    /** 
-     * @ignore 
-     * Callback function to notify about the selected row(s)
-     */
+    /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
 };
 
