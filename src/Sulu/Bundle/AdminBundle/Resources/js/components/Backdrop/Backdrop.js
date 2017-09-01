@@ -5,9 +5,9 @@ import React from 'react';
 import backdropStyles from './backdrop.scss';
 
 type Props = {
-    isOpen: boolean,
+    open: boolean,
     /** When set to false the backdrop renders transparent. */
-    isVisible: boolean,
+    visible: boolean,
     /** If true, the backdrop gets rendered in the placed element and not in the body. */
     local: boolean,
     onClick?: () => void,
@@ -15,8 +15,8 @@ type Props = {
 
 export default class Backdrop extends React.PureComponent<Props> {
     static defaultProps = {
-        isOpen: true,
-        isVisible: true,
+        open: true,
+        visible: true,
         local: false,
     };
 
@@ -28,17 +28,21 @@ export default class Backdrop extends React.PureComponent<Props> {
 
     render() {
         const {
-            isOpen,
-            isVisible,
+            open,
+            visible,
         } = this.props;
-        const backdropClasses = classNames({
-            [backdropStyles.backdrop]: true,
-            [backdropStyles.isVisible]: isVisible,
-        });
-        const backdrop = <div onClick={this.handleClick} className={backdropClasses} />;
+        const backdropClass = classNames(
+            backdropStyles.backdrop,
+            {
+                [backdropStyles.visible]: visible,
+            }
+        );
+        const backdrop = <div onClick={this.handleClick} className={backdropClass} />;
+
         if (this.props.local) {
             return backdrop;
         }
-        return <Portal isOpened={isOpen}>{backdrop}</Portal>;
+
+        return <Portal isOpened={open}>{backdrop}</Portal>;
     }
 }

@@ -35,12 +35,12 @@ $buttonActiveBackgroundColor: $wildSand;
 
     &:not(:disabled) {
         &:hover,
-        &.is-active {
+        &.active {
             color: $buttonTextColorActive;
             background-color: $buttonActiveBackgroundColor;
         }
 
-        &.is-active {
+        &.active {
             z-index: 2;
         }
     }

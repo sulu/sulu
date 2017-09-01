@@ -27,7 +27,7 @@ afterEach(() => document.body.innerHTML = '');
 test('The list should render in body when open', () => {
     const body = document.body;
     const view = mount(
-        <OverlayList isOpen={true}>
+        <OverlayList open={true}>
             <Option value="option-1">My option 1</Option>
             <Option value="option-2">My option 2</Option>
             <Option value="option-3">My option 3</Option>
@@ -40,7 +40,7 @@ test('The list should render in body when open', () => {
 test('The list should not render in body when not open', () => {
     const body = document.body;
     const view = mount(
-        <OverlayList isOpen={false}>
+        <OverlayList open={false}>
             <Option value="option-1">My option 1</Option>
             <Option value="option-2">My option 2</Option>
             <Option value="option-3">My option 3</Option>
@@ -53,7 +53,7 @@ test('The list should not render in body when not open', () => {
 test('The list should request to be closed when the backdrop is clicked', () => {
     const onCloseSpy = jest.fn();
     const list = shallow(
-        <OverlayList isOpen={true} onClose={onCloseSpy}>
+        <OverlayList open={true} onClose={onCloseSpy}>
             <Option value="option-1">My option 1</Option>
         </OverlayList>
     );
@@ -66,7 +66,7 @@ test('The list should request to be closed when the window is blurred', () => {
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
     const onCloseSpy = jest.fn();
     mount(
-        <OverlayList isOpen={true} onClose={onCloseSpy}>
+        <OverlayList open={true} onClose={onCloseSpy}>
             <Option value="option-1">My option 1</Option>
         </OverlayList>
     ).render();
@@ -78,7 +78,7 @@ test('The list should request to be closed when the window is blurred', () => {
 test('The list should take its dimensions from the positioner', () => {
     const body = document.body;
     const list = mount(
-        <OverlayList isOpen={true}>
+        <OverlayList open={true}>
             <Option value="option-1">My option 1</Option>
         </OverlayList>
     );

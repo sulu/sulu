@@ -10,18 +10,14 @@ import dropdownStyles from './dropdown.scss';
 
 @observer
 export default class Dropdown extends React.PureComponent<DropdownProps> {
-    @observable isOpen = false;
-
-    @action open = () => {
-        this.isOpen = true;
-    };
+    @observable open = false;
 
     @action close = () => {
-        this.isOpen = false;
+        this.open = false;
     };
 
     @action toggle = () => {
-        this.isOpen = !this.isOpen;
+        this.open = !this.open;
     };
 
     componentWillReceiveProps = (nextProps: DropdownProps) => {
@@ -54,22 +50,24 @@ export default class Dropdown extends React.PureComponent<DropdownProps> {
             options,
             disabled,
         } = this.props;
-        const dropdownClasses = classNames({
-            [dropdownStyles.dropdown]: true,
-            [dropdownStyles[size]]: size,
-        });
+        const dropdownClass = classNames(
+            dropdownStyles.dropdown,
+            {
+                [dropdownStyles[size]]: size,
+            }
+        );
 
         return (
-            <div className={dropdownClasses}>
+            <div className={dropdownClass}>
                 <Button
                     icon={icon}
                     size={size}
                     disabled={disabled}
                     value={label}
                     onClick={this.handleButtonClick}
-                    isActive={this.isOpen}
+                    active={this.open}
                     hasOptions={true} />
-                {this.isOpen &&
+                {this.open &&
                     <OptionList
                         options={options}
                         onOptionClick={this.handleOptionListClick}

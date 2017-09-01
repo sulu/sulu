@@ -12,7 +12,7 @@ import type {OverlayListDimensions, SelectChildren} from './types';
 import OverlayListPositioner from './OverlayListPositioner';
 
 type Props = {
-    isOpen: boolean,
+    open: boolean,
     children: SelectChildren,
     onClose?: () => void,
     /** The top coordinate relative to which the list will be positioned */
@@ -30,7 +30,7 @@ type Props = {
 @observer
 export default class OverlayList extends React.PureComponent<Props> {
     static defaultProps = {
-        isOpen: false,
+        open: false,
         centeredChildIndex: 0,
         anchorTop: 0,
         anchorLeft: 0,
@@ -41,7 +41,7 @@ export default class OverlayList extends React.PureComponent<Props> {
     @observable scrollHeight: number;
     @observable scrollWidth: number;
     @observable centeredChildRelativeTop: number;
-    @observable isVisible: boolean = false;
+    @observable visible: boolean = false;
     list: ElementRef<'ul'>;
     scrollTop: number;
 
@@ -60,8 +60,8 @@ export default class OverlayList extends React.PureComponent<Props> {
     }
 
     @action componentWillReceiveProps(newProps: Props) {
-        if (this.props.isOpen && !newProps.isOpen) {
-            this.isVisible = false;
+        if (this.props.open && !newProps.open) {
+            this.visible = false;
         }
     }
 
@@ -74,7 +74,7 @@ export default class OverlayList extends React.PureComponent<Props> {
     }
 
     close = () => {
-        if (this.props.isOpen && this.props.onClose) {
+        if (this.props.open && this.props.onClose) {
             this.props.onClose();
         }
     };
@@ -95,7 +95,7 @@ export default class OverlayList extends React.PureComponent<Props> {
         afterElementsRendered(action(() => {
             if (option) {
                 this.centeredChildRelativeTop = option.getOffsetTop();
-                this.isVisible = true;
+                this.visible = true;
             }
         }));
     };
@@ -114,7 +114,8 @@ export default class OverlayList extends React.PureComponent<Props> {
 
     render() {
         let style = {opacity: '0'};
-        if (this.isVisible) {
+
+        if (this.visible) {
             const dimensions = this.dimensions;
             style = OverlayListPositioner.dimensionsToStyle(dimensions);
             this.scrollTop = dimensions.scrollTop;
@@ -122,7 +123,7 @@ export default class OverlayList extends React.PureComponent<Props> {
 
         return (
             <div>
-                <Portal isOpened={this.props.isOpen}>
+                <Portal isOpened={this.props.open}>
                     <div className={overlayListStyles.container}>
                         <ul
                             ref={this.readOffsetDimensions}
@@ -132,7 +133,7 @@ export default class OverlayList extends React.PureComponent<Props> {
                         </ul>
                     </div>
                 </Portal>
-                <Backdrop isVisible={false} isOpen={this.props.isOpen} onClick={this.handleBackropClick} />
+                <Backdrop visible={false} open={this.props.open} onClick={this.handleBackropClick} />
             </div>
         );
     }
@@ -155,6 +156,7 @@ export default class OverlayList extends React.PureComponent<Props> {
                 props.focus = focus;
                 focus = false;
             }
+
             return React.cloneElement(child, props);
         });
     }

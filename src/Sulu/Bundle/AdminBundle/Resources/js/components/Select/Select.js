@@ -12,10 +12,12 @@ type Props = SelectProps & {
 export default class Select extends React.PureComponent<Props> {
     get displayValue(): string {
         let displayValue = '';
+
         React.Children.forEach(this.props.children, (child: any) => {
             if (child.type !== Option) {
                 return;
             }
+
             if (!displayValue || this.props.value === child.props.value) {
                 displayValue = child.props.children;
             }

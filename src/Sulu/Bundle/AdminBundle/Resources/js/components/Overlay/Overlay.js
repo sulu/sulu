@@ -19,7 +19,7 @@ type Props = {
     actions: Array<Action>,
     confirmText: string,
     onConfirm: () => void,
-    isOpen: boolean,
+    open: boolean,
     onClose: () => void,
 };
 
@@ -28,16 +28,16 @@ const CLOSE_ICON = 'times';
 @observer
 export default class Overlay extends React.PureComponent<Props> {
     static defaultProps = {
-        isOpen: false,
+        open: false,
         actions: [],
     };
 
-    @observable isVisible: boolean = false;
-    @observable isOpenHasChanged: boolean = false;
+    @observable visible: boolean = false;
+    @observable openHasChanged: boolean = false;
 
     @action componentWillMount() {
         Mousetrap.bind('esc', this.close);
-        this.isOpenHasChanged = this.props.isOpen;
+        this.openHasChanged = this.props.open;
     }
 
     componentWillUnmount() {
@@ -49,7 +49,7 @@ export default class Overlay extends React.PureComponent<Props> {
     }
 
     @action componentWillReceiveProps(newProps: Props) {
-        this.isOpenHasChanged = newProps.isOpen !== this.props.isOpen;
+        this.openHasChanged = newProps.open !== this.props.open;
     }
 
     componentDidUpdate() {
@@ -62,15 +62,15 @@ export default class Overlay extends React.PureComponent<Props> {
 
     @action toggle() {
         afterElementsRendered(action(() => {
-            if (this.isOpenHasChanged) {
-                this.isVisible = this.props.isOpen;
+            if (this.openHasChanged) {
+                this.visible = this.props.open;
             }
         }));
     }
 
     @action handleTransitionEnd = () => {
         afterElementsRendered(action(() => {
-            this.isOpenHasChanged = false;
+            this.openHasChanged = false;
         }));
     };
 
@@ -79,14 +79,24 @@ export default class Overlay extends React.PureComponent<Props> {
     };
 
     render() {
-        const containerClass = classNames({
-            [overlayStyles.container]: true,
-            [overlayStyles.isDown]: this.isVisible,
-        });
-        const {isOpen, title, actions, onConfirm, confirmText, children} = this.props;
+        const {
+            open,
+            title,
+            actions,
+            onClose,
+            children,
+            onConfirm,
+            confirmText,
+        } = this.props;
+        const containerClass = classNames(
+            overlayStyles.container,
+            {
+                [overlayStyles.isDown]: this.visible,
+            }
+        );
 
         return (
-            <Portal isOpened={isOpen || this.isOpenHasChanged}>
+            <Portal isOpened={open || this.openHasChanged}>
                 <div
                     className={containerClass}
                     onTransitionEnd={this.handleTransitionEnd}>
@@ -108,7 +118,7 @@ export default class Overlay extends React.PureComponent<Props> {
                             </footer>
                         </section>
                     </div>
-                    <Backdrop local={true} onClick={this.props.onClose} />
+                    <Backdrop local={true} onClick={onClose} />
                 </div>
             </Portal>
         );

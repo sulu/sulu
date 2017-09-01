@@ -37,7 +37,7 @@ test('Render button with a prepended icon', () => {
 });
 
 test('Render an active button', () => {
-    expect(render(<Button isActive={true} />)).toMatchSnapshot();
+    expect(render(<Button active={true} />)).toMatchSnapshot();
 });
 
 test('Click on button does not fire onClick callback if button is disabled', () => {

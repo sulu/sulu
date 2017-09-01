@@ -21,7 +21,7 @@ exports[`The component should render in body when open 2`] = `
         </footer>
       </section>
     </div>
-    <div class=\\"backdrop isVisible\\"></div>
+    <div class=\\"backdrop visible\\"></div>
   </div>
 </div>"
 `;
@@ -48,7 +48,7 @@ exports[`The component should render in body with actions when open 2`] = `
         </footer>
       </section>
     </div>
-    <div class=\\"backdrop isVisible\\"></div>
+    <div class=\\"backdrop visible\\"></div>
   </div>
 </div>"
 `;

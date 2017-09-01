@@ -19,11 +19,14 @@ export default class MultiSelect extends React.PureComponent<Props> {
     get displayValue(): string {
         let selectedValues = [];
         let countOptions = 0;
+
         React.Children.forEach(this.props.children, (child: any) => {
             if (child.type !== Option) {
                 return;
             }
+
             countOptions += 1;
+
             if (this.isOptionSelected(child)) {
                 selectedValues.push(child.props.children);
             }
@@ -32,6 +35,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
         if (selectedValues.length === 0) {
             return this.props.noneSelectedText;
         }
+
         if (selectedValues.length === countOptions) {
             return this.props.allSelectedText;
         }
@@ -46,11 +50,13 @@ export default class MultiSelect extends React.PureComponent<Props> {
     handleSelect = (value: string) => {
         const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
+
         if (index === -1) {
             newValues.push(value);
         } else {
             newValues.splice(index, 1);
         }
+
         this.props.onChange(newValues);
     };
 

@@ -36,17 +36,19 @@ export default class OptionList extends React.PureComponent<Props> {
             value,
             options,
         } = this.props;
-        const optionListClasses = classNames({
-            [optionListStyles.optionList]: true,
-            [optionListStyles[size]]: size,
-        });
+        const optionListClass = classNames(
+            optionListStyles.optionList,
+            {
+                [optionListStyles[size]]: size,
+            }
+        );
 
         return (
             <div>
-                <ul className={optionListClasses}>
+                <ul className={optionListClass}>
                     {
                         options.map((option, index: number) => {
-                            const isSelected = option.value ? option.value === value : false;
+                            const selected = option.value ? option.value === value : false;
 
                             return (
                                 <Option
@@ -55,13 +57,13 @@ export default class OptionList extends React.PureComponent<Props> {
                                     value={option}
                                     label={option.label}
                                     disabled={option.disabled}
-                                    selected={isSelected}
+                                    selected={selected}
                                     onClick={this.handleOptionClick} />
                             );
                         })
                     }
                 </ul>
-                <Backdrop isOpen={true} onClick={this.handleBackdropClick} isVisible={false} />
+                <Backdrop open={true} onClick={this.handleBackdropClick} visible={false} />
             </div>
         );
     }

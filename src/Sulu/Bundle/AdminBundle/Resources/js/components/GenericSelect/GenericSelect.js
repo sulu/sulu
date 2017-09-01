@@ -25,31 +25,41 @@ export default class GenericSelect extends React.PureComponent<Props> {
     };
 
     displayValue: ?ElementRef<typeof DisplayValue>;
+
     centeredChildIndex: number;
-    @observable isOpen: boolean;
+
+    @observable open: boolean;
 
     @action openList = () => {
         this.centeredChildIndex = this.getCenteredChildIndex();
-        this.isOpen = true;
+        this.open = true;
     };
 
     @action closeList = () => {
-        this.isOpen = false;
+        this.open = false;
     };
 
     handleOptionClick = (value: string) => {
         this.props.onSelect(value);
+
         if (this.props.closeOnSelect) {
             this.closeList();
         }
     };
 
     handleDisplayValueClick = this.openList;
+
     handleListClose = this.closeList;
-    setDisplayValue = (displayValue: ?ElementRef<typeof DisplayValue>) => this.displayValue = displayValue;
+
+    setDisplayValue = (displayValue: ?ElementRef<typeof DisplayValue>) => {
+        this.displayValue = displayValue;
+    };
 
     render() {
-        const {icon, displayValue} = this.props;
+        const {
+            icon,
+            displayValue,
+        } = this.props;
         const displayValueDimensions = this.displayValue ? this.displayValue.getDimensions() : {};
         const listChildren = this.renderListChildren();
 
@@ -66,7 +76,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     anchorLeft={displayValueDimensions.left}
                     anchorWidth={displayValueDimensions.width}
                     anchorHeight={displayValueDimensions.height}
-                    isOpen={this.isOpen}
+                    open={this.open}
                     centeredChildIndex={this.centeredChildIndex}
                     onClose={this.handleListClose}>
                     {listChildren}
@@ -84,11 +94,13 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     selectedVisualization: this.props.selectedVisualization,
                 });
             }
+
             if (child.type === Action) {
                 child = React.cloneElement(child, {
                     afterAction: this.closeList,
                 });
             }
+
             return child;
         });
     }
@@ -97,6 +109,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
         const index = React.Children.toArray(this.props.children).findIndex(
             (child: any) => child.type === Option && this.props.isOptionSelected(child)
         );
+
         return index === -1 ? 0 : index;
     }
 }

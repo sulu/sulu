@@ -11,12 +11,16 @@ export default function withContainerSize(Component: ComponentType<*>, container
     @observer
     class WithContainerSizeComponent extends React.Component<*> {
         component: Element<*>;
+
         container: HTMLElement;
+
         @observable containerWidth: number = 0;
+
         @observable containerHeight: number = 0;
 
         componentDidMount() {
             window.addEventListener('resize', this.handleWindowResize);
+
             if (typeof this.component.containerDidMount === 'function') {
                 afterElementsRendered(this.component.containerDidMount);
             }
@@ -30,6 +34,7 @@ export default function withContainerSize(Component: ComponentType<*>, container
             if (!container) {
                 return;
             }
+
             afterElementsRendered(action(() => {
                 this.container = container;
                 this.containerWidth = container.clientWidth;
@@ -37,7 +42,10 @@ export default function withContainerSize(Component: ComponentType<*>, container
             }));
         };
 
-        setComponent = (component: Element<*>) => this.component = component;
+        setComponent = (component: Element<*>) => {
+            this.component = component;
+        };
+
         handleWindowResize = () => this.readContainerDimensions(this.container);
 
         render() {
