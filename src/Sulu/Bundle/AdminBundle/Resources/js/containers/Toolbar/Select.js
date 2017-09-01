@@ -10,18 +10,14 @@ import selectStyles from './select.scss';
 
 @observer
 export default class Select extends React.PureComponent<SelectProps> {
-    @observable isOpen: boolean = false;
-
-    @action open = () => {
-        this.isOpen = true;
-    };
+    @observable open: boolean = false;
 
     @action close = () => {
-        this.isOpen = false;
+        this.open = false;
     };
 
     @action toggle = () => {
-        this.isOpen = !this.isOpen;
+        this.open = !this.open;
     };
 
     @computed get selectedOption(): ?Object {
@@ -60,22 +56,24 @@ export default class Select extends React.PureComponent<SelectProps> {
             disabled,
         } = this.props;
         const buttonValue = this.selectedOption ? this.selectedOption.label : label;
-        const selectClasses = classNames({
-            [selectStyles.select]: true,
-            [selectStyles[size]]: size,
-        });
+        const selectClass = classNames(
+            selectStyles.select,
+            {
+                [selectStyles[size]]: size,
+            }
+        );
 
         return (
-            <div className={selectClasses}>
+            <div className={selectClass}>
                 <Button
                     icon={icon}
                     size={size}
                     disabled={disabled}
                     value={buttonValue}
                     onClick={this.handleButtonClick}
-                    isActive={this.isOpen}
+                    active={this.open}
                     hasOptions={true} />
-                {this.isOpen &&
+                {this.open &&
                     <OptionList
                         size={size}
                         value={value}

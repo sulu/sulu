@@ -26,17 +26,21 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
     render() {
         const {icon, onClick, children} = this.props;
-        const displayValueClass = classNames({
-            [displayValueStyles.displayValue]: true,
-            [displayValueStyles.hasIcon]: !!icon,
-        });
+        const displayValueClass = classNames(
+            displayValueStyles.displayValue,
+            {
+                [displayValueStyles.hasIcon]: !!icon,
+            }
+        );
 
         return (
             <button
                 ref={this.setButton}
                 onClick={onClick}
                 className={displayValueClass}>
-                {icon ? <Icon className={displayValueStyles.frontIcon} name={icon} /> : null}
+                {!!icon &&
+                    <Icon className={displayValueStyles.frontIcon} name={icon} />
+                }
                 <CroppedText>{children}</CroppedText>
                 <Icon className={displayValueStyles.toggle} name={TOGGLE_ICON} />
             </button>

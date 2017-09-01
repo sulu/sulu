@@ -12,10 +12,10 @@ type Props = {
 export default class Icon extends React.PureComponent<Props> {
     render() {
         const {className, name, onClick} = this.props;
-        const classes = classNames(className, 'fa', 'fa-' + name);
+        const iconClass = classNames(className, 'fa', 'fa-' + name);
 
         return (
-            <span className={classes} aria-hidden={true} onClick={onClick} />
+            <span className={iconClass} aria-hidden={true} onClick={onClick} />
         );
     }
 }

@@ -8,7 +8,7 @@ export type Button = {
     icon?: string,
     size?: string,
     disabled?: boolean,
-    isActive?: boolean,
+    active?: boolean,
     hasOptions?: boolean,
 };
 

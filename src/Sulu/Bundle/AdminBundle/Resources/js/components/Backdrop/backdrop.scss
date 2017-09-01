@@ -10,7 +10,7 @@ $backdropBackground: rgba($dustyGray, .9);
     height: 100%;
     background: transparent;
 
-    &.is-visible {
+    &.visible {
         background: $backdropBackground;
     }
 }

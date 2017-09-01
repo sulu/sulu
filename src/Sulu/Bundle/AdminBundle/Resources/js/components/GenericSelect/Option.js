@@ -43,10 +43,12 @@ export default class Option extends React.PureComponent<Props> {
     };
 
     setItem = (item: ElementRef<'li'>) => this.item = item;
+
     setButton = (button: ElementRef<'button'>) => {
         if (!button) {
             return;
         }
+
         if (this.props.focus) {
             afterElementsRendered(() => {
                 button.focus();
@@ -55,12 +57,19 @@ export default class Option extends React.PureComponent<Props> {
     };
 
     render() {
-        const {selected, selectedVisualization, disabled, children} = this.props;
-        const optionClass = classNames({
-            [optionStyles.option]: true,
-            [optionStyles[selectedVisualization]]: true,
-            [optionStyles.selected]: selected,
-        });
+        const {
+            selected,
+            children,
+            disabled,
+            selectedVisualization,
+        } = this.props;
+        const optionClass = classNames(
+            optionStyles.option,
+            optionStyles[selectedVisualization],
+            {
+                [optionStyles.selected]: selected,
+            },
+        );
 
         return (
             <li ref={this.setItem}>

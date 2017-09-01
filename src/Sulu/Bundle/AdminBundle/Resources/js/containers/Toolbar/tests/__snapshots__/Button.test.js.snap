@@ -2,7 +2,7 @@
 
 exports[`Render an active button 1`] = `
 <button
-  class="button isActive"
+  class="button active"
 />
 `;
 

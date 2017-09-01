@@ -138,6 +138,7 @@ export class RectangleSelection extends React.PureComponent<Props> {
 
     render() {
         let backdropSize = 0;
+
         if (this.props.containerHeight && this.props.containerWidth) {
             backdropSize = Math.max(this.props.containerHeight, this.props.containerWidth);
         }

@@ -29,14 +29,16 @@ export default class Option extends React.PureComponent<Props> {
             selected,
             disabled,
         } = this.props;
-        const optionClasses = classNames({
-            [optionStyles.option]: true,
-            [optionStyles[size]]: size,
-            [optionStyles.isSelected]: selected,
-        });
+        const optionClass = classNames(
+            optionStyles.option,
+            {
+                [optionStyles[size]]: size,
+                [optionStyles.isSelected]: selected,
+            }
+        );
 
         return (
-            <li className={optionClasses}>
+            <li className={optionClass}>
                 <button
                     disabled={disabled}
                     onClick={this.handleOnClick}>
