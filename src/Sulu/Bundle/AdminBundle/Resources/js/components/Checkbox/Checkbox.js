@@ -8,6 +8,7 @@ import checkboxStyles from './checkbox.scss';
 type Props = SwitchProps & {
     skin: 'dark' | 'light',
     className?: string,
+    onChange?: (checked: boolean, value?: string | number) => void,
 };
 
 const CHECKED_ICON = 'check';

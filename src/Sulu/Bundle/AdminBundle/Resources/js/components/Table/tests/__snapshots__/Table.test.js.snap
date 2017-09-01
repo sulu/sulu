@@ -1,71 +1,383 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render the Table component 1`] = `
-<table
-  class="table"
+exports[`Render a table with buttons 1`] = `
+<div
+  class="tableContainer"
 >
-  <thead
-    class="header"
+  <table
+    class="table"
   >
-    <tr
-      class="row"
+    <thead
+      class="header"
     >
-      <th
-        class="headerCell"
+      <tr>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
       >
-        Column Title
-      </th>
-      <th
-        class="headerCell"
-      >
-        Column Title
-      </th>
-      <th
-        class="headerCell"
-      >
-        Column Title
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr
-      class="row"
+        <td
+          class="buttonCell cell"
+        >
+          <button>
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </button>
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render an empty table 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
     >
-      <td
-        class="cell"
-      >
-        Column Text
-      </td>
-      <td
-        class="cell"
-      >
-        Column Text
-      </td>
-      <td
-        class="cell"
-      >
-        Column Text
-      </td>
-    </tr>
-    <tr
-      class="row"
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+  <div
+    class="tablePlaceholderArea"
+  >
+    <span
+      aria-hidden="true"
+      class="tablePlaceholderIcon fa fa-battery-quarter"
+    />
+    <div
+      class="tablePlaceholderText"
     >
-      <td
-        class="cell"
+      No entries
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render the Table component 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-      <td
-        class="cell"
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-      <td
-        class="cell"
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render the Table component in multiple selection mode 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox light"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span />
+              </span>
+            </label>
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
       >
-        Column Text
-      </td>
-    </tr>
-  </tbody>
-</table>
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render the Table component in single selection mode 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span />
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch radio dark"
+            >
+              <input
+                type="radio"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+        <td
+          class="cell"
+        >
+          Column Text
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 `;

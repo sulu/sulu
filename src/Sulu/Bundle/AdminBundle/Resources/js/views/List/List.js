@@ -82,17 +82,15 @@ class List extends React.PureComponent<*> {
                 <a href="#/snippets/123">To the Form</a>
                 <Table>
                     <Header>
-                        <Row>
-                            {
-                                this.tableData.header.map((headerCell, index) => {
-                                    return (
-                                        <HeaderCell key={index}>
-                                            {headerCell}
-                                        </HeaderCell>
-                                    );
-                                })
-                            }
-                        </Row>
+                        {
+                            this.tableData.header.map((headerCell, index) => {
+                                return (
+                                    <HeaderCell key={index}>
+                                        {headerCell}
+                                    </HeaderCell>
+                                );
+                            })
+                        }
                     </Header>
                     <Body>
                         {

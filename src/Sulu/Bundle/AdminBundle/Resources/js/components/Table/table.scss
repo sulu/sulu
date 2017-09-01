@@ -2,18 +2,23 @@
 
 $headerTextColor: $white;
 $headerCellBackgroundColor: $blueZodiac;
+$headerButtonCellTextColor: rgba($silverChalice, .25);
+$headerButtonCellBorderColor: rgba($silverChalice, .25);
 $cellTextColor: $blueZodiac;
 $cellTextColorActive: $white;
 $cellBackgroundColor: $white;
 $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
+$buttonCellBorderColor: $white;
+$emptyMessageColor: $silver;
 
 .table {
     border-collapse: separate;
     border-spacing: 0 5px;
     margin: -5px 0;
     overflow: hidden;
+    min-width: 100%;
 }
 
 .header {
@@ -26,7 +31,6 @@ $cellBackgroundColorActive: $shakespeare;
 
 .header-cell {
     padding: 20px;
-    text-align: center;
     font-size: 12px;
     font-weight: normal;
     background-color: $headerCellBackgroundColor;
@@ -38,6 +42,22 @@ $cellBackgroundColorActive: $shakespeare;
     &:last-child {
         border-radius: 0 3px 3px 0;
     }
+
+    &.clickable {
+        padding: 0;
+
+        & > button {
+            height: 60px;
+            padding: 20px;
+            color: inherit;
+            border: none;
+            background: none;
+
+            &:not(:disabled) {
+                cursor: pointer;
+            }
+        }
+    }
 }
 
 .cell,
@@ -46,6 +66,17 @@ $cellBackgroundColorActive: $shakespeare;
     text-overflow: ellipsis;
     overflow: hidden;
     max-width: 250px;
+    text-align: left;
+}
+
+.header-cell-sort-icon {
+    padding-left: 10px;
+}
+
+.header-button-cell {
+    border-right: 1px solid $headerButtonCellBorderColor;
+    color: $headerButtonCellTextColor;
+    text-align: center;
 }
 
 .row {
@@ -58,10 +89,10 @@ $cellBackgroundColorActive: $shakespeare;
     }
 }
 
-.cell {
+.cell,
+.button-cell {
     margin: 0;
-    padding: 9px;
-    text-align: center;
+    padding: 9px 20px;
     font-size: 12px;
     border-width: 1px 0;
     border-style: solid;
@@ -78,4 +109,50 @@ $cellBackgroundColorActive: $shakespeare;
         border-radius: 0 3px 3px 0;
         border-right-width: 1px;
     }
+
+    &.small {
+        width: 1px;
+    }
+}
+
+.button-cell {
+    padding: 0;
+    background-color: $cellBackgroundColor;
+    color: $cellTextColorActive;
+    text-align: center;
+    width: 1px;
+
+    &:hover {
+        button {
+            visibility: visible;
+            background-color: $cellBackgroundColorActive;
+            border-right: 1px solid $buttonCellBorderColor;
+        }
+    }
+
+    button {
+        visibility: hidden;
+        width: 55px;
+        height: 38px;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        background-color: transparent;
+    }
+}
+
+.table-placeholder-area {
+    color: $emptyMessageColor;
+    text-align: center;
+    padding: 40px;
+}
+
+.table-placeholder-icon {
+    font-size: 38px;
+}
+
+.table-placeholder-text {
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: bold;
 }

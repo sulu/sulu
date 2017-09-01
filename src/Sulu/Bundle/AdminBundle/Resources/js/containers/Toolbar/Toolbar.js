@@ -23,14 +23,14 @@ function getItemComponentByType(type, itemConfig) {
     let item;
 
     switch (type) {
-    case ToolbarItemTypes.Select:
-        item = (<Select {...itemConfig} />);
-        break;
-    case ToolbarItemTypes.Dropdown:
-        item = (<Dropdown {...itemConfig} />);
-        break;
-    default:
-        item = (<Button {...itemConfig} />);
+        case ToolbarItemTypes.Select:
+            item = (<Select {...itemConfig} />);
+            break;
+        case ToolbarItemTypes.Dropdown:
+            item = (<Dropdown {...itemConfig} />);
+            break;
+        default:
+            item = (<Button {...itemConfig} />);
     }
 
     return () => item;
