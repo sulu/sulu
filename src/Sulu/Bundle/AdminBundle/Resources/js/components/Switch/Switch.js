@@ -35,7 +35,7 @@ export default class Switch extends React.PureComponent<Props> {
         } = this.props;
         const switchClass = classNames(
             switchStyles.switch,
-            className
+            className,
         );
 
         return (
