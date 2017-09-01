@@ -55,7 +55,7 @@ export default class Switch extends React.PureComponent<Props> {
                     </span>
                 </span>
                 {children &&
-                    <span>{children}</span>
+                    <div>{children}</div>
                 }
             </label>
         );

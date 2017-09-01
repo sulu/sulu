@@ -26,6 +26,16 @@ initialState = {
     ]
 };
 
+const createItems = () => {
+    let id = Date.now();
+
+    return [
+        { id: id + 1, size: '260/190', title: 'Hey guys, wazup?' },
+        { id: id + 2, size: '260/210', title: 'I am a new Item :)' },
+        { id: id + 3, size: '260/230', title: 'Mee toooo :*' },
+    ];
+};
+
 const isSelected = (id) => {
     return state.selectedIds.includes(id);
 };
@@ -48,23 +58,52 @@ const handleItemClick = (id) => {
     alert(`You clicked me and my id is "${id}"`);
 };
 
-<Masonry
-    onItemSelectionChange={handleItemSelectionChange}
-    onItemClick={handleItemClick}>
-    {
-        state.items.map((item) => {
-            return (
-                <MasonryMediaItem
-                    key={item.id}
-                    id={item.id}
-                    icon="heart"
-                    selected={isSelected(item.id)}
-                    metaInfo={item.meta}
-                    mediaTitle={item.title}>
-                    <img src={`http://lorempixel.com/${item.size}`} />
-                </MasonryMediaItem>
-            )
-        })
-    }
-</Masonry>
+const prepend = () => {
+    state.items.unshift(...(createItems()));
+
+    setState({
+        items: state.items,
+    });
+};
+
+const append = () => {
+    state.items.push(...(createItems()));
+
+    setState({
+        items: state.items,
+    });
+};
+
+const remove = () => {
+    setState({
+        items: state.items.filter((item, index) => index !== 3),
+    });
+};
+
+<div>
+    <div style={{marginBottom: 30}}>
+        <button onClick={() => prepend()}>Prepend</button>        
+        <button onClick={() => append()}>Append</button>
+        <button onClick={() => remove()}>Remove</button>
+    </div>
+    <Masonry
+        onItemSelectionChange={handleItemSelectionChange}
+        onItemClick={handleItemClick}>
+        {
+            state.items.map((item) => {
+                return (
+                    <MasonryMediaItem
+                        key={item.id}
+                        id={item.id}
+                        icon="heart"
+                        selected={isSelected(item.id)}
+                        metaInfo={item.meta}
+                        mediaTitle={item.title}>
+                        <img src={`http://lorempixel.com/${item.size}`} />
+                    </MasonryMediaItem>
+                )
+            })
+        }
+    </Masonry>
+</div>
 ```
