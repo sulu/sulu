@@ -20,7 +20,7 @@ const onConfirm = () => {
         actions={actions}
         confirmText="Apply"
         onConfirm={onConfirm}
-        isOpen={state.open}>
+        open={state.open}>
         <div style={{width: '900px', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <img src="http://www.nyan.cat/cats/original.gif" />
         </div>
