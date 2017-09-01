@@ -1,6 +1,7 @@
 // @flow
 import type {ChildrenArray, Node, ElementRef} from 'react';
 import React from 'react';
+import imagesLoaded from 'imagesloaded';
 import MasonryLayout from 'masonry-layout';
 import masonryStyles from './masonry.scss';
 
@@ -35,6 +36,7 @@ export default class Masonry extends React.PureComponent<Props> {
 
     componentDidMount() {
         this.initMasonryLayout();
+        this.handleImagesLoading();
     }
 
     componentWillUnmount() {
@@ -44,57 +46,8 @@ export default class Masonry extends React.PureComponent<Props> {
     }
 
     componentDidUpdate() {
-        const currentChildNodes = this.getChildNodes();
-
-        const knownChildNodes = currentChildNodes.filter((currentChildNode) => {
-            return this.latestKnownChildNodes.includes(currentChildNode);
-        });
-
-        const newChildNodes = currentChildNodes.filter((currentChildNode) => {
-            return !knownChildNodes.includes(currentChildNode);
-        });
-
-        const removedChildNodes = knownChildNodes.filter((knownChildNode) => {
-            return !currentChildNodes.includes(knownChildNode);
-        });
-
-        let beginningIndex = 0;
-        const prependedChildNodes = newChildNodes.filter((newChildNode) => {
-            const isPrepended = (beginningIndex === currentChildNodes.indexOf(newChildNode));
-
-            if (isPrepended) {
-                beginningIndex++;
-            }
-
-            return isPrepended;
-        });
-
-        const appendedChildNodes = newChildNodes.filter((newChildNode) => {
-            return !prependedChildNodes.includes(newChildNode);
-        });
-
-        if (removedChildNodes.length > 0) {
-            this.masonry.remove(removedChildNodes);
-            this.masonry.reloadItems();
-        }
-
-        if (appendedChildNodes.length > 0) {
-            this.masonry.appended(appendedChildNodes);
-            this.masonry.reloadItems();
-
-            if (prependedChildNodes.length === 0) {
-                this.masonry.reloadItems();
-            }
-        }
-
-        if (prependedChildNodes.length > 0) {
-            this.masonry.prepended(prependedChildNodes);
-            this.masonry.reloadItems();
-        }
-
-        this.latestKnownChildNodes = currentChildNodes;
-
-        this.masonry.layout();
+        this.handleChildrenUpdates();
+        this.handleImagesLoading();
     }
 
     setLayoutElementRef = (ref: ElementRef<'ul'>) => {
@@ -148,6 +101,64 @@ export default class Masonry extends React.PureComponent<Props> {
                 },
             );
         });
+    }
+
+    handleChildrenUpdates() {
+        const currentChildNodes = this.getChildNodes();
+        const knownChildNodes = currentChildNodes.filter((currentChildNode) => {
+            return this.latestKnownChildNodes.includes(currentChildNode);
+        });
+
+        const newChildNodes = currentChildNodes.filter((currentChildNode) => {
+            return !knownChildNodes.includes(currentChildNode);
+        });
+
+        const removedChildNodes = knownChildNodes.filter((knownChildNode) => {
+            return !currentChildNodes.includes(knownChildNode);
+        });
+
+        let beginningIndex = 0;
+        const prependedChildNodes = newChildNodes.filter((newChildNode) => {
+            const isPrepended = (beginningIndex === currentChildNodes.indexOf(newChildNode));
+
+            if (isPrepended) {
+                beginningIndex++;
+            }
+
+            return isPrepended;
+        });
+
+        const appendedChildNodes = newChildNodes.filter((newChildNode) => {
+            return !prependedChildNodes.includes(newChildNode);
+        });
+
+        if (removedChildNodes.length > 0) {
+            this.masonry.remove(removedChildNodes);
+            this.masonry.reloadItems();
+        }
+
+        if (appendedChildNodes.length > 0) {
+            this.masonry.appended(appendedChildNodes);
+            this.masonry.reloadItems();
+
+            if (prependedChildNodes.length === 0) {
+                this.masonry.reloadItems();
+            }
+        }
+
+        if (prependedChildNodes.length > 0) {
+            this.masonry.prepended(prependedChildNodes);
+            this.masonry.reloadItems();
+        }
+
+        this.latestKnownChildNodes = currentChildNodes;
+
+        this.masonry.layout();
+    }
+
+    handleImagesLoading() {
+        imagesLoaded(this.latestKnownChildNodes)
+            .once('always', () => this.masonry.layout());
     }
 
     handleItemClick = (itemId: string | number) => {

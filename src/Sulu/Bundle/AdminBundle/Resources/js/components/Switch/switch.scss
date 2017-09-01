@@ -6,10 +6,12 @@ $marginBottom: 10px;
     align-items: center;
     cursor: pointer;
 
-    & > span:nth-child(2) {
-        display: block;
-        margin-left: 10px;
+    & > div {
         font-size: $fontSize;
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     & + .label {
@@ -20,6 +22,7 @@ $marginBottom: 10px;
 .switch {
     display: inline-block;
     position: relative;
+    flex-shrink: 0;
 
     input {
         position: absolute;

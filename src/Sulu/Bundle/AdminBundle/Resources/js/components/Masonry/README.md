@@ -1,96 +1,70 @@
-```
-const MasonryItem = require('../MasonryMediaItem').default;
+The Masonry component just serves as a container. It simplifies the management of the items inside by providing
+handlers for selection and clicking on items. The children of the Masonry could be any kind of React component. 
+The only requirement for the Masonry to work correctly is that every child needs a unique invariable `key`, which
+disqualifies the `index` argument inside a `map` callback. It is recommended that the Prop types of the items
+are intersection types which use the `MasonryItem` type defined inside the `types.js` file of the Masonry component.
 
-function createChildren(rnd) {
-    return [
-        {
-            id: rnd + 1,
-            text: `Erfan ${rnd}`
-        },
-        {
-            id: rnd + 2,
-            text: `Alex ${rnd}`
-        },
-        {
-            id: rnd + 3,
-            text: `Daniel ${rnd}`
-        }
-    ];
-}
+Here a basic example of the Masonry view using the `MasonryMediaIte` component as a child.
+
+```
+const MasonryMediaItem = require('../MasonryMediaItem').default;
 
 initialState = {
-    show: true,
-    showPrepend: false,
-    prepended: [],
-    items: createChildren(1, 100),
+    selectedIds: [],
+    items: [
+        { id: 1, size: '260/350', title: 'This is a boring title', meta: 'bo and ring' },
+        { id: 2, size: '260/260', title: 'Is this one better?', meta: 'No' },
+        { id: 3, size: '260/300', title: 'But now!', meta: 'Hmm, not sure' },
+        { id: 4, size: '260/260', title: 'You want to have a fight?', meta: 'Come at me!' },
+        { id: 5, size: '260/380', title: 'LOL', meta: 'Yea, I thought so' },
+        { id: 6, size: '260/200', title: 'Now back to the Masonry', meta: ':)' },
+        { id: 7, size: '260/400', title: 'This is an image', meta: 'You are so smart' },
+        { id: 8, size: '260/180', title: 'This image has meta info', meta: 'No' },
+        { id: 9, size: '260/250', title: 'Dude, cmon', meta: 'NO' },
+        { id: 10, size: '260/200', title: 'Pls, you are embarrassing me', meta: 'Ugh, ok' },
+        { id: 11, size: '260/150', title: 'An image', meta: 'image/png, 3,2 MB' },
+    ]
 };
 
-function getRandom(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-prependItems = () => {
-    state.items.unshift(...(createChildren(getRandom(1, 100))));
-    setState({
-        items: state.items,
-    });
+const isSelected = (id) => {
+    return state.selectedIds.includes(id);
 };
 
-prependOne = () => {
-    state.items.unshift({
-        id: getRandom(1, 100),
-        text: `Alex One`
-    });
+const handleItemSelectionChange = (id, checked) => {
+    if (checked) {
+        state.selectedIds.push(id);
 
-    setState({
-        items: state.items,
-    });
-};
-
-appendItems = () => {
-    setState({
-        items: state.items.concat(createChildren(getRandom(1, 100))),
-    });
-};
-
-removeItems = () => {
-    state.items.splice(3, 3);
-
-    setState({
-        items: state.items,
-    });
-};
-
-editItem = () => {
-    state.items[3].text = 'Lorem dipsum bkds sds dfsds das d asdasdasd asd sad, Lorem dipsum bkds sds dfsds das d asdasdasd asd sad';
-
-    setState({
-        items: state.items,
-    });
-};
-
-<div>
-    <button onClick={() => setState({ show: !state.show })}>Toggle visibility</button>
-    <button onClick={() => prependItems()}>Prepend items</button>
-    <button onClick={() => appendItems()}>Append items</button>    
-    <button onClick={() => prependOne()}>Prepend</button>
-    <button onClick={() => editItem()}>Edit Item</button> 
-    <button onClick={() => removeItems()}>Remove Items</button>     
-
-    {state.show &&
-        <Masonry>
-            {
-                state.items.map((content) => {
-                    return (
-                        <MasonryItem key={content.id}>
-                            <div>
-                                {content.text}
-                            </div>
-                        </MasonryItem>
-                    );
-                })
-            }
-        </Masonry>
+        setState({
+            selectedIds: state.selectedIds,
+        });
+    } else {
+        setState({
+            selectedIds: state.selectedIds.filter((selectedId) => selectedId !== id)
+        });
     }
-</div>
+};
+
+const handleItemClick = (id) => {
+    alert(`You clicked me and my id is "${id}"`);
+};
+
+<Masonry
+    onItemSelectionChange={handleItemSelectionChange}
+    onItemClick={handleItemClick}>
+    {
+        state.items.map((item) => {
+            return (
+                <MasonryMediaItem
+                    key={item.id}
+                    id={item.id}
+                    icon="heart"
+                    selected={isSelected(item.id)}
+                    metaInfo={item.meta}
+                    mediaTitle={item.title}>
+                    <img src={`http://lorempixel.com/${item.size}`} />
+                </MasonryMediaItem>
+            )
+        })
+    }
+</Masonry>
 ```
