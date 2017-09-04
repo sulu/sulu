@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #TODO [SnippetBundle]           Fixed snippet areas with uppercases
+    * HOTFIX      #3504 [SnippetBundle]           Fixed snippet areas with uppercases
     * HOTFIX      #3501 [AdminBundle]             Updated husky to avoid html/js injection
     * HOTFIX      #3492 [ContentBundle]           Fixed smart-content categories load
 

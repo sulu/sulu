@@ -42,6 +42,14 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
                 'de' => 'Test Homepage DE',
             ],
         ],
+        'testCase' => [
+            'key' => 'testCase',
+            'template' => 'test',
+            'title' => [
+                'en' => 'Test Case EN',
+                'de' => 'Test Case DE',
+            ],
+        ],
     ];
 
     public function saveDataProvider()
@@ -55,6 +63,10 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
             ['sulu_io', 'de', 'test', 'test_homepage', '123-123-123', false],
             ['sulu_io', 'de', 'test', 'test_homepage', '123-123-123', true, false],
             ['sulu_io', 'de', 'test', 'test_homepage', '123-123-123', false, false],
+            ['sulu_io', 'de', 'test', 'testCase', '123-123-123'],
+            ['sulu_io', 'de', 'test', 'testCase', '123-123-123', false],
+            ['sulu_io', 'de', 'test', 'testCase', '123-123-123', true, false],
+            ['sulu_io', 'de', 'test', 'testCase', '123-123-123', false, false],
         ];
     }
 
