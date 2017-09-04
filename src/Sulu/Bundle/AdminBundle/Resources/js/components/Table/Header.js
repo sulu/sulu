@@ -61,7 +61,7 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createHeaderCells = (headerCells: ChildrenArray<Element<typeof HeaderCell>>) => {
-        return React.Children.map(headerCells, (headerCell: any, index) => {
+        return React.Children.map(headerCells, (headerCell, index) => {
             const key = `header-${index}`;
 
             return React.cloneElement(

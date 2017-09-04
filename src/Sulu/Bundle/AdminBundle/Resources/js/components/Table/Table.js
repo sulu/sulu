@@ -66,7 +66,7 @@ export default class Table extends React.PureComponent<Props> {
 
     checkAllRowsSelected = (body: Element<typeof Body>) => {
         const rows = body.props.children;
-        const rowSelections = React.Children.map(rows, (row: any) => row.props.selected);
+        const rowSelections = React.Children.map(rows, (row) => row.props.selected);
 
         return !rowSelections.includes(false);
     };

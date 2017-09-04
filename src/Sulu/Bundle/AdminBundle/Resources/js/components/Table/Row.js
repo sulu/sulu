@@ -66,7 +66,7 @@ export default class Row extends React.PureComponent<Props> {
     cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>) => {
         const {rowIndex} = this.props;
 
-        return React.Children.map(originalCells, (cell: any, index) => {
+        return React.Children.map(originalCells, (cell, index) => {
             return React.cloneElement(
                 cell,
                 {

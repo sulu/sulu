@@ -21,7 +21,7 @@ export default class Body extends React.PureComponent<Props> {
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
         const {buttons, selectMode} = this.props;
-        return React.Children.map(originalRows, (row: any, index) => React.cloneElement(
+        return React.Children.map(originalRows, (row, index) => React.cloneElement(
             row,
             {
                 ...row.props,

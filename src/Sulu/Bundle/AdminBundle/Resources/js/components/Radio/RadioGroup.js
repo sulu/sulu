@@ -14,9 +14,9 @@ export default class RadioGroup extends React.PureComponent<Props> {
     render() {
         return (
             <div className={this.props.className}>
-                {React.Children.map(this.props.children, (child: any) => {
+                {React.Children.map(this.props.children, (child) => {
                     return React.cloneElement(child, {
-                        checked: this.props.value && child.props.value === this.props.value,
+                        checked: !!this.props.value && child.props.value === this.props.value,
                         onChange: this.props.onChange,
                     });
                 })}
