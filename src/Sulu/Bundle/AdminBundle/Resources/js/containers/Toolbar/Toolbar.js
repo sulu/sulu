@@ -33,7 +33,7 @@ function getItemComponentByType(type, itemConfig) {
             item = (<Button {...itemConfig} />);
     }
 
-    return () => item;
+    return item;
 }
 
 @observer
@@ -74,11 +74,11 @@ export default class Toolbar extends React.PureComponent<*> {
                             <ul className={toolbarStyles.items}>
                                 {
                                     this.toolbarStore.getItemsConfig().map((itemConfig, index) => {
-                                        const Item = getItemComponentByType(itemConfig.type, itemConfig);
+                                        const item = getItemComponentByType(itemConfig.type, itemConfig);
 
                                         return (
                                             <li key={index}>
-                                                <Item {...itemConfig} />
+                                                {item}
                                             </li>
                                         );
                                     })

@@ -2,23 +2,15 @@
 import {action, observable} from 'mobx';
 import type {ToolbarConfig} from '../types';
 
-const defaultConfig = {
-    icons: [],
-    locale: null,
-    items: [],
-    backButton: null,
-};
-
 export default class ToolbarStore {
-    @observable config = defaultConfig;
+    @observable config: ToolbarConfig = {};
 
     @action setConfig(config: ToolbarConfig) {
-        this.clearConfig();
-        this.config = {...defaultConfig, ...config};
+        this.config = config;
     }
 
     @action clearConfig() {
-        this.config = defaultConfig;
+        this.config = {};
     }
 
     hasBackButtonConfig(): boolean {

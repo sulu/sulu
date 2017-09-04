@@ -7,7 +7,7 @@ type Props = {
     value: string,
     onChange?: () => void,
     className?: string,
-    children: ?ChildrenArray<Element<typeof Radio>>,
+    children: ChildrenArray<Element<typeof Radio>>,
 };
 
 export default class RadioGroup extends React.PureComponent<Props> {
