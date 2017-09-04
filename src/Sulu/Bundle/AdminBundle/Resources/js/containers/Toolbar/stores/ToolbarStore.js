@@ -25,7 +25,7 @@ export default class ToolbarStore {
         return !!this.config.items && !!this.config.items.length;
     }
 
-    getItemsConfig(): ToolbarItem {
+    getItemsConfig(): Array<ToolbarItem> {
         return this.config.items || [];
     }
 
