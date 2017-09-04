@@ -1,6 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {ToolbarConfig} from '../types';
+import type {Button, Select, ToolbarConfig, ToolbarItem} from '../types';
 
 export default class ToolbarStore {
     @observable config: ToolbarConfig = {};
@@ -17,7 +17,7 @@ export default class ToolbarStore {
         return !!this.config.backButton;
     }
 
-    getBackButtonConfig() {
+    getBackButtonConfig(): ?Button {
         return this.config.backButton || null;
     }
 
@@ -25,7 +25,7 @@ export default class ToolbarStore {
         return !!this.config.items && !!this.config.items.length;
     }
 
-    getItemsConfig() {
+    getItemsConfig(): ToolbarItem {
         return this.config.items || [];
     }
 
@@ -33,7 +33,7 @@ export default class ToolbarStore {
         return !!this.config.icons && !!this.config.icons.length;
     }
 
-    getIconsConfig() {
+    getIconsConfig(): Array<string> {
         return this.config.icons || [];
     }
 
@@ -41,7 +41,7 @@ export default class ToolbarStore {
         return !!this.config.locale;
     }
 
-    getLocaleConfig() {
+    getLocaleConfig(): ?Select {
         return this.config.locale;
     }
 }

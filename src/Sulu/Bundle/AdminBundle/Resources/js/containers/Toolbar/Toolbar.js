@@ -19,10 +19,10 @@ const ToolbarItemTypes = {
     Dropdown: 'dropdown',
 };
 
-function getItemComponentByType(type, itemConfig) {
+function getItemComponentByType(itemConfig) {
     let item;
 
-    switch (type) {
+    switch (itemConfig.type) {
         case ToolbarItemTypes.Select:
             item = (<Select {...itemConfig} />);
             break;
@@ -74,7 +74,7 @@ export default class Toolbar extends React.PureComponent<*> {
                             <ul className={toolbarStyles.items}>
                                 {
                                     this.toolbarStore.getItemsConfig().map((itemConfig, index) => {
-                                        const item = getItemComponentByType(itemConfig.type, itemConfig);
+                                        const item = getItemComponentByType(itemConfig);
 
                                         return (
                                             <li key={index}>
