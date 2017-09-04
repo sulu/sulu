@@ -1,5 +1,5 @@
 // @flow
-import type {ChildrenArray} from 'react';
+import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
@@ -8,7 +8,7 @@ import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<*>,
+    children?: ChildrenArray<Element<typeof HeaderCell>>,
     /**
      * @ignore
      * The header will just display the icons.
@@ -36,7 +36,7 @@ export default class Header extends React.PureComponent<Props> {
         return this.props.selectMode === 'single';
     };
 
-    createHeader = (originalCells: ChildrenArray<*>) => {
+    createHeader = (originalCells: ?ChildrenArray<Element<typeof HeaderCell>>) => {
         const {buttons} = this.props;
         const prependCells = [];
         const cells = this.createHeaderCells(originalCells);
@@ -60,8 +60,8 @@ export default class Header extends React.PureComponent<Props> {
         return cells;
     };
 
-    createHeaderCells = (headerCells: ChildrenArray<*>) => {
-        return React.Children.map(headerCells, (headerCell, index) => {
+    createHeaderCells = (headerCells: ?ChildrenArray<Element<typeof HeaderCell>>) => {
+        return React.Children.map(headerCells, (headerCell: any, index) => {
             const key = `header-${index}`;
 
             return React.cloneElement(
