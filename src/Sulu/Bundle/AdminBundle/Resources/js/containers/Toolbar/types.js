@@ -52,9 +52,11 @@ export type ToolbarProps = {
     storeKey?: string,
 };
 
+export type ToolbarItem = ButtonItem | DropdownItem | SelectItem;
+
 export type ToolbarConfig = {
     icons?: Array<string>,
-    items?: Array<ButtonItem | DropdownItem | SelectItem>,
+    items?: Array<ToolbarItem>,
     locale?: Select,
     backButton?: Button,
 };

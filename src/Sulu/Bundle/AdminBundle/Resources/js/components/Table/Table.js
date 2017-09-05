@@ -16,7 +16,7 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     /** Can be set to "single" or "multiple". Defaults is "none". */
     selectMode?: SelectMode,
-    /** 
+    /**
      * Callback function to notify about selection and deselection of a row.
      * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
      */
@@ -33,7 +33,7 @@ export default class Table extends React.PureComponent<Props> {
         selectMode: 'none',
     };
 
-    cloneHeader = (originalHeader?: any, allSelected: boolean) => {
+    cloneHeader = (originalHeader?: Element<typeof Header>, allSelected: boolean) => {
         if (!originalHeader) {
             return null;
         }
@@ -49,7 +49,7 @@ export default class Table extends React.PureComponent<Props> {
         );
     };
 
-    cloneBody = (originalBody?: any) => {
+    cloneBody = (originalBody?: Element<typeof Body>) => {
         if (!originalBody) {
             return null;
         }
@@ -64,7 +64,7 @@ export default class Table extends React.PureComponent<Props> {
         );
     };
 
-    checkAllRowsSelected = (body: any) => {
+    checkAllRowsSelected = (body: Element<typeof Body>) => {
         const rows = body.props.children;
         const rowSelections = React.Children.map(rows, (row) => row.props.selected);
 
@@ -122,8 +122,8 @@ export default class Table extends React.PureComponent<Props> {
         });
 
         const clonedBody = this.cloneBody(body);
-        const emptyBody = (body && React.Children.count(body.props.children) === 0) ?  true : false;
-        const allRowsSelected = (!emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
+        const emptyBody = (clonedBody && React.Children.count(clonedBody.props.children) === 0);
+        const allRowsSelected = (clonedBody && !emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
         const clonedHeader = this.cloneHeader(header, allRowsSelected);
 
         return (

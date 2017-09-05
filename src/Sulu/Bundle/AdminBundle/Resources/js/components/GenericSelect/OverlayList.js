@@ -139,8 +139,9 @@ export default class OverlayList extends React.PureComponent<Props> {
     }
 
     renderChildrenWithFocusSet() {
-        const children: any = React.Children.toArray(this.props.children);
-        const centeredChildIsDisabled = children[this.props.centeredChildIndex].props.disabled;
+        const children = React.Children.toArray(this.props.children);
+        const centeredChildProps = children[this.props.centeredChildIndex].props;
+        const centeredChildIsDisabled = centeredChildProps.disabled || false;
         let focus = true;
 
         return React.Children.map(this.props.children, (child: any, index) => {

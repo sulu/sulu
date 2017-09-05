@@ -3,7 +3,7 @@ import React from 'react';
 import actionStyles from './action.scss';
 
 type Props = {
-    children?: string,
+    children: string,
     onClick: () => void,
     afterAction?: () => void,
 };

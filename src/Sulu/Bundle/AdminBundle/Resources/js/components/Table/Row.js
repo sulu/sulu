@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray} from 'react';
+import type {ChildrenArray, Element} from 'react';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
 import type {ButtonConfig, SelectMode} from './types';
-import Cell from './Cell';
 import ButtonCell from './ButtonCell';
+import Cell from './Cell';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<*>,
+    children: ChildrenArray<Element<typeof Cell>>,
     /** The index of the row inside the body */
     rowIndex: number,
     /** The id will be used to mark the selected row inside the onRowSelection callback. */
@@ -38,7 +38,7 @@ export default class Row extends React.PureComponent<Props> {
         return this.props.selectMode === 'single';
     };
 
-    createCells = (cells: ChildrenArray<*>) => {
+    createCells = (cells: ChildrenArray<Element<typeof Cell>>) => {
         const {buttons} = this.props;
         const prependedCells = [];
 
@@ -63,7 +63,7 @@ export default class Row extends React.PureComponent<Props> {
         return clonedCells;
     };
 
-    cloneCells = (originalCells: ChildrenArray<*>) => {
+    cloneCells = (originalCells: ChildrenArray<Element<typeof Cell>>) => {
         const {rowIndex} = this.props;
 
         return React.Children.map(originalCells, (cell, index) => {
