@@ -23,6 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
@@ -226,6 +227,9 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->getMimeType()->willReturn('image/png');
         $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
 
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+
         $media = $this->prophesize(Media::class);
         $media->getCollection()->willReturn($collection);
         $media->getFiles()->willReturn([$file->reveal()]);
@@ -245,6 +249,10 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+
+        $this->em->remove($media->reveal())->shouldBeCalled();
+        $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
+        $this->em->flush()->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);
     }
