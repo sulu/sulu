@@ -355,7 +355,6 @@ class MediaManager implements MediaManagerInterface
             /** @var FileVersion $fileVersion */
             if ($version == $fileVersion->getVersion()) {
                 $currentFileVersion = $fileVersion;
-
                 break;
             }
         }

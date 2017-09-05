@@ -10,6 +10,7 @@ disabled:
     - phpdoc_align
     - phpdoc_indent
     - phpdoc_to_comment
+    - blank_line_before_break
     - blankline_after_open_tag
     - function_declaration
     - single_line_class_definition
