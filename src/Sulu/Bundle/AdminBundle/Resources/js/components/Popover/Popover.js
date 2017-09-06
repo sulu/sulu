@@ -106,7 +106,7 @@ export default class Popover extends React.PureComponent<Props> {
             scrollWidth,
             scrollHeight,
         } = popoverEl;
-        const borderWidth = parseInt(window.getComputedStyle(popoverEl).borderWidth, 10) * 2;
+        const borderWidth = parseInt(window.getComputedStyle(popoverEl).borderLeftWidth, 10) * 2;
 
         this.setScrollDimensions(
             scrollWidth + borderWidth,

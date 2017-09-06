@@ -24,6 +24,8 @@ $popoverBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
     overflow: auto;
     pointer-events: auto;
     background: $popoverBackgroundColor;
-    border: 1px solid $popoverBorderColor;
     box-shadow: $popoverBoxShadow;
+
+    /* border width need to be the same on all edges for the layouting-calculations to work  */
+    border: 1px solid $popoverBorderColor;
 }
