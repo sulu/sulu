@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should open the list when the display value is clicked 1`] = `
+exports[`The component should open the popover when the display value is clicked 1`] = `
 <div
   class="select"
 >
@@ -41,30 +41,32 @@ exports[`The component should open the list when the display value is clicked 1`
 </div>
 `;
 
-exports[`The component should open the list when the display value is clicked 2`] = `
+exports[`The component should open the popover when the display value is clicked 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <ul class=\\"list\\" style=\\"top: 10px;\\">
-      <li>
-        <button class=\\"option icon\\">
-          <!-- react-text: 5 -->Option 1
-          <!-- /react-text -->
-        </button>
-      </li>
-      <li>
-        <button class=\\"option icon\\">
-          <!-- react-text: 8 -->Option 2
-          <!-- /react-text -->
-        </button>
-      </li>
-      <li class=\\"divider\\"></li>
-      <li>
-        <button class=\\"option icon\\">
-          <!-- react-text: 12 -->Option 3
-          <!-- /react-text -->
-        </button>
-      </li>
-    </ul>
+    <div class=\\"popover\\" style=\\"top: 10px;\\">
+      <ul class=\\"optionsList\\">
+        <li>
+          <button class=\\"option icon\\">
+            <!-- react-text: 6 -->Option 1
+            <!-- /react-text -->
+          </button>
+        </li>
+        <li>
+          <button class=\\"option icon\\">
+            <!-- react-text: 9 -->Option 2
+            <!-- /react-text -->
+          </button>
+        </li>
+        <li class=\\"divider\\"></li>
+        <li>
+          <button class=\\"option icon\\">
+            <!-- react-text: 13 -->Option 3
+            <!-- /react-text -->
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 <div>
@@ -113,11 +115,10 @@ exports[`The component should render with an icon 1`] = `
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div />
 </div>
 `;
 
-exports[`The component should render with the list closed 1`] = `
+exports[`The component should render with the popover closed 1`] = `
 <div
   class="select"
 >
@@ -154,6 +155,5 @@ exports[`The component should render with the list closed 1`] = `
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div />
 </div>
 `;

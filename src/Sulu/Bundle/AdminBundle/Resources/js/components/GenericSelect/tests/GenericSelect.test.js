@@ -6,11 +6,9 @@ import GenericSelect from '../GenericSelect';
 import Divider from '../Divider';
 import Option from '../Option';
 
-jest.mock('../../../services/DOM/afterElementsRendered');
-
 afterEach(() => document.body.innerHTML = '');
 
-test('The component should render with the list closed', () => {
+test('The component should render with the popover closed', () => {
     const body = document.body;
     const isOptionSelected = () => false;
     const onSelect = () => {};
@@ -51,7 +49,7 @@ test('The component should render with an icon', () => {
     expect(body.innerHTML).toBe('');
 });
 
-test('The component should open the list when the display value is clicked', () => {
+test('The component should open the popover when the display value is clicked', () => {
     const body = document.body;
     const isOptionSelected = () => false;
     const onSelect = () => {};
@@ -72,7 +70,7 @@ test('The component should open the list when the display value is clicked', () 
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 
-test('The component should trigger the select callback and close the list when an option is clicked', () => {
+test('The component should trigger the select callback and close the popover when an option is clicked', () => {
     const body = document.body;
     const onSelectSpy = jest.fn();
     const isOptionSelected = () => false;
@@ -94,10 +92,11 @@ test('The component should trigger the select callback and close the list when a
     expect(body.innerHTML).toBe('');
 });
 
-test('The component should pass the centered child index to the overlay list', () => {
+test('The component should pass the centered child node to the popover', () => {
     const onSelect = () => {};
     const isOptionSelected = (child) => child.props.value === 'option-3';
-    const select = shallow(
+    const selectedOption = (<Option value="option-3">Option 3</Option>);
+    const select = mount(
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
@@ -106,12 +105,12 @@ test('The component should pass the centered child index to the overlay list', (
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
-            <Option value="option-3">Option 3</Option>
+            {selectedOption}
         </GenericSelect>
     );
-    select.instance().openList();
-    const overlayList = select.find('OverlayList');
-    expect(overlayList.props().centeredChildIndex).toBe(3);
+
+    const popover = select.find('Popover');
+    expect(popover.props().centerChildNode).toBe(mount(selectedOption).get(0).innerHTML);
 });
 
 test('The component should pass the selected property to the options', () => {

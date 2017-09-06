@@ -71,7 +71,7 @@ export default class Popover extends React.PureComponent<Props> {
             width = 0,
             height = 0,
         } = anchorEl.getBoundingClientRect();
-        const newVerticalOffset = (centerChildNode) ? -centerChildNode.offsetTop + verticalOffset : verticalOffset;
+        const centerChildOffsetTop = (centerChildNode) ? centerChildNode.offsetTop : 0;
         const alignOnVerticalAnchorEdges = (centerChildNode) ? false : true;
 
         return PopoverPositioner.getCroppedDimensions(
@@ -82,7 +82,8 @@ export default class Popover extends React.PureComponent<Props> {
             width,
             height,
             horizontalOffset,
-            newVerticalOffset,
+            verticalOffset,
+            centerChildOffsetTop,
             alignOnVerticalAnchorEdges,
         );
     }

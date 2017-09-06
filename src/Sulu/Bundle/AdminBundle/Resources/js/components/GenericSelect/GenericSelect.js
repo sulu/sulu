@@ -10,6 +10,9 @@ import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './t
 import DisplayValue from './DisplayValue';
 import genericSelectStyles from './genericSelect.scss';
 
+const HORIZONTAL_OFFSET = -20;
+const VERTICAL_OFFSET = 2;
+
 type Props = SelectProps & {
     onSelect: (values: string) => void,
     displayValue: string,
@@ -112,8 +115,8 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     open={this.open}
                     anchorEl={this.displayValueNode}
                     centerChildNode={this.selectedOptionNode}
-                    horizontalOffset={-20}
-                    verticalOffset={2}
+                    horizontalOffset={HORIZONTAL_OFFSET}
+                    verticalOffset={VERTICAL_OFFSET}
                     onClose={this.handlePopoverClose}
                 >
                     <ul className={genericSelectStyles.optionsList}>
