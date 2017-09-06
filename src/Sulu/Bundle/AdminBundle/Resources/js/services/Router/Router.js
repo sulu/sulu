@@ -8,23 +8,26 @@ export default class Router {
     history: Object;
     @observable currentRoute: Route;
     @observable currentParameters: Object;
+    @observable currentSearchParameters: Object;
 
     constructor(history: Object) {
         this.history = history;
 
         this.history.listen((location) => {
-            this.match(location.pathname);
+            this.match(location.pathname, location.search);
         });
 
         autorun(() => {
-            const path = this.url;
-            if (path !== this.history.location.pathname) {
-                this.history.push(path || this.history.location.pathname);
+            const {pathname, search} = this.history.location;
+            const currentUrl = this.url;
+            const historyUrl = pathname + search;
+            if (currentUrl !== historyUrl) {
+                this.history.push(currentUrl || historyUrl);
             }
         });
     }
 
-    match(path: string) {
+    match(path: string, queryString: string) {
         for (const name in routeStore.getAll()) {
             const route = routeStore.get(name);
             const names = [];
@@ -39,39 +42,51 @@ export default class Router {
                 parameters[names[i - 1].name] = match[i];
             }
 
-            this.navigate(name, parameters);
+            const URLSearchParameters = new URLSearchParams(queryString);
+            const searchParameters = {};
+            for (const [key, value] of URLSearchParameters) {
+                searchParameters[key] = value;
+            }
+
+            this.navigate(name, parameters, searchParameters);
 
             break;
         }
     }
 
-    @action navigate(name: string, parameters: Object = {}) {
+    @action navigate(name: string, parameters: Object = {}, searchParameters: Object = {}) {
         const currentRoute = routeStore.get(name);
         const currentParameters = {...currentRoute.parameters, ...parameters};
+        const currentSearchParameters = searchParameters;
 
         if (this.currentRoute
             && currentRoute
             && this.currentRoute.name === currentRoute.name
-            && this.currentParameters
-            && currentParameters
-            && this.currentParameters.length === currentParameters.length
+            && this.compareParameters(this.currentParameters, currentParameters)
+            && this.compareParameters(this.currentSearchParameters, currentSearchParameters)
         ) {
-            let match = true;
-
-            for (let key in currentParameters) {
-                if (this.currentParameters[key] !== currentParameters[key]) {
-                    match = false;
-                    break;
-                }
-            }
-
-            if (match) {
-                return;
-            }
+            return;
         }
 
         this.currentRoute = currentRoute;
         this.currentParameters = currentParameters;
+        this.currentSearchParameters = currentSearchParameters;
+    }
+
+    compareParameters(currentParameters: Object, parameters: Object) {
+        for (const key in parameters) {
+            if (currentParameters[key] !== parameters[key]) {
+                return false;
+            }
+        }
+
+        for (const key in currentParameters) {
+            if (currentParameters[key] !== parameters[key]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @computed get url(): string {
@@ -79,6 +94,13 @@ export default class Router {
             return '';
         }
 
-        return compile(this.currentRoute.path)(this.currentParameters);
+        const url = compile(this.currentRoute.path)(this.currentParameters);
+        const searchParameters = new URLSearchParams();
+        Object.keys(this.currentSearchParameters).forEach((currentSearchParameterKey) => {
+            searchParameters.set(currentSearchParameterKey, this.currentSearchParameters[currentSearchParameterKey]);
+        });
+        const queryString = searchParameters.toString();
+
+        return url + (queryString ? '?' + queryString : '');
     }
 }
