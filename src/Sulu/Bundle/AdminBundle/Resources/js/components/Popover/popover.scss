@@ -1,3 +1,9 @@
+@import '../../containers/Application/colors.scss';
+
+$popoverBorderColor: $frenchGray;
+$popoverBackgroundColor: $wildSand;
+$popoverBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
+
 /* to disable scrolling */
 .container {
     position: fixed;
@@ -7,4 +13,17 @@
     height: 100%;
     z-index: 100;
     pointer-events: none;
+}
+
+.popover {
+    position: fixed;
+    border-radius: 2px;
+    padding: 5px 0;
+    font-size: 12px;
+    margin: 0;
+    overflow: auto;
+    pointer-events: auto;
+    background: $popoverBackgroundColor;
+    border: 1px solid $popoverBorderColor;
+    box-shadow: $popoverBoxShadow;
 }
