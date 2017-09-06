@@ -10,6 +10,7 @@ type Props = {
     onClick: () => void,
     children: string,
     icon?: string,
+    displayValueRef?: (button: ElementRef<'button'>) => void,
 };
 
 const TOGGLE_ICON = 'chevron-down';
@@ -17,12 +18,11 @@ const TOGGLE_ICON = 'chevron-down';
 export default class DisplayValue extends React.PureComponent<Props> {
     button: ElementRef<'button'>;
 
-    /** @public */
-    getDimensions(): ClientRect {
-        return this.button.getBoundingClientRect();
-    }
-
-    setButton = (button: ElementRef<'button'>) => this.button = button;
+    setButtonRef = (button: ElementRef<'button'>) => {
+        if (this.props.displayValueRef) {
+            this.props.displayValueRef(button);
+        }
+    };
 
     render() {
         const {icon, onClick, children} = this.props;
@@ -35,7 +35,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
         return (
             <button
-                ref={this.setButton}
+                ref={this.setButtonRef}
                 onClick={onClick}
                 className={displayValueClass}
             >

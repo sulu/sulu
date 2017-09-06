@@ -1,8 +1,10 @@
 @import '../../containers/Application/colors.scss';
 
-$borderColor: $frenchGray;
-$backgroundColor: $wildSand;
+$popoverBorderColor: $frenchGray;
+$popoverBackgroundColor: $wildSand;
+$popoverBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
+/* to disable scrolling */
 .container {
     position: fixed;
     top: 0;
@@ -13,18 +15,15 @@ $backgroundColor: $wildSand;
     pointer-events: none;
 }
 
-.list {
-    display: inline-block;
-    box-sizing: border-box;
-    position: absolute;
+.popover {
+    position: fixed;
     border-radius: 2px;
     padding: 5px 0;
-    border: 1px solid $borderColor;
-    background: $backgroundColor;
     font-size: 12px;
-    list-style-type: none;
-    box-shadow: 2px 6px 12px 0 rgba($silver, .22);
     margin: 0;
     overflow: auto;
     pointer-events: auto;
+    background: $popoverBackgroundColor;
+    border: 1px solid $popoverBorderColor;
+    box-shadow: $popoverBoxShadow;
 }

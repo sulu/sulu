@@ -3,10 +3,10 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import Popover from '../Popover';
 import Action from './Action';
 import Option from './Option';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
-import OverlayList from './OverlayList';
 import DisplayValue from './DisplayValue';
 import genericSelectStyles from './genericSelect.scss';
 
@@ -24,94 +24,103 @@ export default class GenericSelect extends React.PureComponent<Props> {
         closeOnSelect: true,
     };
 
-    displayValue: ?ElementRef<typeof DisplayValue>;
+    @observable displayValueNode: ?ElementRef<'button'>;
 
-    centeredChildIndex: number;
+    @observable selectedOptionNode: ?ElementRef<'li'>;
 
     @observable open: boolean;
 
-    @action openList = () => {
-        this.centeredChildIndex = this.getCenteredChildIndex();
+    @action openPopup = () => {
         this.open = true;
     };
 
-    @action closeList = () => {
+    @action closePopup = () => {
         this.open = false;
     };
 
-    handleOptionClick = (value: string) => {
-        this.props.onSelect(value);
-
-        if (this.props.closeOnSelect) {
-            this.closeList();
+    @action setDisplayValueNode = (node: ?ElementRef<'button'>) => {
+        if (node) {
+            this.displayValueNode = node;
         }
     };
 
-    handleDisplayValueClick = this.openList;
-
-    handleListClose = this.closeList;
-
-    setDisplayValue = (displayValue: ?ElementRef<typeof DisplayValue>) => {
-        this.displayValue = displayValue;
+    @action setSelectedOptionNode = (node: ?ElementRef<'li'>, selected: boolean) => {
+        if (!this.selectedOptionNode || (node && selected)) {
+            this.selectedOptionNode = node;
+        }
     };
 
-    render() {
-        const {
-            icon,
-            displayValue,
-        } = this.props;
-        const displayValueDimensions = this.displayValue ? this.displayValue.getDimensions() : {};
-        const listChildren = this.renderListChildren();
-
-        return (
-            <div className={genericSelectStyles.select}>
-                <DisplayValue
-                    ref={this.setDisplayValue}
-                    icon={icon}
-                    onClick={this.handleDisplayValueClick}
-                >
-                    {displayValue}
-                </DisplayValue>
-                <OverlayList
-                    anchorTop={displayValueDimensions.top}
-                    anchorLeft={displayValueDimensions.left}
-                    anchorWidth={displayValueDimensions.width}
-                    anchorHeight={displayValueDimensions.height}
-                    open={this.open}
-                    centeredChildIndex={this.centeredChildIndex}
-                    onClose={this.handleListClose}
-                >
-                    {listChildren}
-                </OverlayList>
-            </div>
-        );
+    cloneOption(originalOption: Element<typeof Option>) {
+        return React.cloneElement(originalOption, {
+            onClick: this.handleOptionClick,
+            selected: this.props.isOptionSelected(originalOption),
+            selectedVisualization: this.props.selectedVisualization,
+            optionRef: this.setSelectedOptionNode,
+        });
     }
 
-    renderListChildren(): SelectChildren {
-        return React.Children.map(this.props.children, (child: any) => {
-            if (child.type === Option) {
-                child = React.cloneElement(child, {
-                    onClick: this.handleOptionClick,
-                    selected: this.props.isOptionSelected(child),
-                    selectedVisualization: this.props.selectedVisualization,
-                });
-            }
+    cloneAction(originalAction: Element<typeof Action>) {
+        return React.cloneElement(originalAction, {
+            afterAction: this.closePopup,
+        });
+    }
 
-            if (child.type === Action) {
-                child = React.cloneElement(child, {
-                    afterAction: this.closeList,
-                });
+    cloneChildren(): SelectChildren {
+        return React.Children.map(this.props.children, (child: any) => {
+            switch (child.type) {
+                case Option:
+                    child = this.cloneOption(child);
+                    break;
+                case Action:
+                    child = this.cloneAction(child);
+                    break;
             }
 
             return child;
         });
     }
 
-    getCenteredChildIndex(): number {
-        const index = React.Children.toArray(this.props.children).findIndex(
-            (child: any) => child.type === Option && this.props.isOptionSelected(child)
-        );
+    handleOptionClick = (value: string) => {
+        this.props.onSelect(value);
 
-        return index === -1 ? 0 : index;
+        if (this.props.closeOnSelect) {
+            this.closePopup();
+        }
+    };
+
+    handleDisplayValueClick = this.openPopup;
+
+    handlePopoverClose = this.closePopup;
+
+    render() {
+        const {
+            icon,
+            displayValue,
+        } = this.props;
+        const clonedChildren = this.cloneChildren();
+
+        return (
+            <div className={genericSelectStyles.select}>
+                <DisplayValue
+                    displayValueRef={this.setDisplayValueNode}
+                    icon={icon}
+                    onClick={this.handleDisplayValueClick}
+                >
+                    {displayValue}
+                </DisplayValue>
+                <Popover
+                    open={this.open}
+                    anchorEl={this.displayValueNode}
+                    centerChildNode={this.selectedOptionNode}
+                    horizontalOffset={-20}
+                    verticalOffset={2}
+                    onClose={this.handlePopoverClose}
+                >
+                    <ul className={genericSelectStyles.optionsList}>
+                        {clonedChildren}
+                    </ul>
+                </Popover>
+            </div>
+        );
     }
 }
