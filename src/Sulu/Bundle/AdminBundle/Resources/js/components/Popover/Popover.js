@@ -15,8 +15,14 @@ type Props = {
     onClose?: () => void,
     /** The element which will be used to position the popover */
     anchorEl: ElementRef<*>,
+    /** 
+     * A child-node inside the popover which should be displayed on top of the anchor when the popover is open.
+     * Similar to the select element behaviour on OSX.
+     */
     centerChildNode: ElementRef<*>,
+    /** The horizontal offset of the popover relative to the anchor element */
     horizontalOffset: number,
+    /** The vertical offset of the popover relative to the anchor element */
     verticalOffset: number,
 };
 
