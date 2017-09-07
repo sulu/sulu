@@ -43,11 +43,11 @@ export default class Router {
                 parameters[names[i - 1].name] = match[i];
             }
 
-            const URLSearchParameters = new URLSearchParams(queryString);
+            const search = new URLSearchParams(queryString);
             const searchParameters = {};
-            for (const [key, value] of URLSearchParameters) {
+            search.forEach((value, key) => {
                 searchParameters[key] = value;
-            }
+            });
 
             this.navigate(name, parameters, searchParameters);
 
