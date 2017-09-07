@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
+import equal from 'fast-deep-equal';
 import pathToRegexp, {compile} from 'path-to-regexp';
 import type {Route} from './types';
 import routeStore from './stores/RouteStore';
@@ -62,8 +63,8 @@ export default class Router {
         if (this.currentRoute
             && currentRoute
             && this.currentRoute.name === currentRoute.name
-            && this.compareParameters(this.currentParameters, currentParameters)
-            && this.compareParameters(this.currentSearchParameters, currentSearchParameters)
+            && equal(this.currentParameters, currentParameters)
+            && equal(this.currentSearchParameters, currentSearchParameters)
         ) {
             return;
         }
@@ -71,22 +72,6 @@ export default class Router {
         this.currentRoute = currentRoute;
         this.currentParameters = currentParameters;
         this.currentSearchParameters = currentSearchParameters;
-    }
-
-    compareParameters(currentParameters: Object, parameters: Object) {
-        for (const key in parameters) {
-            if (currentParameters[key] !== parameters[key]) {
-                return false;
-            }
-        }
-
-        for (const key in currentParameters) {
-            if (currentParameters[key] !== parameters[key]) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     @computed get url(): string {

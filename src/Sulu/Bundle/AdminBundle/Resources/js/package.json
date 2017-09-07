@@ -5,6 +5,7 @@
     },
     "dependencies": {
         "classnames": "^2.2.5",
+        "fast-deep-equal": "^1.0.0",
         "font-awesome": "^4.7.0",
         "history": "^4.6.3",
         "loglevel": "^1.4.1",
