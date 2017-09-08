@@ -20,7 +20,7 @@ test('Navigate to route using state', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
-            parameters: {
+            options: {
                 type: 'page',
             },
         },
@@ -30,11 +30,10 @@ test('Navigate to route using state', () => {
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
-    expect(isObservable(router.currentRoute)).toBe(true);
-    expect(router.currentRoute.view).toBe('form');
-    expect(router.currentRoute.parameters.type).toBe('page');
-    expect(router.currentParameters.uuid).toBe('some-uuid');
-    expect(router.currentParameters.type).toBe('page');
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.view).toBe('form');
+    expect(router.server.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/pages/some-uuid');
 });
 
@@ -44,7 +43,7 @@ test('Navigate to route with search parameters using state', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid',
-            parameters: {
+            options: {
                 type: 'page',
             },
         },
@@ -54,13 +53,12 @@ test('Navigate to route with search parameters using state', () => {
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'}, {page: '1', sort: 'title'});
-    expect(isObservable(router.currentRoute)).toBe(true);
-    expect(router.currentRoute.view).toBe('form');
-    expect(router.currentRoute.parameters.type).toBe('page');
-    expect(router.currentParameters.uuid).toBe('some-uuid');
-    expect(router.currentParameters.type).toBe('page');
-    expect(router.currentSearchParameters.page).toBe('1');
-    expect(router.currentSearchParameters.sort).toBe('title');
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.view).toBe('form');
+    expect(router.server.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.query.page).toBe('1');
+    expect(router.query.sort).toBe('title');
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?page=1&sort=title');
 });
@@ -78,7 +76,7 @@ test('Navigate to route without parameters using state', () => {
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
-    expect(router.currentRoute.name).toBe('page');
+    expect(router.route.name).toBe('page');
 });
 
 test('Navigate to route using URL', () => {
@@ -87,7 +85,7 @@ test('Navigate to route using URL', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid/:test',
-            parameters: {
+            options: {
                 type: 'page',
             },
         },
@@ -97,11 +95,10 @@ test('Navigate to route using URL', () => {
     const router = new Router(history);
 
     history.push('/pages/some-uuid/value');
-    expect(router.currentRoute.view).toBe('form');
-    expect(router.currentRoute.parameters.type).toBe('page');
-    expect(router.currentParameters.uuid).toBe('some-uuid');
-    expect(router.currentParameters.test).toBe('value');
-    expect(router.currentParameters.type).toBe('page');
+    expect(router.route.view).toBe('form');
+    expect(router.server.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.test).toBe('value');
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
 });
 
@@ -111,7 +108,7 @@ test('Navigate to route using URL with search parameters', () => {
             name: 'page',
             view: 'form',
             path: '/pages/:uuid/:test',
-            parameters: {
+            options: {
                 type: 'page',
             },
         },
@@ -121,13 +118,12 @@ test('Navigate to route using URL with search parameters', () => {
     const router = new Router(history);
 
     history.push('/pages/some-uuid/value?page=1&sort=date');
-    expect(router.currentRoute.view).toBe('form');
-    expect(router.currentRoute.parameters.type).toBe('page');
-    expect(router.currentParameters.uuid).toBe('some-uuid');
-    expect(router.currentParameters.test).toBe('value');
-    expect(router.currentParameters.type).toBe('page');
-    expect(router.currentSearchParameters.page).toBe('1');
-    expect(router.currentSearchParameters.sort).toBe('date');
+    expect(router.route.view).toBe('form');
+    expect(router.server.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.test).toBe('value');
+    expect(router.query.page).toBe('1');
+    expect(router.query.sort).toBe('date');
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
     expect(history.location.search).toBe('?page=1&sort=date');
 });
@@ -287,11 +283,11 @@ test('Do not navigate if all parameters are equal', () => {
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
-    const expectedParameters = router.currentParameters;
-    expect(router.currentParameters).toBe(expectedParameters);
+    const expectedParameters = router.attributes;
+    expect(router.attributes).toBe(expectedParameters);
 
     router.navigate('page', {uuid: 'some-uuid'});
-    expect(router.currentParameters).toBe(expectedParameters);
+    expect(router.attributes).toBe(expectedParameters);
 });
 
 test('Use current route from URL', () => {
@@ -308,5 +304,5 @@ test('Use current route from URL', () => {
 
     const router = new Router(history);
 
-    expect(router.currentRoute.name).toBe('page');
+    expect(router.route.name).toBe('page');
 });

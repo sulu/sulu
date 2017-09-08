@@ -16,7 +16,7 @@ test('Application should not fail if current route does not exist', () => {
 
 test('Application should render based on current route', () => {
     const router = {
-        currentRoute: {
+        route: {
             view: 'test',
         },
     };

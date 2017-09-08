@@ -20,10 +20,10 @@ export default class Application extends React.PureComponent<Props> {
             <div>
                 <Toolbar />
                 <main className={applicationStyles.main}>
-                    {router.currentRoute &&
+                    {router.route &&
                         <ViewRenderer
-                            key={router.currentRoute.name}
-                            name={router.currentRoute.view}
+                            key={router.route.name}
+                            name={router.route.view}
                             router={router} />
                     }
                 </main>

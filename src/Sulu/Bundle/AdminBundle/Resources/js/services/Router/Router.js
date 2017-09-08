@@ -7,9 +7,9 @@ import routeStore from './stores/RouteStore';
 
 export default class Router {
     history: Object;
-    @observable currentRoute: Route;
-    @observable currentParameters: Object;
-    @observable currentSearchParameters: Object;
+    @observable route: Route;
+    @observable attributes: Object;
+    @observable query: Object;
 
     constructor(history: Object) {
         this.history = history;
@@ -38,51 +38,55 @@ export default class Router {
                 continue;
             }
 
-            const parameters = {};
+            const attributes = {};
             for (let i= 1; i < match.length; i++) {
-                parameters[names[i - 1].name] = match[i];
+                attributes[names[i - 1].name] = match[i];
             }
 
             const search = new URLSearchParams(queryString);
-            const searchParameters = {};
+            const query = {};
             search.forEach((value, key) => {
-                searchParameters[key] = value;
+                query[key] = value;
             });
 
-            this.navigate(name, parameters, searchParameters);
+            this.navigate(name, attributes, query);
 
             break;
         }
     }
 
-    @action navigate(name: string, parameters: Object = {}, searchParameters: Object = {}) {
-        const currentRoute = routeStore.get(name);
-        const currentParameters = {...currentRoute.parameters, ...parameters};
-        const currentSearchParameters = searchParameters;
+    @action navigate(name: string, attributes: Object = {}, query: Object = {}) {
+        const route = routeStore.get(name);
 
-        if (this.currentRoute
-            && currentRoute
-            && this.currentRoute.name === currentRoute.name
-            && equal(this.currentParameters, currentParameters)
-            && equal(this.currentSearchParameters, currentSearchParameters)
+        if (equal(this.route, route)
+            && equal(this.attributes, attributes)
+            && equal(this.query, query)
         ) {
             return;
         }
 
-        this.currentRoute = currentRoute;
-        this.currentParameters = currentParameters;
-        this.currentSearchParameters = currentSearchParameters;
+        this.route = route;
+        this.attributes = attributes;
+        this.query = query;
+    }
+
+    @computed get server(): Object {
+        if (!this.route || !this.route.options) {
+            return {};
+        }
+
+        return this.route.options;
     }
 
     @computed get url(): string {
-        if (!this.currentRoute) {
+        if (!this.route) {
             return '';
         }
 
-        const url = compile(this.currentRoute.path)(this.currentParameters);
+        const url = compile(this.route.path)(this.attributes);
         const searchParameters = new URLSearchParams();
-        Object.keys(this.currentSearchParameters).forEach((currentSearchParameterKey) => {
-            searchParameters.set(currentSearchParameterKey, this.currentSearchParameters[currentSearchParameterKey]);
+        Object.keys(this.query).forEach((currentSearchParameterKey) => {
+            searchParameters.set(currentSearchParameterKey, this.query[currentSearchParameterKey]);
         });
         const queryString = searchParameters.toString();
 
