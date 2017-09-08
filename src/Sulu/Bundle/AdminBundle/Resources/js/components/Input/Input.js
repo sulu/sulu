@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import Icon from '../Icon';
 import inputStyles from './input.scss';
 
@@ -10,6 +11,8 @@ type Props = {
     value: ?string,
     placeholder?: string,
     onChange: (value: string) => void,
+    inputRef?: (ref: ElementRef<'label'>) => void,
+    onFocus?: () => void,
 };
 
 export default class Input extends React.PureComponent<Props> {
@@ -17,8 +20,22 @@ export default class Input extends React.PureComponent<Props> {
         type: 'text',
     };
 
+    setRef = (ref: ElementRef<'label'>) => {
+        if (this.props.inputRef) {
+            this.props.inputRef(ref);
+        }
+    };
+
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value);
+        if (this.props.onChange) {
+            this.props.onChange(event.currentTarget.value);
+        }
+    };
+
+    handleFocus = () => {
+        if (this.props.onFocus) {
+            this.props.onFocus();
+        }
     };
 
     render() {
@@ -31,7 +48,10 @@ export default class Input extends React.PureComponent<Props> {
         } = this.props;
 
         return (
-            <label className={inputStyles.input}>
+            <label
+                className={inputStyles.input}
+                ref={this.setRef}
+            >
                 {icon &&
                     <Icon className={inputStyles.icon} name={icon} />
                 }
@@ -40,6 +60,7 @@ export default class Input extends React.PureComponent<Props> {
                     type={type}
                     value={value || ''}
                     placeholder={placeholder}
+                    onFocus={this.handleFocus}
                     onChange={this.handleChange}
                 />
             </label>

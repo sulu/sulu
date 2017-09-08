@@ -1,0 +1,17 @@
+@import '../../containers/Application/colors.scss';
+
+$suggestionTextColorActive: $shakespeare;
+
+.suggestion {
+    cursor: pointer;
+    display: flex;
+    padding: 5px 20px 5px 40px;
+    
+    &:hover {
+        color: $suggestionTextColorActive;
+    }
+}
+
+.icon {
+    margin-right: 15px;
+}

@@ -1,0 +1,16 @@
+.auto-complete {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+
+.suggestions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.no-suggestions {
+    padding: 5px 10px;
+    text-align: center;
+}
