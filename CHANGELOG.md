@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.5.6 (unreleased)
+    * HOTFIX      #3511 [MediaBundle]           Fixed disappearing of selected medias
+
 * 1.5.5 (2017-06-28)
     * HOTFIX      #3404 [DocumentManagerBundle] Remove exception for non-Sulu user
 
