@@ -29,17 +29,6 @@ module.exports = { // eslint-disable-line
             },
         },
         {
-            name: 'Higher-order components',
-            sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
-                folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
-                return folders.map((folder) => {
-                    const component = path.basename(folder);
-                    return {name: component, content: folder + '/README.md'};
-                });
-            })(),
-        },
-        {
             name: 'Containers',
             components: function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/containers/*');
@@ -51,6 +40,28 @@ module.exports = { // eslint-disable-line
                     return path.join(folder, component + '.js');
                 });
             },
+        },
+        {
+            name: 'Services',
+            sections: (function() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
+
+                return folders.map((folder) => {
+                    const component = path.basename(folder);
+                    return {name: component, content: folder + '/README.md'};
+                });
+            })(),
+        },
+        {
+            name: 'Higher-Order components',
+            sections: (function() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+                folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
+                return folders.map((folder) => {
+                    const component = path.basename(folder);
+                    return {name: component, content: folder + '/README.md'};
+                });
+            })(),
         },
     ],
     webpackConfig: {
