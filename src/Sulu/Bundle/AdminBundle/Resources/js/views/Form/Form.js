@@ -3,8 +3,9 @@ import {action, observable} from 'mobx';
 import React from 'react';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
+import type {ViewProps} from '../../containers/ViewRenderer/types';
 
-class Form extends React.PureComponent<*> {
+class Form extends React.PureComponent<ViewProps> {
     @observable dirty = false;
 
     @observable selectValue;

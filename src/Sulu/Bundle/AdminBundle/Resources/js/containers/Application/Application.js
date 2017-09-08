@@ -24,7 +24,7 @@ export default class Application extends React.PureComponent<Props> {
                         <ViewRenderer
                             key={router.currentRoute.name}
                             name={router.currentRoute.view}
-                            parameters={router.currentParameters} />
+                            router={router} />
                     }
                 </main>
                 <SplitView />
