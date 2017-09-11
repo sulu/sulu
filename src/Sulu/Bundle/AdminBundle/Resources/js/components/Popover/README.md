@@ -6,7 +6,7 @@ always expects to receive an anchor element as a prop, which can be any kind of 
 const Option = require('../Select').Option;
 
 initialState = {
-    open: false,
+    open: true,
     anchorEl: null,
 };
 
@@ -19,9 +19,6 @@ const handleClose = () => {
 const handleOpen = (event) => {
     setState({
         open: true,
-    });
-
-    setState({
         anchorEl: event.currentTarget,
     });
 };

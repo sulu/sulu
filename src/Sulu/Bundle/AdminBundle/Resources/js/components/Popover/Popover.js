@@ -15,14 +15,8 @@ type Props = {
     onClose?: () => void,
     /** The element which will be used to position the popover */
     anchorEl: ElementRef<*>,
-    /** 
-     * A child-node inside the popover which should be displayed on top of the anchor when the popover is open.
-     * Similar to the select element behaviour on OSX.
-     */
-    centerChildNode: ElementRef<*>,
-    /** The horizontal offset of the popover relative to the anchor element */
+    centerChildNode?: ElementRef<*>,
     horizontalOffset: number,
-    /** The vertical offset of the popover relative to the anchor element */
     verticalOffset: number,
 };
 
@@ -34,7 +28,7 @@ export default class Popover extends React.PureComponent<Props> {
         verticalOffset: 0,
     };
 
-    popoverEl: ElementRef<'div'>;
+    @observable popoverEl: ElementRef<'div'>;
 
     @observable scrollHeight: number;
 
@@ -94,6 +88,19 @@ export default class Popover extends React.PureComponent<Props> {
         );
     }
 
+    updateDimensions() {
+        const {
+            scrollWidth,
+            scrollHeight,
+        } = this.popoverEl;
+        const borderWidth = parseInt(window.getComputedStyle(this.popoverEl).borderLeftWidth, 10) * 2;
+
+        this.setScrollDimensions(
+            scrollWidth + borderWidth,
+            scrollHeight + borderWidth,
+        );
+    }
+
     @action setScrollDimensions(scrollWidth: number, scrollHeight: number) {
         this.scrollWidth = scrollWidth;
         this.scrollHeight = scrollHeight;
@@ -101,27 +108,21 @@ export default class Popover extends React.PureComponent<Props> {
 
     handleBackropClick = this.close;
 
-    setPopoverNode = (popoverEl: ElementRef<'div'>) => {
-        if (!popoverEl) {
-            return;
+    @action setPopoverNode = (popoverEl: ElementRef<'div'>) => {
+        if (popoverEl) {
+            this.popoverEl = popoverEl;
+            this.updateDimensions();
         }
-
-        this.popoverEl = popoverEl;
-
-        const {
-            scrollWidth,
-            scrollHeight,
-        } = popoverEl;
-        const borderWidth = parseInt(window.getComputedStyle(popoverEl).borderLeftWidth, 10) * 2;
-
-        this.setScrollDimensions(
-            scrollWidth + borderWidth,
-            scrollHeight + borderWidth,
-        );
     };
 
     render() {
-        if (!this.props.open) {
+        const {
+            open,
+            anchorEl,
+            children,
+        } = this.props;
+
+        if (!open || !anchorEl) {
             return null;
         }
 
@@ -131,17 +132,17 @@ export default class Popover extends React.PureComponent<Props> {
 
         return (
             <div>
-                <Portal isOpened={this.props.open}>
+                <Portal isOpened={open}>
                     <div className={popoverStyles.container}>
                         <div
-                            style={style}
                             ref={this.setPopoverNode}
+                            style={style}
                             className={popoverStyles.popover}>
-                            {this.props.children}
+                            {children}
                         </div>
                     </div>
                 </Portal>
-                <Backdrop visible={false} open={this.props.open} onClick={this.handleBackropClick} />
+                <Backdrop visible={false} open={open} onClick={this.handleBackropClick} />
             </div>
         );
     }
