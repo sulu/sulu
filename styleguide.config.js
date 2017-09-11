@@ -10,7 +10,7 @@ const firstLetterIsUppercase = (string) => {
 
 module.exports = { // eslint-disable-line
     require: [
-        'babel-polyfill',
+        'core-js/fn/array/includes',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/styleguidist.scss',
     ],
