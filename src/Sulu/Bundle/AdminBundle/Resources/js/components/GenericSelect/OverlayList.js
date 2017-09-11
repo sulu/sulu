@@ -128,7 +128,8 @@ export default class OverlayList extends React.PureComponent<Props> {
                         <ul
                             ref={this.readOffsetDimensions}
                             style={style}
-                            className={overlayListStyles.list}>
+                            className={overlayListStyles.list}
+                        >
                             {this.renderChildrenWithFocusSet()}
                         </ul>
                     </div>

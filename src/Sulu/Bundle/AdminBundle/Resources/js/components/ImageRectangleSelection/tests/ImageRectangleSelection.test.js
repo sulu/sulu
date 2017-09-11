@@ -34,7 +34,8 @@ test('The component should calculate the selection with respect to the image', (
             containerWidth={640}
             containerHeight={360}
             onChange={onChangeSpy}
-            src="//:0" />
+            src="//:0"
+        />
     );
 });
 
@@ -54,7 +55,8 @@ test('The component should render with initial selection', (done) => {
             src="//:0"
             containerWidth={640}
             containerHeight={360}
-            initialSelection={{width: 1500, height: 800, top: 200, left: 300}} />
+            initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
+        />
     );
 });
 
@@ -74,6 +76,7 @@ test('The component should render with minWidth and minHeight', (done) => {
             containerWidth={640}
             containerHeight={360}
             minHeight={300}
-            minWidth={600} />
+            minWidth={600}
+        />
     );
 });

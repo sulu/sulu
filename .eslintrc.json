@@ -90,7 +90,7 @@
         ],
         "react/jsx-closing-bracket-location": [
             "error",
-            "after-props"
+            "line-aligned"
         ],
         "react/jsx-wrap-multilines": "error",
         "react/jsx-pascal-case": "error",

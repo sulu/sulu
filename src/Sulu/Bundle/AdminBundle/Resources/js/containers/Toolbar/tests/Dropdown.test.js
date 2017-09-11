@@ -21,7 +21,8 @@ test('Render disabled dropdown', () => {
     expect(render(
         <Dropdown
             {...dropdownPropsMock}
-            disabled={true} />
+            disabled={true}
+        />
     )).toMatchSnapshot();
 });
 
@@ -29,7 +30,8 @@ test('Render dropdown with a prepended icon', () => {
     expect(render(
         <Dropdown
             {...dropdownPropsMock}
-            icon="floppy-o" />
+            icon="floppy-o"
+        />
     )).toMatchSnapshot();
 });
 
@@ -37,7 +39,8 @@ test('Render dropdown with a different size', () => {
     expect(render(
         <Dropdown
             {...dropdownPropsMock}
-            size="small" />
+            size="small"
+        />
     )).toMatchSnapshot();
 });
 
@@ -53,7 +56,8 @@ test('Disabled dropdown will not open', () => {
     const dropdown = mount(
         <Dropdown
             {...dropdownPropsMock}
-            disabled={true} />
+            disabled={true}
+        />
     );
 
     expect(dropdown.find('.optionList').length).toBe(0);

@@ -35,7 +35,8 @@ test('The component should render with initial selection', (done) => {
             containerWidth={2000}
             containerHeight={1000}
             mountSpy={spy}
-            initialSelection={{width: 1, height: 2, top: 3, left: 4}}>
+            initialSelection={{width: 1, height: 2, top: 3, left: 4}}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -68,7 +69,8 @@ test('The component should center and maximize the selection when a minHeight an
             minHeight={200}
             minWidth={50}
             containerWidth={2000}
-            containerHeight={1000}>
+            containerHeight={1000}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -78,7 +80,8 @@ test('The component should center and maximize the selection when a minHeight an
             minHeight={50}
             minWidth={200}
             containerWidth={2000}
-            containerHeight={1000}>
+            containerHeight={1000}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -99,7 +102,8 @@ test('The component should publish the new selection when the rectangle changes'
             mountSpy={spy}
             onChange={setSelection}
             containerWidth={2000}
-            containerHeight={1000}>
+            containerHeight={1000}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -137,7 +141,8 @@ test('The component should not allow the selection to be bigger than the contain
             mountSpy={spy}
             onChange={setSelection}
             containerWidth={2000}
-            containerHeight={1000}>
+            containerHeight={1000}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -160,7 +165,8 @@ test('The component should enforce a ratio on the selection if minWidth and minH
             minWidth={10}
             minHeight={20}
             mountSpy={spy}
-            onChange={setSelection}>
+            onChange={setSelection}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );
@@ -187,7 +193,8 @@ test('The component should should not round if told by the properties', (done) =
             minWidth={3}
             minHeight={1}
             mountSpy={spy}
-            onChange={setSelection}>
+            onChange={setSelection}
+        >
             <p>Lorem ipsum</p>
         </MockedRectangleSelection>
     );

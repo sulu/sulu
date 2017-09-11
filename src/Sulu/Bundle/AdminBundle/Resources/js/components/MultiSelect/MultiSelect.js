@@ -70,7 +70,8 @@ export default class MultiSelect extends React.PureComponent<Props> {
                 closeOnSelect={false}
                 displayValue={this.displayValue}
                 selectedVisualization="checkbox"
-                isOptionSelected={this.isOptionSelected}>
+                isOptionSelected={this.isOptionSelected}
+            >
                 {children}
             </GenericSelect>
         );

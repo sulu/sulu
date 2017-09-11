@@ -72,14 +72,16 @@ export default class Select extends React.PureComponent<SelectProps> {
                     value={buttonValue}
                     onClick={this.handleButtonClick}
                     active={this.open}
-                    hasOptions={true} />
+                    hasOptions={true}
+                />
                 {this.open &&
                     <OptionList
                         size={size}
                         value={value}
                         options={options}
                         onOptionClick={this.handleOptionClick}
-                        onClose={this.handleOptionListClose} />
+                        onClose={this.handleOptionListClose}
+                    />
                 }
             </div>
         );

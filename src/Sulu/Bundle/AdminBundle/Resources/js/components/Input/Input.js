@@ -40,7 +40,8 @@ export default class Input extends React.PureComponent<Props> {
                     type={type}
                     value={value}
                     placeholder={placeholder}
-                    onChange={this.handleChange} />
+                    onChange={this.handleChange}
+                />
             </label>
         );
     }

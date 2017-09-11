@@ -22,7 +22,10 @@ export default class Actions extends React.PureComponent<Props> {
                         <button
                             key={index}
                             className={actionsStyles.action}
-                            onClick={handleButtonClick}>{action.title}</button>
+                            onClick={handleButtonClick}
+                        >
+                            {action.title}
+                        </button>
                     );
                 })}
             </div>

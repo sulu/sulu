@@ -10,7 +10,10 @@ test('The component pass the props correctly to the generic checkbox', () => {
             onChange={onChange}
             value="my-value"
             name="my-name"
-            checked={true}>My label</Toggler>
+            checked={true}
+        >
+            My label
+        </Toggler>
     );
     const switchComponent = toggler.find('Switch');
     expect(switchComponent.props().value).toBe('my-value');

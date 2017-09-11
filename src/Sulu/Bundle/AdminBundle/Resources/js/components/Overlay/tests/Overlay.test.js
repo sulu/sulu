@@ -15,7 +15,8 @@ test('The component should render in body when open', () => {
             title="My overlay title"
             onClose={onClose}
             confirmText="Apply"
-            open={true}>
+            open={true}
+        >
             <p>My overlay content</p>
         </Overlay>
     ).render();
@@ -37,7 +38,8 @@ test('The component should render in body with actions when open', () => {
             onClose={onClose}
             confirmText="Apply"
             actions={actions}
-            open={true}>
+            open={true}
+        >
             <p>My overlay content</p>
         </Overlay>
     ).render();
@@ -54,7 +56,8 @@ test('The component should not render in body when closed', () => {
             title="My overlay title"
             onClose={onClose}
             confirmText="Apply"
-            open={false}>
+            open={false}
+        >
             <p>My overlay content</p>
         </Overlay>
     ).render();
@@ -69,7 +72,8 @@ test('The component should request to be closed on click on backdrop', () => {
             title="My overlay title"
             onClose={closeSpy}
             confirmText="Apply"
-            open={true}>
+            open={true}
+        >
             <p>My overlay content</p>
         </Overlay>
     );
@@ -88,7 +92,8 @@ test('The component should request to be closed when the close icon is clicked',
             title="My overlay title"
             onClose={closeSpy}
             confirmText="Apply"
-            open={true}>
+            open={true}
+        >
             <p>My overlay content</p>
         </Overlay>
     );
@@ -105,7 +110,8 @@ test('The component should request to be closed when the esc key is pressed', ()
             title="My overlay title"
             onClose={closeSpy}
             confirmText="Apply"
-            open={true}>
+            open={true}
+        >
             <p>My overlay content</p>
         </Overlay>
     );
@@ -123,7 +129,8 @@ test('The component should call the callback when the confirm button is clicked'
             title="My title"
             onClose={onClose}
             onConfirm={onConfirm}
-            confirmText="Alright mate!">
+            confirmText="Alright mate!"
+        >
             <p>My overlay content</p>
         </Overlay>
     );

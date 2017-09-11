@@ -153,7 +153,8 @@ export class RectangleSelection extends React.PureComponent<Props> {
                     top={this.selection.top}
                     width={this.selection.width}
                     height={this.selection.height}
-                    backdropSize={backdropSize} />
+                    backdropSize={backdropSize}
+                />
             </div>
         );
     }

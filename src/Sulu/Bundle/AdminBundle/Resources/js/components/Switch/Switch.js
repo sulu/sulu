@@ -37,7 +37,8 @@ export default class Switch extends React.PureComponent<Props> {
                         type={type}
                         name={name}
                         checked={checked}
-                        onChange={this.handleChange} />
+                        onChange={this.handleChange}
+                    />
                     <span>
                         {icon &&
                             <Icon name={icon} />

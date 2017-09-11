@@ -17,7 +17,8 @@ export default class Toggler extends React.PureComponent<Props> {
                 checked={checked}
                 value={value}
                 name={name}
-                onChange={onChange}>
+                onChange={onChange}
+            >
                 {children}
             </Switch>
         );

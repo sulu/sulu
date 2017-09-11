@@ -35,7 +35,8 @@ export default class Radio extends React.PureComponent<Props> {
                 value={value}
                 name={name}
                 onChange={this.handleChange}
-                type="radio">
+                type="radio"
+            >
                 {children}
             </Switch>
         );

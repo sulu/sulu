@@ -101,13 +101,16 @@ export default class ModifiableRectangle extends React.PureComponent<Props> {
                 className={modifiableRectangleStyles.rectangle}
                 onMouseDown={this.handleMoveMouseDown}
                 onDoubleClick={this.handleDoubleClick}
-                style={style}>
+                style={style}
+            >
                 <div
                     className={modifiableRectangleStyles.resizeHandle}
-                    onMouseDown={this.handleResizeMouseDown} />
+                    onMouseDown={this.handleResizeMouseDown}
+                />
                 <div
                     className={modifiableRectangleStyles.backdrop}
-                    style={{outlineWidth: this.props.backdropSize + 'px'}} />
+                    style={{outlineWidth: this.props.backdropSize + 'px'}}
+                />
             </div>
         );
     }
