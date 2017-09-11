@@ -15,9 +15,15 @@ test('Render view returned from ViewRegistry', () => {
     expect(viewStore.get).toBeCalledWith('test');
 });
 
-test('Render view returned from ViewRegistry with passed props', () => {
-    viewStore.get.mockReturnValue((props) => (<h1>{props.value}</h1>));
-    const view = render(<ViewRenderer name="test" parameters={{value: 'Test from props'}} />);
+test('Render view returned from ViewRegistry with passed router', () => {
+    const router = {
+        attributes: {
+            value: 'Test attribute',
+        },
+    };
+
+    viewStore.get.mockReturnValue((props) => (<h1>{props.router.attributes.value}</h1>));
+    const view = render(<ViewRenderer name="test" router={router} />);
     expect(view).toMatchSnapshot();
     expect(viewStore.get).toBeCalledWith('test');
 });

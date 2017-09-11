@@ -1,30 +1,34 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
+import equal from 'fast-deep-equal';
 import pathToRegexp, {compile} from 'path-to-regexp';
 import type {Route} from './types';
 import routeStore from './stores/RouteStore';
 
 export default class Router {
     history: Object;
-    @observable currentRoute: Route;
-    @observable currentParameters: Object;
+    @observable route: Route;
+    @observable attributes: Object;
+    @observable query: Object;
 
     constructor(history: Object) {
         this.history = history;
 
         this.history.listen((location) => {
-            this.match(location.pathname);
+            this.match(location.pathname, location.search);
         });
 
         autorun(() => {
-            const path = this.url;
-            if (path !== this.history.location.pathname) {
-                this.history.push(path || this.history.location.pathname);
+            const {pathname, search} = this.history.location;
+            const currentUrl = this.url;
+            const historyUrl = pathname + search;
+            if (currentUrl !== historyUrl) {
+                this.history.push(currentUrl || historyUrl);
             }
         });
     }
 
-    match(path: string) {
+    match(path: string, queryString: string) {
         for (const name in routeStore.getAll()) {
             const route = routeStore.get(name);
             const names = [];
@@ -34,51 +38,50 @@ export default class Router {
                 continue;
             }
 
-            const parameters = {};
+            const attributes = {};
             for (let i= 1; i < match.length; i++) {
-                parameters[names[i - 1].name] = match[i];
+                attributes[names[i - 1].name] = match[i];
             }
 
-            this.navigate(name, parameters);
+            const search = new URLSearchParams(queryString);
+            const query = {};
+            search.forEach((value, key) => {
+                query[key] = value;
+            });
+
+            this.navigate(name, attributes, query);
 
             break;
         }
     }
 
-    @action navigate(name: string, parameters: Object = {}) {
-        const currentRoute = routeStore.get(name);
-        const currentParameters = {...currentRoute.parameters, ...parameters};
+    @action navigate(name: string, attributes: Object = {}, query: Object = {}) {
+        const route = routeStore.get(name);
 
-        if (this.currentRoute
-            && currentRoute
-            && this.currentRoute.name === currentRoute.name
-            && this.currentParameters
-            && currentParameters
-            && this.currentParameters.length === currentParameters.length
+        if (equal(this.route, route)
+            && equal(this.attributes, attributes)
+            && equal(this.query, query)
         ) {
-            let match = true;
-
-            for (let key in currentParameters) {
-                if (this.currentParameters[key] !== currentParameters[key]) {
-                    match = false;
-                    break;
-                }
-            }
-
-            if (match) {
-                return;
-            }
+            return;
         }
 
-        this.currentRoute = currentRoute;
-        this.currentParameters = currentParameters;
+        this.route = route;
+        this.attributes = attributes;
+        this.query = query;
     }
 
     @computed get url(): string {
-        if (!this.currentRoute) {
+        if (!this.route) {
             return '';
         }
 
-        return compile(this.currentRoute.path)(this.currentParameters);
+        const url = compile(this.route.path)(this.attributes);
+        const searchParameters = new URLSearchParams();
+        Object.keys(this.query).forEach((currentSearchParameterKey) => {
+            searchParameters.set(currentSearchParameterKey, this.query[currentSearchParameterKey]);
+        });
+        const queryString = searchParameters.toString();
+
+        return url + (queryString ? '?' + queryString : '');
     }
 }

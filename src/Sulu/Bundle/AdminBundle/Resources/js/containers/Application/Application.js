@@ -15,15 +15,16 @@ type Props = {
 @observer
 export default class Application extends React.PureComponent<Props> {
     render() {
+        const {router} = this.props;
         return (
             <div>
                 <Toolbar />
                 <main className={applicationStyles.main}>
-                    {this.props.router.currentRoute &&
+                    {router.route &&
                         <ViewRenderer
-                            key={this.props.router.currentRoute.name}
-                            name={this.props.router.currentRoute.view}
-                            parameters={this.props.router.currentParameters} />
+                            key={router.route.name}
+                            name={router.route.view}
+                            router={router} />
                     }
                 </main>
                 <SplitView />

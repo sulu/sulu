@@ -1,8 +1,8 @@
 // @flow
-import type {ComponentType} from 'react';
+import type {View} from '../types';
 
 class ViewStore {
-    views: {[string]: ComponentType<*>};
+    views: {[string]: View};
 
     constructor() {
         this.clear();
@@ -12,7 +12,7 @@ class ViewStore {
         this.views = {};
     }
 
-    add(name: string, view: ComponentType<*>) {
+    add(name: string, view: View) {
         if (name in this.views) {
             throw new Error('The key "' + name + '" has already been used for another view');
         }
@@ -20,7 +20,7 @@ class ViewStore {
         this.views[name] = view;
     }
 
-    get(name: string): ComponentType<*> {
+    get(name: string): View {
         return this.views[name];
     }
 }

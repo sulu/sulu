@@ -1,11 +1,14 @@
 // @flow
 import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 import React from 'react';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import {Table, Body, Header, Cell, HeaderCell, Row} from '../../components/Table';
+import type {ViewProps} from '../../containers/ViewRenderer/types';
 
-class List extends React.PureComponent<*> {
+@observer
+class List extends React.PureComponent<ViewProps> {
     @observable tableData = {
         header: [
             'Type of',

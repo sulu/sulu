@@ -6,8 +6,8 @@ exports[`Render view returned from ViewRegistry 1`] = `
 </h1>
 `;
 
-exports[`Render view returned from ViewRegistry with passed props 1`] = `
+exports[`Render view returned from ViewRegistry with passed router 1`] = `
 <h1>
-  Test from props
+  Test attribute
 </h1>
 `;
