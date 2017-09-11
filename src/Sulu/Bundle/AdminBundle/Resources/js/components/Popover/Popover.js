@@ -18,7 +18,6 @@ type Props = {
     anchorElement: ElementRef<*>,
     centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
-    /** The vertical offset of the popover relative to the anchor element */
     verticalOffset: number,
 };
 
