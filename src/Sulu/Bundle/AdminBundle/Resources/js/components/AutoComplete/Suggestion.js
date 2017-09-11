@@ -26,7 +26,7 @@ export default class Suggestion extends React.PureComponent<Props> {
 
         let matchIndex = 0;
         const highlightedMatches = value.replace(regex, () => {
-            return `<strong>${matches[matchIndex++]}</strong>`
+            return `<strong>${matches[matchIndex++]}</strong>`;
         });
 
         return (
@@ -55,17 +55,19 @@ export default class Suggestion extends React.PureComponent<Props> {
         const prepardedValue = this.prepareValue(value);
 
         return (
-            <div
-                onClick={this.handleClick}
-                className={suggestionStyles.suggestion}>
+            <button
+                className={suggestionStyles.suggestion}
+                onClick={this.handleClick}>
                 {
                     icon &&
-                    <Icon name={icon} className={suggestionStyles.icon} />
+                    <Icon
+                        name={icon}
+                        className={suggestionStyles.icon} />
                 }
-                <div className={suggestionStyles.value}>
+                <span>
                     {prepardedValue}
-                </div>
-            </div>
+                </span>
+            </button>
         );
     }
 }

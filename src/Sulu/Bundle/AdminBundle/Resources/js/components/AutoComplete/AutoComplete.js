@@ -2,9 +2,10 @@
 import React from 'react';
 import type {ChildrenArray, ElementRef} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import Input from '../Input';
 import Popover from '../Popover';
+import Menu from '../Menu';
 import autoCompleteStyles from './autoComplete.scss';
 
 const POPOVER_HORIZONTAL_OFFSET = 5;
@@ -29,7 +30,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
     @observable open: boolean = false;
 
-    inputRef: ElementRef<'label'>;
+    @observable inputRef: ElementRef<'label'>;
 
     @action openSuggestions() {
         this.open = true;
@@ -47,6 +48,14 @@ export default class AutoComplete extends React.PureComponent<Props> {
         } else if (this.open) {
             this.closeSuggestions();
         }
+    }
+
+    @computed get suggestionStyle(): Object {
+        const suggestionListMinWidth = (this.inputRef) ? this.inputRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2: 0;
+
+        return {
+            minWidth: suggestionListMinWidth,
+        };
     }
 
     createSuggestions(children: ChildrenArray<*>) {
@@ -67,7 +76,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
         });
     }
 
-    createNoSuggestionsMessage() {
+    createNoSuggestionsMessage(): ElementRef<'li'> {
         const {noSuggestionsMessage} = this.props;
 
         if (!noSuggestionsMessage) {
@@ -75,7 +84,9 @@ export default class AutoComplete extends React.PureComponent<Props> {
         }
 
         return (
-            <li className={autoCompleteStyles.noSuggestions}>
+            <li
+                style={this.suggestionStyle}
+                className={autoCompleteStyles.noSuggestions}>
                 {noSuggestionsMessage}
             </li>
         );
@@ -122,10 +133,6 @@ export default class AutoComplete extends React.PureComponent<Props> {
         const suggestions = this.createSuggestions(children);
         const noSuggestions = !React.Children.count(suggestions);
         const noSuggestionsMessage = this.createNoSuggestionsMessage();
-        const suggestionListMinWidth = (this.inputRef) ? this.inputRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2: 0;
-        const suggestionListStyle = {
-            minWidth: suggestionListMinWidth,
-        };
 
         return (
             <div className={autoCompleteStyles.autoComplete}>
@@ -142,14 +149,17 @@ export default class AutoComplete extends React.PureComponent<Props> {
                     onClose={this.handlePopoverClose}
                     horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
                     verticalOffset={POPOVER_VERTICAL_OFFSET}>
-                    <ul
-                        className={autoCompleteStyles.suggestions}
-                        style={suggestionListStyle}>
-                        {suggestions}
-                        {noSuggestions &&
-                            noSuggestionsMessage
-                        }
-                    </ul>
+                    {
+                        (setPopoverElementRef, popoverStyle) => (
+                            <Menu
+                                menuRef={setPopoverElementRef}
+                                style={popoverStyle}>
+                                {!noSuggestions
+                                    ? suggestions
+                                    : noSuggestionsMessage}
+                            </Menu>
+                        )
+                    }
                 </Popover>
             </div>
         );
