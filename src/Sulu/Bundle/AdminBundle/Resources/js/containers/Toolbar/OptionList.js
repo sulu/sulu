@@ -58,7 +58,8 @@ export default class OptionList extends React.PureComponent<Props> {
                                     label={option.label}
                                     disabled={option.disabled}
                                     selected={selected}
-                                    onClick={this.handleOptionClick} />
+                                    onClick={this.handleOptionClick}
+                                />
                             );
                         })
                     }

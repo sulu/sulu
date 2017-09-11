@@ -18,7 +18,8 @@ test('The component should render with the list closed', () => {
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            displayValue="My text">
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -38,7 +39,8 @@ test('The component should render with an icon', () => {
             icon="plus"
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            displayValue="My text">
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -57,7 +59,8 @@ test('The component should open the list when the display value is clicked', () 
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            displayValue="My text">
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -77,7 +80,8 @@ test('The component should trigger the select callback and close the list when a
         <GenericSelect
             onSelect={onSelectSpy}
             isOptionSelected={isOptionSelected}
-            displayValue="My text">
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -97,7 +101,8 @@ test('The component should pass the centered child index to the overlay list', (
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            displayValue="My text">
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -116,7 +121,8 @@ test('The component should pass the selected property to the options', () => {
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
-            displayValue="My text">
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />

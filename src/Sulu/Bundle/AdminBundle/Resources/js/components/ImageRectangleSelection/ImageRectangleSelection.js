@@ -100,11 +100,13 @@ export class ImageRectangleSelection extends React.PureComponent<Props> {
                 minWidth={minWidth}
                 minHeight={minHeight}
                 onChange={this.handleRectangleSelectionChange}
-                round={false}>
+                round={false}
+            >
                 <img
                     width={this.imageResizedWidth}
                     height={this.imageResizedHeight}
-                    src={this.props.src} />
+                    src={this.props.src}
+                />
             </RectangleSelection>
         );
     }

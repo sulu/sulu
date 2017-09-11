@@ -18,7 +18,10 @@ test('The component pass the props correctly to the generic checkbox', () => {
         <Radio
             value="my-value"
             name="my-name"
-            checked={true}>My label</Radio>
+            checked={true}
+        >
+            My label
+        </Radio>
     );
     const switchComponent = checkbox.find('Switch');
     expect(switchComponent.props().value).toBe('my-value');

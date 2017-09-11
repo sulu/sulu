@@ -68,7 +68,8 @@ export default class GenericSelect extends React.PureComponent<Props> {
                 <DisplayValue
                     ref={this.setDisplayValue}
                     icon={icon}
-                    onClick={this.handleDisplayValueClick}>
+                    onClick={this.handleDisplayValueClick}
+                >
                     {displayValue}
                 </DisplayValue>
                 <OverlayList
@@ -78,7 +79,8 @@ export default class GenericSelect extends React.PureComponent<Props> {
                     anchorHeight={displayValueDimensions.height}
                     open={this.open}
                     centeredChildIndex={this.centeredChildIndex}
-                    onClose={this.handleListClose}>
+                    onClose={this.handleListClose}
+                >
                     {listChildren}
                 </OverlayList>
             </div>

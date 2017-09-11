@@ -84,12 +84,14 @@ export default class Row extends React.PureComponent<Props> {
         return (
             <Cell
                 key={key}
-                small={true}>
+                small={true}
+            >
                 <Radio
                     skin="dark"
                     value={identifier}
                     checked={!!selected}
-                    onChange={this.handleSingleSelectionChange} />
+                    onChange={this.handleSingleSelectionChange}
+                />
             </Cell>
         );
     };
@@ -102,12 +104,14 @@ export default class Row extends React.PureComponent<Props> {
         return (
             <Cell
                 key={key}
-                small={true}>
+                small={true}
+            >
                 <Checkbox
                     skin="dark"
                     value={identifier}
                     checked={!!selected}
-                    onChange={this.handleMultipleSelectionChange} />
+                    onChange={this.handleMultipleSelectionChange}
+                />
             </Cell>
         );
     };
@@ -130,7 +134,8 @@ export default class Row extends React.PureComponent<Props> {
                     key={key}
                     icon={button.icon}
                     rowId={identifier}
-                    onClick={handleClick} />
+                    onClick={handleClick}
+                />
             );
         });
     };

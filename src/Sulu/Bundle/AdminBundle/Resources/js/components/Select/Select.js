@@ -44,7 +44,8 @@ export default class Select extends React.PureComponent<Props> {
                 icon={icon}
                 onSelect={this.handleSelect}
                 displayValue={this.displayValue}
-                isOptionSelected={this.isOptionSelected}>
+                isOptionSelected={this.isOptionSelected}
+            >
                 {children}
             </GenericSelect>
         );

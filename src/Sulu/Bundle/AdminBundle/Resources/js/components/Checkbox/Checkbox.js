@@ -33,7 +33,8 @@ export default class Checkbox extends React.PureComponent<Props> {
                 value={value}
                 name={name}
                 icon={checked ? CHECKED_ICON : undefined}
-                onChange={onChange}>
+                onChange={onChange}
+            >
                 {children}
             </Switch>
         );

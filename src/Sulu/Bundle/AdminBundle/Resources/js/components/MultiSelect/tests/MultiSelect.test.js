@@ -12,7 +12,8 @@ test('The component should render a generic select', () => {
         <MultiSelect
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChange}>
+            onChange={onChange}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -28,7 +29,8 @@ test('The component should pass the correct display value if nothing is selected
         <MultiSelect
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChange}>
+            onChange={onChange}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -46,7 +48,8 @@ test('The component should pass the correct display value if everything is selec
             values={['option-1', 'option-2', 'option-3']}
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChange}>
+            onChange={onChange}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -64,7 +67,8 @@ test('The component should pass the correct display value if some options are se
             values={['option-1', 'option-2']}
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChange}>
+            onChange={onChange}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -82,7 +86,8 @@ test('The component should select the correct option', () => {
             values={['option-1', 'option-2']}
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChange}>
+            onChange={onChange}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -102,7 +107,8 @@ test('The component should trigger the change callback on select with an added v
             values={['option-1', 'option-2']}
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChangeSpy}>
+            onChange={onChangeSpy}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -120,7 +126,8 @@ test('The component should trigger the change callback on select with a removed 
             values={['option-1', 'option-2']}
             noneSelectedText="None selected"
             allSelectedText="All selected"
-            onChange={onChangeSpy}>
+            onChange={onChangeSpy}
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />

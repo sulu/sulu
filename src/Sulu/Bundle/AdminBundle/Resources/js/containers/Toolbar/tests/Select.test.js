@@ -22,7 +22,8 @@ test('Render disabled select', () => {
     expect(render(
         <Select
             {...selectPropsMock}
-            disabled={true} />
+            disabled={true}
+        />
     )).toMatchSnapshot();
 });
 
@@ -30,7 +31,8 @@ test('Render select with a prepended icon', () => {
     expect(render(
         <Select
             {...selectPropsMock}
-            icon="floppy-o" />
+            icon="floppy-o"
+        />
     )).toMatchSnapshot();
 });
 
@@ -38,7 +40,8 @@ test('Render select with a different size', () => {
     expect(render(
         <Select
             {...selectPropsMock}
-            size="small" />
+            size="small"
+        />
     )).toMatchSnapshot();
 });
 
@@ -54,7 +57,8 @@ test('Disabled select will not open', () => {
     const select = mount(
         <Select
             {...selectPropsMock}
-            disabled={true} />
+            disabled={true}
+        />
     );
 
     expect(select.find('.optionList').length).toBe(0);

@@ -66,12 +66,14 @@ export default class Dropdown extends React.PureComponent<DropdownProps> {
                     value={label}
                     onClick={this.handleButtonClick}
                     active={this.open}
-                    hasOptions={true} />
+                    hasOptions={true}
+                />
                 {this.open &&
                     <OptionList
                         options={options}
                         onOptionClick={this.handleOptionListClick}
-                        onClose={this.handleOptionListClose} />
+                        onClose={this.handleOptionListClose}
+                    />
                 }
             </div>
         );

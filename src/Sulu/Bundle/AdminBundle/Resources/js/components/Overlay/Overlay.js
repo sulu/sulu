@@ -99,7 +99,8 @@ export default class Overlay extends React.PureComponent<Props> {
             <Portal isOpened={open || this.openHasChanged}>
                 <div
                     className={containerClass}
-                    onTransitionEnd={this.handleTransitionEnd}>
+                    onTransitionEnd={this.handleTransitionEnd}
+                >
                     <div className={overlayStyles.overlay}>
                         <section className={overlayStyles.content}>
                             <header>
@@ -107,7 +108,8 @@ export default class Overlay extends React.PureComponent<Props> {
                                 <Icon
                                     name={CLOSE_ICON}
                                     className={overlayStyles.icon}
-                                    onClick={this.handleIconClick} />
+                                    onClick={this.handleIconClick}
+                                />
                             </header>
                             <article>{children}</article>
                             <footer>

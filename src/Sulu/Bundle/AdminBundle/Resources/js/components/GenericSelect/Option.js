@@ -77,7 +77,8 @@ export default class Option extends React.PureComponent<Props> {
                     className={optionClass}
                     ref={this.setButton}
                     onClick={this.handleButtonClick}
-                    disabled={disabled}>
+                    disabled={disabled}
+                >
                     {this.renderSelectedVisualization()}
                     {children}
                 </button>
@@ -94,7 +95,8 @@ export default class Option extends React.PureComponent<Props> {
             <Checkbox
                 onChange={this.handleButtonClick}
                 className={optionStyles.input}
-                checked={this.props.selected} />
+                checked={this.props.selected}
+            />
         );
     }
 }
