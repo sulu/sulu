@@ -70,14 +70,6 @@ export default class Router {
         this.query = query;
     }
 
-    @computed get server(): Object {
-        if (!this.route || !this.route.options) {
-            return {};
-        }
-
-        return this.route.options;
-    }
-
     @computed get url(): string {
         if (!this.route) {
             return '';

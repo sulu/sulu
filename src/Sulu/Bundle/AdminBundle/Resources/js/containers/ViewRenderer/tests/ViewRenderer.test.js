@@ -18,7 +18,7 @@ test('Render view returned from ViewRegistry', () => {
 test('Render view returned from ViewRegistry with passed router', () => {
     const router = {
         attributes: {
-            value: 'Test from props',
+            value: 'Test attribute',
         },
     };
 

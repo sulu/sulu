@@ -37,23 +37,23 @@ Finally, `options` are additional values that can be set on the server side to i
 application.
 
 The `Router` tries to imitate the naming of [Symfony](https://symfony.com/doc/current/components/http_foundation.html),
-therefore it has three different properties, which are observable, to retrieve routing parameters - `server`,
-`attributes` and `query`. The following examples illustrate the values for each query based on the routes defined
-above:
+therefore it has three different properties, which are observable, to retrieve routing parameters - `attributes` and
+`query`. In addition to that there is a `route` parameter allowing to access the route options. The following examples
+illustrate the values for each query based on the routes defined above:
 
 ```javascript
 // URL: #/snippets
-router.server;          // returns {type: 'snippets'}
+router.route.options;   // returns {type: 'snippets'}
 router.attributes;      // returns {}
 router.query;           // returns {}
 
 // URL: #/snippets?page=1
-router.server;          // returns {type: 'snippets'}
+router.route.options;   // returns {type: 'snippets'}
 router.attributes;      // returns {}
 router.query;           // returns {page: '1'}
 
 // URL: #/contacts/5
-router.server;          // returns {type: 'contacts'}
+router.route.options;   // returns {type: 'contacts'}
 router.attributes;      // returns {id: 5}
 router.query;           // returns {}
 ```

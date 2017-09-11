@@ -1,10 +1,12 @@
 // @flow
 import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import React from 'react';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer/types';
 
+@observer
 class Form extends React.PureComponent<ViewProps> {
     @observable dirty = false;
 

@@ -32,7 +32,7 @@ test('Navigate to route using state', () => {
     router.navigate('page', {uuid: 'some-uuid'});
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.view).toBe('form');
-    expect(router.server.type).toBe('page');
+    expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/pages/some-uuid');
 });
@@ -55,7 +55,7 @@ test('Navigate to route with search parameters using state', () => {
     router.navigate('page', {uuid: 'some-uuid'}, {page: '1', sort: 'title'});
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.view).toBe('form');
-    expect(router.server.type).toBe('page');
+    expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.query.page).toBe('1');
     expect(router.query.sort).toBe('title');
@@ -96,7 +96,7 @@ test('Navigate to route using URL', () => {
 
     history.push('/pages/some-uuid/value');
     expect(router.route.view).toBe('form');
-    expect(router.server.type).toBe('page');
+    expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.attributes.test).toBe('value');
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
@@ -119,7 +119,7 @@ test('Navigate to route using URL with search parameters', () => {
 
     history.push('/pages/some-uuid/value?page=1&sort=date');
     expect(router.route.view).toBe('form');
-    expect(router.server.type).toBe('page');
+    expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.attributes.test).toBe('value');
     expect(router.query.page).toBe('1');
