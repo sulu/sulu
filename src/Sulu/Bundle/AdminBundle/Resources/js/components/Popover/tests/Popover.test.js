@@ -41,10 +41,16 @@ test('The popover should render in body when open', () => {
     const view = mount(
         <Popover
             open={true}
-            anchorEl={getMockedAnchorEl()}>
-            <div>My item 1</div>
-            <div>My item 2</div>
-            <div>My item 3</div>
+            anchorElement={getMockedAnchorEl()}>
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                        <div>My item 2</div>
+                        <div>My item 3</div>
+                    </div>
+                )
+            }
         </Popover>
     ).render();
     expect(view).toMatchSnapshot();
@@ -56,10 +62,16 @@ test('The popover should not render in body when not open', () => {
     const view = mount(
         <Popover
             open={false}
-            anchorEl={getMockedAnchorEl()}>
-            <div>My item 1</div>
-            <div>My item 2</div>
-            <div>My item 3</div>
+            anchorElement={getMockedAnchorEl()}>
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                        <div>My item 2</div>
+                        <div>My item 3</div>
+                    </div>
+                )
+            }
         </Popover>
     ).render();
     expect(view).toMatchSnapshot();
@@ -72,8 +84,14 @@ test('The popover should request to be closed when the backdrop is clicked', () 
         <Popover
             open={true}
             onClose={onCloseSpy}
-            anchorEl={getMockedAnchorEl()}>
-            <div>My item 1</div>
+            anchorElement={getMockedAnchorEl()}>
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
         </Popover>
     );
     popover.find('Backdrop').simulate('click');
@@ -88,8 +106,14 @@ test('The popover should request to be closed when the window is blurred', () =>
         <Popover
             open={true}
             onClose={onCloseSpy}
-            anchorEl={getMockedAnchorEl()}>
-            <div>My item 1</div>
+            anchorElement={getMockedAnchorEl()}>
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
         </Popover>
     ).render();
     expect(windowListeners.blur).toBeDefined();
@@ -100,8 +124,14 @@ test('The popover should request to be closed when the window is blurred', () =>
 test('The popover should take its dimensions from the positioner', () => {
     const body = document.body;
     const popover = mount(
-        <Popover open={true} anchorEl={getMockedAnchorEl()}>
-            <div>My item 1</div>
+        <Popover open={true} anchorElement={getMockedAnchorEl()}>
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
         </Popover>
     );
     popover.instance().scrollHeight = 100;

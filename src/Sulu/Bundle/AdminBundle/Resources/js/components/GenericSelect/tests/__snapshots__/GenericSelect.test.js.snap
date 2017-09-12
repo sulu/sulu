@@ -44,29 +44,27 @@ exports[`The component should open the popover when the display value is clicked
 exports[`The component should open the popover when the display value is clicked 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <div class=\\"popover\\" style=\\"top: 10px;\\">
-      <ul class=\\"optionsList\\">
-        <li>
-          <button class=\\"option icon\\">
-            <!-- react-text: 6 -->Option 1
-            <!-- /react-text -->
-          </button>
-        </li>
-        <li>
-          <button class=\\"option icon\\">
-            <!-- react-text: 9 -->Option 2
-            <!-- /react-text -->
-          </button>
-        </li>
-        <li class=\\"divider\\"></li>
-        <li>
-          <button class=\\"option icon\\">
-            <!-- react-text: 13 -->Option 3
-            <!-- /react-text -->
-          </button>
-        </li>
-      </ul>
-    </div>
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: -8px; position: fixed; pointer-events: auto; left: 10px;\\">
+      <li>
+        <button class=\\"option icon\\">
+          <!-- react-text: 5 -->Option 1
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li>
+        <button class=\\"option icon\\">
+          <!-- react-text: 8 -->Option 2
+          <!-- /react-text -->
+        </button>
+      </li>
+      <li class=\\"divider\\"></li>
+      <li>
+        <button class=\\"option icon\\">
+          <!-- react-text: 12 -->Option 3
+          <!-- /react-text -->
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 <div>

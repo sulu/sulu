@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
 import GenericSelect from '../GenericSelect';
@@ -116,7 +116,7 @@ test('The component should pass the centered child node to the popover', () => {
 test('The component should pass the selected property to the options', () => {
     const isOptionSelected = () => true;
     const onSelect = () => {};
-    const select = shallow(
+    const select = mount(
         <GenericSelect
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
@@ -128,8 +128,6 @@ test('The component should pass the selected property to the options', () => {
             <Option value="option-3">Option 3</Option>
         </GenericSelect>
     );
-    const options = select.find('Option');
-    expect(options.get(0).props.selected).toBe(true);
-    expect(options.get(1).props.selected).toBe(true);
-    expect(options.get(2).props.selected).toBe(true);
+    select.instance().handleDisplayValueClick();
+    expect(document.body.querySelectorAll('.selected').length).toBe(3);
 });

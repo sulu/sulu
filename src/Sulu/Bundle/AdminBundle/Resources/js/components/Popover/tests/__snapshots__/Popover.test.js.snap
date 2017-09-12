@@ -9,7 +9,7 @@ exports[`The popover should render in body when open 1`] = `<div />`;
 exports[`The popover should render in body when open 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <div class=\\"popover\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
+    <div style=\\"top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;\\">
       <div>My item 1</div>
       <div>My item 2</div>
       <div>My item 3</div>
@@ -24,7 +24,7 @@ exports[`The popover should render in body when open 2`] = `
 exports[`The popover should take its dimensions from the positioner 1`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <div class=\\"popover\\" style=\\"top: 1px; height: 30px; left: 2px;\\">
+    <div style=\\"top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;\\">
       <div>My item 1</div>
     </div>
   </div>

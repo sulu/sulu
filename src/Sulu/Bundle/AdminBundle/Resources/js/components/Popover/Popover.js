@@ -3,7 +3,7 @@ import React from 'react';
 import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
-import type {ChildrenArray, ElementRef} from 'react';
+import type {Node, ElementRef} from 'react';
 import Backdrop from '../Backdrop';
 import type {PopoverDimensions} from './types';
 import PopoverPositioner from './PopoverPositioner';
@@ -11,11 +11,11 @@ import popoverStyles from './popover.scss';
 
 type Props = {
     open: boolean,
-    children: ChildrenArray<*>,
+    children?: (setPopoverElementRef: (ref: ElementRef<*>) => void, style: Object) => Node,
     onClose?: () => void,
     /** The element which will be used to position the popover */
-    anchorEl: ElementRef<*>,
-    centerChildNode?: ElementRef<*>,
+    anchorElement: ElementRef<*>,
+    centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
     verticalOffset: number,
 };
@@ -28,7 +28,7 @@ export default class Popover extends React.PureComponent<Props> {
         verticalOffset: 0,
     };
 
-    @observable popoverEl: ElementRef<'div'>;
+    @observable popoverRef: ElementRef<'div'>;
 
     @observable scrollHeight: number;
 
@@ -47,8 +47,8 @@ export default class Popover extends React.PureComponent<Props> {
     }
 
     componentDidUpdate() {
-        if (this.popoverEl) {
-            this.popoverEl.scrollTop = this.scrollTop || 0;
+        if (this.popoverRef) {
+            this.popoverRef.scrollTop = this.scrollTop || 0;
         }
     }
 
@@ -60,19 +60,19 @@ export default class Popover extends React.PureComponent<Props> {
 
     @computed get dimensions(): PopoverDimensions {
         const {
-            anchorEl,
+            anchorElement,
             verticalOffset,
             horizontalOffset,
-            centerChildNode,
+            centerChildElement,
         } = this.props;
         const {
             top = 0,
             left = 0,
             width = 0,
             height = 0,
-        } = anchorEl.getBoundingClientRect();
-        const centerChildOffsetTop = (centerChildNode) ? centerChildNode.offsetTop : 0;
-        const alignOnVerticalAnchorEdges = (centerChildNode) ? false : true;
+        } = anchorElement.getBoundingClientRect();
+        const centerChildOffsetTop = (centerChildElement) ? centerChildElement.offsetTop : 0;
+        const alignOnVerticalAnchorEdges = (!centerChildElement) ? true : false;
 
         return PopoverPositioner.getCroppedDimensions(
             this.scrollWidth,
@@ -92,12 +92,11 @@ export default class Popover extends React.PureComponent<Props> {
         const {
             scrollWidth,
             scrollHeight,
-        } = this.popoverEl;
-        const borderWidth = parseInt(window.getComputedStyle(this.popoverEl).borderLeftWidth, 10) * 2;
+        } = this.popoverRef;
 
         this.setScrollDimensions(
-            scrollWidth + borderWidth,
-            scrollHeight + borderWidth,
+            scrollWidth,
+            scrollHeight,
         );
     }
 
@@ -106,11 +105,11 @@ export default class Popover extends React.PureComponent<Props> {
         this.scrollHeight = scrollHeight;
     }
 
-    handleBackropClick = this.close;
+    handleBackdropClick = this.close;
 
-    @action setPopoverNode = (popoverEl: ElementRef<'div'>) => {
-        if (popoverEl) {
-            this.popoverEl = popoverEl;
+    @action setPopoverRef = (popoverRef: ElementRef<*>) => {
+        if (popoverRef) {
+            this.popoverRef = popoverRef;
             this.updateDimensions();
         }
     };
@@ -118,31 +117,31 @@ export default class Popover extends React.PureComponent<Props> {
     render() {
         const {
             open,
-            anchorEl,
             children,
+            anchorElement,
         } = this.props;
 
-        if (!open || !anchorEl) {
+        if (!open || !anchorElement) {
             return null;
         }
 
         const dimensions = this.dimensions;
-        const style = PopoverPositioner.dimensionsToStyle(dimensions);
+        const styles = Object.assign({}, PopoverPositioner.dimensionsToStyle(dimensions), {
+            position: 'fixed',
+            pointerEvents: 'auto',
+        });
         this.scrollTop = dimensions.scrollTop;
 
         return (
             <div>
                 <Portal isOpened={open}>
                     <div className={popoverStyles.container}>
-                        <div
-                            ref={this.setPopoverNode}
-                            style={style}
-                            className={popoverStyles.popover}>
-                            {children}
-                        </div>
+                        {children &&
+                            children(this.setPopoverRef, styles)
+                        }
                     </div>
                 </Portal>
-                <Backdrop visible={false} open={open} onClick={this.handleBackropClick} />
+                <Backdrop visible={false} open={open} onClick={this.handleBackdropClick} />
             </div>
         );
     }

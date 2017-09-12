@@ -5,8 +5,11 @@ import PopoverPositioner from '../PopoverPositioner';
 const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
 
-const getCroppedDimensionsArgs = (changes = {}) => {
-    const argsObj = Object.assign({}, {
+window.innerWidth = 1920;
+window.innerHeight = 1000;
+
+const getCroppedDimensionsArguments = (croppedDimensionsArguments = {}) => {
+    const mergedCroppedDimensionsArguments = Object.assign({}, {
         popoverWidth: 300,
         popoverHeight: 500,
         anchorTop: 400,
@@ -17,35 +20,33 @@ const getCroppedDimensionsArgs = (changes = {}) => {
         verticalOffset: VERTICAL_OFFSET,
         centerChildOffsetTop: 100,
         alignOnVerticalEdges: false,
-        windowWidth: 1920,
-        windowHeight: 1000,
-    }, changes);
+    }, croppedDimensionsArguments);
 
     return [
-        argsObj.popoverWidth,
-        argsObj.popoverHeight,
-        argsObj.anchorTop,
-        argsObj.anchorLeft,
-        argsObj.anchorWidth,
-        argsObj.anchorHeight,
-        argsObj.horizontalOffset,
-        argsObj.verticalOffset,
-        argsObj.centerChildOffsetTop,
-        argsObj.alignOnVerticalEdges,
-        argsObj.windowWidth,
-        argsObj.windowHeight,
+        mergedCroppedDimensionsArguments.popoverWidth,
+        mergedCroppedDimensionsArguments.popoverHeight,
+        mergedCroppedDimensionsArguments.anchorTop,
+        mergedCroppedDimensionsArguments.anchorLeft,
+        mergedCroppedDimensionsArguments.anchorWidth,
+        mergedCroppedDimensionsArguments.anchorHeight,
+        mergedCroppedDimensionsArguments.horizontalOffset,
+        mergedCroppedDimensionsArguments.verticalOffset,
+        mergedCroppedDimensionsArguments.centerChildOffsetTop,
+        mergedCroppedDimensionsArguments.alignOnVerticalEdges,
+        mergedCroppedDimensionsArguments.windowWidth,
+        mergedCroppedDimensionsArguments.windowHeight,
     ];
 };
 
 test('The positioner should return the correct dimensions when the popover fits into the screen', () => {
     expect(PopoverPositioner.getCroppedDimensions(
-        ...(getCroppedDimensionsArgs())
+        ...(getCroppedDimensionsArguments())
     )).toEqual({top: 302, left: 480, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the popover needs to be cropped at the top', () => {
     expect(PopoverPositioner.getCroppedDimensions(
-        ...(getCroppedDimensionsArgs({
+        ...(getCroppedDimensionsArguments({
             anchorTop: 50,
             centerChildOffsetTop: 300,
         }))
@@ -54,7 +55,7 @@ test('The positioner should return the correct dimensions when the popover needs
 
 test('The positioner should return the correct dimensions when the popover undercuts the min height at the top', () => {
     expect(PopoverPositioner.getCroppedDimensions(
-        ...(getCroppedDimensionsArgs({
+        ...(getCroppedDimensionsArguments({
             anchorTop: 50,
             centerChildOffsetTop: 450,
         }))
@@ -63,7 +64,7 @@ test('The positioner should return the correct dimensions when the popover under
 
 test('The positioner should return the correct dimensions when the popover needs to be cropped at the bottom', () => {
     expect(PopoverPositioner.getCroppedDimensions(
-        ...(getCroppedDimensionsArgs({
+        ...(getCroppedDimensionsArguments({
             anchorTop: 920,
             centerChildOffsetTop: 300,
         }))
@@ -73,7 +74,7 @@ test('The positioner should return the correct dimensions when the popover needs
 test('The positioner should return the correct dimensions when the popover undercuts the min height at the bottom',
     () => {
         expect(PopoverPositioner.getCroppedDimensions(
-            ...(getCroppedDimensionsArgs({
+            ...(getCroppedDimensionsArguments({
                 anchorTop: 920,
                 centerChildOffsetTop: 10,
             }))
@@ -83,7 +84,7 @@ test('The positioner should return the correct dimensions when the popover under
 
 test('The positioner should return the correct dimensions when the popover overflows to the left', () => {
     expect(PopoverPositioner.getCroppedDimensions(
-        ...(getCroppedDimensionsArgs({
+        ...(getCroppedDimensionsArguments({
             popoverWidth: 600,
             anchorTop: 400,
             anchorLeft: 10,
@@ -94,7 +95,7 @@ test('The positioner should return the correct dimensions when the popover overf
 
 test('The positioner should return the correct dimensions when the popover overflows to the right', () => {
     expect(PopoverPositioner.getCroppedDimensions(
-        ...(getCroppedDimensionsArgs({
+        ...(getCroppedDimensionsArguments({
             popoverWidth: 600,
             anchorTop: 400,
             anchorLeft: 2000,

@@ -4,6 +4,7 @@ import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Popover from '../Popover';
+import Menu from '../Menu';
 import Action from './Action';
 import Option from './Option';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
@@ -27,29 +28,29 @@ export default class GenericSelect extends React.PureComponent<Props> {
         closeOnSelect: true,
     };
 
-    @observable displayValueNode: ?ElementRef<'button'>;
+    @observable displayValueRef: ?ElementRef<'button'>;
 
-    @observable selectedOptionNode: ?ElementRef<'li'>;
+    @observable selectedOptionRef: ?ElementRef<'li'>;
 
     @observable open: boolean;
 
-    @action openPopup = () => {
+    @action openOptionList = () => {
         this.open = true;
     };
 
-    @action closePopup = () => {
+    @action closeOptionList = () => {
         this.open = false;
     };
 
-    @action setDisplayValueNode = (node: ?ElementRef<'button'>) => {
+    @action setDisplayValueRef = (node: ?ElementRef<'button'>) => {
         if (node) {
-            this.displayValueNode = node;
+            this.displayValueRef = node;
         }
     };
 
-    @action setSelectedOptionNode = (node: ?ElementRef<'li'>, selected: boolean) => {
-        if (!this.selectedOptionNode || (node && selected)) {
-            this.selectedOptionNode = node;
+    @action setSelectedOptionRef = (node: ?ElementRef<'li'>, selected: boolean) => {
+        if (!this.selectedOptionRef || (node && selected)) {
+            this.selectedOptionRef = node;
         }
     };
 
@@ -58,13 +59,13 @@ export default class GenericSelect extends React.PureComponent<Props> {
             onClick: this.handleOptionClick,
             selected: this.props.isOptionSelected(originalOption),
             selectedVisualization: this.props.selectedVisualization,
-            optionRef: this.setSelectedOptionNode,
+            optionRef: this.setSelectedOptionRef,
         });
     }
 
     cloneAction(originalAction: Element<typeof Action>) {
         return React.cloneElement(originalAction, {
-            afterAction: this.closePopup,
+            afterAction: this.closeOptionList,
         });
     }
 
@@ -87,13 +88,13 @@ export default class GenericSelect extends React.PureComponent<Props> {
         this.props.onSelect(value);
 
         if (this.props.closeOnSelect) {
-            this.closePopup();
+            this.closeOptionList();
         }
     };
 
-    handleDisplayValueClick = this.openPopup;
+    handleDisplayValueClick = this.openOptionList;
 
-    handlePopoverClose = this.closePopup;
+    handleOptionListClose = this.closeOptionList;
 
     render() {
         const {
@@ -105,7 +106,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
         return (
             <div className={genericSelectStyles.select}>
                 <DisplayValue
-                    displayValueRef={this.setDisplayValueNode}
+                    displayValueRef={this.setDisplayValueRef}
                     icon={icon}
                     onClick={this.handleDisplayValueClick}
                 >
@@ -113,15 +114,22 @@ export default class GenericSelect extends React.PureComponent<Props> {
                 </DisplayValue>
                 <Popover
                     open={this.open}
-                    anchorEl={this.displayValueNode}
-                    centerChildNode={this.selectedOptionNode}
+                    anchorElement={this.displayValueRef}
+                    centerChildElement={this.selectedOptionRef}
                     horizontalOffset={HORIZONTAL_OFFSET}
                     verticalOffset={VERTICAL_OFFSET}
-                    onClose={this.handlePopoverClose}
+                    onClose={this.handleOptionListClose}
                 >
-                    <ul className={genericSelectStyles.optionsList}>
-                        {clonedChildren}
-                    </ul>
+                    {
+                        (setPopoverElementRef, popoverStyle) => (
+                            <Menu
+                                menuRef={setPopoverElementRef}
+                                style={popoverStyle}
+                            >
+                                {clonedChildren}
+                            </Menu>
+                        )
+                    }
                 </Popover>
             </div>
         );

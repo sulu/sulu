@@ -18,8 +18,8 @@ export default class PopoverPositioner {
     static dimensionsToStyle(dimensions: PopoverDimensions): PopoverStyle {
         return {
             top: dimensions.top + 'px',
-            height: dimensions.height + 'px',
             left: dimensions.left + 'px',
+            maxHeight: dimensions.height + 'px',
         };
     }
 
@@ -34,9 +34,9 @@ export default class PopoverPositioner {
         verticalOffset: number,
         centerChildOffsetTop: number,
         alignOnVerticalAnchorEdges: boolean = true,
-        windowWidth: number = window.innerWidth,
-        windowHeight: number = window.innerHeight,
     ): PopoverDimensions {
+        const windowWidth =  window.innerWidth;
+        const windowHeight = window.innerHeight;
         // First, the popover is positioned without taking the screen borders or the minimum height into account.
         let dimensions = {
             top: anchorTop + verticalOffset - centerChildOffsetTop,
