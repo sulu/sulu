@@ -10,6 +10,7 @@ export default class Router {
     @observable route: Route;
     @observable attributes: Object;
     @observable query: Object;
+    @observable queryBinds: Map<string, observable> = new Map();
 
     constructor(history: Object) {
         this.history = history;
@@ -26,6 +27,14 @@ export default class Router {
                 this.history.push(currentUrl || historyUrl);
             }
         });
+    }
+
+    @action bindQuery(key: string, value: observable) {
+        this.queryBinds.set(key, value);
+    }
+
+    @action unbindQuery(key: string) {
+        this.queryBinds.delete(key);
     }
 
     match(path: string, queryString: string) {
@@ -68,6 +77,10 @@ export default class Router {
         this.route = route;
         this.attributes = attributes;
         this.query = query;
+
+        for (const [key, observableValue] of this.queryBinds.entries()) {
+            observableValue.set(this.query[key]);
+        }
     }
 
     @computed get url(): string {
@@ -77,9 +90,19 @@ export default class Router {
 
         const url = compile(this.route.path)(this.attributes);
         const searchParameters = new URLSearchParams();
-        Object.keys(this.query).forEach((currentSearchParameterKey) => {
-            searchParameters.set(currentSearchParameterKey, this.query[currentSearchParameterKey]);
+        Object.keys(this.query).forEach((key) => {
+            searchParameters.set(key, this.query[key]);
         });
+
+        for (const [key, observableValue] of this.queryBinds.entries()) {
+            const value = observableValue.get();
+            if (!value) {
+                break;
+            }
+
+            searchParameters.set(key, value);
+        }
+
         const queryString = searchParameters.toString();
 
         return url + (queryString ? '?' + queryString : '');

@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
 import createHistory from 'history/createMemoryHistory';
-import {isObservable} from 'mobx';
+import {autorun, observable, isObservable} from 'mobx';
 import Router from '../Router';
 import routeStore from '../stores/RouteStore';
 
@@ -305,4 +305,89 @@ test('Use current route from URL', () => {
     const router = new Router(history);
 
     expect(router.route.name).toBe('page');
+});
+
+test('Bound query parameter should update passed observable', () => {
+    const value = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('page', value);
+    router.navigate('list', {}, {page: 2});
+
+    expect(value.get()).toBe(2);
+});
+
+test('Bound query parameter should update state in router', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable(1);
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('list', {}, {page: 1});
+    router.bindQuery('page', value);
+    expect(router.query.page).toBe('1');
+
+    value.set(2);
+    expect(router.query.page).toBe('2');
+});
+
+test('Unbind query should remove query binding', () => {
+    const value = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('remove', value);
+    expect(router.queryBinds.has('remove')).toBe(true);
+
+    router.unbindQuery('remove');
+    expect(router.queryBinds.has('remove')).toBe(false);
+});
+
+test('Do not add parameter to URL if undefined', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable();
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('page', value);
+    history.push('/list');
+    expect(history.location.search).toBe('');
+});
+
+test('Set state to undefined if parameter is removed from URL', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable(5);
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('page', value);
+    history.push('/list');
+    expect(value.get()).toBe(undefined);
 });
