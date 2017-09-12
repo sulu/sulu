@@ -80,8 +80,7 @@ class List extends React.PureComponent<ViewProps> {
     };
 
     componentWillMount() {
-        this.props.router.bindQuery('page', this.page);
-        window.page = this.page;
+        this.props.router.bindQuery('page', this.page, '1');
     }
 
     componentWillUnmount() {

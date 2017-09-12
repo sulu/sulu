@@ -1,6 +1,7 @@
 // @flow
 import {action, autorun, computed, observable} from 'mobx';
 import equal from 'fast-deep-equal';
+import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
 import type {Route} from './types';
 import routeStore from './stores/RouteStore';
@@ -8,14 +9,16 @@ import routeStore from './stores/RouteStore';
 export default class Router {
     history: Object;
     @observable route: Route;
-    @observable attributes: Object;
-    @observable query: Object;
+    @observable attributes: Object = {};
+    @observable query: Object = {};
     @observable queryBinds: Map<string, observable> = new Map();
+    queryBindDefaults: Map<string, ?string> = new Map();
 
     constructor(history: Object) {
         this.history = history;
 
         this.history.listen((location) => {
+            log.info('URL was changed to ' + location.pathname + location.search);
             this.match(location.pathname, location.search);
         });
 
@@ -24,17 +27,33 @@ export default class Router {
             const currentUrl = this.url;
             const historyUrl = pathname + search;
             if (currentUrl !== historyUrl) {
-                this.history.push(currentUrl || historyUrl);
+                // have to use the historyUrl as a fallback, because currentUrl could be undefined and break the routing
+                const url = currentUrl || historyUrl;
+                log.info('Router changes URL to ' + url);
+                this.history.push(url);
             }
         });
     }
 
-    @action bindQuery(key: string, value: observable) {
+    @action bindQuery(key: string, value: observable, defaultValue: ?string = undefined) {
+        if (key in this.query) {
+            // when the query parameter is bound set the state of the passed observable to the current value once
+            // required because otherwise the parameter will be overridden on the initial start of the application
+            value.set(this.query[key]);
+        }
+
+        if (typeof(value.get()) === 'undefined') {
+            // when the observable value is not set we want it to be the default value
+            value.set(defaultValue);
+        }
+
         this.queryBinds.set(key, value);
+        this.queryBindDefaults.set(key, defaultValue);
     }
 
     @action unbindQuery(key: string) {
         this.queryBinds.delete(key);
+        this.queryBindDefaults.delete(key);
     }
 
     match(path: string, queryString: string) {
@@ -79,7 +98,7 @@ export default class Router {
         this.query = query;
 
         for (const [key, observableValue] of this.queryBinds.entries()) {
-            observableValue.set(this.query[key]);
+            observableValue.set(this.query[key] || this.queryBindDefaults.get(key));
         }
     }
 
@@ -96,7 +115,8 @@ export default class Router {
 
         for (const [key, observableValue] of this.queryBinds.entries()) {
             const value = observableValue.get();
-            if (!value) {
+            if (value == this.queryBindDefaults.get(key)) {
+                searchParameters.delete(key);
                 break;
             }
 

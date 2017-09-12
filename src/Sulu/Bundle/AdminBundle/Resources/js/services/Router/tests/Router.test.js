@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
 import createHistory from 'history/createMemoryHistory';
-import {autorun, observable, isObservable} from 'mobx';
+import {observable, isObservable} from 'mobx';
 import Router from '../Router';
 import routeStore from '../stores/RouteStore';
 
@@ -390,4 +390,82 @@ test('Set state to undefined if parameter is removed from URL', () => {
     router.bindQuery('page', value);
     history.push('/list');
     expect(value.get()).toBe(undefined);
+});
+
+test('Bound query should update state to default value if removed from URL', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable(5);
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('page', value, '1');
+    history.push('/list');
+    expect(value.get()).toBe('1');
+});
+
+test('Bound query should omit URL parameter if set to default value', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable(5);
+
+    const history = createHistory();
+    const router = new Router(history);
+    router.navigate('list');
+
+    router.bindQuery('page', value, '1');
+    value.set('1');
+    expect(history.location.search).toBe('');
+});
+
+test('Bound query should initially not be set to undefined in URL', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable();
+
+    const history = createHistory();
+    history.push('/list');
+    const router = new Router(history);
+    router.bindQuery('page', value, '1');
+
+    expect(history.location.search).toBe('');
+});
+
+test('Bound query should be set to initial passed value from URL', () => {
+    routeStore.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const value = observable();
+
+    const history = createHistory();
+    history.push('/list?page=2');
+    const router = new Router(history);
+    router.bindQuery('page', value, '1');
+
+    expect(value.get()).toBe('2');
+    expect(history.location.search).toBe('?page=2');
 });
