@@ -41,7 +41,8 @@ test('The popover should render in body when open', () => {
     const view = mount(
         <Popover
             open={true}
-            anchorElement={getMockedAnchorEl()}>
+            anchorElement={getMockedAnchorEl()}
+        >
             {
                 (setPopoverRef, styles) => (
                     <div ref={setPopoverRef} style={styles}>
@@ -62,7 +63,8 @@ test('The popover should not render in body when not open', () => {
     const view = mount(
         <Popover
             open={false}
-            anchorElement={getMockedAnchorEl()}>
+            anchorElement={getMockedAnchorEl()}
+        >
             {
                 (setPopoverRef, styles) => (
                     <div ref={setPopoverRef} style={styles}>
@@ -84,7 +86,8 @@ test('The popover should request to be closed when the backdrop is clicked', () 
         <Popover
             open={true}
             onClose={onCloseSpy}
-            anchorElement={getMockedAnchorEl()}>
+            anchorElement={getMockedAnchorEl()}
+        >
             {
                 (setPopoverRef, styles) => (
                     <div ref={setPopoverRef} style={styles}>
@@ -106,7 +109,8 @@ test('The popover should request to be closed when the window is blurred', () =>
         <Popover
             open={true}
             onClose={onCloseSpy}
-            anchorElement={getMockedAnchorEl()}>
+            anchorElement={getMockedAnchorEl()}
+        >
             {
                 (setPopoverRef, styles) => (
                     <div ref={setPopoverRef} style={styles}>

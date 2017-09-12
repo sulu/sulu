@@ -26,7 +26,8 @@ export default class Menu extends React.PureComponent<Props> {
             <ul
                 ref={this.setRef}
                 style={style}
-                className={menuStyles.menu}>
+                className={menuStyles.menu}
+            >
                 {children}
             </ul>
         );
