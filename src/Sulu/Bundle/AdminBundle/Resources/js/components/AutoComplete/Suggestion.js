@@ -20,7 +20,7 @@ export default class Suggestion extends React.PureComponent<Props> {
         const regex = new RegExp(query, 'gi');
         const matches = value.match(regex);
 
-        if (!matches) {
+        if (!matches || query.length === 0) {
             return value;
         }
 
@@ -32,7 +32,8 @@ export default class Suggestion extends React.PureComponent<Props> {
         return (
             <span dangerouslySetInnerHTML={{
                 __html: highlightedMatches,
-            }} />
+            }}
+            />
         );
     }
 
@@ -57,12 +58,14 @@ export default class Suggestion extends React.PureComponent<Props> {
         return (
             <button
                 className={suggestionStyles.suggestion}
-                onClick={this.handleClick}>
+                onClick={this.handleClick}
+            >
                 {
                     icon &&
                     <Icon
                         name={icon}
-                        className={suggestionStyles.icon} />
+                        className={suggestionStyles.icon}
+                    />
                 }
                 <span>
                     {prepardedValue}

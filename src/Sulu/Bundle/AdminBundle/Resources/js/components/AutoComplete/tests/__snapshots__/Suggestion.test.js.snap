@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Suggestion should render 1`] = `
+<button
+  class="suggestion"
+>
+  <span
+    aria-hidden="true"
+    class="icon fa fa-ticket"
+  />
+  <span>
+    suggestion-1
+  </span>
+</button>
+`;
+
+exports[`Suggestion should render strong-tags around found chars 1`] = `
+<button
+  class="suggestion"
+>
+  <span
+    aria-hidden="true"
+    class="icon fa fa-ticket"
+  />
+  <span>
+    <span>
+      <strong>
+        sug
+      </strong>
+      gestion-1
+    </span>
+  </span>
+</button>
+`;

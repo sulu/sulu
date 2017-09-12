@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AutoComplete should render 1`] = `
+<div
+  class="autoComplete"
+>
+  <label
+    class="input"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+</div>
+`;
+
+exports[`Render the AutoComplete with open suggestions list 1`] = `
+<div
+  class="autoComplete"
+>
+  <label
+    class="input"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+  <div>
+    
+  </div>
+</div>
+`;
+
+exports[`Render the AutoComplete with open suggestions list 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: -12px; position: fixed; pointer-events: auto; left: 10px;\\">
+      <li style=\\"min-width: -10px;\\">
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-hidden=\\"true\\"></span><span>suggestion-1</span></button>
+      </li>
+      <li style=\\"min-width: -10px;\\">
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-hidden=\\"true\\"></span><span>suggestion-2</span></button>
+      </li>
+      <li style=\\"min-width: -10px;\\">
+        <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-hidden=\\"true\\"></span><span>suggestion-3</span></button>
+      </li>
+    </ul>
+  </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>"
+`;
+
+exports[`Render the AutoComplete with the placeholder text 1`] = `
+<div
+  class="autoComplete"
+>
+  <label
+    class="input"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+  <div>
+    
+  </div>
+</div>
+`;
+
+exports[`Render the AutoComplete with the placeholder text 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"container\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: -12px; position: fixed; pointer-events: auto; left: 10px;\\">
+      <li class=\\"noSuggestions\\" style=\\"min-width: -10px;\\">Nothing found, sadface...</li>
+    </ul>
+  </div>
+</div>
+<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>"
+`;

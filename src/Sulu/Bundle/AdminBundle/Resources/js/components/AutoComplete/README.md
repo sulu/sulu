@@ -1,3 +1,9 @@
+The AutoComplete is an input-field with auto-completation feature. The AutoComplete has no filter logic. That has to be 
+done inside a HoC which afterwards will adjust the list of suggestions based on the entered input. To display the 
+suggestions you can use the Suggestion component.
+
+Here a basic example (Pssh, look for your favourite Harry Potter character):
+
 ```
 const Suggestion = require('./Suggestion').default;
 

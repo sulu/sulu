@@ -6,7 +6,6 @@ $suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
 
 .suggestion {
     cursor: pointer;
-    display: flex;
     padding: 5px 20px 5px 40px;
     width: 100%;
     color: $suggestionTextColor;

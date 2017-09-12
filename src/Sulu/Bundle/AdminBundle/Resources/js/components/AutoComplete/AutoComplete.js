@@ -30,7 +30,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
     @observable open: boolean = false;
 
-    @observable inputRef: ElementRef<'label'>;
+    @observable inputRef: ElementRef<*>;
 
     @action openSuggestions() {
         this.open = true;
@@ -63,7 +63,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
         return React.Children.map(children, (child, index: number) => {
             return (
-                <li>
+                <li style={this.suggestionStyle}>
                     {
                         React.cloneElement(child, {
                             key: index,
@@ -86,7 +86,8 @@ export default class AutoComplete extends React.PureComponent<Props> {
         return (
             <li
                 style={this.suggestionStyle}
-                className={autoCompleteStyles.noSuggestions}>
+                className={autoCompleteStyles.noSuggestions}
+            >
                 {noSuggestionsMessage}
             </li>
         );
@@ -142,21 +143,25 @@ export default class AutoComplete extends React.PureComponent<Props> {
                     icon={inputIcon}
                     value={value}
                     placeholder={placeholder}
-                    onChange={this.handleChange} />
+                    onChange={this.handleChange}
+                />
                 <Popover
                     open={this.open}
-                    anchorEl={this.inputRef}
+                    anchorElement={this.inputRef}
                     onClose={this.handlePopoverClose}
                     horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
-                    verticalOffset={POPOVER_VERTICAL_OFFSET}>
+                    verticalOffset={POPOVER_VERTICAL_OFFSET}
+                >
                     {
                         (setPopoverElementRef, popoverStyle) => (
                             <Menu
                                 menuRef={setPopoverElementRef}
-                                style={popoverStyle}>
-                                {!noSuggestions
-                                    ? suggestions
-                                    : noSuggestionsMessage}
+                                style={popoverStyle}
+                            >
+                                {noSuggestions
+                                    ? noSuggestionsMessage
+                                    : suggestions
+                                }
                             </Menu>
                         )
                     }

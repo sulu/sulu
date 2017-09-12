@@ -1,4 +1,8 @@
 // @flow
 import AutoComplete from './AutoComplete';
+import Suggestion from './Suggestion';
 
-export default AutoComplete;
+export {
+    AutoComplete,
+    Suggestion,
+};

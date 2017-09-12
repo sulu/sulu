@@ -35,6 +35,8 @@ export default class Popover extends React.PureComponent<Props> {
 
     @observable popoverHeight: number;
 
+    childNodesCount: number;
+
     componentDidMount() {
         window.addEventListener('blur', this.close);
         window.addEventListener('resize', this.close);
@@ -46,11 +48,17 @@ export default class Popover extends React.PureComponent<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (this.popoverChildRef && !prevProps.open && this.props.open) {
+        if (!this.popoverChildRef) {
+            return;
+        }
+
+        if (!prevProps.open && this.props.open) {
             afterElementsRendered(() => {
                 this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
             });
         }
+
+        this.handleChildrenCountChange();
     }
 
     close = () => {
@@ -58,6 +66,16 @@ export default class Popover extends React.PureComponent<Props> {
             this.props.onClose();
         }
     };
+
+    handleChildrenCountChange() {
+        const childNodesCount = (this.popoverChildRef.childNodes) ? this.popoverChildRef.childNodes.length : 0;
+        
+        if (this.childNodesCount !== childNodesCount) {
+            this.updateDimensions();
+        }
+
+        this.childNodesCount = childNodesCount;
+    }
 
     @computed get dimensions(): PopoverDimensions {
         const {
@@ -89,7 +107,11 @@ export default class Popover extends React.PureComponent<Props> {
         );
     }
 
-    updateDimensions() {
+    updateDimensions = () => {
+        if (!this.popoverChildRef) {
+            return;
+        }
+
         const {
             offsetWidth,
             offsetHeight,
@@ -107,7 +129,7 @@ export default class Popover extends React.PureComponent<Props> {
             outerWidth,
             outerHeight
         );
-    }
+    };
 
     @action setPopoverSize(width: number, height: number) {
         this.popoverWidth = width;
