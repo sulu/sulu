@@ -4,6 +4,8 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
-        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
+        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
+        "react": "^15.6.0",
+        "classnames": "^2.2.5"
     }
 }
