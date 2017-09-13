@@ -11,6 +11,7 @@ import Application from './containers/Application';
 import {viewStore} from './containers/ViewRenderer';
 import Form from './views/Form';
 import List from './views/List';
+import {bundlesReadyPromise, bundleReady} from './services/Bundles';
 
 useStrict(true);
 
@@ -31,4 +32,10 @@ const translationPromise = Requester.get('/admin/v2/translations?locale=en')
 const configPromise = Requester.get('/admin/v2/config')
     .then((response) => routeStore.addCollection(response.routes));
 
-Promise.all([translationPromise, configPromise]).then(startApplication);
+Promise.all([
+    translationPromise,
+    configPromise,
+    bundlesReadyPromise,
+]).then(startApplication);
+
+bundleReady();
