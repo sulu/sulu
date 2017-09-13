@@ -1,4 +1,4 @@
 // @flow
-import {BundleRegistry} from 'sulu-admin-bundle';
+import {bundleReady} from 'sulu-admin-bundle/services';
 
-BundleRegistry.add();
+bundleReady();
