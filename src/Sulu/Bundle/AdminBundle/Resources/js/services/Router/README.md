@@ -67,3 +67,18 @@ const query = {admin: true};
 
 router.navigate(name, attributes, query); // redirects to #/contacts/7?admin=true
 ```
+
+Something especially useful is the ability to bind any observable to a query parameter of the router. The `bindQuery`
+method takes the name of the query parameter in the URL, the observable and a default value. The default value will be
+set if the value in the URL is not defined. Any change in the URL will be immediately reflected in that observable and
+the other way round.
+
+```javascript
+const value = observable(1);
+router.bindQuery('value', value, 'default');
+
+// user navigates to /page?value=something
+value.get(); // returns something
+
+value.set('anything'); // will navigate to /page?value=anything
+```
