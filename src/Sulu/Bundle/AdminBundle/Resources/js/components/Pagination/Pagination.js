@@ -2,6 +2,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import Icon from '../Icon';
+import {translate} from '../../services/Translator';
 import paginationStyles from './pagination.scss';
 
 type Props = {
@@ -44,11 +45,12 @@ export default class Pagination extends React.PureComponent<Props> {
             [paginationStyles.next]: true,
             [paginationStyles.enabled]: this.hasNextPage(),
         });
-        // TODO load translations in here?
+        const {current, total} = this.props;
+
         return (
             <nav className={paginationStyles.pagination}>
                 <span className={paginationStyles.display}>
-                    Page: {this.props.current} of {this.props.total}
+                    {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
                 </span>
                 <a className={previousClass} onClick={this.handlePreviousClick}>
                     <Icon name="angle-left" />

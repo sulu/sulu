@@ -3,6 +3,17 @@ import {mount, render} from 'enzyme';
 import React from 'react';
 import Pagination from '../Pagination';
 
+jest.mock('../../../services/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.page':
+                return 'Page';
+            case 'sulu_admin.of':
+                return 'of';
+        }
+    },
+}));
+
 test('Render pagination with page numbers', () => {
     const pagination = render(<Pagination current={5} total={10} onChange={jest.fn()} />);
 

@@ -38,6 +38,17 @@ jest.mock('../../../containers/Toolbar/withToolbar', () => function(Component) {
     return Component;
 });
 
+jest.mock('../../../services/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.page':
+                return 'Page';
+            case 'sulu_admin.of':
+                return 'of';
+        }
+    },
+}));
+
 test('Should render the datagrid with the correct resourceKey', () => {
     const router = {
         bindQuery: jest.fn(),
