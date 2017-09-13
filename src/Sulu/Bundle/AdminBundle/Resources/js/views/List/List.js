@@ -9,6 +9,7 @@ import type {ViewProps} from '../../containers/ViewRenderer/types';
 
 @observer
 class List extends React.PureComponent<ViewProps> {
+    page = observable();
     @observable tableData = {
         header: [
             'Type of',
@@ -78,10 +79,18 @@ class List extends React.PureComponent<ViewProps> {
         ],
     };
 
+    componentWillMount() {
+        this.props.router.bindQuery('page', this.page, '1');
+    }
+
+    componentWillUnmount() {
+        this.props.router.unbindQuery('page');
+    }
+
     render() {
         return (
             <div>
-                <h1>List</h1>
+                <h1>List - Page {this.page.get()}</h1>
                 <a href="#/snippets/123">To the Form</a>
                 <Table>
                     <Header>
