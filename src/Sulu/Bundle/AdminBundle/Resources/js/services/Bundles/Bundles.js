@@ -18,8 +18,8 @@ const bundlesReadyPromise: Promise<*> = new Promise((resolve, reject) => {
 
     setTimeout(() => {
         reject(
-            'Timeout exceeded: Check if you correctly call the "bundleReady" function in your Bundles ' +
-            'JavaScript file.'
+            'Timeout exceeded: Check if you correctly call the "bundleReady" function in the ' +
+            '"./Resources/js/index.js" file of all your bundles.'
         );
     }, TIMEOUT);
 });
