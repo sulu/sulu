@@ -11,7 +11,7 @@ import Application from './containers/Application';
 import {viewStore} from './containers/ViewRenderer';
 import Form from './views/Form';
 import List from './views/List';
-import BundleRegistry from './BundleRegistry';
+import {bundlesReadyPromise, bundleReady} from './services/Bundles';
 
 useStrict(true);
 
@@ -20,8 +20,6 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 viewStore.add('sulu_admin.list', List);
 viewStore.add('sulu_admin.form', Form);
-
-BundleRegistry.add();
 
 function startApplication() {
     const router = new Router(createHistory());
@@ -37,9 +35,7 @@ const configPromise = Requester.get('/admin/v2/config')
 Promise.all([
     translationPromise,
     configPromise,
-    BundleRegistry.wait(),
+    bundlesReadyPromise,
 ]).then(startApplication);
 
-export {
-    BundleRegistry,
-};
+bundleReady();
