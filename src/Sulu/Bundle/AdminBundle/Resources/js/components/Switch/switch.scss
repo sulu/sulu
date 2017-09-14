@@ -9,9 +9,7 @@ $marginBottom: 10px;
     & > div {
         font-size: $fontSize;
         margin-left: 10px;
-        white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     & + .label {

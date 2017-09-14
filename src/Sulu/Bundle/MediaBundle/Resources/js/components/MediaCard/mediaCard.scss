@@ -8,9 +8,8 @@ $mediaOverlayIconTextColor: $white;
 $containerBorderRadius: 3px;
 $imageBorderRadiusBottom: $containerBorderRadius;
 
-.container {
+.media-card {
     width: 260px;
-    margin-bottom: 20px;
     border-radius: $containerBorderRadius;
     border: 1px solid $containerBorderColor;
     background-color: $containerBackgroundColor;
@@ -42,7 +41,7 @@ $imageBorderRadiusBottom: $containerBorderRadius;
     transition: margin-left .15s linear;
 }
 
-.media-title {
+.title {
     position: relative;
     font-size: 12px;
     font-weight: bold;
@@ -50,13 +49,13 @@ $imageBorderRadiusBottom: $containerBorderRadius;
     overflow: hidden;
 }
 
-.media-title-text {
+.title-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.meta-info {
+.meta {
     color: $metaInfoTextColor;
     font-size: 10px;
 }
@@ -65,7 +64,7 @@ $imageBorderRadiusBottom: $containerBorderRadius;
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    background-image: url("data:image/gif;base64,R0lGODlhGAAYAKECAM7Ozunp6f///////yH5BAEKAAIALAAAAAAYABgAAAIyhI8Wy70JgZshJuoswk0fzngKWIlk6Z2iRK6q2cIn6Maprb03LXM1v/P1MD9hkDikrAoAOw==");
+    background-image: url("./checkerBackground.gif");
 
     img {
         width: 100%;

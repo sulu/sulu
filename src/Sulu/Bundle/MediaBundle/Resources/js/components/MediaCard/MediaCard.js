@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import {Icon, Checkbox} from 'sulu-admin-bundle';
+import classNames from 'classnames';
+import {Icon, Checkbox} from 'sulu-admin-bundle/components';
 import mediaCardStyles from './mediaCard.scss';
 
 type Props = {
@@ -11,9 +12,9 @@ type Props = {
     onClick?: (id: string | number) => void,
     onSelectionChange?: (id: string | number, selected: boolean) => void,
     /** The title which will be displayed in the header besides the checkbox */
-    mediaTitle: string,
+    title: string,
     /** For setting meta information like the file size or extension  */
-    metaInfo?: string,
+    meta?: string,
     /** The icon used inside the media overlay */
     icon?: string,
 };
@@ -48,12 +49,12 @@ export default class MediaCard extends React.PureComponent<Props> {
             id,
             icon,
             selected,
-            metaInfo,
+            meta,
             children,
-            mediaTitle,
+            title,
         } = this.props;
         const masonryClass = classNames(
-            mediaCardStyles.container,
+            mediaCardStyles.mediaCard,
             {
                 [mediaCardStyles.selected]: selected,
             }
@@ -64,20 +65,22 @@ export default class MediaCard extends React.PureComponent<Props> {
                 <div className={mediaCardStyles.header}>
                     <div
                         className={mediaCardStyles.headerClickArea}
-                        onClick={this.handleHeaderClick} />
-                    <div className={mediaCardStyles.mediaTitle}>
+                        onClick={this.handleHeaderClick}
+                    />
+                    <div className={mediaCardStyles.title}>
                         <Checkbox
                             value={id}
                             checked={selected}
                             onChange={this.handleSelectionChange}
-                            className={mediaCardStyles.checkbox}>
-                            <div className={mediaCardStyles.mediaTitleText}>
-                                {mediaTitle}
+                            className={mediaCardStyles.checkbox}
+                        >
+                            <div className={mediaCardStyles.titleText}>
+                                {title}
                             </div>
                         </Checkbox>
                     </div>
-                    <div className={mediaCardStyles.metaInfo}>
-                        {metaInfo}
+                    <div className={mediaCardStyles.meta}>
+                        {meta}
                     </div>
                 </div>
                 <div

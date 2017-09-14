@@ -2,20 +2,17 @@
 import {mount, render} from 'enzyme';
 import React from 'react';
 import Masonry from '../Masonry';
-import MasonryMediaItem from '../../MasonryMediaItem';
 
 test('Render an empty Masonry container', () => {
-    expect(render(
-        <Masonry></Masonry>
-    )).toMatchSnapshot();
+    expect(render(<Masonry />)).toMatchSnapshot();
 });
 
 test('Render a Masonry container with one item', () => {
     expect(render(
         <Masonry>
-            <MasonryMediaItem>
+            <div>
                 <img src="http://lorempixel.com/300/200" />
-            </MasonryMediaItem>
+            </div>
         </Masonry>
     )).toMatchSnapshot();
 });
@@ -28,16 +25,17 @@ test('Clicking on an item should call the responsible handler on the Masonry com
     const masonry = mount(
         <Masonry
             onItemClick={clickSpy}
-            onItemSelectionChange={selectionSpy}>
-            <MasonryMediaItem id={itemId}>
+            onItemSelectionChange={selectionSpy}
+        >
+            <div id={itemId}>
                 <img src="http://lorempixel.com/300/200" />
-            </MasonryMediaItem>
+            </div>
         </Masonry>
     );
 
-    masonry.find('MasonryMediaItem .media').simulate('click');
+    masonry.find('div .media').simulate('click');
     expect(clickSpy).toHaveBeenCalledWith(itemId);
 
-    masonry.find('MasonryMediaItem .headerClickArea').simulate('click');
+    masonry.find('div .headerClickArea').simulate('click');
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);
 });

@@ -8,6 +8,21 @@ const firstLetterIsUppercase = (string) => {
     return first === first.toUpperCase();
 };
 
+const compareFolderName = (folderA, folderB) => {
+    folderA = path.basename(folderA).toUpperCase();
+    folderB = path.basename(folderB).toUpperCase();
+
+    if (folderA < folderB) {
+        return -1;
+    }
+
+    if (folderA > folderB) {
+        return 1;
+    }
+
+    return 0;
+};
+
 module.exports = { // eslint-disable-line
     require: [
         'core-js/fn/array/includes',
@@ -20,10 +35,13 @@ module.exports = { // eslint-disable-line
             components: function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
                 // filter out higher order components
-                folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
+                folders = folders
+                    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+                    .sort(compareFolderName);
 
                 return folders.map((folder) => {
                     const component = path.basename(folder);
+
                     return path.join(folder, component + '.js');
                 });
             },
@@ -33,10 +51,13 @@ module.exports = { // eslint-disable-line
             components: function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/containers/*');
                 // filter out containers
-                folders = folders.filter((folder) => firstLetterIsUppercase(path.basename(folder)));
+                folders = folders
+                    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+                    .sort(compareFolderName);
 
                 return folders.map((folder) => {
                     const component = path.basename(folder);
+
                     return path.join(folder, component + '.js');
                 });
             },
@@ -48,8 +69,10 @@ module.exports = { // eslint-disable-line
 
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
+                    .sort(compareFolderName)
                     .map((folder) => {
                         const component = path.basename(folder);
+
                         return {name: component, content: folder + '/README.md'};
                     });
             })(),
@@ -71,10 +94,13 @@ module.exports = { // eslint-disable-line
             sections: (function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
                 folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
+
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
+                    .sort(compareFolderName)
                     .map((folder) => {
                         const component = path.basename(folder);
+
                         return {name: component, content: folder + '/README.md'};
                     });
             })(),
@@ -117,6 +143,14 @@ module.exports = { // eslint-disable-line
                             },
                         },
                         'postcss-loader',
+                    ],
+                },
+                {
+                    test:/\.(jpg|gif|png)(\?.*$|$)/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                        },
                     ],
                 },
                 {

@@ -5,34 +5,22 @@ import imagesLoaded from 'imagesloaded';
 import MasonryLayout from 'masonry-layout';
 import masonryStyles from './masonry.scss';
 
+const MASONRY_OPTIONS = {
+    gutter: 20,
+    horizontalOrder: true,
+    transitionDuration: 250,
+};
+
 type Props = {
-    children?: ChildrenArray<*>,
-    /** Called when an item gets selected or deselected */
-    onItemClick?: (rowId: string | number) => void,
-    /** Called when an item gets selected or deselected */
-    onItemSelectionChange?: (rowId: string | number, checked: boolean) => void,
-    /** 
-     * Specifies which child elements will be used as item elements in the layout. 
-     * Should always be set cause of performance reasons. 
-     */
-    itemSelector?: string,
-    /** The time it takes for every animation. Set to "0" to disable animations */
-    transitionDuration: number,
-    /** Adds horizontal space between item. To set vertical space between elements, use margin in CSS */
-    gutter: number,
+    children?: ChildrenArray<Node>,
 };
 
 export default class Masonry extends React.PureComponent<Props> {
-    static defaultProps = {
-        gutter: 15,
-        transitionDuration: 250,
-    };
-
-    elementRef: ElementRef<'div'>;
+    masonryRef: ElementRef<'div'>;
 
     masonry: MasonryLayout;
 
-    latestKnownChildNodes: Node[];
+    layoutedChildNodes: Node[];
 
     componentDidMount() {
         this.initMasonryLayout();
@@ -40,7 +28,7 @@ export default class Masonry extends React.PureComponent<Props> {
     }
 
     componentWillUnmount() {
-        this.latestKnownChildNodes = [];
+        this.layoutedChildNodes = [];
 
         this.destroyMasonry();
     }
@@ -50,63 +38,53 @@ export default class Masonry extends React.PureComponent<Props> {
         this.handleImagesLoading();
     }
 
-    setLayoutElementRef = (ref: ElementRef<'div'>) => {
-        this.elementRef = ref;
+    setMasonryRef = (ref: ElementRef<'div'>) => {
+        this.masonryRef = ref;
     };
 
     getChildNodes() {
-        const containerNode = this.elementRef;
-        const childNodes = containerNode.children;
+        const childNodes = this.masonryRef.children;
 
         return Array.from(childNodes);
     }
 
     initMasonryLayout() {
-        const {
-            gutter,
-            itemSelector,
-            transitionDuration,
-        } = this.props;
-        const options = {
-            gutter,
-            itemSelector,
-            transitionDuration,
-            horizontalOrder: true,
-        };
-
         this.masonry = new MasonryLayout(
-            this.elementRef,
-            options,
+            this.masonryRef,
+            MASONRY_OPTIONS,
         );
 
-        this.latestKnownChildNodes = this.getChildNodes();
+        this.layoutedChildNodes = this.getChildNodes();
     }
 
     destroyMasonry() {
         if (this.masonry) {
             this.masonry.destroy();
-
             this.masonry = null;
         }
     }
 
-    cloneItems(originalItems: any) {
-        return React.Children.map(originalItems, (item) => {
-            return React.cloneElement(
-                item,
+    cloneItems(originalItems: ChildrenArray<*>) {
+        const itemStyle = {marginBottom: MASONRY_OPTIONS.gutter};
+
+        return React.Children.map(originalItems, (item) => (
+            <li style={itemStyle}>
                 {
-                    key: item.key,
-                    onClick: this.handleItemClick,
-                    onSelectionChange: this.handleItemSelect,
-                },
-            );
-        });
+                    React.cloneElement(
+                        item,
+                        {
+                            key: item.key,
+                        },
+                    )
+                }
+            </li>
+        ));
     }
 
     handleChildrenUpdates() {
         const currentChildNodes = this.getChildNodes();
         const knownChildNodes = currentChildNodes.filter((currentChildNode) => {
-            return this.latestKnownChildNodes.includes(currentChildNode);
+            return this.layoutedChildNodes.includes(currentChildNode);
         });
 
         const newChildNodes = currentChildNodes.filter((currentChildNode) => {
@@ -117,12 +95,12 @@ export default class Masonry extends React.PureComponent<Props> {
             return !currentChildNodes.includes(knownChildNode);
         });
 
-        let beginningIndex = 0;
+        let startIndex = 0;
         const prependedChildNodes = newChildNodes.filter((newChildNode) => {
-            const isPrepended = (beginningIndex === currentChildNodes.indexOf(newChildNode));
+            const isPrepended = (startIndex === currentChildNodes.indexOf(newChildNode));
 
             if (isPrepended) {
-                beginningIndex++;
+                startIndex++;
             }
 
             return isPrepended;
@@ -139,7 +117,6 @@ export default class Masonry extends React.PureComponent<Props> {
 
         if (appendedChildNodes.length > 0) {
             this.masonry.appended(appendedChildNodes);
-            this.masonry.reloadItems();
 
             if (prependedChildNodes.length === 0) {
                 this.masonry.reloadItems();
@@ -151,27 +128,15 @@ export default class Masonry extends React.PureComponent<Props> {
             this.masonry.reloadItems();
         }
 
-        this.latestKnownChildNodes = currentChildNodes;
+        this.layoutedChildNodes = currentChildNodes;
 
         this.masonry.layout();
     }
 
     handleImagesLoading() {
-        imagesLoaded(this.latestKnownChildNodes)
+        imagesLoaded(this.layoutedChildNodes)
             .once('always', () => this.masonry.layout());
     }
-
-    handleItemClick = (itemId: string | number) => {
-        if (this.props.onItemClick) {
-            this.props.onItemClick(itemId);
-        }
-    };
-
-    handleItemSelect = (itemId: string | number, checked: boolean) => {
-        if (this.props.onItemSelectionChange) {
-            this.props.onItemSelectionChange(itemId, checked);
-        }
-    };
 
     render() {
         const {
@@ -181,8 +146,9 @@ export default class Masonry extends React.PureComponent<Props> {
 
         return (
             <div
-                ref={this.setLayoutElementRef}
-                className={masonryStyles.masonry}>
+                ref={this.setMasonryRef}
+                className={masonryStyles.masonry}
+            >
                 {clonedItems}
             </div>
         );

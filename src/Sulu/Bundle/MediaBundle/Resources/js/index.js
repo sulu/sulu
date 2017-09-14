@@ -1,12 +1,8 @@
 // @flow
 import {bundleReady} from 'sulu-admin-bundle/services';
-import MediaList from './views/MediaList';
-import MediaCard from './components/MediaCard';
+import {viewStore} from 'sulu-admin-bundle/containers';
+import MediaOverview from './views/MediaOverview';
 
-viewStore.add('sulu_media.media_list', MediaList);
+viewStore.add('sulu_media.overview', MediaOverview);
 
 bundleReady();
-
-export {
-    MediaCard,
-};
