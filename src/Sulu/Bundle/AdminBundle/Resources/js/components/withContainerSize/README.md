@@ -2,7 +2,7 @@ This is a higher order component which decorates the child component with the wi
 of the container. `withContainerSize` renders a container around the child component and passes the
 width and height of this container to the child via the properties.
 
-```javascript
+```javascript static
 class Component extends React.PureComponent {
     render = () => <p>{this.props.containerWidth} - {this.props.containerHeight}</p>;
 }
@@ -14,7 +14,7 @@ at the beginning, as the size of the container can be only determined after ever
 For that matter the higher-order component calls the `containerDidMount` method right after the mentioned
 properties are correctly set.
 
-```javascript
+```javascript static
 class Component extends React.PureComponent {
     containerDidMount() {
         // container has been mounted and
@@ -28,6 +28,6 @@ const WithSizeComponent = withContainerSize(Component);
 The default behaviour of the wrapping container is to take the maximum available space.
 This can be changed by passing a custom class to the container through the second function parameter.
 
-```javascript
+```javascript static
 const WithSizeComponent = withContainerSize(Component, 'custom-css-class');
 ```

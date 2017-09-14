@@ -37,9 +37,7 @@ exports[`The component should open the list when the display value is clicked 1`
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div>
-    
-  </div>
+  <div />
 </div>
 `;
 
@@ -115,9 +113,7 @@ exports[`The component should render with an icon 1`] = `
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div>
-    
-  </div>
+  <div />
 </div>
 `;
 
@@ -158,8 +154,6 @@ exports[`The component should render with the list closed 1`] = `
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div>
-    
-  </div>
+  <div />
 </div>
 `;
