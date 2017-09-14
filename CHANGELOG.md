@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.4 (2017-09-14)
     * HOTFIX      #3509 [MediaBundle]             Fixed deletion of tag when referenced in media fileversion
     * HOTFIX      #3504 [SnippetBundle]           Fixed snippet areas with uppercases
     * HOTFIX      #3501 [AdminBundle]             Updated husky to avoid html/js injection
