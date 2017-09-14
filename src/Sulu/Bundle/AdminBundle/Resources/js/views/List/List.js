@@ -22,6 +22,10 @@ class List extends React.PureComponent<ViewProps> {
             },
         } = router;
 
+        if (!resourceKey) {
+            throw new Error('The route does not define the mandatory resourceKey option');
+        }
+
         this.datagridStore = new DatagridStore(
             resourceKey,
             resourceMetadataStore.getBaseUrl(resourceKey)

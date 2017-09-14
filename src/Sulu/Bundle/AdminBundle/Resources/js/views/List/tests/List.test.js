@@ -63,6 +63,16 @@ test('Should render the datagrid with the correct resourceKey', () => {
     expect(list).toMatchSnapshot();
 });
 
+test('Should throw an error when no resourceKey is defined in the route options', () => {
+    const router = {
+        route: {
+            options: {},
+        },
+    };
+
+    expect(() => render(<List router={router} />)).toThrow(/mandatory resourceKey option/);
+});
+
 test('Should bind the query parameter to the router', () => {
     const router = {
         bindQuery: jest.fn(),
@@ -88,6 +98,7 @@ test('Should navigate when click on pencil button', () => {
         route: {
             options: {
                 editLink: 'editLink',
+                resourceKey: 'test',
             },
         },
     };
