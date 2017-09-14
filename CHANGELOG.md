@@ -91,6 +91,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.6 (2017-09-14)
+    * HOTFIX      #3511 [MediaBundle]           Fixed disappearing of selected medias
+
 * 1.5.5 (2017-06-28)
     * HOTFIX      #3404 [DocumentManagerBundle] Remove exception for non-Sulu user
 
