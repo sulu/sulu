@@ -91,7 +91,7 @@ test('Should bind the query parameter to the router', () => {
     expect(router.unbindQuery).toBeCalledWith('page');
 });
 
-test('Should navigate when click on pencil button', () => {
+test('Should navigate when pencil button is clicked', () => {
     const router = {
         navigate: jest.fn(),
         bindQuery: jest.fn(),

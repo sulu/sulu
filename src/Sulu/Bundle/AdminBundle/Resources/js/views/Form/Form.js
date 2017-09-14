@@ -36,13 +36,19 @@ class Form extends React.PureComponent<ViewProps> {
 }
 
 export default withToolbar(Form, function() {
-    return {
-        backButton: {
+    const {router} = this.props;
+    const {backRoute} = router.route.options;
+
+    const backButton = backRoute
+        ? {
             onClick: () => {
-                const {router} = this.props;
-                router.navigate(router.route.options.backRoute);
+                router.navigate(backRoute);
             },
-        },
+        }
+        : undefined;
+
+    return {
+        backButton,
         icons: [
             'ban',
             'flag',
