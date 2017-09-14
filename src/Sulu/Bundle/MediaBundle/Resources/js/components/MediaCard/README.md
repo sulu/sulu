@@ -1,4 +1,5 @@
-The `MediaCard` is useful for displaying a list of selectable images.
+The MediaCard is one kind of child component of the Masonry layout. Due to the props of this component being an
+intersection type with `MasonryItem` the `id` prop is required.
 
 ```
 initialState = {
@@ -23,6 +24,7 @@ const handleClick = (id) => {
     selected={state.selected}
     meta="image/png, 3,2 MB"
     title="Lorempixel"
-    image={'http://lorempixel.com/300/200'}
-/>
+>
+    <img src="http://lorempixel.com/300/200"/>
+</MediaCard>
 ```

@@ -6,7 +6,3 @@ import MediaOverview from './views/MediaOverview';
 viewStore.add('sulu_media.overview', MediaOverview);
 
 bundleReady();
-
-export {
-    MediaCard,
-};
