@@ -73,7 +73,7 @@
                     <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idTags" referenced-column-name="id"/>
+                    <join-column name="idTags" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>

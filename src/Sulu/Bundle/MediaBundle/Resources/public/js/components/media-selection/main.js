@@ -109,16 +109,15 @@ define([
             this.sandbox.on(this.DATA_RETRIEVED(), function(data) {
                 var ids = [];
                 this.sandbox.util.foreach(data, function(el) {
+                    this.items[el.id] = el;
                     ids.push(el.id);
                 }.bind(this));
 
                 setData.call(this, {ids: ids}, false);
             }, this);
 
-            this.sandbox.on('sulu.media-selection.' + this.options.instanceName + '.add-button-clicked', function() {
-                var items = _.map(this.getData().ids, function(id) {
-                    return {id: id};
-                });
+            this.sandbox.on(this.ADD_BUTTON_CLICKED(), function() {
+                var items = this.getItems();
 
                 this.sandbox.emit(
                     'sulu.media-selection-overlay.' + this.options.instanceName + '.set-items',
@@ -171,9 +170,7 @@ define([
                     el: $container,
                     url: this.options.url,
                     instanceName: this.options.instanceName,
-                    preSelectedIds: _.map(this.getData().ids, function(id) {
-                        return {id: id};
-                    }),
+                    preselected: this.getItems(),
                     removeOnClose: false,
                     autoStart: false,
                     removeable: false,
@@ -185,6 +182,7 @@ define([
 
                         data.ids = _.map(items, function(item) {
                             this.addItem(item);
+                            this.items[item.id] = item;
 
                             return item.id;
                         }.bind(this));
@@ -209,6 +207,8 @@ define([
 
     return {
         type: 'itembox',
+
+        items: [],
 
         initialize: function() {
             // extend default options
@@ -240,6 +240,16 @@ define([
             }
 
             startSelectionOverlay.call(this);
+        },
+
+        getItems: function() {
+            return _.map(this.getData().ids, function(id) {
+                if (this.items[id]) {
+                    return this.items[id];
+                }
+
+                return {id: id};
+            }.bind(this))
         },
 
         isDataEmpty: function(data) {
@@ -278,6 +288,7 @@ define([
 
         removeHandler: function(id) {
             var data = this.getData();
+            delete this.items[id];
 
             for (var i = -1, length = data.ids.length; ++i < length;) {
                 if (data.ids[i] === id) {

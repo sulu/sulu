@@ -712,6 +712,11 @@ class MediaManager implements MediaManagerInterface
                 );
 
                 $this->storage->remove($fileVersion->getStorageOptions());
+
+                foreach ($fileVersion->getMeta() as $fileVersionMeta) {
+                    // this will trigger massive-search deindex
+                    $this->em->remove($fileVersionMeta);
+                }
             }
         }
 

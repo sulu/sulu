@@ -1,6 +1,13 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.4 (2017-09-14)
+    * HOTFIX      #3509 [MediaBundle]             Fixed deletion of tag when referenced in media fileversion
+    * HOTFIX      #3504 [SnippetBundle]           Fixed snippet areas with uppercases
+    * HOTFIX      #3501 [AdminBundle]             Updated husky to avoid html/js injection
+    * HOTFIX      #3492 [ContentBundle]           Fixed smart-content categories load
+    * HOTFIX      #3499 [MediaBundle]             Fixed deindex of medias
+
 * 1.6.3 (2017-08-17)
     * HOTFIX      #3484 [TestBundle]              Fix doctrine errors for mysql older than 5.7
     * HOTFIX      #3475 [ContentBundle]           Added possibility to set default value for single-select
@@ -83,6 +90,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.6 (2017-09-14)
+    * HOTFIX      #3511 [MediaBundle]           Fixed disappearing of selected medias
 
 * 1.5.5 (2017-06-28)
     * HOTFIX      #3404 [DocumentManagerBundle] Remove exception for non-Sulu user

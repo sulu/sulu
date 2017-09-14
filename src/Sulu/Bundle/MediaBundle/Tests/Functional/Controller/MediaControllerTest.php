@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -79,6 +80,16 @@ class MediaControllerTest extends SuluTestCase
      * @var CategoryInterface
      */
     private $category2;
+
+    /**
+     * @var TagInterface
+     */
+    private $tag1;
+
+    /**
+     * @var TagInterface
+     */
+    private $tag2;
 
     /**
      * @var string
@@ -206,14 +217,14 @@ class MediaControllerTest extends SuluTestCase
         $tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         // create some tags
-        $tag1 = $tagRepository->createNew();
-        $tag1->setName('Tag 1');
+        $this->tag1 = $tagRepository->createNew();
+        $this->tag1->setName('Tag 1');
 
-        $tag2 = $tagRepository->createNew();
-        $tag2->setName('Tag 2');
+        $this->tag2 = $tagRepository->createNew();
+        $this->tag2->setName('Tag 2');
 
-        $this->em->persist($tag1);
-        $this->em->persist($tag2);
+        $this->em->persist($this->tag1);
+        $this->em->persist($this->tag2);
         $this->em->persist($this->documentType);
         $this->em->persist($this->audioType);
         $this->em->persist($this->imageType);
@@ -259,6 +270,8 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setDownloadCounter(2);
         $fileVersion->addCategory($this->category);
         $fileVersion->addCategory($this->category2);
+        $fileVersion->addTag($this->tag1);
+        $fileVersion->addTag($this->tag2);
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.' . $extension . '"}');
@@ -1141,6 +1154,7 @@ class MediaControllerTest extends SuluTestCase
                 'contentLanguages' => [
                     'en-gb',
                 ],
+                'tags' => ['Tag 1', 'Tag 2'],
                 'publishLanguages' => [
                     'en-gb',
                     'en-au',
@@ -1165,6 +1179,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->focusPointX);
         $this->assertEquals(2, $response->focusPointY);
         $this->assertNotEmpty($response->url);
+        $this->assertEquals(['Tag 1', 'Tag 2'], $response->tags);
+
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(
             [
@@ -1181,6 +1197,29 @@ class MediaControllerTest extends SuluTestCase
             ],
             $response->publishLanguages
         );
+    }
+
+    /**
+     * Test tag remove.
+     */
+    public function testTagRemove()
+    {
+        $media = $this->createMedia('photo');
+
+        $client = $this->createAuthenticatedClient();
+
+        // Check Tag Remove
+        $this->getEntityManager()->remove($this->tag1);
+        $this->getEntityManager()->flush();
+
+        $client->request(
+            'GET',
+            '/api/media/' . $media->getId() . '?locale=en'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertEquals(['Tag 2'], $response->tags);
     }
 
     /**

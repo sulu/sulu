@@ -1063,7 +1063,7 @@ define(['config', 'services/sulucontent/smart-content-manager'], function(config
                 i;
 
             for (i = 0; i < length; i++) {
-                html.push(util.template(templates.categoryItem, {item: items[i]}));
+                html.push(this.sandbox.util.template(templates.categoryItem, {item: items[i]}));
 
                 if (i < length - 1) {
                     html.push(', ');

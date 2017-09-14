@@ -59,7 +59,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $this->documentManager = $documentManager;
         $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
-        $this->areas = new FrozenParameterBag($areas);
+        $this->areas = new FrozenParameterBag(array_change_key_case($areas));
     }
 
     /**

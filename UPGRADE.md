@@ -1,5 +1,23 @@
 # Upgrade
 
+## 1.6.4
+
+### File Version - Tag Cascading
+
+That its possible to delete a Tag, which is referenced in a Media FileVersion, a `on-delete CASCADE` need to be added to the database.
+Run the following command:
+
+```bash
+php bin/console doctrine:schema:update --force
+```
+
+or the following SQL statements on your database:
+
+```sql
+ALTER TABLE me_file_version_tags DROP FOREIGN KEY FK_150A30BE1C41CAB8;
+ALTER TABLE me_file_version_tags ADD CONSTRAINT FK_150A30BE1C41CAB8 FOREIGN KEY (idTags) REFERENCES ta_tags (id) ON DELETE CASCADE;
+```
+
 ## 1.6.0
 
 ### Default Snippets
