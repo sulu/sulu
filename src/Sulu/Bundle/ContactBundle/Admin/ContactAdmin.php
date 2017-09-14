@@ -61,13 +61,21 @@ class ContactAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutes(): array
     {
         return [
-            new Route('sulu_contact.list', '/contacts', 'sulu_admin.list', ['resourceKey' => 'contacts']),
+            new Route(
+                'sulu_contact.contacts_list',
+                '/contacts',
+                'sulu_admin.list',
+                ['resourceKey' => 'contacts']
+            ),
+            new Route(
+                'sulu_contact.accounts_list',
+                '/accounts',
+                'sulu_admin.list',
+                ['resourceKey' => 'accounts']
+            ),
         ];
     }
 
