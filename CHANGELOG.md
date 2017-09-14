@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.5.6
+* 1.5.6 (2017-09-14)
     * HOTFIX      #3511 [MediaBundle]           Fixed disappearing of selected medias
 
 * 1.5.5 (2017-06-28)
