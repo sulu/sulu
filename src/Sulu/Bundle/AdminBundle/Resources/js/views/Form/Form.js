@@ -30,17 +30,25 @@ class Form extends React.PureComponent<ViewProps> {
         return (
             <div>
                 <h1>Form</h1>
-                <a href="#/snippets/">To the List</a>
             </div>
         );
     }
 }
 
 export default withToolbar(Form, function() {
+    const {router} = this.props;
+    const {backRoute} = router.route.options;
+
+    const backButton = backRoute
+        ? {
+            onClick: () => {
+                router.navigate(backRoute);
+            },
+        }
+        : undefined;
+
     return {
-        backButton: {
-            onClick: () => {},
-        },
+        backButton,
         icons: [
             'ban',
             'flag',

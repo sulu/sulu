@@ -1,0 +1,441 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render data with pencil button when onRowEdit callback is passed 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox light"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span />
+              </span>
+            </label>
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="buttonCell cell"
+        >
+          <button>
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </button>
+        </td>
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Title 1
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="buttonCell cell"
+        >
+          <button>
+            <span
+              aria-hidden="true"
+              class="fa fa-pencil"
+            />
+          </button>
+        </td>
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Title 2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data with schema 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox light"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span />
+              </span>
+            </label>
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            description
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Title 1
+        </td>
+        <td
+          class="cell"
+        >
+          Description 1
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Title 2
+        </td>
+        <td
+          class="cell"
+        >
+          Description 2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data with schema in different order 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox light"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span />
+              </span>
+            </label>
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            description
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Description 1
+        </td>
+        <td
+          class="cell"
+        >
+          Title 1
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Description 2
+        </td>
+        <td
+          class="cell"
+        >
+          Title 2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data with schema not containing all fields 1`] = `
+<div
+  class="tableContainer"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox light"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span />
+              </span>
+            </label>
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Title 1
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell small"
+        >
+          <label
+            class="label"
+          >
+            <span
+              class="switch checkbox dark"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </td>
+        <td
+          class="cell"
+        >
+          Title 2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

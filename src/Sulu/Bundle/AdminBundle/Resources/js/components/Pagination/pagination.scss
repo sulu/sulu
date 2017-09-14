@@ -1,0 +1,41 @@
+@import '../../containers/Application/colors.scss';
+
+$borderRadius: 4px;
+$buttonWidth: 33px;
+
+.pagination {
+    float: right;
+    color: $gray;
+    font-size: 12px;
+    line-height: 40px;
+}
+
+.display {
+    margin-right: 20px;
+}
+
+.next,
+.previous {
+    display: inline-block;
+    height: 40px;
+    width: $buttonWidth;
+    background-color: $white;
+    border: 1px solid $mischka;
+    text-align: center;
+    font-size: 18px;
+
+    &.enabled {
+        color: $blueZodiac;
+        cursor: pointer;
+    }
+}
+
+.previous {
+    border-radius: $borderRadius 0 0 $borderRadius;
+    width: calc($buttonWidth + 1px);
+}
+
+.next {
+    border-radius: 0 $borderRadius $borderRadius 0;
+    border-left: none;
+}
