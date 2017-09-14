@@ -70,7 +70,7 @@ export default withToolbar(List, function() {
                 type: 'button',
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
-                disabled: true,
+                disabled: this.datagridStore.selections.length === 0,
                 onClick: () => {},
             },
         ],

@@ -129,7 +129,7 @@ test('Should navigate when pencil button is clicked', () => {
     expect(router.navigate).toBeCalledWith('editLink', {uuid: 1});
 });
 
-test('Should render the delete item as disabled if nothing is selected', () => {
+test('Should render the delete item enabled only if something is selected', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
@@ -142,9 +142,16 @@ test('Should render the delete item as disabled if nothing is selected', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
 
-    const toolbarConfig = toolbarFunction.call(list);
-    const item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    let toolbarConfig, item;
+    toolbarConfig = toolbarFunction.call(list);
+    item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(true);
+
+    datagridStore.selections.push(1);
+    toolbarConfig = toolbarFunction.call(list);
+    item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    expect(item.disabled).toBe(false);
 });

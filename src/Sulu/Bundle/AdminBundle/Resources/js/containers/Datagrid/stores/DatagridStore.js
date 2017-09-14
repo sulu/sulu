@@ -7,7 +7,7 @@ export default class DatagridStore {
     page: observable = observable();
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
-    @observable selections: Array<string | number> = [];
+    @observable selections: Array<string | number> = [];
     @observable isLoading: boolean = true;
     disposer: () => void;
     baseUrl: string;
