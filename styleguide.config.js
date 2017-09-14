@@ -46,10 +46,12 @@ module.exports = { // eslint-disable-line
             sections: (function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
 
-                return folders.map((folder) => {
-                    const component = path.basename(folder);
-                    return {name: component, content: folder + '/README.md'};
-                });
+                return folders
+                    .filter((folder) => path.basename(folder) !== 'index.js')
+                    .map((folder) => {
+                        const component = path.basename(folder);
+                        return {name: component, content: folder + '/README.md'};
+                    });
             })(),
         },
         {
@@ -57,10 +59,12 @@ module.exports = { // eslint-disable-line
             sections: (function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
                 folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
-                return folders.map((folder) => {
-                    const component = path.basename(folder);
-                    return {name: component, content: folder + '/README.md'};
-                });
+                return folders
+                    .filter((folder) => path.basename(folder) !== 'index.js')
+                    .map((folder) => {
+                        const component = path.basename(folder);
+                        return {name: component, content: folder + '/README.md'};
+                    });
             })(),
         },
     ],

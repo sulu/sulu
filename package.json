@@ -1,8 +1,11 @@
 {
+    "license": "MIT",
+    "repository": "https://github.com/sulu/sulu.git",
     "scripts": {
         "lint:js": "eslint .",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",
+        "test": "jest",
         "styleguide": "styleguidist server"
     },
     "dependencies": {
@@ -19,6 +22,8 @@
         "babel-preset-react": "^6.24.1",
         "core-js": "^2.5.1",
         "empty": "^0.10.1",
+        "enzyme": "^2.9.1",
+        "enzyme-to-json": "^1.5.1",
         "eslint": "^4.0.0",
         "eslint-plugin-class-property": "^1.0.6",
         "eslint-plugin-flowtype": "^2.34.0",
@@ -27,15 +32,29 @@
         "file-loader": "^0.11.2",
         "flow-bin": "^0.54.0",
         "glob": "^7.1.2",
+        "identity-obj-proxy": "^3.0.0",
+        "jest": "^21.1.0",
+        "mobx": "^3.2.2",
         "null-loader": "^0.1.1",
         "postcss-hexrgba": "^1.0.0",
         "postcss-import": "^10.0.0",
         "postcss-loader": "^2.0.6",
         "postcss-nested": "^2.1.0",
         "postcss-simple-vars": "^4.0.0",
-        "react-styleguidist": "^5.5.7",
+        "pretty": "^2.0.0",
+        "react-styleguidist": "^6.0.24",
+        "react-test-renderer": "^15.6.1",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0",
-        "webpack": "^3.4.1"
+        "webpack": "^3.5.6"
+    },
+    "jest": {
+        "moduleNameMapper": {
+            "\\.(scss|css)$": "identity-obj-proxy"
+        },
+        "snapshotSerializers": [
+            "enzyme-to-json/serializer"
+        ],
+        "clearMocks": true
     }
 }

@@ -1,4 +1,8 @@
 {
+    "name": "sulu-media-bundle",
+    "description": "Adds support for media handling to Sulu",
+    "license": "MIT",
+    "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
     }

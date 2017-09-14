@@ -1,18 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The list should not render in body when not open 1`] = `
-<div>
-  
-</div>
-`;
+exports[`The list should not render in body when not open 1`] = `<div />`;
 
 exports[`The list should not render in body when not open 2`] = `""`;
 
-exports[`The list should render in body when open 1`] = `
-<div>
-  
-</div>
-`;
+exports[`The list should render in body when open 1`] = `<div />`;
 
 exports[`The list should render in body when open 2`] = `
 "<div>

@@ -3,7 +3,7 @@ a time - this means that the correct language has to be set using the `setTransl
 does a simple lookup in the translation map and returns the value for the given key. If the key doesn't exist in the
 map the key itself is returned, and a warning is logged.
 
-```javascript
+```javascript static
 import {setTranslations, translate} from './Translator';
 setTranslations({
     'title': 'Title',
