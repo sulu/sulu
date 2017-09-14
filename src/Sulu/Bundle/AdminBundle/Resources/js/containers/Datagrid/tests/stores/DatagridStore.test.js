@@ -91,3 +91,8 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     expect(datagridStore.getFields()).toBe(fields);
     expect(metadataStore.getFields).toBeCalledWith('test');
 });
+
+test('After initialization no row should be selected', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    expect(datagridStore.selections).toHaveLength(0);
+});

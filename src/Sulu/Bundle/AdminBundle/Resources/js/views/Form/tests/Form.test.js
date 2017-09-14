@@ -30,9 +30,9 @@ test('Should navigate to defined route on back button click', () => {
             },
         },
     };
-    const FormInstance = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} />).get(0);
 
-    const toolbarConfig = toolbarFunction.call(FormInstance);
+    const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
     expect(router.navigate).toBeCalledWith('test_route');
 });
@@ -48,8 +48,8 @@ test('Should not render back button when no editLink is configured', () => {
             options: {},
         },
     };
-    const FormInstance = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} />).get(0);
 
-    const toolbarConfig = toolbarFunction.call(FormInstance);
+    const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.backButton).toBe(undefined);
 });
