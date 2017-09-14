@@ -1,6 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
+import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
 import datagridStyles from './datagrid.scss';
@@ -26,7 +27,7 @@ export default class Datagrid extends React.PureComponent<Props> {
             <section>
                 <div className={datagridStyles.content}>
                     {this.props.store.isLoading
-                        ? 'loading...'
+                        ? <Loader />
                         : <TableAdapter
                             data={store.data}
                             schema={store.getFields()}
