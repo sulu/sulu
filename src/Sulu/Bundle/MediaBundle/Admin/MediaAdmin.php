@@ -56,12 +56,12 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-     public function getRoutes(): array
-     {
-         return [
-             new Route('sulu_media.overview', '/media', 'sulu_media.overview', ['type' => 'media']),
-         ];
-     }
+    public function getRoutes(): array
+    {
+        return [
+            new Route('sulu_media.overview', '/media', 'sulu_media.overview', ['type' => 'media']),
+        ];
+    }
 
     public function getSecurityContexts()
     {
