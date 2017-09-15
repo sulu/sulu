@@ -12,12 +12,7 @@
     "devDependencies": {
         "enzyme": "^2.9.1"
     },
-    "jest": {
-        "moduleNameMapper": {
-            "\\.(scss|css)$": "identity-obj-proxy"
-        },
-        "snapshotSerializers": [
-            "enzyme-to-json/serializer"
-        ]
+    "peerDependencies": {
+        "mobx": ">=3.2.2"
     }
 }
