@@ -61,6 +61,23 @@ export default class DatagridStore {
         this.page.set(page);
     }
 
+    @action select(id: string | number) {
+        if (this.selections.includes(id)) {
+            return;
+        }
+
+        this.selections.push(id);
+    }
+
+    @action deselect(id: string | number) {
+        const index = this.selections.indexOf(id);
+        if (index === -1) {
+            return;
+        }
+
+        this.selections.splice(index, 1);
+    }
+
     destroy() {
         this.disposer();
     }

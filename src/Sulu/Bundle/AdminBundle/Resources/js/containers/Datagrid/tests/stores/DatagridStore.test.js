@@ -94,5 +94,23 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
 
 test('After initialization no row should be selected', () => {
     const datagridStore = new DatagridStore('test', '/api/test');
-    expect(datagridStore.selections).toHaveLength(0);
+    expect(datagridStore.selections.length).toBe(0);
+});
+
+test('Select an item', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.select(1);
+    datagridStore.select(2);
+    expect(datagridStore.selections.toJS()).toEqual([1, 2]);
+
+    datagridStore.deselect(1);
+    expect(datagridStore.selections.toJS()).toEqual([2]);
+});
+
+test('Deselect an item that has not been selected yet', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.select(1);
+    datagridStore.deselect(2);
+
+    expect(datagridStore.selections.toJS()).toEqual([1]);
 });
