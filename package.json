@@ -55,6 +55,9 @@
         "snapshotSerializers": [
             "enzyme-to-json/serializer"
         ],
-        "clearMocks": true
+        "clearMocks": true,
+        "transformIgnorePatterns": [
+            "node_modules/(?!(sulu-(.*)-bundle)/)"
+        ]
     }
 }

@@ -65,6 +65,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                   >
                     <input
                       type="checkbox"
+                      value="2"
                     />
                     <span />
                   </span>
@@ -95,6 +96,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                   >
                     <input
                       type="checkbox"
+                      value="1"
                     />
                     <span />
                   </span>

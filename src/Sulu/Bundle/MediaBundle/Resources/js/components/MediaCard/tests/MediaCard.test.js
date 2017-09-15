@@ -34,6 +34,6 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
     masonry.find('MediaCard .media').simulate('click');
     expect(clickSpy).toHaveBeenCalledWith(itemId);
 
-    masonry.find('MediaCard .headerClickArea').simulate('click');
+    masonry.find('MediaCard .header').simulate('click');
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);
 });

@@ -62,16 +62,15 @@ export default class MediaCard extends React.PureComponent<Props> {
 
         return (
             <div className={masonryClass}>
-                <div className={mediaCardStyles.header}>
-                    <div
-                        className={mediaCardStyles.headerClickArea}
-                        onClick={this.handleHeaderClick}
-                    />
+                <div
+                    className={mediaCardStyles.header}
+                    onClick={this.handleHeaderClick}
+                >
                     <div className={mediaCardStyles.title}>
                         <Checkbox
                             value={id}
                             checked={selected}
-                            onChange={this.handleSelectionChange}
+                            useLabel={false}
                             className={mediaCardStyles.checkbox}
                         >
                             <div className={mediaCardStyles.titleText}>

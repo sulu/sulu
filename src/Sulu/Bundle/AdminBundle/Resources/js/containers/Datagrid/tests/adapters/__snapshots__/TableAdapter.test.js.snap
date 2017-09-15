@@ -73,6 +73,7 @@ exports[`Render data with pencil button when onRowEdit callback is passed 1`] = 
             >
               <input
                 type="checkbox"
+                value="1"
               />
               <span />
             </span>
@@ -108,6 +109,7 @@ exports[`Render data with pencil button when onRowEdit callback is passed 1`] = 
             >
               <input
                 type="checkbox"
+                value="2"
               />
               <span />
             </span>
@@ -184,6 +186,7 @@ exports[`Render data with schema 1`] = `
             >
               <input
                 type="checkbox"
+                value="1"
               />
               <span />
             </span>
@@ -214,6 +217,7 @@ exports[`Render data with schema 1`] = `
             >
               <input
                 type="checkbox"
+                value="2"
               />
               <span />
             </span>
@@ -331,6 +335,7 @@ exports[`Render data with schema and selections 1`] = `
             >
               <input
                 type="checkbox"
+                value="1"
               />
               <span />
             </span>
@@ -448,6 +453,7 @@ exports[`Render data with schema in different order 1`] = `
             >
               <input
                 type="checkbox"
+                value="2"
               />
               <span />
             </span>
@@ -478,6 +484,7 @@ exports[`Render data with schema in different order 1`] = `
             >
               <input
                 type="checkbox"
+                value="1"
               />
               <span />
             </span>
@@ -552,6 +559,7 @@ exports[`Render data with schema not containing all fields 1`] = `
             >
               <input
                 type="checkbox"
+                value="2"
               />
               <span />
             </span>

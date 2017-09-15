@@ -1,54 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a Masonry container with one item 1`] = `
+exports[`Render a Masonry container with items 1`] = `
 <div
   class="masonry"
 >
-  <div
-    class="container"
+  <li
+    style="margin-bottom:20px;"
   >
-    <div
-      class="header"
-    >
-      <div
-        class="headerClickArea"
-      />
-      <div
-        class="mediaTitle"
-      >
-        <label
-          class="label"
-        >
-          <span
-            class="switch checkbox dark checkbox"
-          >
-            <input
-              type="checkbox"
-            />
-            <span />
-          </span>
-          <div>
-            <div
-              class="mediaTitleText"
-            />
-          </div>
-        </label>
-      </div>
-      <div
-        class="metaInfo"
-      />
-    </div>
-    <div
-      class="media"
-    >
+    <div>
       <img
         src="http://lorempixel.com/300/200"
       />
-      <div
-        class="mediaOverlay"
+    </div>
+  </li>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div>
+      <img
+        src="http://lorempixel.com/300/200"
       />
     </div>
-  </div>
+  </li>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div>
+      <img
+        src="http://lorempixel.com/300/200"
+      />
+    </div>
+  </li>
 </div>
 `;
 

@@ -76,3 +76,19 @@ exports[`The component should render with radio type 1`] = `
   </span>
 </label>
 `;
+
+exports[`The component should render without a label container 1`] = `
+<div
+  class="label"
+>
+  <span
+    class="switch"
+  >
+    <input
+      name="my-name"
+      type="checkbox"
+    />
+    <span />
+  </span>
+</div>
+`;
