@@ -66,6 +66,22 @@ test('Should render the datagrid with the correct resourceKey', () => {
     expect(list).toMatchSnapshot();
 });
 
+test('Should render the datagrid with the pencil icon if a editRoute has been passed', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                editRoute: 'editRoute',
+            },
+        },
+    };
+
+    const list = render(<List router={router} />);
+    expect(list).toMatchSnapshot();
+});
+
 test('Should throw an error when no resourceKey is defined in the route options', () => {
     const List = require('../List').default;
     const router = {
@@ -118,7 +134,7 @@ test('Should navigate when pencil button is clicked', () => {
         bindQuery: jest.fn(),
         route: {
             options: {
-                editLink: 'editLink',
+                editRoute: 'editRoute',
                 resourceKey: 'test',
             },
         },
@@ -126,7 +142,7 @@ test('Should navigate when pencil button is clicked', () => {
 
     const list = mount(<List router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editLink', {uuid: 1});
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
 
 test('Should render the delete item enabled only if something is selected', () => {

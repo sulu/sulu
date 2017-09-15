@@ -41,16 +41,23 @@ class List extends React.PureComponent<ViewProps> {
 
     handleEditClick = (rowId) => {
         const {router} = this.props;
-        router.navigate(router.route.options.editLink, {uuid: rowId});
+        router.navigate(router.route.options.editRoute, {id: rowId});
     };
 
     render() {
+        const {
+            route: {
+                options: {
+                    editRoute,
+                },
+            },
+        } = this.props.router;
         return (
             <div>
                 <h1>List</h1>
                 <Datagrid
                     store={this.datagridStore}
-                    onRowEditClick={this.handleEditClick}
+                    onRowEditClick={editRoute && this.handleEditClick}
                 />
             </div>
         );

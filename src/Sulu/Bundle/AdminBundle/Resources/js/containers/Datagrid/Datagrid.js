@@ -23,7 +23,7 @@ export default class Datagrid extends React.PureComponent<Props> {
         selected ? store.select(id) : store.deselect(id);
     };
 
-    handleAllSelectionChange = (selected: boolean) => {
+    handleAllSelectionChange = (selected?: boolean) => {
         const {store} = this.props;
         selected ? store.selectEntirePage() : store.deselectEntirePage();
     };
