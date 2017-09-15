@@ -13,6 +13,7 @@ type Props = SwitchProps & {
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {
         skin: 'dark',
+        useLabel: true,
     };
 
     handleChange = (checked: boolean, value?: string | number) => {
@@ -26,6 +27,7 @@ export default class Radio extends React.PureComponent<Props> {
             name,
             value,
             checked,
+            useLabel,
             children,
         } = this.props;
         const radioClass = classNames(
@@ -39,6 +41,7 @@ export default class Radio extends React.PureComponent<Props> {
                 name={name}
                 value={value}
                 checked={checked}
+                useLabel={useLabel}
                 onChange={this.handleChange}
                 className={radioClass}
             >
