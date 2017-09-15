@@ -13,7 +13,7 @@ type Props = {
     open: boolean,
     children?: (setPopoverElementRef: (ref: ElementRef<*>) => void, style: Object) => Node,
     onClose?: () => void,
-    /** The element which will be used to position the popover */
+    /** This element will be used to position the popover */
     anchorElement: ElementRef<*>,
     centerChildElement?: ElementRef<*>,
     horizontalOffset: number,
@@ -28,7 +28,7 @@ export default class Popover extends React.PureComponent<Props> {
         verticalOffset: 0,
     };
 
-    @observable popoverRef: ElementRef<'div'>;
+    @observable popoverChildRef: ElementRef<'div'>;
 
     @observable scrollHeight: number;
 
@@ -47,8 +47,8 @@ export default class Popover extends React.PureComponent<Props> {
     }
 
     componentDidUpdate() {
-        if (this.popoverRef) {
-            this.popoverRef.scrollTop = this.scrollTop || 0;
+        if (this.popoverChildRef) {
+            this.popoverChildRef.scrollTop = this.scrollTop || 0;
         }
     }
 
@@ -92,7 +92,7 @@ export default class Popover extends React.PureComponent<Props> {
         const {
             scrollWidth,
             scrollHeight,
-        } = this.popoverRef;
+        } = this.popoverChildRef;
 
         this.setScrollDimensions(
             scrollWidth,
@@ -107,9 +107,9 @@ export default class Popover extends React.PureComponent<Props> {
 
     handleBackdropClick = this.close;
 
-    @action setPopoverRef = (popoverRef: ElementRef<*>) => {
-        if (popoverRef) {
-            this.popoverRef = popoverRef;
+    @action setPopoverChildRef = (popoverChildRef: ElementRef<*>) => {
+        if (popoverChildRef) {
+            this.popoverChildRef = popoverChildRef;
             this.updateDimensions();
         }
     };
@@ -126,10 +126,13 @@ export default class Popover extends React.PureComponent<Props> {
         }
 
         const dimensions = this.dimensions;
-        const styles = Object.assign({}, PopoverPositioner.dimensionsToStyle(dimensions), {
-            position: 'fixed',
-            pointerEvents: 'auto',
-        });
+        const styles = {
+            ...PopoverPositioner.dimensionsToStyle(dimensions),
+            ...{
+                position: 'fixed',
+                pointerEvents: 'auto',
+            },
+        };
         this.scrollTop = dimensions.scrollTop;
 
         return (
@@ -137,7 +140,7 @@ export default class Popover extends React.PureComponent<Props> {
                 <Portal isOpened={open}>
                     <div className={popoverStyles.container}>
                         {children &&
-                            children(this.setPopoverRef, styles)
+                            children(this.setPopoverChildRef, styles)
                         }
                     </div>
                 </Portal>
