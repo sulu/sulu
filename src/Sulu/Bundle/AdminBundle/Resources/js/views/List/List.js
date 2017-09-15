@@ -48,13 +48,14 @@ class List extends React.PureComponent<ViewProps> {
         const {
             route: {
                 options: {
+                    title,
                     editRoute,
                 },
             },
         } = this.props.router;
         return (
             <div>
-                <h1>List</h1>
+                {title && <h1>{translate(title)}</h1>}
                 <Datagrid
                     store={this.datagridStore}
                     onRowEditClick={editRoute && this.handleEditClick}

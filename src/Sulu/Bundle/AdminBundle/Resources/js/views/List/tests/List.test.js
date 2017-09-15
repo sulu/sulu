@@ -43,6 +43,8 @@ jest.mock('../../../services/Translator', () => ({
                 return 'Delete';
             case 'sulu_admin.add':
                 return 'Add';
+            case 'sulu_snippet.snippets':
+                return 'Snippets';
         }
     },
 }));
@@ -58,6 +60,22 @@ test('Should render the datagrid with the correct resourceKey', () => {
         route: {
             options: {
                 resourceKey: 'snippets',
+            },
+        },
+    };
+
+    const list = render(<List router={router} />);
+    expect(list).toMatchSnapshot();
+});
+
+test('Should render the list with a title', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                title: 'sulu_snippet.snippets',
             },
         },
     };

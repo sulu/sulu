@@ -68,13 +68,13 @@ class ContactAdmin extends Admin
                 'sulu_contact.contacts_list',
                 '/contacts',
                 'sulu_admin.list',
-                ['resourceKey' => 'contacts']
+                ['title' => 'sulu_contact.persons', 'resourceKey' => 'contacts']
             ),
             new Route(
                 'sulu_contact.accounts_list',
                 '/accounts',
                 'sulu_admin.list',
-                ['resourceKey' => 'accounts']
+                ['title' => 'sulu_contact.organizations', 'resourceKey' => 'accounts']
             ),
         ];
     }
