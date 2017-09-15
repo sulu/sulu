@@ -69,6 +69,12 @@ export default class DatagridStore {
         this.selections.push(id);
     }
 
+    @action selectEntirePage() {
+        this.data.forEach((item) => {
+            this.select(item.id);
+        });
+    }
+
     @action deselect(id: string | number) {
         const index = this.selections.indexOf(id);
         if (index === -1) {
@@ -76,6 +82,12 @@ export default class DatagridStore {
         }
 
         this.selections.splice(index, 1);
+    }
+
+    @action deselectEntirePage() {
+        this.data.forEach((item) => {
+            this.deselect(item.id);
+        });
     }
 
     destroy() {

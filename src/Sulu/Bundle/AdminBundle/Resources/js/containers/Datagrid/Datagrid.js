@@ -23,6 +23,11 @@ export default class Datagrid extends React.PureComponent<Props> {
         selected ? store.select(id) : store.deselect(id);
     };
 
+    handleAllSelectionChange = (selected: boolean) => {
+        const {store} = this.props;
+        selected ? store.selectEntirePage() : store.deselectEntirePage();
+    };
+
     render() {
         const {onRowEditClick, store} = this.props;
         const page = store.getPage();
@@ -39,6 +44,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                             schema={store.getFields()}
                             onRowEditClick={onRowEditClick}
                             onRowSelectionChange={this.handleRowSelectionChange}
+                            onAllSelectionChange={this.handleAllSelectionChange}
                         />
                     }
                 </div>

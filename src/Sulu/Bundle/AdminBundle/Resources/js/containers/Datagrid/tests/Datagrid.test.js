@@ -18,6 +18,8 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.getFields = jest.fn().mockReturnValue({test: {}});
     this.select = jest.fn();
     this.deselect = jest.fn();
+    this.selectEntirePage = jest.fn();
+    this.deselectEntirePage = jest.fn();
 }));
 
 jest.mock('../../../services/Translator', () => ({
@@ -79,4 +81,20 @@ test.skip('Selecting and deselecting items should update store', () => {
     expect(datagridStore.select).toBeCalledWith(2);
     checkboxes.at(1).simulate('change', {currentTarget: {checked: false}});
     expect(datagridStore.deselect).toBeCalledWith(1);
+});
+
+test.skip('Selecting and unselecting all items on current page should update store', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.data = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = mount(<Datagrid store={datagridStore} />);
+
+    const headerCheckbox = datagrid.find('input[type="checkbox"]').at(0);
+    headerCheckbox.simulate('change', {currentTarget: {checked: true}});
+    expect(datagridStore.selectEntirePage).toBeCalledWith();
+    headerCheckbox.simulate('change', {currentTarget: {checked: false}});
+    expect(datagridStore.deselectEntirePage).toBeCalledWith();
 });

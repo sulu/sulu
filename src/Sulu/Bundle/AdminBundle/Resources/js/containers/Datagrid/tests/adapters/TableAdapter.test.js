@@ -170,3 +170,16 @@ test('Click on checkbox should call onRowSelectionChange callback', () => {
 
     expect(tableAdapter.find('Table').get(0).props.onRowSelectionChange).toBe(rowSelectionChangeSpy);
 });
+
+test('Click on checkbox in header should call onAllSelectionChange callback', () => {
+    const allSelectionChangeSpy = jest.fn();
+    const data = [];
+    const schema = {
+        title: {},
+    };
+    const tableAdapter = shallow(
+        <TableAdapter data={data} schema={schema} onAllSelectionChange={allSelectionChangeSpy} selections={[]} />
+    );
+
+    expect(tableAdapter.find('Table').get(0).props.onAllSelectionChange).toBe(allSelectionChangeSpy);
+});

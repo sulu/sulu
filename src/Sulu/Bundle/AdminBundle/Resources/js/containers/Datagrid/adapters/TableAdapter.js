@@ -9,13 +9,14 @@ type Props = {
     selections: Array<number | string>,
     onRowEditClick?: (rowId: string | number) => void,
     onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onAllSelectionChange?: (selected?: boolean) => void,
     schema: Schema,
 };
 
 @observer
 export default class TableAdapter extends React.Component<Props> {
     render() {
-        const {data, selections, schema, onRowEditClick, onRowSelectionChange} = this.props;
+        const {data, selections, schema, onRowEditClick, onRowSelectionChange, onAllSelectionChange} = this.props;
         const schemaKeys = Object.keys(schema);
         const buttons = [];
 
@@ -27,7 +28,12 @@ export default class TableAdapter extends React.Component<Props> {
         }
 
         return (
-            <Table buttons={buttons} selectMode="multiple" onRowSelectionChange={onRowSelectionChange}>
+            <Table
+                buttons={buttons}
+                selectMode="multiple"
+                onRowSelectionChange={onRowSelectionChange}
+                onAllSelectionChange={onAllSelectionChange}
+            >
                 <Header>
                     {schemaKeys.map((schemaKey) => <HeaderCell key={schemaKey}>{schemaKey}</HeaderCell>)}
                 </Header>
