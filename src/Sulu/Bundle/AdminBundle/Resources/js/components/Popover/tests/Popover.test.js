@@ -138,9 +138,9 @@ test('The popover should take its dimensions from the positioner', () => {
             }
         </Popover>
     );
-    popover.instance().scrollHeight = 100;
-    popover.instance().scrollWidth = 20;
+    popover.instance().popoverWidth = 20;
+    popover.instance().popoverHeight = 100;
     popover.update();
     expect(pretty(body.innerHTML)).toMatchSnapshot();
-    expect(popover.instance().scrollTop).toBe(4);
+    expect(popover.instance().dimensions.scrollTop).toBe(4);
 });

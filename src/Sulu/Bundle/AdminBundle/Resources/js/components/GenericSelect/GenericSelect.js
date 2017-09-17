@@ -42,15 +42,15 @@ export default class GenericSelect extends React.PureComponent<Props> {
         this.open = false;
     };
 
-    @action setDisplayValueRef = (node: ?ElementRef<'button'>) => {
-        if (node) {
-            this.displayValueRef = node;
+    @action setDisplayValueRef = (ref: ?ElementRef<'button'>) => {
+        if (ref) {
+            this.displayValueRef = ref;
         }
     };
 
-    @action setSelectedOptionRef = (node: ?ElementRef<'li'>, selected: boolean) => {
-        if (!this.selectedOptionRef || (node && selected)) {
-            this.selectedOptionRef = node;
+    @action setSelectedOptionRef = (ref: ?ElementRef<'li'>, selected: boolean) => {
+        if (!this.selectedOptionRef || (ref && selected)) {
+            this.selectedOptionRef = ref;
         }
     };
 
@@ -106,25 +106,25 @@ export default class GenericSelect extends React.PureComponent<Props> {
         return (
             <div className={genericSelectStyles.select}>
                 <DisplayValue
-                    displayValueRef={this.setDisplayValueRef}
                     icon={icon}
                     onClick={this.handleDisplayValueClick}
+                    displayValueRef={this.setDisplayValueRef}
                 >
                     {displayValue}
                 </DisplayValue>
                 <Popover
                     open={this.open}
-                    anchorElement={this.displayValueRef}
-                    centerChildElement={this.selectedOptionRef}
-                    horizontalOffset={HORIZONTAL_OFFSET}
-                    verticalOffset={VERTICAL_OFFSET}
                     onClose={this.handleOptionListClose}
+                    anchorElement={this.displayValueRef}
+                    verticalOffset={VERTICAL_OFFSET}
+                    horizontalOffset={HORIZONTAL_OFFSET}
+                    centerChildElement={this.selectedOptionRef}
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
                             <Menu
-                                menuRef={setPopoverElementRef}
                                 style={popoverStyle}
+                                menuRef={setPopoverElementRef}
                             >
                                 {clonedChildren}
                             </Menu>

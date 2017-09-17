@@ -4,6 +4,7 @@ import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import type {Node, ElementRef} from 'react';
+import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import type {PopoverDimensions} from './types';
 import PopoverPositioner from './PopoverPositioner';
@@ -30,11 +31,9 @@ export default class Popover extends React.PureComponent<Props> {
 
     @observable popoverChildRef: ElementRef<'div'>;
 
-    @observable scrollHeight: number;
+    @observable popoverWidth: number;
 
-    @observable scrollWidth: number;
-
-    scrollTop: number;
+    @observable popoverHeight: number;
 
     componentDidMount() {
         window.addEventListener('blur', this.close);
@@ -46,9 +45,11 @@ export default class Popover extends React.PureComponent<Props> {
         window.removeEventListener('resize', this.close);
     }
 
-    componentDidUpdate() {
-        if (this.popoverChildRef) {
-            this.popoverChildRef.scrollTop = this.scrollTop || 0;
+    componentDidUpdate(prevProps: Props) {
+        if (this.popoverChildRef && !prevProps.open && this.props.open) {
+            afterElementsRendered(() => {
+                this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
+            });
         }
     }
 
@@ -75,8 +76,8 @@ export default class Popover extends React.PureComponent<Props> {
         const alignOnVerticalAnchorEdges = (!centerChildElement) ? true : false;
 
         return PopoverPositioner.getCroppedDimensions(
-            this.scrollWidth,
-            this.scrollHeight,
+            this.popoverWidth,
+            this.popoverHeight,
             top,
             left,
             width,
@@ -90,19 +91,27 @@ export default class Popover extends React.PureComponent<Props> {
 
     updateDimensions() {
         const {
+            offsetWidth,
+            offsetHeight,
             scrollWidth,
             scrollHeight,
+            clientWidth,
+            clientHeight,
         } = this.popoverChildRef;
 
-        this.setScrollDimensions(
-            scrollWidth,
-            scrollHeight,
+        // calculating real size by considering borders, margins and paddings
+        const outerWidth = scrollWidth + offsetWidth - clientWidth;
+        const outerHeight = scrollHeight + offsetHeight - clientHeight;
+
+        this.setPopoverSize(
+            outerWidth,
+            outerHeight,
         );
     }
 
-    @action setScrollDimensions(scrollWidth: number, scrollHeight: number) {
-        this.scrollWidth = scrollWidth;
-        this.scrollHeight = scrollHeight;
+    @action setPopoverSize(width: number, height: number) {
+        this.popoverWidth = width;
+        this.popoverHeight = height;
     }
 
     handleBackdropClick = this.close;
@@ -133,7 +142,6 @@ export default class Popover extends React.PureComponent<Props> {
                 pointerEvents: 'auto',
             },
         };
-        this.scrollTop = dimensions.scrollTop;
 
         return (
             <div>

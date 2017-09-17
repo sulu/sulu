@@ -49,7 +49,7 @@ test('The component should render with an icon', () => {
     expect(body.innerHTML).toBe('');
 });
 
-test('The component should open the popover when the display value is clicked', () => {
+test.only('The component should open the popover when the display value is clicked', () => {
     const body = document.body;
     const isOptionSelected = () => false;
     const onSelect = () => {};
