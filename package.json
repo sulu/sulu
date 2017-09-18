@@ -33,7 +33,6 @@
         "flow-bin": "^0.54.0",
         "glob": "^7.1.2",
         "identity-obj-proxy": "^3.0.0",
-        "js-beautify": "1.6.14",
         "jest": "^21.1.0",
         "mobx": "^3.2.2",
         "null-loader": "^0.1.1",
