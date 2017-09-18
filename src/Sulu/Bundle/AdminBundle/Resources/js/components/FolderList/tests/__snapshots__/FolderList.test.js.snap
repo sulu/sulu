@@ -27,7 +27,7 @@ exports[`Render a FolderList with Folder components inside 1`] = `
           This is a folder
         </h5>
         <div
-          class="meta"
+          class="info"
         >
           3 Objects
         </div>
@@ -57,7 +57,7 @@ exports[`Render a FolderList with Folder components inside 1`] = `
           This is a folder
         </h5>
         <div
-          class="meta"
+          class="info"
         >
           2 Objects
         </div>
@@ -87,7 +87,7 @@ exports[`Render a FolderList with Folder components inside 1`] = `
           This is a folder
         </h5>
         <div
-          class="meta"
+          class="info"
         >
           0 Objects
         </div>

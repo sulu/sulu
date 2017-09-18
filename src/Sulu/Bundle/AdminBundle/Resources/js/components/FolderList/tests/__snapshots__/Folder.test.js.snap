@@ -23,7 +23,7 @@ exports[`Render a Folder component 1`] = `
       This is a folder
     </h5>
     <div
-      class="meta"
+      class="info"
     >
       3 Objects
     </div>

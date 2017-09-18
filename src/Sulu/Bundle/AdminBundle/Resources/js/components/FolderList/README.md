@@ -1,9 +1,8 @@
-The FolderList component is used display a list of folders. The FolderList accepts Folder componenta as children.
-The Folder component is just an interactive element for presentation purposes. Every Folder component has its
-own onClick-handler. The FolderList component offers a more convenient way to work with multiple folders by offering 
-a single onClick-handler.
+The `FolderList` component is used to display a list of folders. The `FolderList` accepts `Folder` components as 
+children. The `Folder` component is just an interactive element for presentation purposes. Every `Folder` component has 
+its own `onClick`-handler.
 
-Folder Example:
+`Folder` example:
 
 ```
 const Folder = require('./Folder').default;
@@ -14,13 +13,14 @@ const handleClick = (id) => {
 
 <Folder
     id="1"
-    meta="3 Objects"
+    info="3 Objects"
     title="This is a folder"
     onClick={handleClick}
 />
 ```
 
-FolderList Example:
+The `FolderList` component offers a more convenient way to work with multiple folders by offering 
+a single `onClick`-handler:
 
 ```
 const handleClick = (id) => {
@@ -30,32 +30,32 @@ const handleClick = (id) => {
 <FolderList onFolderClick={handleClick}>
     <FolderList.Folder
         id="1"
-        meta="3 Objects"
+        info="3 Objects"
         title="This is a folder"
     />
     <FolderList.Folder
         id="2"
-        meta="0 Objects"
+        info="0 Objects"
         title="I am empty"
     />
     <FolderList.Folder
         id="3"
-        meta="1 Object"
+        info="1 Object"
         title="I have 1 child inside me"
     />
     <FolderList.Folder
         id="4"
-        meta="10 Objects"
+        info="10 Objects"
         title="And I have 10 children. Wuhuu!"
     />
     <FolderList.Folder
         id="5"
-        meta="2 Objects"
+        info="2 Objects"
         title="Jeez, these folders..."
     />
     <FolderList.Folder
         id="6"
-        meta="4 Objects"
+        info="4 Objects"
         title="el oh el"
     />
 </FolderList>

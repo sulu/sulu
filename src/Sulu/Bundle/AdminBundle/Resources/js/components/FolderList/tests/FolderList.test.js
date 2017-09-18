@@ -12,17 +12,17 @@ test('Render a FolderList with Folder components inside', () => {
         <FolderList>
             <FolderList.Folder
                 id="1"
-                meta="3 Objects"
+                info="3 Objects"
                 title="This is a folder"
             />
             <FolderList.Folder
                 id="2"
-                meta="2 Objects"
+                info="2 Objects"
                 title="This is a folder"
             />
             <FolderList.Folder
                 id="3"
-                meta="0 Objects"
+                info="0 Objects"
                 title="This is a folder"
             />
         </FolderList>
@@ -36,17 +36,17 @@ test('Clicking on a folder should call the click handler with the right id as ar
         <FolderList onFolderClick={clickSpy}>
             <FolderList.Folder
                 id="1"
-                meta="3 Objects"
+                info="3 Objects"
                 title="This is a folder"
             />
             <FolderList.Folder
                 id="2"
-                meta="2 Objects"
+                info="2 Objects"
                 title="This is a folder"
             />
             <FolderList.Folder
                 id={clickedFolderId}
-                meta="0 Objects"
+                info="0 Objects"
                 title="This is a folder"
             />
         </FolderList>

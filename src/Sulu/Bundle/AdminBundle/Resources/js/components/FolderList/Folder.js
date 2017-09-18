@@ -9,7 +9,7 @@ type Props = {
     /** The id which will be passed as an argument inside the onClick handler */
     id: string | number,
     /** The subtext underneath the title */
-    meta: string,
+    info: string,
     title: string,
     onClick?: (id: string | number) => void,
 };
@@ -23,7 +23,7 @@ export default class Folder extends React.PureComponent<Props> {
 
     render() {
         const {
-            meta,
+            info,
             title,
         } = this.props;
 
@@ -41,8 +41,8 @@ export default class Folder extends React.PureComponent<Props> {
                     <h5 className={folderStyles.title}>
                         {title}
                     </h5>
-                    <div className={folderStyles.meta}>
-                        {meta}
+                    <div className={folderStyles.info}>
+                        {info}
                     </div>
                 </div>
             </div>

@@ -7,7 +7,7 @@ test('Render a Folder component', () => {
     expect(render(
         <Folder
             id="1"
-            meta="3 Objects"
+            info="3 Objects"
             title="This is a folder"
         />
     )).toMatchSnapshot();
@@ -19,7 +19,7 @@ test('Call clickhandler when clicking on the folder', () => {
     const folder = shallow(
         <Folder
             id={folderId}
-            meta="3 Objects"
+            info="3 Objects"
             title="This is a folder"
             onClick={clickSpy}
         />
