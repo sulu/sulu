@@ -47,12 +47,13 @@ const handleChange = (value) => {
 };
 
 <AutoComplete
-    placeholder="Enter something fun..."
+    icon="search"
     value={state.value}
+    onChange={handleChange}
     threshold={1}
-    inputIcon="search"
+    placeholder="Enter something fun..."
     noSuggestionsMessage="Nothing found..."
-    onChange={handleChange}>
+>
     {
         state.suggestions.map((suggestion, index) => {
             return (

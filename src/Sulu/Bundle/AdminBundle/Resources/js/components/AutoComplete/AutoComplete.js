@@ -12,12 +12,12 @@ const POPOVER_HORIZONTAL_OFFSET = 5;
 const POPOVER_VERTICAL_OFFSET = -2;
 
 type Props = {
-    children: ChildrenArray<*>,
-    onChange: (value: string) => void,
+    icon?: string,
     value: string,
+    children: ChildrenArray<*>,
     threshold: number,
-    inputIcon?: string,
     placeholder?: string,
+    onChange: (value: string) => void,
     noSuggestionsMessage?: string,
 };
 
@@ -32,22 +32,14 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
     @observable inputRef: ElementRef<*>;
 
+    previousSuggestionListChildrenCount: number = 0;
+
     @action openSuggestions() {
         this.open = true;
     }
 
     @action closeSuggestions() {
         this.open = false;
-    }
-
-    componentWillReceiveProps(nextProps: Props) {
-        const {value} = nextProps;
-
-        if (this.hasReachedThreshold(value)) {
-            this.openSuggestions();
-        } else if (this.open) {
-            this.closeSuggestions();
-        }
     }
 
     @computed get suggestionStyle(): Object {
@@ -103,21 +95,31 @@ export default class AutoComplete extends React.PureComponent<Props> {
         }
     };
 
+    resizeSuggestionListOnContentChange = (suggestionListContent: ChildrenArray<*>, resizeList?: () => void) => {
+        const currentSuggestionListChildrenCount = React.Children.count(suggestionListContent);
+
+        if (resizeList && this.previousSuggestionListChildrenCount !== currentSuggestionListChildrenCount) {
+            resizeList();
+        }
+
+        this.previousSuggestionListChildrenCount = currentSuggestionListChildrenCount;
+
+        return suggestionListContent;
+    };
+
     handleSuggestionSelection = (value: string) => {
         this.props.onChange(value);
         this.closeSuggestions();
     };
 
     handleChange = (value: string) => {
-        this.props.onChange(value);
-    };
-
-    handleInputFocus = () => {
-        const {value} = this.props;
-
         if (this.hasReachedThreshold(value)) {
             this.openSuggestions();
+        } else {
+            this.closeSuggestions();
         }
+
+        this.props.onChange(value);
     };
 
     handlePopoverClose = () => {
@@ -126,41 +128,43 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
     render() {
         const {
+            icon,
             value,
             children,
-            inputIcon,
             placeholder,
         } = this.props;
         const suggestions = this.createSuggestions(children);
         const noSuggestions = !React.Children.count(suggestions);
         const noSuggestionsMessage = this.createNoSuggestionsMessage();
+        const suggestionListContent = noSuggestions ? noSuggestionsMessage : suggestions;
 
         return (
             <div className={autoCompleteStyles.autoComplete}>
                 <Input
-                    inputRef={this.setInputRef}
-                    onFocus={this.handleInputFocus}
-                    icon={inputIcon}
+                    icon={icon}
                     value={value}
-                    placeholder={placeholder}
+                    inputRef={this.setInputRef}
                     onChange={this.handleChange}
+                    placeholder={placeholder}
                 />
                 <Popover
                     open={this.open}
-                    anchorElement={this.inputRef}
                     onClose={this.handlePopoverClose}
-                    horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
+                    anchorElement={this.inputRef}
                     verticalOffset={POPOVER_VERTICAL_OFFSET}
+                    horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
                 >
                     {
-                        (setPopoverElementRef, popoverStyle) => (
+                        (setPopoverElementRef, popoverStyle, triggerResize) => (
                             <Menu
-                                menuRef={setPopoverElementRef}
                                 style={popoverStyle}
+                                menuRef={setPopoverElementRef}
                             >
-                                {noSuggestions
-                                    ? noSuggestionsMessage
-                                    : suggestions
+                                {
+                                    this.resizeSuggestionListOnContentChange(
+                                        suggestionListContent,
+                                        triggerResize,
+                                    )
                                 }
                             </Menu>
                         )

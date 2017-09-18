@@ -32,12 +32,6 @@ export default class Input extends React.PureComponent<Props> {
         }
     };
 
-    handleFocus = () => {
-        if (this.props.onFocus) {
-            this.props.onFocus();
-        }
-    };
-
     render() {
         const {
             name,
@@ -60,7 +54,6 @@ export default class Input extends React.PureComponent<Props> {
                     type={type}
                     value={value || ''}
                     placeholder={placeholder}
-                    onFocus={this.handleFocus}
                     onChange={this.handleChange}
                 />
             </label>

@@ -3,7 +3,7 @@ import React from 'react';
 import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
-import type {Node, ElementRef} from 'react';
+import type {ElementRef, Node} from 'react';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import type {PopoverDimensions} from './types';
@@ -12,7 +12,11 @@ import popoverStyles from './popover.scss';
 
 type Props = {
     open: boolean,
-    children?: (setPopoverElementRef: (ref: ElementRef<*>) => void, style: Object) => Node,
+    children?: (
+        setPopoverElementRef: (ref: ElementRef<*>) => void,
+        style: Object,
+        triggerResize: () => void,
+    ) => Node,
     onClose?: () => void,
     /** This element will be used to position the popover */
     anchorElement: ElementRef<*>,
@@ -35,7 +39,7 @@ export default class Popover extends React.PureComponent<Props> {
 
     @observable popoverHeight: number;
 
-    childNodesCount: number;
+    shouldUpdateDimensions: boolean;
 
     componentDidMount() {
         window.addEventListener('blur', this.close);
@@ -47,18 +51,19 @@ export default class Popover extends React.PureComponent<Props> {
         window.removeEventListener('resize', this.close);
     }
 
-    componentDidUpdate(prevProps: Props) {
+    componentDidUpdate() {
         if (!this.popoverChildRef) {
             return;
         }
 
-        if (!prevProps.open && this.props.open) {
-            afterElementsRendered(() => {
-                this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
-            });
-        }
+        afterElementsRendered(() => {
+            this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
 
-        this.handleChildrenCountChange();
+            if (this.shouldUpdateDimensions) {
+                this.updateDimensions();
+                this.shouldUpdateDimensions = false;
+            }
+        });
     }
 
     close = () => {
@@ -66,16 +71,6 @@ export default class Popover extends React.PureComponent<Props> {
             this.props.onClose();
         }
     };
-
-    handleChildrenCountChange() {
-        const childNodesCount = (this.popoverChildRef.childNodes) ? this.popoverChildRef.childNodes.length : 0;
-        
-        if (this.childNodesCount !== childNodesCount) {
-            this.updateDimensions();
-        }
-
-        this.childNodesCount = childNodesCount;
-    }
 
     @computed get dimensions(): PopoverDimensions {
         const {
@@ -131,6 +126,10 @@ export default class Popover extends React.PureComponent<Props> {
         );
     };
 
+    triggerResize = () => {
+        this.shouldUpdateDimensions = true;
+    };
+
     @action setPopoverSize(width: number, height: number) {
         this.popoverWidth = width;
         this.popoverHeight = height;
@@ -169,7 +168,7 @@ export default class Popover extends React.PureComponent<Props> {
                 <Portal isOpened={open}>
                     <div className={popoverStyles.container}>
                         {children &&
-                            children(this.setPopoverChildRef, styles)
+                            children(this.setPopoverChildRef, styles, this.triggerResize)
                         }
                     </div>
                 </Portal>

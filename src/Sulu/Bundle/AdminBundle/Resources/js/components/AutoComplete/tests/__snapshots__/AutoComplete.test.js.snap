@@ -27,16 +27,14 @@ exports[`Render the AutoComplete with open suggestions list 1`] = `
       value=""
     />
   </label>
-  <div>
-    
-  </div>
+  <div />
 </div>
 `;
 
 exports[`Render the AutoComplete with open suggestions list 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; max-height: -12px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
       <li style=\\"min-width: -10px;\\">
         <button class=\\"suggestion\\"><span class=\\"icon fa fa-ticket\\" aria-hidden=\\"true\\"></span><span>suggestion-1</span></button>
       </li>
@@ -66,16 +64,14 @@ exports[`Render the AutoComplete with the placeholder text 1`] = `
       value=""
     />
   </label>
-  <div>
-    
-  </div>
+  <div />
 </div>
 `;
 
 exports[`Render the AutoComplete with the placeholder text 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; max-height: -12px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
       <li class=\\"noSuggestions\\" style=\\"min-width: -10px;\\">Nothing found, sadface...</li>
     </ul>
   </div>
