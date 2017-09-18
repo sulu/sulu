@@ -4,23 +4,21 @@ import {render, shallow} from 'enzyme';
 import Folder from '../Folder';
 
 test('Render a Folder component', () => {
-    const handleClick = jest.fn();
-
     expect(render(
         <Folder
             id="1"
             meta="3 Objects"
             title="This is a folder"
-            onClick={handleClick}
         />
     )).toMatchSnapshot();
 });
 
-test('Should call clickhandler when clicking on folder', () => {
+test('Call clickhandler when clicking on the folder', () => {
     const clickSpy = jest.fn();
+    const folderId = 1;
     const folder = shallow(
         <Folder
-            id="1"
+            id={folderId}
             meta="3 Objects"
             title="This is a folder"
             onClick={clickSpy}
@@ -28,5 +26,5 @@ test('Should call clickhandler when clicking on folder', () => {
     );
 
     folder.simulate('click');
-    expect(clickSpy).toBeCalled();
+    expect(clickSpy).toHaveBeenCalledWith(folderId);
 });

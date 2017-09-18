@@ -11,12 +11,14 @@ type Props = {
     /** The subtext underneath the title */
     meta: string,
     title: string,
-    onClick: (id: string | number) => void,
+    onClick?: (id: string | number) => void,
 };
 
 export default class Folder extends React.PureComponent<Props> {
     handleClick = () => {
-        this.props.onClick(this.props.id);
+        if (this.props.onClick) {
+            this.props.onClick(this.props.id);
+        }
     };
 
     render() {
