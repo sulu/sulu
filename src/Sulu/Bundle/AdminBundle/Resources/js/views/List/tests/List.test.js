@@ -1,10 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render} from 'enzyme';
-import List from '../List';
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => function() {
+jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
     this.isLoading = false;
+    this.pageCount = 3;
     this.data = [
         {
             id: 1,
@@ -17,26 +19,18 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => function() 
             description: 'Description 2',
         },
     ];
-    this.getPage = function() {
-        return 2;
-    };
-    this.pageCount = 3;
-    this.getFields = function() {
-        return {
-            title: {},
-            description: {},
-        };
-    };
+    this.selections = [];
+    this.getPage = jest.fn().mockReturnValue(2);
+    this.getFields = jest.fn().mockReturnValue({
+        title: {},
+        description: {},
+    });
     this.destroy = jest.fn();
-});
+}));
 
 jest.mock('../../../stores/ResourceMetadataStore', () => ({
     getBaseUrl: jest.fn(),
 }));
-
-jest.mock('../../../containers/Toolbar/withToolbar', () => function(Component) {
-    return Component;
-});
 
 jest.mock('../../../services/Translator', () => ({
     translate: function(key) {
@@ -45,11 +39,22 @@ jest.mock('../../../services/Translator', () => ({
                 return 'Page';
             case 'sulu_admin.of':
                 return 'of';
+            case 'sulu_admin.delete':
+                return 'Delete';
+            case 'sulu_admin.add':
+                return 'Add';
+            case 'sulu_snippet.snippets':
+                return 'Snippets';
         }
     },
 }));
 
+beforeEach(() => {
+    jest.resetModules();
+});
+
 test('Should render the datagrid with the correct resourceKey', () => {
+    const List = require('../List').default;
     const router = {
         bindQuery: jest.fn(),
         route: {
@@ -63,7 +68,40 @@ test('Should render the datagrid with the correct resourceKey', () => {
     expect(list).toMatchSnapshot();
 });
 
+test('Should render the list with a title', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                title: 'sulu_snippet.snippets',
+            },
+        },
+    };
+
+    const list = render(<List router={router} />);
+    expect(list).toMatchSnapshot();
+});
+
+test('Should render the datagrid with the pencil icon if a editRoute has been passed', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+                editRoute: 'editRoute',
+            },
+        },
+    };
+
+    const list = render(<List router={router} />);
+    expect(list).toMatchSnapshot();
+});
+
 test('Should throw an error when no resourceKey is defined in the route options', () => {
+    const List = require('../List').default;
     const router = {
         route: {
             options: {},
@@ -73,7 +111,23 @@ test('Should throw an error when no resourceKey is defined in the route options'
     expect(() => render(<List router={router} />)).toThrow(/mandatory resourceKey option/);
 });
 
-test('Should bind the query parameter to the router', () => {
+test('Should bind the query parameter on mount', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+    };
+
+    mount(<List router={router} />);
+    expect(router.bindQuery).toBeCalledWith('page', undefined, '1');
+});
+
+test('Should unbind the query parameter and destroy the store on unmount', () => {
+    const List = require('../List').default;
     const router = {
         bindQuery: jest.fn(),
         unbindQuery: jest.fn(),
@@ -92,12 +146,13 @@ test('Should bind the query parameter to the router', () => {
 });
 
 test('Should navigate when pencil button is clicked', () => {
+    const List = require('../List').default;
     const router = {
         navigate: jest.fn(),
         bindQuery: jest.fn(),
         route: {
             options: {
-                editLink: 'editLink',
+                editRoute: 'editRoute',
                 resourceKey: 'test',
             },
         },
@@ -105,5 +160,32 @@ test('Should navigate when pencil button is clicked', () => {
 
     const list = mount(<List router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editLink', {uuid: 1});
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
+});
+
+test('Should render the delete item enabled only if something is selected', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+
+    let toolbarConfig, item;
+    toolbarConfig = toolbarFunction.call(list);
+    item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    expect(item.disabled).toBe(true);
+
+    datagridStore.selections.push(1);
+    toolbarConfig = toolbarFunction.call(list);
+    item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    expect(item.disabled).toBe(false);
 });

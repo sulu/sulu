@@ -17,7 +17,7 @@ test('Do not send request without defined page parameter', () => {
     expect(Requester.get).not.toBeCalled();
 });
 
-test('Send request with default parameters', () => {
+test('Send request with default parameters', (done) => {
     const Promise = require.requireActual('promise');
     Requester.get.mockReturnValue(Promise.resolve({
         pages: 3,
@@ -34,6 +34,7 @@ test('Send request with default parameters', () => {
             expect(datagridStore.data.toJS()).toEqual([{id: 1}]);
             expect(datagridStore.pageCount).toEqual(3);
             datagridStore.destroy();
+            done();
         }
     );
 });
@@ -90,4 +91,81 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     const datagridStore = new DatagridStore('test', '/api/test');
     expect(datagridStore.getFields()).toBe(fields);
     expect(metadataStore.getFields).toBeCalledWith('test');
+    datagridStore.destroy();
+});
+
+test('After initialization no row should be selected', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    expect(datagridStore.selections.length).toBe(0);
+    datagridStore.destroy();
+});
+
+test('Select an item', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.select(1);
+    datagridStore.select(2);
+    expect(datagridStore.selections.toJS()).toEqual([1, 2]);
+
+    datagridStore.deselect(1);
+    expect(datagridStore.selections.toJS()).toEqual([2]);
+    datagridStore.destroy();
+});
+
+test('Deselect an item that has not been selected yet', () => {
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.select(1);
+    datagridStore.deselect(2);
+
+    expect(datagridStore.selections.toJS()).toEqual([1]);
+    datagridStore.destroy();
+});
+
+test('Select the entire page', (done) => {
+    Requester.get.mockReturnValue(Promise.resolve({
+        _embedded: {
+            test: [
+                {id: 1},
+                {id: 2},
+                {id: 3},
+            ],
+        },
+    }));
+
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.selections = [1, 7];
+    datagridStore.setPage(1);
+    when(
+        () => !datagridStore.isLoading,
+        () => {
+            datagridStore.selectEntirePage();
+            expect(datagridStore.selections.toJS()).toEqual([1, 7, 2, 3]);
+            datagridStore.destroy();
+            done();
+        }
+    );
+});
+
+test('Deselect the entire page', (done) => {
+    Requester.get.mockReturnValue(Promise.resolve({
+        _embedded: {
+            test: [
+                {id: 1},
+                {id: 2},
+                {id: 3},
+            ],
+        },
+    }));
+
+    const datagridStore = new DatagridStore('test', '/api/test');
+    datagridStore.selections = [1, 2, 7];
+    datagridStore.setPage(1);
+    when(
+        () => !datagridStore.isLoading,
+        () => {
+            datagridStore.deselectEntirePage();
+            expect(datagridStore.selections.toJS()).toEqual([7]);
+            datagridStore.destroy();
+            done();
+        }
+    );
 });

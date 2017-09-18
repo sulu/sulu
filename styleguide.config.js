@@ -55,6 +55,18 @@ module.exports = { // eslint-disable-line
             })(),
         },
         {
+            name: 'Views',
+            sections: (function() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
+
+                return folders
+                    .map((folder) => {
+                        const component = path.basename(folder);
+                        return {name: component, content: folder + '/README.md'};
+                    });
+            })(),
+        },
+        {
             name: 'Higher-Order components',
             sections: (function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');

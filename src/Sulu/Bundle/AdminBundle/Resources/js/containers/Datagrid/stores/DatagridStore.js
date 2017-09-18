@@ -7,6 +7,7 @@ export default class DatagridStore {
     page: observable = observable();
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
+    @observable selections: Array<string | number> = [];
     @observable isLoading: boolean = true;
     disposer: () => void;
     baseUrl: string;
@@ -58,6 +59,35 @@ export default class DatagridStore {
         }
 
         this.page.set(page);
+    }
+
+    @action select(id: string | number) {
+        if (this.selections.includes(id)) {
+            return;
+        }
+
+        this.selections.push(id);
+    }
+
+    @action selectEntirePage() {
+        this.data.forEach((item) => {
+            this.select(item.id);
+        });
+    }
+
+    @action deselect(id: string | number) {
+        const index = this.selections.indexOf(id);
+        if (index === -1) {
+            return;
+        }
+
+        this.selections.splice(index, 1);
+    }
+
+    @action deselectEntirePage() {
+        this.data.forEach((item) => {
+            this.deselect(item.id);
+        });
     }
 
     destroy() {

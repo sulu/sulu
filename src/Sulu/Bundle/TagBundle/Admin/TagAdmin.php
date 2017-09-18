@@ -59,7 +59,7 @@ class TagAdmin extends Admin
                 'sulu_tag.list',
                 '/tags',
                 'sulu_admin.list',
-                ['resourceKey' => 'tags']
+                ['title' => 'sulu_tag.tags', 'resourceKey' => 'tags']
             ),
         ];
     }

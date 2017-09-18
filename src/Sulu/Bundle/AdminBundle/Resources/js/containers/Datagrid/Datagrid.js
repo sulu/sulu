@@ -18,6 +18,16 @@ export default class Datagrid extends React.PureComponent<Props> {
         this.props.store.setPage(page);
     };
 
+    handleRowSelectionChange = (id: string | number, selected?: boolean) => {
+        const {store} = this.props;
+        selected ? store.select(id) : store.deselect(id);
+    };
+
+    handleAllSelectionChange = (selected?: boolean) => {
+        const {store} = this.props;
+        selected ? store.selectEntirePage() : store.deselectEntirePage();
+    };
+
     render() {
         const {onRowEditClick, store} = this.props;
         const page = store.getPage();
@@ -30,8 +40,11 @@ export default class Datagrid extends React.PureComponent<Props> {
                         ? <Loader />
                         : <TableAdapter
                             data={store.data}
+                            selections={store.selections}
                             schema={store.getFields()}
                             onRowEditClick={onRowEditClick}
+                            onRowSelectionChange={this.handleRowSelectionChange}
+                            onAllSelectionChange={this.handleAllSelectionChange}
                         />
                     }
                 </div>

@@ -87,7 +87,7 @@ class SecurityAdmin extends Admin
                 'sulu_security.list',
                 '/roles',
                 'sulu_admin.list',
-                ['resourceKey' => 'roles']
+                ['title' => 'sulu_security.roles', 'resourceKey' => 'roles']
             ),
         ];
     }
