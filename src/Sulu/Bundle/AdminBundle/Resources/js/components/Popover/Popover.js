@@ -137,10 +137,8 @@ export default class Popover extends React.PureComponent<Props> {
         const dimensions = this.dimensions;
         const styles = {
             ...PopoverPositioner.dimensionsToStyle(dimensions),
-            ...{
-                position: 'fixed',
-                pointerEvents: 'auto',
-            },
+            position: 'fixed',
+            pointerEvents: 'auto',
         };
 
         return (
