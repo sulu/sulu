@@ -1,6 +1,6 @@
-The Popover component serves as a container to position other components on top of everything else. 
-A good usecase example is the dropdown when a Select component is opened or the result list for the Autocomplete 
-component. The Popover always expects to receive an anchor element as a prop, which can be any kind of HTML
+The `Popover` component serves as a container to position other components on top of everything else. 
+A good usecase example is the dropdown when a `Select` component is opened or the result list for the `Autocomplete` 
+component. The `Popover` always expects to receive an anchor element as a prop, which can be any kind of HTML
 element.
 
 ```

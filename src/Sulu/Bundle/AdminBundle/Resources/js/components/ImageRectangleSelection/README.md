@@ -1,4 +1,4 @@
-This component builds upon the RectangleSelection and defines more specific functionality,
+This component builds upon the `RectangleSelection` and defines more specific functionality,
 useful when dealing with large images. Imagine loading a large 1920x1080 image.
 Most often you want the user to select a section from a scaled down version of this large image.
 However, the data returned by the selection component should be with respect to the large image
@@ -14,7 +14,7 @@ without distorting the image and renders a selection component on top of it.
 </div>
 ```
 
-Like with the RectangleSelection, if both the minWidth and minHeight properties are set,
+Like with the `RectangleSelection`, if both the `minWidth` and `minHeight` properties are set,
 the ratio between these two is enforced on the selection.
 
 ```

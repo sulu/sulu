@@ -1,9 +1,9 @@
-The Table component consists out of six parts: Table, Header, Body, Row, Cell and HeaderCell. All of them has to be
-imported in order to build a table.
+The `Table` component consists out of six parts: `Table`, `Header`, `Body`, `Row`, `Cell` and `HeaderCell`. 
+All of them has to be imported in order to build a table.
 
-Here is an example of a simple table. The structure of the Table component is almost identical to a normal HTML table.
-The only difference can be seen in the header section where you have to omit the table row and add the HeaderCell 
-components as direct children. This is due to the fact that the Table component expects only one row inside the its 
+Here is an example of a simple table. The structure of the `Table` component is almost identical to a normal HTML table.
+The only difference can be seen in the header section where you have to omit the table row and add the `HeaderCell` 
+components as direct children. This is due to the fact that the `Table` component expects only one row inside the its 
 header.
 
 ```
