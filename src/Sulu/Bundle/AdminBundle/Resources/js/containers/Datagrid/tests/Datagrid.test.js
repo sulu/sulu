@@ -65,7 +65,7 @@ test('Render TableAdapter with correct values', () => {
     expect(tableAdapter.prop('onRowEditClick')).toBe(editClickSpy);
 });
 
-test.skip('Selecting and deselecting items should update store', () => {
+test('Selecting and deselecting items should update store', () => {
     const datagridStore = new DatagridStore('test', '/api/test');
     datagridStore.data = [
         {id: 1},
@@ -75,6 +75,9 @@ test.skip('Selecting and deselecting items should update store', () => {
     const datagrid = mount(<Datagrid store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
+    // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
+    checkboxes.at(1).getDOMNode().checked = true;
+    checkboxes.at(2).getDOMNode().checked = true;
     checkboxes.at(1).simulate('change', {currentTarget: {checked: true}});
     expect(datagridStore.select).toBeCalledWith(1);
     checkboxes.at(2).simulate('change', {currentTarget: {checked: true}});
@@ -83,7 +86,7 @@ test.skip('Selecting and deselecting items should update store', () => {
     expect(datagridStore.deselect).toBeCalledWith(1);
 });
 
-test.skip('Selecting and unselecting all items on current page should update store', () => {
+test('Selecting and unselecting all items on current page should update store', () => {
     const datagridStore = new DatagridStore('test', '/api/test');
     datagridStore.data = [
         {id: 1},
@@ -93,6 +96,8 @@ test.skip('Selecting and unselecting all items on current page should update sto
     const datagrid = mount(<Datagrid store={datagridStore} />);
 
     const headerCheckbox = datagrid.find('input[type="checkbox"]').at(0);
+    // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
+    headerCheckbox.getDOMNode().checked = true;
     headerCheckbox.simulate('change', {currentTarget: {checked: true}});
     expect(datagridStore.selectEntirePage).toBeCalledWith();
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
