@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
-import Requester from '../../../services/Requester';
+import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
@@ -10,12 +10,10 @@ export default class DatagridStore {
     @observable selections: Array<string | number> = [];
     @observable isLoading: boolean = true;
     disposer: () => void;
-    baseUrl: string;
     resourceKey: string;
 
-    constructor(resourceKey: string, baseUrl: string) {
+    constructor(resourceKey: string) {
         this.resourceKey = resourceKey;
-        this.baseUrl = baseUrl;
         this.disposer = autorun(this.sendRequest);
     }
 
@@ -30,7 +28,7 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        Requester.get(this.baseUrl + '?flat=true&page=' + page + '&limit=10')
+        ResourceRequester.cget(this.resourceKey, {page})
             .then(this.handleResponse);
     };
 

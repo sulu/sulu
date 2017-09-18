@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
-import resourceMetadataStore from '../../stores/ResourceMetadataStore';
+import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer/types';
@@ -26,10 +26,7 @@ class List extends React.PureComponent<ViewProps> {
             throw new Error('The route does not define the mandatory resourceKey option');
         }
 
-        this.datagridStore = new DatagridStore(
-            resourceKey,
-            resourceMetadataStore.getBaseUrl(resourceKey)
-        );
+        this.datagridStore = new DatagridStore(resourceKey);
 
         router.bindQuery('page', this.datagridStore.page, '1');
     }

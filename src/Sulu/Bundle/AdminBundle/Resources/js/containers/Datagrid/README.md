@@ -2,7 +2,7 @@ The `Datagrid` is responsible for rendering data in a table view. One of its par
 created outside, and be passed to the Datagrid. The `DatagridStore` is responsible for loading a page from a REST API.
 
 ```javascript static
-const store = new DatagridStore('snippets', '/admin/api/snippets');
+const store = new DatagridStore('snippets');
 
 <Datagrid store={store} />
 
