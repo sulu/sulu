@@ -4,10 +4,6 @@ import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    getBaseUrl: jest.fn(),
-}));
-
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);

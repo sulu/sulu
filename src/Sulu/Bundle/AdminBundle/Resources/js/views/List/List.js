@@ -76,7 +76,19 @@ export default withToolbar(List, function() {
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
                 disabled: this.datagridStore.selections.length === 0,
-                onClick: () => {},
+                onClick: () => {
+                    const {
+                        route: {
+                            options: {
+                                resourceKey,
+                            },
+                        },
+                    } = this.props.router;
+
+                    this.datagridStore.selections.forEach((id) => {
+                        ResourceRequester.delete(resourceKey, id);
+                    });
+                },
             },
         ],
     };

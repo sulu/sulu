@@ -28,10 +28,6 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.destroy = jest.fn();
 }));
 
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    getBaseUrl: jest.fn(),
-}));
-
 jest.mock('../../../services/Translator', () => ({
     translate: function(key) {
         switch (key) {

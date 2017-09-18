@@ -13,17 +13,6 @@ jest.mock('../../stores/MetadataStore', () => ({
     getFields: jest.fn(),
 }));
 
-jest.mock('../../../../stores/ResourceMetadataStore', () => ({
-    getBaseUrl: jest.fn().mockImplementation((resourceKey) => {
-        switch(resourceKey) {
-            case 'tests':
-                return '/api/test';
-        }
-
-        throw new Error(`The baseUrl for the resouceKey "${resourceKey}" was not mocked in this test`);
-    }),
-}));
-
 test('Do not send request without defined page parameter', () => {
     new DatagridStore('tests');
     expect(ResourceRequester.cget).not.toBeCalled();
