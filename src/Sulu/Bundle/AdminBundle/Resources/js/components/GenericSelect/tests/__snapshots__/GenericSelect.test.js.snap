@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should open the list when the display value is clicked 1`] = `
+exports[`The component should open the popover when the display value is clicked 1`] = `
 <div
   class="select"
 >
@@ -41,10 +41,10 @@ exports[`The component should open the list when the display value is clicked 1`
 </div>
 `;
 
-exports[`The component should open the list when the display value is clicked 2`] = `
+exports[`The component should open the popover when the display value is clicked 2`] = `
 "<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
-    <ul class=\\"list\\" style=\\"top: 10px;\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
       <li>
         <button class=\\"option icon\\">
           <!-- react-text: 5 -->Option 1
@@ -113,11 +113,10 @@ exports[`The component should render with an icon 1`] = `
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div />
 </div>
 `;
 
-exports[`The component should render with the list closed 1`] = `
+exports[`The component should render with the popover closed 1`] = `
 <div
   class="select"
 >
@@ -154,6 +153,5 @@ exports[`The component should render with the list closed 1`] = `
       class="toggle fa fa-chevron-down"
     />
   </button>
-  <div />
 </div>
 `;

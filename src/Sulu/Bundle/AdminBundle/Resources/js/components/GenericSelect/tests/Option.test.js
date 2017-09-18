@@ -40,9 +40,3 @@ test('The component should be focused when the corresponding property was set', 
         done();
     });
 });
-
-test('The component should provide a method for getting its offset top', () => {
-    const option = mount(<Option focus={true}>My option</Option>);
-    option.instance().item = {offsetTop: 7};
-    expect(option.instance().getOffsetTop()).toBe(7);
-});

@@ -15,6 +15,7 @@ type Props = {
     value: string,
     children: string,
     onClick?: (value: string) => void,
+    optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
     selectedVisualization: OptionSelectedVisualization,
 };
 
@@ -31,18 +32,22 @@ export default class Option extends React.PureComponent<Props> {
 
     item: ElementRef<'li'>;
 
-    /** @public **/
-    getOffsetTop() {
-        return this.item.offsetTop;
-    }
-
     handleButtonClick = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.value);
         }
     };
 
-    setItem = (item: ElementRef<'li'>) => this.item = item;
+    setItem = (item: ElementRef<'li'>) => {
+        const {
+            selected,
+            optionRef,
+        } = this.props;
+
+        if (optionRef) {
+            optionRef(item, selected);
+        }
+    };
 
     setButton = (button: ElementRef<'button'>) => {
         if (!button) {
@@ -55,6 +60,20 @@ export default class Option extends React.PureComponent<Props> {
             });
         }
     };
+
+    renderSelectedVisualization() {
+        if (this.props.selectedVisualization === 'icon') {
+            return this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : null;
+        }
+
+        return (
+            <Checkbox
+                onChange={this.handleButtonClick}
+                className={optionStyles.input}
+                checked={this.props.selected}
+            />
+        );
+    }
 
     render() {
         const {
@@ -83,20 +102,6 @@ export default class Option extends React.PureComponent<Props> {
                     {children}
                 </button>
             </li>
-        );
-    }
-
-    renderSelectedVisualization() {
-        if (this.props.selectedVisualization === 'icon') {
-            return this.props.selected ? <Icon className={optionStyles.icon} name={SELECTED_ICON} /> : null;
-        }
-
-        return (
-            <Checkbox
-                onChange={this.handleButtonClick}
-                className={optionStyles.input}
-                checked={this.props.selected}
-            />
         );
     }
 }

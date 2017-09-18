@@ -3,12 +3,16 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import Popover from '../Popover';
+import Menu from '../Menu';
 import Action from './Action';
 import Option from './Option';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
-import OverlayList from './OverlayList';
 import DisplayValue from './DisplayValue';
 import genericSelectStyles from './genericSelect.scss';
+
+const HORIZONTAL_OFFSET = -20;
+const VERTICAL_OFFSET = 2;
 
 type Props = SelectProps & {
     onSelect: (values: string) => void,
@@ -24,94 +28,110 @@ export default class GenericSelect extends React.PureComponent<Props> {
         closeOnSelect: true,
     };
 
-    displayValue: ?ElementRef<typeof DisplayValue>;
+    @observable displayValueRef: ?ElementRef<'button'>;
 
-    centeredChildIndex: number;
+    @observable selectedOptionRef: ?ElementRef<'li'>;
 
     @observable open: boolean;
 
-    @action openList = () => {
-        this.centeredChildIndex = this.getCenteredChildIndex();
+    @action openOptionList = () => {
         this.open = true;
     };
 
-    @action closeList = () => {
+    @action closeOptionList = () => {
         this.open = false;
     };
 
-    handleOptionClick = (value: string) => {
-        this.props.onSelect(value);
-
-        if (this.props.closeOnSelect) {
-            this.closeList();
+    @action setDisplayValueRef = (ref: ?ElementRef<'button'>) => {
+        if (ref) {
+            this.displayValueRef = ref;
         }
     };
 
-    handleDisplayValueClick = this.openList;
-
-    handleListClose = this.closeList;
-
-    setDisplayValue = (displayValue: ?ElementRef<typeof DisplayValue>) => {
-        this.displayValue = displayValue;
+    @action setSelectedOptionRef = (ref: ?ElementRef<'li'>, selected: boolean) => {
+        if (!this.selectedOptionRef || (ref && selected)) {
+            this.selectedOptionRef = ref;
+        }
     };
 
-    render() {
-        const {
-            icon,
-            displayValue,
-        } = this.props;
-        const displayValueDimensions = this.displayValue ? this.displayValue.getDimensions() : {};
-        const listChildren = this.renderListChildren();
-
-        return (
-            <div className={genericSelectStyles.select}>
-                <DisplayValue
-                    ref={this.setDisplayValue}
-                    icon={icon}
-                    onClick={this.handleDisplayValueClick}
-                >
-                    {displayValue}
-                </DisplayValue>
-                <OverlayList
-                    anchorTop={displayValueDimensions.top}
-                    anchorLeft={displayValueDimensions.left}
-                    anchorWidth={displayValueDimensions.width}
-                    anchorHeight={displayValueDimensions.height}
-                    open={this.open}
-                    centeredChildIndex={this.centeredChildIndex}
-                    onClose={this.handleListClose}
-                >
-                    {listChildren}
-                </OverlayList>
-            </div>
-        );
+    cloneOption(originalOption: Element<typeof Option>) {
+        return React.cloneElement(originalOption, {
+            onClick: this.handleOptionClick,
+            selected: this.props.isOptionSelected(originalOption),
+            selectedVisualization: this.props.selectedVisualization,
+            optionRef: this.setSelectedOptionRef,
+        });
     }
 
-    renderListChildren(): SelectChildren {
-        return React.Children.map(this.props.children, (child: any) => {
-            if (child.type === Option) {
-                child = React.cloneElement(child, {
-                    onClick: this.handleOptionClick,
-                    selected: this.props.isOptionSelected(child),
-                    selectedVisualization: this.props.selectedVisualization,
-                });
-            }
+    cloneAction(originalAction: Element<typeof Action>) {
+        return React.cloneElement(originalAction, {
+            afterAction: this.closeOptionList,
+        });
+    }
 
-            if (child.type === Action) {
-                child = React.cloneElement(child, {
-                    afterAction: this.closeList,
-                });
+    cloneChildren(): SelectChildren {
+        return React.Children.map(this.props.children, (child: any) => {
+            switch (child.type) {
+                case Option:
+                    child = this.cloneOption(child);
+                    break;
+                case Action:
+                    child = this.cloneAction(child);
+                    break;
             }
 
             return child;
         });
     }
 
-    getCenteredChildIndex(): number {
-        const index = React.Children.toArray(this.props.children).findIndex(
-            (child: any) => child.type === Option && this.props.isOptionSelected(child)
-        );
+    handleOptionClick = (value: string) => {
+        this.props.onSelect(value);
 
-        return index === -1 ? 0 : index;
+        if (this.props.closeOnSelect) {
+            this.closeOptionList();
+        }
+    };
+
+    handleDisplayValueClick = this.openOptionList;
+
+    handleOptionListClose = this.closeOptionList;
+
+    render() {
+        const {
+            icon,
+            displayValue,
+        } = this.props;
+        const clonedChildren = this.cloneChildren();
+
+        return (
+            <div className={genericSelectStyles.select}>
+                <DisplayValue
+                    icon={icon}
+                    onClick={this.handleDisplayValueClick}
+                    displayValueRef={this.setDisplayValueRef}
+                >
+                    {displayValue}
+                </DisplayValue>
+                <Popover
+                    open={this.open}
+                    onClose={this.handleOptionListClose}
+                    anchorElement={this.displayValueRef}
+                    verticalOffset={VERTICAL_OFFSET}
+                    horizontalOffset={HORIZONTAL_OFFSET}
+                    centerChildElement={this.selectedOptionRef}
+                >
+                    {
+                        (setPopoverElementRef, popoverStyle) => (
+                            <Menu
+                                style={popoverStyle}
+                                menuRef={setPopoverElementRef}
+                            >
+                                {clonedChildren}
+                            </Menu>
+                        )
+                    }
+                </Popover>
+            </div>
+        );
     }
 }
