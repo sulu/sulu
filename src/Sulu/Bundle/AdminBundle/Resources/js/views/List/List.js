@@ -85,8 +85,14 @@ export default withToolbar(List, function() {
                         },
                     } = this.props.router;
 
+                    const deletePromises = [];
+
                     this.datagridStore.selections.forEach((id) => {
-                        ResourceRequester.delete(resourceKey, id);
+                        deletePromises.push(ResourceRequester.delete(resourceKey, id));
+                    });
+
+                    return Promise.all(deletePromises).then(() => {
+                        this.datagridStore.sendRequest();
                     });
                 },
             },

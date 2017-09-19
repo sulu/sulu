@@ -26,6 +26,11 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
         description: {},
     });
     this.destroy = jest.fn();
+    this.sendRequest = jest.fn();
+}));
+
+jest.mock('../../../services/ResourceRequester', () => ({
+    delete: jest.fn().mockReturnValue(Promise.resolve(true)),
 }));
 
 jest.mock('../../../services/Translator', () => ({
@@ -184,4 +189,33 @@ test('Should render the delete item enabled only if something is selected', () =
     toolbarConfig = toolbarFunction.call(list);
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
+});
+
+test.only('Should delete selected items when click on delete button', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+    datagridStore.selections = [1, 4, 6];
+
+    const toolbarConfig = toolbarFunction.call(list);
+    const item = toolbarConfig.items.find((item) => item.value === 'Delete');
+
+    return item.onClick().then(() => {
+        expect(ResourceRequester.delete).toBeCalledWith('test', 1);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 4);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 6);
+        expect(datagridStore.sendRequest).toBeCalled();
+    });
 });

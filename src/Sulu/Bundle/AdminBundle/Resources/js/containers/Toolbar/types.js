@@ -3,7 +3,7 @@ import type {Node} from 'react';
 
 export type Button = {
     children?: Node,
-    onClick: () => void,
+    onClick: () => ?Promise<*>,
     value?: string | number,
     icon?: string,
     size?: string,
