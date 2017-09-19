@@ -6,7 +6,7 @@ import metadataStore from '../../stores/MetadataStore';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
 jest.mock('../../../../services/ResourceRequester', () => ({
-    cget: jest.fn(),
+    getList: jest.fn(),
 }));
 
 jest.mock('../../stores/MetadataStore', () => ({
@@ -15,12 +15,12 @@ jest.mock('../../stores/MetadataStore', () => ({
 
 test('Do not send request without defined page parameter', () => {
     new DatagridStore('tests');
-    expect(ResourceRequester.cget).not.toBeCalled();
+    expect(ResourceRequester.getList).not.toBeCalled();
 });
 
 test('Send request with default parameters', (done) => {
     const Promise = require.requireActual('promise');
-    ResourceRequester.cget.mockReturnValue(Promise.resolve({
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({
         pages: 3,
         _embedded: {
             tests: [{id: 1}],
@@ -28,7 +28,7 @@ test('Send request with default parameters', (done) => {
     }));
     const datagridStore = new DatagridStore('tests');
     datagridStore.setPage(1);
-    expect(ResourceRequester.cget).toBeCalledWith('tests', {page: 1});
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     when(
         () => !datagridStore.isLoading,
         () => {
@@ -43,16 +43,16 @@ test('Send request with default parameters', (done) => {
 test('Send request to other base URL', () => {
     const datagridStore = new DatagridStore('tests');
     datagridStore.setPage(1);
-    expect(ResourceRequester.cget).toBeCalledWith('tests', {page: 1});
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     datagridStore.destroy();
 });
 
 test('Send request to other page', () => {
     const datagridStore = new DatagridStore('tests');
     datagridStore.setPage(1);
-    expect(ResourceRequester.cget).toBeCalledWith('tests', {page: 1});
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     datagridStore.setPage(2);
-    expect(ResourceRequester.cget).toBeCalledWith('tests', {page: 2});
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 2});
     datagridStore.destroy();
 });
 
@@ -68,7 +68,7 @@ test('Set loading flag to true before request', () => {
 test('Set loading flag to false after request', () => {
     const datagridStore = new DatagridStore('tests');
     const Promise = require.requireActual('promise');
-    ResourceRequester.cget.mockReturnValue(Promise.resolve({
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({
         _embedded: {
             tests: [],
         },
@@ -122,7 +122,7 @@ test('Deselect an item that has not been selected yet', () => {
 });
 
 test('Select the entire page', (done) => {
-    ResourceRequester.cget.mockReturnValue(Promise.resolve({
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({
         _embedded: {
             tests: [
                 {id: 1},
@@ -147,7 +147,7 @@ test('Select the entire page', (done) => {
 });
 
 test('Deselect the entire page', (done) => {
-    ResourceRequester.cget.mockReturnValue(Promise.resolve({
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({
         _embedded: {
             tests: [
                 {id: 1},

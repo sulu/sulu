@@ -1,19 +1,19 @@
 // @flow
 import Requester from '../Requester';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
-import type {CGetOptions} from './types';
+import type {ListOptions} from './types';
 
-const cgetDefaults = {
+const listDefaults = {
     flat: true,
     page: 1,
     limit: 10,
 };
 
 export default class ResourceRequester {
-    static cget(resourceKey: string, options: CGetOptions = cgetDefaults) {
+    static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         const searchParameters = new URLSearchParams();
-        const searchOptions = {...cgetDefaults, ...options};
+        const searchOptions = {...listDefaults, ...options};
 
         Object.keys(searchOptions).forEach((searchKey) => {
             searchParameters.set(searchKey, searchOptions[searchKey]);

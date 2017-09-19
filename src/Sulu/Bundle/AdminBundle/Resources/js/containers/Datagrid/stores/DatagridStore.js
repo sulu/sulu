@@ -28,7 +28,7 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        ResourceRequester.cget(this.resourceKey, {page})
+        ResourceRequester.getList(this.resourceKey, {page})
             .then(this.handleResponse);
     };
 

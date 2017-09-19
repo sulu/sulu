@@ -22,31 +22,31 @@ jest.mock('../../../stores/ResourceMetadataStore', () => ({
 test('Should send a list get request and return the promise', () => {
     const promise = {};
     Requester.get.mockReturnValue(promise);
-    const result = ResourceRequester.cget('snippets');
+    const result = ResourceRequester.getList('snippets');
     expect(result).toBe(promise);
 });
 
 test('Should send a list get request to the correct URL', () => {
-    ResourceRequester.cget('snippets');
+    ResourceRequester.getList('snippets');
     expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=10');
 
-    ResourceRequester.cget('contacts');
+    ResourceRequester.getList('contacts');
     expect(Requester.get).toBeCalledWith('/contacts?flat=true&page=1&limit=10');
 });
 
 test('Should send a list get request to the correct URL with page and limit parameters', () => {
-    ResourceRequester.cget('snippets', {
+    ResourceRequester.getList('snippets', {
         page: 3,
         limit: 20,
     });
     expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=3&limit=20');
 
-    ResourceRequester.cget('snippets', {
+    ResourceRequester.getList('snippets', {
         page: 5,
     });
     expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=5&limit=10');
 
-    ResourceRequester.cget('snippets', {
+    ResourceRequester.getList('snippets', {
         limit: 5,
     });
     expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=5');

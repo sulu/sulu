@@ -1,5 +1,5 @@
 // @flow
-export type CGetOptions = {
+export type ListOptions = {
     page?: number,
     limit?: number,
 };
