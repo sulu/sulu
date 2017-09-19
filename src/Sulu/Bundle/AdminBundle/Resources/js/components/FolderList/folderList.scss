@@ -1,0 +1,10 @@
+.folder-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & > li {
+        display: inline-block;
+        margin: 0 30px 30px 0;
+    }
+}
