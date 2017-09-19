@@ -27,7 +27,7 @@ exports[`The component should render in selected state 1`] = `
     class="option icon selected"
   >
     <span
-      aria-hidden="true"
+      aria-label="check"
       class="icon fa fa-check"
     />
     My option

@@ -15,7 +15,7 @@ exports[`Input should render with icon 1`] = `
   class="input"
 >
   <span
-    aria-hidden="true"
+    aria-label="my-icon"
     class="icon fa fa-my-icon"
   />
   <input

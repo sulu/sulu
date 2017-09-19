@@ -15,7 +15,7 @@ exports[`Render disabled dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="dropdownIcon fa fa-chevron-down"
     />
   </button>
@@ -36,7 +36,7 @@ exports[`Render dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="dropdownIcon fa fa-chevron-down"
     />
   </button>
@@ -57,7 +57,7 @@ exports[`Render dropdown with a different size 1`] = `
       Click to open
     </span>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="dropdownIcon fa fa-chevron-down"
     />
   </button>
@@ -73,7 +73,7 @@ exports[`Render dropdown with a prepended icon 1`] = `
     value="Click to open"
   >
     <span
-      aria-hidden="true"
+      aria-label="floppy-o"
       class="icon fa fa-floppy-o"
     />
     <span
@@ -82,7 +82,7 @@ exports[`Render dropdown with a prepended icon 1`] = `
       Click to open
     </span>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="dropdownIcon fa fa-chevron-down"
     />
   </button>

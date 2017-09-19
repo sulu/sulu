@@ -11,6 +11,11 @@ test('Icon should render with class names', () => {
     expect(render(<Icon className="test" name="edit" />)).toMatchSnapshot();
 });
 
+test('Icon should render with onClick handler, role and tabindex', () => {
+    const onClickSpy = jest.fn();
+    expect(render(<Icon className="test" name="save" onClick={onClickSpy} />)).toMatchSnapshot();
+});
+
 test('Icon should call the callback on click', () => {
     const onClick = jest.fn();
     const icon = shallow(<Icon className="test" name="edit" onClick={onClick} />);
