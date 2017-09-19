@@ -4,7 +4,9 @@ different `Select` component types and as the container for the `Suggestions` of
 Example:
 
 ```
-const Option = require('../GenericSelect').Option;
+const GenericSelect = require('../GenericSelect').default;
+
+const Option = GenericSelect.Option;
 
 <Menu style={{maxWidth: '200px'}}>
     <Option>Item 1</Option>

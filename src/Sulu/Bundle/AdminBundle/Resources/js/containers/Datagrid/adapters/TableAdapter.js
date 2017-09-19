@@ -1,7 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import {Body, Cell, Header, HeaderCell, Row, Table} from '../../../components/Table';
+import Table from '../../../components/Table';
 import type {DataItem, Schema} from '../types';
 
 type Props = {
@@ -34,16 +34,20 @@ export default class TableAdapter extends React.Component<Props> {
                 onRowSelectionChange={onRowSelectionChange}
                 onAllSelectionChange={onAllSelectionChange}
             >
-                <Header>
-                    {schemaKeys.map((schemaKey) => <HeaderCell key={schemaKey}>{schemaKey}</HeaderCell>)}
-                </Header>
-                <Body>
-                    {data.map((item) => (
-                        <Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
-                            {schemaKeys.map((schemaKey) => <Cell key={item.id + schemaKey}>{item[schemaKey]}</Cell>)}
-                        </Row>
+                <Table.Header>
+                    {schemaKeys.map((schemaKey) => (
+                        <Table.HeaderCell key={schemaKey}>{schemaKey}</Table.HeaderCell>
                     ))}
-                </Body>
+                </Table.Header>
+                <Table.Body>
+                    {data.map((item) => (
+                        <Table.Row key={item.id} id={item.id} selected={selections.includes(item.id)}>
+                            {schemaKeys.map((schemaKey) => (
+                                <Table.Cell key={item.id + schemaKey}>{item[schemaKey]}</Table.Cell>
+                            ))}
+                        </Table.Row>
+                    ))}
+                </Table.Body>
             </Table>
         );
     }

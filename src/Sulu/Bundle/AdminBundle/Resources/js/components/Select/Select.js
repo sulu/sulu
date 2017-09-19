@@ -2,7 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 import type {SelectProps} from '../GenericSelect';
-import GenericSelect, {Option} from '../GenericSelect';
+import GenericSelect from '../GenericSelect';
 
 type Props = SelectProps & {
     value?: string,
@@ -10,11 +10,17 @@ type Props = SelectProps & {
 };
 
 export default class Select extends React.PureComponent<Props> {
+    static Action = GenericSelect.Action;
+
+    static Option = GenericSelect.Option;
+
+    static Divider = GenericSelect.Divider;
+
     get displayValue(): string {
         let displayValue = '';
 
         React.Children.forEach(this.props.children, (child: any) => {
-            if (child.type !== Option) {
+            if (child.type !== Select.Option) {
                 return;
             }
 
@@ -26,7 +32,7 @@ export default class Select extends React.PureComponent<Props> {
         return displayValue;
     }
 
-    isOptionSelected = (option: Element<typeof Option>): boolean => {
+    isOptionSelected = (option: Element<typeof Select.Option>): boolean => {
         return option.props.value === this.props.value && !option.props.disabled;
     };
 

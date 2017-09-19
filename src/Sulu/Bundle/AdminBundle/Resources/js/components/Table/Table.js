@@ -5,6 +5,9 @@ import type {ChildrenArray, Element} from 'react';
 import Icon from '../Icon';
 import Header from './Header';
 import Body from './Body';
+import Row from './Row';
+import Cell from './Cell';
+import HeaderCell from './HeaderCell';
 import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
@@ -32,6 +35,16 @@ export default class Table extends React.PureComponent<Props> {
     static defaultProps = {
         selectMode: 'none',
     };
+
+    static Header = Header;
+
+    static Body = Body;
+
+    static Row = Row;
+
+    static Cell = Cell;
+
+    static HeaderCell = HeaderCell;
 
     cloneHeader = (originalHeader?: Element<typeof Header>, allSelected: boolean) => {
         if (!originalHeader) {

@@ -7,12 +7,11 @@ components as direct children. This is due to the fact that the `Table` componen
 header.
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 <Table>
     <Header>
@@ -78,12 +77,11 @@ const HeaderCell = require('./HeaderCell').default;
 An empty table component will be rendered as follows. You can set a `placeholderText`.
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 const buttons = [{
     icon: 'heart',
@@ -114,12 +112,11 @@ like it is done in the example below.
 Hover the first cell and click on the button to change the boring text inside each row.
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 initialState = {
     rows: [
@@ -174,12 +171,11 @@ distinguishes between `single` and `multiple` selection mode. The single selecti
 to each row as you can see in the following example.
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 initialState = {
     rows: [1, 2, 3, 4, 5],
@@ -227,12 +223,11 @@ The multiple selection mode prepends the `Checkbox` component to each row and al
 header.
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 initialState = {
     rows: [1, 2, 3, 4, 5],
@@ -312,12 +307,11 @@ component. In addition with the `sortMode` property this can be used to change t
 If the `sortMode` property is set, an indicator appears next to the header cell.
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 initialState = {
     rows: [
@@ -369,12 +363,11 @@ const handleSortColumnA = () => {
 Here a more complex example of the Table component with most of its features:
 
 ```
-const Table = require('./Table').default;
-const Header = require('./Header').default;
-const Body = require('./Body').default;
-const Row = require('./Row').default;
-const Cell = require('./Cell').default;
-const HeaderCell = require('./HeaderCell').default;
+const Header = Table.Header;
+const Body = Table.Body;
+const Row = Table.Row;
+const Cell = Table.Cell;
+const HeaderCell = Table.HeaderCell;
 
 initialState = {
     rows: [1, 2, 3, 4, 5],
