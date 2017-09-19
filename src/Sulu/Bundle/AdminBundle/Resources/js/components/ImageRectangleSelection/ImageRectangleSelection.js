@@ -3,9 +3,8 @@ import {action, computed, observable} from 'mobx';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
 import React from 'react';
-import RectangleSelection from '../RectangleSelection';
-import RoundingNormalizer from '../RectangleSelection/normalizers/RoundingNormalizer';
-import type {SelectionData} from '../RectangleSelection/types';
+import RectangleSelection, {RoundingNormalizer} from '../RectangleSelection';
+import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 

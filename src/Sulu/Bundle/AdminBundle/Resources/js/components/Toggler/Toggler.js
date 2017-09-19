@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Switch from '../Switch';
-import type {SwitchProps} from '../Switch/types';
+import type {SwitchProps} from '../Switch';
 import togglerStyles from './toggler.scss';
 
 type Props = SwitchProps & {
