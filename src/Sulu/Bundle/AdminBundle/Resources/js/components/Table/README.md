@@ -85,17 +85,24 @@ const Row = require('./Row').default;
 const Cell = require('./Cell').default;
 const HeaderCell = require('./HeaderCell').default;
 
-<Table placeholderText="Awwww, this little fella has no entries...">
+const buttons = [{
+    icon: 'heart',
+    onClick: (rowId) => {
+        state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
+        const newRows = state.rows;
+
+        setState({
+            rows: newRows,
+        })
+    },
+}];
+
+<Table buttons={buttons} placeholderText="Awwww, this little fella has no entries...">
     <Header>
         <HeaderCell>Column 1</HeaderCell>
         <HeaderCell>Column 2</HeaderCell>
         <HeaderCell>Column 3</HeaderCell>
         <HeaderCell>Column 4</HeaderCell>
-        <HeaderCell>Column 5</HeaderCell>
-        <HeaderCell>Column 6</HeaderCell>
-        <HeaderCell>Column 7</HeaderCell>
-        <HeaderCell>Column 8</HeaderCell>
-        <HeaderCell>Column 9</HeaderCell>
     </Header>
     <Body></Body>
 </Table>

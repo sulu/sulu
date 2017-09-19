@@ -12,6 +12,7 @@ $cellBorderColorActive: $shakespeare;
 $cellBackgroundColorActive: $shakespeare;
 $buttonCellBorderColor: $white;
 $emptyMessageColor: $silver;
+$rowHeight: 40px;
 
 .table {
     border-collapse: separate;
@@ -24,7 +25,7 @@ $emptyMessageColor: $silver;
 .header {
     color: $headerTextColor;
 
-    .row {
+    & > tr {
         height: 60px;
     }
 }
@@ -74,19 +75,25 @@ $emptyMessageColor: $silver;
 }
 
 .header-button-cell {
+    width: 1px;
     border-right: 1px solid $headerButtonCellBorderColor;
     color: $headerButtonCellTextColor;
     text-align: center;
 }
 
 .row {
-    height: 40px;
+    height: $rowHeight;
 
     &:hover {
         .cell {
             border-color: $cellBorderColorActive;
         }
     }
+}
+
+.button-cell,
+.header-button-cell {
+    width: 56px;
 }
 
 .cell,
@@ -120,7 +127,6 @@ $emptyMessageColor: $silver;
     background-color: $cellBackgroundColor;
     color: $cellTextColorActive;
     text-align: center;
-    width: 1px;
 
     &:hover {
         button {
@@ -132,8 +138,8 @@ $emptyMessageColor: $silver;
 
     button {
         visibility: hidden;
-        width: 55px;
-        height: 38px;
+        width: 100%;
+        height: $rowHeight;
         border: none;
         color: inherit;
         cursor: pointer;
