@@ -2,8 +2,6 @@ The `FolderList` component is used to display a list of folders. The `FolderList
 children. The `Folder` component is just an interactive element for presentation purposes. Every `Folder` component has 
 its own `onClick`-handler.
 
-`Folder` example:
-
 ```
 const Folder = require('./Folder').default;
 
