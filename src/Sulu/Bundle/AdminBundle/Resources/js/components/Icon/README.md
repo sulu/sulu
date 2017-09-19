@@ -11,3 +11,13 @@ It can also take an additional `className`, which will be added to the class of 
 ```
 <Icon name="trash-o" className="special-icon" />
 ```
+
+An icon can also have a `onClick` handler:
+
+```
+function handleClick() {
+    alert('No action for you!');
+}
+
+<Icon name="bars" onClick={handleClick} />
+```

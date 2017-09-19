@@ -127,7 +127,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         class="previous enabled"
       >
         <span
-          aria-hidden="true"
+          aria-label="angle-left"
           class="fa fa-angle-left"
         />
       </a>
@@ -135,7 +135,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         class="next enabled"
       >
         <span
-          aria-hidden="true"
+          aria-label="angle-right"
           class="fa fa-angle-right"
         />
       </a>
@@ -165,7 +165,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               >
                 <span>
                   <span
-                    aria-hidden="true"
+                    aria-label="pencil"
                     class="fa fa-pencil"
                   />
                 </span>
@@ -213,7 +213,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               >
                 <button>
                   <span
-                    aria-hidden="true"
+                    aria-label="pencil"
                     class="fa fa-pencil"
                   />
                 </button>
@@ -253,7 +253,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
               >
                 <button>
                   <span
-                    aria-hidden="true"
+                    aria-label="pencil"
                     class="fa fa-pencil"
                   />
                 </button>
@@ -301,7 +301,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
         class="previous enabled"
       >
         <span
-          aria-hidden="true"
+          aria-label="angle-left"
           class="fa fa-angle-left"
         />
       </a>
@@ -309,7 +309,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
         class="next enabled"
       >
         <span
-          aria-hidden="true"
+          aria-label="angle-right"
           class="fa fa-angle-right"
         />
       </a>
@@ -448,7 +448,7 @@ exports[`Should render the list with a title 1`] = `
         class="previous enabled"
       >
         <span
-          aria-hidden="true"
+          aria-label="angle-left"
           class="fa fa-angle-left"
         />
       </a>
@@ -456,7 +456,7 @@ exports[`Should render the list with a title 1`] = `
         class="next enabled"
       >
         <span
-          aria-hidden="true"
+          aria-label="angle-right"
           class="fa fa-angle-right"
         />
       </a>

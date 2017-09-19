@@ -11,7 +11,7 @@ exports[`The component should render in body when open 2`] = `
       <section class=\\"content\\">
         <header>
           <!-- react-text: 5 -->My overlay title
-          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <p>My overlay content</p>
         </article>
@@ -35,7 +35,7 @@ exports[`The component should render in body with actions when open 2`] = `
       <section class=\\"content\\">
         <header>
           <!-- react-text: 5 -->My overlay title
-          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-hidden=\\"true\\"></span></header>
+          <!-- /react-text --><span class=\\"icon fa fa-times\\" aria-label=\\"times\\" role=\\"button\\" tabindex=\\"0\\"></span></header>
         <article>
           <p>My overlay content</p>
         </article>

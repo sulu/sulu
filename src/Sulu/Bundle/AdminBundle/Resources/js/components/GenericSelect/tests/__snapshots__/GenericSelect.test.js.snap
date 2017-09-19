@@ -33,7 +33,7 @@ exports[`The component should open the popover when the display value is clicked
       </div>
     </div>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="toggle fa fa-chevron-down"
     />
   </button>
@@ -80,7 +80,7 @@ exports[`The component should render with an icon 1`] = `
     class="displayValue hasIcon"
   >
     <span
-      aria-hidden="true"
+      aria-label="plus"
       class="frontIcon fa fa-plus"
     />
     <div
@@ -109,7 +109,7 @@ exports[`The component should render with an icon 1`] = `
       </div>
     </div>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="toggle fa fa-chevron-down"
     />
   </button>
@@ -149,7 +149,7 @@ exports[`The component should render with the popover closed 1`] = `
       </div>
     </div>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="toggle fa fa-chevron-down"
     />
   </button>

@@ -16,7 +16,7 @@ exports[`Render data with pencil button when onRowEdit callback is passed 1`] = 
         >
           <span>
             <span
-              aria-hidden="true"
+              aria-label="pencil"
               class="fa fa-pencil"
             />
           </span>
@@ -57,7 +57,7 @@ exports[`Render data with pencil button when onRowEdit callback is passed 1`] = 
         >
           <button>
             <span
-              aria-hidden="true"
+              aria-label="pencil"
               class="fa fa-pencil"
             />
           </button>
@@ -92,7 +92,7 @@ exports[`Render data with pencil button when onRowEdit callback is passed 1`] = 
         >
           <button>
             <span
-              aria-hidden="true"
+              aria-label="pencil"
               class="fa fa-pencil"
             />
           </button>
@@ -299,7 +299,7 @@ exports[`Render data with schema and selections 1`] = `
               />
               <span>
                 <span
-                  aria-hidden="true"
+                  aria-label="check"
                   class="fa fa-check"
                 />
               </span>
@@ -365,7 +365,7 @@ exports[`Render data with schema and selections 1`] = `
               />
               <span>
                 <span
-                  aria-hidden="true"
+                  aria-label="check"
                   class="fa fa-check"
                 />
               </span>

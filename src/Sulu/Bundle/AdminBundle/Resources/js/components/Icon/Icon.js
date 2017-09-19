@@ -14,8 +14,16 @@ export default class Icon extends React.PureComponent<Props> {
         const {className, name, onClick} = this.props;
         const iconClass = classNames(className, 'fa', 'fa-' + name);
 
+        const onClickProperties = onClick
+            ? {
+                onClick,
+                role: 'button',
+                tabIndex: 0,
+            }
+            : {};
+
         return (
-            <span className={iconClass} aria-hidden={true} onClick={onClick} />
+            <span className={iconClass} aria-label={name} {...onClickProperties} />
         );
     }
 }
