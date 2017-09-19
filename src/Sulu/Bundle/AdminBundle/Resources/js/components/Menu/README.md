@@ -1,5 +1,5 @@
-The Menu is a component to stylize a list. The Menu is used as the container for Options inside the different 
-Select component types and as the container for the Suggestions of the AutoComplete.
+The `Menu` is a component to stylize a list. Usage examples of the `Menu` are the `Options` container inside the 
+different `Select` component types and as the container for the `Suggestions` of the `AutoComplete`.
 
 Example:
 

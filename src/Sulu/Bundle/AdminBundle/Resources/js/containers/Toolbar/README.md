@@ -1,4 +1,4 @@
-The Toolbar is a configurable component which serves as a wrapper for multiple other component types. 
+The `Toolbar` is a configurable component which serves as a wrapper for multiple other component types. 
 The configuration can be set by using the `withToolbar` function which takes a React component as the first, a 
 configuration object as the second and optionally the `storeKey` of the store you want to use as the third argument. 
 If you don't define a `storeKey` the default store will be used. In most cases the given component would be some kind 
@@ -7,7 +7,7 @@ of a page or view component in which the Toolbar will be placed.
 The configuration object describes how the Toolbar should be rendered and the kind of inputs and controls it should 
 offer.
 
-Here is a basic example of the Toolbar component:
+Here is a basic example of the `Toolbar` component:
 
 ```
 const withToolbar = require('./withToolbar').default;
@@ -42,13 +42,13 @@ const PageWithToolbar = withToolbar(Page, function() {
 </div>
 ```
 
-In the above example an item with the type of button is being defined inside the configuration. The Toolbar offers three 
-kinds of items which can be used by defining them inside the items array and setting the appropriate type:
+In the above example an item with the type of button is being defined inside the configuration. The `Toolbar` 
+offers three kinds of items which can be used by defining them inside the items array and setting the appropriate type:
  - button
  - dropdown
  - select
 
-Here a Toolbar example which is using all three of them:
+Here a `Toolbar` example which is using all three of them:
 
 ```
 const withToolbar = require('./withToolbar').default;
@@ -124,8 +124,8 @@ const PageWithToolbar = withToolbar(Page, function() {
 </div>
 ```
 
-In addition to items, the Toolbar also offers a set of control elements like a back-button, a language-chooser and the 
-option to show icons in order to display notifications or other state information about the application.
+In addition to items, the `Toolbar` also offers a set of control elements like a back-button, a language-chooser 
+and the option to show icons in order to display notifications or other state information about the application.
 
 Example with special control elements:
 

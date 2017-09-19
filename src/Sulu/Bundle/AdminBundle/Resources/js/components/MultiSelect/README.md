@@ -1,4 +1,4 @@
-The multi select component allows the user to select many options out of many.
+The `MultiSelectComponent` allows the user to select many options out of many.
 The component follows the
 [recommendation of React for form components](https://facebook.github.io/react/docs/forms.html):
 The component itself holds no internal state and is solely dependent on the passed properties.

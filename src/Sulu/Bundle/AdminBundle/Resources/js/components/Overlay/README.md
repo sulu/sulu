@@ -1,4 +1,4 @@
-The overlay component let's you display some content above everything else.
+The `Overlay` component let's you display some content above everything else.
 It renders depending on the passed property and request being closed through a callback.
 
 ```

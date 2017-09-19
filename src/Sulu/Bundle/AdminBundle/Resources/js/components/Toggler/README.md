@@ -1,4 +1,4 @@
-The toggler is an boolean input element and has no internal state. It has to be managed from the outside,
+The `Toggler` is an boolean input element and has no internal state. It has to be managed from the outside,
 like shown in the following example:
 
 ```

@@ -1,4 +1,4 @@
-The job of the Bundles service is to offer methods to guarantee that all index JavaScript files of every bundle
+The job of the `Bundles` service is to offer methods to guarantee that all index JavaScript files of every bundle
 are already loaded before the application gets initialized.
 
 When all bundle JavaScript files are loaded the `bundlesReadyPromise` gets resolved and that is where the
