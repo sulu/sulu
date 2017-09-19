@@ -170,3 +170,13 @@ test('Deselect the entire page', (done) => {
         }
     );
 });
+
+test('Clear the selection', () => {
+    const datagridStore = new DatagridStore('tests');
+    datagridStore.selections = [1, 4, 5];
+    datagridStore.setPage(1);
+    expect(datagridStore.selections).toHaveLength(3);
+
+    datagridStore.clearSelection();
+    expect(datagridStore.selections).toHaveLength(0);
+});

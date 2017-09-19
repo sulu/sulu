@@ -27,6 +27,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     });
     this.destroy = jest.fn();
     this.sendRequest = jest.fn();
+    this.clearSelection = jest.fn();
 }));
 
 jest.mock('../../../services/ResourceRequester', () => ({
@@ -216,6 +217,7 @@ test.only('Should delete selected items when click on delete button', () => {
         expect(ResourceRequester.delete).toBeCalledWith('test', 1);
         expect(ResourceRequester.delete).toBeCalledWith('test', 4);
         expect(ResourceRequester.delete).toBeCalledWith('test', 6);
+        expect(datagridStore.clearSelection).toBeCalled();
         expect(datagridStore.sendRequest).toBeCalled();
     });
 });

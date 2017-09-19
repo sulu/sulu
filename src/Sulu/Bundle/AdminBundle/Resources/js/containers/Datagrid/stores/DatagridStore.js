@@ -88,6 +88,10 @@ export default class DatagridStore {
         });
     }
 
+    @action clearSelection() {
+        this.selections = [];
+    }
+
     destroy() {
         this.disposer();
     }

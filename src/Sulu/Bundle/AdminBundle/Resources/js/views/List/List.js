@@ -92,6 +92,7 @@ export default withToolbar(List, function() {
                     });
 
                     return Promise.all(deletePromises).then(() => {
+                        this.datagridStore.clearSelection();
                         this.datagridStore.sendRequest();
                     });
                 },
