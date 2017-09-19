@@ -1,0 +1,29 @@
+@import '../../containers/Application/colors.scss';
+
+$buttonTextColor: $scorpion;
+$buttonTextColorActive: $white;
+$buttonBackgroundColor: $alto;
+$buttonBackgroundColorActive: $shakespeare;
+$buttonBorderRadius: 3px;
+
+.button {
+    width: 40px;
+    color: $buttonTextColor;
+    background-color: $buttonBackgroundColor;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+        color: $buttonTextColorActive;
+        background-color: $buttonBackgroundColorActive;
+    }
+
+    &.left {
+        border-radius: $buttonBorderRadius 0 0 $buttonBorderRadius;
+    }
+
+    &.right {
+        border-radius: 0 $buttonBorderRadius $buttonBorderRadius 0;
+    }
+}
