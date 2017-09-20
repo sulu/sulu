@@ -193,6 +193,10 @@ test('Should render the delete item enabled only if something is selected', () =
 });
 
 test('Should delete selected items when click on delete button', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(list).items.find((item) => item.value === 'Delete');
+    }
+
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const ResourceRequester = require('../../../services/ResourceRequester');
@@ -210,14 +214,16 @@ test('Should delete selected items when click on delete button', () => {
     const datagridStore = list.datagridStore;
     datagridStore.selections = [1, 4, 6];
 
-    const toolbarConfig = toolbarFunction.call(list);
-    const item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    expect(getDeleteItem().loading).toBe(false);
+    const clickPromise = getDeleteItem().onClick();
+    expect(getDeleteItem().loading).toBe(true);
 
-    return item.onClick().then(() => {
+    return clickPromise.then(() => {
         expect(ResourceRequester.delete).toBeCalledWith('test', 1);
         expect(ResourceRequester.delete).toBeCalledWith('test', 4);
         expect(ResourceRequester.delete).toBeCalledWith('test', 6);
         expect(datagridStore.clearSelection).toBeCalled();
         expect(datagridStore.sendRequest).toBeCalled();
+        expect(getDeleteItem().loading).toBe(false);
     });
 });

@@ -1,4 +1,5 @@
 // @flow
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Datagrid from '../../containers/Datagrid';
@@ -11,6 +12,7 @@ import type {ViewProps} from '../../containers/ViewRenderer/types';
 @observer
 class List extends React.PureComponent<ViewProps> {
     datagridStore: DatagridStore;
+    @observable deleting = false;
 
     componentWillMount() {
         const router = this.props.router;
@@ -76,7 +78,8 @@ export default withToolbar(List, function() {
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
                 disabled: this.datagridStore.selections.length === 0,
-                onClick: () => {
+                loading: this.deleting,
+                onClick: action(() => {
                     const {
                         route: {
                             options: {
@@ -85,17 +88,19 @@ export default withToolbar(List, function() {
                         },
                     } = this.props.router;
 
-                    const deletePromises = [];
+                    this.deleting = true;
 
+                    const deletePromises = [];
                     this.datagridStore.selections.forEach((id) => {
                         deletePromises.push(ResourceRequester.delete(resourceKey, id));
                     });
 
-                    return Promise.all(deletePromises).then(() => {
+                    return Promise.all(deletePromises).then(action(() => {
                         this.datagridStore.clearSelection();
                         this.datagridStore.sendRequest();
-                    });
-                },
+                        this.deleting = false;
+                    }));
+                }),
             },
         ],
     };
