@@ -113,7 +113,7 @@ exports[`Render loading dropdown 1`] = `
       Click to open
     </span>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="dropdownIcon fa fa-chevron-down"
     />
   </button>

@@ -46,7 +46,7 @@ exports[`Render loading select 1`] = `
       Chose an option
     </span>
     <span
-      aria-hidden="true"
+      aria-label="chevron-down"
       class="dropdownIcon fa fa-chevron-down"
     />
   </button>
