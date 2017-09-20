@@ -1,4 +1,4 @@
-The `ResourceRequester` is built for talking to APIs as they are built in Sulu. It alreaedy knows how this API is built
+The `ResourceRequester` is built for talking to APIs as they are built in Sulu. It already knows how this API is built
 and sends the correct requests resp. handles the responses correctly.
 
 There are a few methods that can be used to talk to these APIs. They all share the same methods, and the first
