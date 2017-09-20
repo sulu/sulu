@@ -21,4 +21,8 @@ function translate(key: string) {
     return translationMap[key];
 }
 
-export {setTranslations, clearTranslations, translate};
+export {
+    translate,
+    setTranslations,
+    clearTranslations,
+};

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import type {Element} from 'react';
-import type {SelectProps} from '../GenericSelect/types';
-import GenericSelect, {Option} from '../GenericSelect';
+import type {SelectProps} from '../GenericSelect';
+import GenericSelect from '../GenericSelect';
 
 type Props = SelectProps & {
     values: Array<string>,
@@ -16,12 +16,18 @@ export default class MultiSelect extends React.PureComponent<Props> {
         values: [],
     };
 
+    static Action = GenericSelect.Action;
+
+    static Option = GenericSelect.Option;
+
+    static Divider = GenericSelect.Divider;
+
     get displayValue(): string {
         let selectedValues = [];
         let countOptions = 0;
 
         React.Children.forEach(this.props.children, (child: any) => {
-            if (child.type !== Option) {
+            if (child.type !== MultiSelect.Option) {
                 return;
             }
 
@@ -43,7 +49,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
         return selectedValues.join(', ');
     }
 
-    isOptionSelected = (option: Element<typeof Option>): boolean => {
+    isOptionSelected = (option: Element<typeof MultiSelect.Option>): boolean => {
         return this.props.values.includes(option.props.value);
     };
 

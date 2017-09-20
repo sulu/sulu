@@ -2,7 +2,10 @@
 import {shallow} from 'enzyme';
 import React from 'react';
 import GenericSelect from '../../GenericSelect';
-import Select, {Divider, Option} from '../../Select';
+import Select from '../../Select';
+
+const Option = Select.Option;
+const Divider = Select.Option;
 
 jest.mock('../../GenericSelect');
 

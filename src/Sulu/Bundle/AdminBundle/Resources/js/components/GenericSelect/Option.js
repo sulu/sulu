@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {afterElementsRendered} from '../../services/DOM';
 import Icon from '../Icon';
 import Checkbox from '../Checkbox';
-import type {OptionSelectedVisualization} from '../GenericSelect/types';
+import type {OptionSelectedVisualization} from './types';
 import optionStyles from './option.scss';
 
 type Props = {
