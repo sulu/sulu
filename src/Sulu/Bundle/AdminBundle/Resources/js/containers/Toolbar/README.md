@@ -193,3 +193,92 @@ const PageWithToolbar = withToolbar(Page, function() {
     <PageWithToolbar />
 </div>
 ```
+
+Each item has also the possibility to show a loader instead of its text by using the `loading` property. This is useful
+when an asynchronous action is sent:
+
+```
+const withToolbar = require('./withToolbar').default;
+const Toolbar = require('./Toolbar').default;
+const observable = require('mobx').observable;
+
+class Page extends React.PureComponent {
+    constructor() {
+        this.loadingSave = observable(false);
+        this.template = observable();
+        this.loadingTemplate = observable(false);
+        this.loadingActions = observable(false);
+    }
+
+    render() {
+        return (
+            <h1>My awesome Page</h1>
+        );
+    }
+}
+
+const PageWithToolbar = withToolbar(Page, function() {
+    return {
+        items: [
+            {
+                type: 'button',
+                value: 'Save',
+                icon: 'floppy-o',
+                loading: this.loadingSave.get(),
+                onClick: () => {
+                    this.loadingSave.set(true);
+                    setTimeout(() => {
+                        this.loadingSave.set(false);
+                    }, 2000);
+                },
+            },
+            {
+                type: 'select',
+                label: 'Template',
+                value: this.template.get(),
+                icon: 'pencil',
+                loading: this.loadingTemplate.get(),
+                onChange: (value) => {
+                    this.loadingTemplate.set(true);
+                    setTimeout(() => {
+                        this.template.set(value);
+                        this.loadingTemplate.set(false);
+                    }, 2000);
+                },
+                options: [
+                    {
+                        value: 'default',
+                        label: 'Default',
+                    },
+                    {
+                        value: 'news',
+                        label: 'News',
+                    },
+                ],
+            },
+            {
+                type: 'dropdown',
+                label: 'Actions',
+                icon: 'ellipsis-h',
+                loading: this.loadingActions.get(),
+                options: [
+                    {
+                        label: 'Copy',
+                        onClick: () => {
+                            this.loadingActions.set(true);
+                            setTimeout(() => {
+                                this.loadingActions.set(false);
+                            }, 2000);
+                        }
+                    }
+                ],
+            },
+        ],
+    };
+}, 'toolbar-demo-4');
+
+<div>
+    <Toolbar storeKey="toolbar-demo-4" />
+    <PageWithToolbar />
+</div>
+```

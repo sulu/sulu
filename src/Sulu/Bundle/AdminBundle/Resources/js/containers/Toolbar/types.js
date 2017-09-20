@@ -10,6 +10,7 @@ export type Button = {
     disabled?: boolean,
     active?: boolean,
     hasOptions?: boolean,
+    loading?: boolean,
 };
 
 export type DropdownOption = {
@@ -30,6 +31,7 @@ export type Dropdown = {
     icon?: string,
     size?: string,
     disabled?: boolean,
+    loading?: boolean,
 };
 
 export type Select = {
@@ -40,6 +42,7 @@ export type Select = {
     icon?: string,
     size?: string,
     disabled?: boolean,
+    loading?: boolean,
 };
 
 export type ButtonItem = Button & { type: 'button' };

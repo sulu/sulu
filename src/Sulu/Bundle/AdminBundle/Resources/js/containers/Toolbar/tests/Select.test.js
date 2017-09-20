@@ -18,6 +18,10 @@ test('Render select', () => {
     expect(render(<Select {...selectPropsMock} />)).toMatchSnapshot();
 });
 
+test('Render loading select', () => {
+    expect(render(<Select {...selectPropsMock} loading={true} />)).toMatchSnapshot();
+});
+
 test('Render disabled select', () => {
     expect(render(
         <Select

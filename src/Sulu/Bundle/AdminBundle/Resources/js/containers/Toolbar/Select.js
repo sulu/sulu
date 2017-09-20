@@ -54,6 +54,7 @@ export default class Select extends React.PureComponent<SelectProps> {
             label,
             options,
             disabled,
+            loading,
         } = this.props;
         const buttonValue = this.selectedOption ? this.selectedOption.label : label;
         const selectClass = classNames(
@@ -73,6 +74,7 @@ export default class Select extends React.PureComponent<SelectProps> {
                     onClick={this.handleButtonClick}
                     active={this.open}
                     hasOptions={true}
+                    loading={loading}
                 />
                 {this.open &&
                     <OptionList

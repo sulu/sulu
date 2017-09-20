@@ -49,6 +49,7 @@ export default class Dropdown extends React.PureComponent<DropdownProps> {
             label,
             options,
             disabled,
+            loading,
         } = this.props;
         const dropdownClass = classNames(
             dropdownStyles.dropdown,
@@ -67,6 +68,7 @@ export default class Dropdown extends React.PureComponent<DropdownProps> {
                     onClick={this.handleButtonClick}
                     active={this.open}
                     hasOptions={true}
+                    loading={loading}
                 />
                 {this.open &&
                     <OptionList

@@ -192,7 +192,7 @@ test('Should render the delete item enabled only if something is selected', () =
     expect(item.disabled).toBe(false);
 });
 
-test.only('Should delete selected items when click on delete button', () => {
+test('Should delete selected items when click on delete button', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const ResourceRequester = require('../../../services/ResourceRequester');
