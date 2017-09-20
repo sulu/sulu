@@ -5,7 +5,7 @@ import {mount, render} from 'enzyme';
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
-    this.isLoading = false;
+    this.loading = false;
     this.pageCount = 3;
     this.data = [
         {

@@ -30,7 +30,7 @@ test('Send request with default parameters', (done) => {
     datagridStore.setPage(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     when(
-        () => !datagridStore.isLoading,
+        () => !datagridStore.loading,
         () => {
             expect(datagridStore.data.toJS()).toEqual([{id: 1}]);
             expect(datagridStore.pageCount).toEqual(3);
@@ -61,7 +61,7 @@ test('Set loading flag to true before request', () => {
     datagridStore.setPage(1);
     datagridStore.setLoading(false);
     datagridStore.sendRequest();
-    expect(datagridStore.isLoading).toEqual(true);
+    expect(datagridStore.loading).toEqual(true);
     datagridStore.destroy();
 });
 
@@ -75,9 +75,9 @@ test('Set loading flag to false after request', () => {
     }));
     datagridStore.sendRequest();
     when(
-        () => !datagridStore.isLoading,
+        () => !datagridStore.loading,
         () => {
-            expect(datagridStore.isLoading).toEqual(false);
+            expect(datagridStore.loading).toEqual(false);
             datagridStore.destroy();
         }
     );
@@ -136,7 +136,7 @@ test('Select the entire page', (done) => {
     datagridStore.selections = [1, 7];
     datagridStore.setPage(1);
     when(
-        () => !datagridStore.isLoading,
+        () => !datagridStore.loading,
         () => {
             datagridStore.selectEntirePage();
             expect(datagridStore.selections.toJS()).toEqual([1, 7, 2, 3]);
@@ -161,7 +161,7 @@ test('Deselect the entire page', (done) => {
     datagridStore.selections = [1, 2, 7];
     datagridStore.setPage(1);
     when(
-        () => !datagridStore.isLoading,
+        () => !datagridStore.loading,
         () => {
             datagridStore.deselectEntirePage();
             expect(datagridStore.selections.toJS()).toEqual([7]);

@@ -8,7 +8,7 @@ export default class DatagridStore {
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
-    @observable isLoading: boolean = true;
+    @observable loading: boolean = true;
     disposer: () => void;
     resourceKey: string;
 
@@ -38,8 +38,8 @@ export default class DatagridStore {
         this.setLoading(false);
     };
 
-    @action setLoading(isLoading: boolean) {
-        this.isLoading = isLoading;
+    @action setLoading(loading: boolean) {
+        this.loading = loading;
     }
 
     getPage(): ?number {
