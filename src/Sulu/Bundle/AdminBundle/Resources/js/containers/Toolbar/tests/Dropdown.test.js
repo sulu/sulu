@@ -17,6 +17,10 @@ test('Render dropdown', () => {
     expect(render(<Dropdown {...dropdownPropsMock} />)).toMatchSnapshot();
 });
 
+test('Render loading dropdown', () => {
+    expect(render(<Dropdown {...dropdownPropsMock} loading={true} />)).toMatchSnapshot();
+});
+
 test('Render disabled dropdown', () => {
     expect(render(
         <Dropdown

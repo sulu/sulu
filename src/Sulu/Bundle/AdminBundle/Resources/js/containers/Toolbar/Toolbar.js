@@ -61,19 +61,35 @@ export default class Toolbar extends React.PureComponent<*> {
     };
 
     render() {
+        const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
+        const disableAllButtons = loadingItems.length > 0;
+
+        const backButtonConfig = this.toolbarStore.getBackButtonConfig();
+        const itemsConfig = this.toolbarStore.getItemsConfig();
+
+        if (disableAllButtons) {
+            if (backButtonConfig) {
+                backButtonConfig.disabled = true;
+            }
+
+            itemsConfig.forEach((item) => {
+                item.disabled = true;
+            });
+        }
+
         return (
             <header className={toolbarStyles.toolbar}>
                 <nav>
                     <div className={toolbarStyles.controlsLeft}>
                         {this.toolbarStore.hasBackButtonConfig() &&
-                            <Button {...this.toolbarStore.getBackButtonConfig()}>
+                            <Button {...backButtonConfig}>
                                 <Icon name={BACK_BUTTON_ICON} />
                             </Button>
                         }
                         {this.toolbarStore.hasItemsConfig() &&
                             <ul className={toolbarStyles.items}>
                                 {
-                                    this.toolbarStore.getItemsConfig().map((itemConfig, index) => {
+                                    itemsConfig.map((itemConfig, index) => {
                                         const item = getItemComponentByType(itemConfig);
 
                                         return (

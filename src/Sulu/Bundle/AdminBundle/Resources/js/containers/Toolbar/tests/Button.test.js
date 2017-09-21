@@ -7,6 +7,10 @@ test('Render button', () => {
     expect(render(<Button>Click</Button>)).toMatchSnapshot();
 });
 
+test('Render loading button', () => {
+    expect(render(<Button loading={true}>Click</Button>)).toMatchSnapshot();
+});
+
 test('Render button with value', () => {
     expect(render(<Button value="Click" />)).toMatchSnapshot();
 });

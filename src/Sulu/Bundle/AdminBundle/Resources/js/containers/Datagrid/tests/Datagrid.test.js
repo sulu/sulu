@@ -4,17 +4,13 @@ import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    getBaseUrl: jest.fn(),
-}));
-
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
     this.getPage = jest.fn().mockReturnValue(4);
     this.pageCount = 7;
     this.data = {test: 'value'};
     this.selections = [];
-    this.isLoading = false;
+    this.loading = false;
     this.getFields = jest.fn().mockReturnValue({test: {}});
     this.select = jest.fn();
     this.deselect = jest.fn();
@@ -34,14 +30,14 @@ jest.mock('../../../services/Translator', () => ({
 }));
 
 test('Change page in DatagridStore on pagination click', () => {
-    const datagridStore = new DatagridStore('test', '/api/test');
+    const datagridStore = new DatagridStore('test');
     const datagrid = shallow(<Datagrid store={datagridStore} />);
     datagrid.find('Pagination').simulate('change', 3);
     expect(datagridStore.setPage).toBeCalledWith(3);
 });
 
 test ('Render Pagination with correct values', () => {
-    const datagridStore = new DatagridStore('test', '/api/test');
+    const datagridStore = new DatagridStore('test');
 
     const datagrid = shallow(<Datagrid store={datagridStore} />);
     const pagination = datagrid.find('Pagination');
@@ -51,7 +47,7 @@ test ('Render Pagination with correct values', () => {
 });
 
 test('Render TableAdapter with correct values', () => {
-    const datagridStore = new DatagridStore('test', '/api/test');
+    const datagridStore = new DatagridStore('test');
     datagridStore.selections.push(1);
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
@@ -66,7 +62,7 @@ test('Render TableAdapter with correct values', () => {
 });
 
 test('Selecting and deselecting items should update store', () => {
-    const datagridStore = new DatagridStore('test', '/api/test');
+    const datagridStore = new DatagridStore('test');
     datagridStore.data = [
         {id: 1},
         {id: 2},
@@ -87,7 +83,7 @@ test('Selecting and deselecting items should update store', () => {
 });
 
 test('Selecting and unselecting all items on current page should update store', () => {
-    const datagridStore = new DatagridStore('test', '/api/test');
+    const datagridStore = new DatagridStore('test');
     datagridStore.data = [
         {id: 1},
         {id: 2},

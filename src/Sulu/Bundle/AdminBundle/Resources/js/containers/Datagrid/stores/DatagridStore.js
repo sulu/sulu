@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
-import Requester from '../../../services/Requester';
+import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
@@ -8,14 +8,12 @@ export default class DatagridStore {
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
-    @observable isLoading: boolean = true;
+    @observable loading: boolean = true;
     disposer: () => void;
-    baseUrl: string;
     resourceKey: string;
 
-    constructor(resourceKey: string, baseUrl: string) {
+    constructor(resourceKey: string) {
         this.resourceKey = resourceKey;
-        this.baseUrl = baseUrl;
         this.disposer = autorun(this.sendRequest);
     }
 
@@ -30,7 +28,7 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        Requester.get(this.baseUrl + '?flat=true&page=' + page + '&limit=10')
+        ResourceRequester.getList(this.resourceKey, {page})
             .then(this.handleResponse);
     };
 
@@ -40,8 +38,8 @@ export default class DatagridStore {
         this.setLoading(false);
     };
 
-    @action setLoading(isLoading: boolean) {
-        this.isLoading = isLoading;
+    @action setLoading(loading: boolean) {
+        this.loading = loading;
     }
 
     getPage(): ?number {
@@ -88,6 +86,10 @@ export default class DatagridStore {
         this.data.forEach((item) => {
             this.deselect(item.id);
         });
+    }
+
+    @action clearSelection() {
+        this.selections = [];
     }
 
     destroy() {

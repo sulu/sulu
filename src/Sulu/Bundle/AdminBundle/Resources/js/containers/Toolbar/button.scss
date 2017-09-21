@@ -60,12 +60,31 @@ $buttonActiveBackgroundColor: $wildSand;
     & + .label {
         padding: 0 0 0 10px;
     }
+
+    .loader ~ & {
+        visibility: hidden;
+    }
 }
 
 .label {
     vertical-align: middle;
+
+    .loader ~ & {
+        visibility: hidden;
+    }
 }
 
 .dropdown-icon {
     padding: 0 0 0 10px;
+
+    .loader ~ & {
+        visibility: hidden;
+    }
+}
+
+.loader {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
 }

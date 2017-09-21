@@ -1,9 +1,10 @@
 // @flow
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Datagrid from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
-import resourceMetadataStore from '../../stores/ResourceMetadataStore';
+import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer/types';
@@ -11,6 +12,7 @@ import type {ViewProps} from '../../containers/ViewRenderer/types';
 @observer
 class List extends React.PureComponent<ViewProps> {
     datagridStore: DatagridStore;
+    @observable deleting = false;
 
     componentWillMount() {
         const router = this.props.router;
@@ -26,10 +28,7 @@ class List extends React.PureComponent<ViewProps> {
             throw new Error('The route does not define the mandatory resourceKey option');
         }
 
-        this.datagridStore = new DatagridStore(
-            resourceKey,
-            resourceMetadataStore.getBaseUrl(resourceKey)
-        );
+        this.datagridStore = new DatagridStore(resourceKey);
 
         router.bindQuery('page', this.datagridStore.page, '1');
     }
@@ -79,7 +78,29 @@ export default withToolbar(List, function() {
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
                 disabled: this.datagridStore.selections.length === 0,
-                onClick: () => {},
+                loading: this.deleting,
+                onClick: action(() => {
+                    const {
+                        route: {
+                            options: {
+                                resourceKey,
+                            },
+                        },
+                    } = this.props.router;
+
+                    this.deleting = true;
+
+                    const deletePromises = [];
+                    this.datagridStore.selections.forEach((id) => {
+                        deletePromises.push(ResourceRequester.delete(resourceKey, id));
+                    });
+
+                    return Promise.all(deletePromises).then(action(() => {
+                        this.datagridStore.clearSelection();
+                        this.datagridStore.sendRequest();
+                        this.deleting = false;
+                    }));
+                }),
             },
         ],
     };

@@ -36,7 +36,7 @@ export default class Datagrid extends React.PureComponent<Props> {
         return (
             <section>
                 <div className={datagridStyles.content}>
-                    {this.props.store.isLoading
+                    {this.props.store.loading
                         ? <Loader />
                         : <TableAdapter
                             data={store.data}

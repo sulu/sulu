@@ -2,6 +2,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import Icon from '../../components/Icon';
+import Loader from '../../components/Loader';
 import type {Button as ButtonProps} from './types';
 import buttonStyles from './button.scss';
 
@@ -26,6 +27,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
             disabled,
             active,
             hasOptions,
+            loading,
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
@@ -34,6 +36,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 [buttonStyles[size]]: size,
             }
         );
+        const loaderClass = classNames(buttonStyles.loader);
         const buttonContent = this.props.children || value;
 
         return (
@@ -43,6 +46,9 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 onClick={this.handleOnClick}
                 value={value}
             >
+                {loading &&
+                    <Loader className={loaderClass} />
+                }
                 {icon &&
                     <Icon name={icon} className={buttonStyles.icon} />
                 }

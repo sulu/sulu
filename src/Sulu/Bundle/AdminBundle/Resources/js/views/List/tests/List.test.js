@@ -5,7 +5,7 @@ import {mount, render} from 'enzyme';
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
-    this.isLoading = false;
+    this.loading = false;
     this.pageCount = 3;
     this.data = [
         {
@@ -26,10 +26,12 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
         description: {},
     });
     this.destroy = jest.fn();
+    this.sendRequest = jest.fn();
+    this.clearSelection = jest.fn();
 }));
 
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    getBaseUrl: jest.fn(),
+jest.mock('../../../services/ResourceRequester', () => ({
+    delete: jest.fn().mockReturnValue(Promise.resolve(true)),
 }));
 
 jest.mock('../../../services/Translator', () => ({
@@ -188,4 +190,40 @@ test('Should render the delete item enabled only if something is selected', () =
     toolbarConfig = toolbarFunction.call(list);
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
+});
+
+test('Should delete selected items when click on delete button', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(list).items.find((item) => item.value === 'Delete');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+    datagridStore.selections = [1, 4, 6];
+
+    expect(getDeleteItem().loading).toBe(false);
+    const clickPromise = getDeleteItem().onClick();
+    expect(getDeleteItem().loading).toBe(true);
+
+    return clickPromise.then(() => {
+        expect(ResourceRequester.delete).toBeCalledWith('test', 1);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 4);
+        expect(ResourceRequester.delete).toBeCalledWith('test', 6);
+        expect(datagridStore.clearSelection).toBeCalled();
+        expect(datagridStore.sendRequest).toBeCalled();
+        expect(getDeleteItem().loading).toBe(false);
+    });
 });
