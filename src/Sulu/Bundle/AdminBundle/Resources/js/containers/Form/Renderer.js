@@ -1,5 +1,4 @@
 // @flow
-import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
@@ -8,8 +7,10 @@ import rendererStyles from './renderer.scss';
 import type {Schema} from './types';
 
 type Props = {
+    data: Object,
     schema: Schema,
     onSubmit: () => void,
+    onChange: (string, mixed) => void,
 };
 
 @observer
@@ -26,16 +27,12 @@ export default class Renderer extends React.PureComponent<Props> {
         event.preventDefault();
     };
 
-    @action handleChange = (name: string, value: mixed) => {
-        console.log('Change!', name, value);
-    };
-
     setSubmitButton = (submitButton: ElementRef<'button'>) => {
         this.submitButton = submitButton;
     };
 
     render() {
-        const {schema} = this.props;
+        const {data, schema, onChange} = this.props;
         const schemaKeys = Object.keys(schema);
 
         return (
@@ -45,7 +42,8 @@ export default class Renderer extends React.PureComponent<Props> {
                         key={schemaKey}
                         name={schemaKey}
                         schema={schema[schemaKey]}
-                        onChange={this.handleChange}
+                        onChange={onChange}
+                        value={data[schemaKey]}
                     />
                 ))}
                 <button ref={this.setSubmitButton} type="submit" className={rendererStyles.submit}>Submit</button>

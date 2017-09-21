@@ -28,6 +28,11 @@ test('Input should render with value', () => {
     expect(render(<Input value="My value" onChange={onChange} />)).toMatchSnapshot();
 });
 
+test('Input should render null value as empty string', () => {
+    const onChange = () => {};
+    expect(render(<Input value={null} onChange={onChange} />)).toMatchSnapshot();
+});
+
 test('Input should call the callback when the input changes', () => {
     const onChange = jest.fn();
     const input = shallow(<Input value="My value" onChange={onChange} />);

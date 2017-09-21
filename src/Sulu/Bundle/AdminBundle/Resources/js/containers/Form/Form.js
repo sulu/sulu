@@ -1,11 +1,13 @@
 // @flow
 import type {ElementRef} from 'react';
 import React from 'react';
+import FormStore from './stores/FormStore';
 import Renderer from './Renderer';
 import type {Schema} from './types';
 
 type Props = {
     schema: Schema,
+    store: FormStore,
     onSubmit: () => void,
 };
 
@@ -25,17 +27,23 @@ export default class Form extends React.PureComponent<Props> {
         this.props.onSubmit();
     };
 
+    handleChange = (name: string, value: mixed) => {
+        this.props.store.set(name, value);
+    };
+
     setRenderer = (renderer: ?ElementRef<typeof Renderer>) => {
         this.renderer = renderer;
     };
 
     render() {
-        const {schema} = this.props;
+        const {schema, store} = this.props;
         return (
             <Renderer
                 ref={this.setRenderer}
                 onSubmit={this.handleSubmit}
+                onChange={this.handleChange}
                 schema={schema}
+                data={store.data}
             />
         );
     }
