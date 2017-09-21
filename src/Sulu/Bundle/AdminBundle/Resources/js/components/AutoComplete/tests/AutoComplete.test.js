@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render, mount, shallow} from 'enzyme';
+import {render, mount} from 'enzyme';
 import pretty from 'pretty';
 import AutoComplete from '../AutoComplete';
 import Suggestion from '../Suggestion';
@@ -13,15 +13,21 @@ test('AutoComplete should render', () => {
             <Suggestion
                 icon="ticket"
                 value="suggestion-1"
-            />
+            >
+                Suggestion 1
+            </Suggestion>
             <Suggestion
                 icon="ticket"
                 value="suggestion-2"
-            />
+            >
+                Suggestion 2
+            </Suggestion>
             <Suggestion
                 icon="ticket"
                 value="suggestion-3"
-            />
+            >
+                Suggestion 3
+            </Suggestion>
         </AutoComplete>
     )).toMatchSnapshot();
 });
@@ -32,15 +38,21 @@ test('Render the AutoComplete with open suggestions list', () => {
             <Suggestion
                 icon="ticket"
                 value="suggestion-1"
-            />
+            >
+                Suggestion 1
+            </Suggestion>
             <Suggestion
                 icon="ticket"
                 value="suggestion-2"
-            />
+            >
+                Suggestion 2
+            </Suggestion>
             <Suggestion
                 icon="ticket"
                 value="suggestion-3"
-            />
+            >
+                Suggestion 3
+            </Suggestion>
         </AutoComplete>
     );
 
@@ -61,43 +73,36 @@ test('Render the AutoComplete with the placeholder text', () => {
     expect(pretty(document.body.innerHTML)).toMatchSnapshot();
 });
 
-test('The threshold check should return true or false based on the threshold property', () => {
-    const testValue1 = 'abc';
-    const testValue2 = 'abcd';
-    const autoComplete = shallow(
-        <AutoComplete
-            threshold="4"
-        />
-    );
-
-    expect(autoComplete.instance().hasReachedThreshold(testValue1)).toBe(false);
-    expect(autoComplete.instance().hasReachedThreshold(testValue2)).toBe(true);
-});
-
-test('Clicking on a suggestion should close the AutoComplete list and call the onChange handler', () => {
-    const onChangeSpy = jest.fn();
+test('Clicking on a suggestion should close the AutoComplete list and call the onSuggestionSelection handler', () => {
+    const onSuggestionSelectionSpy = jest.fn();
     const testValue = 'suggestion-1';
     const autoComplete = mount(
         <AutoComplete
-            onChange={onChangeSpy}
+            onSuggestionSelection={onSuggestionSelectionSpy}
         >
             <Suggestion
                 icon="ticket"
                 value={testValue}
-            />
+            >
+                Suggestion 1
+            </Suggestion>
             <Suggestion
                 icon="ticket"
                 value="suggestion-2"
-            />
+            >
+                Suggestion 2
+            </Suggestion>
             <Suggestion
                 icon="ticket"
                 value="suggestion-3"
-            />
+            >
+                Suggestion 3
+            </Suggestion>
         </AutoComplete>
     );
 
     autoComplete.instance().openSuggestions();
     document.body.querySelector('.suggestion:first-child').click();
-    expect(onChangeSpy).toHaveBeenCalledWith(testValue);
+    expect(onSuggestionSelectionSpy).toHaveBeenCalledWith(testValue);
     expect(document.body.innerHTML).toBe('');
 });

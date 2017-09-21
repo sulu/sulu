@@ -15,7 +15,6 @@ type Props = {
     children?: (
         setPopoverElementRef: (ref: ElementRef<*>) => void,
         style: Object,
-        triggerResize: () => void,
     ) => Node,
     onClose?: () => void,
     /** This element will be used to position the popover */
@@ -39,8 +38,6 @@ export default class Popover extends React.PureComponent<Props> {
 
     @observable popoverHeight: number;
 
-    shouldUpdateDimensions: boolean;
-
     componentDidMount() {
         window.addEventListener('blur', this.close);
         window.addEventListener('resize', this.close);
@@ -52,18 +49,11 @@ export default class Popover extends React.PureComponent<Props> {
     }
 
     componentDidUpdate() {
-        if (!this.popoverChildRef) {
-            return;
+        if (this.popoverChildRef) {
+            afterElementsRendered(() => {
+                this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
+            });
         }
-
-        afterElementsRendered(() => {
-            this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
-
-            if (this.shouldUpdateDimensions) {
-                this.updateDimensions();
-                this.shouldUpdateDimensions = false;
-            }
-        });
     }
 
     close = () => {
@@ -126,10 +116,6 @@ export default class Popover extends React.PureComponent<Props> {
         );
     };
 
-    triggerResize = () => {
-        this.shouldUpdateDimensions = true;
-    };
-
     @action setPopoverSize(width: number, height: number) {
         this.popoverWidth = width;
         this.popoverHeight = height;
@@ -168,7 +154,7 @@ export default class Popover extends React.PureComponent<Props> {
                 <Portal isOpened={open}>
                     <div className={popoverStyles.container}>
                         {children &&
-                            children(this.setPopoverChildRef, styles, this.triggerResize)
+                            children(this.setPopoverChildRef, styles)
                         }
                     </div>
                 </Portal>

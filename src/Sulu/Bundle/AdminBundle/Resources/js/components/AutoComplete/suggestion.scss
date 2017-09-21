@@ -5,6 +5,7 @@ $suggestionTextColorActive: $shakespeare;
 $suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
 
 .suggestion {
+    display: flex;
     cursor: pointer;
     padding: 5px 20px 5px 40px;
     width: 100%;

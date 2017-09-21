@@ -1,18 +1,18 @@
 @import '../../containers/Application/colors.scss';
 
-$borderColor: $silver;
-$iconColor: $dustyGray;
-$iconBorderPadding: 5px;
-$placeholderColor: $dustyGray;
-$borderWidth: 1px;
-$borderRadius: 3px;
+$inputBorderColor: $silver;
+$inputBorderWidth: 1px;
+$inputBorderRadius: 3px;
 $inputHeight: 30px;
 $inputColor: $black;
 $inputFontSize: 12px;
+$iconColor: $dustyGray;
+$iconBorderPadding: 5px;
+$placeholderColor: $dustyGray;
 
 .input {
-    border: $borderWidth solid $borderColor;
-    border-radius: $borderRadius;
+    border: $inputBorderWidth solid $inputBorderColor;
+    border-radius: $inputBorderRadius;
     display: inline-flex;
     align-items: center;
     height: $inputHeight;
@@ -22,9 +22,8 @@ $inputFontSize: 12px;
         width: 100%;
         flex-grow: 1;
         border: none;
-        border-radius: $borderRadius;
-        line-height: calc($inputHeight - 2 * $borderWidth);
-        height: calc($inputHeight - 2 * $borderWidth);
+        line-height: calc($inputHeight - 2 * $inputBorderWidth);
+        height: calc($inputHeight - 2 * $inputBorderWidth);
         padding-left: 10px;
         font-size: $inputFontSize;
         color: $inputColor;
@@ -36,12 +35,21 @@ $inputFontSize: 12px;
     }
 }
 
+.prepended-container {
+    position: relative;
+    width: 34px;
+    height: calc($inputHeight - 2 * $iconBorderPadding);
+    border-right: $inputBorderWidth solid $inputBorderColor;
+}
+
+.loader {
+    position: absolute;
+    top: -1px;
+    left: 5px;
+}
+
 .icon {
-    display: block;
     font-size: 14px;
-    flex-grow: 0;
-    color: $iconColor;
     padding: 0 10px;
-    border-right: $borderWidth solid $borderColor;
-    line-height: calc($inputHeight - 2 * $iconBorderPadding);
+    color: $iconColor;
 }

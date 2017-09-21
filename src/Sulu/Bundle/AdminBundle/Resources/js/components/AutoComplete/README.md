@@ -1,14 +1,17 @@
-The AutoComplete is an input-field with auto-completation feature. The AutoComplete has no filter logic. That has to be 
-done inside a HoC which afterwards will adjust the list of suggestions based on the entered input. To display the 
-suggestions you can use the Suggestion component.
+The AutoComplete is an input-field with auto-completion feature. The AutoComplete has no filter logic. That has to be 
+done inside another component which afterwards will adjust the list of suggestions based on the entered input. 
+To display the suggestions you can use the Suggestion component. The displayed value of a `Suggestion` can be a simple 
+text or if you need further customization you can wrap HTML markup into a function and place that as the child of the 
+`Suggestion`. In that case you have to use the `highlight` function to highlight the matched suggestion text.
 
 Here a basic example (Pssh, look for your favourite Harry Potter character):
 
 ```
-const Suggestion = require('./Suggestion').default;
+const Suggestion = AutoComplete.Suggestion;
 
 initialState = {
     value: '',
+    loading: false,
     suggestions: [],
 }
 
@@ -38,19 +41,34 @@ const data = [
 ];
 
 const handleChange = (value) => {
-    const regexp = new RegExp(value, 'gi');
-
     setState(() => ({
         value: value,
+        loading: !!value,
+    }));
+};
+
+const handleUpdate = (value) => {
+    const regexp = new RegExp(value, 'gi');
+    
+    setState(() => ({
+        loading: false,
         suggestions: data.filter((suggestion) => suggestion.match(regexp))
     }));
 };
 
+const handleSelection = (value) => {
+    setState(() => ({
+        value: value,
+        loading: false,
+    }));
+};
+
 <AutoComplete
-    icon="search"
     value={state.value}
     onChange={handleChange}
-    threshold={1}
+    onDebouncedChange={handleUpdate}
+    onSuggestionSelection={handleSelection}
+    loading={state.loading}
     placeholder="Enter something fun..."
     noSuggestionsMessage="Nothing found..."
 >
@@ -60,7 +78,12 @@ const handleChange = (value) => {
                 <Suggestion
                     key={index}
                     icon="ticket"
-                    value={suggestion} />
+                    value={suggestion}
+                >
+                    {(highlight) => (
+                        <div>{highlight(suggestion)}</div>
+                    )}
+                </Suggestion>
             );
         })
     }

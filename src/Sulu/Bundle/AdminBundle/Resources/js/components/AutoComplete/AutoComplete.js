@@ -1,23 +1,33 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, ElementRef} from 'react';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
+import debounce from 'debounce';
 import Input from '../Input';
 import Popover from '../Popover';
 import Menu from '../Menu';
+import Suggestion from './Suggestion';
 import autoCompleteStyles from './autoComplete.scss';
 
+const LENS_ICON = 'search';
+const DEBOUNCE_TIME = 250;
 const POPOVER_HORIZONTAL_OFFSET = 5;
 const POPOVER_VERTICAL_OFFSET = -2;
 
 type Props = {
-    icon?: string,
+    children: ChildrenArray<Element<typeof Suggestion>>,
+    /** The value inside the input field */
     value: string,
-    children: ChildrenArray<*>,
-    threshold: number,
     placeholder?: string,
+    /** Shows the loading indicator when true */
+    loading?: boolean,
+    /** Called on every input change */
     onChange: (value: string) => void,
+    /** Debounced version of `onChange`. Put network requests inside of this handler */
+    onDebouncedChange: (value: string) => void,
+    onSuggestionSelection: (value: string) => void,
+    /** Message when no `Suggestions` could be found */
     noSuggestionsMessage?: string,
 };
 
@@ -28,11 +38,17 @@ export default class AutoComplete extends React.PureComponent<Props> {
         threshold: 0,
     };
 
+    static Suggestion = Suggestion;
+
     @observable open: boolean = false;
 
     @observable inputRef: ElementRef<*>;
 
     previousSuggestionListChildrenCount: number = 0;
+
+    componentWillUnmount() {
+        this.debouncedUpdateSuggestions.clear();
+    }
 
     @action openSuggestions() {
         this.open = true;
@@ -50,12 +66,15 @@ export default class AutoComplete extends React.PureComponent<Props> {
         };
     }
 
-    createSuggestions(children: ChildrenArray<*>) {
+    createSuggestions(children: ChildrenArray<Element<typeof Suggestion>>) {
         const {value} = this.props;
 
         return React.Children.map(children, (child, index: number) => {
             return (
-                <li style={this.suggestionStyle}>
+                <li
+                    style={this.suggestionStyle}
+                    className={autoCompleteStyles.suggestionItem}
+                >
                     {
                         React.cloneElement(child, {
                             key: index,
@@ -85,40 +104,29 @@ export default class AutoComplete extends React.PureComponent<Props> {
         );
     }
 
-    hasReachedThreshold(value: string) {
-        return value && value.length >= this.props.threshold;
-    }
-
     setInputRef = (inputRef: ElementRef<'label'>) => {
         if (inputRef) {
             this.inputRef = inputRef;
         }
     };
 
-    resizeSuggestionListOnContentChange = (suggestionListContent: ChildrenArray<*>, resizeList?: () => void) => {
-        const currentSuggestionListChildrenCount = React.Children.count(suggestionListContent);
-
-        if (resizeList && this.previousSuggestionListChildrenCount !== currentSuggestionListChildrenCount) {
-            resizeList();
-        }
-
-        this.previousSuggestionListChildrenCount = currentSuggestionListChildrenCount;
-
-        return suggestionListContent;
-    };
+    debouncedUpdateSuggestions = debounce((value: string) => {
+        this.props.onDebouncedChange(value);
+    }, DEBOUNCE_TIME);
 
     handleSuggestionSelection = (value: string) => {
-        this.props.onChange(value);
+        this.props.onSuggestionSelection(value);
         this.closeSuggestions();
     };
 
     handleChange = (value: string) => {
-        if (this.hasReachedThreshold(value)) {
+        if (value !== '') {
             this.openSuggestions();
         } else {
             this.closeSuggestions();
         }
 
+        this.debouncedUpdateSuggestions(value);
         this.props.onChange(value);
     };
 
@@ -128,8 +136,8 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
     render() {
         const {
-            icon,
             value,
+            loading,
             children,
             placeholder,
         } = this.props;
@@ -141,35 +149,33 @@ export default class AutoComplete extends React.PureComponent<Props> {
         return (
             <div className={autoCompleteStyles.autoComplete}>
                 <Input
-                    icon={icon}
+                    icon={LENS_ICON}
                     value={value}
+                    loading={loading}
                     inputRef={this.setInputRef}
                     onChange={this.handleChange}
                     placeholder={placeholder}
                 />
-                <Popover
-                    open={this.open}
-                    onClose={this.handlePopoverClose}
-                    anchorElement={this.inputRef}
-                    verticalOffset={POPOVER_VERTICAL_OFFSET}
-                    horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
-                >
-                    {
-                        (setPopoverElementRef, popoverStyle, triggerResize) => (
-                            <Menu
-                                style={popoverStyle}
-                                menuRef={setPopoverElementRef}
-                            >
-                                {
-                                    this.resizeSuggestionListOnContentChange(
-                                        suggestionListContent,
-                                        triggerResize,
-                                    )
-                                }
-                            </Menu>
-                        )
-                    }
-                </Popover>
+                {!loading &&
+                    <Popover
+                        open={this.open}
+                        onClose={this.handlePopoverClose}
+                        anchorElement={this.inputRef}
+                        verticalOffset={POPOVER_VERTICAL_OFFSET}
+                        horizontalOffset={POPOVER_HORIZONTAL_OFFSET}
+                    >
+                        {
+                            (setPopoverElementRef, popoverStyle) => (
+                                <Menu
+                                    style={popoverStyle}
+                                    menuRef={setPopoverElementRef}
+                                >
+                                    {suggestionListContent}
+                                </Menu>
+                            )
+                        }
+                    </Popover>
+                }
             </div>
         );
     }

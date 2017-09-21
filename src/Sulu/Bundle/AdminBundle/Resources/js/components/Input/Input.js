@@ -2,13 +2,17 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import Icon from '../Icon';
+import Loader from '../Loader';
 import inputStyles from './input.scss';
+
+const LOADER_SIZE = 22;
 
 type Props = {
     name?: string,
     icon?: string,
     type: string,
     value: ?string,
+    loading?: boolean,
     placeholder?: string,
     onChange: (value: string) => void,
     inputRef?: (ref: ElementRef<'label'>) => void,
@@ -38,6 +42,7 @@ export default class Input extends React.PureComponent<Props> {
             icon,
             type,
             value,
+            loading,
             placeholder,
         } = this.props;
 
@@ -46,9 +51,17 @@ export default class Input extends React.PureComponent<Props> {
                 className={inputStyles.input}
                 ref={this.setRef}
             >
-                {icon &&
-                    <Icon className={inputStyles.icon} name={icon} />
-                }
+                <div className={inputStyles.prependedContainer}>
+                    {!loading && icon &&
+                        <Icon className={inputStyles.icon} name={icon} />
+                    }
+                    {loading &&
+                        <Loader
+                            size={LOADER_SIZE}
+                            className={inputStyles.loader}
+                        />
+                    }
+                </div>
                 <input
                     name={name}
                     type={type}

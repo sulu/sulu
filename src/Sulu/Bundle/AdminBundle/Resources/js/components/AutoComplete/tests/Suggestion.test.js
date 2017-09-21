@@ -8,7 +8,9 @@ test('Suggestion should render', () => {
         <Suggestion
             icon="ticket"
             value="suggestion-1"
-        />
+        >
+            Suggestion 1
+        </Suggestion>
     )).toMatchSnapshot();
 });
 
@@ -18,7 +20,9 @@ test('Suggestion should render strong-tags around found chars', () => {
             query="sug"
             icon="ticket"
             value="suggestion-1"
-        />
+        >
+            Suggestion 2
+        </Suggestion>
     )).toMatchSnapshot();
 });
 
@@ -30,7 +34,11 @@ test('Clicking on a suggestion should call the onClick handler', () => {
             icon="ticket"
             value="suggestion-1"
             onSelection={onClickSpy}
-        />
+        >
+            {() => (
+                <div>Suggestion 3</div>
+            )}
+        </Suggestion>
     );
 
     suggestion.simulate('click');

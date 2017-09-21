@@ -5,12 +5,10 @@ exports[`Suggestion should render 1`] = `
   class="suggestion"
 >
   <span
-    aria-hidden="true"
+    aria-label="ticket"
     class="icon fa fa-ticket"
   />
-  <span>
-    suggestion-1
-  </span>
+  Suggestion 1
 </button>
 `;
 
@@ -19,16 +17,14 @@ exports[`Suggestion should render strong-tags around found chars 1`] = `
   class="suggestion"
 >
   <span
-    aria-hidden="true"
+    aria-label="ticket"
     class="icon fa fa-ticket"
   />
   <span>
-    <span>
-      <strong>
-        sug
-      </strong>
-      gestion-1
-    </span>
+    <strong>
+      Sug
+    </strong>
+    gestion 2
   </span>
 </button>
 `;
