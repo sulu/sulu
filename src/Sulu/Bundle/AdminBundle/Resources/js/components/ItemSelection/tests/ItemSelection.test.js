@@ -75,7 +75,7 @@ test('Clicking the left and right button inside the header should call the right
     itemSelection.find('.button.left').simulate('click');
     expect(leftClickHandler).toBeCalled();
 
-    itemSelection.find('.button.right').simulate('click');    
+    itemSelection.find('.button.right').simulate('click');
     expect(rightClickHandler).toBeCalled();
 });
 

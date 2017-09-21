@@ -26,7 +26,7 @@ export default class ItemSelection extends React.PureComponent<Props> {
 
     static arrayMove = arrayMove;
 
-    createItem(originalItem: Element<typeof Item>, index: number) {
+    createItem(originalItem: Element<typeof Item>) {
         return (
             <li className={itemSelectionStyles.listElement}>
                 {
@@ -48,11 +48,11 @@ export default class ItemSelection extends React.PureComponent<Props> {
 
         return SortableContainer(({children}) => (
             <ul className={itemSelectionStyles.list}>
-                {React.Children.map(children, (item, index) =>
+                {React.Children.map(children, (item, index) => (
                     <SortableItem index={index} displayIndex={index}>
                         {item}
                     </SortableItem>
-                )}
+                ))}
             </ul>
         ));
     }
@@ -109,7 +109,7 @@ export default class ItemSelection extends React.PureComponent<Props> {
                     helperClass={itemSelectionStyles.duringDrag}
                 >
                     {children}
-                </SortableList>                
+                </SortableList>
             </div>
         );
     }

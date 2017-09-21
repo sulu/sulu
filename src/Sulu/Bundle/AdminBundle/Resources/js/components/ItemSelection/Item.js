@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {Component, Node} from 'react';
+import type {Node} from 'react';
 import {SortableHandle} from 'react-sortable-hoc';
 import Icon from '../Icon';
 import itemStyles from './item.scss';
@@ -31,10 +31,10 @@ export default class Item extends React.PureComponent<Props> {
 
         return (
             <div className={itemStyles.item}>
-                    <DragHandle className={itemStyles.dragHandle}>
-                        <Icon name={DRAG_ICON} />
-                        <span className={itemStyles.index}>{index}</span>
-                    </DragHandle>
+                <DragHandle className={itemStyles.dragHandle}>
+                    <Icon name={DRAG_ICON} />
+                    <span className={itemStyles.index}>{index}</span>
+                </DragHandle>
                 <div className={itemStyles.content}>
                     {children}
                 </div>
