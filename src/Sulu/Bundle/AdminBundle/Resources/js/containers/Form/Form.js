@@ -35,7 +35,8 @@ export default class Form extends React.PureComponent<Props> {
             <Renderer
                 ref={this.setRenderer}
                 onSubmit={this.handleSubmit}
-                schema={schema} />
+                schema={schema}
+            />
         );
     }
 }

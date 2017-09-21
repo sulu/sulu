@@ -13,6 +13,12 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
+jest.mock('../../../containers/Form/stores/FieldStore', () => ({
+    get: jest.fn().mockReturnValue(function() {
+        return null;
+    }),
+}));
+
 beforeEach(() => {
     jest.resetModules();
 });

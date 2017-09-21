@@ -9,7 +9,7 @@ class Form extends React.PureComponent<ViewProps> {
     form: ?FormContainer;
 
     handleSubmit = () => {
-        // TODO
+        console.log('Submit!');
     };
 
     setForm = (form) => {

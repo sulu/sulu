@@ -1,4 +1,6 @@
 // @flow
+import {action} from 'mobx';
+import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
 import Field from './Field';
@@ -10,8 +12,9 @@ type Props = {
     onSubmit: () => void,
 };
 
+@observer
 export default class Renderer extends React.PureComponent<Props> {
-    submitButton: ElementRef<'form'>;
+    submitButton: ElementRef<'button'>;
 
     /** @public */
     submit = () => {
@@ -21,6 +24,10 @@ export default class Renderer extends React.PureComponent<Props> {
     handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         this.props.onSubmit();
         event.preventDefault();
+    };
+
+    @action handleChange = (name: string, value: mixed) => {
+        console.log('Change!', name, value);
     };
 
     setSubmitButton = (submitButton: ElementRef<'button'>) => {
@@ -33,7 +40,14 @@ export default class Renderer extends React.PureComponent<Props> {
 
         return (
             <form onSubmit={this.handleSubmit} className={rendererStyles.form}>
-                {schemaKeys.map((schemaKey) => <Field key={schemaKey} schema={schema[schemaKey]} />)}
+                {schemaKeys.map((schemaKey) => (
+                    <Field
+                        key={schemaKey}
+                        name={schemaKey}
+                        schema={schema[schemaKey]}
+                        onChange={this.handleChange}
+                    />
+                ))}
                 <button ref={this.setSubmitButton} type="submit" className={rendererStyles.submit}>Submit</button>
             </form>
         );

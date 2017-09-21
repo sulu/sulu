@@ -59,3 +59,25 @@ test('Should render field types based on schema', () => {
 
     expect(renderer).toMatchSnapshot();
 });
+
+test('Should pass name and schema to fields', () => {
+    const schema = {
+        text: {
+            label: 'Text',
+            type: 'text',
+        },
+        datetime: {
+            label: 'Datetime',
+            type: 'datetime',
+        },
+    };
+
+    const renderer = shallow(<Renderer schema={schema} />);
+
+    const fields = renderer.find('Field');
+
+    expect(fields.at(0).prop('name')).toBe('text');
+    expect(fields.at(0).prop('onChange')).toBeInstanceOf(Function);
+    expect(fields.at(1).prop('name')).toBe('datetime');
+    expect(fields.at(1).prop('onChange')).toBeInstanceOf(Function);
+});
