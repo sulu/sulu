@@ -47,7 +47,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
     previousSuggestionListChildrenCount: number = 0;
 
     componentWillUnmount() {
-        this.debouncedUpdateSuggestions.clear();
+        this.debouncedChange.clear();
     }
 
     @action openSuggestions() {
@@ -110,7 +110,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
         }
     };
 
-    debouncedUpdateSuggestions = debounce((value: string) => {
+    debouncedChange = debounce((value: string) => {
         this.props.onDebouncedChange(value);
     }, DEBOUNCE_TIME);
 
@@ -126,8 +126,8 @@ export default class AutoComplete extends React.PureComponent<Props> {
             this.closeSuggestions();
         }
 
-        this.debouncedUpdateSuggestions(value);
         this.props.onChange(value);
+        this.debouncedChange(value);
     };
 
     handlePopoverClose = () => {
