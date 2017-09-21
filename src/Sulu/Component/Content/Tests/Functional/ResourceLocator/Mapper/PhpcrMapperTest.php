@@ -57,7 +57,12 @@ class PhpcrMapperTest extends SuluTestCase
     /**
      * @var SessionInterface
      */
-    private $session;
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
 
     /**
      * @var SessionManagerInterface
@@ -75,7 +80,8 @@ class PhpcrMapperTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
-        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
+        $this->defaultSession = $this->getContainer()->get('sulu_document_manager.default_session');
+        $this->liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
@@ -86,20 +92,8 @@ class PhpcrMapperTest extends SuluTestCase
 
     private function prepareTestData()
     {
-        $products = $this->session->getNode('/cmf/sulu_io/routes/de')->addNode('products');
-        $products->addMixin('mix:referenceable');
-
-        $machines = $products->addNode('machines');
-        $machines->addMixin('mix:referenceable');
-
-        $machines1 = $products->addNode('machines-1');
-        $machines1->addMixin('mix:referenceable');
-
-        $drill = $machines->addNode('drill');
-        $drill->addMixin('mix:referenceable');
-
-        $drill1 = $machines->addNode('drill-1');
-        $drill1->addMixin('mix:referenceable');
+        $this->prepareRouteTestData($this->defaultSession);
+        $this->prepareRouteTestData($this->liveSession);
 
         $this->document1 = $this->createDocument($this->homeDocument, 'content1', '/content1');
         $this->documentManager->persist($this->document1, 'de');
@@ -110,6 +104,36 @@ class PhpcrMapperTest extends SuluTestCase
         $this->documentManager->publish($this->document2, 'de');
 
         $this->documentManager->flush();
+    }
+
+    private function prepareRouteTestData(SessionInterface $session)
+    {
+        $products = $session->getNode('/cmf/sulu_io/routes/de')->addNode('products');
+        $products->addMixin('mix:referenceable');
+        $products->setProperty('sulu:content', $this->documentInspector->getNode($this->homeDocument));
+        $products->setProperty('sulu:history', false);
+
+        $machines = $products->addNode('machines');
+        $machines->addMixin('mix:referenceable');
+        $machines->setProperty('sulu:content', $this->documentInspector->getNode($this->homeDocument));
+        $machines->setProperty('sulu:history', false);
+
+        $machines1 = $products->addNode('machines-1');
+        $machines1->addMixin('mix:referenceable');
+        $machines1->setProperty('sulu:content', $this->documentInspector->getNode($this->homeDocument));
+        $machines1->setProperty('sulu:history', false);
+
+        $drill = $machines->addNode('drill');
+        $drill->addMixin('mix:referenceable');
+        $drill->setProperty('sulu:content', $this->documentInspector->getNode($this->homeDocument));
+        $drill->setProperty('sulu:history', false);
+
+        $drill1 = $machines->addNode('drill-1');
+        $drill1->addMixin('mix:referenceable');
+        $drill1->setProperty('sulu:content', $this->documentInspector->getNode($this->homeDocument));
+        $drill1->setProperty('sulu:history', false);
+
+        $session->save();
     }
 
     public function testUnique()
@@ -173,7 +197,7 @@ class PhpcrMapperTest extends SuluTestCase
 
         $route = '/cmf/sulu_io/routes/de/products/news/content1-news';
 
-        $node = $this->session->getNode($route);
+        $node = $this->defaultSession->getNode($route);
         $this->assertTrue(
             $node->getPropertyValue('sulu:content') == $this->documentInspector->getNode($this->document1)
         );
@@ -192,7 +216,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->save($document);
         $this->sessionManager->getSession()->save();
 
-        $node = $this->session->getNode('/cmf/sulu_io/routes/de/test');
+        $node = $this->defaultSession->getNode('/cmf/sulu_io/routes/de/test');
         $this->assertEquals($node->getPropertyValue('sulu:content'), $this->documentInspector->getNode($document));
         $this->assertTrue($node->hasProperty('sulu:history'));
         $this->assertTrue($node->hasProperty('sulu:content'));
@@ -200,9 +224,9 @@ class PhpcrMapperTest extends SuluTestCase
 
     public function testReadFailure()
     {
-        $content = $this->session->getNode('/cmf/sulu_io/contents')->addNode('content');
+        $content = $this->defaultSession->getNode('/cmf/sulu_io/contents')->addNode('content');
         $content->addMixin('mix:referenceable');
-        $this->session->save();
+        $this->defaultSession->save();
 
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByContent($content, 'sulu_io', 'de');
@@ -210,9 +234,9 @@ class PhpcrMapperTest extends SuluTestCase
 
     public function testReadFailureUuid()
     {
-        $content = $this->session->getNode('/cmf/sulu_io/contents')->addNode('content');
+        $content = $this->defaultSession->getNode('/cmf/sulu_io/contents')->addNode('content');
         $content->addMixin('mix:referenceable');
-        $this->session->save();
+        $this->defaultSession->save();
 
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByContentUuid($content->getIdentifier(), 'sulu_io', 'de');
@@ -267,8 +291,8 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->save($this->document1);
         $this->sessionManager->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/asdf/content2-news');
+        $oldNode = $this->defaultSession->getNode('/cmf/sulu_io/routes/de/products/news/content1-news');
+        $newNode = $this->defaultSession->getNode('/cmf/sulu_io/routes/de/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
@@ -309,8 +333,8 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->save($this->document1);
         $this->sessionManager->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/asdf/content2-news');
+        $oldNode = $this->defaultSession->getNode('/cmf/sulu_io/routes/de/products/news/content1-news');
+        $newNode = $this->defaultSession->getNode('/cmf/sulu_io/routes/de/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
