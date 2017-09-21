@@ -99,7 +99,11 @@ exports[`Render loading dropdown 1`] = `
   >
     <div
       class="spinner loader"
+<<<<<<< HEAD:src/Sulu/Bundle/AdminBundle/Resources/js/components/Toolbar/tests/__snapshots__/Dropdown.test.js.snap
       style="width:40px;height:40px;"
+=======
+      style="width:20px;height:20px;"
+>>>>>>> updated loader size in toolbar:src/Sulu/Bundle/AdminBundle/Resources/js/containers/Toolbar/tests/__snapshots__/Dropdown.test.js.snap
     >
       <div
         class="doubleBounce1"

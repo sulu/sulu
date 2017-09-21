@@ -6,6 +6,7 @@ import Loader from '../Loader';
 import type {Button as ButtonProps} from './types';
 import buttonStyles from './button.scss';
 
+const LOADER_SIZE= 20;
 const ICON_ARROW_DOWN = 'chevron-down';
 
 export default class Button extends React.PureComponent<ButtonProps> {
@@ -49,7 +50,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 value={value}
             >
                 {loading &&
-                    <Loader className={loaderClass} />
+                    <Loader size={LOADER_SIZE} className={loaderClass} />
                 }
                 {icon &&
                     <Icon name={icon} className={buttonStyles.icon} />
