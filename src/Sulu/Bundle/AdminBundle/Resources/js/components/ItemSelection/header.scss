@@ -7,20 +7,22 @@ $contentBackgroundColor: $alto;
     display: flex;
     justify-content: space-between;
     height: 40px;
+    overflow: hidden;
+    border-radius: 3px 3px 0 0;
+
+    &.empty-list {
+        border-radius: 3px;
+    }
 }
 
-.content {
+.label {
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex: 1;
     height: 100%;
-    margin: 0 2px;
     background-color: $contentBackgroundColor;
-}
-
-.label {
     font-size: 12px;
     color: $labelTextColor;
-    text-indent: 20px;
+    padding: 0 20px;
 }

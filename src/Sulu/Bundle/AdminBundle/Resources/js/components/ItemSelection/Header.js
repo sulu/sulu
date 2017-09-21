@@ -1,37 +1,43 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
+import classNames from 'classnames';
 import type {Button as ButtonConfig} from './types';
 import Button from './Button';
 import headerStyles from './header.scss';
 
 type Props = {
     label?: string,
-    children?: Node,
+    emptyList: boolean,
     leftButton?: ButtonConfig,
     rightButton?: ButtonConfig,
 };
 
 export default class ItemSelection extends React.PureComponent<Props> {
+    static defaultProps = {
+        emptyList: false,
+    };
+
     render() {
         const {
             label,
-            children,
+            emptyList,
             leftButton,
             rightButton,
         } = this.props;
+        const headerClass = classNames(
+            headerStyles.header,
+            {
+                [headerStyles.emptyList]: emptyList,
+            },
+        );
 
         return (
-            <div className={headerStyles.header}>
+            <div className={headerClass}>
                 {leftButton &&
                     <Button {...leftButton} location="left" />
                 }
-                <div className={headerStyles.content}>
-                    {children ||
-                        <div className={headerStyles.label}>
-                            {label}
-                        </div>
-                    }
+                <div className={headerStyles.label}>
+                    {label}
                 </div>
                 {rightButton &&
                     <Button {...rightButton} location="right" />

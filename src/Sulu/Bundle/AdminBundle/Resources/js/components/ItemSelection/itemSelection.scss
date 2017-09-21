@@ -2,17 +2,26 @@
 
 $listElementBackgroundColor: $white;
 $listElementBorderBottomColor: $silver;
+$listElementDragBoxShadowColor: rgba($black, .1);
 
 .list {
     margin: 0;
     padding: 0;
-    list-style: none;
 }
 
 .list-element {
+    list-style: none;
     border-bottom: 1px solid $listElementBorderBottomColor;
 
-    &:last-child {
+    &:last-child:not(:first-of-type) {
         border-bottom: 0;
+        border-radius: 0 0 3px 3px;
+        overflow: hidden;
+    }
+
+    &.during-drag {
+        opacity: .75;
+        box-shadow: 0px 3px 6px $listElementDragBoxShadowColor,
+                    0px -3px 6px $listElementDragBoxShadowColor;        
     }
 }

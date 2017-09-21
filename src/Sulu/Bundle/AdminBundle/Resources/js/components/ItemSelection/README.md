@@ -1,33 +1,74 @@
+
+The `ItemSelection` component is a list used for referencing different datasets in `Sulu`. Inside the `ItemSelection`
+those references can be added, sorted and deleted. The sorting can be done by drag and drop.
+
 ```
 const Item = ItemSelection.Item;
+const arrayMove = ItemSelection.arrayMove;
 
-<ItemSelection
-    label="Select an item"
-    onItemRemove={(itemId) => {console.log('onItemRemove', itemId)}}
-    leftButton={{
-        icon: 'plus',
-        onClick: () =>{console.log('leftButton')},
-    }}
-    rightButton={{
-        icon: 'comment',
-        onClick: () =>{console.log('rightButton')},
-    }}
-    onItemMove={(itemIds) => {console.log('onItemMove')}}
->
-    <Item id="1">
-        <div>
-            I am an item. Hihi :)
-        </div>
-    </Item>
-    <Item  id="2">
-        <div>
-            I am an item. Hihi :)
-        </div>
-    </Item>
-    <Item  id="3">
-        <div>
-            I am an item. Hihi :)
-        </div>
-    </Item>
-</ItemSelection>
+const items = [
+    {
+        id: 1,
+        content: 'I am an item. Hihi :)'        
+    },
+    {
+        id: 2,
+        content: 'Lorem ipsum doloris sit amet'
+    },
+    {
+        id: 3,
+        content: 'Thomas the little locomotive'        
+    },
+];
+
+initialState = {
+    items: items,
+};
+
+const handleItemsSorted = (oldItemIndex, newItemIndex) => {
+    setState({
+        items: arrayMove(state.items, oldItemIndex, newItemIndex),
+    });
+};
+
+const handleRemove = (itemId) => {
+    setState({
+        items: state.items.filter((item) => item.id !== itemId),
+    });
+};
+
+const handleAddItem = () => {
+    state.items.push({
+        id: Date.now(),
+        content: 'I was added :D'        
+    }),
+    
+    setState({
+        items: state.items,
+    });
+};
+
+<div style={{padding: 20, backgroundColor: '#f1f1f1'}}>
+    <ItemSelection
+        label="Select an item"
+        onItemRemove={handleRemove}
+        leftButton={{
+            icon: 'plus',
+            onClick: handleAddItem,
+        }}
+        onItemsSorted={handleItemsSorted}
+    >
+        {state.items.map((item, index) =>
+            <Item
+                key={item.id}
+                id={item.id}
+                index={index + 1}
+            >
+                <div>
+                    {item.content}
+                </div>
+            </Item>
+        )}
+    </ItemSelection>
+</div>
 ```

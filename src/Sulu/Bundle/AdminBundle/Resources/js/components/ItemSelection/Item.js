@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
+import type {Component, Node} from 'react';
+import {SortableHandle} from 'react-sortable-hoc';
 import Icon from '../Icon';
 import itemStyles from './item.scss';
 
@@ -9,8 +10,10 @@ const REMOVE_ICON = 'times';
 
 type Props = {
     id: string | number,
+    index: number,
     children: Node,
     onRemove: (id: string | number) => void,
+    createDragHandle: () => SortableHandle,
 };
 
 export default class Item extends React.PureComponent<Props> {
@@ -19,13 +22,19 @@ export default class Item extends React.PureComponent<Props> {
     };
 
     render() {
-        const {children} = this.props;
+        const {
+            index,
+            children,
+            createDragHandle,
+        } = this.props;
+        const DragHandle = createDragHandle();
 
         return (
             <div className={itemStyles.item}>
-                <button className={itemStyles.dragButton}>
-                    <Icon name={DRAG_ICON} />
-                </button>
+                    <DragHandle className={itemStyles.dragHandle}>
+                        <Icon name={DRAG_ICON} />
+                        <span className={itemStyles.index}>{index}</span>
+                    </DragHandle>
                 <div className={itemStyles.content}>
                     {children}
                 </div>

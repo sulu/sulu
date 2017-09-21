@@ -4,7 +4,7 @@ $buttonTextColor: $scorpion;
 $buttonTextColorActive: $white;
 $buttonBackgroundColor: $alto;
 $buttonBackgroundColorActive: $shakespeare;
-$buttonBorderRadius: 3px;
+$buttonMargin: 2px;
 
 .button {
     width: 40px;
@@ -20,10 +20,10 @@ $buttonBorderRadius: 3px;
     }
 
     &.left {
-        border-radius: $buttonBorderRadius 0 0 $buttonBorderRadius;
+        margin-right: $buttonMargin;
     }
 
     &.right {
-        border-radius: 0 $buttonBorderRadius $buttonBorderRadius 0;
+        margin-left: $buttonMargin;
     }
 }
