@@ -173,3 +173,28 @@ test('Should pass store, schema and onSubmit handler to FormContainer', () => {
     expect(formContainer.prop('onSubmit')).toBeInstanceOf(Function);
     expect(Object.keys(formContainer.prop('schema'))).toEqual(['title', 'slogan']);
 });
+
+test('Should render save button loading only if form is not saving', () => {
+    function getSaveItem() {
+        return toolbarFunction.call(form).items.find((item) => item.value === 'Save');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+
+    const router = {
+        navigate: jest.fn(),
+        route: {
+            options: {},
+        },
+        attributes: {},
+    };
+    const form = mount(<Form router={router} />).get(0);
+
+    expect(getSaveItem().loading).toBe(false);
+
+    form.formStore.saving = true;
+    expect(getSaveItem().loading).toBe(true);
+});
+

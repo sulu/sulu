@@ -17,7 +17,7 @@ export default class FormStore {
         this.load();
     }
 
-    load() {
+    @action load() {
         this.loading = true;
         ResourceRequester.get(this.resourceKey, this.id).then(action((response) => {
             this.data = response;
@@ -25,12 +25,12 @@ export default class FormStore {
         }));
     }
 
-    save() {
+    @action save() {
         this.saving = true;
-        ResourceRequester.put(this.resourceKey, this.id, this.data).then((response) => {
+        ResourceRequester.put(this.resourceKey, this.id, this.data).then(action((response) => {
             this.data = response;
             this.saving = false;
-        });
+        }));
     }
 
     changeSchema(schema: Schema) {

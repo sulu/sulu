@@ -73,6 +73,7 @@ export default withToolbar(Form, function() {
                 value: translate('sulu_admin.save'),
                 icon: 'floppy-o',
                 disabled: !this.formStore.dirty,
+                loading: this.formStore.saving,
                 onClick: () => {
                     this.form.submit();
                 },
