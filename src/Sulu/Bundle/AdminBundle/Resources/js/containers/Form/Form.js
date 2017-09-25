@@ -2,6 +2,7 @@
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
+import Loader from '../../components/Loader';
 import FormStore from './stores/FormStore';
 import Renderer from './Renderer';
 import type {Schema} from './types';
@@ -39,14 +40,14 @@ export default class Form extends React.PureComponent<Props> {
 
     render() {
         const {schema, store} = this.props;
-        return (
-            <Renderer
+        return store.loading
+            ? <Loader />
+            : <Renderer
                 ref={this.setRenderer}
                 onSubmit={this.handleSubmit}
                 onChange={this.handleChange}
                 schema={schema}
                 data={store.data}
-            />
-        );
+            />;
     }
 }

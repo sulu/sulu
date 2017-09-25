@@ -64,3 +64,27 @@ test('Should load the data with the ResourceRequester', () => {
     expect(ResourceRequester.get).toBeCalledWith('snippets', 3);
     expect(formStore.data).toEqual({value: 'Value'});
 });
+
+test('Loading flag should be set to true when loading', () => {
+    ResourceRequester.get.mockReturnValue({
+        then: function() {},
+    });
+    const formStore = new FormStore('snippets', 1);
+    formStore.loading = false;
+
+    formStore.loadData();
+    expect(formStore.loading).toBe(true);
+});
+
+test('Loading flag should be set to false when loading has finished', () => {
+    ResourceRequester.get.mockReturnValue({
+        then: function(callback) {
+            callback();
+        },
+    });
+    const formStore = new FormStore('snippets', 1);
+    formStore.loading = true;
+
+    formStore.loadData();
+    expect(formStore.loading).toBe(false);
+});
