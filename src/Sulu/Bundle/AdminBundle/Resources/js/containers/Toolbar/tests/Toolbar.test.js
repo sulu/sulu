@@ -109,7 +109,7 @@ test('Render the items as disabled if one is loading', () => {
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 
     const buttons = view.find('Button');
-    expect(buttons.at(0).prop('disabled')).toBe(true);
     expect(buttons.at(1).prop('disabled')).toBe(true);
     expect(buttons.at(2).prop('disabled')).toBe(true);
+    expect(buttons.at(3).prop('disabled')).toBe(true);
 });

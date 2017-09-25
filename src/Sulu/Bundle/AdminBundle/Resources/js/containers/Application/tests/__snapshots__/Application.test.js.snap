@@ -8,7 +8,20 @@ exports[`Application should not fail if current route does not exist 1`] = `
     <nav>
       <div
         class="controlsLeft"
-      />
+      >
+        <button
+          class="button navigationButton"
+        >
+          <span
+            class="label"
+          >
+            <span
+              aria-label="star"
+              class="fa fa-star"
+            />
+          </span>
+        </button>
+      </div>
       <div
         class="controlsRight"
       />
@@ -29,7 +42,20 @@ exports[`Application should render based on current route 1`] = `
     <nav>
       <div
         class="controlsLeft"
-      />
+      >
+        <button
+          class="button navigationButton"
+        >
+          <span
+            class="label"
+          >
+            <span
+              aria-label="star"
+              class="fa fa-star"
+            />
+          </span>
+        </button>
+      </div>
       <div
         class="controlsRight"
       />
