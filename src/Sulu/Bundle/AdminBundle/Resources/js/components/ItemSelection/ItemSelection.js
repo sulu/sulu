@@ -49,7 +49,7 @@ export default class ItemSelection extends React.PureComponent<Props> {
         return SortableContainer(({children}) => (
             <ul className={itemSelectionStyles.list}>
                 {React.Children.map(children, (item, index) => (
-                    <SortableItem index={index} displayIndex={index}>
+                    <SortableItem index={index}>
                         {item}
                     </SortableItem>
                 ))}
@@ -58,8 +58,8 @@ export default class ItemSelection extends React.PureComponent<Props> {
     }
 
     createSortableItem() {
-        return SortableElement(({children, displayIndex}) => {
-            return this.createItem(children, displayIndex);
+        return SortableElement(({children}) => {
+            return this.createItem(children);
         });
     }
 
