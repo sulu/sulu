@@ -123,6 +123,10 @@ class StructureBridge implements StructureInterface
      */
     public function getWebspaceKey()
     {
+        if (!$this->document) {
+            return null;
+        }
+
         return $this->inspector->getWebspace($this->getDocument());
     }
 
@@ -636,7 +640,7 @@ class StructureBridge implements StructureInterface
     public function getIsShadow()
     {
         $document = $this->getDocument();
-        if (!$document instanceof ShadowLocaleBehavior) {
+        if (!$document || !$document instanceof ShadowLocaleBehavior) {
             return false;
         }
 
