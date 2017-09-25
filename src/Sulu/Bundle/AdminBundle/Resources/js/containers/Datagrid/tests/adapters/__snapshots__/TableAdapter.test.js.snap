@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render data with pencil button when onRowEdit callback is passed 1`] = `
+exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <div
   class="tableContainer"
 >

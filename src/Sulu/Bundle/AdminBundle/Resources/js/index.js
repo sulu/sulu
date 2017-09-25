@@ -11,6 +11,7 @@ import Input from './components/Input';
 import Application from './containers/Application';
 import {fieldStore} from './containers/Form';
 import {viewStore} from './containers/ViewRenderer';
+import {adapterStore, TableAdapter, FolderListAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import List from './views/List';
 import {bundlesReadyPromise, bundleReady} from './services/Bundles';
@@ -22,6 +23,8 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 viewStore.add('sulu_admin.list', List);
 viewStore.add('sulu_admin.form', Form);
+adapterStore.add('table', TableAdapter);
+adapterStore.add('folderList', FolderListAdapter);
 
 fieldStore.add('text_line', Input);
 

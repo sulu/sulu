@@ -60,7 +60,8 @@ class List extends React.PureComponent<ViewProps> {
                 {title && <h1>{translate(title)}</h1>}
                 <Datagrid
                     store={this.datagridStore}
-                    onRowEditClick={editRoute && this.handleEditClick}
+                    views={['table']}
+                    onItemEditClick={editRoute && this.handleEditClick}
                 />
             </div>
         );

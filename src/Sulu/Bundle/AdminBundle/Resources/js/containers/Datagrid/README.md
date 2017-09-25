@@ -1,10 +1,18 @@
-The `Datagrid` is responsible for rendering data in a table view. One of its parameters is the `store`, which has to be
-created outside, and be passed to the Datagrid. The `DatagridStore` is responsible for loading a page from a REST API.
+The `Datagrid` is responsible for rendering data in a table view. One of its properties is the `store`, which has to be
+created outside, and be passed to the `Datagrid`. The `DatagridStore` is responsible for loading a page from a
+REST API. The presentation of the `Datagrid` is handled by its adapters. An adapter is the glue which connects a basic
+component like the `Table` to the `Datagrid`. The available adapters for a `Datagrid` can be set using the `views`
+property. Keep in mind that an adapter has to be defined and added to the `adapterStore` before it is used by a
+rendered `Datagrid`.
 
 ```javascript static
+const TableAdapter = require('./adapters/TableAdapter');
+const adapterStore = require('./stores/AdapterStore');
 const store = new DatagridStore('snippets');
 
-<Datagrid store={store} />
+adapterStore.add('table', TableAdapter);
+
+<Datagrid store={store} views={['table']} />
 
 store.selections; // returns the IDs of the selected items
 store.destroy();

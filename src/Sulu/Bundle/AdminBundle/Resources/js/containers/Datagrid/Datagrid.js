@@ -5,15 +5,20 @@ import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
 import datagridStyles from './datagrid.scss';
-import TableAdapter from './adapters/TableAdapter';
+import adapterStore from './stores/AdapterStore';
 
 type Props = {
-    onRowEditClick?: (rowId: string | number) => void,
+    onItemEditClick?: (rowId: string | number) => void,
     store: DatagridStore,
+    views: Array<string>,
 };
 
 @observer
 export default class Datagrid extends React.PureComponent<Props> {
+    getAdapter(name: string = this.props.views[0]) {
+        return adapterStore.get(name);
+    }
+
     handleChangePage = (page: number) => {
         this.props.store.setPage(page);
     };
@@ -29,21 +34,22 @@ export default class Datagrid extends React.PureComponent<Props> {
     };
 
     render() {
-        const {onRowEditClick, store} = this.props;
+        const {onItemEditClick, store} = this.props;
         const page = store.getPage();
         const pageCount = store.pageCount;
+        const Adapter = this.getAdapter();
 
         return (
             <section>
                 <div className={datagridStyles.content}>
                     {this.props.store.loading
                         ? <Loader />
-                        : <TableAdapter
+                        : <Adapter
                             data={store.data}
                             selections={store.selections}
                             schema={store.getFields()}
-                            onRowEditClick={onRowEditClick}
-                            onRowSelectionChange={this.handleRowSelectionChange}
+                            onItemEditClick={onItemEditClick}
+                            onItemSelectionChange={this.handleRowSelectionChange}
                             onAllSelectionChange={this.handleAllSelectionChange}
                         />
                     }

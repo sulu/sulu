@@ -2,28 +2,26 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
-import type {DataItem, Schema} from '../types';
-
-type Props = {
-    data: Array<DataItem>,
-    selections: Array<number | string>,
-    onRowEditClick?: (rowId: string | number) => void,
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
-    onAllSelectionChange?: (selected?: boolean) => void,
-    schema: Schema,
-};
+import type {AdapterProps} from '../types';
 
 @observer
-export default class TableAdapter extends React.Component<Props> {
+export default class TableAdapter extends React.Component<AdapterProps> {
     render() {
-        const {data, selections, schema, onRowEditClick, onRowSelectionChange, onAllSelectionChange} = this.props;
+        const {
+            data,
+            schema,
+            selections,
+            onItemEditClick,
+            onItemSelectionChange,
+            onAllSelectionChange,
+        } = this.props;
         const schemaKeys = Object.keys(schema);
         const buttons = [];
 
-        if (onRowEditClick) {
+        if (onItemEditClick) {
             buttons.push({
                 icon: 'pencil',
-                onClick: (rowId) => onRowEditClick(rowId),
+                onClick: (rowId) => onItemEditClick(rowId),
             });
         }
 
@@ -31,7 +29,7 @@ export default class TableAdapter extends React.Component<Props> {
             <Table
                 buttons={buttons}
                 selectMode="multiple"
-                onRowSelectionChange={onRowSelectionChange}
+                onRowSelectionChange={onItemSelectionChange}
                 onAllSelectionChange={onAllSelectionChange}
             >
                 <Table.Header>

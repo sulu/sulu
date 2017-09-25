@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a basic FolderList with data 1`] = `
+<ul
+  class="folderList"
+>
+  <li>
+    <div
+      class="folder"
+      role="button"
+      tabindex="0"
+    >
+      <div
+        class="iconContainer"
+      >
+        <span
+          aria-label="folder-o"
+          class="fa fa-folder-o"
+        />
+      </div>
+      <div
+        class="description"
+      >
+        <h5
+          class="title"
+        >
+          Test
+        </h5>
+        <div
+          class="info"
+        >
+          Test
+        </div>
+      </div>
+    </div>
+  </li>
+  <li>
+    <div
+      class="folder"
+      role="button"
+      tabindex="0"
+    >
+      <div
+        class="iconContainer"
+      >
+        <span
+          aria-label="folder-o"
+          class="fa fa-folder-o"
+        />
+      </div>
+      <div
+        class="description"
+      >
+        <h5
+          class="title"
+        >
+          Test
+        </h5>
+        <div
+          class="info"
+        >
+          Test
+        </div>
+      </div>
+    </div>
+  </li>
+</ul>
+`;

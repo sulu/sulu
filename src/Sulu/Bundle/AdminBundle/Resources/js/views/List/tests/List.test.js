@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render} from 'enzyme';
+import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -30,6 +31,11 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.clearSelection = jest.fn();
 }));
 
+jest.mock('../../../containers/Datagrid/stores/AdapterStore', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+}));
+
 jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn().mockReturnValue(Promise.resolve(true)),
 }));
@@ -53,6 +59,9 @@ jest.mock('../../../services/Translator', () => ({
 
 beforeEach(() => {
     jest.resetModules();
+
+    const adapterStore = require('../../../containers/Datagrid/stores/AdapterStore');
+    adapterStore.get.mockReturnValue(TableAdapter);
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {
