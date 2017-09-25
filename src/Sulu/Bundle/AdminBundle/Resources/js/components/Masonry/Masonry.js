@@ -112,23 +112,25 @@ export default class Masonry extends React.PureComponent<Props> {
 
         if (removedChildNodes.length > 0) {
             this.masonry.remove(removedChildNodes);
-            this.masonry.reloadItems();
         }
 
         if (appendedChildNodes.length > 0) {
             this.masonry.appended(appendedChildNodes);
-
-            if (prependedChildNodes.length === 0) {
-                this.masonry.reloadItems();
-            }
         }
 
         if (prependedChildNodes.length > 0) {
             this.masonry.prepended(prependedChildNodes);
-            this.masonry.reloadItems();
         }
 
         this.layoutedChildNodes = currentChildNodes;
+
+        if (
+            removedChildNodes.length > 0 ||
+            appendedChildNodes.length > 0 ||
+            prependedChildNodes.length > 0
+        ) {
+            this.masonry.reloadItems();
+        }
 
         this.masonry.layout();
     }

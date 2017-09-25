@@ -65,7 +65,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                   >
                     <input
                       type="checkbox"
-                      value="2"
+                      value="1"
                     />
                     <span />
                   </span>
@@ -96,7 +96,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
                   >
                     <input
                       type="checkbox"
-                      value="1"
+                      value="2"
                     />
                     <span />
                   </span>
@@ -231,6 +231,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                   >
                     <input
                       type="checkbox"
+                      value="1"
                     />
                     <span />
                   </span>
@@ -271,6 +272,7 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
                   >
                     <input
                       type="checkbox"
+                      value="2"
                     />
                     <span />
                   </span>
@@ -388,6 +390,7 @@ exports[`Should render the list with a title 1`] = `
                   >
                     <input
                       type="checkbox"
+                      value="1"
                     />
                     <span />
                   </span>
@@ -418,6 +421,7 @@ exports[`Should render the list with a title 1`] = `
                   >
                     <input
                       type="checkbox"
+                      value="2"
                     />
                     <span />
                   </span>

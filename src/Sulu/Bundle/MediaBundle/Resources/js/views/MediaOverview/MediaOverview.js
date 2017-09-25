@@ -11,7 +11,7 @@ import MediaCard from '../../components/MediaCard';
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
     medias: Array<*> = [
-        { id: 1, size: '260/350', title: 'This is a boring title', meta: 'bo and ring' },
+        { id: 1, size: '260/350', title: 'This is a boring title boring fin fjfjd djdjd', meta: 'bo and ring' },
         { id: 2, size: '260/260', title: 'Is this one better?', meta: 'No' },
         { id: 3, size: '260/300', title: 'But now!', meta: 'Hmm, not sure' },
         { id: 4, size: '260/260', title: 'You want to have a fight?', meta: 'Come at me!' },
@@ -44,7 +44,6 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         return (
             <div>
                 <h1>Media Overview</h1>
-                <a href="#/snippets/123">To the Form</a>
                 {!!selectedCount &&
                     <p>{selectedCount} Items selected</p>
                 }
@@ -59,9 +58,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                                 icon="pencil"
                                 selected={this.isSelected(media.id)}
                                 onSelectionChange={this.handleMediaCardSelectionChange}
-                            >
-                                <img src={`http://lorempixel.com/${media.size}`} />
-                            </MediaCard>
+                                imageURL={`http://lorempixel.com/${media.size}`}
+                            />
                         ))
                     }
                 </Masonry>

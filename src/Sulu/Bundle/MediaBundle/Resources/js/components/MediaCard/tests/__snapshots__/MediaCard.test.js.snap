@@ -25,7 +25,31 @@ exports[`Render a simple MediaCard component 1`] = `
           <div
             class="titleText"
           >
-            Test
+            <div
+              aria-label="Test"
+              class="croppedText"
+              title="Test"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Te
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  st
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Test
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -40,7 +64,7 @@ exports[`Render a simple MediaCard component 1`] = `
     class="media"
   >
     <img
-      src="http://lorempixel.com/300/200"
+      alt="Test"
     />
     <div
       class="mediaOverlay"

@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import classNames from 'classnames';
-import {Icon, Checkbox} from 'sulu-admin-bundle/components';
+import {Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
 import mediaCardStyles from './mediaCard.scss';
 
 type Props = {
-    children: Node,
     id: string | number,
     selected: boolean,
+    /** Called when the image at the bottom part of this element was clicked */
     onClick?: (id: string | number) => void,
+    /** Called when the header or the checkbox was clicked to select/deselect this item */    
     onSelectionChange?: (id: string | number, selected: boolean) => void,
     /** The title which will be displayed in the header besides the checkbox */
     title: string,
@@ -17,6 +17,8 @@ type Props = {
     meta?: string,
     /** The icon used inside the media overlay */
     icon?: string,
+    /** The URL of the presented image */
+    imageURL: string,
 };
 
 export default class MediaCard extends React.PureComponent<Props> {
@@ -25,33 +27,32 @@ export default class MediaCard extends React.PureComponent<Props> {
     };
 
     handleClick = () => {
-        const {id} = this.props;
+        const {
+            id,
+            onClick,
+        } = this.props;
 
-        if (this.props.onClick) {
-            this.props.onClick(id);
-        }
-    };
-
-    handleSelectionChange = (checked: boolean, id?: string | number) => {
-        if (this.props.onSelectionChange && id) {
-            this.props.onSelectionChange(id, checked);
+        if (onClick) {
+            onClick(id);
         }
     };
 
     handleHeaderClick = () => {
         const {id, selected} = this.props;
 
-        this.handleSelectionChange(!selected, id);
+        if (this.props.onSelectionChange && id) {
+            this.props.onSelectionChange(id, !selected);
+        }
     };
 
     render() {
         const {
             id,
             icon,
-            selected,
             meta,
-            children,
             title,
+            selected,
+            imageURL,
         } = this.props;
         const masonryClass = classNames(
             mediaCardStyles.mediaCard,
@@ -74,7 +75,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                             className={mediaCardStyles.checkbox}
                         >
                             <div className={mediaCardStyles.titleText}>
-                                {title}
+                                <CroppedText>{title}</CroppedText>
                             </div>
                         </Checkbox>
                     </div>
@@ -86,7 +87,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
                 >
-                    {children}
+                    <img alt={title} src={imageURL} />
                     <div className={mediaCardStyles.mediaOverlay}>
                         {!!icon &&
                             <Icon name={icon} className={mediaCardStyles.mediaIcon} />

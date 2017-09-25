@@ -1,7 +1,8 @@
-The Masonry component just serves as a container. It simplifies the management of the items inside by providing
-handlers for selecting and clicking on items. The children of the Masonry could be any kind of React component. 
+The Masonry component just serves as a container. The children of the Masonry could be any kind of `React` component. 
 The only requirement for the Masonry to work correctly is that every child needs a unique invariable `key`, which
-disqualifies the `index` argument inside a `map` callback.
+disqualifies the `index` argument inside a `map` callback. The component recognizes appended, prepended and removed 
+child elements and adjusts the masonry layout appropriately.
+**Note:** Adding elements inbetween of existing children may cause incomprehensible and/or inconsistent behaviour. 
 
 Here a basic example of the Masonry view:
 
