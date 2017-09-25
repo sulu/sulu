@@ -21,7 +21,6 @@ $listElementDragBoxShadowColor: rgba($black, .1);
 
     &.during-drag {
         border-radius: 0;
-        opacity: .75;
         box-shadow:
             0 3px 6px $listElementDragBoxShadowColor,
             0 -3px 6px $listElementDragBoxShadowColor;

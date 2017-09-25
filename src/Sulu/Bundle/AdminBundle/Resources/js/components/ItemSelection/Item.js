@@ -6,7 +6,7 @@ import Icon from '../Icon';
 import itemStyles from './item.scss';
 
 const DRAG_ICON = 'ellipsis-v';
-const REMOVE_ICON = 'times';
+const REMOVE_ICON = 'trash';
 
 type Props = {
     id: string | number,
