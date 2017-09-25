@@ -15,6 +15,11 @@ export default class ResourceRequester {
         return Requester.get(baseUrl + '/' + id);
     }
 
+    static put(resourceKey: string, id: number | string, data: Object) {
+        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        return Requester.put(baseUrl + '/' + id, data);
+    }
+
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         const searchParameters = new URLSearchParams();

@@ -37,7 +37,7 @@ class Form extends React.PureComponent<ViewProps> {
     }
 
     handleSubmit = () => {
-        console.log(this.formStore.data);
+        this.formStore.save();
     };
 
     setForm = (form) => {

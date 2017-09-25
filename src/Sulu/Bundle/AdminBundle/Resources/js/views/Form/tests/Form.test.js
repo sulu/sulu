@@ -32,6 +32,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
     get: jest.fn().mockReturnValue({
         then: jest.fn(),
     }),
+    put: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -122,6 +123,33 @@ test('Should render save button disabled only if form is not dirty', () => {
 
     form.formStore.dirty = true;
     expect(getSaveItem().disabled).toBe(false);
+});
+
+test('Should save form when submitted', () => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue({
+        then: jest.fn(),
+    });
+    const Form = require('../Form').default;
+
+    const router = {
+        navigate: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form router={router} />);
+    const formStore = form.get(0).formStore;
+    formStore.data = {value: 'Value'};
+    formStore.loading = false;
+    form.find('Form').at(1).simulate('submit');
+
+    expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'});
 });
 
 test('Should pass store, schema and onSubmit handler to FormContainer', () => {

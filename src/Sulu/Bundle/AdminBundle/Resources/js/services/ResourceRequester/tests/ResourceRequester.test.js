@@ -5,6 +5,7 @@ import Requester from '../../Requester/Requester';
 
 jest.mock('../../Requester/Requester', () => ({
     get: jest.fn(),
+    put: jest.fn(),
     delete: jest.fn(),
 }));
 
@@ -58,6 +59,15 @@ test('Should send a list get request to the correct URL with page and limit para
         limit: 5,
     });
     expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=5');
+});
+
+test('Should send a put request and return the promise', () => {
+    const promise = {};
+    const data = {title: 'Title'};
+    Requester.put.mockReturnValue(promise);
+    const result = ResourceRequester.put('snippets', 5, data);
+    expect(Requester.put).toBeCalledWith('/snippets/5', data);
+    expect(result).toBe(promise);
 });
 
 test('Should send a delete request and return the promise', () => {

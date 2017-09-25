@@ -6,6 +6,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
     get: jest.fn().mockReturnValue({
         then: jest.fn(),
     }),
+    put: jest.fn(),
 }));
 
 test('Create data object for schema', () => {
@@ -72,7 +73,7 @@ test('Loading flag should be set to true when loading', () => {
     const formStore = new FormStore('snippets', 1);
     formStore.loading = false;
 
-    formStore.loadData();
+    formStore.load();
     expect(formStore.loading).toBe(true);
 });
 
@@ -85,6 +86,32 @@ test('Loading flag should be set to false when loading has finished', () => {
     const formStore = new FormStore('snippets', 1);
     formStore.loading = true;
 
-    formStore.loadData();
+    formStore.load();
     expect(formStore.loading).toBe(false);
+});
+
+test('Saving flag should be set to true when saving', () => {
+    ResourceRequester.put.mockReturnValue({
+        then: function() {},
+    });
+    const formStore = new FormStore('snippets', 1);
+    formStore.saving = false;
+
+    formStore.save();
+    expect(formStore.saving).toBe(true);
+});
+
+test('Saving flag should be set to false when saving has finished', () => {
+    const data = {changed: 'later'};
+    ResourceRequester.put.mockReturnValue({
+        then: function(callback) {
+            callback(data);
+        },
+    });
+    const formStore = new FormStore('snippets', 1);
+    formStore.saving = true;
+
+    formStore.save();
+    expect(formStore.saving).toBe(false);
+    expect(formStore.data).toEqual(data);
 });
