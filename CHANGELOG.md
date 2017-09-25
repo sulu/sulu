@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #3535 [Content]                 Fix bug in structure bridge when no document is available
+
 * 1.6.4 (2017-09-14)
     * HOTFIX      #3509 [MediaBundle]             Fixed deletion of tag when referenced in media fileversion
     * HOTFIX      #3504 [SnippetBundle]           Fixed snippet areas with uppercases
