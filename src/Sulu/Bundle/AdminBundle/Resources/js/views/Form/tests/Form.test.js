@@ -28,6 +28,12 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
+jest.mock('../../../services/ResourceRequester', () => ({
+    get: jest.fn().mockReturnValue({
+        then: jest.fn(),
+    }),
+}));
+
 beforeEach(() => {
     jest.resetModules();
 });
@@ -44,6 +50,7 @@ test('Should navigate to defined route on back button click', () => {
                 backRoute: 'test_route',
             },
         },
+        attributes: {},
     };
     const form = mount(<Form router={router} />).get(0);
 
@@ -62,6 +69,7 @@ test('Should not render back button when no editLink is configured', () => {
         route: {
             options: {},
         },
+        attributes: {},
     };
     const form = mount(<Form router={router} />).get(0);
 
@@ -71,7 +79,21 @@ test('Should not render back button when no editLink is configured', () => {
 
 test('Should initialize the FormStore with a schema', () => {
     const Form = require('../Form').default;
-    const form = mount(<Form />).get(0);
+
+    const router = {
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+        attributes: {
+            id: 12,
+        },
+    };
+
+    const form = mount(<Form router={router} />).get(0);
+    expect(form.formStore.resourceKey).toBe('snippets');
+    expect(form.formStore.id).toBe(12);
     expect(form.formStore.data).toEqual({
         title: null,
         slogan: null,
@@ -92,6 +114,7 @@ test('Should render save button disabled only if form is not dirty', () => {
         route: {
             options: {},
         },
+        attributes: {},
     };
     const form = mount(<Form router={router} />).get(0);
 
@@ -109,6 +132,7 @@ test('Should pass store, schema and onSubmit handler to FormContainer', () => {
         route: {
             options: {},
         },
+        attributes: {},
     };
 
     const form = shallow(<Form router={router} />);

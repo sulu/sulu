@@ -19,6 +19,14 @@ jest.mock('../../../stores/ResourceMetadataStore', () => ({
     }),
 }));
 
+test('Should send a get request and return the promise', () => {
+    const promise = {};
+    Requester.get.mockReturnValue(promise);
+    const result = ResourceRequester.get('snippets', 5);
+    expect(Requester.get).toBeCalledWith('/snippets/5');
+    expect(result).toBe(promise);
+});
+
 test('Should send a list get request and return the promise', () => {
     const promise = {};
     Requester.get.mockReturnValue(promise);

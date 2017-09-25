@@ -10,6 +10,11 @@ const listDefaults = {
 };
 
 export default class ResourceRequester {
+    static get(resourceKey: string, id: number | string) {
+        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        return Requester.get(baseUrl + '/' + id);
+    }
+
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         const searchParameters = new URLSearchParams();

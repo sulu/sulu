@@ -1,4 +1,5 @@
 // @flow
+import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
 import FormStore from './stores/FormStore';
@@ -11,6 +12,7 @@ type Props = {
     onSubmit: () => void,
 };
 
+@observer
 export default class Form extends React.PureComponent<Props> {
     renderer: ?ElementRef<typeof Renderer>;
 

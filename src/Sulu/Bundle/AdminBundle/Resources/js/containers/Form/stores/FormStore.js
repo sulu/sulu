@@ -1,18 +1,30 @@
 // @flow
 import {action, observable} from 'mobx';
+import ResourceRequester from '../../../services/ResourceRequester';
 import type {Schema} from '../types';
 
 export default class FormStore {
+    resourceKey: string;
+    id: string;
     @observable data: Object = {};
     @observable dirty: boolean = false;
 
-    changeSchema(schema: Schema) {
-        const data = {};
-        Object.keys(schema).forEach((schemaKey) => {
-            data[schemaKey] = null;
-        });
+    constructor(resourceKey: string, id: string) {
+        this.resourceKey = resourceKey;
+        this.id = id;
 
-        this.data = data;
+        ResourceRequester.get(this.resourceKey, this.id).then(action((response) => {
+            this.data = response;
+        }));
+    }
+
+    changeSchema(schema: Schema) {
+        const schemaFields = Object.keys(schema).reduce((object, key) => {
+            object[key] = null;
+            return object;
+        }, {});
+
+        this.data = {...schemaFields, ...this.data};
     }
 
     @action set(name: string, value: mixed) {

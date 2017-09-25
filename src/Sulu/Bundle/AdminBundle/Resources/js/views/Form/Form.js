@@ -22,7 +22,17 @@ class Form extends React.PureComponent<ViewProps> {
     formStore: FormStore;
 
     componentWillMount() {
-        this.formStore = new FormStore();
+        const {
+            route: {
+                options: {
+                    resourceKey,
+                },
+            },
+            attributes: {
+                id,
+            },
+        } = this.props.router;
+        this.formStore = new FormStore(resourceKey, id);
         this.formStore.changeSchema(schema);
     }
 
