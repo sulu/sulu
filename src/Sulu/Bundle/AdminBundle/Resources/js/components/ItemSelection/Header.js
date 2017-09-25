@@ -14,7 +14,7 @@ type Props = {
 
 export default class ItemSelection extends React.PureComponent<Props> {
     static defaultProps = {
-        emptyList: false,
+        emptyList: true,
     };
 
     render() {

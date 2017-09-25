@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {ChildrenArray, Element} from 'react';
-import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc';
+import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 import type {Button} from './types';
 import Header from './Header';
 import Item from './Item';
@@ -35,7 +35,6 @@ export default class ItemSelection extends React.PureComponent<Props> {
                         {
                             ...originalItem.props,
                             onRemove: this.handleItemRemove,
-                            createDragHandle: this.createDragHandle,
                         },
                     )
                 }
@@ -61,12 +60,6 @@ export default class ItemSelection extends React.PureComponent<Props> {
         return SortableElement(({children}) => {
             return this.createItem(children);
         });
-    }
-
-    createDragHandle() {
-        return SortableHandle(({children, className}) => (
-            <span className={className}>{children}</span>
-        ));
     }
 
     handleItemRemove = (itemId: string | number) => {

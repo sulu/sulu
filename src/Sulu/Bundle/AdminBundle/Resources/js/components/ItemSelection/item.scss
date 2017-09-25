@@ -21,6 +21,9 @@ $itemBackgroundColor: $white;
 
 .remove-button {
     border: 0;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: pointer;
     background-color: transparent;
 }
 
@@ -31,12 +34,6 @@ $itemBackgroundColor: $white;
     border: 0;
     cursor: grab;
     padding-left: 20px;
-}
-
-.remove-button {
-    padding: 0 10px;
-    margin-right: 10px;
-    cursor: pointer;
 }
 
 .index {

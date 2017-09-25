@@ -13,10 +13,15 @@ type Props = {
     index: number,
     children: Node,
     onRemove: (id: string | number) => void,
-    createDragHandle: () => SortableHandle,
 };
 
 export default class Item extends React.PureComponent<Props> {
+    createDragHandle() {
+        return SortableHandle(({children, className}) => (
+            <span className={className}>{children}</span>
+        ));
+    }
+
     handleRemove = () => {
         this.props.onRemove(this.props.id);
     };
@@ -25,9 +30,8 @@ export default class Item extends React.PureComponent<Props> {
         const {
             index,
             children,
-            createDragHandle,
         } = this.props;
-        const DragHandle = createDragHandle();
+        const DragHandle = this.createDragHandle();
 
         return (
             <div className={itemStyles.item}>

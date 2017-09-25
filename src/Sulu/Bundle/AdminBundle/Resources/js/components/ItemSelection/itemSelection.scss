@@ -13,13 +13,14 @@ $listElementDragBoxShadowColor: rgba($black, .1);
     list-style: none;
     border-bottom: 1px solid $listElementBorderBottomColor;
 
-    &:last-child:not(:first-of-type) {
+    &:last-child {
         border-bottom: 0;
         border-radius: 0 0 3px 3px;
         overflow: hidden;
     }
 
     &.during-drag {
+        border-radius: 0;
         opacity: .75;
         box-shadow:
             0 3px 6px $listElementDragBoxShadowColor,
