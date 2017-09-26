@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\Util\PathHelper;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -23,6 +24,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -41,6 +43,12 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
+    /**
+     * @var NodeManager
+     */
+    private $nodeManager;
+
     /**
      * @var RouteSubscriber
      */
@@ -51,11 +59,13 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $this->nodeManager = $this->prophesize(NodeManager::class);
 
         $this->routeSubscriber = new RouteSubscriber(
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->sessionManager->reveal()
+            $this->sessionManager->reveal(),
+            $this->nodeManager->reveal()
         );
     }
 
@@ -246,5 +256,53 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->routeSubscriber->handleRemove($removeEvent->reveal());
 
         $this->documentManager->remove($routeDocument2->reveal())->shouldBeCalled();
+    }
+
+    public function testHandleSetNodeOnPersist()
+    {
+        $options = ['path' => '/cmf/sulu_io/routes/de/products/machines'];
+
+        $document = $this->prophesize(RouteBehavior::class);
+        $parentNode = $this->prophesize(NodeInterface::class);
+        $node = $this->prophesize(NodeInterface::class);
+
+        $node->hasProperty(RouteSubscriber::NODE_HISTORY_FIELD)->willReturn(false);
+        $parentNode->getNode(PathHelper::getNodeName($options['path']))->willReturn($node->reveal());
+
+        $this->nodeManager->createPath(PathHelper::getParentPath($options['path']))->willReturn($parentNode->reveal());
+
+        $event = $this->prophesize(PersistEvent::class);
+        $event->getDocument()->willReturn($document->reveal());
+        $event->getOptions()->willReturn($options);
+        $event->setParentNode($parentNode->reveal())->shouldBeCalled();
+        $event->setNode($node->reveal())->shouldBeCalled();
+
+        $parentNode->hasNode(PathHelper::getNodeName($options['path']))->willReturn(true);
+
+        $this->routeSubscriber->handleSetNodeOnPersist($event->reveal());
+    }
+
+    public function testHandleSetNodeOnPersistAlreadyUsed()
+    {
+        $options = ['path' => '/cmf/sulu_io/routes/de/products/machines'];
+
+        $document = $this->prophesize(RouteBehavior::class);
+        $parentNode = $this->prophesize(NodeInterface::class);
+        $node = $this->prophesize(NodeInterface::class);
+
+        $node->hasProperty(RouteSubscriber::NODE_HISTORY_FIELD)->willReturn(true);
+        $parentNode->getNode(PathHelper::getNodeName($options['path']))->willReturn($node->reveal());
+
+        $this->nodeManager->createPath(PathHelper::getParentPath($options['path']))->willReturn($parentNode->reveal());
+
+        $event = $this->prophesize(PersistEvent::class);
+        $event->getDocument()->willReturn($document->reveal());
+        $event->getOptions()->willReturn($options);
+        $event->setParentNode($parentNode->reveal())->shouldNotBeCalled();
+        $event->setNode($node->reveal())->shouldNotBeCalled();
+
+        $parentNode->hasNode(PathHelper::getNodeName($options['path']))->willReturn(true);
+
+        $this->routeSubscriber->handleSetNodeOnPersist($event->reveal());
     }
 }

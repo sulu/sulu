@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -23,6 +24,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -50,14 +52,21 @@ class RouteSubscriber implements EventSubscriberInterface
      */
     private $sessionManager;
 
+    /**
+     * @var NodeManager
+     */
+    private $nodeManager;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        SessionManagerInterface $sessionManager
+        SessionManagerInterface $sessionManager,
+        NodeManager $nodeManager
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->sessionManager = $sessionManager;
+        $this->nodeManager = $nodeManager;
     }
 
     /**
@@ -66,8 +75,11 @@ class RouteSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            // must be exectued before the TargetSubscriber
-            Events::PERSIST => ['handlePersist', 5],
+            Events::PERSIST => [
+                ['handleSetNodeOnPersist', 490],
+                // must be executed before the TargetSubscriber
+                ['handlePersist', 5],
+            ],
             Events::HYDRATE => 'handleHydrate',
             Events::REMOVE => ['handleRemove', 550],
             Events::PUBLISH => 'handlePublish',
@@ -88,6 +100,36 @@ class RouteSubscriber implements EventSubscriberInterface
         }
 
         $document->setHistory($event->getNode()->getPropertyValue(self::NODE_HISTORY_FIELD));
+    }
+
+    /**
+     * Receives node for route and overwrite when the node is empty.
+     *
+     * @param PersistEvent $event
+     */
+    public function handleSetNodeOnPersist(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+        $options = $event->getOptions();
+        if (!$document instanceof RouteBehavior || !array_key_exists('path', $options)) {
+            return;
+        }
+
+        $parentPath = PathHelper::getParentPath($options['path']);
+        $parentNode = $this->nodeManager->createPath($parentPath);
+
+        $nodeName = PathHelper::getNodeName($options['path']);
+        if (!$parentNode->hasNode($nodeName)) {
+            return;
+        }
+
+        $node = $parentNode->getNode($nodeName);
+        if ($node->hasProperty(self::NODE_HISTORY_FIELD)) {
+            return;
+        }
+
+        $event->setNode($node);
+        $event->setParentNode($parentNode);
     }
 
     /**

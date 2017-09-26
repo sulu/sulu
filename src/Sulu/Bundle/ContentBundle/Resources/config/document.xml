@@ -112,6 +112,7 @@
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.node_manager"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
