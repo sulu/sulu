@@ -1,77 +1,133 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import React from 'react';
-import GenericSelect from '../../GenericSelect';
-import Select from '../../Select';
+import pretty from 'pretty';
+import Select from '../Select';
+import Divider from '../Divider';
+import Option from '../Option';
 
-const Option = Select.Option;
-const Divider = Select.Option;
+afterEach(() => document.body.innerHTML = '');
 
-jest.mock('../../GenericSelect');
-
-test('The component should render a generic select', () => {
-    const select = shallow(
-        <Select>
+test('The component should render with the popover closed', () => {
+    const body = document.body;
+    const isOptionSelected = () => false;
+    const onSelect = () => {};
+    const select = mount(
+        <Select
+            onSelect={onSelect}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    expect(select.node.type).toBe(GenericSelect);
+    expect(select.render()).toMatchSnapshot();
+    expect(body.innerHTML).toBe('');
 });
 
-test('The component should return the first option as default display value', () => {
-    const select = shallow(
-        <Select>
+test('The component should render with an icon', () => {
+    const body = document.body;
+    const isOptionSelected = () => false;
+    const onSelect = () => {};
+    const select = mount(
+        <Select
+            icon="plus"
+            onSelect={onSelect}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
-    expect(displayValue).toBe('Option 1');
+    expect(select.render()).toMatchSnapshot();
+    expect(body.innerHTML).toBe('');
 });
 
-test('The component should return the correct displayValue', () => {
-    const select = shallow(
-        <Select value="option-2">
+test('The component should open the popover when the display value is clicked', () => {
+    const body = document.body;
+    const isOptionSelected = () => false;
+    const onSelect = () => {};
+    const select = mount(
+        <Select
+            onSelect={onSelect}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
-    expect(displayValue).toBe('Option 2');
+    select.instance().handleDisplayValueClick();
+    expect(select.render()).toMatchSnapshot();
+    expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 
-test('The component should select the correct option', () => {
-    const select = shallow(
-        <Select value="option-2">
+test('The component should trigger the select callback and close the popover when an option is clicked', () => {
+    const body = document.body;
+    const onSelectSpy = jest.fn();
+    const isOptionSelected = () => false;
+    const select = mount(
+        <Select
+            onSelect={onSelectSpy}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    const isOptionSelected = select.find(GenericSelect).props().isOptionSelected;
-    expect(isOptionSelected({props: {value: 'option-1', disabled: false}})).toBe(false);
-    expect(isOptionSelected({props: {value: 'option-2', disabled: false}})).toBe(true);
-    expect(isOptionSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
+    select.instance().handleDisplayValueClick();
+    body.getElementsByTagName('button')[2].click();
+    expect(onSelectSpy).toHaveBeenCalledWith('option-3');
+    expect(body.innerHTML).toBe('');
 });
 
-test('The component should trigger the change callback on select', () => {
-    const onChangeSpy = jest.fn();
-    const select = shallow(
-        <Select value="option-2" onChange={onChangeSpy}>
+test('The component should pass the centered child node to the popover', () => {
+    const onSelect = () => {};
+    const isOptionSelected = (child) => child.props.value === 'option-3';
+    const selectedOption = (<Option value="option-3">Option 3</Option>);
+    const select = mount(
+        <Select
+            onSelect={onSelect}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            {selectedOption}
+        </Select>
+    );
+
+    const popover = select.find('Popover');
+    expect(popover.props().centerChildNode).toBe(mount(selectedOption).get(0).innerHTML);
+});
+
+test('The component should pass the selected property to the options', () => {
+    const isOptionSelected = () => true;
+    const onSelect = () => {};
+    const select = mount(
+        <Select
+            onSelect={onSelect}
+            isOptionSelected={isOptionSelected}
+            displayValue="My text"
+        >
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    select.find(GenericSelect).props().onSelect('option-3');
-    expect(onChangeSpy).toHaveBeenCalledWith('option-3');
+    select.instance().handleDisplayValueClick();
+    expect(document.body.querySelectorAll('.selected').length).toBe(3);
 });
