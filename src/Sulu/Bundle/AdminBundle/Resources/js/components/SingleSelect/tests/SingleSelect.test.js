@@ -1,13 +1,13 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {shallow} from 'enzyme';
 import React from 'react';
-import GenericSelect from '../../GenericSelect';
+import Select from '../../Select';
 import SingleSelect from '../../SingleSelect';
 
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Option;
 
-jest.mock('../../GenericSelect');
+jest.mock('../../Select');
 
 test('The component should render a generic select', () => {
     const select = shallow(
@@ -18,7 +18,7 @@ test('The component should render a generic select', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    expect(select.node.type).toBe(GenericSelect);
+    expect(select.node.type).toBe(Select);
 });
 
 test('The component should return the first option as default display value', () => {
@@ -30,7 +30,7 @@ test('The component should return the first option as default display value', ()
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
+    const displayValue = select.find(Select).props().displayValue;
     expect(displayValue).toBe('Option 1');
 });
 
@@ -43,7 +43,7 @@ test('The component should return the correct displayValue', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
+    const displayValue = select.find(Select).props().displayValue;
     expect(displayValue).toBe('Option 2');
 });
 
@@ -56,7 +56,7 @@ test('The component should select the correct option', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const isOptionSelected = select.find(GenericSelect).props().isOptionSelected;
+    const isOptionSelected = select.find(Select).props().isOptionSelected;
     expect(isOptionSelected({props: {value: 'option-1', disabled: false}})).toBe(false);
     expect(isOptionSelected({props: {value: 'option-2', disabled: false}})).toBe(true);
     expect(isOptionSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
@@ -72,6 +72,6 @@ test('The component should trigger the change callback on select', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    select.find(GenericSelect).props().onSelect('option-3');
+    select.find(Select).props().onSelect('option-3');
     expect(onChangeSpy).toHaveBeenCalledWith('option-3');
 });

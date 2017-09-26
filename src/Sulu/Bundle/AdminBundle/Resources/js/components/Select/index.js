@@ -1,6 +1,6 @@
 // @flow
-import GenericSelect from './GenericSelect';
+import Select from './Select';
 import type {SelectProps} from './types';
 
-export default GenericSelect;
+export default Select;
 export type {SelectProps};

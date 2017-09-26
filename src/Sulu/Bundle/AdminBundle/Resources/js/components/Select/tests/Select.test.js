@@ -2,7 +2,7 @@
 import {mount} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
-import GenericSelect from '../GenericSelect';
+import Select from '../Select';
 import Divider from '../Divider';
 import Option from '../Option';
 
@@ -13,7 +13,7 @@ test('The component should render with the popover closed', () => {
     const isOptionSelected = () => false;
     const onSelect = () => {};
     const select = mount(
-        <GenericSelect
+        <Select
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
             displayValue="My text"
@@ -22,7 +22,7 @@ test('The component should render with the popover closed', () => {
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </GenericSelect>
+        </Select>
     );
     expect(select.render()).toMatchSnapshot();
     expect(body.innerHTML).toBe('');
@@ -33,7 +33,7 @@ test('The component should render with an icon', () => {
     const isOptionSelected = () => false;
     const onSelect = () => {};
     const select = mount(
-        <GenericSelect
+        <Select
             icon="plus"
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
@@ -43,7 +43,7 @@ test('The component should render with an icon', () => {
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </GenericSelect>
+        </Select>
     );
     expect(select.render()).toMatchSnapshot();
     expect(body.innerHTML).toBe('');
@@ -54,7 +54,7 @@ test('The component should open the popover when the display value is clicked', 
     const isOptionSelected = () => false;
     const onSelect = () => {};
     const select = mount(
-        <GenericSelect
+        <Select
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
             displayValue="My text"
@@ -63,7 +63,7 @@ test('The component should open the popover when the display value is clicked', 
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </GenericSelect>
+        </Select>
     );
     select.instance().handleDisplayValueClick();
     expect(select.render()).toMatchSnapshot();
@@ -75,7 +75,7 @@ test('The component should trigger the select callback and close the popover whe
     const onSelectSpy = jest.fn();
     const isOptionSelected = () => false;
     const select = mount(
-        <GenericSelect
+        <Select
             onSelect={onSelectSpy}
             isOptionSelected={isOptionSelected}
             displayValue="My text"
@@ -84,7 +84,7 @@ test('The component should trigger the select callback and close the popover whe
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </GenericSelect>
+        </Select>
     );
     select.instance().handleDisplayValueClick();
     body.getElementsByTagName('button')[2].click();
@@ -97,7 +97,7 @@ test('The component should pass the centered child node to the popover', () => {
     const isOptionSelected = (child) => child.props.value === 'option-3';
     const selectedOption = (<Option value="option-3">Option 3</Option>);
     const select = mount(
-        <GenericSelect
+        <Select
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
             displayValue="My text"
@@ -106,7 +106,7 @@ test('The component should pass the centered child node to the popover', () => {
             <Option value="option-2">Option 2</Option>
             <Divider />
             {selectedOption}
-        </GenericSelect>
+        </Select>
     );
 
     const popover = select.find('Popover');
@@ -117,7 +117,7 @@ test('The component should pass the selected property to the options', () => {
     const isOptionSelected = () => true;
     const onSelect = () => {};
     const select = mount(
-        <GenericSelect
+        <Select
             onSelect={onSelect}
             isOptionSelected={isOptionSelected}
             displayValue="My text"
@@ -126,7 +126,7 @@ test('The component should pass the selected property to the options', () => {
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </GenericSelect>
+        </Select>
     );
     select.instance().handleDisplayValueClick();
     expect(document.body.querySelectorAll('.selected').length).toBe(3);

@@ -10,7 +10,7 @@ import Option from './Option';
 import Divider from './Divider';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
 import DisplayValue from './DisplayValue';
-import genericSelectStyles from './genericSelect.scss';
+import selectStyles from './select.scss';
 
 const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
@@ -24,7 +24,7 @@ type Props = SelectProps & {
 };
 
 @observer
-export default class GenericSelect extends React.PureComponent<Props> {
+export default class Select extends React.PureComponent<Props> {
     static defaultProps = {
         closeOnSelect: true,
     };
@@ -111,7 +111,7 @@ export default class GenericSelect extends React.PureComponent<Props> {
         const clonedChildren = this.cloneChildren();
 
         return (
-            <div className={genericSelectStyles.select}>
+            <div className={selectStyles.select}>
                 <DisplayValue
                     icon={icon}
                     onClick={this.handleDisplayValueClick}

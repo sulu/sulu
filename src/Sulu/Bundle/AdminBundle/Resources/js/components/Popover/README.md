@@ -5,7 +5,7 @@ element.
 
 ```
 const Menu = require('../Menu').default;
-const Option = require('../GenericSelect').default.Option;
+const Option = require('../Select').default.Option;
 
 initialState = {
     open: true,

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import type {Element} from 'react';
-import type {SelectProps} from '../GenericSelect';
-import GenericSelect from '../GenericSelect';
+import type {SelectProps} from '../Select';
+import Select from '../Select';
 
 type Props = SelectProps & {
     value?: string,
@@ -10,11 +10,11 @@ type Props = SelectProps & {
 };
 
 export default class SingleSelect extends React.PureComponent<Props> {
-    static Action = GenericSelect.Action;
+    static Action = Select.Action;
 
-    static Option = GenericSelect.Option;
+    static Option = Select.Option;
 
-    static Divider = GenericSelect.Divider;
+    static Divider = Select.Divider;
 
     get displayValue(): string {
         let displayValue = '';
@@ -46,14 +46,14 @@ export default class SingleSelect extends React.PureComponent<Props> {
         const {icon, children} = this.props;
 
         return (
-            <GenericSelect
+            <Select
                 icon={icon}
                 onSelect={this.handleSelect}
                 displayValue={this.displayValue}
                 isOptionSelected={this.isOptionSelected}
             >
                 {children}
-            </GenericSelect>
+            </Select>
         );
     }
 }

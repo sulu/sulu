@@ -1,13 +1,13 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {shallow} from 'enzyme';
 import React from 'react';
-import GenericSelect from '../../GenericSelect';
+import Select from '../../Select';
 import MultiSelect from '../../MultiSelect';
 
 const Option = MultiSelect.Option;
 const Divider = MultiSelect.Divider;
 
-jest.mock('../../GenericSelect');
+jest.mock('../../Select');
 
 test('The component should render a generic select', () => {
     const onChange = () => {};
@@ -23,7 +23,7 @@ test('The component should render a generic select', () => {
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    expect(select.node.type).toBe(GenericSelect);
+    expect(select.node.type).toBe(Select);
 });
 
 test('The component should pass the correct display value if nothing is selected', () => {
@@ -40,7 +40,7 @@ test('The component should pass the correct display value if nothing is selected
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
+    const displayValue = select.find(Select).props().displayValue;
     expect(displayValue).toBe('None selected');
 });
 
@@ -59,7 +59,7 @@ test('The component should pass the correct display value if everything is selec
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
+    const displayValue = select.find(Select).props().displayValue;
     expect(displayValue).toBe('All selected');
 });
 
@@ -78,7 +78,7 @@ test('The component should pass the correct display value if some options are se
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const displayValue = select.find(GenericSelect).props().displayValue;
+    const displayValue = select.find(Select).props().displayValue;
     expect(displayValue).toBe('Option 1, Option 2');
 });
 
@@ -97,7 +97,7 @@ test('The component should select the correct option', () => {
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    const isOptionSelected = select.find(GenericSelect).props().isOptionSelected;
+    const isOptionSelected = select.find(Select).props().isOptionSelected;
     expect(isOptionSelected({props: {value: 'option-1'}})).toBe(true);
     expect(isOptionSelected({props: {value: 'option-2'}})).toBe(true);
     expect(isOptionSelected({props: {value: 'option-3'}})).toBe(false);
@@ -118,7 +118,7 @@ test('The component should trigger the change callback on select with an added v
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    select.find(GenericSelect).props().onSelect('option-3');
+    select.find(Select).props().onSelect('option-3');
     expect(onChangeSpy).toHaveBeenCalledWith(['option-1', 'option-2', 'option-3']);
 });
 
@@ -137,6 +137,6 @@ test('The component should trigger the change callback on select with a removed 
             <Option value="option-3">Option 3</Option>
         </MultiSelect>
     );
-    select.find(GenericSelect).props().onSelect('option-2');
+    select.find(Select).props().onSelect('option-2');
     expect(onChangeSpy).toHaveBeenCalledWith(['option-1']);
 });
