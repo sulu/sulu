@@ -2,33 +2,33 @@
 import {shallow} from 'enzyme';
 import React from 'react';
 import GenericSelect from '../../GenericSelect';
-import Select from '../../Select';
+import SingleSelect from '../../SingleSelect';
 
-const Option = Select.Option;
-const Divider = Select.Option;
+const Option = SingleSelect.Option;
+const Divider = SingleSelect.Option;
 
 jest.mock('../../GenericSelect');
 
 test('The component should render a generic select', () => {
     const select = shallow(
-        <Select>
+        <SingleSelect>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </Select>
+        </SingleSelect>
     );
     expect(select.node.type).toBe(GenericSelect);
 });
 
 test('The component should return the first option as default display value', () => {
     const select = shallow(
-        <Select>
+        <SingleSelect>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </Select>
+        </SingleSelect>
     );
     const displayValue = select.find(GenericSelect).props().displayValue;
     expect(displayValue).toBe('Option 1');
@@ -36,12 +36,12 @@ test('The component should return the first option as default display value', ()
 
 test('The component should return the correct displayValue', () => {
     const select = shallow(
-        <Select value="option-2">
+        <SingleSelect value="option-2">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </Select>
+        </SingleSelect>
     );
     const displayValue = select.find(GenericSelect).props().displayValue;
     expect(displayValue).toBe('Option 2');
@@ -49,12 +49,12 @@ test('The component should return the correct displayValue', () => {
 
 test('The component should select the correct option', () => {
     const select = shallow(
-        <Select value="option-2">
+        <SingleSelect value="option-2">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </Select>
+        </SingleSelect>
     );
     const isOptionSelected = select.find(GenericSelect).props().isOptionSelected;
     expect(isOptionSelected({props: {value: 'option-1', disabled: false}})).toBe(false);
@@ -65,12 +65,12 @@ test('The component should select the correct option', () => {
 test('The component should trigger the change callback on select', () => {
     const onChangeSpy = jest.fn();
     const select = shallow(
-        <Select value="option-2" onChange={onChangeSpy}>
+        <SingleSelect value="option-2" onChange={onChangeSpy}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
             <Option value="option-3">Option 3</Option>
-        </Select>
+        </SingleSelect>
     );
     select.find(GenericSelect).props().onSelect('option-3');
     expect(onChangeSpy).toHaveBeenCalledWith('option-3');

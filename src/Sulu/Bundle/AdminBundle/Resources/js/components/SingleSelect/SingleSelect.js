@@ -9,7 +9,7 @@ type Props = SelectProps & {
     onChange?: (value: string) => void,
 };
 
-export default class Select extends React.PureComponent<Props> {
+export default class SingleSelect extends React.PureComponent<Props> {
     static Action = GenericSelect.Action;
 
     static Option = GenericSelect.Option;
@@ -20,7 +20,7 @@ export default class Select extends React.PureComponent<Props> {
         let displayValue = '';
 
         React.Children.forEach(this.props.children, (child: any) => {
-            if (child.type !== Select.Option) {
+            if (child.type !== SingleSelect.Option) {
                 return;
             }
 
@@ -32,7 +32,7 @@ export default class Select extends React.PureComponent<Props> {
         return displayValue;
     }
 
-    isOptionSelected = (option: Element<typeof Select.Option>): boolean => {
+    isOptionSelected = (option: Element<typeof SingleSelect.Option>): boolean => {
         return option.props.value === this.props.value && !option.props.disabled;
     };
 

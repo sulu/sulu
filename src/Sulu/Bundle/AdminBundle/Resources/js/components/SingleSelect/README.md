@@ -3,34 +3,34 @@ The component follows the [recommendation of React for form components](https://
 The Select itself holds no internal state and is solely dependent on the passed properties. Moreover, it provides
 a possibility to pass a callback which gets called when the user selects an option.
 ```
-const Action = Select.Action;
-const Option = Select.Option;
-const Divider = Select.Divider;
+const Action = SingleSelect.Action;
+const Option = SingleSelect.Option;
+const Divider = SingleSelect.Divider;
 
 initialState = {selectValue: 'page-1'};
 const onChange = (selectValue) => setState({selectValue});
 
-<Select value={state.selectValue} onChange={onChange}>
+<SingleSelect value={state.selectValue} onChange={onChange}>
     <Option value="page-1">Page 1 of 4</Option>
     <Option value="page-2">Page 2 of 4</Option>
     <Option value="page-3">Page 3 of 4</Option>
     <Option value="page-4">Page 4 of 4</Option>
     <Divider />
     <Action onClick={() => {/* do stuff */}}>Create new page</Action>
-</Select>
+</SingleSelect>
 ```
 
 Also a lot of options are possible and correctly handled as well as neatly styled.
 
 ```
-const Action = Select.Action;
-const Option = Select.Option;
-const Divider = Select.Divider;
+const Action = SingleSelect.Action;
+const Option = SingleSelect.Option;
+const Divider = SingleSelect.Divider;
 
 initialState = {selectValue: null};
 const onChange = (value) => setState({selectValue: value});
 
-<Select value={state.selectValue} onChange={onChange}>
+<SingleSelect value={state.selectValue} onChange={onChange}>
     <Option disabled>Choose the owner</Option>
     <Option value="1">Donald Duck</Option>
     <Option value="2">Mickey Mouse</Option>
@@ -54,5 +54,5 @@ const onChange = (value) => setState({selectValue: value});
     <Option value="20">Susan Bones</Option>
     <Option value="21">Marvolo Gaunt</Option>
     <Option value="22">Godric Gryffindor</Option>
-</Select>
+</SingleSelect>
 ```
