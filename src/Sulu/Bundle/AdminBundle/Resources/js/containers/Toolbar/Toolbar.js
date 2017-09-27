@@ -12,6 +12,7 @@ import type {ToolbarProps} from './types';
 
 const BACK_BUTTON_ICON = 'arrow-left';
 const LOCALE_SELECT_SIZE = 'small';
+const NAVIGATION_BUTTON_ICON = 'bars';
 
 const ToolbarItemTypes = {
     Button: 'button',
@@ -60,10 +61,16 @@ export default class Toolbar extends React.PureComponent<*> {
         }
     };
 
+    handleNavigationButtonClick = () => {
+        if (this.props.onNavigationButtonClick) {
+            this.props.onNavigationButtonClick();
+        }
+    };
+
     render() {
+        const {onNavigationButtonClick} = this.props;
         const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
         const disableAllButtons = loadingItems.length > 0;
-
         const backButtonConfig = this.toolbarStore.getBackButtonConfig();
         const itemsConfig = this.toolbarStore.getItemsConfig();
 
@@ -81,10 +88,15 @@ export default class Toolbar extends React.PureComponent<*> {
             <header className={toolbarStyles.toolbar}>
                 <nav>
                     <div className={toolbarStyles.controlsLeft}>
+                        {onNavigationButtonClick &&
+                            <Button
+                                onClick={this.handleNavigationButtonClick}
+                                skin="primary"
+                                icon={NAVIGATION_BUTTON_ICON}
+                            />
+                        }
                         {this.toolbarStore.hasBackButtonConfig() &&
-                            <Button {...backButtonConfig}>
-                                <Icon name={BACK_BUTTON_ICON} />
-                            </Button>
+                            <Button {...backButtonConfig} icon={BACK_BUTTON_ICON} />
                         }
                         {this.toolbarStore.hasItemsConfig() &&
                             <ul className={toolbarStyles.items}>

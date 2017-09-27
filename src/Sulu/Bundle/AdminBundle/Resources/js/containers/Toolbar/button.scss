@@ -4,6 +4,8 @@ $buttonTextColor: $blueZodiac;
 $buttonTextColorActive: $shakespeare;
 $buttonTextColorDisabled: $silver;
 $buttonActiveBackgroundColor: $wildSand;
+$primaryTextColor: $white;
+$primaryBackgroundColor: $shakespeare;
 
 .button-container {
     position: relative;
@@ -50,6 +52,12 @@ $buttonActiveBackgroundColor: $wildSand;
             margin-left: -6px;
             padding: 0;
         }
+    }
+
+    &.primary,
+    &.primary:hover {
+        color: $primaryTextColor;
+        background-color: $primaryBackgroundColor;
     }
 }
 

@@ -11,6 +11,7 @@ export type Button = {
     active?: boolean,
     hasOptions?: boolean,
     loading?: boolean,
+    skin?: 'primary',
 };
 
 export type DropdownOption = {
@@ -53,6 +54,7 @@ export type SelectItem = Select & { type: 'select' };
 
 export type ToolbarProps = {
     storeKey?: string,
+    onNavigationButtonClick?: () => void,
 };
 
 export type ToolbarItem = ButtonItem | DropdownItem | SelectItem;

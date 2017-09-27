@@ -23,17 +23,19 @@ export default class Button extends React.PureComponent<ButtonProps> {
         const {
             icon,
             size,
+            skin,
             value,
-            disabled,
             active,
-            hasOptions,
             loading,
+            disabled,
+            hasOptions,
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
             {
                 [buttonStyles.active]: active,
                 [buttonStyles[size]]: size,
+                [buttonStyles[skin]]: skin,
             }
         );
         const loaderClass = classNames(buttonStyles.loader);
