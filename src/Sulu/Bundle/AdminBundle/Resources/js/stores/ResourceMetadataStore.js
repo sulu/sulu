@@ -8,7 +8,6 @@ class ResourceMetadataStore {
         roles: '/admin/api/roles',
         tags: '/admin/api/tags',
         collections: '/admin/api/collections',
-        collection: '/admin/api/collections/:id',
     };
 
     // TODO load from server

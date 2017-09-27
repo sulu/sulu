@@ -4,5 +4,6 @@ import {viewStore} from 'sulu-admin-bundle/containers';
 import MediaList from './views/MediaList';
 
 viewStore.add('sulu_media.collections', MediaList);
+viewStore.add('sulu_media.collection', MediaList);
 
 bundleReady();

@@ -61,22 +61,11 @@ class MediaAdmin extends Admin
         return [
             new Route(
                 'sulu_media.collections',
-                '/media/collections',
+                '/media/collections/:id?',
                 'sulu_media.collections',
                 [
-                    'resourceKey' => 'collections',
                     'title' => 'sulu_media.collections',
-                    'collectionRoute' => 'sulu_media.collection',
-                ]
-            ),
-            new Route(
-                'sulu_media.collection',
-                '/media/collections/:id',
-                'sulu_media.collection',
-                [
-                    'resourceKey' => 'collection',
-                    'title' => 'sulu_media.collection',
-                    'collectionRoute' => 'sulu_media.collection',
+                    'collectionRoute' => 'sulu_media.collections',
                 ]
             ),
         ];
