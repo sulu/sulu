@@ -18,7 +18,8 @@ class MediaList extends React.PureComponent<ViewProps> {
     }
 
     handleOpenFolder = (collectionId) => {
-        // open folder
+        const {router} = this.props;
+        router.navigate(router.route.options.collectionRoute, {id: collectionId});
     };
 
     render() {
