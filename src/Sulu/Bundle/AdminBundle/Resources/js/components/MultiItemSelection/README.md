@@ -1,10 +1,10 @@
 
-The `ItemSelection` component is a list used for referencing different datasets in `Sulu`. Inside the `ItemSelection`
-those references can be added, sorted and deleted. The sorting can be done by drag and drop.
+The `MultiItemSelection` component is a list used for referencing different datasets in `Sulu`. Inside the 
+`MultiItemSelection` those references can be added, sorted and deleted. The sorting can be done by drag and drop.
 
 ```
-const Item = ItemSelection.Item;
-const arrayMove = ItemSelection.arrayMove;
+const arrayMove = require('react-sortable-hoc').arrayMove;
+const Item = MultiItemSelection.Item;
 
 const items = [
     {
@@ -49,7 +49,7 @@ const handleAddItem = () => {
 };
 
 <div style={{padding: 20, backgroundColor: '#f1f1f1'}}>
-    <ItemSelection
+    <MultiItemSelection
         label="Select an item"
         onItemRemove={handleRemove}
         leftButton={{
@@ -69,6 +69,6 @@ const handleAddItem = () => {
                 </div>
             </Item>
         )}
-    </ItemSelection>
+    </MultiItemSelection>
 </div>
 ```

@@ -10,7 +10,7 @@ type Props = {
     location: 'left' | 'right',
 };
 
-export default class ItemSelection extends React.PureComponent<Props> {
+export default class Button extends React.PureComponent<Props> {
     handleClick = () => {
         this.props.onClick();
     };

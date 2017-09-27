@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
 import type {ChildrenArray, Element} from 'react';
-import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import type {Button} from './types';
 import Header from './Header';
 import Item from './Item';
-import itemSelectionStyles from './itemSelection.scss';
+import multiItemSelectionStyles from './multiItemSelection.scss';
 
 type Props = {
     children: ChildrenArray<*>,
-    /** The text inside the header bar of the `ItemSelection` */
+    /** The text inside the header bar of the `MultiItemSelection` */
     label?: string,
     /** Called when the remove button is clicked on an item */
     onItemRemove?: (itemid: string | number) => void,
@@ -21,14 +21,12 @@ type Props = {
     rightButton?: Button,
 };
 
-export default class ItemSelection extends React.PureComponent<Props> {
+export default class MultiItemSelection extends React.PureComponent<Props> {
     static Item = Item;
-
-    static arrayMove = arrayMove;
 
     createItem(originalItem: Element<typeof Item>) {
         return (
-            <li className={itemSelectionStyles.listElement}>
+            <li className={multiItemSelectionStyles.listElement}>
                 {
                     React.cloneElement(
                         originalItem,
@@ -46,7 +44,7 @@ export default class ItemSelection extends React.PureComponent<Props> {
         const SortableItem = this.createSortableItem();
 
         return SortableContainer(({children}) => (
-            <ul className={itemSelectionStyles.list}>
+            <ul className={multiItemSelectionStyles.list}>
                 {React.Children.map(children, (item, index) => (
                     <SortableItem index={index}>
                         {item}
@@ -99,7 +97,7 @@ export default class ItemSelection extends React.PureComponent<Props> {
                     lockAxis="y"
                     useDragHandle={true}
                     onSortEnd={this.handleItemsSorted}
-                    helperClass={itemSelectionStyles.duringDrag}
+                    helperClass={multiItemSelectionStyles.dragging}
                 >
                     {children}
                 </SortableList>

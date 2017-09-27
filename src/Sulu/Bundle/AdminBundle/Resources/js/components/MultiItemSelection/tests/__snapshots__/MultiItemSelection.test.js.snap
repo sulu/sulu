@@ -58,8 +58,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="removeButton"
         >
           <span
-            aria-label="times"
-            class="fa fa-times"
+            aria-label="trash"
+            class="fa fa-trash"
           />
         </button>
       </div>
@@ -92,8 +92,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="removeButton"
         >
           <span
-            aria-label="times"
-            class="fa fa-times"
+            aria-label="trash"
+            class="fa fa-trash"
           />
         </button>
       </div>
@@ -126,8 +126,8 @@ exports[`Clicking the left and right button inside the header should call the ri
           class="removeButton"
         >
           <span
-            aria-label="times"
-            class="fa fa-times"
+            aria-label="trash"
+            class="fa fa-trash"
           />
         </button>
       </div>
@@ -136,7 +136,7 @@ exports[`Clicking the left and right button inside the header should call the ri
 </div>
 `;
 
-exports[`Render an ItemSelection with children 1`] = `
+exports[`Render an MultiItemSelection with children 1`] = `
 <div>
   <div
     class="header"
@@ -178,8 +178,8 @@ exports[`Render an ItemSelection with children 1`] = `
           class="removeButton"
         >
           <span
-            aria-label="times"
-            class="fa fa-times"
+            aria-label="trash"
+            class="fa fa-trash"
           />
         </button>
       </div>
@@ -212,8 +212,8 @@ exports[`Render an ItemSelection with children 1`] = `
           class="removeButton"
         >
           <span
-            aria-label="times"
-            class="fa fa-times"
+            aria-label="trash"
+            class="fa fa-trash"
           />
         </button>
       </div>
@@ -246,8 +246,8 @@ exports[`Render an ItemSelection with children 1`] = `
           class="removeButton"
         >
           <span
-            aria-label="times"
-            class="fa fa-times"
+            aria-label="trash"
+            class="fa fa-trash"
           />
         </button>
       </div>
@@ -256,7 +256,7 @@ exports[`Render an ItemSelection with children 1`] = `
 </div>
 `;
 
-exports[`Render an empty ItemSelection 1`] = `
+exports[`Render an empty MultiItemSelection 1`] = `
 <div>
   <div
     class="header emptyList"

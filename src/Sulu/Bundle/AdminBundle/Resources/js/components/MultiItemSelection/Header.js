@@ -12,7 +12,7 @@ type Props = {
     rightButton?: ButtonConfig,
 };
 
-export default class ItemSelection extends React.PureComponent<Props> {
+export default class Header extends React.PureComponent<Props> {
     static defaultProps = {
         emptyList: true,
     };
