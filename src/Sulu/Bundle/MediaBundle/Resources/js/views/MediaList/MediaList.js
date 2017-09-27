@@ -5,7 +5,7 @@ import {translate} from 'sulu-admin-bundle/services';
 import {withToolbar, Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 
-const COLLECTION_RESSOURCE_KEY = 'collections';
+const COLLECTIONS_RESSOURCE_KEY = 'collections';
 
 @observer
 class MediaList extends React.PureComponent<ViewProps> {
@@ -13,14 +13,12 @@ class MediaList extends React.PureComponent<ViewProps> {
 
     componentWillMount() {
         const {router} = this.props;
-        this.collectionStore = new DatagridStore(COLLECTION_RESSOURCE_KEY);
-
+        this.collectionStore = new DatagridStore(COLLECTIONS_RESSOURCE_KEY);
         router.bindQuery('page', this.collectionStore.page, '1');
     }
 
     handleOpenFolder = (collectionId) => {
-        const {router} = this.props;
-        router.navigate(router.route.options.openRoute, {id: collectionId});
+        // open folder
     };
 
     render() {
