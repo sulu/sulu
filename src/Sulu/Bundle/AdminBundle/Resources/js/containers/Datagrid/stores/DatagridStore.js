@@ -12,9 +12,11 @@ export default class DatagridStore {
     @observable loading: boolean = true;
     disposer: () => void;
     resourceKey: string;
+    options: Object;
 
-    constructor(resourceKey: string) {
+    constructor(resourceKey: string, options: Object = {}) {
         this.resourceKey = resourceKey;
+        this.options = options;
         this.disposer = autorun(this.sendRequest);
     }
 
@@ -30,16 +32,18 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        const options = {};
-        options.page = page;
+        const defaultOptions = {};
+        defaultOptions.page = page;
 
         const locale = this.locale.get();
         if (locale) {
-            options.locale = locale;
+            defaultOptions.locale = locale;
         }
 
-        ResourceRequester.getList(this.resourceKey, options)
-            .then(this.handleResponse);
+        ResourceRequester.getList(this.resourceKey, {
+            ...defaultOptions,
+            ...this.options,
+        }).then(this.handleResponse);
     };
 
     @action handleResponse = (response: Object) => {

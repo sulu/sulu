@@ -13,7 +13,13 @@ class MediaList extends React.PureComponent<ViewProps> {
 
     componentWillMount() {
         const {router} = this.props;
-        this.collectionStore = new DatagridStore(COLLECTIONS_RESSOURCE_KEY);
+        const {
+            attributes: {
+                id,
+            },
+        } = router;
+
+        this.collectionStore = new DatagridStore(COLLECTIONS_RESSOURCE_KEY, {id});
         router.bindQuery('page', this.collectionStore.page, '1');
     }
 
