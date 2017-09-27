@@ -18,8 +18,8 @@ export default class FolderListAdapter extends React.Component<AdapterProps> {
                     <FolderList.Folder
                         key={item.id}
                         id={item.id}
-                        title="Test"
-                        info="Test"
+                        title={item.title}
+                        info={item.objectCount}
                     />
                 ))}
             </FolderList>

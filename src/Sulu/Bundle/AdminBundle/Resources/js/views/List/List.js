@@ -7,7 +7,7 @@ import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
-import type {ViewProps} from '../../containers/ViewRenderer/types';
+import type {ViewProps} from '../../containers/ViewRenderer';
 
 @observer
 class List extends React.PureComponent<ViewProps> {
@@ -55,6 +55,7 @@ class List extends React.PureComponent<ViewProps> {
                 },
             },
         } = this.props.router;
+
         return (
             <div>
                 {title && <h1>{translate(title)}</h1>}

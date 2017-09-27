@@ -24,6 +24,7 @@ export default class DatagridStore {
 
     sendRequest = () => {
         const page = this.getPage();
+
         if (!page) {
             return;
         }

@@ -7,6 +7,7 @@ class ResourceMetadataStore {
         accounts: '/admin/api/accounts',
         roles: '/admin/api/roles',
         tags: '/admin/api/tags',
+        collections: '/admin/api/collections',
     };
 
     // TODO load from server
@@ -49,6 +50,20 @@ class ResourceMetadataStore {
                 name: {},
             },
         },
+        // TODO: Remove after API change
+        collections: {
+            list: {
+                id: {},
+                title: {},
+                objectCount: {},
+            },
+        },
+        media: {
+            list: {
+                id: {},
+                title: {},
+            },
+        },
     };
 
     getBaseUrl(key: string) {
@@ -60,7 +75,7 @@ class ResourceMetadataStore {
 
     loadConfiguration(key: string): Object {
         if (!(key in this.configuration)) {
-            throw new Error('There is no baseUrl for the resourceKey "' + key + '"');
+            throw new Error('There is no configuration for the resourceKey "' + key + '"');
         }
         return this.configuration[key];
     }
