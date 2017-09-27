@@ -24,7 +24,7 @@ export default class Radio extends React.PureComponent<Props> {
     render() {
         const radioClass = classNames(
             radioStyles.radio,
-            radioStyles[this.props.skin],
+            radioStyles[this.props.skin]
         );
         const {checked, value, name, children} = this.props;
 

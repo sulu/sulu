@@ -87,7 +87,7 @@ export default class Option extends React.PureComponent<Props> {
             optionStyles[selectedVisualization],
             {
                 [optionStyles.selected]: selected,
-            },
+            }
         );
 
         return (

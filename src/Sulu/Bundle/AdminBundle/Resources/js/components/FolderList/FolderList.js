@@ -21,7 +21,7 @@ export default class FolderList extends React.PureComponent<Props> {
                         {
                             ...folder.props,
                             onClick: this.handleFolderClick,
-                        },
+                        }
                     )
                 }
             </li>

@@ -69,7 +69,7 @@ test('Render the items from the ToolbarStore', () => {
                     },
                 ],
             },
-        ],
+        ]
     );
 
     const view = render(<Toolbar storeKey={storeKey} />);
@@ -102,7 +102,7 @@ test('Render the items as disabled if one is loading', () => {
                 icon: 'trash-o',
                 loading: true,
             },
-        ],
+        ]
     );
 
     const view = shallow(<Toolbar storeKey={storeKey} />);

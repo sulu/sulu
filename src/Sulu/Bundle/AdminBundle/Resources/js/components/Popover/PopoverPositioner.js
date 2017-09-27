@@ -33,7 +33,7 @@ export default class PopoverPositioner {
         horizontalOffset: number,
         verticalOffset: number,
         centerChildOffsetTop: number,
-        alignOnVerticalAnchorEdges: boolean = true,
+        alignOnVerticalAnchorEdges: boolean = true
     ): PopoverDimensions {
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
@@ -106,7 +106,7 @@ export default class PopoverPositioner {
     static cropHorizontalDimensions(
         dimensions: PopoverDimensions,
         windowWidth: number,
-        popoverWidth: number,
+        popoverWidth: number
     ): PopoverDimensions {
         let newDimensions = {...dimensions};
         newDimensions.left = Math.max(PADDING_TO_WINDOW, newDimensions.left);
