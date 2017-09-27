@@ -69,7 +69,7 @@ export default class Header extends React.PureComponent<Props> {
                 {
                     ...headerCell.props,
                     key,
-                },
+                }
             );
         });
     };

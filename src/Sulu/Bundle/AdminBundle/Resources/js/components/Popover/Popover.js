@@ -85,7 +85,7 @@ export default class Popover extends React.PureComponent<Props> {
             horizontalOffset,
             verticalOffset,
             centerChildOffsetTop,
-            alignOnVerticalAnchorEdges,
+            alignOnVerticalAnchorEdges
         );
     }
 
@@ -105,7 +105,7 @@ export default class Popover extends React.PureComponent<Props> {
 
         this.setPopoverSize(
             outerWidth,
-            outerHeight,
+            outerHeight
         );
     }
 

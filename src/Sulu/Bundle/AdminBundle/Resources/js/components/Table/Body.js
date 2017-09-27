@@ -30,7 +30,7 @@ export default class Body extends React.PureComponent<Props> {
                 buttons: buttons,
                 selectMode: selectMode,
                 onSelectionChange: this.handleRowSelectionChange,
-            },
+            }
         ));
     };
 
