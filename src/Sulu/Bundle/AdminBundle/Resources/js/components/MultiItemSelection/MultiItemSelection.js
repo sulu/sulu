@@ -33,7 +33,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
                         {
                             ...originalItem.props,
                             onRemove: this.handleItemRemove,
-                        },
+                        }
                     )
                 }
             </li>

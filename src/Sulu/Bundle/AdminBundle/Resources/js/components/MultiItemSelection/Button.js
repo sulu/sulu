@@ -22,7 +22,7 @@ export default class Button extends React.PureComponent<Props> {
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
-            buttonStyles[location],
+            buttonStyles[location]
         );
 
         return (

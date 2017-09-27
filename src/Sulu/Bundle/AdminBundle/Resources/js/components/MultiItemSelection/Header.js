@@ -28,7 +28,7 @@ export default class Header extends React.PureComponent<Props> {
             headerStyles.header,
             {
                 [headerStyles.emptyList]: emptyList,
-            },
+            }
         );
 
         return (
