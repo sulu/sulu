@@ -27,10 +27,15 @@ export default class FormStore {
 
     @action save() {
         this.saving = true;
-        ResourceRequester.put(this.resourceKey, this.id, this.data).then(action((response) => {
-            this.data = response;
-            this.saving = false;
-        }));
+        ResourceRequester.put(this.resourceKey, this.id, this.data)
+            .then(action((response) => {
+                this.data = response;
+                this.saving = false;
+                this.dirty = false;
+            }))
+            .catch(action(() => {
+                this.saving = false;
+            }));
     }
 
     changeSchema(schema: Schema) {

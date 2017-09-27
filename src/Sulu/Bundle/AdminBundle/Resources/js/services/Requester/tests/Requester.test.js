@@ -2,11 +2,12 @@
 import Requester from '../Requester';
 
 test('Should execute GET request and return JSON', () => {
-    const request = {
+    const response = {
         json: jest.fn(),
+        ok: true,
     };
-    request.json.mockReturnValue('test');
-    const promise = new Promise((resolve) => resolve(request));
+    response.json.mockReturnValue('test');
+    const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
     window.fetch.mockReturnValue(promise);
@@ -23,12 +24,31 @@ test('Should execute GET request and return JSON', () => {
     return requestPromise;
 });
 
-test('Should execute PUT request and return JSON', () => {
-    const request = {
-        json: jest.fn(),
+test('Should execute GET request and throw error if response contains error', () => {
+    const response = {
+        ok: false,
+        statusText: 'An error occured!',
     };
-    request.json.mockReturnValue('test');
-    const promise = new Promise((resolve) => resolve(request));
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    expect(Requester.get('/some-url')).rejects.toEqual(new Error('An error occured!'));
+
+    expect(window.fetch).toBeCalledWith('/some-url', {
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json'},
+    });
+});
+
+test('Should execute PUT request and return JSON', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue('test');
+    const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
     window.fetch.mockReturnValue(promise);
@@ -52,11 +72,12 @@ test('Should execute PUT request and return JSON', () => {
 });
 
 test('Should execute DELETE request and return JSON', () => {
-    const request = {
+    const response = {
         json: jest.fn(),
+        ok: true,
     };
-    request.json.mockReturnValue('test');
-    const promise = new Promise((resolve) => resolve(request));
+    response.json.mockReturnValue('test');
+    const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
     window.fetch.mockReturnValue(promise);

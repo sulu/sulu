@@ -127,9 +127,7 @@ test('Should render save button disabled only if form is not dirty', () => {
 
 test('Should save form when submitted', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue({
-        then: jest.fn(),
-    });
+    ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
 
     const router = {
