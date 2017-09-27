@@ -12,7 +12,7 @@ type Props = {
     id: string | number,
     index: number,
     children: Node,
-    onRemove: (id: string | number) => void,
+    onRemove?: (id: string | number) => void,
 };
 
 export default class Item extends React.PureComponent<Props> {
@@ -23,12 +23,15 @@ export default class Item extends React.PureComponent<Props> {
     }
 
     handleRemove = () => {
-        this.props.onRemove(this.props.id);
+        if (this.props.onRemove) {
+            this.props.onRemove(this.props.id);
+        }
     };
 
     render() {
         const {
             index,
+            onRemove,
             children,
         } = this.props;
         const DragHandle = this.createDragHandle();
@@ -42,12 +45,14 @@ export default class Item extends React.PureComponent<Props> {
                 <div className={itemStyles.content}>
                     {children}
                 </div>
-                <button
-                    className={itemStyles.removeButton}
-                    onClick={this.handleRemove}
-                >
-                    <Icon name={REMOVE_ICON} />
-                </button>
+                {onRemove &&
+                    <button
+                        className={itemStyles.removeButton}
+                        onClick={this.handleRemove}
+                    >
+                        <Icon name={REMOVE_ICON} />
+                    </button>
+                }
             </div>
         );
     }

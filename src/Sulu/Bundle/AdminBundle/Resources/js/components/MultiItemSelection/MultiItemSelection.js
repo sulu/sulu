@@ -8,7 +8,7 @@ import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
 type Props = {
-    children: ChildrenArray<*>,
+    children: ChildrenArray<Element<typeof Item>>,
     /** The text inside the header bar of the `MultiItemSelection` */
     label?: string,
     /** Called when the remove button is clicked on an item */
@@ -32,7 +32,7 @@ export default class MultiItemSelection extends React.PureComponent<Props> {
                         originalItem,
                         {
                             ...originalItem.props,
-                            onRemove: this.handleItemRemove,
+                            onRemove: this.props.onItemRemove && this.handleItemRemove,
                         }
                     )
                 }

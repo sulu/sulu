@@ -54,14 +54,6 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 1
         </div>
-        <button
-          class="removeButton"
-        >
-          <span
-            aria-label="trash"
-            class="fa fa-trash"
-          />
-        </button>
       </div>
     </li>
     <li
@@ -88,14 +80,6 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 2
         </div>
-        <button
-          class="removeButton"
-        >
-          <span
-            aria-label="trash"
-            class="fa fa-trash"
-          />
-        </button>
       </div>
     </li>
     <li
@@ -122,14 +106,6 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 3
         </div>
-        <button
-          class="removeButton"
-        >
-          <span
-            aria-label="trash"
-            class="fa fa-trash"
-          />
-        </button>
       </div>
     </li>
   </ul>
@@ -174,14 +150,6 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
-        <button
-          class="removeButton"
-        >
-          <span
-            aria-label="trash"
-            class="fa fa-trash"
-          />
-        </button>
       </div>
     </li>
     <li
@@ -208,14 +176,6 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
-        <button
-          class="removeButton"
-        >
-          <span
-            aria-label="trash"
-            class="fa fa-trash"
-          />
-        </button>
       </div>
     </li>
     <li
@@ -242,14 +202,6 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
-        <button
-          class="removeButton"
-        >
-          <span
-            aria-label="trash"
-            class="fa fa-trash"
-          />
-        </button>
       </div>
     </li>
   </ul>
