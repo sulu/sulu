@@ -10,14 +10,14 @@ exports[`Application should not fail if current route does not exist 1`] = `
         class="controlsLeft"
       >
         <button
-          class="button navigationButton"
+          class="button primary"
         >
           <span
             class="label"
           >
             <span
-              aria-label="star"
-              class="fa fa-star"
+              aria-label="bars"
+              class="fa fa-bars"
             />
           </span>
         </button>
@@ -44,14 +44,14 @@ exports[`Application should render based on current route 1`] = `
         class="controlsLeft"
       >
         <button
-          class="button navigationButton"
+          class="button primary"
         >
           <span
             class="label"
           >
             <span
-              aria-label="star"
-              class="fa fa-star"
+              aria-label="bars"
+              class="fa fa-bars"
             />
           </span>
         </button>

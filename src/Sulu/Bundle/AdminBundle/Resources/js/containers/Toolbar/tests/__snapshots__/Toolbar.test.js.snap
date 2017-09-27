@@ -8,18 +8,6 @@ exports[`Render the items from the ToolbarStore 1`] = `
     <div
       class="controlsLeft"
     >
-      <button
-        class="button navigationButton"
-      >
-        <span
-          class="label"
-        >
-          <span
-            aria-label="star"
-            class="fa fa-star"
-          />
-        </span>
-      </button>
       <ul
         class="items"
       >

@@ -11,7 +11,7 @@ export type Button = {
     active?: boolean,
     hasOptions?: boolean,
     loading?: boolean,
-    navigationButton?: boolean,
+    skin?: 'primary',
 };
 
 export type DropdownOption = {
