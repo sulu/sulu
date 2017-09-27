@@ -39,6 +39,8 @@ define([
                 },
 
                 setValue: function(categories) {
+                    categories = categories || [];
+
                     // At the moment setValue gets called with objects but the
                     // datagrid works only with ids internally.
                     // TODO: find a common representation
