@@ -92,14 +92,11 @@ export default class Toolbar extends React.PureComponent<*> {
                             <Button
                                 onClick={this.handleNavigationButtonClick}
                                 skin="primary"
-                            >
-                                <Icon name={NAVIGATION_BUTTON_ICON} />
-                            </Button>
+                                icon={NAVIGATION_BUTTON_ICON}
+                            />
                         }
                         {this.toolbarStore.hasBackButtonConfig() &&
-                            <Button {...backButtonConfig}>
-                                <Icon name={BACK_BUTTON_ICON} />
-                            </Button>
+                            <Button {...backButtonConfig} icon={BACK_BUTTON_ICON} />
                         }
                         {this.toolbarStore.hasItemsConfig() &&
                             <ul className={toolbarStyles.items}>
