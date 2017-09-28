@@ -343,6 +343,41 @@ class CollectionControllerTest extends SuluTestCase
     }
 
     /**
+     * @description Test GET Collections filtered by parent
+     */
+    public function testCGetFlatWithParent()
+    {
+        $collection = $this->createCollection($this->collectionType1);
+
+        for ($i = 1; $i <= 5; ++$i) {
+            $this->createCollection(
+                $this->collectionType1,
+                ['en-gb' => 'Test Collection ' . $i, 'de' => 'Test Kollektion ' . $i],
+                $collection
+            );
+        }
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections',
+            [
+                'locale' => 'en-gb',
+                'parent' => $collection->getId(),
+                'flat' => true,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        $this->assertCount(5, $response->_embedded->collections);
+    }
+
+    /**
      * @description Test GET all Collections with pagination and sorted by title
      */
     public function testcGetPaginated()
