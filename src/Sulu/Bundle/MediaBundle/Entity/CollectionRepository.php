@@ -111,6 +111,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function count($depth = 0, $filter = [], CollectionInterface $collection = null)
     {
         $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
+
         try {
             return count($ids);
         } catch (NoResultException $e) {
@@ -187,12 +188,15 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
             if ($parent !== null) {
                 $qb->andWhere('parent.id = :parent');
-            }
-            if ($depth !== null) {
+                $qb->setParameter('parent', $parent);
+            } elseif ($depth !== null) {
+                // the combination of depth and parent needs a bigger refactoring of this query.
                 $qb->andWhere('collection.depth <= :depth');
+                $qb->setParameter('depth', intval($depth));
             }
             if ($search !== null) {
                 $qb->andWhere('collectionMeta.title LIKE :search');
+                $qb->setParameter('search', '%' . $search . '%');
             }
             if ($offset !== null) {
                 $qb->setFirstResult($offset);
@@ -201,18 +205,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->setMaxResults($limit);
             }
 
-            $query = $qb->getQuery();
-            if ($parent !== null) {
-                $query->setParameter('parent', $parent);
-            }
-            if ($depth !== null) {
-                $query->setParameter('depth', intval($depth));
-            }
-            if ($search !== null) {
-                $query->setParameter('search', '%' . $search . '%');
-            }
-
-            return new Paginator($query);
+            return new Paginator($qb->getQuery());
         } catch (NoResultException $ex) {
             return;
         }

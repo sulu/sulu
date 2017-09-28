@@ -162,6 +162,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
+            $parent = $request->get('parent', null);
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $listRestHelper->getSearchPattern();
@@ -174,6 +175,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $this->getRequestParameter($request, 'locale', true),
                     [
                         'depth' => $depth,
+                        'parent' => $parent,
                     ],
                     $limit,
                     $offset,
