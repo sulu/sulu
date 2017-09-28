@@ -3,7 +3,7 @@ The `MultiItemSelection` component is a list used for referencing different data
 `MultiItemSelection` those references can be added, sorted and deleted. The sorting can be done by drag and drop.
 
 ```
-const arrayMove = require('react-sortable-hoc').arrayMove;
+const arrayMove = require('sulu-admin-bundle/components').arrayMove;
 const Item = MultiItemSelection.Item;
 
 const items = [
