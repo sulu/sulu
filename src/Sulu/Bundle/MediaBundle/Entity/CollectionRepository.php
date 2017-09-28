@@ -190,6 +190,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->andWhere('parent.id = :parent');
                 $qb->setParameter('parent', $parent);
             } elseif ($depth !== null) {
+                // the combination of depth and parent needs a bigger refactoring of this query.
                 $qb->andWhere('collection.depth <= :depth');
                 $qb->setParameter('depth', intval($depth));
             }
