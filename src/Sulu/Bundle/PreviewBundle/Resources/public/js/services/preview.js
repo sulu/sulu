@@ -169,8 +169,6 @@ define([
                     return;
                 }
 
-                // clear the preview first (firefox does not override but append)
-                Mediator.emit('sulu.preview.set-content', '');
                 Mediator.emit('sulu.preview.set-content', message.response);
             }.bind(this));
         },

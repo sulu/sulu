@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * HOTFIX      #3535 [Content]                 Fix bug in structure bridge when no document is available
     * HOTFIX      #3514 [ContentBundle]           Fixed override route when using "tree_full_edit"
     * HOTFIX      #3541 [CategoryBundle]          Fixed category-list for null selected value
+    * HOTFIX      #3543 [PreviewBundle]           Fixed rerender preview if html is the same
 
 * 1.6.4 (2017-09-14)
     * HOTFIX      #3509 [MediaBundle]             Fixed deletion of tag when referenced in media fileversion
