@@ -61,18 +61,6 @@ test('Render the AutoComplete with open suggestions list', () => {
     expect(pretty(document.body.innerHTML)).toMatchSnapshot();
 });
 
-test('Render the AutoComplete with the placeholder text', () => {
-    const autoComplete = mount(
-        <AutoComplete
-            noSuggestionsMessage="Nothing found, sadface..."
-        />
-    );
-
-    autoComplete.instance().openSuggestions();
-    expect(autoComplete.render()).toMatchSnapshot();
-    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
-});
-
 test('Clicking on a suggestion should close the AutoComplete list and call the onSuggestionSelection handler', () => {
     const onSuggestionSelectionSpy = jest.fn();
     const testValue = 'suggestion-1';

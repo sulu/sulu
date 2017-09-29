@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import Loader from '../Loader';
 import inputStyles from './input.scss';
 
-const LOADER_SIZE = 22;
+const LOADER_SIZE = 20;
 
 type Props = {
     name?: string,
@@ -51,17 +51,19 @@ export default class Input extends React.PureComponent<Props> {
                 className={inputStyles.input}
                 ref={this.setRef}
             >
-                <div className={inputStyles.prependedContainer}>
-                    {!loading && icon &&
+                {!loading && icon &&
+                    <div className={inputStyles.prependedContainer}>
                         <Icon className={inputStyles.icon} name={icon} />
-                    }
-                    {loading &&
+                    </div>
+                }
+                {loading &&
+                    <div className={inputStyles.prependedContainer}>
                         <Loader
                             size={LOADER_SIZE}
                             className={inputStyles.loader}
                         />
-                    }
-                </div>
+                    </div>
+                }
                 <input
                     name={name}
                     type={type}

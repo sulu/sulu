@@ -40,37 +40,39 @@ const data = [
     'Godric Gryffindor',
 ];
 
-const handleChange = (value) => {
-    setState(() => ({
-        value: value,
-        loading: !!value,
-    }));
-};
-
-const handleUpdate = (value) => {
+const handleSearch = (value) => {
     const regexp = new RegExp(value, 'gi');
-    
+
     setState(() => ({
-        loading: false,
-        suggestions: data.filter((suggestion) => suggestion.match(regexp))
+        loading: !!value,
+        suggestions: [],
     }));
+    
+    if (value) {
+        // Fake Request
+        setTimeout(() => {
+            setState(() => ({
+                loading: false,
+                suggestions: data.filter((suggestion) => suggestion.match(regexp))
+            }));
+        }, 500);
+    }
 };
 
-const handleSelection = (value) => {
+const handleChange = (value) => {
+    console.log(value);
     setState(() => ({
         value: value,
-        loading: false,
+        suggestions: [],
     }));
 };
 
 <AutoComplete
     value={state.value}
     onChange={handleChange}
-    onDebouncedChange={handleUpdate}
-    onSuggestionSelection={handleSelection}
+    onSearch={handleSearch}
     loading={state.loading}
     placeholder="Enter something fun..."
-    noSuggestionsMessage="Nothing found..."
 >
     {
         state.suggestions.map((suggestion, index) => {
