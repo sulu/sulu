@@ -42,7 +42,7 @@ $imageBorderRadiusBottom: $containerBorderRadius;
 }
 
 .title {
-    pointer-events: none;
+    pointer-events: none; /* We don't want the label/title to trigger an "onClick" event */
     position: relative;
     font-size: 12px;
     font-weight: bold;
