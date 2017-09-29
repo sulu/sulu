@@ -70,6 +70,14 @@ test('Should send a put request and return the promise', () => {
     expect(result).toBe(promise);
 });
 
+test('Should send a put request with passed options as query parameters', () => {
+    const data = {slogan: 'Slogan'};
+    const options = {locale: 'en', action: 'publish'};
+    Requester.put.mockReturnValue({});
+    ResourceRequester.put('snippets', 5, data, options);
+    expect(Requester.put).toBeCalledWith('/snippets/5?locale=en&action=publish', data);
+});
+
 test('Should send a delete request and return the promise', () => {
     const promise = {};
     Requester.delete.mockReturnValue(promise);

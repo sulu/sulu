@@ -9,15 +9,29 @@ const listDefaults = {
     limit: 10,
 };
 
+function buildQueryString(queryOptions: ?Object) {
+    const options = queryOptions;
+    if (!options) {
+        return '';
+    }
+
+    const searchParameters = new URLSearchParams();
+    Object.keys(options).forEach((key) => {
+        searchParameters.set(key, options[key]);
+    });
+
+    return '?' + searchParameters.toString();
+}
+
 export default class ResourceRequester {
     static get(resourceKey: string, id: number | string) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         return Requester.get(baseUrl + '/' + id);
     }
 
-    static put(resourceKey: string, id: number | string, data: Object) {
+    static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.put(baseUrl + '/' + id, data);
+        return Requester.put(baseUrl + '/' + id + buildQueryString(queryOptions), data);
     }
 
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
