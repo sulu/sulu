@@ -15,7 +15,6 @@ type Props = SwitchProps & {
 export default class Switch extends React.PureComponent<Props> {
     static defaultProps = {
         type: 'checkbox',
-        useLabel: true,
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -31,18 +30,16 @@ export default class Switch extends React.PureComponent<Props> {
             name,
             value,
             checked,
-            useLabel,
             children,
             className,
         } = this.props;
         const switchClass = classNames(
             switchStyles.switch,
-            className,
+            className
         );
-        const Container = (useLabel) ? 'label' : 'div';
 
         return (
-            <Container className={switchStyles.label}>
+            <label className={switchStyles.label}>
                 <span className={switchClass}>
                     <input
                         type={type}
@@ -60,7 +57,7 @@ export default class Switch extends React.PureComponent<Props> {
                 {children &&
                     <div>{children}</div>
                 }
-            </Container>
+            </label>
         );
     }
 }

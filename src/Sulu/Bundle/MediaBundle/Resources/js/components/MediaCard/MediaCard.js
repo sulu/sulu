@@ -38,7 +38,10 @@ export default class MediaCard extends React.PureComponent<Props> {
     };
 
     handleHeaderClick = () => {
-        const {id, selected} = this.props;
+        const {
+            id,
+            selected,
+        } = this.props;
 
         if (this.props.onSelectionChange && id) {
             this.props.onSelectionChange(id, !selected);
@@ -70,8 +73,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                     <div className={mediaCardStyles.title}>
                         <Checkbox
                             value={id}
-                            checked={selected}
-                            useLabel={false}
+                            checked={!!selected}
                             className={mediaCardStyles.checkbox}
                         >
                             <div className={mediaCardStyles.titleText}>

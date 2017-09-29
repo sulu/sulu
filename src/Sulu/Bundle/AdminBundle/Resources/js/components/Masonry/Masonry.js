@@ -51,7 +51,7 @@ export default class Masonry extends React.PureComponent<Props> {
     initMasonryLayout() {
         this.masonry = new MasonryLayout(
             this.masonryRef,
-            MASONRY_OPTIONS,
+            MASONRY_OPTIONS
         );
 
         this.layoutedChildNodes = this.getChildNodes();
@@ -74,7 +74,7 @@ export default class Masonry extends React.PureComponent<Props> {
                         item,
                         {
                             key: item.key,
-                        },
+                        }
                     )
                 }
             </li>

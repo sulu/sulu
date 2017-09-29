@@ -6,5 +6,4 @@ export type SwitchProps = {
     value?: string | number,
     name?: string,
     children?: Node,
-    useLabel: boolean,
 };

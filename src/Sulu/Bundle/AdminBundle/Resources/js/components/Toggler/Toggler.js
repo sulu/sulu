@@ -9,10 +9,6 @@ type Props = SwitchProps & {
 };
 
 export default class Toggler extends React.PureComponent<Props> {
-    static defaultProps = {
-        useLabel: true,
-    };
-
     render() {
         const {
             name,
@@ -20,7 +16,6 @@ export default class Toggler extends React.PureComponent<Props> {
             checked,
             children,
             onChange,
-            useLabel,
         } = this.props;
 
         return (
@@ -30,7 +25,6 @@ export default class Toggler extends React.PureComponent<Props> {
                 value={value}
                 name={name}
                 onChange={onChange}
-                useLabel={useLabel}
             >
                 {children}
             </Switch>

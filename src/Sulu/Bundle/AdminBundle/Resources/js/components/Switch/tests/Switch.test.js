@@ -23,11 +23,6 @@ test('The component should render with name', () => {
     expect(component).toMatchSnapshot();
 });
 
-test('The component should render without a label container', () => {
-    const component = render(<Switch name="my-name" checked={false} useLabel={false} />);
-    expect(component).toMatchSnapshot();
-});
-
 test('The component should render with radio type', () => {
     const component = render(<Switch type="radio" className="my-class" checked={false} />);
     expect(component).toMatchSnapshot();

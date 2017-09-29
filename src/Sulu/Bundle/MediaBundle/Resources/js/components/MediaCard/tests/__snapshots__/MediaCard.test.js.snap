@@ -10,7 +10,7 @@ exports[`Render a simple MediaCard component 1`] = `
     <div
       class="title"
     >
-      <div
+      <label
         class="label"
       >
         <span
@@ -52,7 +52,7 @@ exports[`Render a simple MediaCard component 1`] = `
             </div>
           </div>
         </div>
-      </div>
+      </label>
     </div>
     <div
       class="meta"
