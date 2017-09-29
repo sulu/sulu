@@ -65,6 +65,8 @@ define([
             namespace: 'sulu.preview.'
         },
 
+        htmlFile: '',
+
         initialize: function() {
             this.previewExpanded = false;
 
@@ -213,10 +215,27 @@ define([
          * @param {String} htmlFile The html file including doctype etc.
          */
         setContent: function(htmlFile) {
+            if (this.htmlFile === htmlFile) {
+                return;
+            }
+
+            this.htmlFile = htmlFile;
             var previewDocument = this.getPreviewDocument();
 
+            // clear the preview first (firefox does not override but append)
+            this.write(previewDocument, '');
+            this.write(previewDocument, htmlFile);
+        },
+
+        /**
+         * Reset and write content to document.
+         *
+         * @param {Document} previewDocument
+         * @param {String} content
+         */
+        write: function(previewDocument, content) {
             previewDocument.open();
-            previewDocument.write(htmlFile);
+            previewDocument.write(content);
             previewDocument.close();
 
             this.avoidNavigate(previewDocument);
