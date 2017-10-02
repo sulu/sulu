@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -50,6 +51,16 @@ class MediaAdmin extends Admin
     public function getJsBundleName()
     {
         return 'sulumedia';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes(): array
+    {
+        return [
+            new Route('sulu_media.overview', '/media', 'sulu_media.overview'),
+        ];
     }
 
     public function getSecurityContexts()

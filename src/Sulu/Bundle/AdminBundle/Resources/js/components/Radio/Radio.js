@@ -22,20 +22,25 @@ export default class Radio extends React.PureComponent<Props> {
     };
 
     render() {
+        const {
+            name,
+            value,
+            checked,
+            children,
+        } = this.props;
         const radioClass = classNames(
             radioStyles.radio,
             radioStyles[this.props.skin]
         );
-        const {checked, value, name, children} = this.props;
 
         return (
             <Switch
-                className={radioClass}
-                checked={checked}
-                value={value}
-                name={name}
-                onChange={this.handleChange}
                 type="radio"
+                name={name}
+                value={value}
+                checked={checked}
+                onChange={this.handleChange}
+                className={radioClass}
             >
                 {children}
             </Switch>

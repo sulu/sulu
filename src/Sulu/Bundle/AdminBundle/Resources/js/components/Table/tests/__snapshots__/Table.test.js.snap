@@ -276,6 +276,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
             >
               <input
                 type="checkbox"
+                value="0"
               />
               <span />
             </span>
@@ -356,6 +357,7 @@ exports[`Render the Table component in single selection mode 1`] = `
             >
               <input
                 type="radio"
+                value="0"
               />
               <span />
             </span>

@@ -19,7 +19,15 @@ export default class Checkbox extends React.PureComponent<Props> {
     };
 
     render() {
-        const {checked, value, name, onChange, children, className, skin} = this.props;
+        const {
+            skin,
+            name,
+            value,
+            checked,
+            onChange,
+            children,
+            className,
+        } = this.props;
         const checkboxClass = classNames(
             checkboxStyles.checkbox,
             checkboxStyles[skin],

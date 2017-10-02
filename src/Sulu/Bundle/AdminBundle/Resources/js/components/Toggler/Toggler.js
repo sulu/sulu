@@ -10,7 +10,14 @@ type Props = SwitchProps & {
 
 export default class Toggler extends React.PureComponent<Props> {
     render() {
-        const {checked, value, name, onChange, children} = this.props;
+        const {
+            name,
+            value,
+            checked,
+            children,
+            onChange,
+        } = this.props;
+
         return (
             <Switch
                 className={togglerStyles.toggler}

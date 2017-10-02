@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a Masonry container with items 1`] = `
+<div
+  class="masonry"
+>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div>
+      <img
+        src="http://lorempixel.com/300/200"
+      />
+    </div>
+  </li>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div>
+      <img
+        src="http://lorempixel.com/300/200"
+      />
+    </div>
+  </li>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div>
+      <img
+        src="http://lorempixel.com/300/200"
+      />
+    </div>
+  </li>
+</div>
+`;
+
+exports[`Render an empty Masonry container 1`] = `
+<div
+  class="masonry"
+/>
+`;
