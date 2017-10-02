@@ -1,4 +1,3 @@
-
 The `MediaCard` is useful for displaying a list of selectable images.
 
 ```
