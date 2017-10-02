@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate, ResourceRequester} from 'sulu-admin-bundle/services';
 import {withToolbar, Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
@@ -13,10 +13,19 @@ const COLLECTIONS_RESSOURCE_KEY = 'collections';
 class MediaOverview extends React.PureComponent<ViewProps> {
     @observable title: string;
     @observable parentId: ?string | number;
-    collectionId: string | number;
     @observable collectionStore: DatagridStore;
+    collectionId: string | number;
+    disposer: () => void;
 
     componentWillMount() {
+        this.disposer = autorun(this.load);
+    }
+
+    componentWillUnmount() {
+        this.disposer();
+    }
+
+    load = () => {
         const {router} = this.props;
         const {
             attributes: {
@@ -29,7 +38,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         }
 
         this.createCollectionStore(id);
-    }
+    };
 
     loadCollectionInfo(collectionId) {
         return ResourceRequester.get(COLLECTIONS_RESSOURCE_KEY, collectionId, {depth: 1})
@@ -57,18 +66,6 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     };
 
     render() {
-        const {router} = this.props;
-        const {
-            attributes: {
-                id,
-            },
-        } = router;
-
-        if (id !== this.collectionId) {
-            this.loadCollectionInfo(id);
-            this.createCollectionStore(id);
-        }
-
         return (
             <div>
                 {this.title && <h1>{translate(this.title)}</h1>}
@@ -104,7 +101,6 @@ export default withToolbar(MediaOverview, function() {
                 type: 'button',
                 value: translate('sulu_admin.delete'),
                 icon: 'trash-o',
-                loading: this.collectionStore.loading,
                 onClick: () => {},
             },
         ],
