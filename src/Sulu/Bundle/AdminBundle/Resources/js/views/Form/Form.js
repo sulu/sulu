@@ -22,6 +22,7 @@ class Form extends React.PureComponent<ViewProps> {
     formStore: FormStore;
 
     componentWillMount() {
+        const {router} = this.props;
         const {
             route: {
                 options: {
@@ -31,9 +32,15 @@ class Form extends React.PureComponent<ViewProps> {
             attributes: {
                 id,
             },
-        } = this.props.router;
+        } = router;
         this.formStore = new FormStore(resourceKey, id);
         this.formStore.changeSchema(schema);
+        router.bindQuery('locale', this.formStore.locale, 'en'); // TODO how to handle the default parameter?
+    }
+
+    componentWillUnmount() {
+        this.formStore.destroy();
+        this.props.router.unbindQuery('locale');
     }
 
     handleSubmit = () => {
@@ -79,5 +86,22 @@ export default withToolbar(Form, function() {
                 },
             },
         ],
+        locale: {
+            value: this.formStore.locale.get(),
+            onChange: (locale) => {
+                this.formStore.setLocale(locale);
+            },
+            // TODO how to load values from server?
+            options: [
+                {
+                    value: 'de',
+                    label: 'de',
+                },
+                {
+                    value: 'en',
+                    label: 'en',
+                },
+            ],
+        },
     };
 });

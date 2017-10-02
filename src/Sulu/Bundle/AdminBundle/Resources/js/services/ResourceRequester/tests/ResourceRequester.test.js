@@ -28,6 +28,12 @@ test('Should send a get request and return the promise', () => {
     expect(result).toBe(promise);
 });
 
+test('Should send a get request with passed options as query parameters', () => {
+    const options = {locale: 'en', action: 'publish'};
+    ResourceRequester.get('snippets', 5, options);
+    expect(Requester.get).toBeCalledWith('/snippets/5?locale=en&action=publish');
+});
+
 test('Should send a list get request and return the promise', () => {
     const promise = {};
     Requester.get.mockReturnValue(promise);

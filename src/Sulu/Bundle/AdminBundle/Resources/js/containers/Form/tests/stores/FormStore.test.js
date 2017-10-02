@@ -62,7 +62,8 @@ test('Should load the data with the ResourceRequester', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
     const formStore = new FormStore('snippets', 3);
-    expect(ResourceRequester.get).toBeCalledWith('snippets', 3);
+    formStore.setLocale('en');
+    expect(ResourceRequester.get).toBeCalledWith('snippets', 3, {locale: 'en'});
     return promise.then(() => {
         expect(formStore.data).toEqual({value: 'Value'});
     });
@@ -72,6 +73,7 @@ test('Loading flag should be set to true when loading', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve());
     const formStore = new FormStore('snippets', 1);
     formStore.loading = false;
+    formStore.setLocale('en');
 
     formStore.load();
     expect(formStore.loading).toBe(true);
@@ -81,12 +83,24 @@ test('Loading flag should be set to false when loading has finished', () => {
     const promise = Promise.resolve();
     ResourceRequester.get.mockReturnValue(promise);
     const formStore = new FormStore('snippets', 1);
+    formStore.setLocale('en');
     formStore.loading = true;
 
     formStore.load();
     return promise.then(() => {
         expect(formStore.loading).toBe(false);
     });
+});
+
+test('Save the store should send a PUT request', () => {
+    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    const formStore = new FormStore('snippets', 3);
+    formStore.locale.set('de');
+    formStore.data = {title: 'Title'};
+    formStore.dirty = false;
+
+    formStore.save();
+    expect(ResourceRequester.put).toBeCalledWith('snippets', 3, {title: 'Title'}, {locale: 'de'});
 });
 
 test('Saving flag should be set to true when saving', () => {
@@ -120,6 +134,7 @@ test('Saving and dirty flag should be set to false when saving has failed', (don
     ResourceRequester.get.mockReturnValue(Promise.resolve({title: 'Title to stay!'}));
     ResourceRequester.put.mockReturnValue(promise);
     const formStore = new FormStore('snippets', 1);
+    formStore.locale.set('en');
     formStore.saving = true;
     formStore.dirty = true;
 

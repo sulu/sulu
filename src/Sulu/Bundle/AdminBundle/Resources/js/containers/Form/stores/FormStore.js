@@ -1,11 +1,13 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
 import type {Schema} from '../types';
 
 export default class FormStore {
     resourceKey: string;
     id: string;
+    locale = observable();
+    disposer: () => void;
     @observable loading: boolean = false;
     @observable saving: boolean = false;
     @observable data: Object = {};
@@ -14,20 +16,35 @@ export default class FormStore {
     constructor(resourceKey: string, id: string) {
         this.resourceKey = resourceKey;
         this.id = id;
-        this.load();
+        this.disposer = autorun(this.load);
     }
 
-    @action load() {
-        this.loading = true;
-        ResourceRequester.get(this.resourceKey, this.id).then(action((response) => {
-            this.data = response;
-            this.loading = false;
-        }));
+    load = () => {
+        if (!this.locale.get()) {
+            return;
+        }
+
+        this.setLoading(true);
+        ResourceRequester.get(this.resourceKey, this.id, {locale: this.locale.get()})
+            .then(this.handleResponse);
+    };
+
+    @action handleResponse = (response) => {
+        this.data = response;
+        this.setLoading(false);
+    };
+
+    @action setLoading(loading: boolean) {
+        this.loading = loading;
+    }
+
+    @action setLocale(locale: string) {
+        this.locale.set(locale);
     }
 
     @action save() {
         this.saving = true;
-        ResourceRequester.put(this.resourceKey, this.id, this.data)
+        ResourceRequester.put(this.resourceKey, this.id, this.data, {locale: this.locale.get()})
             .then(action((response) => {
                 this.data = response;
                 this.saving = false;
@@ -50,5 +67,9 @@ export default class FormStore {
     @action set(name: string, value: mixed) {
         this.data[name] = value;
         this.dirty = true;
+    }
+
+    destroy() {
+        this.disposer();
     }
 }

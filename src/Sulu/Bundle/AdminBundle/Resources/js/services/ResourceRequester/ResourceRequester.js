@@ -24,9 +24,9 @@ function buildQueryString(queryOptions: ?Object) {
 }
 
 export default class ResourceRequester {
-    static get(resourceKey: string, id: number | string) {
+    static get(resourceKey: string, id: number | string, queryOptions: ?Object) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
-        return Requester.get(baseUrl + '/' + id);
+        return Requester.get(baseUrl + '/' + id + buildQueryString(queryOptions));
     }
 
     static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
