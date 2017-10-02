@@ -18,7 +18,7 @@ type Props = {
     /** The icon used inside the media overlay */
     icon?: string,
     /** The URL of the presented image */
-    imageURL: string,
+    image: string,
 };
 
 export default class MediaCard extends React.PureComponent<Props> {
@@ -41,10 +41,11 @@ export default class MediaCard extends React.PureComponent<Props> {
         const {
             id,
             selected,
+            onSelectionChange,
         } = this.props;
 
-        if (this.props.onSelectionChange && id) {
-            this.props.onSelectionChange(id, !selected);
+        if (onSelectionChange && id) {
+            onSelectionChange(id, !selected);
         }
     };
 
@@ -54,8 +55,8 @@ export default class MediaCard extends React.PureComponent<Props> {
             icon,
             meta,
             title,
+            image,
             selected,
-            imageURL,
         } = this.props;
         const masonryClass = classNames(
             mediaCardStyles.mediaCard,
@@ -89,7 +90,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
                 >
-                    <img alt={title} src={imageURL} />
+                    <img alt={title} src={image} />
                     <div className={mediaCardStyles.mediaOverlay}>
                         {!!icon &&
                             <Icon name={icon} className={mediaCardStyles.mediaIcon} />

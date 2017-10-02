@@ -59,7 +59,7 @@ class MediaAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            new Route('sulu_media.overview', '/media', 'sulu_media.overview', ['type' => 'media']),
+            new Route('sulu_media.overview', '/media', 'sulu_media.overview'),
         ];
     }
 
