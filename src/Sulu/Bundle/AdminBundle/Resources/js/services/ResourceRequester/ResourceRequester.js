@@ -3,6 +3,11 @@ import Requester from '../Requester';
 import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import type {ListOptions} from './types';
 
+// TODO: Remove "locale" after API change
+const defaultOptions = {
+    locale: 'en',
+};
+
 const listDefaults = {
     flat: true,
     page: 1,
@@ -37,7 +42,7 @@ export default class ResourceRequester {
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         const searchParameters = new URLSearchParams();
-        const searchOptions = {...listDefaults, ...options};
+        const searchOptions = {...defaultOptions, ...listDefaults, ...options};
 
         Object.keys(searchOptions).forEach((searchKey) => {
             searchParameters.set(searchKey, searchOptions[searchKey]);
@@ -46,6 +51,20 @@ export default class ResourceRequester {
         const queryString = searchParameters.toString();
 
         return Requester.get(baseUrl + (queryString ? '?' + queryString : ''));
+    }
+
+    static get(resourceKey: string, id: number | string, options: Object = defaultOptions) {
+        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        const searchParameters = new URLSearchParams();
+        const searchOptions = {...defaultOptions, ...options};
+
+        Object.keys(searchOptions).forEach((searchKey) => {
+            searchParameters.set(searchKey, searchOptions[searchKey]);
+        });
+
+        const queryString = searchParameters.toString();
+
+        return Requester.get(baseUrl + '/' + id + (queryString ? '?' + queryString : ''));
     }
 
     static delete(resourceKey: string, id: number | string) {

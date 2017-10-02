@@ -1,9 +1,8 @@
 // @flow
 import {bundleReady} from 'sulu-admin-bundle/services';
 import {viewStore} from 'sulu-admin-bundle/containers';
-import MediaList from './views/MediaList';
+import MediaOverview from './views/MediaOverview';
 
-viewStore.add('sulu_media.collections', MediaList);
-viewStore.add('sulu_media.collection', MediaList);
+viewStore.add('sulu_media.overview', MediaOverview);
 
 bundleReady();
