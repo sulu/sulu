@@ -2,12 +2,12 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import FolderList from '../../../components/FolderList';
-import type {AdapterProps, DataItem} from '../types';
+import type {AdapterProps} from '../types';
 import {translate} from '../../../services/Translator';
 
 @observer
 export default class FolderListAdapter extends React.Component<AdapterProps> {
-    getInfoText(item: DataItem) {
+    getInfoText(item: Object) {
         const label = (item.objectCount === 1)
             ? translate('sulu_admin.object')
             : translate('sulu_admin.objects');
@@ -23,7 +23,7 @@ export default class FolderListAdapter extends React.Component<AdapterProps> {
 
         return (
             <FolderList onFolderClick={onItemEditClick}>
-                {data.map((item) => (
+                {data.map((item: Object) => (
                     <FolderList.Folder
                         key={item.id}
                         id={item.id}

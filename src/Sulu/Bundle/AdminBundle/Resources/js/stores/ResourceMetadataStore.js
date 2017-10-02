@@ -50,7 +50,6 @@ class ResourceMetadataStore {
                 name: {},
             },
         },
-        // TODO: Remove after API change
         collections: {
             list: {
                 id: {},

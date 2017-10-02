@@ -9,6 +9,7 @@ const COLLECTIONS_RESSOURCE_KEY = 'collections';
 
 @observer
 class MediaList extends React.PureComponent<ViewProps> {
+    collectionId: number;
     collectionStore: DatagridStore;
 
     componentWillMount() {
@@ -19,7 +20,26 @@ class MediaList extends React.PureComponent<ViewProps> {
             },
         } = router;
 
-        this.collectionStore = new DatagridStore(COLLECTIONS_RESSOURCE_KEY, {id});
+        this.createCollectionStore(id);
+    }
+
+    componentWillUpdate(nextProps: ViewProps) {
+        const {
+            attributes: {
+                id,
+            },
+        } = nextProps.router;
+
+        if (id !== this.collectionId) {
+            this.createCollectionStore(id);
+        }
+    }
+
+    createCollectionStore(collectionId) {
+        const {router} = this.props;
+        this.collectionId = collectionId;
+        this.collectionStore = new DatagridStore(COLLECTIONS_RESSOURCE_KEY, {parent: collectionId});
+
         router.bindQuery('page', this.collectionStore.page, '1');
     }
 
