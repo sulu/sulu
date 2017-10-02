@@ -440,6 +440,14 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     public function getLocale(Request $request)
     {
+        if ($request->query->has('locale')) {
+            return $request->query->get('locale');
+        }
+
+        if ($request->query->has('language')) {
+            @trigger_error('The usage of the "language" parameter in the SnippetController is deprecated. Please use "locale" instead.', E_USER_DEPRECATED);
+        }
+
         return $request->query->get('language', null);
     }
 

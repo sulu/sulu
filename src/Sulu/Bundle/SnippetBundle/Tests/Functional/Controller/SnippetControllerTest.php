@@ -61,7 +61,7 @@ class SnippetControllerTest extends SuluTestCase
      */
     public function testGet($locale, $expected)
     {
-        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=' . $locale);
+        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?locale=' . $locale);
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
@@ -101,7 +101,7 @@ class SnippetControllerTest extends SuluTestCase
             '/snippets?ids=%s,%s%s',
             $this->hotel1->getUuid(),
             $this->hotel2->getUuid(),
-            '&language=de'
+            '&locale=de'
         ));
         $response = $this->client->getResponse();
 
@@ -124,7 +124,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request(
             'GET',
             sprintf(
-                '/snippets?ids=%s&language=fr',
+                '/snippets?ids=%s&locale=fr',
                 $this->hotel1->getUuid()
             )
         );
@@ -144,7 +144,7 @@ class SnippetControllerTest extends SuluTestCase
             $this->hotel1->getUuid(),
             '99999999-754c-4da0-bbc7-bf909b05c352',
             $this->hotel2->getUuid(),
-            '&language=de'
+            '&locale=de'
         ));
         $response = $this->client->getResponse();
 
@@ -206,7 +206,7 @@ class SnippetControllerTest extends SuluTestCase
     public function testIndex($params, $expectedNbResults)
     {
         $params = array_merge([
-            'language' => 'de',
+            'locale' => 'de',
         ], $params);
 
         $query = http_build_query($params);
@@ -236,7 +236,7 @@ class SnippetControllerTest extends SuluTestCase
             ],
             [
                 [
-                    'language' => 'en',
+                    'locale' => 'en',
                 ],
                 [
                     'template' => 'hotel',
@@ -252,7 +252,7 @@ class SnippetControllerTest extends SuluTestCase
     public function testPost($params, $data)
     {
         $params = array_merge([
-            'language' => 'de',
+            'locale' => 'de',
         ], $params);
 
         $data = [
@@ -272,7 +272,7 @@ class SnippetControllerTest extends SuluTestCase
         ], $result);
 
         $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals($params['locale'], reset($result['concreteLanguages']));
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
         $this->assertEquals('My car is red.', $result['description']);
 
@@ -289,7 +289,7 @@ class SnippetControllerTest extends SuluTestCase
     public function testPostPublished($params, $data)
     {
         $params = array_merge([
-            'language' => 'de',
+            'locale' => 'de',
             'state' => StructureInterface::STATE_PUBLISHED,
         ], $params);
 
@@ -305,7 +305,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals($params['locale'], reset($result['concreteLanguages']));
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
@@ -318,7 +318,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $params = [
-            'language' => 'de',
+            'locale' => 'de',
         ];
 
         $query = http_build_query($params);
@@ -332,7 +332,7 @@ class SnippetControllerTest extends SuluTestCase
             $this->assertEquals($data[$key], $value);
         }
 
-        $this->assertContains($params['language'], $result['concreteLanguages']);
+        $this->assertContains($params['locale'], $result['concreteLanguages']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
 
         $document = $this->documentManager->find($result['id'], 'de');
@@ -345,7 +345,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $data = [];
         $params = [
-            'language' => 'de',
+            'locale' => 'de',
             'state' => StructureInterface::STATE_PUBLISHED,
         ];
 
@@ -363,7 +363,7 @@ class SnippetControllerTest extends SuluTestCase
             $this->assertEquals($value, $result[$key]);
         }
 
-        $this->assertContains($params['language'], $result['concreteLanguages']);
+        $this->assertContains($params['locale'], $result['concreteLanguages']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
@@ -375,7 +375,7 @@ class SnippetControllerTest extends SuluTestCase
             'description' => 'My car is red.',
         ];
 
-        $this->client->request('POST', '/snippets?language=de', $data);
+        $this->client->request('POST', '/snippets?locale=de', $data);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -383,7 +383,7 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request(
             'PUT',
-            '/snippets/' . $result['id'] . '?language=de',
+            '/snippets/' . $result['id'] . '?locale=de',
             array_merge(['_hash' => $result['_hash']], $data)
         );
 
@@ -398,7 +398,7 @@ class SnippetControllerTest extends SuluTestCase
             'description' => 'My car is red.',
         ];
 
-        $this->client->request('POST', '/snippets?language=de', $data);
+        $this->client->request('POST', '/snippets?locale=de', $data);
         $response = $this->client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -406,7 +406,7 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request(
             'PUT',
-            '/snippets/' . $result['id'] . '?language=de',
+            '/snippets/' . $result['id'] . '?locale=de',
             array_merge(['_hash' => 'wrong-hash'], $data)
         );
 
@@ -427,7 +427,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
 
         $params = [
-            'language' => 'de',
+            'locale' => 'de',
         ];
 
         $query = http_build_query($params);
@@ -487,7 +487,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->publish($snippet, 'de');
         $this->documentManager->flush();
 
-        $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
+        $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&locale=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->documentManager->clear();
