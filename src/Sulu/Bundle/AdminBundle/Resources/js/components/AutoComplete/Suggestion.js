@@ -8,7 +8,7 @@ type Props = {
     value: string,
     query: string,
     icon?: string,
-    children: Node | (highlight: (text: string) => Node) => Node,
+    children: string | (highlight: (text: string) => Node) => Node,
     onSelection?: (value: string) => void,
 };
 
