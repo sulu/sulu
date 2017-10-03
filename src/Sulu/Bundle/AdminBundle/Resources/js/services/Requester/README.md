@@ -10,4 +10,8 @@ Requester.get('/admin/api/snippets')
     .then((response) => {
         console.log(response._embedded.snippets);
     });
+
+Requester.delete('/admin/api/snippets/5');
+
+Requester.put('/admin/api/snippets/2', {title: 'Title'});
 ```
