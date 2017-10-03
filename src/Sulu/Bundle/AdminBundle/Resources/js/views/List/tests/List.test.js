@@ -162,7 +162,7 @@ test('Should navigate when pencil button is clicked', () => {
 
     const list = mount(<List router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1}, {locale: 'en'});
 });
 
 test('Should render the delete item enabled only if something is selected', () => {

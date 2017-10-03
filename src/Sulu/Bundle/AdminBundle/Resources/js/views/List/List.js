@@ -40,7 +40,7 @@ class List extends React.PureComponent<ViewProps> {
 
     handleEditClick = (rowId) => {
         const {router} = this.props;
-        router.navigate(router.route.options.editRoute, {id: rowId});
+        router.navigate(router.route.options.editRoute, {id: rowId}, {locale: 'en'}); // TODO use selected locale
     };
 
     render() {
