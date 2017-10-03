@@ -63,7 +63,7 @@ class Form extends React.PureComponent<ViewProps> {
 
 export default withToolbar(Form, function() {
     const {router} = this.props;
-    const {backRoute} = router.route.options;
+    const {backRoute, locales} = router.route.options;
 
     const backButton = backRoute
         ? {
@@ -93,16 +93,10 @@ export default withToolbar(Form, function() {
                 this.formStore.setLocale(locale);
             },
             // TODO how to load values from server?
-            options: [
-                {
-                    value: 'de',
-                    label: 'de',
-                },
-                {
-                    value: 'en',
-                    label: 'en',
-                },
-            ],
+            options: locales.map((locale) => ({
+                value: locale,
+                label: locale,
+            })),
         },
     };
 });

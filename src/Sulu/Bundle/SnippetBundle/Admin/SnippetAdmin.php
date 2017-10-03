@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -85,6 +86,15 @@ class SnippetAdmin extends Admin
      */
     public function getRoutes(): array
     {
+        $snippetLocales = array_values(
+            array_map(
+                function(Localization $localization) {
+                    return $localization->getLocale();
+                },
+                $this->webspaceManager->getAllLocalizations()
+            )
+        );
+
         return [
             new Route(
                 'sulu_snippet.list',
@@ -96,7 +106,11 @@ class SnippetAdmin extends Admin
                 'sulu_snippet.form',
                 '/snippets/:id',
                 'sulu_admin.form',
-                ['resourceKey' => 'snippets', 'backRoute' => 'sulu_snippet.list']
+                [
+                    'resourceKey' => 'snippets',
+                    'backRoute' => 'sulu_snippet.list',
+                    'locales' => $snippetLocales,
+                ]
             ),
         ];
     }

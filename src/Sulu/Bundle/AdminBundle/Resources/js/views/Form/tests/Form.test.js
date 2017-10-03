@@ -50,6 +50,7 @@ test('Should navigate to defined route on back button click', () => {
         route: {
             options: {
                 backRoute: 'test_route',
+                locales: [],
             },
         },
         attributes: {},
@@ -70,7 +71,9 @@ test('Should not render back button when no editLink is configured', () => {
         navigate: jest.fn(),
         bindQuery: jest.fn(),
         route: {
-            options: {},
+            options: {
+                locales: [],
+            },
         },
         attributes: {},
     };
@@ -91,6 +94,7 @@ test('Should change locale in form store via locale chooser', () => {
         route: {
             options: {
                 backRoute: 'test_route',
+                locales: [],
             },
         },
         attributes: {},
@@ -103,6 +107,30 @@ test('Should change locale in form store via locale chooser', () => {
     expect(form.formStore.locale.get()).toBe('en');
 });
 
+test('Should show locales from router options in toolbar', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+
+    const router = {
+        navigate: jest.fn(),
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                locales: ['en', 'de'],
+            },
+        },
+        attributes: {},
+    };
+    const form = mount(<Form router={router} />).get(0);
+
+    const toolbarConfig = toolbarFunction.call(form);
+    expect(toolbarConfig.locale.options).toEqual([
+        {value: 'en', label: 'en'},
+        {value: 'de', label: 'de'},
+    ]);
+});
+
 test('Should initialize the FormStore with a schema', () => {
     const Form = require('../Form').default;
 
@@ -111,6 +139,7 @@ test('Should initialize the FormStore with a schema', () => {
         route: {
             options: {
                 resourceKey: 'snippets',
+                locales: [],
             },
         },
         attributes: {
@@ -140,7 +169,9 @@ test('Should render save button disabled only if form is not dirty', () => {
         bindQuery: jest.fn(),
         navigate: jest.fn(),
         route: {
-            options: {},
+            options: {
+                locales: [],
+            },
         },
         attributes: {},
     };
@@ -163,6 +194,7 @@ test('Should save form when submitted', () => {
         route: {
             options: {
                 resourceKey: 'snippets',
+                locales: [],
             },
         },
         attributes: {
@@ -186,7 +218,9 @@ test('Should pass store, schema and onSubmit handler to FormContainer', () => {
         bindQuery: jest.fn(),
         navigate: jest.fn(),
         route: {
-            options: {},
+            options: {
+                locales: [],
+            },
         },
         attributes: {},
     };
@@ -215,7 +249,9 @@ test('Should render save button loading only if form is not saving', () => {
         bindQuery: jest.fn(),
         navigate: jest.fn(),
         route: {
-            options: {},
+            options: {
+                locales: [],
+            },
         },
         attributes: {},
     };
@@ -235,6 +271,7 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
         route: {
             options: {
                 resourceKey: 'snippets',
+                locales: [],
             },
         },
         attributes: {},
