@@ -131,6 +131,25 @@ test('Should show locales from router options in toolbar', () => {
     ]);
 });
 
+test('Should not show a locale chooser if no locales are passed in router options', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+
+    const router = {
+        navigate: jest.fn(),
+        bindQuery: jest.fn(),
+        route: {
+            options: {},
+        },
+        attributes: {},
+    };
+    const form = mount(<Form router={router} />).get(0);
+
+    const toolbarConfig = toolbarFunction.call(form);
+    expect(toolbarConfig.locale).toBe(undefined);
+});
+
 test('Should initialize the FormStore with a schema', () => {
     const Form = require('../Form').default;
 

@@ -72,9 +72,22 @@ export default withToolbar(Form, function() {
             },
         }
         : undefined;
+    const locale = locales
+        ? {
+            value: this.formStore.locale.get(),
+            onChange: (locale) => {
+                this.formStore.setLocale(locale);
+            },
+            options: locales.map((locale) => ({
+                value: locale,
+                label: locale,
+            })),
+        }
+        : undefined;
 
     return {
         backButton,
+        locale,
         items: [
             {
                 type: 'button',
@@ -87,16 +100,5 @@ export default withToolbar(Form, function() {
                 },
             },
         ],
-        locale: {
-            value: this.formStore.locale.get(),
-            onChange: (locale) => {
-                this.formStore.setLocale(locale);
-            },
-            // TODO how to load values from server?
-            options: locales.map((locale) => ({
-                value: locale,
-                label: locale,
-            })),
-        },
     };
 });
