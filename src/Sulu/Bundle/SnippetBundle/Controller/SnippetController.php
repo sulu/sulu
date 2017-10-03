@@ -397,16 +397,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
     * Returns user.
     */
-   private function getUser()
-   {
-       $token = $this->tokenStorage->getToken();
+    private function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
 
-       if (null === $token) {
-           throw new \InvalidArgumentException('No user is set');
-       }
+        if (null === $token) {
+            throw new \InvalidArgumentException('No user is set');
+        }
 
-       return $token->getUser();
-   }
+        return $token->getUser();
+    }
 
     /**
      * Decorate snippet for HATEOAS.
