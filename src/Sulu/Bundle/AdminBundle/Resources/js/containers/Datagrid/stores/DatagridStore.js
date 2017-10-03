@@ -29,7 +29,13 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        ResourceRequester.getList(this.resourceKey, {page, locale: this.locale.get()})
+        const options = {page};
+        const locale = this.locale.get();
+        if (locale) {
+            options.locale = locale;
+        }
+
+        ResourceRequester.getList(this.resourceKey, options)
             .then(this.handleResponse);
     };
 

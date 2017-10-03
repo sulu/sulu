@@ -66,6 +66,15 @@ test('Send request to other locale', () => {
     datagridStore.destroy();
 });
 
+test('Send not request without locale if undefined', () => {
+    const datagridStore = new DatagridStore('tests');
+    datagridStore.setPage(1);
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
+    expect(ResourceRequester.getList.mock.calls[0][1]).not.toHaveProperty('locale');
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
+    datagridStore.destroy();
+});
+
 test('Set loading flag to true before request', () => {
     const datagridStore = new DatagridStore('tests');
     datagridStore.setPage(1);
