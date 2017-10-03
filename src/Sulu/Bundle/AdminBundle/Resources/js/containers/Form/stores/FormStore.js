@@ -29,7 +29,7 @@ export default class FormStore {
             .then(this.handleResponse);
     };
 
-    @action handleResponse = (response) => {
+    @action handleResponse = (response: Object) => {
         this.data = response;
         this.setLoading(false);
     };

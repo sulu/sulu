@@ -242,7 +242,7 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
 
     const form = mount(<Form router={router} />);
 
-    expect(router.bindQuery).toBeCalledWith('locale', form.find('Form').at(1).prop('store').locale, 'en');
+    expect(router.bindQuery).toBeCalledWith('locale', form.find('Form').at(1).prop('store').locale);
 
     form.unmount();
     expect(router.unbindQuery).toBeCalledWith('locale');

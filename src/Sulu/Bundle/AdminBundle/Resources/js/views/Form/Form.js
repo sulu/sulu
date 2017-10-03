@@ -35,7 +35,8 @@ class Form extends React.PureComponent<ViewProps> {
         } = router;
         this.formStore = new FormStore(resourceKey, id);
         this.formStore.changeSchema(schema);
-        router.bindQuery('locale', this.formStore.locale, 'en'); // TODO how to handle the default parameter?
+        this.formStore.setLocale('en'); // TODO replace with content language from user settings
+        router.bindQuery('locale', this.formStore.locale);
     }
 
     componentWillUnmount() {
