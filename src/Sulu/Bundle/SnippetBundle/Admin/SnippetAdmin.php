@@ -100,7 +100,12 @@ class SnippetAdmin extends Admin
                 'sulu_snippet.list',
                 '/snippets',
                 'sulu_admin.list',
-                ['title' => 'sulu_snippet.snippets', 'resourceKey' => 'snippets', 'editRoute' => 'sulu_snippet.form']
+                [
+                    'title' => 'sulu_snippet.snippets',
+                    'resourceKey' => 'snippets',
+                    'editRoute' => 'sulu_snippet.form',
+                    'locales' => $snippetLocales,
+                ]
             ),
             new Route(
                 'sulu_snippet.form',

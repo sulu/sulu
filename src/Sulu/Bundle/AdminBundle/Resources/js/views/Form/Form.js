@@ -35,7 +35,6 @@ class Form extends React.PureComponent<ViewProps> {
         } = router;
         this.formStore = new FormStore(resourceKey, id);
         this.formStore.changeSchema(schema);
-        this.formStore.setLocale('en'); // TODO replace with content language from user settings
         router.bindQuery('locale', this.formStore.locale);
     }
 
@@ -68,7 +67,7 @@ export default withToolbar(Form, function() {
     const backButton = backRoute
         ? {
             onClick: () => {
-                router.navigate(backRoute);
+                router.navigate(backRoute, {}, {locale: this.formStore.locale.get()});
             },
         }
         : undefined;

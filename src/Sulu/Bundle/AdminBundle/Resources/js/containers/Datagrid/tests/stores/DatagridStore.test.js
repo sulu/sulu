@@ -56,6 +56,16 @@ test('Send request to other page', () => {
     datagridStore.destroy();
 });
 
+test('Send request to other locale', () => {
+    const datagridStore = new DatagridStore('tests');
+    datagridStore.setPage(1);
+    datagridStore.setLocale('en');
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'en'});
+    datagridStore.setLocale('de');
+    expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'de'});
+    datagridStore.destroy();
+});
+
 test('Set loading flag to true before request', () => {
     const datagridStore = new DatagridStore('tests');
     datagridStore.setPage(1);

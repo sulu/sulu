@@ -113,21 +113,6 @@ test('Should throw an error when no resourceKey is defined in the route options'
     expect(() => render(<List router={router} />)).toThrow(/mandatory resourceKey option/);
 });
 
-test('Should bind the query parameter on mount', () => {
-    const List = require('../List').default;
-    const router = {
-        bindQuery: jest.fn(),
-        route: {
-            options: {
-                resourceKey: 'snippets',
-            },
-        },
-    };
-
-    mount(<List router={router} />);
-    expect(router.bindQuery).toBeCalledWith('page', undefined, '1');
-});
-
 test('Should unbind the query parameter and destroy the store on unmount', () => {
     const List = require('../List').default;
     const router = {
@@ -142,9 +127,11 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
 
     const list = mount(<List router={router} />);
     expect(router.bindQuery).toBeCalledWith('page', undefined, '1');
+    expect(router.bindQuery).toBeCalledWith('locale', undefined);
 
     list.unmount();
     expect(router.unbindQuery).toBeCalledWith('page');
+    expect(router.unbindQuery).toBeCalledWith('locale');
 });
 
 test('Should navigate when pencil button is clicked', () => {
@@ -160,9 +147,14 @@ test('Should navigate when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editRoute', {id: 1}, {locale: 'en'});
+    const listWrapper = mount(<List router={router} />);
+    listWrapper.find('List').get(0).datagridStore.locale = {
+        get: function() {
+            return 'de';
+        }
+    };
+    listWrapper.find('ButtonCell button').at(0).simulate('click');
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1}, {locale: 'de'});
 });
 
 test('Should render the delete item enabled only if something is selected', () => {
@@ -190,6 +182,36 @@ test('Should render the delete item enabled only if something is selected', () =
     toolbarConfig = toolbarFunction.call(list);
     item = toolbarConfig.items.find((item) => item.value === 'Delete');
     expect(item.disabled).toBe(false);
+});
+
+test('Should render the locale dropdown with the options from router', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                locales: ['en', 'de'],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+    datagridStore.locale = {
+        get: function() {
+            return 'de';
+        }
+    };
+
+    const toolbarConfig = toolbarFunction.call(list);
+    expect(toolbarConfig.locale.value).toBe('de');
+    expect(toolbarConfig.locale.options).toEqual([
+        {value: 'en', label: 'en'},
+        {value: 'de', label: 'de'},
+    ]);
 });
 
 test('Should delete selected items when click on delete button', () => {

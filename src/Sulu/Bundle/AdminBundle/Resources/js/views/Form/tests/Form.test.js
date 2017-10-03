@@ -56,10 +56,11 @@ test('Should navigate to defined route on back button click', () => {
         attributes: {},
     };
     const form = mount(<Form router={router} />).get(0);
+    form.formStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
-    expect(router.navigate).toBeCalledWith('test_route');
+    expect(router.navigate).toBeCalledWith('test_route', {}, {locale: 'de'});
 });
 
 test('Should not render back button when no editLink is configured', () => {

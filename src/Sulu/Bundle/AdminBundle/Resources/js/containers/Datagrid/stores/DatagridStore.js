@@ -5,6 +5,7 @@ import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     page: observable = observable();
+    locale: observable = observable();
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
@@ -28,7 +29,7 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        ResourceRequester.getList(this.resourceKey, {page})
+        ResourceRequester.getList(this.resourceKey, {page, locale: this.locale.get()})
             .then(this.handleResponse);
     };
 
@@ -57,6 +58,10 @@ export default class DatagridStore {
         }
 
         this.page.set(page);
+    }
+
+    @action setLocale(locale: string) {
+        this.locale.set(locale);
     }
 
     @action select(id: string | number) {
