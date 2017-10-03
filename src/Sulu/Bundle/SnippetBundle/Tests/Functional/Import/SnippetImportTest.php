@@ -11,8 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Import;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Snippet\Import\SnippetImport;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -25,20 +29,35 @@ class SnippetImportTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
     /**
-     * @var object
+     * @var SnippetImport
      */
-    private $parent;
     private $snippetImporter;
+
+    /**
+     * @var SnippetDocument[]
+     */
     private $snippets = [];
-    protected $distPath = './src/Sulu/Bundle/SnippetBundle/Tests/app/Resources/import/export.xliff.dist';
-    protected $path = './src/Sulu/Bundle/SnippetBundle/Tests/app/Resources/import/export.xliff';
+
+    /**
+     * @var string
+     */
+    protected $distPath;
+
+    /**
+     * @var string
+     */
+    protected $path;
 
     /**
      * Setup data for import.
      */
     protected function setUp()
     {
+        $this->distPath = __DIR__ . '/../../app/Resources/import/export.xliff.dist';
+        $this->path = __DIR__ . '/../../app/Resources/import/export.xliff';
+
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->snippetImporter = $this->getContainer()->get('sulu_snippet.import.snippet');

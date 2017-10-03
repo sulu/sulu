@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\SmartContent\ContentDataItem;
@@ -60,18 +61,25 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private $documentManager;
 
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $snippetQueryBuilder,
         SuluNodeHelper $nodeHelper,
         LazyLoadingValueHolderFactory $proxyFactory,
-        DocumentManagerInterface $documentManager
+        DocumentManagerInterface $documentManager,
+        ReferenceStoreInterface $referenceStore
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->snippetQueryBuilder = $snippetQueryBuilder;
         $this->nodeHelper = $nodeHelper;
         $this->proxyFactory = $proxyFactory;
         $this->documentManager = $documentManager;
+        $this->referenceStore = $referenceStore;
     }
 
     /**
@@ -129,15 +137,7 @@ class SnippetDataProvider implements DataProviderInterface
             $pageSize
         );
 
-        $items = $this->decorateDataItems($items, $options['locale']);
-
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(function(ContentDataItem $item) {
-                return $item->getId();
-            }, $items)
-        );
+        return new DataProviderResult($this->decorateDataItems($items, $options['locale']), $hasNextPage);
     }
 
     /**
@@ -160,18 +160,7 @@ class SnippetDataProvider implements DataProviderInterface
             $pageSize
         );
 
-        $items = $this->decorateResourceItems($items, $options['locale']);
-
-        return new DataProviderResult(
-            $items,
-            $hasNextPage,
-            array_map(
-                function (ArrayAccessItem $item) {
-                    return $item->getId();
-                },
-                $items
-            )
-        );
+        return new DataProviderResult($this->decorateResourceItems($items, $options['locale']), $hasNextPage);
     }
 
     /**
@@ -212,6 +201,8 @@ class SnippetDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
+                $this->referenceStore->add($item['uuid']);
+
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -265,11 +256,22 @@ class SnippetDataProvider implements DataProviderInterface
         $properties = array_key_exists('properties', $propertyParameter)
             ? $propertyParameter['properties']->getValue() : [];
 
+        $excluded = [];
+
+        if (array_key_exists('excluded', $filters) && is_array($filters['excluded'])) {
+            $excluded = $filters['excluded'];
+        }
+
+        if (array_key_exists('exclude_duplicates', $propertyParameter)
+            && $propertyParameter['exclude_duplicates']->getValue()) {
+            $excluded = array_merge($excluded, $this->referenceStore->getAll());
+        }
+
         $this->snippetQueryBuilder->init(
             [
                 'config' => $filters,
                 'properties' => $properties,
-                'excluded' => $filters['excluded'],
+                'excluded' => $excluded,
             ]
         );
 
