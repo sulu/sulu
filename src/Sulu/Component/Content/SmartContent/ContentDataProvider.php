@@ -148,6 +148,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     {
         return [
             'properties' => new PropertyParameter('properties', [], 'collection'),
+            'templates' => new PropertyParameter('templates', [], 'collection'),
         ];
     }
 
@@ -269,6 +270,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
             $excluded = array_merge($excluded, $this->referenceStore->getAll());
         }
 
+        $filters['templates'] = $this->getTemplates($properties);
         $this->contentQueryBuilder->init(
             [
                 'config' => $filters,
@@ -415,5 +417,22 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     public function getAlias()
     {
         return 'content';
+    }
+
+    /**
+     * Extracts templates from given property-parameters.
+     *
+     * @param PropertyParameter[] $propertyParameter
+     *
+     * @return array
+     */
+    private function getTemplates(array $propertyParameter)
+    {
+        $templates = '';
+        if (array_key_exists('templates', $propertyParameter)) {
+            $templates = $propertyParameter['templates']->getValue();
+        }
+
+        return array_filter(explode(',', $templates));
     }
 }

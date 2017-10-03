@@ -37,6 +37,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_content.extension.manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_snippet.smart_content.snippet_data_provider"

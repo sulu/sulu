@@ -13,9 +13,12 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -43,6 +46,11 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
     private $session;
 
     /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
      * @var SnippetQueryBuilder
      */
     private $snippetQueryBuilder;
@@ -53,6 +61,7 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->session = $this->prophesize(SessionInterface::class);
+        $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
 
         $this->sessionManager->getSession()->willReturn($this->session->reveal());
 
@@ -60,6 +69,7 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
             $this->structureManager->reveal(),
             $this->extensionManager->reveal(),
             $this->sessionManager->reveal(),
+            $this->propertyEncoder->reveal(),
             'i18n'
         );
     }
@@ -85,13 +95,21 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->session->getNodeByIdentifier('some-uuid')->willReturn($node->reveal());
 
         list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
-
         $this->assertContains('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
     }
 
     public function testBuildWithProperties()
     {
-        $this->structureManager->getStructures(Structure::TYPE_SNIPPET)->shouldBeCalled()->willReturn([]);
+        $property = $this->prophesize(PropertyInterface::class);
+
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getKey()->willReturn('test');
+        $structure->hasProperty('description')->willReturn(true);
+        $structure->getProperty('description')->willReturn($property->reveal());
+
+        $this->structureManager->getStructures(Structure::TYPE_SNIPPET)->shouldBeCalled()->willReturn(
+                [$structure->reveal()]
+            );
 
         $this->snippetQueryBuilder->init([
             'properties' => [
@@ -99,6 +117,11 @@ class SnippetQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
+        list($sql2, $additionalFields) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
+        $this->assertContains('SELECT page.*', $sql2);
+        $this->assertContains(
+            ['name' => 'description', 'property' => $property->reveal(), 'templateKey' => 'test'],
+            $additionalFields['de']
+        );
     }
 }

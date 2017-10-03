@@ -16,6 +16,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
@@ -64,6 +65,11 @@ class QueryBuilder extends ContentQueryBuilder
     private $sessionManager;
 
     /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
      * @var string
      */
     protected static $structureType = Structure::TYPE_PAGE;
@@ -72,11 +78,13 @@ class QueryBuilder extends ContentQueryBuilder
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         SessionManagerInterface $sessionManager,
+        PropertyEncoder $propertyEncoder,
         $languageNamespace
     ) {
         parent::__construct($structureManager, $extensionManager, $languageNamespace);
 
         $this->sessionManager = $sessionManager;
+        $this->propertyEncoder = $propertyEncoder;
     }
 
     /**
@@ -140,6 +148,11 @@ class QueryBuilder extends ContentQueryBuilder
                 $this->getConfig('websiteCategoriesOperator', 'OR'),
                 $locale
             );
+        }
+
+        // build where clause for templates
+        if ($this->hasConfig('templates')) {
+            $sql2Where[] = $this->buildTemplateWhere($this->getConfig('templates', []), $locale);
         }
 
         if (count($this->ids) > 0) {
@@ -352,6 +365,29 @@ class QueryBuilder extends ContentQueryBuilder
         }
 
         return '';
+    }
+
+    /**
+     * Build templates where clauses.
+     *
+     * @param string[] $templates
+     * @param string $languageCode
+     *
+     * @return string
+     */
+    private function buildTemplateWhere($templates, $languageCode)
+    {
+        if (0 === count($templates)) {
+            return '';
+        }
+
+        $sql2Where = [];
+        $templateName = $this->propertyEncoder->localizedSystemName('template', $languageCode);
+        foreach ($templates as $category) {
+            $sql2Where[] = 'page.[' . $templateName . '] = "' . $category . '"';
+        }
+
+        return '(' . implode(' AND ', $sql2Where) . ')';
     }
 
     /**

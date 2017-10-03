@@ -18,6 +18,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -31,6 +32,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\SmartContent\QueryBuilder as SmartContentQueryBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
@@ -66,6 +68,11 @@ class SmartContentQueryBuilderTest extends SuluTestCase
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
 
     /**
      * @var string
@@ -111,11 +118,12 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->contentQuery = $this->getContainer()->get('sulu.content.query_executor');
         $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
         $this->audienceTargetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
+        $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager.property_encoder');
 
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
+        $user = $em->getRepository(User::class)->findOneByUsername('test');
 
         $this->tag1 = $this->tagRepository->createNew();
         $this->tag1->setName('test1');
@@ -200,6 +208,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         $builder->init(
@@ -289,6 +298,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         // test news
@@ -323,6 +333,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         $builder->init(['config' => ['dataSource' => $root->getIdentifier(), 'includeSubFolders' => true]]);
@@ -391,6 +402,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -475,6 +487,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -627,6 +640,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -673,6 +687,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -763,6 +778,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -863,6 +879,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -997,6 +1014,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -1050,6 +1068,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
 
@@ -1097,6 +1116,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         $builder->init(
@@ -1128,6 +1148,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         $builder->init(['ids' => [array_keys($nodes)[0], array_keys($nodes)[1]]]);
@@ -1150,6 +1171,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         $builder->init(['excluded' => [$uuids[0]]]);
@@ -1331,6 +1353,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
+            $this->propertyEncoder,
             $this->languageNamespace
         );
         $builder->init(
