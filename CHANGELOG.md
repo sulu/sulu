@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.5 (2017-10-04)
+    * HOTFIX      #---- [Husky]                   Fixed bug in `escapeHtml` method
     * HOTFIX      #3535 [Content]                 Fix bug in structure bridge when no document is available
     * HOTFIX      #3514 [ContentBundle]           Fixed override route when using "tree_full_edit"
     * HOTFIX      #3541 [CategoryBundle]          Fixed category-list for null selected value
