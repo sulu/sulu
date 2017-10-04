@@ -263,7 +263,8 @@ class SnippetDataProvider implements DataProviderInterface
         }
 
         if (array_key_exists('exclude_duplicates', $propertyParameter)
-            && $propertyParameter['exclude_duplicates']->getValue()) {
+            && $propertyParameter['exclude_duplicates']->getValue()
+        ) {
             $excluded = array_merge($excluded, $this->referenceStore->getAll());
         }
 
