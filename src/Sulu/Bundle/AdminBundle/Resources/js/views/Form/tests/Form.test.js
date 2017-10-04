@@ -69,6 +69,30 @@ test('Should navigate to defined route on back button click', () => {
     expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
 });
 
+test('Should navigate to defined route on back button click without locale', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                backRoute: 'test_route',
+            },
+        },
+        attributes: {},
+    };
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+
+    const toolbarConfig = toolbarFunction.call(form);
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('test_route', {});
+});
+
 test('Should not render back button when no editLink is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;

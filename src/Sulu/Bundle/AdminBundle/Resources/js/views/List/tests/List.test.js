@@ -181,7 +181,31 @@ test('Should unbind the binding and destroy the store on unmount without locale'
     expect(router.unbind).not.toBeCalledWith('locale');
 });
 
-test('Should navigate when pencil button is clicked', () => {
+test('Should navigate when pencil button is clicked and locales have been passed in options', () => {
+    const List = require('../List').default;
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                editRoute: 'editRoute',
+                resourceKey: 'test',
+                locales: ['de', 'en'],
+            },
+        },
+    };
+
+    const listWrapper = mount(<List router={router} />);
+    listWrapper.find('List').get(0).locale = {
+        get: function() {
+            return 'de';
+        },
+    };
+    listWrapper.find('ButtonCell button').at(0).simulate('click');
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1, locale: 'de'});
+});
+
+test('Should navigate without locale when pencil button is clicked', () => {
     const List = require('../List').default;
     const router = {
         navigate: jest.fn(),
@@ -195,13 +219,13 @@ test('Should navigate when pencil button is clicked', () => {
     };
 
     const listWrapper = mount(<List router={router} />);
-    listWrapper.find('List').get(0).locale = {
+    listWrapper.find('List').get(0).datagridStore.locale = {
         get: function() {
             return 'de';
         },
     };
     listWrapper.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editRoute', {id: 1, locale: 'de'});
+    expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
 
 test('Should render the delete item enabled only if something is selected', () => {
