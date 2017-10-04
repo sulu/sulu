@@ -25,9 +25,9 @@ type Props = {
     /** The URL of the presented image */
     image: string,
     /** List of available image sizes */
-    sizes: Array<{value: string | number, label: string}>,
+    sizes?: Array<{value: string | number, label: string}>,
     /** Called when a size was clicked */
-    onDownloadClicked: (value: string | number) => void,
+    onDownloadClicked?: (value: string | number) => void,
 };
 
 @observer
