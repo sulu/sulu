@@ -11,17 +11,17 @@ export default class TableAdapter extends React.Component<AdapterProps> {
             data,
             schema,
             selections,
-            onItemEditClick,
+            onItemClick,
             onItemSelectionChange,
             onAllSelectionChange,
         } = this.props;
         const schemaKeys = Object.keys(schema);
         const buttons = [];
 
-        if (onItemEditClick) {
+        if (onItemClick) {
             buttons.push({
                 icon: 'pencil',
-                onClick: (rowId) => onItemEditClick(rowId),
+                onClick: (rowId) => onItemClick(rowId),
             });
         }
 

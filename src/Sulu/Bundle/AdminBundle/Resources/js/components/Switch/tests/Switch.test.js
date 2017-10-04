@@ -24,7 +24,7 @@ test('The component should render with name', () => {
 });
 
 test('The component should render without a label container', () => {
-    const component = render(<Switch name="my-name" checked={false} useLabel={false} />);
+    const component = render(<Switch name="my-name" checked={false} />);
     expect(component).toMatchSnapshot();
 });
 

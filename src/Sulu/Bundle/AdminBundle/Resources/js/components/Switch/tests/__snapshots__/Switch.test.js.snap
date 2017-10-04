@@ -78,7 +78,7 @@ exports[`The component should render with radio type 1`] = `
 `;
 
 exports[`The component should render without a label container 1`] = `
-<div
+<label
   class="label"
 >
   <span
@@ -90,5 +90,5 @@ exports[`The component should render without a label container 1`] = `
     />
     <span />
   </span>
-</div>
+</label>
 `;

@@ -24,7 +24,7 @@ test('Render a basic FolderList with data', () => {
 });
 
 test('Click on a Folder should call the onItemEdit callback', () => {
-    const itemEditClickSpy = jest.fn();
+    const itemClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -45,6 +45,6 @@ test('Click on a Folder should call the onItemEdit callback', () => {
             description: 'Description 3',
         },
     ];
-    const folderListAdapter = shallow(<FolderListAdapter data={data} onItemEditClick={itemEditClickSpy} />);
-    expect(folderListAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemEditClickSpy);
+    const folderListAdapter = shallow(<FolderListAdapter data={data} onItemClick={itemClickSpy} />);
+    expect(folderListAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemClickSpy);
 });

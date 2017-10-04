@@ -13,7 +13,7 @@ export type AdapterProps = {
     data: Array<DataItem>,
     schema: Schema,
     selections: Array<number | string>,
-    onItemEditClick?: (rowId: string | number) => void,
+    onItemClick?: (rowId: string | number) => void,
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onAllSelectionChange?: (selected?: boolean) => void,
 };

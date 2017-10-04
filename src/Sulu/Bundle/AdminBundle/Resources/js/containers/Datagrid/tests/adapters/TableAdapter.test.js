@@ -113,7 +113,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         title: {},
     };
     const tableAdapter = render(
-        <TableAdapter data={data} schema={schema} onItemEditClick={rowEditClickSpy} selections={[]} />
+        <TableAdapter data={data} schema={schema} onItemClick={rowEditClickSpy} selections={[]} />
     );
 
     expect(tableAdapter).toMatchSnapshot();
@@ -137,7 +137,7 @@ test('Click on pencil should execute onItemEdit callback', () => {
         title: {},
     };
     const tableAdapter = shallow(
-        <TableAdapter data={data} schema={schema} onItemEditClick={rowEditClickSpy} selections={[]} />
+        <TableAdapter data={data} schema={schema} onItemClick={rowEditClickSpy} selections={[]} />
     );
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(1);

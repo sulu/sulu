@@ -63,13 +63,13 @@ test('Render TableAdapter with correct values', () => {
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
 
-    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} onItemEditClick={editClickSpy} />);
+    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} onItemClick={editClickSpy} />);
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual({test: 'value'});
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({test: {}});
-    expect(tableAdapter.prop('onItemEditClick')).toBe(editClickSpy);
+    expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
 });
 
 test('Selecting and deselecting items should update store', () => {

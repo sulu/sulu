@@ -69,6 +69,10 @@ export default class DatagridStore {
         return page;
     }
 
+    @action setPage(page: number) {
+        this.observableOptions.page = page;
+    }
+
     @action select(id: string | number) {
         if (this.selections.includes(id)) {
             return;

@@ -16,7 +16,6 @@ const CHECKED_ICON = 'check';
 export default class Checkbox extends React.PureComponent<Props> {
     static defaultProps = {
         skin: 'dark',
-        useLabel: true,
     };
 
     render() {
@@ -25,7 +24,6 @@ export default class Checkbox extends React.PureComponent<Props> {
             name,
             value,
             checked,
-            useLabel,
             onChange,
             children,
             className,
@@ -44,7 +42,6 @@ export default class Checkbox extends React.PureComponent<Props> {
                 name={name}
                 icon={checked ? CHECKED_ICON : undefined}
                 onChange={onChange}
-                useLabel={useLabel}
             >
                 {children}
             </Switch>

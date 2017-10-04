@@ -8,7 +8,7 @@ import datagridStyles from './datagrid.scss';
 import adapterStore from './stores/AdapterStore';
 
 type Props = {
-    onItemEditClick?: (rowId: string | number) => void,
+    onItemClick?: (rowId: string | number) => void,
     store: DatagridStore,
     views: Array<string>,
 };
@@ -36,7 +36,7 @@ export default class Datagrid extends React.PureComponent<Props> {
     render() {
         const {
             store,
-            onItemEditClick,
+            onItemClick,
         } = this.props;
         const page = store.getPage();
         const pageCount = store.pageCount;
@@ -51,7 +51,7 @@ export default class Datagrid extends React.PureComponent<Props> {
                             data={store.data}
                             selections={store.selections}
                             schema={store.getFields()}
-                            onItemEditClick={onItemEditClick}
+                            onItemClick={onItemClick}
                             onItemSelectionChange={this.handleItemSelectionChange}
                             onAllSelectionChange={this.handleAllSelectionChange}
                         />

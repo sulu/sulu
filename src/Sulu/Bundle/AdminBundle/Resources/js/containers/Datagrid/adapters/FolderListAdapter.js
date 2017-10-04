@@ -18,11 +18,11 @@ export default class FolderListAdapter extends React.Component<AdapterProps> {
     render() {
         const {
             data,
-            onItemEditClick,
+            onItemClick,
         } = this.props;
 
         return (
-            <FolderList onFolderClick={onItemEditClick}>
+            <FolderList onFolderClick={onItemClick}>
                 {data.map((item: Object) => (
                     <FolderList.Folder
                         key={item.id}
