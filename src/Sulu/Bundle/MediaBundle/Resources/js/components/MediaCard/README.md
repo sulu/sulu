@@ -22,7 +22,7 @@ const handleClick = (id) => {
     onClick={handleClick}
     selected={state.selected}
     meta="image/png, 3,2 MB"
-    title="Lorempixel"
+    title="Lorempixel sdsdasdsd sdadasd asdasd"
     image={'http://lorempixel.com/300/200'}
 />
 ```

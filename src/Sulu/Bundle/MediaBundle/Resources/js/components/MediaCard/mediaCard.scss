@@ -7,6 +7,12 @@ $mediaOverlayBackgroundColor: rgba($black, .5);
 $mediaOverlayIconTextColor: $white;
 $containerBorderRadius: 3px;
 $imageBorderRadiusBottom: $containerBorderRadius;
+$downloadButtonBackgroundColor: $white;
+$downloadButtonBackgroundColorActive: $shakespeare;
+$downloadButtonTextColor: $alto;
+$downloadButtonTextColorActive: $white;
+$downloadButtonBorderColor: $alto;
+$downloadButtonBorderColorActive: $shakespeare;
 
 .media-card {
     width: 260px;
@@ -23,8 +29,8 @@ $imageBorderRadiusBottom: $containerBorderRadius;
 }
 
 .header {
+    display: flex;
     position: relative;
-    padding: 20px;
     cursor: pointer;
 }
 
@@ -34,6 +40,28 @@ $imageBorderRadiusBottom: $containerBorderRadius;
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.description {
+    width: 230px;
+    padding: 20px;
+}
+
+.download-button {
+    width: 32px;
+    border: 0;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: $downloadButtonBackgroundColor;
+    color: $downloadButtonTextColor;
+    border-left: 1px solid $downloadButtonBorderColor;
+
+    &:hover,
+    &:active {
+        background-color: $downloadButtonBackgroundColorActive;
+        color: $downloadButtonTextColorActive;
+        border-left: 1px solid $downloadButtonBorderColorActive;
+    }
 }
 
 .checkbox {
