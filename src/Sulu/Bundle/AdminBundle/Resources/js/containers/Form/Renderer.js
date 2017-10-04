@@ -27,7 +27,7 @@ export default class Renderer extends React.PureComponent<Props> {
         event.preventDefault();
     };
 
-    setSubmitButton = (submitButton: ElementRef<'button'>) => {
+    setSubmitButtonRef = (submitButton: ElementRef<'button'>) => {
         this.submitButton = submitButton;
     };
 
@@ -46,7 +46,7 @@ export default class Renderer extends React.PureComponent<Props> {
                         value={data[schemaKey]}
                     />
                 ))}
-                <button ref={this.setSubmitButton} type="submit" className={rendererStyles.submit}>Submit</button>
+                <button ref={this.setSubmitButtonRef} type="submit" className={rendererStyles.submit}>Submit</button>
             </form>
         );
     }

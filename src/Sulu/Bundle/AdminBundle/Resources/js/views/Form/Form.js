@@ -47,14 +47,19 @@ class Form extends React.PureComponent<ViewProps> {
         this.formStore.save();
     };
 
-    setForm = (form) => {
+    setFormRef = (form) => {
         this.form = form;
     };
 
     render() {
         return (
             <div>
-                <FormContainer ref={this.setForm} store={this.formStore} onSubmit={this.handleSubmit} schema={schema} />
+                <FormContainer
+                    ref={this.setFormRef}
+                    store={this.formStore}
+                    onSubmit={this.handleSubmit}
+                    schema={schema}
+                />
             </div>
         );
     }

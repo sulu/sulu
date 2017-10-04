@@ -29,7 +29,9 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        const options = {page};
+        const options = {};
+        options.page = page;
+
         const locale = this.locale.get();
         if (locale) {
             options.locale = locale;

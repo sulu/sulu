@@ -151,7 +151,7 @@ test('Should navigate when pencil button is clicked', () => {
     listWrapper.find('List').get(0).datagridStore.locale = {
         get: function() {
             return 'de';
-        }
+        },
     };
     listWrapper.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1}, {locale: 'de'});
@@ -203,7 +203,7 @@ test('Should render the locale dropdown with the options from router', () => {
     datagridStore.locale = {
         get: function() {
             return 'de';
-        }
+        },
     };
 
     const toolbarConfig = toolbarFunction.call(list);
