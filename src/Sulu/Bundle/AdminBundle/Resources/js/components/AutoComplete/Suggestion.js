@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import suggestionStyles from './suggestion.scss';
 
 type Props = {
-    value: string,
+    value: string | number,
     query: string,
     icon?: string,
     children: string | (highlight: (text: string) => Node) => Node,

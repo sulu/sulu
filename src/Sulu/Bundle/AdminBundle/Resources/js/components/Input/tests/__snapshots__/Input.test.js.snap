@@ -4,9 +4,16 @@ exports[`Input should render 1`] = `
 <label
   class="input"
 >
-  <div
-    class="prependedContainer"
+  <input
+    type="text"
   />
+</label>
+`;
+
+exports[`Input should render with a loader 1`] = `
+<label
+  class="input"
+>
   <input
     type="text"
     value="My value"
@@ -48,9 +55,6 @@ exports[`Input should render with placeholder 1`] = `
 <label
   class="input"
 >
-  <div
-    class="prependedContainer"
-  />
   <input
     placeholder="My placeholder"
     type="text"
@@ -63,9 +67,6 @@ exports[`Input should render with type 1`] = `
 <label
   class="input"
 >
-  <div
-    class="prependedContainer"
-  />
   <input
     type="password"
     value="My value"
@@ -77,9 +78,6 @@ exports[`Input should render with value 1`] = `
 <label
   class="input"
 >
-  <div
-    class="prependedContainer"
-  />
   <input
     type="text"
     value="My value"

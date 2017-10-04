@@ -34,7 +34,9 @@ test('AutoComplete should render', () => {
 
 test('Render the AutoComplete with open suggestions list', () => {
     const autoComplete = mount(
-        <AutoComplete>
+        <AutoComplete
+            value="Test"
+        >
             <Suggestion
                 icon="ticket"
                 value="suggestion-1"
@@ -56,17 +58,17 @@ test('Render the AutoComplete with open suggestions list', () => {
         </AutoComplete>
     );
 
-    autoComplete.instance().openSuggestions();
     expect(autoComplete.render()).toMatchSnapshot();
     expect(pretty(document.body.innerHTML)).toMatchSnapshot();
 });
 
-test('Clicking on a suggestion should close the AutoComplete list and call the onSuggestionSelection handler', () => {
-    const onSuggestionSelectionSpy = jest.fn();
+test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {
+    const onChangeSpy = jest.fn();
     const testValue = 'suggestion-1';
-    const autoComplete = mount(
+    mount(
         <AutoComplete
-            onSuggestionSelection={onSuggestionSelectionSpy}
+            value="Test"
+            onChange={onChangeSpy}
         >
             <Suggestion
                 icon="ticket"
@@ -89,8 +91,6 @@ test('Clicking on a suggestion should close the AutoComplete list and call the o
         </AutoComplete>
     );
 
-    autoComplete.instance().openSuggestions();
     document.body.querySelector('.suggestion:first-child').click();
-    expect(onSuggestionSelectionSpy).toHaveBeenCalledWith(testValue);
-    expect(document.body.innerHTML).toBe('');
+    expect(onChangeSpy).toHaveBeenCalledWith(testValue);
 });

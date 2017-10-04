@@ -39,3 +39,8 @@ test('Input should call the callback when the input changes', () => {
     input.find('input').simulate('change', {currentTarget: {value: 'my-value'}});
     expect(onChange).toHaveBeenCalledWith('my-value');
 });
+
+test('Input should render with a loader', () => {
+    const onChange = () => {};
+    expect(render(<Input loader={true} onChange={onChange} />)).toMatchSnapshot();
+});

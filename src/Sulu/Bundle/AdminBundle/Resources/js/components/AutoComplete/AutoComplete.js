@@ -57,7 +57,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
         const suggestionListMinWidth = (this.inputRef) ? this.inputRef.scrollWidth - POPOVER_HORIZONTAL_OFFSET * 2: 0;
 
         return {
-            minWidth: suggestionListMinWidth,
+            minWidth: Math.max(suggestionListMinWidth, 0),
         };
     }
 
