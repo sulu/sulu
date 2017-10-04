@@ -15,6 +15,8 @@ use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
 use Sulu\Bundle\SnippetBundle\Content\SnippetDataProvider;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -48,6 +50,11 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
     private $documentManager;
 
     /**
+     * @var DocumentManagerInterface
+     */
+    private $referenceStore;
+
+    /**
      * @var SnippetDataProvider
      */
     private $snippetDataProvider;
@@ -59,6 +66,7 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->nodeHelper = $this->prophesize(SuluNodeHelper::class);
         $this->proxyFactory = $this->prophesize(LazyLoadingValueHolderFactory::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $this->proxyFactory->createProxy(Argument::cetera())
             ->willReturn($this->prophesize(VirtualProxyInterface::class)->reveal());
@@ -68,8 +76,11 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->snippetQueryBuilder->reveal(),
             $this->nodeHelper->reveal(),
             $this->proxyFactory->reveal(),
-            $this->documentManager->reveal()
+            $this->documentManager->reveal(),
+            $this->referenceStore->reveal()
         );
+
+        $this->referenceStore->getAll()->willReturn([]);
     }
 
     /**
@@ -184,6 +195,10 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
         $result,
         $hasNextPage
     ) {
+        foreach ($result as $item) {
+            $this->referenceStore->add($item['uuid'])->shouldBeCalled();
+        }
+
         $this->contentQueryExecutor->execute(
             $options['webspaceKey'],
             [$options['locale']],
@@ -205,6 +220,67 @@ class SnippetDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(count($result), $dataProviderResult->getItems());
         $this->assertEquals($hasNextPage, $dataProviderResult->getHasNextPage());
+    }
+
+    /**
+     * @dataProvider provideResolveExcludeDuplicates
+     */
+    public function testResolveResourceItemsExcludeDuplicates($filters, $uuids)
+    {
+        $options = ['webspaceKey' => 'sulu', 'locale' => 'de'];
+
+        $this->referenceStore->getAll()->willReturn(['456-456-456']);
+
+        $result = [];
+        foreach ($uuids as $uuid) {
+            $result[] = ['uuid' => $uuid];
+            $this->referenceStore->add($uuid)->shouldBeCalled();
+        }
+
+        $this->snippetQueryBuilder->init(
+            [
+                'config' => array_merge($filters, ['dataSource' => null, 'includeSubFolders' => true]),
+                'properties' => [],
+                'excluded' => ['456-456-456'],
+            ]
+        )->shouldBeCalled();
+
+        $this->contentQueryExecutor->execute(
+            $options['webspaceKey'],
+            [$options['locale']],
+            $this->snippetQueryBuilder->reveal(),
+            true,
+            -1,
+            null,
+            null
+        )->willReturn($result);
+
+        $dataProviderResult = $this->snippetDataProvider->resolveResourceItems(
+            $filters,
+            ['exclude_duplicates' => new PropertyParameter('exclude_duplicates', true)],
+            $options
+        );
+
+        $this->assertCount(count($result), $dataProviderResult->getItems());
+        $this->assertEquals(false, $dataProviderResult->getHasNextPage());
+    }
+
+    public function provideResolveExcludeDuplicates()
+    {
+        return [
+            [
+                [],
+                ['123-123-123', '321-321-321'],
+            ],
+            [
+                ['excluded' => null],
+                ['123-123-123', '321-321-321'],
+            ],
+            [
+                ['excluded' => []],
+                ['123-123-123', '321-321-321'],
+            ],
+        ];
     }
 
     public function provideResolveResourceItems()

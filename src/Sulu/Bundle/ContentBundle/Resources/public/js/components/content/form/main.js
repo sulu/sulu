@@ -88,7 +88,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                     }
                 }.bind(this));
 
-                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout.resourcelocator', this.loadResourceLocator.bind(this));
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout.resourcelocator, change.resourcelocator', this.loadResourceLocator.bind(this));
 
                 // initialize all rlp-inputs as not edited by the user
                 this.getDomElementsForTagName('sulu.rlp', function(property) {
