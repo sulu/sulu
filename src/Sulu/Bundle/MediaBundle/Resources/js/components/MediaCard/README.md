@@ -24,6 +24,6 @@ const handleClick = (id) => {
     selected={state.selected}
     meta="image/png, 3,2 MB"
     title="Lorempixel"
-    imageURL={'http://lorempixel.com/300/200'}
+    image={'http://lorempixel.com/300/200'}
 />
 ```

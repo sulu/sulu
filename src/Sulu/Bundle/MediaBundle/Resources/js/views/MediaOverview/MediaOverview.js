@@ -14,7 +14,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     @observable title: string;
     @observable parentId: ?string | number;
     @observable collectionStore: DatagridStore;
-    collectionId: string | number;
+    @observable collectionId: string | number;
     disposer: () => void;
 
     componentWillMount() {
@@ -84,7 +84,7 @@ export default withToolbar(MediaOverview, function() {
 
     return {
         disableAll: this.collectionStore.loading,
-        backButton: (this.parentId !== undefined)
+        backButton: (this.collectionId !== undefined)
             ? {
                 onClick: () => {
                     router.navigate(COLLECTION_ROUTE, {id: this.parentId});

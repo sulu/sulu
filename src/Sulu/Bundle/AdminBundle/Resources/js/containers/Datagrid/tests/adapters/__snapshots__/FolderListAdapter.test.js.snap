@@ -24,12 +24,12 @@ exports[`Render a basic FolderList with data 1`] = `
         <h5
           class="title"
         >
-          Test
+          Title 1
         </h5>
         <div
           class="info"
         >
-          Test
+          1 sulu_admin.object
         </div>
       </div>
     </div>
@@ -54,12 +54,12 @@ exports[`Render a basic FolderList with data 1`] = `
         <h5
           class="title"
         >
-          Test
+          Title 2
         </h5>
         <div
           class="info"
         >
-          Test
+          0 sulu_admin.objects
         </div>
       </div>
     </div>

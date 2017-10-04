@@ -43,10 +43,10 @@ test('Should send a list get request and return the promise', () => {
 
 test('Should send a list get request to the correct URL', () => {
     ResourceRequester.getList('snippets');
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=10');
+    expect(Requester.get).toBeCalledWith('/snippets?locale=en&flat=true&page=1&limit=10');
 
     ResourceRequester.getList('contacts');
-    expect(Requester.get).toBeCalledWith('/contacts?flat=true&page=1&limit=10');
+    expect(Requester.get).toBeCalledWith('/contacts?locale=en&flat=true&page=1&limit=10');
 });
 
 test('Should send a list get request to the correct URL with page and limit parameters', () => {
@@ -54,17 +54,17 @@ test('Should send a list get request to the correct URL with page and limit para
         page: 3,
         limit: 20,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=3&limit=20');
+    expect(Requester.get).toBeCalledWith('/snippets?locale=en&flat=true&page=3&limit=20');
 
     ResourceRequester.getList('snippets', {
         page: 5,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=5&limit=10');
+    expect(Requester.get).toBeCalledWith('/snippets?locale=en&flat=true&page=5&limit=10');
 
     ResourceRequester.getList('snippets', {
         limit: 5,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?flat=true&page=1&limit=5');
+    expect(Requester.get).toBeCalledWith('/snippets?locale=en&flat=true&page=1&limit=5');
 });
 
 test('Should send a put request and return the promise', () => {

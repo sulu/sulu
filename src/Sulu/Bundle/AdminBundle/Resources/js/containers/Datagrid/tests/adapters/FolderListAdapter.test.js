@@ -8,11 +8,13 @@ test('Render a basic FolderList with data', () => {
         {
             id: 1,
             title: 'Title 1',
+            objectCount: 1,
             description: 'Description 1',
         },
         {
             id: 2,
             title: 'Title 2',
+            objectCount: 0,
             description: 'Description 2',
         },
     ];
@@ -27,16 +29,19 @@ test('Click on a Folder should call the onItemEdit callback', () => {
         {
             id: 1,
             title: 'Title 1',
+            objectCount: 1,
             description: 'Description 1',
         },
         {
             id: 2,
             title: 'Title 2',
+            objectCount: 7,
             description: 'Description 2',
         },
         {
             id: 3,
             title: 'Title 3',
+            objectCount: 0,
             description: 'Description 3',
         },
     ];
