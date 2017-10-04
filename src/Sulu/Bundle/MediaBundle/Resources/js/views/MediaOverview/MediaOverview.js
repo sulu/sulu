@@ -83,6 +83,7 @@ export default withToolbar(MediaOverview, function() {
     const router = this.props.router;
 
     return {
+        disableAll: this.collectionStore.loading,
         backButton: (this.parentId !== undefined)
             ? {
                 onClick: () => {

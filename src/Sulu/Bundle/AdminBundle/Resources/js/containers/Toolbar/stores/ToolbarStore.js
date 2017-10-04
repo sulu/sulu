@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {Button, Select, ToolbarConfig, ToolbarItem} from '../types';
 
 export default class ToolbarStore {
@@ -11,6 +11,10 @@ export default class ToolbarStore {
 
     @action clearConfig() {
         this.config = {};
+    }
+
+    @computed get disableAll(): boolean {
+        return !!this.config.disableAll;
     }
 
     hasBackButtonConfig(): boolean {
