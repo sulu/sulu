@@ -4,8 +4,6 @@ import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
-    page: observable = observable();
-    locale: observable = observable();
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
@@ -13,9 +11,16 @@ export default class DatagridStore {
     disposer: () => void;
     resourceKey: string;
     options: Object;
+    observableOptions: Object;
 
-    constructor(resourceKey: string, options: Object = {}) {
+    constructor(resourceKey: string, observableOptions: Object = {}, options: Object = {}) {
         this.resourceKey = resourceKey;
+        this.observableOptions = observableOptions;
+
+        if (!this.observableOptions.page) {
+            throw new Error('The DatagridStore expects an observable "page" property inside the "observableOptions".');
+        }
+
         this.options = options;
         this.disposer = autorun(this.sendRequest);
     }
@@ -35,9 +40,8 @@ export default class DatagridStore {
         const defaultOptions = {};
         defaultOptions.page = page;
 
-        const locale = this.locale.get();
-        if (locale) {
-            defaultOptions.locale = locale;
+        if (this.observableOptions.locale) {
+            defaultOptions.locale = this.observableOptions.locale.get();
         }
 
         ResourceRequester.getList(this.resourceKey, {
@@ -57,24 +61,12 @@ export default class DatagridStore {
     }
 
     getPage(): ?number {
-        const page = parseInt(this.page.get());
+        const page = parseInt(this.observableOptions.page.get());
         if (!page) {
             return undefined;
         }
 
         return page;
-    }
-
-    @action setPage(page: number) {
-        if (this.page.get() == page) {
-            return;
-        }
-
-        this.page.set(page);
-    }
-
-    @action setLocale(locale: string) {
-        this.locale.set(locale);
     }
 
     @action select(id: string | number) {

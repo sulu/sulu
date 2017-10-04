@@ -11,6 +11,8 @@ const COLLECTIONS_RESSOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
+    page: observable = observable();
+    locale: observable = observable();
     @observable title: string;
     @observable parentId: ?string | number;
     @observable collectionStore: DatagridStore;
@@ -18,11 +20,20 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     disposer: () => void;
 
     componentWillMount() {
+        const {router} = this.props;
+
+        router.bindQuery('page', this.page, '1');
+        router.bindQuery('locale', this.locale);
+
         this.disposer = autorun(this.load);
     }
 
     componentWillUnmount() {
+        const {router} = this.props;
         this.disposer();
+        router.unbindQuery('locale');
+        router.unbindQuery('page');
+        this.collectionStore.destroy();
     }
 
     load = () => {
@@ -41,28 +52,31 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     };
 
     loadCollectionInfo(collectionId) {
-        return ResourceRequester.get(COLLECTIONS_RESSOURCE_KEY, collectionId, {depth: 1})
-            .then(action((collectionInfo) => {
-                const parentCollection = collectionInfo._embedded.parent;
-                this.title = collectionInfo.title;
-                this.parentId = (parentCollection) ? parentCollection.id : undefined;
-            }));
+        return ResourceRequester.get(COLLECTIONS_RESSOURCE_KEY, collectionId, {
+            depth: 1,
+            locale: this.locale,
+        }).then(action((collectionInfo) => {
+            const parentCollection = collectionInfo._embedded.parent;
+            this.title = collectionInfo.title;
+            this.parentId = (parentCollection) ? parentCollection.id : undefined;
+        }));
     }
 
     @action createCollectionStore(collectionId) {
-        const {router} = this.props;
         this.collectionId = collectionId;
         this.collectionStore = new DatagridStore(
             COLLECTIONS_RESSOURCE_KEY,
+            {
+                page: this.page,
+                locale: this.locale,
+            },
             (collectionId) ? {parent: collectionId} : undefined
         );
-
-        router.bindQuery('page', this.collectionStore.page, '1');
     }
 
     handleOpenFolder = (collectionId) => {
         const {router} = this.props;
-        router.navigate(COLLECTION_ROUTE, {id: collectionId});
+        router.navigate(COLLECTION_ROUTE, {id: collectionId}, {page: this.page.get(), locale: this.locale.get()});
     };
 
     render() {
@@ -87,7 +101,7 @@ export default withToolbar(MediaOverview, function() {
         backButton: (this.collectionId !== undefined)
             ? {
                 onClick: () => {
-                    router.navigate(COLLECTION_ROUTE, {id: this.parentId});
+                    router.navigate(COLLECTION_ROUTE, {id: this.parentId}, {locale: this.locale.get(), page: 1});
                 },
             }
             : undefined,

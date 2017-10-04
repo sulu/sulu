@@ -11,6 +11,8 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 
 @observer
 class List extends React.PureComponent<ViewProps> {
+    page: observable = observable();
+    locale: observable = observable();
     datagridStore: DatagridStore;
     @observable deleting = false;
 
@@ -28,10 +30,13 @@ class List extends React.PureComponent<ViewProps> {
             throw new Error('The route does not define the mandatory resourceKey option');
         }
 
-        this.datagridStore = new DatagridStore(resourceKey);
+        router.bindQuery('locale', this.locale);
+        router.bindQuery('page', this.page, '1');
 
-        router.bindQuery('locale', this.datagridStore.locale);
-        router.bindQuery('page', this.datagridStore.page, '1');
+        this.datagridStore = new DatagridStore(resourceKey, {
+            page: this.page,
+            locale: this.locale,
+        });
     }
 
     componentWillUnmount() {
@@ -81,9 +86,9 @@ export default withToolbar(List, function() {
 
     const locale = locales
         ? {
-            value: this.datagridStore.locale.get(),
+            value: this.locale.get(),
             onChange: (locale) => {
-                this.datagridStore.setLocale(locale);
+                this.locale.set(locale);
             },
             options: locales.map((locale) => ({
                 value: locale,

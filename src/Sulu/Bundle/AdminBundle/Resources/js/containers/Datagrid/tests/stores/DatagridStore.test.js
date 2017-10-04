@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
-import {when} from 'mobx';
+import {when, observable} from 'mobx';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
 import ResourceRequester from '../../../../services/ResourceRequester';
@@ -14,7 +14,10 @@ jest.mock('../../stores/MetadataStore', () => ({
 }));
 
 test('Do not send request without defined page parameter', () => {
-    new DatagridStore('tests');
+    const page = observable();
+    new DatagridStore('tests', {
+        page,
+    });
     expect(ResourceRequester.getList).not.toBeCalled();
 });
 
@@ -26,8 +29,11 @@ test('Send request with default parameters', (done) => {
             tests: [{id: 1}],
         },
     }));
-    const datagridStore = new DatagridStore('tests');
-    datagridStore.setPage(1);
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     when(
         () => !datagridStore.loading,
@@ -41,34 +47,48 @@ test('Send request with default parameters', (done) => {
 });
 
 test('Send request to other base URL', () => {
-    const datagridStore = new DatagridStore('tests');
-    datagridStore.setPage(1);
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     datagridStore.destroy();
 });
 
 test('Send request to other page', () => {
-    const datagridStore = new DatagridStore('tests');
-    datagridStore.setPage(1);
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
-    datagridStore.setPage(2);
+    page.set(2);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 2});
     datagridStore.destroy();
 });
 
 test('Send request to other locale', () => {
-    const datagridStore = new DatagridStore('tests');
-    datagridStore.setPage(1);
-    datagridStore.setLocale('en');
+    const page = observable();
+    const locale = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+        locale,
+    });
+    page.set(1);
+    locale.set('en');
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'en'});
-    datagridStore.setLocale('de');
+    locale.set('de');
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1, locale: 'de'});
     datagridStore.destroy();
 });
 
 test('Send not request without locale if undefined', () => {
-    const datagridStore = new DatagridStore('tests');
-    datagridStore.setPage(1);
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    page.set(1);
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
     expect(ResourceRequester.getList.mock.calls[0][1]).not.toHaveProperty('locale');
     expect(ResourceRequester.getList).toBeCalledWith('tests', {page: 1});
@@ -76,8 +96,11 @@ test('Send not request without locale if undefined', () => {
 });
 
 test('Set loading flag to true before request', () => {
-    const datagridStore = new DatagridStore('tests');
-    datagridStore.setPage(1);
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
+    page.set(1);
     datagridStore.setLoading(false);
     datagridStore.sendRequest();
     expect(datagridStore.loading).toEqual(true);
@@ -85,7 +108,10 @@ test('Set loading flag to true before request', () => {
 });
 
 test('Set loading flag to false after request', () => {
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     const Promise = require.requireActual('promise');
     ResourceRequester.getList.mockReturnValue(Promise.resolve({
         _embedded: {
@@ -108,20 +134,29 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     };
     metadataStore.getFields.mockReturnValue(fields);
 
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     expect(datagridStore.getFields()).toBe(fields);
     expect(metadataStore.getFields).toBeCalledWith('tests');
     datagridStore.destroy();
 });
 
 test('After initialization no row should be selected', () => {
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     expect(datagridStore.selections.length).toBe(0);
     datagridStore.destroy();
 });
 
 test('Select an item', () => {
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     datagridStore.select(1);
     datagridStore.select(2);
     expect(datagridStore.selections.toJS()).toEqual([1, 2]);
@@ -132,7 +167,10 @@ test('Select an item', () => {
 });
 
 test('Deselect an item that has not been selected yet', () => {
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     datagridStore.select(1);
     datagridStore.deselect(2);
 
@@ -151,9 +189,12 @@ test('Select the entire page', (done) => {
         },
     }));
 
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     datagridStore.selections = [1, 7];
-    datagridStore.setPage(1);
+    page.set(1);
     when(
         () => !datagridStore.loading,
         () => {
@@ -176,9 +217,12 @@ test('Deselect the entire page', (done) => {
         },
     }));
 
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     datagridStore.selections = [1, 2, 7];
-    datagridStore.setPage(1);
+    page.set(1);
     when(
         () => !datagridStore.loading,
         () => {
@@ -191,9 +235,12 @@ test('Deselect the entire page', (done) => {
 });
 
 test('Clear the selection', () => {
-    const datagridStore = new DatagridStore('tests');
+    const page = observable();
+    const datagridStore = new DatagridStore('tests', {
+        page,
+    });
     datagridStore.selections = [1, 4, 5];
-    datagridStore.setPage(1);
+    page.set(1);
     expect(datagridStore.selections).toHaveLength(3);
 
     datagridStore.clearSelection();
