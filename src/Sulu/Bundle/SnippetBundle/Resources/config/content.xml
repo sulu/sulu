@@ -46,6 +46,8 @@
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu_content.smart_content.data_provider.content.proxy_factory"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_snippet.reference_store.snippet"/>
+
             <tag name="sulu.smart_content.data_provider" alias="snippet"/>
         </service>
     </services>

@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * HOTFIX      #3541 [CategoryBundle]          Fixed category-list for null selected value
     * HOTFIX      #3543 [PreviewBundle]           Fixed rerender preview if html is the same
     * HOTFIX      #3543 [ContentBundle]           Fixed update resource-locator with date content type
+    * ENHANCEMENT #3544 [SnippetBundle]           Added reference-store to snippet data-provider
 
 * 1.6.4 (2017-09-14)
     * HOTFIX      #3509 [MediaBundle]             Fixed deletion of tag when referenced in media fileversion
