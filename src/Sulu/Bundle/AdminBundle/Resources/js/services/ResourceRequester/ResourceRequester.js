@@ -9,7 +9,31 @@ const listDefaults = {
     limit: 10,
 };
 
+function buildQueryString(queryOptions: ?Object) {
+    const options = queryOptions;
+    if (!options) {
+        return '';
+    }
+
+    const searchParameters = new URLSearchParams();
+    Object.keys(options).forEach((key) => {
+        searchParameters.set(key, options[key]);
+    });
+
+    return '?' + searchParameters.toString();
+}
+
 export default class ResourceRequester {
+    static get(resourceKey: string, id: number | string, queryOptions: ?Object) {
+        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        return Requester.get(baseUrl + '/' + id + buildQueryString(queryOptions));
+    }
+
+    static put(resourceKey: string, id: number | string, data: Object, queryOptions: ?Object) {
+        const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
+        return Requester.put(baseUrl + '/' + id + buildQueryString(queryOptions), data);
+    }
+
     static getList(resourceKey: string, options: ListOptions = listDefaults) {
         const baseUrl = resourceMetadataStore.getBaseUrl(resourceKey);
         const searchParameters = new URLSearchParams();

@@ -6,6 +6,18 @@ exports[`Input should render 1`] = `
 >
   <input
     type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render null value as empty string 1`] = `
+<label
+  class="input"
+>
+  <input
+    type="text"
+    value=""
   />
 </label>
 `;
@@ -20,6 +32,7 @@ exports[`Input should render with icon 1`] = `
   />
   <input
     type="text"
+    value=""
   />
 </label>
 `;
@@ -31,6 +44,7 @@ exports[`Input should render with placeholder 1`] = `
   <input
     placeholder="My placeholder"
     type="text"
+    value=""
   />
 </label>
 `;
@@ -41,6 +55,7 @@ exports[`Input should render with type 1`] = `
 >
   <input
     type="password"
+    value=""
   />
 </label>
 `;

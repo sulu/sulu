@@ -38,7 +38,7 @@ export default class Input extends React.PureComponent<Props> {
                 <input
                     name={name}
                     type={type}
-                    value={value}
+                    value={value || ''}
                     placeholder={placeholder}
                     onChange={this.handleChange}
                 />

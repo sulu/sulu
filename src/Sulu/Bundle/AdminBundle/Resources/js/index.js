@@ -7,7 +7,9 @@ import {useStrict} from 'mobx';
 import Requester from './services/Requester';
 import Router, {routeStore} from './services/Router';
 import {setTranslations} from './services/Translator';
+import Input from './components/Input';
 import Application from './containers/Application';
+import {fieldStore} from './containers/Form';
 import {viewStore} from './containers/ViewRenderer';
 import Form from './views/Form';
 import List from './views/List';
@@ -20,6 +22,8 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 viewStore.add('sulu_admin.list', List);
 viewStore.add('sulu_admin.form', Form);
+
+fieldStore.add('text_line', Input);
 
 function startApplication() {
     const router = new Router(createHistory());

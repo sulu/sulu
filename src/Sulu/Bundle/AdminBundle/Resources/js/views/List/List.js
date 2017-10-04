@@ -30,17 +30,20 @@ class List extends React.PureComponent<ViewProps> {
 
         this.datagridStore = new DatagridStore(resourceKey);
 
+        router.bindQuery('locale', this.datagridStore.locale);
         router.bindQuery('page', this.datagridStore.page, '1');
     }
 
     componentWillUnmount() {
+        const {router} = this.props;
         this.datagridStore.destroy();
-        this.props.router.unbindQuery('page');
+        router.unbindQuery('locale');
+        router.unbindQuery('page');
     }
 
     handleEditClick = (rowId) => {
         const {router} = this.props;
-        router.navigate(router.route.options.editRoute, {id: rowId});
+        router.navigate(router.route.options.editRoute, {id: rowId}, {locale: this.datagridStore.locale.get()});
     };
 
     render() {
@@ -65,7 +68,30 @@ class List extends React.PureComponent<ViewProps> {
 }
 
 export default withToolbar(List, function() {
+    const {
+        route: {
+            options: {
+                resourceKey,
+                locales,
+            },
+        },
+    } = this.props.router;
+
+    const locale = locales
+        ? {
+            value: this.datagridStore.locale.get(),
+            onChange: (locale) => {
+                this.datagridStore.setLocale(locale);
+            },
+            options: locales.map((locale) => ({
+                value: locale,
+                label: locale,
+            })),
+        }
+        : undefined;
+
     return {
+        locale,
         items: [
             {
                 type: 'button',
@@ -80,14 +106,6 @@ export default withToolbar(List, function() {
                 disabled: this.datagridStore.selections.length === 0,
                 loading: this.deleting,
                 onClick: action(() => {
-                    const {
-                        route: {
-                            options: {
-                                resourceKey,
-                            },
-                        },
-                    } = this.props.router;
-
                     this.deleting = true;
 
                     const deletePromises = [];

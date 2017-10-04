@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render form using renderer 1`] = `
+<form
+  class="form"
+>
+  <button
+    class="submit"
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

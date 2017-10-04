@@ -11,6 +11,12 @@ ResourceRequester.getList('contacts', {page: 2})
         console.log(response._embedded.contacts);
     });
 
+// get only the snippet with the ID 2 and send the locale as query parameter
+ResourceRequester.get('snippets', 2, {locale: 'en'});
+
+// update the snippet with the ID 3 and send the locale as query parameter
+ResourceRequester.put('snippets', 3, {title: 'Title'}, {locale: 'en'});
+
 // delete the snippet with the ID 6
 ResourceRequester.delete('snippets', 6);
 ```

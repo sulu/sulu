@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a form tag 1`] = `
+<form
+  class="form"
+>
+  <button
+    class="submit"
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`Should render field types based on schema 1`] = `
+<form
+  class="form"
+>
+  <div>
+    <label
+      class="label"
+    >
+      Text
+    </label>
+    <input
+      type="text"
+    />
+  </div>
+  <div>
+    <label
+      class="label"
+    >
+      Datetime
+    </label>
+    <input
+      type="datetime"
+    />
+  </div>
+  <button
+    class="submit"
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
