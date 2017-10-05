@@ -129,6 +129,21 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
+    public function testNoUserPermissions()
+    {
+        $securityCondition = new SecurityCondition('sulu.security.roles');
+
+        $this->accessControlManager->getUserPermissions($securityCondition, $this->user)->willReturn([]);
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            $securityCondition,
+            ['view']
+        );
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
+    }
+
     public function testNegativeVote()
     {
         $securityCondition = new SecurityCondition('sulu.security.roles');

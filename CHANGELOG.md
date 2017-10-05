@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * HOTFIX      #3551 [SecurityBundle]        Fixed permissions for user with no role
+
 * 1.5.6 (2017-09-14)
     * HOTFIX      #3511 [MediaBundle]           Fixed disappearing of selected medias
 
