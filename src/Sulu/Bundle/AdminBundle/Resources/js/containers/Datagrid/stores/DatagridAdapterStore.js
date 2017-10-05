@@ -1,8 +1,8 @@
 // @flow
-import type {Adapter} from '../types';
+import type {DatagridAdapter} from '../types';
 
-class AdapterStore {
-    adapters: {[string]: Adapter};
+class DatagridAdapterStore {
+    adapters: {[string]: DatagridAdapter};
 
     constructor() {
         this.clear();
@@ -12,7 +12,11 @@ class AdapterStore {
         this.adapters = {};
     }
 
-    add(name: string, adapter: Adapter) {
+    has(name: string) {
+        return !!this.adapters[name];
+    }
+
+    add(name: string, adapter: DatagridAdapter) {
         if (name in this.adapters) {
             throw new Error('The key "' + name + '" has already been used for another adapter');
         }
@@ -20,7 +24,7 @@ class AdapterStore {
         this.adapters[name] = adapter;
     }
 
-    get(name: string): Adapter {
+    get(name: string): DatagridAdapter {
         if (!(name in this.adapters)) {
             throw new Error(
                 'The adapter with the key "' + name + '" is not defined. ' +
@@ -32,4 +36,4 @@ class AdapterStore {
     }
 }
 
-export default new AdapterStore();
+export default new DatagridAdapterStore();

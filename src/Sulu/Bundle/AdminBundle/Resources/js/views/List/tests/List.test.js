@@ -31,9 +31,10 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.clearSelection = jest.fn();
 }));
 
-jest.mock('../../../containers/Datagrid/stores/AdapterStore', () => ({
+jest.mock('../../../containers/Datagrid/stores/DatagridAdapterStore', () => ({
     add: jest.fn(),
     get: jest.fn(),
+    has: jest.fn(),
 }));
 
 jest.mock('../../../services/ResourceRequester', () => ({
@@ -60,8 +61,9 @@ jest.mock('../../../services/Translator', () => ({
 beforeEach(() => {
     jest.resetModules();
 
-    const adapterStore = require('../../../containers/Datagrid/stores/AdapterStore');
-    adapterStore.get.mockReturnValue(TableAdapter);
+    const datagridAdapterStore = require('../../../containers/Datagrid/stores/DatagridAdapterStore');
+    datagridAdapterStore.has.mockReturnValue(true);
+    datagridAdapterStore.get.mockReturnValue(TableAdapter);
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {
@@ -138,6 +140,8 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
     const page = router.bindQuery.mock.calls[0][1];
     const locale = router.bindQuery.mock.calls[1][1];
 
+    expect(page.get()).toBe(undefined);
+    expect(locale.get()).toBe(undefined);
     expect(router.bindQuery).toBeCalledWith('page', page, '1');
     expect(router.bindQuery).toBeCalledWith('locale', locale);
 

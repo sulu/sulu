@@ -2,10 +2,10 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
-import type {AdapterProps} from '../types';
+import type {DatagridAdapterProps} from '../types';
 
 @observer
-export default class TableAdapter extends React.Component<AdapterProps> {
+export default class TableAdapter extends React.Component<DatagridAdapterProps> {
     render() {
         const {
             data,

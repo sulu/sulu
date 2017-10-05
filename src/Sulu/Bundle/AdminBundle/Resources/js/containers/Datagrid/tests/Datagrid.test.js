@@ -4,7 +4,7 @@ import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 import TableAdapter from '../adapters/TableAdapter';
-import apadterStore from '../stores/AdapterStore';
+import datagridApadterStore from '../stores/DatagridAdapterStore';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -20,9 +20,10 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselectEntirePage = jest.fn();
 }));
 
-jest.mock('../stores/AdapterStore', () => ({
+jest.mock('../stores/DatagridAdapterStore', () => ({
     add: jest.fn(),
     get: jest.fn(),
+    has: jest.fn(),
 }));
 
 jest.mock('../../../services/Translator', () => ({
@@ -37,7 +38,8 @@ jest.mock('../../../services/Translator', () => ({
 }));
 
 beforeEach(() => {
-    apadterStore.get.mockReturnValue(TableAdapter);
+    datagridApadterStore.has.mockReturnValue(true);
+    datagridApadterStore.get.mockReturnValue(TableAdapter);
 });
 
 test('Change page in DatagridStore on pagination click', () => {

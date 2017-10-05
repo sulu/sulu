@@ -9,7 +9,7 @@ export type Schema = {
     [string]: {},
 };
 
-export type AdapterProps = {
+export type DatagridAdapterProps = {
     data: Array<DataItem>,
     schema: Schema,
     selections: Array<number | string>,
@@ -18,4 +18,4 @@ export type AdapterProps = {
     onAllSelectionChange?: (selected?: boolean) => void,
 };
 
-export type Adapter = ComponentType<AdapterProps>;
+export type DatagridAdapter = ComponentType<DatagridAdapterProps>;

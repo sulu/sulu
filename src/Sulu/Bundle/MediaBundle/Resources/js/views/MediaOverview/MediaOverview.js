@@ -7,7 +7,7 @@ import {withToolbar, Datagrid, DatagridStore} from 'sulu-admin-bundle/containers
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
-const COLLECTIONS_RESSOURCE_KEY = 'collections';
+const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
@@ -52,7 +52,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     };
 
     loadCollectionInfo(collectionId) {
-        return ResourceRequester.get(COLLECTIONS_RESSOURCE_KEY, collectionId, {
+        return ResourceRequester.get(COLLECTIONS_RESOURCE_KEY, collectionId, {
             depth: 1,
             locale: this.locale,
         }).then(action((collectionInfo) => {
@@ -65,7 +65,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     @action createCollectionStore(collectionId) {
         this.collectionId = collectionId;
         this.collectionStore = new DatagridStore(
-            COLLECTIONS_RESSOURCE_KEY,
+            COLLECTIONS_RESOURCE_KEY,
             {
                 page: this.page,
                 locale: this.locale,

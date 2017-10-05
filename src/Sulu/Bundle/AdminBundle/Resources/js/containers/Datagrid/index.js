@@ -1,16 +1,19 @@
 // @flow
 import Datagrid from './Datagrid';
 import DatagridStore from './stores/DatagridStore';
-import adapterStore from './stores/AdapterStore';
+import datagridAdapterStore from './stores/DatagridAdapterStore';
 import TableAdapter from './adapters/TableAdapter';
 import FolderListAdapter from './adapters/FolderListAdapter';
-import type {Adapter} from './types';
+import type {DatagridAdapter, DatagridAdapterProps} from './types';
 
 export default Datagrid;
 export {
     DatagridStore,
-    adapterStore,
+    datagridAdapterStore,
     TableAdapter,
     FolderListAdapter,
 };
-export type {Adapter};
+export type {
+    DatagridAdapter,
+    DatagridAdapterProps,
+};
