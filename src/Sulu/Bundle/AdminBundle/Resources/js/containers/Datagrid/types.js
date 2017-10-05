@@ -23,5 +23,5 @@ export type DatagridAdapter = ComponentType<DatagridAdapterProps>;
 
 export type ObservableOptions = {
     page: observable,
-    locale: observable,
+    locale?: observable,
 };
