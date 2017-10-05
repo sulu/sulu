@@ -108,7 +108,29 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 export default withToolbar(MediaOverview, function() {
     const router = this.props.router;
 
+    const {
+        route: {
+            options: {
+                locales,
+            },
+        },
+    } = this.props.router;
+
+    const locale = locales
+        ? {
+            value: this.locale.get(),
+            onChange: (locale) => {
+                this.locale.set(locale);
+            },
+            options: locales.map((locale) => ({
+                value: locale,
+                label: locale,
+            })),
+        }
+        : undefined;
+
     return {
+        locale,
         disableAll: this.collectionStore.loading,
         backButton: (this.collectionId !== undefined)
             ? {
