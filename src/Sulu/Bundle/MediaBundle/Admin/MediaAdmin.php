@@ -38,7 +38,7 @@ class MediaAdmin extends Admin
         $title
     ) {
         $this->securityChecker = $securityChecker;
-        $this->localizationManager = $localizationManager;        
+        $this->localizationManager = $localizationManager;
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.modules');
