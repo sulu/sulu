@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import {Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
+import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
 
 const DOWNLOAD_ICON = 'cloud-download';
@@ -25,9 +26,7 @@ type Props = {
     /** The URL of the presented image */
     image: string,
     /** List of available image sizes */
-    sizes?: Array<{value: string | number, label: string}>,
-    /** Called when a size was clicked */
-    onDownloadClicked?: (value: string | number) => void,
+    imageSizes?: Array<{url: string | number, label: string}>,
 };
 
 @observer
@@ -36,11 +35,21 @@ export default class MediaCard extends React.PureComponent<Props> {
         selected: false,
     };
 
-    @observable downloadButtonRef: ElementRef<'div'>;
+    @observable downloadButtonRef: ElementRef<'button'>;
 
-    @action setDownloadButtonRef = (ref: ElementRef<'div'>) => {
+    @observable downloadListOpen: boolean = false;
+
+    @action setDownloadButtonRef = (ref: ElementRef<'button'>) => {
         this.downloadButtonRef = ref;
     };
+
+    @action openDownloadList() {
+        this.downloadListOpen = true;
+    }
+
+    @action closeDownloadList() {
+        this.downloadListOpen = false;
+    }
 
     handleClick = () => {
         const {
@@ -65,6 +74,14 @@ export default class MediaCard extends React.PureComponent<Props> {
         }
     };
 
+    handleDownloadButtonClick = () => {
+        this.openDownloadList();
+    };
+
+    handleDownloadListClose = () => {
+        this.closeDownloadList();
+    };
+
     render() {
         const {
             id,
@@ -73,6 +90,7 @@ export default class MediaCard extends React.PureComponent<Props> {
             title,
             image,
             selected,
+            imageSizes,
         } = this.props;
         const masonryClass = classNames(
             mediaCardStyles.mediaCard,
@@ -105,10 +123,17 @@ export default class MediaCard extends React.PureComponent<Props> {
                     </div>
                     <button
                         ref={this.setDownloadButtonRef}
+                        onClick={this.handleDownloadButtonClick}
                         className={mediaCardStyles.downloadButton}
                     >
                         <Icon name={DOWNLOAD_ICON} />
                     </button>
+                    <DownloadList
+                        open={this.downloadListOpen}
+                        onClose={this.handleDownloadListClose}
+                        buttonRef={this.downloadButtonRef}
+                        imageSizes={imageSizes}
+                    />
                 </div>
                 <div
                     className={mediaCardStyles.media}
