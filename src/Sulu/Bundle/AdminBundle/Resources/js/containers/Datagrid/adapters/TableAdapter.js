@@ -12,8 +12,8 @@ export default class TableAdapter extends React.Component<DatagridAdapterProps> 
             schema,
             selections,
             onItemClick,
-            onItemSelectionChange,
             onAllSelectionChange,
+            onItemSelectionChange,
         } = this.props;
         const schemaKeys = Object.keys(schema);
         const buttons = [];
