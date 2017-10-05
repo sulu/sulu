@@ -12,12 +12,14 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\Exception\UserNotInSystemException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -85,6 +87,8 @@ class ResettingController extends Controller
         } catch (NoTokenFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (TokenEmailsLimitReachedException $ex) {
+            $response = new JsonResponse($ex->toArray(), 400);
+        } catch (UserNotInSystemException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -197,14 +201,21 @@ class ResettingController extends Controller
      * @return UserInterface
      *
      * @throws EntityNotFoundException
+     * @throws UserNotInSystemException
      */
     private function findUser($identifier)
     {
         try {
-            return $this->getUserRepository()->findUserByIdentifier($identifier);
+            $user = $this->getUserRepository()->findUserByIdentifier($identifier);
         } catch (NoResultException $exc) {
             throw new EntityNotFoundException($this->getUserRepository()->getClassName(), $identifier);
         }
+
+        if (!$this->hasSystem($user)) {
+            throw new UserNotInSystemException($this->getSystem(), $identifier);
+        }
+
+        return $user;
     }
 
     /**
@@ -417,5 +428,34 @@ class ResettingController extends Controller
     private function getUserRepository()
     {
         return $this->get('sulu.repository.user');
+    }
+
+    /**
+     * Check if given user has sulu-system.
+     *
+     * @param SuluUserInterface $user
+     *
+     * @return bool
+     */
+    private function hasSystem(SuluUserInterface $user)
+    {
+        $system = $this->getSystem();
+        foreach ($user->getRoleObjects() as $role) {
+            if ($role->getSystem() === $system) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns system name.
+     *
+     * @return string
+     */
+    private function getSystem()
+    {
+        return $this->container->getParameter('sulu_security.system');
     }
 }
