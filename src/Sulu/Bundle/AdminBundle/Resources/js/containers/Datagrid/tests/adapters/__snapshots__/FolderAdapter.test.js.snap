@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a basic FolderList with data 1`] = `
+exports[`Render a basic Folder list with data 1`] = `
 <ul
   class="folderList"
 >
@@ -29,7 +29,7 @@ exports[`Render a basic FolderList with data 1`] = `
         <div
           class="info"
         >
-          1 sulu_admin.object
+          1 Object
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@ exports[`Render a basic FolderList with data 1`] = `
         <div
           class="info"
         >
-          0 sulu_admin.objects
+          0 Objects
         </div>
       </div>
     </div>

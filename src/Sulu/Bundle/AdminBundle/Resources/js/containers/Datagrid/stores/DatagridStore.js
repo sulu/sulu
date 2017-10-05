@@ -66,7 +66,7 @@ export default class DatagridStore {
     }
 
     @action setPage(page: number) {
-        this.observableOptions.page = page;
+        this.observableOptions.page.set(page);
     }
 
     @action select(id: string | number) {

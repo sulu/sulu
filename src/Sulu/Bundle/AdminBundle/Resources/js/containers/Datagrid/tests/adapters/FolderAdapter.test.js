@@ -3,6 +3,17 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import FolderAdapter from '../../adapters/FolderAdapter';
 
+jest.mock('../../../../services/Translator', () => ({
+    translate: function(key) {
+        switch (key) {
+            case 'sulu_admin.object':
+                return 'Object';
+            case 'sulu_admin.objects':
+                return 'Objects';
+        }
+    },
+}));
+
 test('Render a basic Folder list with data', () => {
     const data = [
         {
