@@ -1,7 +1,7 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
+$mediaCardBorderColor: $alto;
 $containerBackgroundColor: $white;
-$containerBorderColor: $alto;
 $metaInfoTextColor: $silverChalice;
 $mediaOverlayBackgroundColor: rgba($black, .5);
 $mediaOverlayIconTextColor: $white;
@@ -11,13 +11,12 @@ $downloadButtonBackgroundColor: $white;
 $downloadButtonBackgroundColorActive: $shakespeare;
 $downloadButtonTextColor: $alto;
 $downloadButtonTextColorActive: $white;
-$downloadButtonBorderColor: $alto;
 $downloadButtonBorderColorActive: $shakespeare;
 
 .media-card {
     width: 260px;
     border-radius: $containerBorderRadius;
-    border: 1px solid $containerBorderColor;
+    border: 1px solid $mediaCardBorderColor;
     background-color: $containerBackgroundColor;
 
     &:hover,
@@ -32,6 +31,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     display: flex;
     position: relative;
     cursor: pointer;
+    border-bottom: 1px solid $mediaCardBorderColor;
 }
 
 .header-click-area {
@@ -54,7 +54,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     cursor: pointer;
     background-color: $downloadButtonBackgroundColor;
     color: $downloadButtonTextColor;
-    border-left: 1px solid $downloadButtonBorderColor;
+    border-left: 1px solid $mediaCardBorderColor;
 
     &:hover,
     &:active {
