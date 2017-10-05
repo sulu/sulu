@@ -82,6 +82,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $structure->getPath()->willReturn('test-path');
         $structure->getUrls()->willReturn(['en' => '/description', 'de' => '/beschreibung', 'es' => null]);
         $structure->getShadowBaseLanguage()->willReturn('en');
+        $structure->getWebspaceKey()->willReturn('test');
 
         $authored = new \DateTime();
 
@@ -112,6 +113,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
             'shadowBaseLocale' => 'en',
             'authored' => $authored,
             'author' => 1,
+            'webspaceKey' => 'test',
         ];
 
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));
