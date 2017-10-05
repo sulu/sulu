@@ -30,15 +30,17 @@ const handleClick = (id) => {
     alert(`You clicked me and my id is "${id}"`);
 };
 
-<MediaCard
-    id="What is luv?"
-    icon="pencil"
-    onSelectionChange={handleSelection}
-    onClick={handleClick}
-    selected={state.selected}
-    meta="image/png, 3,2 MB"
-    title="Lorempixel sdsdasdsd sdadasd asdasd"
-    image={'http://lorempixel.com/300/200'}
-    imageSizes={imageSizes}
-/>
+<div style={{backgroundColor: '#e5e5e5', padding: 20}}>
+    <MediaCard
+        id="What is luv?"
+        icon="pencil"
+        onSelectionChange={handleSelection}
+        onClick={handleClick}
+        selected={state.selected}
+        meta="image/png, 3,2 MB"
+        title="Lorempixel sdsdasdsd sdadasd asdasd"
+        image={'http://lorempixel.com/300/200'}
+        imageSizes={imageSizes}
+    />
+</div>
 ```

@@ -18,6 +18,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     border-radius: $containerBorderRadius;
     border: 1px solid $mediaCardBorderColor;
     background-color: $containerBackgroundColor;
+    overflow: hidden;
 
     &:hover,
     &.selected {

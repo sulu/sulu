@@ -26,7 +26,7 @@ type Props = {
     /** The URL of the presented image */
     image: string,
     /** List of available image sizes */
-    imageSizes?: Array<{url: string | number, label: string}>,
+    imageSizes?: Array<{url: string, label: string}>,
 };
 
 @observer
