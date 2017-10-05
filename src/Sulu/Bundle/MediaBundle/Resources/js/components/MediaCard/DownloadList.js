@@ -7,7 +7,7 @@ type Props = {
     open: boolean,
     onClose: () => void,
     buttonRef: ElementRef<'button'>,
-    imageSizes: Array<{url: string | number, label: string}>,
+    imageSizes: Array<{url: string, label: string}>,
 };
 
 export default class DownloadList extends React.PureComponent<Props> {

@@ -26,13 +26,14 @@ type Props = {
     /** The URL of the presented image */
     image: string,
     /** List of available image sizes */
-    imageSizes?: Array<{url: string, label: string}>,
+    imageSizes: Array<{url: string, label: string}>,
 };
 
 @observer
 export default class MediaCard extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
+        imageSizes: [],
     };
 
     @observable downloadButtonRef: ElementRef<'button'>;
