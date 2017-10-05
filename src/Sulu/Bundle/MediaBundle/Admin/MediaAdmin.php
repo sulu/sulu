@@ -15,6 +15,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -25,9 +27,18 @@ class MediaAdmin extends Admin
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker, $title)
-    {
+    /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    public function __construct(
+        SecurityCheckerInterface $securityChecker,
+        LocalizationManager $localizationManager,
+        $title
+    ) {
         $this->securityChecker = $securityChecker;
+        $this->localizationManager = $localizationManager;        
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.modules');
@@ -58,8 +69,22 @@ class MediaAdmin extends Admin
      */
     public function getRoutes(): array
     {
+        $mediaLocales = array_values(
+            array_map(
+                function(Localization $localization) {
+                    return $localization->getLocale();
+                },
+                $this->localizationManager->getLocalizations()
+            )
+        );
+
         return [
-            new Route('sulu_media.overview', '/collections/:id?', 'sulu_media.overview'),
+            new Route(
+                'sulu_media.overview',
+                '/collections/:id?',
+                'sulu_media.overview',
+                ['locales' => $mediaLocales]
+            ),
         ];
     }
 

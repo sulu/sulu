@@ -119,9 +119,9 @@ export default withToolbar(MediaOverview, function() {
     const locale = locales
         ? {
             value: this.locale.get(),
-            onChange: (locale) => {
+            onChange: action((locale) => {
                 this.locale.set(locale);
-            },
+            }),
             options: locales.map((locale) => ({
                 value: locale,
                 label: locale,
