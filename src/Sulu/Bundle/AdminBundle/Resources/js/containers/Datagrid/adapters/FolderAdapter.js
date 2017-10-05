@@ -25,7 +25,6 @@ export default class FolderAdapter extends React.Component<DatagridAdapterProps>
             <FolderList onFolderClick={onItemClick}>
                 {data.map((item: Object) => (
                     // TODO: Don't access properties like "title" directly.
-                    // Currently needed, will change with api update.
                     <FolderList.Folder
                         key={item.id}
                         id={item.id}
