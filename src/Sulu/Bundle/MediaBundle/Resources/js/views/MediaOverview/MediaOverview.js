@@ -62,7 +62,19 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         }));
     }
 
+    getTitle(title: string) {
+        if (!this.collectionId) {
+            return translate('sulu_admin.all_media');
+        }
+
+        return title;
+    }
+
     @action createCollectionStore(collectionId) {
+        if (this.collectionStore) {
+            this.collectionStore.destroy();
+        }
+
         this.collectionId = collectionId;
         this.collectionStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
@@ -82,7 +94,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     render() {
         return (
             <div>
-                {this.title && <h1>{translate(this.title)}</h1>}
+                <h1>{this.getTitle(this.title)}</h1>
                 <Datagrid
                     store={this.collectionStore}
                     views={['folderList']}
