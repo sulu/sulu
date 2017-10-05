@@ -1,6 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
+import equal from 'fast-deep-equal';
 import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
@@ -16,6 +17,16 @@ type Props = {
 @observer
 export default class Datagrid extends React.PureComponent<Props> {
     componentWillMount() {
+        this.validateViews();
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (!equal(this.props.views, nextProps.views)) {
+            this.validateViews();
+        }
+    }
+
+    validateViews() {
         this.props.views.forEach((viewName) => {
             if (!datagridAdapterStore.has(viewName)) {
                 throw new Error(

@@ -97,7 +97,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                 <h1>{this.getTitle()}</h1>
                 <Datagrid
                     store={this.collectionStore}
-                    views={['folderList']}
+                    views={['folder']}
                     onItemClick={this.handleOpenFolder}
                 />
             </div>

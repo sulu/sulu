@@ -6,7 +6,7 @@ import type {DatagridAdapterProps} from '../types';
 import {translate} from '../../../services/Translator';
 
 @observer
-export default class FolderListAdapter extends React.Component<DatagridAdapterProps> {
+export default class FolderAdapter extends React.Component<DatagridAdapterProps> {
     static getInfoText(item: Object) {
         const label = (item.objectCount === 1)
             ? translate('sulu_admin.object')
@@ -24,12 +24,13 @@ export default class FolderListAdapter extends React.Component<DatagridAdapterPr
         return (
             <FolderList onFolderClick={onItemClick}>
                 {data.map((item: Object) => (
-                    // TODO: We have to come up with a real solution here
+                    // TODO: Don't access properties like "title" directly.
+                    // Currently needed, will change with api update.
                     <FolderList.Folder
                         key={item.id}
                         id={item.id}
                         title={item.title}
-                        info={FolderListAdapter.getInfoText(item)}
+                        info={FolderAdapter.getInfoText(item)}
                     />
                 ))}
             </FolderList>

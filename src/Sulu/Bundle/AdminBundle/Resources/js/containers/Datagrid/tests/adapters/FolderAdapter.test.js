@@ -1,9 +1,9 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {render, shallow} from 'enzyme';
-import FolderListAdapter from '../../adapters/FolderListAdapter';
+import FolderAdapter from '../../adapters/FolderAdapter';
 
-test('Render a basic FolderList with data', () => {
+test('Render a basic Folder list with data', () => {
     const data = [
         {
             id: 1,
@@ -18,9 +18,9 @@ test('Render a basic FolderList with data', () => {
             description: 'Description 2',
         },
     ];
-    const folderListAdapter = render(<FolderListAdapter data={data} />);
+    const folderAdapter = render(<FolderAdapter data={data} />);
 
-    expect(folderListAdapter).toMatchSnapshot();
+    expect(folderAdapter).toMatchSnapshot();
 });
 
 test('Click on a Folder should call the onItemEdit callback', () => {
@@ -45,6 +45,6 @@ test('Click on a Folder should call the onItemEdit callback', () => {
             description: 'Description 3',
         },
     ];
-    const folderListAdapter = shallow(<FolderListAdapter data={data} onItemClick={itemClickSpy} />);
-    expect(folderListAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemClickSpy);
+    const folderAdapter = shallow(<FolderAdapter data={data} onItemClick={itemClickSpy} />);
+    expect(folderAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemClickSpy);
 });
