@@ -3,6 +3,8 @@ import {mount, shallow} from 'enzyme';
 import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
+import TableAdapter from '../adapters/TableAdapter';
+import datagridApadterStore from '../stores/DatagridAdapterStore';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -18,6 +20,12 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselectEntirePage = jest.fn();
 }));
 
+jest.mock('../stores/DatagridAdapterStore', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+    has: jest.fn(),
+}));
+
 jest.mock('../../../services/Translator', () => ({
     translate: function(key) {
         switch (key) {
@@ -29,9 +37,14 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
+beforeEach(() => {
+    datagridApadterStore.has.mockReturnValue(true);
+    datagridApadterStore.get.mockReturnValue(TableAdapter);
+});
+
 test('Change page in DatagridStore on pagination click', () => {
     const datagridStore = new DatagridStore('test');
-    const datagrid = shallow(<Datagrid store={datagridStore} />);
+    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} />);
     datagrid.find('Pagination').simulate('change', 3);
     expect(datagridStore.setPage).toBeCalledWith(3);
 });
@@ -39,7 +52,7 @@ test('Change page in DatagridStore on pagination click', () => {
 test ('Render Pagination with correct values', () => {
     const datagridStore = new DatagridStore('test');
 
-    const datagrid = shallow(<Datagrid store={datagridStore} />);
+    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} />);
     const pagination = datagrid.find('Pagination');
 
     expect(pagination.prop('current')).toEqual(4);
@@ -52,13 +65,13 @@ test('Render TableAdapter with correct values', () => {
     datagridStore.selections.push(3);
     const editClickSpy = jest.fn();
 
-    const datagrid = shallow(<Datagrid store={datagridStore} onRowEditClick={editClickSpy} />);
+    const datagrid = shallow(<Datagrid views={['table']} store={datagridStore} onItemClick={editClickSpy} />);
     const tableAdapter = datagrid.find('TableAdapter');
 
     expect(tableAdapter.prop('data')).toEqual({test: 'value'});
     expect(tableAdapter.prop('selections')).toEqual([1, 3]);
     expect(tableAdapter.prop('schema')).toEqual({test: {}});
-    expect(tableAdapter.prop('onRowEditClick')).toBe(editClickSpy);
+    expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
 });
 
 test('Selecting and deselecting items should update store', () => {
@@ -68,7 +81,7 @@ test('Selecting and deselecting items should update store', () => {
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid store={datagridStore} />);
+    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
 
     const checkboxes = datagrid.find('input[type="checkbox"]');
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
@@ -89,7 +102,7 @@ test('Selecting and unselecting all items on current page should update store', 
         {id: 2},
         {id: 3},
     ];
-    const datagrid = mount(<Datagrid store={datagridStore} />);
+    const datagrid = mount(<Datagrid views={['table']} store={datagridStore} />);
 
     const headerCheckbox = datagrid.find('input[type="checkbox"]').at(0);
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114

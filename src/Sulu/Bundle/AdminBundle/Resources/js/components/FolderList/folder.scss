@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
-$folderBackgroundColor: $silver;
+$folderBackgroundColor: $white;
+$folderBorderColor: $silver;
 $metaFontColor: $silverChalice;
 
 .folder {
@@ -8,9 +9,10 @@ $metaFontColor: $silverChalice;
     height: 80px;
     display: flex;
     padding: 10px;
-    border: 1px solid $folderBackgroundColor;
+    border: 1px solid $folderBorderColor;
     border-radius: 3px;
     cursor: pointer;
+    background: $folderBackgroundColor;
 }
 
 .description {

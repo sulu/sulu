@@ -1,75 +1,144 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {translate} from 'sulu-admin-bundle/services';
-import {withToolbar} from 'sulu-admin-bundle/containers';
+import {translate, ResourceRequester} from 'sulu-admin-bundle/services';
+import {withToolbar, Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import {Masonry} from 'sulu-admin-bundle/components';
-import MediaCard from '../../components/MediaCard';
+
+const COLLECTION_ROUTE = 'sulu_media.overview';
+const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
-    medias: Array<*> = [
-        { id: 1, size: '260/350', title: 'This is a boring title', meta: 'bo and ring' },
-        { id: 2, size: '260/260', title: 'Is this one better?', meta: 'No' },
-        { id: 3, size: '260/300', title: 'But now!', meta: 'Hmm, not sure' },
-        { id: 4, size: '260/260', title: 'You want to have a fight?', meta: 'Come at me!' },
-        { id: 5, size: '260/380', title: 'LOL', meta: 'Yea, I thought so' },
-        { id: 6, size: '260/200', title: 'Now back to the Masonry', meta: ':)' },
-        { id: 7, size: '260/400', title: 'This is an image', meta: 'You are so smart' },
-        { id: 8, size: '260/180', title: 'This image has meta info', meta: 'No' },
-        { id: 9, size: '260/250', title: 'Dude, cmon', meta: 'NO' },
-        { id: 10, size: '260/200', title: 'Pls, you are embarrassing me', meta: 'Ugh, ok' },
-        { id: 11, size: '260/150', title: 'An image', meta: 'image/png, 3,2 MB' },
-    ];
+    page: observable = observable();
+    locale: observable = observable();
+    @observable title: string;
+    @observable parentId: ?string | number;
+    @observable collectionStore: DatagridStore;
+    @observable collectionId: string | number;
+    disposer: () => void;
 
-    @observable selectedMediaIds: Array<string | number> = [];
+    componentWillMount() {
+        const {router} = this.props;
 
-    @action handleMediaCardSelectionChange = (id: string | number, selected: boolean) => {
-        if (selected) {
-            this.selectedMediaIds.push(id);
-        } else {
-            this.selectedMediaIds = this.selectedMediaIds.filter((selectedId) => selectedId !== id);
+        router.bindQuery('page', this.page, '1');
+        router.bindQuery('locale', this.locale);
+
+        this.disposer = autorun(this.load);
+    }
+
+    componentWillUnmount() {
+        const {router} = this.props;
+        this.disposer();
+        router.unbindQuery('locale');
+        router.unbindQuery('page');
+        this.collectionStore.destroy();
+    }
+
+    load = () => {
+        const {router} = this.props;
+        const {
+            attributes: {
+                id,
+            },
+        } = router;
+
+        if (id) {
+            this.loadCollectionInfo(id);
         }
+
+        this.createCollectionStore(id);
     };
 
-    isSelected = (id: string | number) => {
-        return this.selectedMediaIds.includes(id);
+    loadCollectionInfo(collectionId) {
+        return ResourceRequester.get(COLLECTIONS_RESOURCE_KEY, collectionId, {
+            depth: 1,
+            locale: this.locale,
+        }).then(action((collectionInfo) => {
+            const parentCollection = collectionInfo._embedded.parent;
+            this.title = collectionInfo.title;
+            this.parentId = (parentCollection) ? parentCollection.id : undefined;
+        }));
+    }
+
+    getTitle() {
+        if (!this.collectionId) {
+            return translate('sulu_admin.all_media');
+        }
+
+        return this.title;
+    }
+
+    @action createCollectionStore(collectionId) {
+        if (this.collectionStore) {
+            this.collectionStore.destroy();
+        }
+
+        this.collectionId = collectionId;
+        this.collectionStore = new DatagridStore(
+            COLLECTIONS_RESOURCE_KEY,
+            {
+                page: this.page,
+                locale: this.locale,
+            },
+            (collectionId) ? {parent: collectionId} : undefined
+        );
+    }
+
+    handleOpenFolder = (collectionId) => {
+        const {router} = this.props;
+        router.navigate(COLLECTION_ROUTE, {id: collectionId}, {page: '1', locale: this.locale.get()});
     };
 
     render() {
-        const selectedCount = this.selectedMediaIds.length;
-
         return (
             <div>
-                <h1>Media Overview</h1>
-                {!!selectedCount &&
-                    <p>{selectedCount} Items selected</p>
-                }
-                <Masonry>
-                    {
-                        this.medias.map((media) => (
-                            <MediaCard
-                                id={media.id}
-                                key={media.id}
-                                title={media.title}
-                                meta={media.meta}
-                                icon="pencil"
-                                selected={this.isSelected(media.id)}
-                                onSelectionChange={this.handleMediaCardSelectionChange}
-                                image={`http://lorempixel.com/${media.size}`}
-                            />
-                        ))
-                    }
-                </Masonry>
+                <h1>{this.getTitle()}</h1>
+                <Datagrid
+                    store={this.collectionStore}
+                    views={['folder']}
+                    onItemClick={this.handleOpenFolder}
+                />
             </div>
         );
     }
 }
 
 export default withToolbar(MediaOverview, function() {
+    const router = this.props.router;
+
+    const {
+        route: {
+            options: {
+                locales,
+            },
+        },
+    } = this.props.router;
+
+    const locale = locales
+        ? {
+            value: this.locale.get(),
+            onChange: action((locale) => {
+                this.locale.set(locale);
+            }),
+            options: locales.map((locale) => ({
+                value: locale,
+                label: locale,
+            })),
+        }
+        : undefined;
+
     return {
+        locale,
+        disableAll: this.collectionStore.loading,
+        backButton: (this.collectionId !== undefined)
+            ? {
+                onClick: () => {
+                    router.navigate(COLLECTION_ROUTE, {id: this.parentId}, {locale: this.locale.get(), page: 1});
+                },
+            }
+            : undefined,
         items: [
             {
                 type: 'button',

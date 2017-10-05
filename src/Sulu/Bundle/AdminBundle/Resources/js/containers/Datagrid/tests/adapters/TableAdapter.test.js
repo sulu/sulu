@@ -95,7 +95,7 @@ test('Render data with schema not containing all fields', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
-test('Render data with pencil button when onRowEdit callback is passed', () => {
+test('Render data with pencil button when onItemEdit callback is passed', () => {
     const rowEditClickSpy = jest.fn();
     const data = [
         {
@@ -113,13 +113,13 @@ test('Render data with pencil button when onRowEdit callback is passed', () => {
         title: {},
     };
     const tableAdapter = render(
-        <TableAdapter data={data} schema={schema} onRowEditClick={rowEditClickSpy} selections={[]} />
+        <TableAdapter data={data} schema={schema} onItemClick={rowEditClickSpy} selections={[]} />
     );
 
     expect(tableAdapter).toMatchSnapshot();
 });
 
-test('Click on pencil should execute onRowEdit callback', () => {
+test('Click on pencil should execute onItemEdit callback', () => {
     const rowEditClickSpy = jest.fn();
     const data = [
         {
@@ -137,7 +137,7 @@ test('Click on pencil should execute onRowEdit callback', () => {
         title: {},
     };
     const tableAdapter = shallow(
-        <TableAdapter data={data} schema={schema} onRowEditClick={rowEditClickSpy} selections={[]} />
+        <TableAdapter data={data} schema={schema} onItemClick={rowEditClickSpy} selections={[]} />
     );
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(1);
@@ -147,7 +147,7 @@ test('Click on pencil should execute onRowEdit callback', () => {
     expect(rowEditClickSpy).toBeCalledWith(1);
 });
 
-test('Click on checkbox should call onRowSelectionChange callback', () => {
+test('Click on checkbox should call onItemSelectionChange callback', () => {
     const rowSelectionChangeSpy = jest.fn();
     const data = [
         {
@@ -165,7 +165,7 @@ test('Click on checkbox should call onRowSelectionChange callback', () => {
         title: {},
     };
     const tableAdapter = shallow(
-        <TableAdapter data={data} schema={schema} onRowSelectionChange={rowSelectionChangeSpy} selections={[]} />
+        <TableAdapter data={data} schema={schema} onItemSelectionChange={rowSelectionChangeSpy} selections={[]} />
     );
 
     expect(tableAdapter.find('Table').get(0).props.onRowSelectionChange).toBe(rowSelectionChangeSpy);

@@ -1,20 +1,23 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
+import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
-    page: observable = observable();
-    locale: observable = observable();
     @observable pageCount: number = 0;
     @observable data: Array<Object> = [];
     @observable selections: Array<string | number> = [];
     @observable loading: boolean = true;
     disposer: () => void;
     resourceKey: string;
+    options: Object;
+    observableOptions: ObservableOptions;
 
-    constructor(resourceKey: string) {
+    constructor(resourceKey: string, observableOptions: ObservableOptions, options: Object = {}) {
         this.resourceKey = resourceKey;
+        this.observableOptions = observableOptions;
+        this.options = options;
         this.disposer = autorun(this.sendRequest);
     }
 
@@ -24,21 +27,23 @@ export default class DatagridStore {
 
     sendRequest = () => {
         const page = this.getPage();
+
         if (!page) {
             return;
         }
 
         this.setLoading(true);
-        const options = {};
-        options.page = page;
+        const observableOptions = {};
+        observableOptions.page = page;
 
-        const locale = this.locale.get();
-        if (locale) {
-            options.locale = locale;
+        if (this.observableOptions.locale) {
+            observableOptions.locale = this.observableOptions.locale.get();
         }
 
-        ResourceRequester.getList(this.resourceKey, options)
-            .then(this.handleResponse);
+        ResourceRequester.getList(this.resourceKey, {
+            ...observableOptions,
+            ...this.options,
+        }).then(this.handleResponse);
     };
 
     @action handleResponse = (response: Object) => {
@@ -52,7 +57,7 @@ export default class DatagridStore {
     }
 
     getPage(): ?number {
-        const page = parseInt(this.page.get());
+        const page = parseInt(this.observableOptions.page.get());
         if (!page) {
             return undefined;
         }
@@ -61,15 +66,7 @@ export default class DatagridStore {
     }
 
     @action setPage(page: number) {
-        if (this.page.get() == page) {
-            return;
-        }
-
-        this.page.set(page);
-    }
-
-    @action setLocale(locale: string) {
-        this.locale.set(locale);
+        this.observableOptions.page.set(page);
     }
 
     @action select(id: string | number) {

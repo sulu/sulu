@@ -4,7 +4,7 @@ import {default as FormContainer} from '../../containers/Form';
 import FormStore from '../../containers/Form/stores/FormStore';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
-import type {ViewProps} from '../../containers/ViewRenderer/types';
+import type {ViewProps} from '../../containers/ViewRenderer';
 
 const schema = {
     title: {

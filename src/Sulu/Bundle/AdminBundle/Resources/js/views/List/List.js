@@ -7,10 +7,12 @@ import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
-import type {ViewProps} from '../../containers/ViewRenderer/types';
+import type {ViewProps} from '../../containers/ViewRenderer';
 
 @observer
 class List extends React.PureComponent<ViewProps> {
+    page: observable = observable();
+    locale: observable = observable();
     datagridStore: DatagridStore;
     @observable deleting = false;
 
@@ -28,22 +30,25 @@ class List extends React.PureComponent<ViewProps> {
             throw new Error('The route does not define the mandatory resourceKey option');
         }
 
-        this.datagridStore = new DatagridStore(resourceKey);
+        router.bindQuery('page', this.page, '1');
+        router.bindQuery('locale', this.locale);
 
-        router.bindQuery('locale', this.datagridStore.locale);
-        router.bindQuery('page', this.datagridStore.page, '1');
+        this.datagridStore = new DatagridStore(resourceKey, {
+            page: this.page,
+            locale: this.locale,
+        });
     }
 
     componentWillUnmount() {
         const {router} = this.props;
         this.datagridStore.destroy();
-        router.unbindQuery('locale');
         router.unbindQuery('page');
+        router.unbindQuery('locale');
     }
 
     handleEditClick = (rowId) => {
         const {router} = this.props;
-        router.navigate(router.route.options.editRoute, {id: rowId}, {locale: this.datagridStore.locale.get()});
+        router.navigate(router.route.options.editRoute, {id: rowId}, {locale: this.locale.get()});
     };
 
     render() {
@@ -55,12 +60,14 @@ class List extends React.PureComponent<ViewProps> {
                 },
             },
         } = this.props.router;
+
         return (
             <div>
                 {title && <h1>{translate(title)}</h1>}
                 <Datagrid
                     store={this.datagridStore}
-                    onRowEditClick={editRoute && this.handleEditClick}
+                    views={['table']}
+                    onItemClick={editRoute && this.handleEditClick}
                 />
             </div>
         );
@@ -79,10 +86,10 @@ export default withToolbar(List, function() {
 
     const locale = locales
         ? {
-            value: this.datagridStore.locale.get(),
-            onChange: (locale) => {
-                this.datagridStore.setLocale(locale);
-            },
+            value: this.locale.get(),
+            onChange: action((locale) => {
+                this.locale.set(locale);
+            }),
             options: locales.map((locale) => ({
                 value: locale,
                 label: locale,

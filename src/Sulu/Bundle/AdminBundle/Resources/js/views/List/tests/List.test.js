@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render} from 'enzyme';
+import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -30,6 +31,12 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.clearSelection = jest.fn();
 }));
 
+jest.mock('../../../containers/Datagrid/stores/DatagridAdapterStore', () => ({
+    add: jest.fn(),
+    get: jest.fn(),
+    has: jest.fn(),
+}));
+
 jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn().mockReturnValue(Promise.resolve(true)),
 }));
@@ -53,6 +60,10 @@ jest.mock('../../../services/Translator', () => ({
 
 beforeEach(() => {
     jest.resetModules();
+
+    const datagridAdapterStore = require('../../../containers/Datagrid/stores/DatagridAdapterStore');
+    datagridAdapterStore.has.mockReturnValue(true);
+    datagridAdapterStore.get.mockReturnValue(TableAdapter);
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {
@@ -126,8 +137,13 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
     };
 
     const list = mount(<List router={router} />);
-    expect(router.bindQuery).toBeCalledWith('page', undefined, '1');
-    expect(router.bindQuery).toBeCalledWith('locale', undefined);
+    const page = router.bindQuery.mock.calls[0][1];
+    const locale = router.bindQuery.mock.calls[1][1];
+
+    expect(page.get()).toBe(undefined);
+    expect(locale.get()).toBe(undefined);
+    expect(router.bindQuery).toBeCalledWith('page', page, '1');
+    expect(router.bindQuery).toBeCalledWith('locale', locale);
 
     list.unmount();
     expect(router.unbindQuery).toBeCalledWith('page');
@@ -148,7 +164,7 @@ test('Should navigate when pencil button is clicked', () => {
     };
 
     const listWrapper = mount(<List router={router} />);
-    listWrapper.find('List').get(0).datagridStore.locale = {
+    listWrapper.find('List').get(0).locale = {
         get: function() {
             return 'de';
         },
@@ -199,8 +215,7 @@ test('Should render the locale dropdown with the options from router', () => {
     };
 
     const list = mount(<List router={router} />).get(0);
-    const datagridStore = list.datagridStore;
-    datagridStore.locale = {
+    list.locale = {
         get: function() {
             return 'de';
         },

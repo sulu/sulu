@@ -64,4 +64,5 @@ export type ToolbarConfig = {
     items?: Array<ToolbarItem>,
     locale?: Select,
     backButton?: Button,
+    disableAll?: boolean,
 };
