@@ -1,5 +1,6 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
+import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
 
@@ -11,12 +12,9 @@ export default class DatagridStore {
     disposer: () => void;
     resourceKey: string;
     options: Object;
-    observableOptions: {
-        page: observable,
-        locale: observable,
-    };
+    observableOptions: ObservableOptions;
 
-    constructor(resourceKey: string, observableOptions: Object = {}, options: Object = {}) {
+    constructor(resourceKey: string, observableOptions: ObservableOptions, options: Object = {}) {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;

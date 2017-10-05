@@ -1,5 +1,6 @@
 // @flow
 import type {ComponentType} from 'react';
+import {observable} from 'mobx';
 
 export type DataItem = {
     id: string | number,
@@ -19,3 +20,8 @@ export type DatagridAdapterProps = {
 };
 
 export type DatagridAdapter = ComponentType<DatagridAdapterProps>;
+
+export type ObservableOptions = {
+    page: observable,
+    locale: observable,
+};
