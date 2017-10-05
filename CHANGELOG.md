@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+
+* dev-master
+    * ENHANCEMENT #3554 [WebsiteBundle]           Return webspaceKey on StructureResolver
+
 * 1.6.5 (2017-10-04)
     * HOTFIX      #---- [Husky]                   Fixed bug in `escapeHtml` method
     * HOTFIX      #3535 [Content]                 Fix bug in structure bridge when no document is available
