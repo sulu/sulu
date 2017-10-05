@@ -11,16 +11,14 @@ export default class DatagridStore {
     disposer: () => void;
     resourceKey: string;
     options: Object;
-    observableOptions: Object;
+    observableOptions: {
+        page: observable,
+        locale: observable,
+    };
 
     constructor(resourceKey: string, observableOptions: Object = {}, options: Object = {}) {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
-
-        if (!this.observableOptions.page) {
-            throw new Error('The DatagridStore expects an observable "page" property inside the "observableOptions".');
-        }
-
         this.options = options;
         this.disposer = autorun(this.sendRequest);
     }
@@ -37,15 +35,15 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
-        const defaultOptions = {};
-        defaultOptions.page = page;
+        const observableOptions = {};
+        observableOptions.page = page;
 
         if (this.observableOptions.locale) {
-            defaultOptions.locale = this.observableOptions.locale.get();
+            observableOptions.locale = this.observableOptions.locale.get();
         }
 
         ResourceRequester.getList(this.resourceKey, {
-            ...defaultOptions,
+            ...observableOptions,
             ...this.options,
         }).then(this.handleResponse);
     };

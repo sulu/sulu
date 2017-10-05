@@ -18,7 +18,7 @@ class DatagridAdapterStore {
 
     add(name: string, adapter: DatagridAdapter) {
         if (name in this.adapters) {
-            throw new Error('The key "' + name + '" has already been used for another adapter');
+            throw new Error('The key "' + name + '" has already been used for another datagrid adapter');
         }
 
         this.adapters[name] = adapter;
@@ -27,7 +27,7 @@ class DatagridAdapterStore {
     get(name: string): DatagridAdapter {
         if (!(name in this.adapters)) {
             throw new Error(
-                'The adapter with the key "' + name + '" is not defined. ' +
+                'The datagrid adapter with the key "' + name + '" is not defined. ' +
                 'You probably forgot to add it to the store using the "add" method.'
             );
         }
