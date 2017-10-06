@@ -60,7 +60,6 @@ const handleSearch = (value) => {
 };
 
 const handleChange = (value) => {
-    console.log(value);
     setState(() => ({
         value: value,
         suggestions: [],

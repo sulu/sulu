@@ -9,7 +9,7 @@ type Props = {
     query: string,
     icon?: string,
     children: string | (highlight: (text: string) => Node) => Node,
-    onSelection?: (value: string) => void,
+    onSelection?: (value: string | number) => void,
 };
 
 export default class Suggestion extends React.PureComponent<Props> {

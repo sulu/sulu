@@ -17,7 +17,7 @@ const POPOVER_VERTICAL_OFFSET = -2;
 
 type Props = {
     children: ChildrenArray<Element<typeof Suggestion>>,
-    /** The value inside the input field */
+    /** The value of the selected "Suggestion" */
     value: string,
     placeholder?: string,
     /** Shows the loading indicator when true */
@@ -36,15 +36,15 @@ export default class AutoComplete extends React.PureComponent<Props> {
 
     static Suggestion = Suggestion;
 
-    @observable inputRef: ElementRef<*>;
+    @observable inputRef: ElementRef<'input'>;
 
     @observable inputValue: string = this.props.value;
 
-    dirtyValue: boolean = false;
+    overrideValue: boolean = false;
 
     componentWillReceiveProps(nextProps: Props) {
-        if (this.dirtyValue) {
-            this.dirtyValue = false;
+        if (this.overrideValue) {
+            this.overrideValue = false;
             this.setInputValue(nextProps.value);
         }
     }
@@ -95,7 +95,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
     }, DEBOUNCE_TIME);
 
     handleSuggestionSelection = (value: string | number) => {
-        this.dirtyValue = true;
+        this.overrideValue = true;
         this.props.onChange(value);
     };
 
@@ -109,7 +109,7 @@ export default class AutoComplete extends React.PureComponent<Props> {
         const firstSuggestion = React.Children.toArray(children)[0];
 
         if (firstSuggestion && firstSuggestion.props) {
-            this.dirtyValue = true;
+            this.overrideValue = true;
             this.props.onChange(firstSuggestion.props.value);
         }
     };

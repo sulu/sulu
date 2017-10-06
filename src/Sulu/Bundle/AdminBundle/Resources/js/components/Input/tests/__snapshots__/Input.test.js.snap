@@ -6,11 +6,12 @@ exports[`Input should render 1`] = `
 >
   <input
     type="text"
+    value=""
   />
 </label>
 `;
 
-exports[`Input should render with a loader 1`] = `
+exports[`Input should render null value as empty string 1`] = `
 <label
   class="input"
 >
@@ -21,7 +22,7 @@ exports[`Input should render with a loader 1`] = `
 </label>
 `;
 
-exports[`Input should render null value as empty string 1`] = `
+exports[`Input should render with a loader 1`] = `
 <label
   class="input"
 >
