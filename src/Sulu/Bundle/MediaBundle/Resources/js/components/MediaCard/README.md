@@ -27,13 +27,15 @@ const handleSelection = () => {
 };
 
 const handleClick = (id) => {
-    alert(`You clicked me and my id is "${id}"`);
+    setState({
+        selected: !state.selected,
+    });
 };
 
 <div style={{backgroundColor: '#e5e5e5', padding: 20}}>
     <MediaCard
         id="What is luv?"
-        icon="pencil"
+        icon="check"
         onSelectionChange={handleSelection}
         onClick={handleClick}
         selected={state.selected}
@@ -41,6 +43,8 @@ const handleClick = (id) => {
         title="Lorempixel sdsdasdsd sdadasd asdasd"
         image={'http://lorempixel.com/300/200'}
         imageSizes={imageSizes}
+        downloadCopyInfo="Copy URL"
+        showCover={state.selected}
     />
 </div>
 ```

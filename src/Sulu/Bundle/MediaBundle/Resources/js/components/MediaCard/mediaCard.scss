@@ -1,13 +1,12 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
 $mediaCardBorderColor: $alto;
-$containerBackgroundColor: $white;
+$headerBackgroundColor: $white;
 $metaInfoTextColor: $silverChalice;
-$mediaOverlayBackgroundColor: rgba($black, .5);
-$mediaOverlayIconTextColor: $white;
-$containerBorderRadius: 3px;
-$imageBorderRadiusBottom: $containerBorderRadius;
-$downloadButtonBackgroundColor: $white;
+$coverBackgroundColor: rgba($black, .5);
+$coverIconTextColor: $white;
+$mediaCardBorderRadius: 3px;
+$downloadButtonBackgroundColor: $headerBackgroundColor;
 $downloadButtonBackgroundColorActive: $shakespeare;
 $downloadButtonTextColor: $alto;
 $downloadButtonTextColorActive: $white;
@@ -15,10 +14,6 @@ $downloadButtonBorderColorActive: $shakespeare;
 
 .media-card {
     width: 260px;
-    border-radius: $containerBorderRadius;
-    border: 1px solid $mediaCardBorderColor;
-    background-color: $containerBackgroundColor;
-    overflow: hidden;
 
     &:hover,
     &.selected {
@@ -32,7 +27,6 @@ $downloadButtonBorderColorActive: $shakespeare;
     display: flex;
     position: relative;
     cursor: pointer;
-    border-bottom: 1px solid $mediaCardBorderColor;
 }
 
 .header-click-area {
@@ -44,24 +38,35 @@ $downloadButtonBorderColorActive: $shakespeare;
 }
 
 .description {
-    width: 230px;
+    width: 100%;
     padding: 20px;
+    border-bottom: 1px solid $mediaCardBorderColor;
+    border-radius: $mediaCardBorderRadius 0 0 0;
+    background-color: $headerBackgroundColor;
+
+    .noDownloadList & {
+        border-radius: $mediaCardBorderRadius $mediaCardBorderRadius 0 0;
+    }
 }
 
 .download-button {
     width: 32px;
+    height: 100%;
     border: 0;
     font-size: 12px;
     cursor: pointer;
     background-color: $downloadButtonBackgroundColor;
     color: $downloadButtonTextColor;
-    border-left: 1px solid $mediaCardBorderColor;
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    border-color: $mediaCardBorderColor;
+    border-radius: 0 $mediaCardBorderRadius 0 0;
 
     &:hover,
-    &:active {
+    &.active {
         background-color: $downloadButtonBackgroundColorActive;
         color: $downloadButtonTextColorActive;
-        border-left: 1px solid $downloadButtonBorderColorActive;
+        border-color: $downloadButtonBackgroundColorActive;
     }
 }
 
@@ -89,21 +94,22 @@ $downloadButtonBorderColorActive: $shakespeare;
 }
 
 .media {
-    overflow: hidden;
     position: relative;
     cursor: pointer;
     background-image: url("./checkerBackground.gif");
+    overflow: hidden;
 
     img {
         width: 100%;
         display: block;
         transform: scale(1);
-        border-radius: 0 0 $imageBorderRadiusBottom;
         transition: transform .2s linear;
+        border-radius: 0 0 $mediaCardBorderRadius $mediaCardBorderRadius;
     }
 
-    &:hover {
-        .media-overlay {
+    &:hover,
+    .show-cover & {
+        .cover {
             opacity: 1;
         }
 
@@ -113,7 +119,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     }
 }
 
-.media-overlay {
+.cover {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -123,12 +129,12 @@ $downloadButtonBorderColorActive: $shakespeare;
     width: 100%;
     height: 100%;
     opacity: 0;
-    background-color: $mediaOverlayBackgroundColor;
+    background-color: $coverBackgroundColor;
     transition: opacity .2s linear;
 }
 
 .media-icon {
     display: flex;
-    color: $mediaOverlayIconTextColor;
+    color: $coverIconTextColor;
     font-size: 20px;
 }

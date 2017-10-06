@@ -27,13 +27,19 @@ type Props = {
     image: string,
     /** List of available image sizes */
     imageSizes: Array<{url: string, label: string}>,
+    /** Info text which is shown, when a download link is hovered */
+    downloadCopyInfo: string,
+    /** When true the cover is permanently shown */
+    showCover: boolean,
 };
 
 @observer
 export default class MediaCard extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
+        showCover: false,
         imageSizes: [],
+        downloadCopyInfo: '',
     };
 
     @observable downloadButtonRef: ElementRef<'button'>;
@@ -91,12 +97,22 @@ export default class MediaCard extends React.PureComponent<Props> {
             title,
             image,
             selected,
+            showCover,
             imageSizes,
+            downloadCopyInfo,
         } = this.props;
         const masonryClass = classNames(
             mediaCardStyles.mediaCard,
             {
-                [mediaCardStyles.selected]: selected,
+                [mediaCardStyles.selected]: !!selected,
+                [mediaCardStyles.showCover]: !!showCover,
+                [mediaCardStyles.noDownloadList]: !imageSizes.length,
+            }
+        );
+        const downloadButtonClass = classNames(
+            mediaCardStyles.downloadButton,
+            {
+                [mediaCardStyles.active]: !!this.downloadListOpen,
             }
         );
 
@@ -122,26 +138,31 @@ export default class MediaCard extends React.PureComponent<Props> {
                             {meta}
                         </div>
                     </div>
-                    <button
-                        ref={this.setDownloadButtonRef}
-                        onClick={this.handleDownloadButtonClick}
-                        className={mediaCardStyles.downloadButton}
-                    >
-                        <Icon name={DOWNLOAD_ICON} />
-                    </button>
-                    <DownloadList
-                        open={this.downloadListOpen}
-                        onClose={this.handleDownloadListClose}
-                        buttonRef={this.downloadButtonRef}
-                        imageSizes={imageSizes}
-                    />
+                    {!!imageSizes.length &&
+                        <div>
+                            <button
+                                ref={this.setDownloadButtonRef}
+                                onClick={this.handleDownloadButtonClick}
+                                className={downloadButtonClass}
+                            >
+                                <Icon name={DOWNLOAD_ICON} />
+                            </button>
+                            <DownloadList
+                                open={this.downloadListOpen}
+                                onClose={this.handleDownloadListClose}
+                                buttonRef={this.downloadButtonRef}
+                                imageSizes={imageSizes}
+                                copyInfo={downloadCopyInfo}
+                            />
+                        </div>
+                    }
                 </div>
                 <div
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
                 >
                     <img alt={title} src={image} />
-                    <div className={mediaCardStyles.mediaOverlay}>
+                    <div className={mediaCardStyles.cover}>
                         {!!icon &&
                             <Icon name={icon} className={mediaCardStyles.mediaIcon} />
                         }
