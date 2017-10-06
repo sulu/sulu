@@ -99,7 +99,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 [
                     'search' => [
                         'mapping' => [
-                            PageDocument::class => ['index' => 'page'],
+                            PageDocument::class => ['index' => 'page', 'decorate_index' => true],
                         ],
                     ],
                 ]
