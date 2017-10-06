@@ -1,4 +1,5 @@
-The `MediaCard` is useful for displaying a list of selectable images.
+The `MediaCard` is useful for displaying a list of selectable images. When the `imageSizes` property is set a button
+will be shown in the header of the `MediaCard` which will open a list of copyable URLs on click.
 
 ```
 initialState = {
