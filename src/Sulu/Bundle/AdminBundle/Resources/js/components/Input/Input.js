@@ -9,7 +9,7 @@ type Props = {
     type: string,
     value?: string,
     placeholder?: string,
-    onChange: (password: string) => void,
+    onChange: (value: string) => void,
 };
 
 export default class Input extends React.PureComponent<Props> {
