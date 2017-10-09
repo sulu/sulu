@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import fieldStore from './stores/FieldStore';
+import fieldRegistry from './FieldRegistry';
 import fieldStyles from './field.scss';
 import type {SchemaEntry} from './types';
 
@@ -21,7 +21,7 @@ export default class Field extends React.PureComponent<Props> {
     render() {
         const {schema, value} = this.props;
         const {label, type} = schema;
-        const FieldType = fieldStore.get(type);
+        const FieldType = fieldRegistry.get(type);
 
         return (
             <div>

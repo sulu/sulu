@@ -1,8 +1,8 @@
-The `Router` handles the translation from the URL to a defined route. Routes are added to the `RouteStore` using the
+The `Router` handles the translation from the URL to a defined route. Routes are added to the `RouteRegistry` using the
 `add` or `addCollection` methods:
 
 ```javascript static
-routeStore.add({
+routeRegistry.add({
     name: 'sulu_snippet.list',
     path: '/snippets',
     view: 'sulu_admin.list',
@@ -11,7 +11,7 @@ routeStore.add({
     },
 });
 
-routeStore.addCollection([
+routeRegistry.addCollection([
     {
         name: 'sulu_contact.list',
         path: '/contacts',
@@ -32,7 +32,7 @@ routeStore.addCollection([
 ```
 
 The `name` is just a unique identifier, the `path` is the URL for the react application, the `view` defines which
-component should be rendered, which will be retrieved from the [`ViewStore`](#viewrenderer) by the given identifier.
+component should be rendered, which will be retrieved from the [`ViewRegistry`](#viewrenderer) by the given identifier.
 Finally, `options` are additional values that can be set on the server side to influence the behavior of the react
 application.
 

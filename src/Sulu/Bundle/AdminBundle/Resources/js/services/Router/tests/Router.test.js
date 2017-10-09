@@ -3,9 +3,9 @@ import 'url-search-params-polyfill';
 import createHistory from 'history/createMemoryHistory';
 import {observable, isObservable} from 'mobx';
 import Router from '../Router';
-import routeStore from '../stores/RouteStore';
+import routeRegistry from '../RouteRegistry';
 
-jest.mock('../stores/RouteStore', () => {
+jest.mock('../RouteRegistry', () => {
     const getAllMock = jest.fn();
 
     return {
@@ -15,7 +15,7 @@ jest.mock('../stores/RouteStore', () => {
 });
 
 test('Navigate to route using state', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -38,7 +38,7 @@ test('Navigate to route using state', () => {
 });
 
 test('Navigate to route with search parameters using state', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -64,7 +64,7 @@ test('Navigate to route with search parameters using state', () => {
 });
 
 test('Navigate to route without parameters using state', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -80,7 +80,7 @@ test('Navigate to route without parameters using state', () => {
 });
 
 test('Navigate to route using URL', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -103,7 +103,7 @@ test('Navigate to route using URL', () => {
 });
 
 test('Navigate to route using URL with search parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -129,7 +129,7 @@ test('Navigate to route using URL with search parameters', () => {
 });
 
 test('Navigate to route changing only parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -148,7 +148,7 @@ test('Navigate to route changing only parameters', () => {
 });
 
 test('Navigate to route by adding parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -167,7 +167,7 @@ test('Navigate to route by adding parameters', () => {
 });
 
 test('Navigate to route by removing parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -186,7 +186,7 @@ test('Navigate to route by removing parameters', () => {
 });
 
 test('Navigate to route changing only search parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -207,7 +207,7 @@ test('Navigate to route changing only search parameters', () => {
 });
 
 test('Navigate to route by adding search parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -228,7 +228,7 @@ test('Navigate to route by adding search parameters', () => {
 });
 
 test('Navigate to route by removing search parameters', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -249,7 +249,7 @@ test('Navigate to route by removing search parameters', () => {
 });
 
 test('Navigate to route and let history react', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         home: {
             name: 'home',
             view: 'home',
@@ -271,7 +271,7 @@ test('Navigate to route and let history react', () => {
 });
 
 test('Do not navigate if all parameters are equal', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'form',
@@ -291,7 +291,7 @@ test('Do not navigate if all parameters are equal', () => {
 });
 
 test('Use current route from URL', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         page: {
             name: 'page',
             view: 'page',
@@ -320,7 +320,7 @@ test('Bound query parameter should update passed observable', () => {
 });
 
 test('Bound query parameter should update state in router', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',
@@ -355,7 +355,7 @@ test('Unbind query should remove query binding', () => {
 });
 
 test('Do not add parameter to URL if undefined', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',
@@ -374,7 +374,7 @@ test('Do not add parameter to URL if undefined', () => {
 });
 
 test('Set state to undefined if parameter is removed from URL', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',
@@ -393,7 +393,7 @@ test('Set state to undefined if parameter is removed from URL', () => {
 });
 
 test('Bound query should update state to default value if removed from URL', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',
@@ -412,7 +412,7 @@ test('Bound query should update state to default value if removed from URL', () 
 });
 
 test('Bound query should omit URL parameter if set to default value', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',
@@ -432,7 +432,7 @@ test('Bound query should omit URL parameter if set to default value', () => {
 });
 
 test('Bound query should initially not be set to undefined in URL', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',
@@ -451,7 +451,7 @@ test('Bound query should initially not be set to undefined in URL', () => {
 });
 
 test('Bound query should be set to initial passed value from URL', () => {
-    routeStore.getAll.mockReturnValue({
+    routeRegistry.getAll.mockReturnValue({
         list: {
             name: 'list',
             view: 'list',

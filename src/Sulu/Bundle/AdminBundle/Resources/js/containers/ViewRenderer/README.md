@@ -1,11 +1,11 @@
-The `ViewRenderer` is a simple component, which loads the registered view from its `ViewStore`, and renders it as a
+The `ViewRenderer` is a simple component, which loads the registered view from its `ViewRegistry`, and renders it as a
 React component and passes it the `Router` service, which is passed in as a property.
 
-Registering a component in the `ViewStore` and rendering it using the `ViewRenderer` is shown in the following example:
+Registering a component in the `ViewRegistry` and rendering it using the `ViewRenderer` is shown in the following example:
 
 ```
-const viewStore = require('./stores/ViewStore').default;
-viewStore.clear(); // Just to make sure the ViewStore is empty, not needed in a real world application
+const viewRegistry = require('./ViewRegistry').default;
+viewRegistry.clear(); // Just to make sure the ViewRegistry is empty, not needed in a real world application
 
 const Component = ({router}) => (
     <div>
@@ -14,7 +14,7 @@ const Component = ({router}) => (
         <p>{router.attributes.content}</p>
     </div>
 );
-viewStore.add('view', Component);
+viewRegistry.add('view', Component);
 
 // instead of this mocked Router you would usually use a real one
 const router = {

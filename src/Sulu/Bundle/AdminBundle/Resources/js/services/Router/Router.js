@@ -4,7 +4,7 @@ import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
 import type {Route} from './types';
-import routeStore from './stores/RouteStore';
+import routeRegistry from './RouteRegistry';
 
 export default class Router {
     history: Object;
@@ -57,8 +57,8 @@ export default class Router {
     }
 
     match(path: string, queryString: string) {
-        for (const name in routeStore.getAll()) {
-            const route = routeStore.get(name);
+        for (const name in routeRegistry.getAll()) {
+            const route = routeRegistry.get(name);
             const names = [];
             const match = pathToRegexp(route.path, names).exec(path);
 
@@ -84,7 +84,7 @@ export default class Router {
     }
 
     @action navigate(name: string, attributes: Object = {}, query: Object = {}) {
-        const route = routeStore.get(name);
+        const route = routeRegistry.get(name);
 
         if (equal(this.route, route)
             && equal(this.attributes, attributes)

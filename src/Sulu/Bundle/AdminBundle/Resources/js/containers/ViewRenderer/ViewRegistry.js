@@ -1,7 +1,7 @@
 // @flow
-import type {View} from '../types';
+import type {View} from './types';
 
-class ViewStore {
+class ViewRegistry {
     views: {[string]: View};
 
     constructor() {
@@ -25,4 +25,4 @@ class ViewStore {
     }
 }
 
-export default new ViewStore();
+export default new ViewRegistry();

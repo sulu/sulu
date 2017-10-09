@@ -31,7 +31,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.clearSelection = jest.fn();
 }));
 
-jest.mock('../../../containers/Datagrid/stores/DatagridAdapterStore', () => ({
+jest.mock('../../../containers/Datagrid/DatagridAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),
@@ -61,9 +61,9 @@ jest.mock('../../../services/Translator', () => ({
 beforeEach(() => {
     jest.resetModules();
 
-    const datagridAdapterStore = require('../../../containers/Datagrid/stores/DatagridAdapterStore');
-    datagridAdapterStore.has.mockReturnValue(true);
-    datagridAdapterStore.get.mockReturnValue(TableAdapter);
+    const datagridAdapterRegistry = require('../../../containers/Datagrid/DatagridAdapterRegistry');
+    datagridAdapterRegistry.has.mockReturnValue(true);
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 });
 
 test('Should render the datagrid with the correct resourceKey', () => {

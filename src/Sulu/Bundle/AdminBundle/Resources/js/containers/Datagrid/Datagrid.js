@@ -6,7 +6,7 @@ import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
 import datagridStyles from './datagrid.scss';
-import datagridAdapterStore from './stores/DatagridAdapterStore';
+import datagridAdapterRegistry from './DatagridAdapterRegistry';
 
 type Props = {
     onItemClick?: (rowId: string | number) => void,
@@ -28,17 +28,17 @@ export default class Datagrid extends React.PureComponent<Props> {
 
     validateViews() {
         this.props.views.forEach((viewName) => {
-            if (!datagridAdapterStore.has(viewName)) {
+            if (!datagridAdapterRegistry.has(viewName)) {
                 throw new Error(
                     'Datagrid-View with the name "' + viewName + '" does not exist.' +
-                    'Did you forget to add it to the "datagridAdapterStore"?'
+                    'Did you forget to add it to the "datagridAdapterRegistry"?'
                 );
             }
         });
     }
 
     getAdapter(name: string = this.props.views[0]) {
-        return datagridAdapterStore.get(name);
+        return datagridAdapterRegistry.get(name);
     }
 
     handleChangePage = (page: number) => {

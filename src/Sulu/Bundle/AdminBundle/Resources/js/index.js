@@ -5,13 +5,13 @@ import React from 'react';
 import {render} from 'react-dom';
 import {useStrict} from 'mobx';
 import Requester from './services/Requester';
-import Router, {routeStore} from './services/Router';
+import Router, {routeRegistry} from './services/Router';
 import {setTranslations} from './services/Translator';
 import Input from './components/Input';
 import Application from './containers/Application';
-import {fieldStore} from './containers/Form';
-import {viewStore} from './containers/ViewRenderer';
-import {datagridAdapterStore, TableAdapter, FolderAdapter} from './containers/Datagrid';
+import {fieldRegistry} from './containers/Form';
+import {viewRegistry} from './containers/ViewRenderer';
+import {datagridAdapterRegistry, TableAdapter, FolderAdapter} from './containers/Datagrid';
 import Form from './views/Form';
 import List from './views/List';
 import {bundlesReadyPromise, bundleReady} from './services/Bundles';
@@ -21,12 +21,12 @@ useStrict(true);
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
 
-viewStore.add('sulu_admin.list', List);
-viewStore.add('sulu_admin.form', Form);
-datagridAdapterStore.add('table', TableAdapter);
-datagridAdapterStore.add('folder', FolderAdapter);
+viewRegistry.add('sulu_admin.list', List);
+viewRegistry.add('sulu_admin.form', Form);
+datagridAdapterRegistry.add('table', TableAdapter);
+datagridAdapterRegistry.add('folder', FolderAdapter);
 
-fieldStore.add('text_line', Input);
+fieldRegistry.add('text_line', Input);
 
 function startApplication() {
     const router = new Router(createHistory());
@@ -37,7 +37,7 @@ const translationPromise = Requester.get('/admin/v2/translations?locale=en')
     .then((response) => setTranslations(response));
 
 const configPromise = Requester.get('/admin/v2/config')
-    .then((response) => routeStore.addCollection(response.routes));
+    .then((response) => routeRegistry.addCollection(response.routes));
 
 Promise.all([
     translationPromise,
