@@ -5,9 +5,11 @@ exports[`Application should not fail if current route does not exist 1`] = `
   <header
     class="toolbar"
   >
-    <nav>
+    <nav
+      class="controlsContainer"
+    >
       <div
-        class="controlsLeft"
+        class="controls"
       >
         <button
           class="button primary"
@@ -19,7 +21,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
         </button>
       </div>
       <div
-        class="controlsRight"
+        class="controls"
       />
     </nav>
   </header>
@@ -35,9 +37,11 @@ exports[`Application should render based on current route 1`] = `
   <header
     class="toolbar"
   >
-    <nav>
+    <nav
+      class="controlsContainer"
+    >
       <div
-        class="controlsLeft"
+        class="controls"
       >
         <button
           class="button primary"
@@ -49,7 +53,7 @@ exports[`Application should render based on current route 1`] = `
         </button>
       </div>
       <div
-        class="controlsRight"
+        class="controls"
       />
     </nav>
   </header>

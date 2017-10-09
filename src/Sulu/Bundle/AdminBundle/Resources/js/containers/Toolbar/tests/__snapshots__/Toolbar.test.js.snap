@@ -4,9 +4,11 @@ exports[`Render the items from the ToolbarStore 1`] = `
 <header
   class="toolbar"
 >
-  <nav>
+  <nav
+    class="controlsContainer"
+  >
     <div
-      class="controlsLeft"
+      class="controls"
     >
       <ul
         class="items"
@@ -49,7 +51,7 @@ exports[`Render the items from the ToolbarStore 1`] = `
       </ul>
     </div>
     <div
-      class="controlsRight"
+      class="controls"
     />
   </nav>
 </header>
