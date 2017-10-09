@@ -103,18 +103,6 @@ export default withToolbar(Form, function() {
                     this.form.submit();
                 },
             },
-            {
-                type: 'select',
-                value: translate('sulu_admin.save'),
-                icon: 'floppy-o',
-                onChange: () => {},
-                options: [
-                    {
-                        label: 'Wtfsdsadasdsd',
-                        value: 'wtf',
-                    },
-                ],
-            },
         ],
     };
 });
