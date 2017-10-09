@@ -29,12 +29,13 @@ $itemsContainerBorder: 1px $itemsContainerBorderColor solid;
     }
 }
 
-.controls-left {
-    float: left;
+.controls-container {
+    display: flex;
+    justify-content: space-between;
 }
 
-.controls-right {
-    float: right;
+.controls {
+    display: flex;
 }
 
 .icons,

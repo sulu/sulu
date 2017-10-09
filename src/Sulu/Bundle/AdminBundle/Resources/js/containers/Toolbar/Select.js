@@ -59,9 +59,7 @@ export default class Select extends React.PureComponent<SelectProps> {
         const buttonValue = this.selectedOption ? this.selectedOption.label : label;
         const selectClass = classNames(
             selectStyles.select,
-            {
-                [selectStyles[size]]: size,
-            }
+            selectStyles[size]
         );
 
         return (
