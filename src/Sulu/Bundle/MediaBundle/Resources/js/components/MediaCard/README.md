@@ -44,7 +44,7 @@ const handleClick = (id) => {
         title="Lorempixel sdsdasdsd sdadasd asdasd"
         image={'http://lorempixel.com/300/200'}
         imageSizes={imageSizes}
-        downloadCopyInfo="Copy URL"
+        downloadCopyText="Copy URL"
         showCover={state.selected}
     />
 </div>

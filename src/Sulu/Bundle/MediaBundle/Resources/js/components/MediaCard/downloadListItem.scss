@@ -15,7 +15,7 @@ $itemTextColorActive: $shakespeare;
         &:hover {
             color: $itemTextColorActive;
 
-            .copy-info {
+            .copy-text {
                 opacity: 1;
             }
         }
@@ -35,7 +35,7 @@ $itemTextColorActive: $shakespeare;
     justify-content: space-between;
 }
 
-.copy-info {
+.copy-text {
     opacity: 0;
 }
 

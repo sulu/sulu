@@ -28,7 +28,7 @@ type Props = {
     /** List of available image sizes */
     imageSizes: Array<{url: string, label: string}>,
     /** Info text which is shown, when a download link is hovered */
-    downloadCopyInfo: string,
+    downloadCopyText: string,
     /** When true the cover is permanently shown */
     showCover: boolean,
 };
@@ -39,7 +39,7 @@ export default class MediaCard extends React.PureComponent<Props> {
         selected: false,
         showCover: false,
         imageSizes: [],
-        downloadCopyInfo: '',
+        downloadCopyText: '',
     };
 
     @observable downloadButtonRef: ElementRef<'button'>;
@@ -99,9 +99,9 @@ export default class MediaCard extends React.PureComponent<Props> {
             selected,
             showCover,
             imageSizes,
-            downloadCopyInfo,
+            downloadCopyText,
         } = this.props;
-        const masonryClass = classNames(
+        const mediaCardClass = classNames(
             mediaCardStyles.mediaCard,
             {
                 [mediaCardStyles.selected]: !!selected,
@@ -117,7 +117,7 @@ export default class MediaCard extends React.PureComponent<Props> {
         );
 
         return (
-            <div className={masonryClass}>
+            <div className={mediaCardClass}>
                 <div className={mediaCardStyles.header}>
                     <div
                         className={mediaCardStyles.description}
@@ -152,7 +152,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                                 onClose={this.handleDownloadListClose}
                                 buttonRef={this.downloadButtonRef}
                                 imageSizes={imageSizes}
-                                copyInfo={downloadCopyInfo}
+                                copyText={downloadCopyText}
                             />
                         </div>
                     }

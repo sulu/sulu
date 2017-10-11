@@ -9,7 +9,7 @@ type Props = {
     onClose: () => void,
     buttonRef: ElementRef<'button'>,
     imageSizes: Array<{url: string, label: string}>,
-    copyInfo: string,
+    copyText: string,
 };
 
 export default class DownloadList extends React.PureComponent<Props> {
@@ -24,7 +24,7 @@ export default class DownloadList extends React.PureComponent<Props> {
     render() {
         const {
             open,
-            copyInfo,
+            copyText,
             buttonRef,
             imageSizes,
         } = this.props;
@@ -45,7 +45,7 @@ export default class DownloadList extends React.PureComponent<Props> {
                                 key={index}
                                 url={imageSize.url}
                                 onCopy={this.handleDownloadItemCopy}
-                                copyInfo={copyInfo}
+                                copyText={copyText}
                             >
                                 {imageSize.label}
                             </DownloadListItem>

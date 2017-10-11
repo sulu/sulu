@@ -9,7 +9,7 @@ import downloadListItemStyles from './downloadListItem.scss';
 type Props = {
     url: string,
     onCopy: () => void,
-    copyInfo: string,
+    copyText: string,
     children: string,
 };
 
@@ -33,7 +33,7 @@ export default class DownloadListItem extends React.PureComponent<Props> {
         const {
             url,
             children,
-            copyInfo,
+            copyText,
         } = this.props;
         const itemClass = classNames(
             downloadListItemStyles.item,
@@ -53,8 +53,8 @@ export default class DownloadListItem extends React.PureComponent<Props> {
                 >
                     <span className={downloadListItemStyles.itemContent}>
                         {children}
-                        <span className={downloadListItemStyles.copyInfo}>
-                            {copyInfo}
+                        <span className={downloadListItemStyles.copyText}>
+                            {copyText}
                         </span>
                     </span>
                 </ClipboardButton>

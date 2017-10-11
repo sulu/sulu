@@ -10,7 +10,8 @@
         "styleguide:build": "styleguidist build"
     },
     "dependencies": {
-        "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js"
+        "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
+        "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js"
     },
     "devDependencies": {
         "babel-core": "^6.25.0",
