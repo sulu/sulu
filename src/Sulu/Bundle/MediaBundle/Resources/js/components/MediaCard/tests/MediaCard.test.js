@@ -35,7 +35,7 @@ test('Render a MediaCard with download list', () => {
             title="Test"
             meta="Test/Test"
             imageSizes={imageSizes}
-            downloadCopyInfo="Copy URL"
+            downloadCopyText="Copy URL"
             image="http://lorempixel.com/300/200"
         />
     );
