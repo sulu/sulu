@@ -2,24 +2,14 @@
 
 $tabTextColor: $black;
 $tabUnderlineBackgroundColor: $black;
+$buttonHorizontalPadding: 20px;
 
 .tab {
     position: relative;
 
-    &:first-child {
-        button {
-            padding-left: 0;
-        }
-
-        &::after {
-            left: 0;
-            width: calc(100% - 20px);
-        }
-    }
-
     &::after {
         content: "";
-        width: calc(100% - 40px);
+        width: calc(100% - $buttonHorizontalPadding * 2);
         height: 2px;
         background-color: $tabUnderlineBackgroundColor;
         position: absolute;
@@ -32,7 +22,7 @@ $tabUnderlineBackgroundColor: $black;
     button {
         height: 40px;
         cursor: pointer;
-        padding: 10px 20px;
+        padding: 10px $buttonHorizontalPadding;
         color: $tabTextColor;
         background-color: transparent;
         font-size: 12px;
