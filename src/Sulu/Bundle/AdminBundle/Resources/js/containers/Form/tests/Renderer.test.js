@@ -1,10 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import fieldStore from '../stores/FieldStore';
+import fieldRegistry from '../registries/FieldRegistry';
 import Renderer from '../Renderer';
 
-jest.mock('../stores/FieldStore', () => ({
+jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
 }));
 
@@ -42,7 +42,7 @@ test('Should render field types based on schema', () => {
         },
     };
 
-    fieldStore.get.mockImplementation((type) => {
+    fieldRegistry.get.mockImplementation((type) => {
         switch (type) {
             case 'text':
                 return function Text() {

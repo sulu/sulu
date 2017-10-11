@@ -1,7 +1,7 @@
 // @flow
 import type {ComponentType} from 'react';
 
-class FieldStore {
+class FieldRegistry {
     fields: {[string]: ComponentType<*>};
 
     constructor() {
@@ -25,4 +25,4 @@ class FieldStore {
     }
 }
 
-export default new FieldStore();
+export default new FieldRegistry();

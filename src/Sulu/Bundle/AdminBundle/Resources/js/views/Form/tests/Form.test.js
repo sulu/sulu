@@ -13,7 +13,7 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
-jest.mock('../../../containers/Form/stores/FieldStore', () => ({
+jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     get: jest.fn().mockReturnValue(function() {
         return null;
     }),

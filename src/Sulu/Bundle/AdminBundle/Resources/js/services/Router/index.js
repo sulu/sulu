@@ -1,6 +1,6 @@
 // @flow
 import Router from './Router';
-import routeStore from './stores/RouteStore';
+import routeRegistry from './registries/RouteRegistry';
 
 export default Router;
-export {routeStore};
+export {routeRegistry};

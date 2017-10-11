@@ -1,7 +1,7 @@
 // @flow
 import type {Route, RouteMap} from '../types';
 
-class RouteStore {
+class RouteRegistry {
     routes: RouteMap;
 
     constructor() {
@@ -32,4 +32,4 @@ class RouteStore {
     }
 }
 
-export default new RouteStore();
+export default new RouteRegistry();

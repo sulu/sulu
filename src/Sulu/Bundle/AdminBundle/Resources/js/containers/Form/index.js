@@ -1,6 +1,6 @@
 // @flow
 import Form from './Form';
-import fieldStore from './stores/FieldStore';
+import fieldRegistry from './registries/FieldRegistry';
 
-export {fieldStore};
+export {fieldRegistry};
 export default Form;

@@ -1,6 +1,6 @@
 // @flow
 import Datagrid, {DatagridStore} from './Datagrid';
-import {viewStore} from './ViewRenderer';
+import {viewRegistry} from './ViewRenderer';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 
@@ -9,7 +9,7 @@ export type {
 };
 
 export {
-    viewStore,
+    viewRegistry,
     withToolbar,
     Datagrid,
     DatagridStore,

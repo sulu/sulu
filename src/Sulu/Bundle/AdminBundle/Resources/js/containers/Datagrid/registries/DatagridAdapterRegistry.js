@@ -1,7 +1,7 @@
 // @flow
 import type {DatagridAdapter} from '../types';
 
-class DatagridAdapterStore {
+class DatagridAdapterRegistry {
     adapters: {[string]: DatagridAdapter};
 
     constructor() {
@@ -36,4 +36,4 @@ class DatagridAdapterStore {
     }
 }
 
-export default new DatagridAdapterStore();
+export default new DatagridAdapterRegistry();

@@ -1,24 +1,24 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import routeStore from '../../stores/RouteStore';
+import routeRegistry from '../registries/RouteRegistry';
 
 beforeEach(() => {
-    routeStore.clear();
+    routeRegistry.clear();
 });
 
-test('Clear routes from RouteStore', () => {
-    routeStore.add({
+test('Clear routes from RouteRegistry', () => {
+    routeRegistry.add({
         name:'route',
         view: 'view',
         pattern: '/route',
     });
 
-    expect(Object.keys(routeStore.routes)).toHaveLength(1);
+    expect(Object.keys(routeRegistry.routes)).toHaveLength(1);
 
-    routeStore.clear();
-    expect(Object.keys(routeStore.routes)).toHaveLength(0);
+    routeRegistry.clear();
+    expect(Object.keys(routeRegistry.routes)).toHaveLength(0);
 });
 
-test('Get routes from RouteStore', () => {
+test('Get routes from RouteRegistry', () => {
     const route1 = {
         name: 'route1',
         view: 'view1',
@@ -36,19 +36,19 @@ test('Get routes from RouteStore', () => {
         },
     };
 
-    routeStore.add(route1);
-    routeStore.add(route2);
+    routeRegistry.add(route1);
+    routeRegistry.add(route2);
 
-    expect(routeStore.get('route1')).toBe(route1);
-    expect(routeStore.get('route2')).toBe(route2);
+    expect(routeRegistry.get('route1')).toBe(route1);
+    expect(routeRegistry.get('route2')).toBe(route2);
 
-    expect(routeStore.getAll()).toEqual({
+    expect(routeRegistry.getAll()).toEqual({
         route1: route1,
         route2: route2,
     });
 });
 
-test('Add a route collection to the RouteStore', () => {
+test('Add a route collection to the RouteRegistry', () => {
     const route1 = {
         name: 'route1',
         view: 'view1',
@@ -67,10 +67,10 @@ test('Add a route collection to the RouteStore', () => {
         },
     };
 
-    routeStore.addCollection([route1, route2]);
+    routeRegistry.addCollection([route1, route2]);
 
-    expect(routeStore.get('route1')).toBe(route1);
-    expect(routeStore.get('route2')).toBe(route2);
+    expect(routeRegistry.get('route1')).toBe(route1);
+    expect(routeRegistry.get('route2')).toBe(route2);
 });
 
 test('Add route with existing key should throw', () => {
@@ -80,7 +80,7 @@ test('Add route with existing key should throw', () => {
         pattern: '/route',
     };
 
-    routeStore.add(route);
+    routeRegistry.add(route);
 
-    expect(() => routeStore.add(route)).toThrow('test_route');
+    expect(() => routeRegistry.add(route)).toThrow('test_route');
 });

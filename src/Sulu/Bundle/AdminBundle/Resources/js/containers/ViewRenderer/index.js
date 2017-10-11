@@ -1,8 +1,8 @@
 // @flow
 import ViewRenderer from './ViewRenderer';
-import viewStore from './stores/ViewStore';
+import viewRegistry from './registries/ViewRegistry';
 import type {ViewProps} from './types';
 
 export default ViewRenderer;
-export {viewStore};
+export {viewRegistry};
 export type {ViewProps};
