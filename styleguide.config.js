@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable import/no-nodejs-modules */
 const path = require('path');
+const fs = require('fs');
 const glob = require('glob');
 
 const firstLetterIsUppercase = (string) => {
@@ -21,6 +22,10 @@ const compareFolderName = (folderA, folderB) => {
     }
 
     return 0;
+};
+
+const javaScriptFileExists = (path, fileName) => {
+    return fs.existsSync(`${path}/${fileName}.js`);
 };
 
 module.exports = { // eslint-disable-line
@@ -45,6 +50,7 @@ module.exports = { // eslint-disable-line
                 // filter out higher order components
                 folders = folders
                     .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
                     .sort(compareFolderName);
 
                 return folders.map((folder) => {
@@ -61,6 +67,7 @@ module.exports = { // eslint-disable-line
                 // filter out containers
                 folders = folders
                     .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
                     .sort(compareFolderName);
 
                 return folders.map((folder) => {
@@ -77,6 +84,7 @@ module.exports = { // eslint-disable-line
 
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
+                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
                     .sort(compareFolderName)
                     .map((folder) => {
                         const component = path.basename(folder);

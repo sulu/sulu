@@ -128,7 +128,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                 />
                 <Datagrid
                     store={this.mediaStore}
-                    views={['masonry']}
+                    views={['mediaCardOverview']}
                 />
             </div>
         );

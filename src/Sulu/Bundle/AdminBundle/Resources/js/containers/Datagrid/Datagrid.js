@@ -3,9 +3,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import equal from 'fast-deep-equal';
 import Loader from '../../components/Loader';
-import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
-import datagridStyles from './datagrid.scss';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 
 type Props = {
@@ -41,7 +39,7 @@ export default class Datagrid extends React.PureComponent<Props> {
         return datagridAdapterRegistry.get(name);
     }
 
-    handleChangePage = (page: number) => {
+    handlePageChange = (page: number) => {
         this.props.store.setPage(page);
     };
 
@@ -66,24 +64,18 @@ export default class Datagrid extends React.PureComponent<Props> {
 
         return (
             <section>
-                <div className={datagridStyles.content}>
-                    {this.props.store.loading
-                        ? <Loader />
-                        : <Adapter
-                            data={store.data}
-                            selections={store.selections}
-                            schema={store.getFields()}
-                            onItemClick={onItemClick}
-                            onItemSelectionChange={this.handleItemSelectionChange}
-                            onAllSelectionChange={this.handleAllSelectionChange}
-                        />
-                    }
-                </div>
-                {!!page && !!pageCount &&
-                    <Pagination
-                        current={page}
-                        total={pageCount}
-                        onChange={this.handleChangePage}
+                {this.props.store.loading
+                    ? <Loader />
+                    : <Adapter
+                        data={store.data}
+                        selections={store.selections}
+                        schema={store.getFields()}
+                        currentPage={page}
+                        pageCount={pageCount}
+                        onPageChange={this.handlePageChange}
+                        onItemClick={onItemClick}
+                        onItemSelectionChange={this.handleItemSelectionChange}
+                        onAllSelectionChange={this.handleAllSelectionChange}
                     />
                 }
             </section>

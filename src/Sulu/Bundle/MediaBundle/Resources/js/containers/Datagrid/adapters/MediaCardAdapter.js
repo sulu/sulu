@@ -3,12 +3,12 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import {Masonry} from 'sulu-admin-bundle/components';
 import type {DatagridAdapterProps} from 'sulu-admin-bundle/containers';
-import MediaCard from '../../components/MediaCard';
+import MediaCard from '../../../components/MediaCard';
 
 const THUMBNAIL_SIZE = 'sulu-260x';
 
 @observer
-export default class MasonryAdapter extends React.Component<DatagridAdapterProps> {
+export default class MediaCardAdapter extends React.Component<DatagridAdapterProps> {
     static formatFileSize(size: number) {
         const megaByteThreshold = 1000000;
         const kiloByteThreshold = 1000;
@@ -29,7 +29,7 @@ export default class MasonryAdapter extends React.Component<DatagridAdapterProps
         return (
             <Masonry>
                 {data.map((item: Object) => {
-                    const meta = `${item.mimeType} ${MasonryAdapter.formatFileSize(item.size)}`;
+                    const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
 
                     return (
                         // TODO: Don't access properties like "title" directly.

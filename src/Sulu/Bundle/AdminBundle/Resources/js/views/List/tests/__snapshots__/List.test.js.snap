@@ -5,145 +5,151 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
   class="list"
 >
   <section>
-    <div
-      class="content"
-    >
+    <div>
       <div
-        class="tableContainer"
+        class="adapter"
       >
-        <table
-          class="table"
+        <div
+          class="tableContainer"
         >
-          <thead
-            class="header"
+          <table
+            class="table"
           >
-            <tr>
-              <th
-                class="headerCell"
+            <thead
+              class="header"
+            >
+              <tr>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    <label
+                      class="label"
+                    >
+                      <span
+                        class="switch checkbox light"
+                      >
+                        <input
+                          type="checkbox"
+                        />
+                        <span />
+                      </span>
+                    </label>
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    title
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    description
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="row"
               >
-                <span>
+                <td
+                  class="cell small"
+                >
                   <label
                     class="label"
                   >
                     <span
-                      class="switch checkbox light"
+                      class="switch checkbox dark"
                     >
                       <input
                         type="checkbox"
+                        value="1"
                       />
                       <span />
                     </span>
                   </label>
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="row"
-            >
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
+                </td>
+                <td
+                  class="cell"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
-              </td>
-            </tr>
-            <tr
-              class="row"
-            >
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
+                  Title 1
+                </td>
+                <td
+                  class="cell"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  Description 1
+                </td>
+              </tr>
+              <tr
+                class="row"
+              >
+                <td
+                  class="cell small"
+                >
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </td>
+                <td
+                  class="cell"
+                >
+                  Title 2
+                </td>
+                <td
+                  class="cell"
+                >
+                  Description 2
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+      <nav
+        class="pagination"
+      >
+        <div
+          class="control"
+        >
+          <span
+            class="display"
+          >
+            Page: 2 of 3
+          </span>
+          <a
+            class="previous enabled"
+          >
+            <span
+              aria-label="angle-left"
+              class="fa fa-angle-left"
+            />
+          </a>
+          <a
+            class="next enabled"
+          >
+            <span
+              aria-label="angle-right"
+              class="fa fa-angle-right"
+            />
+          </a>
+        </div>
+      </nav>
     </div>
-    <nav
-      class="pagination"
-    >
-      <span
-        class="display"
-      >
-        Page: 2 of 3
-      </span>
-      <a
-        class="previous enabled"
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </a>
-      <a
-        class="next enabled"
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </a>
-    </nav>
   </section>
 </div>
 `;
@@ -153,175 +159,181 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
   class="list"
 >
   <section>
-    <div
-      class="content"
-    >
+    <div>
       <div
-        class="tableContainer"
+        class="adapter"
       >
-        <table
-          class="table"
+        <div
+          class="tableContainer"
         >
-          <thead
-            class="header"
+          <table
+            class="table"
           >
-            <tr>
-              <th
-                class="headerButtonCell headerCell"
+            <thead
+              class="header"
+            >
+              <tr>
+                <th
+                  class="headerButtonCell headerCell"
+                >
+                  <span>
+                    <span
+                      aria-label="pencil"
+                      class="fa fa-pencil"
+                    />
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    <label
+                      class="label"
+                    >
+                      <span
+                        class="switch checkbox light"
+                      >
+                        <input
+                          type="checkbox"
+                        />
+                        <span />
+                      </span>
+                    </label>
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    title
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    description
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="row"
               >
-                <span>
-                  <span
-                    aria-label="pencil"
-                    class="fa fa-pencil"
-                  />
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
+                <td
+                  class="buttonCell cell"
+                >
+                  <button>
+                    <span
+                      aria-label="pencil"
+                      class="fa fa-pencil"
+                    />
+                  </button>
+                </td>
+                <td
+                  class="cell small"
+                >
                   <label
                     class="label"
                   >
                     <span
-                      class="switch checkbox light"
+                      class="switch checkbox dark"
                     >
                       <input
                         type="checkbox"
+                        value="1"
                       />
                       <span />
                     </span>
                   </label>
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="row"
-            >
-              <td
-                class="buttonCell cell"
-              >
-                <button>
-                  <span
-                    aria-label="pencil"
-                    class="fa fa-pencil"
-                  />
-                </button>
-              </td>
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
+                </td>
+                <td
+                  class="cell"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
-              </td>
-            </tr>
-            <tr
-              class="row"
-            >
-              <td
-                class="buttonCell cell"
-              >
-                <button>
-                  <span
-                    aria-label="pencil"
-                    class="fa fa-pencil"
-                  />
-                </button>
-              </td>
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
+                  Title 1
+                </td>
+                <td
+                  class="cell"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="2"
+                  Description 1
+                </td>
+              </tr>
+              <tr
+                class="row"
+              >
+                <td
+                  class="buttonCell cell"
+                >
+                  <button>
+                    <span
+                      aria-label="pencil"
+                      class="fa fa-pencil"
                     />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  </button>
+                </td>
+                <td
+                  class="cell small"
+                >
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </td>
+                <td
+                  class="cell"
+                >
+                  Title 2
+                </td>
+                <td
+                  class="cell"
+                >
+                  Description 2
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+      <nav
+        class="pagination"
+      >
+        <div
+          class="control"
+        >
+          <span
+            class="display"
+          >
+            Page: 2 of 3
+          </span>
+          <a
+            class="previous enabled"
+          >
+            <span
+              aria-label="angle-left"
+              class="fa fa-angle-left"
+            />
+          </a>
+          <a
+            class="next enabled"
+          >
+            <span
+              aria-label="angle-right"
+              class="fa fa-angle-right"
+            />
+          </a>
+        </div>
+      </nav>
     </div>
-    <nav
-      class="pagination"
-    >
-      <span
-        class="display"
-      >
-        Page: 2 of 3
-      </span>
-      <a
-        class="previous enabled"
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </a>
-      <a
-        class="next enabled"
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </a>
-    </nav>
   </section>
 </div>
 `;
@@ -334,145 +346,151 @@ exports[`Should render the list with a title 1`] = `
     Snippets
   </h1>
   <section>
-    <div
-      class="content"
-    >
+    <div>
       <div
-        class="tableContainer"
+        class="adapter"
       >
-        <table
-          class="table"
+        <div
+          class="tableContainer"
         >
-          <thead
-            class="header"
+          <table
+            class="table"
           >
-            <tr>
-              <th
-                class="headerCell"
+            <thead
+              class="header"
+            >
+              <tr>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    <label
+                      class="label"
+                    >
+                      <span
+                        class="switch checkbox light"
+                      >
+                        <input
+                          type="checkbox"
+                        />
+                        <span />
+                      </span>
+                    </label>
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    title
+                  </span>
+                </th>
+                <th
+                  class="headerCell"
+                >
+                  <span>
+                    description
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="row"
               >
-                <span>
+                <td
+                  class="cell small"
+                >
                   <label
                     class="label"
                   >
                     <span
-                      class="switch checkbox light"
+                      class="switch checkbox dark"
                     >
                       <input
                         type="checkbox"
+                        value="1"
                       />
                       <span />
                     </span>
                   </label>
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  title
-                </span>
-              </th>
-              <th
-                class="headerCell"
-              >
-                <span>
-                  description
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="row"
-            >
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
+                </td>
+                <td
+                  class="cell"
                 >
-                  <span
-                    class="switch checkbox dark"
-                  >
-                    <input
-                      type="checkbox"
-                      value="1"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 1
-              </td>
-              <td
-                class="cell"
-              >
-                Description 1
-              </td>
-            </tr>
-            <tr
-              class="row"
-            >
-              <td
-                class="cell small"
-              >
-                <label
-                  class="label"
+                  Title 1
+                </td>
+                <td
+                  class="cell"
                 >
-                  <span
-                    class="switch checkbox dark"
+                  Description 1
+                </td>
+              </tr>
+              <tr
+                class="row"
+              >
+                <td
+                  class="cell small"
+                >
+                  <label
+                    class="label"
                   >
-                    <input
-                      type="checkbox"
-                      value="2"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </td>
-              <td
-                class="cell"
-              >
-                Title 2
-              </td>
-              <td
-                class="cell"
-              >
-                Description 2
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </td>
+                <td
+                  class="cell"
+                >
+                  Title 2
+                </td>
+                <td
+                  class="cell"
+                >
+                  Description 2
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+      <nav
+        class="pagination"
+      >
+        <div
+          class="control"
+        >
+          <span
+            class="display"
+          >
+            Page: 2 of 3
+          </span>
+          <a
+            class="previous enabled"
+          >
+            <span
+              aria-label="angle-left"
+              class="fa fa-angle-left"
+            />
+          </a>
+          <a
+            class="next enabled"
+          >
+            <span
+              aria-label="angle-right"
+              class="fa fa-angle-right"
+            />
+          </a>
+        </div>
+      </nav>
     </div>
-    <nav
-      class="pagination"
-    >
-      <span
-        class="display"
-      >
-        Page: 2 of 3
-      </span>
-      <a
-        class="previous enabled"
-      >
-        <span
-          aria-label="angle-left"
-          class="fa fa-angle-left"
-        />
-      </a>
-      <a
-        class="next enabled"
-      >
-        <span
-          aria-label="angle-right"
-          class="fa fa-angle-right"
-        />
-      </a>
-    </nav>
   </section>
 </div>
 `;

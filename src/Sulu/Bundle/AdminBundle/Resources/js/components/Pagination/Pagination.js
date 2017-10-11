@@ -49,15 +49,17 @@ export default class Pagination extends React.PureComponent<Props> {
 
         return (
             <nav className={paginationStyles.pagination}>
-                <span className={paginationStyles.display}>
-                    {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
-                </span>
-                <a className={previousClass} onClick={this.handlePreviousClick}>
-                    <Icon name="angle-left" />
-                </a>
-                <a className={nextClass} onClick={this.handleNextClick}>
-                    <Icon name="angle-right" />
-                </a>
+                <div className={paginationStyles.control}>
+                    <span className={paginationStyles.display}>
+                        {translate('sulu_admin.page')}: {current} {translate('sulu_admin.of')} {total}
+                    </span>
+                    <a className={previousClass} onClick={this.handlePreviousClick}>
+                        <Icon name="angle-left" />
+                    </a>
+                    <a className={nextClass} onClick={this.handleNextClick}>
+                        <Icon name="angle-right" />
+                    </a>
+                </div>
             </nav>
         );
     }

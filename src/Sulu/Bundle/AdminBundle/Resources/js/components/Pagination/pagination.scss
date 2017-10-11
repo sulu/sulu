@@ -4,10 +4,15 @@ $borderRadius: 4px;
 $buttonWidth: 33px;
 
 .pagination {
-    float: right;
     color: $gray;
     font-size: 12px;
     line-height: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.control {
+    margin-left: auto;
 }
 
 .display {
