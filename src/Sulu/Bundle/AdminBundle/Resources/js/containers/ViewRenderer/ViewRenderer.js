@@ -11,11 +11,13 @@ type Props = {
 export default class ViewRenderer extends React.PureComponent<Props> {
     render() {
         const {name, router} = this.props;
-        const view = viewRegistry.get(name);
-        if (!view) {
+        const View = viewRegistry.get(name);
+        if (!View) {
             throw new Error('View "' + name + '" has not been found');
         }
 
-        return React.createElement(view, {router});
+        return (
+            <View router={router} />
+        );
     }
 }
