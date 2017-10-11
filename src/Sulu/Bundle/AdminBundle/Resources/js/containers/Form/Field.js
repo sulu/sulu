@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import fieldRegistry from './FieldRegistry';
+import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
 import type {SchemaEntry} from './types';
 

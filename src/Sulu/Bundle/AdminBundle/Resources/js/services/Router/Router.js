@@ -4,7 +4,7 @@ import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
 import type {Route} from './types';
-import routeRegistry from './RouteRegistry';
+import routeRegistry from './registries/RouteRegistry';
 
 export default class Router {
     history: Object;

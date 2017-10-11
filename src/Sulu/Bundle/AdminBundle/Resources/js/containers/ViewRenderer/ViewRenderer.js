@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Router from '../../services/Router';
-import viewRegistry from './ViewRegistry';
+import viewRegistry from './registries/ViewRegistry';
 
 type Props = {
     name: string,

@@ -2,9 +2,9 @@
 import React from 'react';
 import {render} from 'enzyme';
 import ViewRenderer from '../ViewRenderer';
-import viewRegistry from '../ViewRegistry';
+import viewRegistry from '../registries/ViewRegistry';
 
-jest.mock('../ViewRegistry', () => ({
+jest.mock('../registries/ViewRegistry', () => ({
     get: jest.fn(),
 }));
 

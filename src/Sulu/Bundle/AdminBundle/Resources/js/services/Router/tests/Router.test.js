@@ -3,9 +3,9 @@ import 'url-search-params-polyfill';
 import createHistory from 'history/createMemoryHistory';
 import {observable, isObservable} from 'mobx';
 import Router from '../Router';
-import routeRegistry from '../RouteRegistry';
+import routeRegistry from '../registries/RouteRegistry';
 
-jest.mock('../RouteRegistry', () => {
+jest.mock('../registries/RouteRegistry', () => {
     const getAllMock = jest.fn();
 
     return {

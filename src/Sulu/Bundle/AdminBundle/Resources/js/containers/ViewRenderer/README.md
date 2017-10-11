@@ -4,7 +4,7 @@ React component and passes it the `Router` service, which is passed in as a prop
 Registering a component in the `ViewRegistry` and rendering it using the `ViewRenderer` is shown in the following example:
 
 ```
-const viewRegistry = require('./ViewRegistry').default;
+const viewRegistry = require('./registries/ViewRegistry').default;
 viewRegistry.clear(); // Just to make sure the ViewRegistry is empty, not needed in a real world application
 
 const Component = ({router}) => (

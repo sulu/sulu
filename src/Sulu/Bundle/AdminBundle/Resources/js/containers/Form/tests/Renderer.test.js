@@ -1,10 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import fieldRegistry from '../FieldRegistry';
+import fieldRegistry from '../registries/FieldRegistry';
 import Renderer from '../Renderer';
 
-jest.mock('../FieldRegistry', () => ({
+jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
 }));
 

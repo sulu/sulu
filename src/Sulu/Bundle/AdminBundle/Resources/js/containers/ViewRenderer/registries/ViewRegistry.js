@@ -1,5 +1,5 @@
 // @flow
-import type {View} from './types';
+import type {View} from '../types';
 
 class ViewRegistry {
     views: {[string]: View};

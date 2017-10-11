@@ -1,5 +1,5 @@
 // @flow
-import type {Route, RouteMap} from './types';
+import type {Route, RouteMap} from '../types';
 
 class RouteRegistry {
     routes: RouteMap;

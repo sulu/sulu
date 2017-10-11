@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import routeRegistry from '../RouteRegistry';
+import routeRegistry from '../registries/RouteRegistry';
 
 beforeEach(() => {
     routeRegistry.clear();

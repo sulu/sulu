@@ -6,7 +6,7 @@ import Loader from '../../components/Loader';
 import Pagination from '../../components/Pagination';
 import DatagridStore from './stores/DatagridStore';
 import datagridStyles from './datagrid.scss';
-import datagridAdapterRegistry from './DatagridAdapterRegistry';
+import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 
 type Props = {
     onItemClick?: (rowId: string | number) => void,

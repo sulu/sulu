@@ -4,7 +4,7 @@ import React from 'react';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
 import TableAdapter from '../adapters/TableAdapter';
-import datagridAdapterRegistry from '../DatagridAdapterRegistry';
+import datagridAdapterRegistry from '../registries/DatagridAdapterRegistry';
 
 jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.setPage = jest.fn();
@@ -20,7 +20,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselectEntirePage = jest.fn();
 }));
 
-jest.mock('../DatagridAdapterRegistry', () => ({
+jest.mock('../registries/DatagridAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),

@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import fieldRegistry from '../FieldRegistry';
+import fieldRegistry from '../registries/FieldRegistry';
 
 beforeEach(() => {
     fieldRegistry.clear();

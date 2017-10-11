@@ -31,7 +31,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
     this.clearSelection = jest.fn();
 }));
 
-jest.mock('../../../containers/Datagrid/DatagridAdapterRegistry', () => ({
+jest.mock('../../../containers/Datagrid/registries/DatagridAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),
@@ -61,7 +61,7 @@ jest.mock('../../../services/Translator', () => ({
 beforeEach(() => {
     jest.resetModules();
 
-    const datagridAdapterRegistry = require('../../../containers/Datagrid/DatagridAdapterRegistry');
+    const datagridAdapterRegistry = require('../../../containers/Datagrid/registries/DatagridAdapterRegistry');
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
 });

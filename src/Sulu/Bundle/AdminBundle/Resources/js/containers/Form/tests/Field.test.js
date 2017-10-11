@@ -2,9 +2,9 @@
 import {render, shallow} from 'enzyme';
 import React from 'react';
 import Field from '../Field';
-import fieldRegistry from '../FieldRegistry';
+import fieldRegistry from '../registries/FieldRegistry';
 
-jest.mock('../FieldRegistry', () => ({
+jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
 }));
 

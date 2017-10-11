@@ -1,5 +1,5 @@
 // @flow
-import type {DatagridAdapter} from './types';
+import type {DatagridAdapter} from '../types';
 
 class DatagridAdapterRegistry {
     adapters: {[string]: DatagridAdapter};
