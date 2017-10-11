@@ -33,9 +33,6 @@ exports[`Render a Tabs component 1`] = `
       </button>
     </li>
   </ul>
-  <div
-    class="content"
-  />
 </div>
 `;
 
@@ -73,10 +70,5 @@ exports[`Render a Tabs component with a selected tab 1`] = `
       </button>
     </li>
   </ul>
-  <div
-    class="content"
-  >
-    Hello 1
-  </div>
 </div>
 `;

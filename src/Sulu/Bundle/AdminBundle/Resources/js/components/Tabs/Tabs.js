@@ -6,60 +6,46 @@ import tabsStyles from './tabs.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Tab>>,
-    value: string | number,
-    onChange: (value: string | number) => void,
+    selectedIndex: number,
+    onSelect: (tabIndex: string | number) => void,
 };
 
 export default class Tabs extends React.PureComponent<Props> {
     static Tab = Tab;
 
-    isSelected(tabValue: string | number) {
-        return tabValue === this.props.value;
+    isSelected(tabIndex: number) {
+        return tabIndex === this.props.selectedIndex;
     }
 
-    createTabMenuItems(tabs: ChildrenArray<Element<typeof Tab>>) {
-        return React.Children.map(tabs, (tab) => {
+    createTabItems(tabs: ChildrenArray<Element<typeof Tab>>) {
+        return React.Children.map(tabs, (tab, index) => {
             return React.cloneElement(
                 tab,
                 {
                     ...tab.props,
-                    selected: this.isSelected(tab.props.value),
+                    index: index,
+                    selected: this.isSelected(index),
                     onClick: this.handleSelectionChange,
                 }
             );
         });
     }
 
-    getSelectedTabContent(tabs: ChildrenArray<Element<typeof Tab>>) {
-        const tabsArray = React.Children.toArray(tabs);
-        const selectedTab = tabsArray.find((tab) => this.isSelected(tab.props.value));
-
-        if (!selectedTab || !selectedTab.props) {
-            return null;
-        }
-
-        return selectedTab.props.children;
-    }
-
-    handleSelectionChange = (selectedTabValue: string | number) => {
-        this.props.onChange(selectedTabValue);
+    handleSelectionChange = (selectedTabIndex: number) => {
+        this.props.onSelect(selectedTabIndex);
     };
 
     render() {
         const {
             children,
         } = this.props;
-        const tabsMenuItems = this.createTabMenuItems(children);
-        const content = this.getSelectedTabContent(children);
+        const tabsItems = this.createTabItems(children);
 
         return (
             <div>
                 <ul className={tabsStyles.tabsMenu}>
-                    {tabsMenuItems}
+                    {tabsItems}
                 </ul>
-                <div className={tabsStyles.content}>
-                    {content}
-                </div>
             </div>
         );
     }

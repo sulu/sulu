@@ -7,15 +7,15 @@ test('Render a Tabs component', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs value={null} onChange={changeSpy}>
-            <Tabs.Tab label="Tab 1" value="1">
-                Hello 1
+        <Tabs selectedIndex={null} onSelect={changeSpy}>
+            <Tabs.Tab>
+                Tab 1
             </Tabs.Tab>
-            <Tabs.Tab label="Tab 2" value="2">
-                Hello 2
+            <Tabs.Tab>
+                Tab 2
             </Tabs.Tab>
-            <Tabs.Tab label="Tab 3" value="3">
-                Hello 3
+            <Tabs.Tab>
+                Tab 3
             </Tabs.Tab>
         </Tabs>
     )).toMatchSnapshot();
@@ -23,41 +23,41 @@ test('Render a Tabs component', () => {
 
 test('Render a Tabs component with a selected tab', () => {
     const changeSpy = jest.fn();
-    const selectedTabValue = 1;
+    const selectedTabIndex = 0;
 
     expect(render(
-        <Tabs value={selectedTabValue} onChange={changeSpy}>
-            <Tabs.Tab label="Tab 1" value={selectedTabValue}>
-                Hello 1
+        <Tabs selectedIndex={selectedTabIndex} onSelect={changeSpy}>
+            <Tabs.Tab>
+                Tab 1
             </Tabs.Tab>
-            <Tabs.Tab label="Tab 2" value="2">
-                Hello 2
+            <Tabs.Tab>
+                Tab 2
             </Tabs.Tab>
-            <Tabs.Tab label="Tab 3" value="3">
-                Hello 3
+            <Tabs.Tab>
+                Tab 3
             </Tabs.Tab>
         </Tabs>
     )).toMatchSnapshot();
 });
 
-test('Clicking on a Tab should call the onChange handler', () => {
+test('Clicking on a Tab should call the onSelect handler', () => {
     const changeSpy = jest.fn();
-    const selectedTabValue = 1;
+    const selectedTabIndex = 0;
 
     const tabs = mount(
-        <Tabs value={null} onChange={changeSpy}>
-            <Tabs.Tab label="Tab 1" value={selectedTabValue}>
-                Hello 1
+        <Tabs selectedIndex={null} onSelect={changeSpy}>
+            <Tabs.Tab>
+                Tab 1
             </Tabs.Tab>
-            <Tabs.Tab label="Tab 2" value="2">
-                Hello 2
+            <Tabs.Tab>
+                Tab 2
             </Tabs.Tab>
-            <Tabs.Tab label="Tab 3" value="3">
-                Hello 3
+            <Tabs.Tab>
+                Tab 3
             </Tabs.Tab>
         </Tabs>
     );
 
     tabs.find('.tab button').at(0).simulate('click');
-    expect(changeSpy).toHaveBeenCalledWith(selectedTabValue);
+    expect(changeSpy).toHaveBeenCalledWith(selectedTabIndex);
 });

@@ -1,15 +1,13 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray} from 'react';
 import classNames from 'classnames';
 import tabStyles from './tab.scss';
 
 type Props = {
-    children: ChildrenArray<*>,
-    value: string | number,
-    label: string,
+    children: string,
+    index: number,
     selected: boolean,
-    onClick?: (value: string | number) => void,
+    onClick?: (index: number) => void,
 };
 
 export default class Tab extends React.PureComponent<Props> {
@@ -19,18 +17,18 @@ export default class Tab extends React.PureComponent<Props> {
 
     handleClick = () => {
         const {
-            value,
+            index,
             onClick,
         } = this.props;
 
         if (onClick) {
-            onClick(value);
+            onClick(index);
         }
     };
 
     render() {
         const {
-            label,
+            children,
             selected,
         } = this.props;
         const tabClass = classNames(
@@ -43,11 +41,11 @@ export default class Tab extends React.PureComponent<Props> {
         return (
             <li className={tabClass}>
                 <button
-                    title={label}
+                    title={children}
                     onClick={this.handleClick}
                     disabled={selected}
                 >
-                    {label}
+                    {children}
                 </button>
             </li>
         );
