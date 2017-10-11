@@ -100,7 +100,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     overflow: hidden;
 
     img {
-        width: 100%;
+        margin: 0 auto;
         display: block;
         transform: scale(1);
         transition: transform .2s linear;

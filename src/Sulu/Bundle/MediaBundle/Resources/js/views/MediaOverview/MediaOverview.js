@@ -9,6 +9,7 @@ import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
+const MEDIA_RESOURCE_KEY = 'media';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
@@ -18,6 +19,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     @observable parentId: ?string | number;
     @observable collectionStore: DatagridStore;
     @observable collectionId: string | number;
+    @observable mediaStore: DatagridStore;
     disposer: () => void;
 
     componentWillMount() {
@@ -50,6 +52,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         }
 
         this.createCollectionStore(id);
+        this.createMediaStore();
     };
 
     loadCollectionInfo(collectionId) {
@@ -87,6 +90,28 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         );
     }
 
+    @action createMediaStore() {
+        if (this.mediaStore) {
+            this.mediaStore.destroy();
+        }
+
+        const options = {};
+        options.fields = 'id,thumbnails,type,name,subVersion,size,mimeType,title';
+
+        if (this.collectionId) {
+            options.collection = this.collectionId;
+        }
+
+        this.mediaStore = new DatagridStore(
+            MEDIA_RESOURCE_KEY,
+            {
+                page: this.page,
+                locale: this.locale,
+            },
+            options
+        );
+    }
+
     handleOpenFolder = (collectionId) => {
         const {router} = this.props;
         router.navigate(COLLECTION_ROUTE, {id: collectionId, locale: this.locale.get()});
@@ -100,6 +125,10 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                     store={this.collectionStore}
                     views={['folder']}
                     onItemClick={this.handleOpenFolder}
+                />
+                <Datagrid
+                    store={this.mediaStore}
+                    views={['masonry']}
                 />
             </div>
         );

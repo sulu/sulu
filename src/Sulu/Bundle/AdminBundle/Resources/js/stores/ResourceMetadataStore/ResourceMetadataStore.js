@@ -8,6 +8,7 @@ class ResourceMetadataStore {
         roles: '/admin/api/roles',
         tags: '/admin/api/tags',
         collections: '/admin/api/collections',
+        media: '/admin/api/media',
     };
 
     // TODO load from server
@@ -60,7 +61,10 @@ class ResourceMetadataStore {
         media: {
             list: {
                 id: {},
+                size: {},
                 title: {},
+                mimeType: {},
+                thumbnails: {},
             },
         },
     };
