@@ -64,7 +64,7 @@ export default class Router {
         for (const name in routeRegistry.getAll()) {
             const route = routeRegistry.get(name);
             const names = [];
-            const match = pathToRegexp(route.path, names).exec(path);
+            const match = pathToRegexp(Router.getRoutePath(route), names).exec(path);
 
             if (!match) {
                 continue;
@@ -90,7 +90,9 @@ export default class Router {
     @action navigate(name: string, attributes: Object = {}, query: Object = {}) {
         const route = routeRegistry.get(name);
 
-        if (equal(this.route, route)
+        if (this.route
+            && route
+            && this.route.name === route.name
             && equal(this.attributes, attributes)
             && equal(this.query, query)
         ) {
@@ -111,7 +113,7 @@ export default class Router {
             return '';
         }
 
-        const url = compile(this.route.path)(this.attributes);
+        const url = compile(Router.getRoutePath(this.route))(this.attributes);
         const searchParameters = new URLSearchParams();
         Object.keys(this.query).forEach((key) => {
             searchParameters.set(key, this.query[key]);
@@ -130,5 +132,13 @@ export default class Router {
         const queryString = searchParameters.toString();
 
         return url + (queryString ? '?' + queryString : '');
+    }
+
+    static getRoutePath(route: Route) {
+        if (!route.parent) {
+            return route.path;
+        }
+
+        return Router.getRoutePath(route.parent) + route.path;
     }
 }

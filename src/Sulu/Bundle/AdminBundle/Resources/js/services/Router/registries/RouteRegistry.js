@@ -1,4 +1,5 @@
 // @flow
+import {extendObservable} from 'mobx';
 import type {Route, RouteConfig, RouteMap} from '../types';
 
 class RouteRegistry {
@@ -18,21 +19,22 @@ class RouteRegistry {
                 throw new Error('The name "' + routeConfig.name + '" has already been used for another route');
             }
 
-            const route = {
+            const route = extendObservable({
                 ...routeConfig,
                 children: [],
                 parent: undefined,
-            };
+            });
             this.routes[route.name] = route;
         });
 
         routeConfigs.forEach((routeConfig) => {
-            if (!routeConfig.parent) {
+            const routeParent = routeConfig.parent;
+            if (!routeParent) {
                 return;
             }
 
-            this.routes[routeConfig.name].parent = this.routes[routeConfig.parent];
-            this.routes[routeConfig.parent].children.push(this.routes[routeConfig.name]);
+            this.routes[routeConfig.name].parent = this.routes[routeParent];
+            this.routes[routeParent].children.push(this.routes[routeConfig.name]);
         });
     }
 

@@ -40,12 +40,27 @@ test('Get routes from RouteRegistry', () => {
 
     routeRegistry.addCollection([route1, route2]);
 
-    expect(routeRegistry.get('route1')).toBe(route1);
-    expect(routeRegistry.get('route2')).toBe(route2);
-
     expect(routeRegistry.getAll()).toEqual({
-        route1: route1,
-        route2: route2,
+        route1: {
+            name: 'route1',
+            view: 'view1',
+            pattern: '/route/1',
+            parameters: {
+                test: 'value',
+            },
+            children: [],
+            parent: undefined,
+        },
+        route2: {
+            name: 'route2',
+            view: 'view2',
+            pattern: '/route/2',
+            parameters: {
+                test2: 'value2',
+            },
+            children: [],
+            parent: undefined,
+        },
     });
 });
 
@@ -70,8 +85,26 @@ test('Add a route collection to the RouteRegistry', () => {
 
     routeRegistry.addCollection([route1, route2]);
 
-    expect(routeRegistry.get('route1')).toBe(route1);
-    expect(routeRegistry.get('route2')).toBe(route2);
+    expect(routeRegistry.get('route1')).toEqual({
+        name: 'route1',
+        view: 'view1',
+        pattern: '/route/1',
+        parameters: {
+            test: 'value',
+        },
+        parent: undefined,
+        children: [],
+    });
+    expect(routeRegistry.get('route2')).toEqual({
+        name: 'route2',
+        view: 'view2',
+        pattern: '/route/2',
+        parameters: {
+            test2: 'value2',
+        },
+        parent: undefined,
+        children: [],
+    });
 });
 
 test('Add route with existing key should throw', () => {
