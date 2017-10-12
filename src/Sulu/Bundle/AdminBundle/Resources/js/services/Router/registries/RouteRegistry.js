@@ -1,5 +1,5 @@
 // @flow
-import type {Route, RouteMap} from '../types';
+import type {Route, RouteConfig, RouteMap} from '../types';
 
 class RouteRegistry {
     routes: RouteMap;
@@ -12,15 +12,28 @@ class RouteRegistry {
         this.routes = {};
     }
 
-    add(route: Route) {
-        if (route.name in this.routes) {
-            throw new Error('The name "' + route.name + '" has already been used for another route');
-        }
-        this.routes[route.name] = route;
-    }
+    addCollection(routeConfigs: Array<RouteConfig>) {
+        routeConfigs.forEach((routeConfig) => {
+            if (routeConfig.name in this.routes) {
+                throw new Error('The name "' + routeConfig.name + '" has already been used for another route');
+            }
 
-    addCollection(routes: Array<Route>) {
-        routes.forEach((route) => this.add(route));
+            const route = {
+                ...routeConfig,
+                children: [],
+                parent: undefined,
+            };
+            this.routes[route.name] = route;
+        });
+
+        routeConfigs.forEach((routeConfig) => {
+            if (!routeConfig.parent) {
+                return;
+            }
+
+            this.routes[routeConfig.name].parent = this.routes[routeConfig.parent];
+            this.routes[routeConfig.parent].children.push(this.routes[routeConfig.name]);
+        });
     }
 
     get(name: string): Route {
