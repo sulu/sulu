@@ -2,5 +2,5 @@
     /* 100% of the window height - the toolbar height */
     height: calc(100vh - 60px);
     padding: 60px;
-    overflow: auto;
+    overflow-y: auto;
 }

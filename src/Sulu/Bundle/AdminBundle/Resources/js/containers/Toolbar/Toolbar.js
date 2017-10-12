@@ -86,8 +86,8 @@ export default class Toolbar extends React.PureComponent<*> {
 
         return (
             <header className={toolbarStyles.toolbar}>
-                <nav>
-                    <div className={toolbarStyles.controlsLeft}>
+                <nav className={toolbarStyles.controlsContainer}>
+                    <div className={toolbarStyles.controls}>
                         {onNavigationButtonClick &&
                             <Button
                                 onClick={this.handleNavigationButtonClick}
@@ -114,7 +114,7 @@ export default class Toolbar extends React.PureComponent<*> {
                             </ul>
                         }
                     </div>
-                    <div className={toolbarStyles.controlsRight}>
+                    <div className={toolbarStyles.controls}>
                         {this.toolbarStore.hasIconsConfig() &&
                             <div className={toolbarStyles.icons}>
                                 {
