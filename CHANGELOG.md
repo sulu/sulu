@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * ENHANCEMENT #3557 [ContentBundle]           Added option to decorate index name for document types
+    * HOTFIX      #3555 [ContentBundle]           Fixed "awkward" state of documents after copy-locale
     * ENHANCEMENT #3554 [WebsiteBundle]           Return webspaceKey on StructureResolver
 
 * 1.6.5 (2017-10-04)

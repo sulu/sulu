@@ -37,6 +37,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
@@ -47,6 +48,7 @@ use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundExcep
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
+use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -493,6 +495,11 @@ class ContentMapper implements ContentMapperInterface
             $destDocument->setLocale($destLocale);
             $destDocument->setTitle($document->getTitle());
             $destDocument->getStructure()->bind($document->getStructure()->toArray());
+
+            if ($document instanceof WorkflowStageBehavior) {
+                $documentAccessor = new DocumentAccessor($destDocument);
+                $documentAccessor->set(WorkflowStageSubscriber::PUBLISHED_FIELD, null);
+            }
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
