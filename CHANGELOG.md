@@ -1,10 +1,12 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.6 (2017-10-12)
     * ENHANCEMENT #3557 [ContentBundle]           Added option to decorate index name for document types
     * HOTFIX      #3555 [ContentBundle]           Fixed "awkward" state of documents after copy-locale
     * ENHANCEMENT #3554 [WebsiteBundle]           Return webspaceKey on StructureResolver
+    * HOTFIX      #3551 [SecurityBundle]          Fixed permissions for user with no role
+    * HOTFIX      #3553 [SecurityBundle]          Added system check for password reset
 
 * 1.6.5 (2017-10-04)
     * HOTFIX      #---- [Husky]                   Fixed bug in `escapeHtml` method
@@ -104,6 +106,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.7 (2017-10-12)
+    * HOTFIX      #3551 [SecurityBundle]        Fixed permissions for user with no role
+    * HOTFIX      #3553 [SecurityBundle]        Added system check for password reset
 
 * 1.5.6 (2017-09-14)
     * HOTFIX      #3511 [MediaBundle]           Fixed disappearing of selected medias
