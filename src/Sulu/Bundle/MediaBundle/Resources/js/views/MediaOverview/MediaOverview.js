@@ -3,43 +3,25 @@ import React from 'react';
 import {action, autorun, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate, ResourceRequester} from 'sulu-admin-bundle/services';
-import {withToolbar, Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
+import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import mediaOverviewStyles from './mediaOverview.scss';
+import MediaContainer from '../../containers/MediaContainer';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
-const COLLECTIONS_RESOURCE_KEY = 'collections';
 const MEDIA_RESOURCE_KEY = 'media';
+const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
     page: observable = observable();
     locale: observable = observable();
-    @observable title: string;
-    @observable parentId: ?string | number;
-    @observable collectionStore: DatagridStore;
-    @observable collectionId: string | number;
+    @observable collectionId: ?string | number;
+    @observable parentCollectionId: ?string | number;
     @observable mediaStore: DatagridStore;
+    @observable collectionStore: DatagridStore;
     disposer: () => void;
 
     componentWillMount() {
-        const {router} = this.props;
-
-        router.bind('page', this.page, '1');
-        router.bind('locale', this.locale);
-
-        this.disposer = autorun(this.load);
-    }
-
-    componentWillUnmount() {
-        const {router} = this.props;
-        this.disposer();
-        router.unbind('locale', this.page);
-        router.unbind('page', this.locale);
-        this.collectionStore.destroy();
-    }
-
-    load = () => {
         const {router} = this.props;
         const {
             attributes: {
@@ -47,88 +29,122 @@ class MediaOverview extends React.PureComponent<ViewProps> {
             },
         } = router;
 
+        router.bind('page', this.page, '1');
+        router.bind('locale', this.locale);
+
+        this.load(id);
+    }
+
+    componentWillUnmount() {
+        const {router} = this.props;
+
+        this.disposer();
+        router.unbind('locale', this.page);
+        router.unbind('page', this.locale);
+        this.collectionStore.destroy();
+    }
+
+    load(id) {
         if (id) {
-            this.loadCollectionInfo(id);
+            this.loadCollectionInfo(id, this.locale)
+                .then((collectionInfo) => {
+                    const {
+                        _embedded: {
+                            parent,
+                        },
+                    } = collectionInfo;
+
+                    this.setParentCollectionId((parent) ? parent.id : null);
+                });
+        } else {
+            this.setParentCollectionId(null);
         }
 
-        this.createCollectionStore(id);
-        this.createMediaStore();
-    };
-
-    loadCollectionInfo(collectionId) {
-        return ResourceRequester.get(COLLECTIONS_RESOURCE_KEY, collectionId, {
-            depth: 1,
-            locale: this.locale,
-        }).then(action((collectionInfo) => {
-            const parentCollection = collectionInfo._embedded.parent;
-            this.title = collectionInfo.title;
-            this.parentId = (parentCollection) ? parentCollection.id : undefined;
-        }));
+        this.setCollectionId(id);
+        // this.createMediaStore(id, this.page, this.locale);
+        this.createCollectionStore(id, this.page, this.locale);
     }
 
-    getTitle() {
-        if (!this.collectionId) {
-            return translate('sulu_media.all_media');
-        }
-
-        return this.title;
+    @action setCollectionId(id) {
+        this.collectionId = id;
     }
 
-    @action createCollectionStore(collectionId) {
+    @action setParentCollectionId(id) {
+        this.parentCollectionId = id;
+    }
+
+    loadCollectionInfo(collectionId, locale) {
+        return ResourceRequester.get(
+            COLLECTIONS_RESOURCE_KEY,
+            collectionId,
+            {
+                depth: 1,
+                locale,
+            }
+        );
+    }
+
+    @action createCollectionStore(collectionId, page, locale) {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
 
-        this.collectionId = collectionId;
         this.collectionStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
             {
-                page: this.page,
-                locale: this.locale,
+                page,
+                locale,
             },
             (collectionId) ? {parent: collectionId} : undefined
         );
     }
 
-    @action createMediaStore() {
-        if (this.mediaStore) {
-            this.mediaStore.destroy();
+    @action createMediaStore(collectionId, page, locale) {
+        const options = {};
+        options.fields = [
+            'id',
+            'type',
+            'name',
+            'size',
+            'title',
+            'mimeType',
+            'subVersion',
+            'thumbnails',
+        ].join(',');
+
+        if (collectionId) {
+            options.collection = collectionId;
         }
 
-        const options = {};
-        options.fields = 'id,thumbnails,type,name,subVersion,size,mimeType,title';
-
-        if (this.collectionId) {
-            options.collection = this.collectionId;
+        if (this.mediaStore) {
+            this.mediaStore.destroy();
         }
 
         this.mediaStore = new DatagridStore(
             MEDIA_RESOURCE_KEY,
             {
-                page: this.page,
-                locale: this.locale,
+                page,
+                locale,
             },
             options
         );
     }
 
-    handleOpenFolder = (collectionId) => {
+    handleCollectionOpen = (collectionId) => {
         const {router} = this.props;
         router.navigate(COLLECTION_ROUTE, {id: collectionId, locale: this.locale.get()});
     };
 
     render() {
         return (
-            <div className={mediaOverviewStyles.mediaOverview}>
-                <h1>{this.getTitle()}</h1>
-                <Datagrid
-                    store={this.collectionStore}
-                    views={['folder']}
-                    onItemClick={this.handleOpenFolder}
-                />
-                <Datagrid
-                    store={this.mediaStore}
-                    views={['mediaCardOverview']}
+            <div>
+                <h1>Eins Title</h1>
+                <MediaContainer
+                    page={this.page}
+                    locale={this.locale}
+                    collectionStore={this.collectionStore}
+                    datagridViews={['folder']}
+                    onCollectionOpen={this.handleCollectionOpen}
                 />
             </div>
         );
@@ -162,7 +178,7 @@ export default withToolbar(MediaOverview, function() {
     return {
         locale,
         disableAll: this.collectionStore.loading,
-        backButton: (this.collectionId !== undefined)
+        backButton: (this.collectionId)
             ? {
                 onClick: () => {
                     router.restore(COLLECTION_ROUTE, {id: this.parentId, locale: this.locale.get()});

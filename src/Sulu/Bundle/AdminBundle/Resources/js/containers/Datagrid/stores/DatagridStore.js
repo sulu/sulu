@@ -32,7 +32,6 @@ export default class DatagridStore {
             return;
         }
 
-        this.setLoading(true);
         const observableOptions = {};
         observableOptions.page = page;
 
@@ -40,6 +39,7 @@ export default class DatagridStore {
             observableOptions.locale = this.observableOptions.locale.get();
         }
 
+        this.setLoading(true);
         ResourceRequester.getList(this.resourceKey, {
             ...observableOptions,
             ...this.options,
