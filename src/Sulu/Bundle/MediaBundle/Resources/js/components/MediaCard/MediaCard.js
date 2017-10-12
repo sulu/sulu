@@ -1,8 +1,14 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import classNames from 'classnames';
+import {observer} from 'mobx-react';
+import {action, observable} from 'mobx';
 import {Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
+import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
+
+const DOWNLOAD_ICON = 'cloud-download';
 
 type Props = {
     id: string | number,
@@ -19,12 +25,38 @@ type Props = {
     icon?: string,
     /** The URL of the presented image */
     image: string,
+    /** List of available image sizes */
+    imageSizes: Array<{url: string, label: string}>,
+    /** Info text which is shown, when a download link is hovered */
+    downloadCopyText: string,
+    /** When true the cover is permanently shown */
+    showCover: boolean,
 };
 
+@observer
 export default class MediaCard extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
+        showCover: false,
+        imageSizes: [],
+        downloadCopyText: '',
     };
+
+    @observable downloadButtonRef: ElementRef<'button'>;
+
+    @observable downloadListOpen: boolean = false;
+
+    @action setDownloadButtonRef = (ref: ElementRef<'button'>) => {
+        this.downloadButtonRef = ref;
+    };
+
+    @action openDownloadList() {
+        this.downloadListOpen = true;
+    }
+
+    @action closeDownloadList() {
+        this.downloadListOpen = false;
+    }
 
     handleClick = () => {
         const {
@@ -49,6 +81,14 @@ export default class MediaCard extends React.PureComponent<Props> {
         }
     };
 
+    handleDownloadButtonClick = () => {
+        this.openDownloadList();
+    };
+
+    handleDownloadListClose = () => {
+        this.closeDownloadList();
+    };
+
     render() {
         const {
             id,
@@ -57,41 +97,72 @@ export default class MediaCard extends React.PureComponent<Props> {
             title,
             image,
             selected,
+            showCover,
+            imageSizes,
+            downloadCopyText,
         } = this.props;
-        const masonryClass = classNames(
+        const mediaCardClass = classNames(
             mediaCardStyles.mediaCard,
             {
-                [mediaCardStyles.selected]: selected,
+                [mediaCardStyles.selected]: !!selected,
+                [mediaCardStyles.showCover]: !!showCover,
+                [mediaCardStyles.noDownloadList]: !imageSizes.length,
+            }
+        );
+        const downloadButtonClass = classNames(
+            mediaCardStyles.downloadButton,
+            {
+                [mediaCardStyles.active]: !!this.downloadListOpen,
             }
         );
 
         return (
-            <div className={masonryClass}>
-                <div
-                    className={mediaCardStyles.header}
-                    onClick={this.handleHeaderClick}
-                >
-                    <div className={mediaCardStyles.title}>
-                        <Checkbox
-                            value={id}
-                            checked={!!selected}
-                            className={mediaCardStyles.checkbox}
-                        >
-                            <div className={mediaCardStyles.titleText}>
-                                <CroppedText>{title}</CroppedText>
-                            </div>
-                        </Checkbox>
+            <div className={mediaCardClass}>
+                <div className={mediaCardStyles.header}>
+                    <div
+                        className={mediaCardStyles.description}
+                        onClick={this.handleHeaderClick}
+                    >
+                        <div className={mediaCardStyles.title}>
+                            <Checkbox
+                                value={id}
+                                checked={!!selected}
+                                className={mediaCardStyles.checkbox}
+                            >
+                                <div className={mediaCardStyles.titleText}>
+                                    <CroppedText>{title}</CroppedText>
+                                </div>
+                            </Checkbox>
+                        </div>
+                        <div className={mediaCardStyles.meta}>
+                            {meta}
+                        </div>
                     </div>
-                    <div className={mediaCardStyles.meta}>
-                        {meta}
-                    </div>
+                    {!!imageSizes.length &&
+                        <div>
+                            <button
+                                ref={this.setDownloadButtonRef}
+                                onClick={this.handleDownloadButtonClick}
+                                className={downloadButtonClass}
+                            >
+                                <Icon name={DOWNLOAD_ICON} />
+                            </button>
+                            <DownloadList
+                                open={this.downloadListOpen}
+                                onClose={this.handleDownloadListClose}
+                                buttonRef={this.downloadButtonRef}
+                                imageSizes={imageSizes}
+                                copyText={downloadCopyText}
+                            />
+                        </div>
+                    }
                 </div>
                 <div
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
                 >
                     <img alt={title} src={image} />
-                    <div className={mediaCardStyles.mediaOverlay}>
+                    <div className={mediaCardStyles.cover}>
                         {!!icon &&
                             <Icon name={icon} className={mediaCardStyles.mediaIcon} />
                         }

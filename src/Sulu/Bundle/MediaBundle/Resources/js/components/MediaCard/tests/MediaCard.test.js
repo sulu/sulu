@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
+import pretty from 'pretty';
 import React from 'react';
 import MediaCard from '../MediaCard';
 
@@ -8,10 +9,39 @@ test('Render a simple MediaCard component', () => {
         <MediaCard
             title="Test"
             meta="Test/Test"
-        >
-            <img src="http://lorempixel.com/300/200" />
-        </MediaCard>
+            image="http://lorempixel.com/300/200"
+        />
     )).toMatchSnapshot();
+});
+
+test('Render a MediaCard with download list', () => {
+    const imageSizes = [
+        {
+            url: 'http://lorempixel.com/300/200',
+            label: '300/200',
+        },
+        {
+            url: 'http://lorempixel.com/600/300',
+            label: '600/300',
+        },
+        {
+            url: 'http://lorempixel.com/150/200',
+            label: '150/200',
+        },
+    ];
+
+    const masonry = mount(
+        <MediaCard
+            title="Test"
+            meta="Test/Test"
+            imageSizes={imageSizes}
+            downloadCopyText="Copy URL"
+            image="http://lorempixel.com/300/200"
+        />
+    );
+
+    masonry.instance().openDownloadList();
+    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
 });
 
 test('Clicking on an item should call the responsible handler on the MediaCard component', () => {
@@ -19,21 +49,20 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
     const selectionSpy = jest.fn();
     const itemId = 'test';
 
-    const masonry = mount(
+    const mediaCard = mount(
         <MediaCard
             id={itemId}
             title="Test"
             meta="Test/Test"
             onClick={clickSpy}
             onSelectionChange={selectionSpy}
-        >
-            <img src="http://lorempixel.com/300/200" />
-        </MediaCard>
+            image="http://lorempixel.com/300/200"
+        />
     );
 
-    masonry.find('MediaCard .media').simulate('click');
+    mediaCard.find('MediaCard .media').simulate('click');
     expect(clickSpy).toHaveBeenCalledWith(itemId);
 
-    masonry.find('MediaCard .header').simulate('click');
+    mediaCard.find('MediaCard .description').simulate('click');
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);
 });
