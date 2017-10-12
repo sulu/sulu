@@ -1,8 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-
 * dev-master
+    * ENHANCEMENT #3557 [ContentBundle]           Added option to decorate index name for document types
     * ENHANCEMENT #3554 [WebsiteBundle]           Return webspaceKey on StructureResolver
 
 * 1.6.5 (2017-10-04)
