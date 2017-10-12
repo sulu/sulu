@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('index')->info('Name of index to use')->isRequired()->end()
+                                    ->booleanNode('decorate_index')->info('Decorate Index name')->defaultFalse()->end()
                                 ->end()
                             ->end()
                         ->end()
