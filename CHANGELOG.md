@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.7 (2017-10-12)
     * HOTFIX      #3551 [SecurityBundle]        Fixed permissions for user with no role
     * HOTFIX      #3553 [SecurityBundle]        Added system check for password reset
 
