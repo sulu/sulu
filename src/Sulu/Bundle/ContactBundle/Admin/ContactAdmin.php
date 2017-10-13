@@ -64,18 +64,12 @@ class ContactAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            new Route(
-                'sulu_contact.contacts_list',
-                '/contacts',
-                'sulu_admin.list',
-                ['title' => 'sulu_contact.persons', 'resourceKey' => 'contacts']
-            ),
-            new Route(
-                'sulu_contact.accounts_list',
-                '/accounts',
-                'sulu_admin.list',
-                ['title' => 'sulu_contact.organizations', 'resourceKey' => 'accounts']
-            ),
+            (new Route('sulu_contact.contacts_list', '/contacts', 'sulu_admin.list'))
+                ->addOption('title', 'sulu_contact.persons')
+                ->addOption('resourceKey', 'contacts'),
+            (new Route('sulu_contact.accounts_list', '/accounts', 'sulu_admin.list'))
+                ->addOption('title', 'sulu_contact.organizations')
+                ->addOption('resourceKey', 'accounts'),
         ];
     }
 
