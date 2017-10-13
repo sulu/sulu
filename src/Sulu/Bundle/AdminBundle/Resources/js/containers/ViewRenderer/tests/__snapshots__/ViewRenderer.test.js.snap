@@ -17,14 +17,17 @@ exports[`Render view with parents should nest rendered views 1`] = `
   <h1>
     App
   </h1>
+  sulu_admin.app
   <div>
     <h2>
       Form
     </h2>
+    sulu_admin.form
     <div>
       <h3>
         Form Tab
       </h3>
+      sulu_admin.form_tab
     </div>
   </div>
 </div>

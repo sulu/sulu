@@ -39,10 +39,13 @@ test('Render view should throw if view does not exist', () => {
 test('Render view with parents should nest rendered views', () => {
     const router = {
         route: {
+            name: 'sulu_admin.form_tab',
             view: 'form_tab',
             parent: {
+                name: 'sulu_admin.form',
                 view: 'form',
                 parent: {
+                    name: 'sulu_admin.app',
                     view: 'app',
                 },
             },
@@ -52,10 +55,11 @@ test('Render view with parents should nest rendered views', () => {
     viewRegistry.get.mockImplementation((view) => {
         switch (view) {
             case 'form_tab':
-                return function FormTab() {
+                return function FormTab(props) {
                     return (
                         <div>
                             <h3>Form Tab</h3>
+                            {props.route.name}
                         </div>
                     );
                 };
@@ -64,6 +68,7 @@ test('Render view with parents should nest rendered views', () => {
                     return (
                         <div>
                             <h2>Form</h2>
+                            {props.route.name}
                             {props.children}
                         </div>
                     );
@@ -73,6 +78,7 @@ test('Render view with parents should nest rendered views', () => {
                     return (
                         <div>
                             <h1>App</h1>
+                            {props.route.name}
                             {props.children}
                         </div>
                     );

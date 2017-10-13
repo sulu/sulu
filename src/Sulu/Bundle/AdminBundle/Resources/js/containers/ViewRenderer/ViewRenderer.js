@@ -10,22 +10,29 @@ type Props = {
 export default class ViewRenderer extends React.PureComponent<Props> {
     render() {
         const {router} = this.props;
-        const views = [];
+        const viewConfigs = [];
 
         let route = router.route;
         while (route) {
-            views.push(route.view);
+            viewConfigs.push({
+                view: route.view,
+                props: {
+                    router: router,
+                    route,
+                },
+            });
             route = route.parent;
         }
 
         let NestedView = null;
-        for (const viewName of views) {
-            const View = viewRegistry.get(viewName);
+        for (const viewConfig of viewConfigs) {
+            const {view, props} = viewConfig;
+            const View = viewRegistry.get(view);
             if (!View) {
-                throw new Error('View "' + viewName + '" has not been found');
+                throw new Error('View "' + view + '" has not been found');
             }
 
-            NestedView = <View router={router}>{NestedView}</View>;
+            NestedView = <View {...props}>{NestedView}</View>;
         }
 
         return NestedView;
