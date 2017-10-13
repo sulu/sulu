@@ -22,6 +22,7 @@ class List extends React.PureComponent<ViewProps> {
             route: {
                 options: {
                     resourceKey,
+                    locales,
                 },
             },
         } = router;
@@ -30,20 +31,33 @@ class List extends React.PureComponent<ViewProps> {
             throw new Error('The route does not define the mandatory resourceKey option');
         }
 
-        router.bindQuery('page', this.page, '1');
-        router.bindQuery('locale', this.locale);
+        const observableOptions = {};
 
-        this.datagridStore = new DatagridStore(resourceKey, {
-            page: this.page,
-            locale: this.locale,
-        });
+        router.bindQuery('page', this.page, '1');
+        observableOptions.page = this.page;
+
+        if (locales) {
+            router.bindQuery('locale', this.locale);
+            observableOptions.locale = this.locale;
+        }
+
+        this.datagridStore = new DatagridStore(resourceKey, observableOptions);
     }
 
     componentWillUnmount() {
         const {router} = this.props;
+        const {
+            route: {
+                options: {
+                    locales,
+                },
+            },
+        } = router;
         this.datagridStore.destroy();
         router.unbindQuery('page');
-        router.unbindQuery('locale');
+        if (locales) {
+            router.unbindQuery('locale');
+        }
     }
 
     handleEditClick = (rowId) => {

@@ -5,7 +5,9 @@ import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions) {
+    this.resourceKey = resourceKey;
+    this.observableOptions = observableOptions;
     this.loading = false;
     this.pageCount = 3;
     this.data = [
@@ -132,6 +134,7 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
         route: {
             options: {
                 resourceKey: 'snippets',
+                locales: ['de', 'en'],
             },
         },
     };
@@ -148,6 +151,30 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
     list.unmount();
     expect(router.unbindQuery).toBeCalledWith('page');
     expect(router.unbindQuery).toBeCalledWith('locale');
+});
+
+test('Should unbind the query parameter and destroy the store on unmount without locale', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        unbindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const page = router.bindQuery.mock.calls[0][1];
+
+    expect(page.get()).toBe(undefined);
+    expect(router.bindQuery).toBeCalledWith('page', page, '1');
+    expect(router.bindQuery).not.toBeCalledWith('locale');
+
+    list.unmount();
+    expect(router.unbindQuery).toBeCalledWith('page');
+    expect(router.unbindQuery).not.toBeCalledWith('locale');
 });
 
 test('Should navigate when pencil button is clicked', () => {
@@ -227,6 +254,43 @@ test('Should render the locale dropdown with the options from router', () => {
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
     ]);
+});
+
+test('Should pass locale and page observables to the DatagridStore', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+                locales: ['en', 'de'],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+
+    expect(datagridStore.observableOptions).toHaveProperty('page');
+    expect(datagridStore.observableOptions).toHaveProperty('locale');
+});
+
+test('Should not pass the locale observable to the DatagridStore if no locales are defined', () => {
+    const List = require('../List').default;
+    const router = {
+        bindQuery: jest.fn(),
+        route: {
+            options: {
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />).get(0);
+    const datagridStore = list.datagridStore;
+
+    expect(datagridStore.observableOptions).toHaveProperty('page');
+    expect(datagridStore.observableOptions).not.toHaveProperty('locale');
 });
 
 test('Should delete selected items when click on delete button', () => {
