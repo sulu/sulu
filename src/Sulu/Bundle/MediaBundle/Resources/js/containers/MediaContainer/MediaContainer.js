@@ -7,7 +7,8 @@ import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 type Props = {
     page: observable,
     locale: observable,
-    datagridViews: Array<string>,
+    mediaView: string,
+    mediaStore: DatagridStore,
     collectionStore: DatagridStore,
     onCollectionOpen: (collectionId: string | number) => void,
 };
@@ -20,15 +21,21 @@ export default class MediaContainer extends React.PureComponent<Props> {
 
     render() {
         const {
+            mediaView,
+            mediaStore,
             collectionStore,
         } = this.props;
 
         return (
             <div>
                 <Datagrid
-                    store={collectionStore}
                     views={['folder']}
+                    store={collectionStore}
                     onItemClick={this.handleCollectionClick}
+                />
+                <Datagrid
+                    views={[mediaView]}
+                    store={mediaStore}
                 />
             </div>
         );

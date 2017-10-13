@@ -7,7 +7,7 @@ import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 
 type Props = {
-    onItemClick?: (rowId: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
     store: DatagridStore,
     views: Array<string>,
 };

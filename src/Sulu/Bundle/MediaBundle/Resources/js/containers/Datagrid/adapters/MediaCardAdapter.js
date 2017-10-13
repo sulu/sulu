@@ -23,7 +23,9 @@ export default class MediaCardAdapter extends React.Component<DatagridAdapterPro
     render() {
         const {
             data,
+            selections,
             onItemClick,
+            onItemSelectionChange,
         } = this.props;
 
         return (
@@ -39,6 +41,9 @@ export default class MediaCardAdapter extends React.Component<DatagridAdapterPro
                             title={item.title}
                             meta={meta}
                             image={item.thumbnails[THUMBNAIL_SIZE]}
+                            onClick={onItemClick}
+                            selected={selections.includes(item.id)}
+                            onSelectionChange={onItemSelectionChange}
                         />
                     );
                 })}
