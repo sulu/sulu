@@ -102,7 +102,6 @@ class RatchetAppManager implements AppManagerInterface
         $this->ratchetApp = new WebsocketApp($this->getHttpHost(), $this->getPort(), $this->getIpAddress(), $this->loop);
 
         foreach ($this->apps as $app) {
-            // TODO introduce session config for this: $sessionApp = new SessionProvider($app['app'], $this->sessionHandler);
             $this->ratchetApp->route($app['route'], $app['app'], $app['allowedOrigins'], $app['httpHost']);
         }
 

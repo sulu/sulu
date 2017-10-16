@@ -11,13 +11,15 @@
 
 namespace Sulu\Component\Websocket\Tests\Unit;
 
+use React\EventLoop\LoopInterface;
 use Sulu\Component\Websocket\RatchetAppManager;
+use Sulu\Component\Websocket\WebsocketAppInterface;
 
 class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $loop = $this->prophesize('React\EventLoop\LoopInterface');
+        $loop = $this->prophesize(LoopInterface::class);
 
         $manager = new RatchetAppManager(9876, 'sulu.io', '192.168.0.1', $loop->reveal());
 
@@ -29,7 +31,7 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testAdd()
     {
-        $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
+        $app = $this->prophesize(WebsocketAppInterface::class);
         $app->getName()->willReturn('test');
 
         $manager = new RatchetAppManager(9876);
@@ -52,7 +54,7 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testAddAllowedOrigins()
     {
-        $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
+        $app = $this->prophesize(WebsocketAppInterface::class);
         $app->getName()->willReturn('test');
 
         $manager = new RatchetAppManager(9876);
@@ -75,11 +77,10 @@ class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testAddHttpHost()
     {
-        $sessionHandler = $this->prophesize('SessionHandlerInterface');
-        $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
+        $app = $this->prophesize(WebsocketAppInterface::class);
         $app->getName()->willReturn('test');
 
-        $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
+        $manager = new RatchetAppManager(9876);
 
         $manager->add('/content', $app->reveal(), ['test'], 'sulu.io');
 
