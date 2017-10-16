@@ -7,6 +7,9 @@ $itemTextColorActive: $shakespeare;
     display: block;
 
     button {
+        display: block;
+        width: 100%;
+        padding: 5px 20px;
         cursor: pointer;
         border: 0;
         color: $itemTextColor;
@@ -30,13 +33,13 @@ $itemTextColorActive: $shakespeare;
 
 .item-content {
     min-width: 200px;
-    padding: 5px 20px;
     display: flex;
     justify-content: space-between;
 }
 
 .copy-text {
     opacity: 0;
+    margin-left: 30px;
 }
 
 @keyframes blink {

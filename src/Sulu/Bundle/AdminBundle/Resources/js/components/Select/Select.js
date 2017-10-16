@@ -7,7 +7,6 @@ import Popover from '../Popover';
 import Menu from '../Menu';
 import Action from './Action';
 import Option from './Option';
-import Divider from './Divider';
 import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
 import DisplayValue from './DisplayValue';
 import selectStyles from './select.scss';
@@ -31,9 +30,9 @@ export default class Select extends React.PureComponent<Props> {
 
     static Action = Action;
 
-    static Divider = Divider;
-
     static Option = Option;
+
+    static Divider = Menu.Divider;
 
     @observable displayValueRef: ?ElementRef<'button'>;
 

@@ -8,8 +8,9 @@ import downloadListItemStyles from './downloadListItem.scss';
 
 type Props = {
     url: string,
-    onCopy: () => void,
-    copyText: string,
+    onCopy?: () => void,
+    onClick?: (url: string) => void,
+    copyText?: string,
     children: string,
 };
 
@@ -26,12 +27,28 @@ export default class DownloadListItem extends React.PureComponent<Props> {
     };
 
     handleCopyAnimationEnd = () => {
-        this.props.onCopy();
+        const {onCopy} = this.props;
+
+        if (onCopy) {
+            onCopy();
+        }
+    };
+
+    handleClick = () => {
+        const {
+            url,
+            onClick,
+        } = this.props;
+
+        if (onClick) {
+            onClick(url);
+        }
     };
 
     render() {
         const {
             url,
+            onClick,
             children,
             copyText,
         } = this.props;
@@ -41,23 +58,31 @@ export default class DownloadListItem extends React.PureComponent<Props> {
                 [downloadListItemStyles.copying]: this.copying,
             }
         );
+        const itemContent = (
+            <span className={downloadListItemStyles.itemContent}>
+                {children}
+                <span className={downloadListItemStyles.copyText}>
+                    {copyText}
+                </span>
+            </span>
+        );
 
         return (
             <li
                 className={itemClass}
                 onAnimationEnd={this.handleCopyAnimationEnd}
             >
-                <ClipboardButton
-                    onSuccess={this.handleCopySuccess}
-                    data-clipboard-text={url}
-                >
-                    <span className={downloadListItemStyles.itemContent}>
-                        {children}
-                        <span className={downloadListItemStyles.copyText}>
-                            {copyText}
-                        </span>
-                    </span>
-                </ClipboardButton>
+                {(!onClick)
+                    ? <ClipboardButton
+                        onSuccess={this.handleCopySuccess}
+                        data-clipboard-text={url}
+                    >
+                        {itemContent}
+                    </ClipboardButton>
+                    : <button onClick={this.handleClick}>
+                        {itemContent}
+                    </button>
+                }
             </li>
         );
     }

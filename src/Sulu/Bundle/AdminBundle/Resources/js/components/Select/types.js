@@ -1,7 +1,7 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
+import Select from './Select';
 import Action from './Action';
-import Divider from './Divider';
 import Option from './Option';
 
 export type SelectProps = {
@@ -11,5 +11,5 @@ export type SelectProps = {
 
 export type OptionSelectedVisualization = 'icon' | 'checkbox';
 
-export type SelectChild = Element<typeof Option> | Element<typeof Divider> | Element<typeof Action>;
+export type SelectChild = Element<typeof Option> | Element<typeof Select.Divider> | Element<typeof Action>;
 export type SelectChildren = ChildrenArray<SelectChild>;

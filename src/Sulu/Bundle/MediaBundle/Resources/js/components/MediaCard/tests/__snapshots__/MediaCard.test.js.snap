@@ -5,15 +5,20 @@ exports[`Render a MediaCard with download list 1`] = `
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
       <li class=\\"item\\">
-        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/300/200\\"><span class=\\"itemContent\\"><!-- react-text: 6 -->300/200<!-- /react-text --><span class=\\"copyText\\">Copy URL</span></span>
+        <button><span class=\\"itemContent\\"><!-- react-text: 6 -->Direct download<!-- /react-text --><span class=\\"copyText\\"></span></span>
+        </button>
+      </li>
+      <li class=\\"divider\\"></li>
+      <li class=\\"item\\">
+        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/300/200\\"><span class=\\"itemContent\\"><!-- react-text: 12 -->300/200<!-- /react-text --><span class=\\"copyText\\">Copy URL</span></span>
         </button>
       </li>
       <li class=\\"item\\">
-        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/600/300\\"><span class=\\"itemContent\\"><!-- react-text: 11 -->600/300<!-- /react-text --><span class=\\"copyText\\">Copy URL</span></span>
+        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/600/300\\"><span class=\\"itemContent\\"><!-- react-text: 17 -->600/300<!-- /react-text --><span class=\\"copyText\\">Copy URL</span></span>
         </button>
       </li>
       <li class=\\"item\\">
-        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/150/200\\"><span class=\\"itemContent\\"><!-- react-text: 16 -->150/200<!-- /react-text --><span class=\\"copyText\\">Copy URL</span></span>
+        <button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/150/200\\"><span class=\\"itemContent\\"><!-- react-text: 22 -->150/200<!-- /react-text --><span class=\\"copyText\\">Copy URL</span></span>
         </button>
       </li>
     </ul>

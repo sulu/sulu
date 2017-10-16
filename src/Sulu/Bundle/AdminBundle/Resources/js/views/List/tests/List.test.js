@@ -85,6 +85,7 @@ test('Should render the datagrid with the correct resourceKey', () => {
 
 test('Should render the list with a title', () => {
     const List = require('../List').default;
+
     const router = {
         bind: jest.fn(),
         route: {

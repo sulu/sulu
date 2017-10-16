@@ -1,3 +1,8 @@
 {
-    "sulu_media.all_media": "Alle Medien"
+    "sulu_media.all_media": "Alle Medien",
+    "sulu_admin.object": "Objekt",
+    "sulu_admin.objects": "Objekte",
+    "sulu_admin.all_media": "Alle Medien",
+    "sulu_admin.copy_url": "URL kopieren",
+    "sulu_admin.download_masterfile": "Download master file"
 }

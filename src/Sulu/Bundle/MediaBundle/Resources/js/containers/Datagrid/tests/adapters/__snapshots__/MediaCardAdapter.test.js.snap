@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a basic Masonry view with MediaCards 1`] = `
+<div
+  class="masonry"
+>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div
+      class="mediaCard"
+    >
+      <div
+        class="header"
+      >
+        <div
+          class="description"
+        >
+          <div
+            class="title"
+          >
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox dark checkbox"
+              >
+                <input
+                  type="checkbox"
+                  value="1"
+                />
+                <span />
+              </span>
+              <div>
+                <div
+                  class="titleText"
+                >
+                  <div
+                    aria-label="Title 1"
+                    class="croppedText"
+                    title="Title 1"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="front"
+                    >
+                      Titl
+                    </div>
+                    <div
+                      aria-hidden="true"
+                      class="back"
+                    >
+                      <span>
+                        e 1
+                      </span>
+                    </div>
+                    <div
+                      class="whole"
+                    >
+                      Title 1
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+          <div
+            class="meta"
+          >
+            image/png 12.35 KB
+          </div>
+        </div>
+        <div>
+          <button
+            class="downloadButton"
+          >
+            <span
+              aria-label="cloud-download"
+              class="fa fa-cloud-download"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="media"
+      >
+        <img
+          alt="Title 1"
+          src="http://lorempixel.com/260/100"
+        />
+        <div
+          class="cover"
+        />
+      </div>
+    </div>
+  </li>
+  <li
+    style="margin-bottom:20px;"
+  >
+    <div
+      class="mediaCard"
+    >
+      <div
+        class="header"
+      >
+        <div
+          class="description"
+        >
+          <div
+            class="title"
+          >
+            <label
+              class="label"
+            >
+              <span
+                class="switch checkbox dark checkbox"
+              >
+                <input
+                  type="checkbox"
+                  value="2"
+                />
+                <span />
+              </span>
+              <div>
+                <div
+                  class="titleText"
+                >
+                  <div
+                    aria-label="Title 1"
+                    class="croppedText"
+                    title="Title 1"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="front"
+                    >
+                      Titl
+                    </div>
+                    <div
+                      aria-hidden="true"
+                      class="back"
+                    >
+                      <span>
+                        e 1
+                      </span>
+                    </div>
+                    <div
+                      class="whole"
+                    >
+                      Title 1
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+          <div
+            class="meta"
+          >
+            image/jpeg 54.32 KB
+          </div>
+        </div>
+        <div>
+          <button
+            class="downloadButton"
+          >
+            <span
+              aria-label="cloud-download"
+              class="fa fa-cloud-download"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="media"
+      >
+        <img
+          alt="Title 1"
+          src="http://lorempixel.com/260/100"
+        />
+        <div
+          class="cover"
+        />
+      </div>
+    </div>
+  </li>
+</div>
+`;

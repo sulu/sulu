@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a simple MediaOverview 1`] = `
+<div>
+  <h1>
+    Eins Title
+  </h1>
+</div>
+`;

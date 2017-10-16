@@ -3,12 +3,18 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import {Masonry} from 'sulu-admin-bundle/components';
 import type {DatagridAdapterProps} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/services';
 import MediaCard from '../../../components/MediaCard';
 
 const THUMBNAIL_SIZE = 'sulu-260x';
 
+type Props = DatagridAdapterProps & {
+    icon: string,
+    showDownloadDropdown: boolean,
+};
+
 @observer
-export default class MediaCardAdapter extends React.Component<DatagridAdapterProps> {
+export default class MediaCardAdapter extends React.Component<Props> {
     static formatFileSize(size: number) {
         const megaByteThreshold = 1000000;
         const kiloByteThreshold = 1000;
@@ -20,11 +26,38 @@ export default class MediaCardAdapter extends React.Component<DatagridAdapterPro
         }
     }
 
+    getDownloadDropdownProps(item: Object) {
+        const baseURL = window.location.origin;
+        const {thumbnails} = item;
+        const imageSizes = Object.keys(thumbnails).map((itemKey) => {
+            return {
+                url: baseURL + item.thumbnails[itemKey],
+                label: itemKey,
+            };
+        });
+
+        return {
+            imageSizes,
+            onDirectDownload: this.handleDirectDownload,
+            downloadCopyText: translate('sulu_admin.copy_url'),
+            directDownload: {
+                url: baseURL + item.url,
+                label: translate('sulu_admin.download_masterfile'),
+            },
+        };
+    }
+
+    handleDirectDownload = (downloadURL: string) => {
+        window.location.href = downloadURL;
+    };
+
     render() {
         const {
             data,
+            icon,
             selections,
             onItemClick,
+            showDownloadDropdown,
             onItemSelectionChange,
         } = this.props;
 
@@ -32,14 +65,17 @@ export default class MediaCardAdapter extends React.Component<DatagridAdapterPro
             <Masonry>
                 {data.map((item: Object) => {
                     const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
+                    const downloadDropdownProps = (showDownloadDropdown) ? this.getDownloadDropdownProps(item) : {};
 
                     return (
                         // TODO: Don't access properties like "title" directly.
                         <MediaCard
+                            {...downloadDropdownProps}
                             key={item.id}
                             id={item.id}
-                            title={item.title}
                             meta={meta}
+                            icon={icon}
+                            title={item.title}
                             image={item.thumbnails[THUMBNAIL_SIZE]}
                             onClick={onItemClick}
                             selected={selections.includes(item.id)}
