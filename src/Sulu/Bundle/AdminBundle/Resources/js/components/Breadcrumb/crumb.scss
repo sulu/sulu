@@ -1,0 +1,22 @@
+@import '../../containers/Application/colors.scss';
+
+$crumbTextColor: $silver;
+$crumbTextColorActive: $black;
+
+.crumb {
+    font-size: 30px;
+    color: $crumbTextColor;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover,
+    &:disabled {
+        color: $crumbTextColorActive;
+    }
+
+    &:disabled {
+        cursor: default;
+    }
+}

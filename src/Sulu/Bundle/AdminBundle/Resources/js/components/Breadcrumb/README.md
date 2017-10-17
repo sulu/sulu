@@ -1,6 +1,6 @@
 The `Breadcrumb` indicates the current page’s location within a navigational hierarchy.
 
-```
+```javascript
 const handleClick = (value) => {
     alert(`You clicked on crumb ${value}`);
 };
