@@ -18,8 +18,9 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProv
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
 use Sulu\Component\Rest\ExceptionSerializerSubscriber;
-use Sulu\Component\Symfony\CompilerPass\AddArgumentCompilerPass;
-use Sulu\Component\Symfony\CompilerPass\ReplaceClassCompilerPass;
+use Sulu\Component\Symfony\CompilerPass\Customizer\AddArgumentCustomizer;
+use Sulu\Component\Symfony\CompilerPass\Customizer\ReplaceClassCustomizer;
+use Sulu\Component\Symfony\CompilerPass\ServiceCustomizerCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -52,16 +53,9 @@ class SuluCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(
-            new ReplaceClassCompilerPass(
-                'fos_rest.serializer.exception_normalizer.jms',
-                ExceptionSerializerSubscriber::class
-            )
-        );
-        $container->addCompilerPass(
-            new AddArgumentCompilerPass(
-                'fos_rest.serializer.exception_normalizer.jms',
-                '%kernel.environment%'
-            )
+            ServiceCustomizerCompilerPass::customize('fos_rest.serializer.exception_normalizer.jms')
+                ->add(new ReplaceClassCustomizer(ExceptionSerializerSubscriber::class))
+                ->add(new AddArgumentCustomizer('%kernel.environment%'))
         );
     }
 }
