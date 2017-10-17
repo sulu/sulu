@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
@@ -121,6 +121,80 @@ class NodeController extends RestController implements ClassResourceInterface, S
         );
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns the title of the pages for a given smart content configuration.
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated will be removed with version 1.2
+     */
+    public function filterAction(Request $request)
+    {
+        // load data from request
+        $dataSource = $this->getRequestParameter($request, 'dataSource');
+        $includeSubFolders = $this->getBooleanRequestParameter($request, 'includeSubFolders', false, false);
+        $limitResult = $this->getRequestParameter($request, 'limitResult');
+        $tagNames = $this->getRequestParameter($request, 'tags');
+        $tagOperator = $this->getRequestParameter($request, 'tagOperator', false, 'or');
+        $sortBy = $this->getRequestParameter($request, 'sortBy');
+        $sortMethod = $this->getRequestParameter($request, 'sortMethod', false, 'asc');
+        $exclude = $this->getRequestParameter($request, 'exclude');
+        $webspaceKey = $this->getWebspace($request);
+        $languageCode = $this->getLanguage($request);
+
+        // resolve tag names
+        $resolvedTags = [];
+
+        /** @var TagManagerInterface $tagManager */
+        $tagManager = $this->get('sulu_tag.tag_manager');
+
+        if (isset($tagNames)) {
+            $tags = explode(',', $tagNames);
+            foreach ($tags as $tag) {
+                $resolvedTag = $tagManager->findByName($tag);
+                if ($resolvedTag) {
+                    $resolvedTags[] = $resolvedTag->getId();
+                }
+            }
+        }
+
+        // get sort columns
+        $sortColumns = [];
+        if (isset($sortBy)) {
+            $columns = explode(',', $sortBy);
+            foreach ($columns as $column) {
+                if ($column) {
+                    $sortColumns[] = $column;
+                }
+            }
+        }
+
+        $filterConfig = [
+            'dataSource' => $dataSource,
+            'includeSubFolders' => $includeSubFolders,
+            'limitResult' => $limitResult,
+            'tags' => $resolvedTags,
+            'tagOperator' => $tagOperator,
+            'sortBy' => $sortColumns,
+            'sortMethod' => $sortMethod,
+        ];
+
+        /** @var NodeRepository $repository */
+        $repository = $this->get('sulu_content.node_repository');
+        $content = $repository->getFilteredNodes(
+            $filterConfig,
+            $languageCode,
+            $webspaceKey,
+            true,
+            true,
+            $exclude !== null ? [$exclude] : []
+        );
+
+        return $this->handleView($this->view($content));
     }
 
     /**
@@ -277,8 +351,12 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $groups[] = 'breadcrumbPage';
         }
 
+        $context = new Context();
+        $context->setGroups($groups);
+        $context->setSerializeNull(true);
+
         // preview needs also null value to work correctly
-        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true)->setGroups($groups));
+        $view->setContext($context);
 
         return $this->handleView($view);
     }
@@ -607,12 +685,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
-        $view = $this->view($document);
-        $view->setSerializationContext(
-            SerializationContext::create()->setSerializeNull(true)->setGroups(['defaultPage'])
-        );
+        $context = new Context();
+        $context->setGroups(['defaultPage']);
+        $context->setSerializeNull(true);
 
-        return $this->handleView($view);
+        return $this->handleView($this->view($document)->setContext($context));
     }
 
     /**
@@ -640,12 +717,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
-        $view = $this->view($document);
-        $view->setSerializationContext(
-            SerializationContext::create()->setSerializeNull(true)->setGroups(['defaultPage'])
-        );
+        $context = new Context();
+        $context->setGroups(['defaultPage']);
+        $context->setSerializeNull(true);
 
-        return $this->handleView($view);
+        return $this->handleView($this->view($document)->setContext($context));
     }
 
     /**
@@ -780,9 +856,13 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     throw new RestException('Unrecognized action: ' . $action);
             }
 
+            $context = new Context();
+            $context->setGroups(['defaultPage']);
+
             // prepare view
-            $view = $this->view($data, null !== $data ? 200 : 204);
-            $view->setSerializationContext(SerializationContext::create()->setGroups(['defaultPage']));
+            $view = $this->view($data, $data !== null ? 200 : 204);
+
+            $view->setContext($context);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }

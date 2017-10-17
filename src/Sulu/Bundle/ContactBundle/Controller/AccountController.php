@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
@@ -88,38 +88,6 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         // Default contacts list.
         return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
-    }
-
-    /**
-     * Shows a single account with the given id.
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getAction($id, Request $request)
-    {
-        $includes = explode(',', $request->get('include'));
-        $accountManager = $this->getAccountManager();
-        $locale = $this->getUser()->getLocale();
-
-        try {
-            $view = $this->responseGetById(
-                $id,
-                function ($id) use ($includes, $accountManager, $locale) {
-                    return $accountManager->getByIdAndInclude($id, $locale, $includes);
-                }
-            );
-
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-            );
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        }
-
-        return $this->handleView($view);
     }
 
     /**
@@ -406,9 +374,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $view = $this->view($list, 200);
         }
 
-        $view->setSerializationContext(
-            SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'Default'])
-        );
+        $context = new Context();
+        $context->setGroups(['fullAccount', 'partialContact', 'Default']);
+        $view->setContext($context);
 
         return $this->handleView($view);
     }
@@ -499,9 +467,10 @@ class AccountController extends RestController implements ClassResourceInterface
             $locale = $this->getUser()->getLocale();
             $acc = $accountManager->getAccount($account, $locale);
             $view = $this->view($acc, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-            );
+
+            $context = new Context();
+            $context->setGroups(self::$accountSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
@@ -580,10 +549,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 $locale = $this->getUser()->getLocale();
                 $acc = $accountManager->getAccount($account, $locale);
 
+                $context = new Context();
+                $context->setGroups(self::$accountSerializationGroups);
+
                 $view = $this->view($acc, 200);
-                $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-                );
+                $view->setContext($context);
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -690,10 +660,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 $locale = $this->getUser()->getLocale();
                 $acc = $accountManager->getAccount($account, $locale);
 
+                $context = new Context();
+                $context->setGroups(self::$accountSerializationGroups);
+
                 $view = $this->view($acc, 200);
-                $view->setSerializationContext(
-                    SerializationContext::create()->setGroups(self::$accountSerializationGroups)
-                );
+                $view->setContext($context);
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -902,6 +873,38 @@ class AccountController extends RestController implements ClassResourceInterface
             $view = $this->view($response, 200);
         } else {
             $view = $this->view(null, 404);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Shows a single account with the given id.
+     *
+     * @param int $id
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getAction($id, Request $request)
+    {
+        $includes = explode(',', $request->get('include'));
+        $accountManager = $this->getAccountManager();
+        $locale = $this->getUser()->getLocale();
+
+        try {
+            $view = $this->responseGetById(
+                $id,
+                function ($id) use ($includes, $accountManager, $locale) {
+                    return $accountManager->getByIdAndInclude($id, $locale, $includes);
+                }
+            );
+
+            $context = new Context();
+            $context->setGroups(self::$accountSerializationGroups);
+            $view->setContext($context);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
         }
 
         return $this->handleView($view);

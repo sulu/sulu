@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;
-use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -81,11 +81,13 @@ class CustomUrlController extends RestController implements SecuredControllerInt
             $document->getTargetDocument()->getTitle();
         }
 
-        return $this->handleView(
-            $this->view($document)->setSerializationContext(
-                SerializationContext::create()->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute'])
-            )
-        );
+        $view = $this->view($document);
+
+        $context = new Context();
+        $context->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute']);
+        $view->setContext($context);
+
+        return $this->handleView($view);
     }
 
     /**
@@ -105,11 +107,10 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         );
         $this->get('sulu_document_manager.document_manager')->flush();
 
-        return $this->handleView(
-            $this->view($document)->setSerializationContext(
-                SerializationContext::create()->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute'])
-            )
-        );
+        $context = new Context();
+        $context->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute']);
+
+        return $this->handleView($this->view($document)->setContext($context));
     }
 
     /**
@@ -133,11 +134,10 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         $manager->invalidate($document);
         $this->get('sulu_document_manager.document_manager')->flush();
 
-        return $this->handleView(
-            $this->view($document)->setSerializationContext(
-                SerializationContext::create()->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute'])
-            )
-        );
+        $context = new Context();
+        $context->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute']);
+
+        return $this->handleView($this->view($document)->setContext($context));
     }
 
     /**

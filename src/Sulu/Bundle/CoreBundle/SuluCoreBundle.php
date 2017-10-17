@@ -17,6 +17,9 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesComp
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
+use Sulu\Component\Rest\ExceptionSerializerSubscriber;
+use Sulu\Component\Symfony\CompilerPass\AddArgumentCompilerPass;
+use Sulu\Component\Symfony\CompilerPass\ReplaceClassCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -45,6 +48,19 @@ class SuluCoreBundle extends Bundle
                 'sulu.resource_locator.strategy',
                 0,
                 'alias'
+            )
+        );
+
+        $container->addCompilerPass(
+            new ReplaceClassCompilerPass(
+                'fos_rest.serializer.exception_normalizer.jms',
+                ExceptionSerializerSubscriber::class
+            )
+        );
+        $container->addCompilerPass(
+            new AddArgumentCompilerPass(
+                'fos_rest.serializer.exception_normalizer.jms',
+                '%kernel.environment%'
             )
         );
     }

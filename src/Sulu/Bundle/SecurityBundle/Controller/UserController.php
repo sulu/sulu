@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
@@ -351,12 +351,10 @@ class UserController extends RestController implements ClassResourceInterface, S
      */
     private function addSerializationGroups($view)
     {
+        $context = new Context();
+
         // set serialization groups
-        $view->setSerializationContext(
-            SerializationContext::create()->setGroups(
-                ['Default', 'partialContact', 'fullUser']
-            )
-        );
+        $view->setContext($context->setGroups(['Default', 'partialContact', 'fullUser']));
     }
 
     /**

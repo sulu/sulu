@@ -17,6 +17,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -53,6 +54,8 @@ class NodeControllerTest extends SuluTestCase
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+
+        $this->importer = new PHPCRImporter($this->session, $this->liveSession);
 
         $this->initOrm();
         $this->initPhpcr();

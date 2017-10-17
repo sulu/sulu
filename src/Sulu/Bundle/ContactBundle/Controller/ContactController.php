@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
@@ -109,67 +109,33 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             [
                 new DoctrineFieldDescriptor(
-                    'firstName',
-                    'firstName',
-                    $this->container->getParameter('sulu.model.contact.class')
+                    'firstName', 'firstName', $this->container->getParameter('sulu.model.contact.class')
                 ),
                 new DoctrineFieldDescriptor(
-                    'lastName',
-                    'lastName',
-                    $this->container->getParameter('sulu.model.contact.class')
+                    'lastName', 'lastName', $this->container->getParameter('sulu.model.contact.class')
                 ),
-            ],
-            'fullName',
-            'public.name',
-            ' ',
-            false,
-            true,
-            'string',
-            '',
-            '',
-            false
+            ], 'fullName', 'public.name', ' ', false, true, 'string', '', '', false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
-            'position',
-            'position',
-            self::$positionEntityName,
-            'contact.contacts.position',
-            [
+            'position', 'position', self::$positionEntityName, 'contact.contacts.position', [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
-                    self::$positionEntityName,
-                    self::$accountContactEntityName . '.position'
+                    self::$positionEntityName, self::$accountContactEntityName . '.position'
                 ),
-            ],
-            false,
-            true,
-            'string',
-            '',
-            '',
-            false
+            ], false, true, 'string', '', '', false
         );
 
         // FIXME use field descriptor with expression when implemented
         $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
-            'main',
-            'isMainContact',
-            self::$accountContactEntityName,
-            'contact.contacts.main-contact',
-            [
+            'main', 'isMainContact', self::$accountContactEntityName, 'contact.contacts.main-contact', [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
-            ],
-            false,
-            true,
-            'radio',
-            '',
-            '',
-            false
+            ], false, true, 'radio', '', '', false
         );
     }
 
@@ -236,11 +202,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
         // set serialization groups
         if (count($serializationGroups) > 0) {
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    $serializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups($serializationGroups);
+            $view->setContext($context);
         }
 
         return $this->handleView($view);
@@ -355,11 +319,9 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             );
 
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         }
@@ -386,11 +348,9 @@ class ContactController extends RestController implements ClassResourceInterface
                 $this->getLocale($request)
             );
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (MissingArgumentException $maex) {
@@ -418,11 +378,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
@@ -451,11 +409,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
-            $view->setSerializationContext(
-                SerializationContext::create()->setGroups(
-                    static::$contactSerializationGroups
-                )
-            );
+            $context = new Context();
+            $context->setGroups(static::$contactSerializationGroups);
+            $view->setContext($context);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
@@ -513,8 +469,7 @@ class ContactController extends RestController implements ClassResourceInterface
         foreach ($contacts as $key => $contact) {
             if (array_key_exists('avatar', $contact)
                 && $contact['avatar']
-                && array_key_exists($contact['avatar'], $avatars)
-            ) {
+                && array_key_exists($contact['avatar'], $avatars)) {
                 $contacts[$key]['avatar'] = $avatars[$contact['avatar']];
             }
         }
