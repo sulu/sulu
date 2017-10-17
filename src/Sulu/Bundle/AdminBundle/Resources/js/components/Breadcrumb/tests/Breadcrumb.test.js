@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {shallow, render} from 'enzyme';
+import {mount, render} from 'enzyme';
 import React from 'react';
 import Breadcrumb from '../Breadcrumb';
 
@@ -25,12 +25,13 @@ test('Render a Breadcrumb', () => {
 test('Clicking on a clickable breadcrumb part should call a handler', () => {
     const clickSpy1 = jest.fn();
     const clickSpy2 = jest.fn();
-    const breadcrumb = shallow(
+    const testValue = 2;
+    const breadcrumb = mount(
         <Breadcrumb>
             <Breadcrumb.Crumb onClick={clickSpy1}>
                 Crumb 1
             </Breadcrumb.Crumb>
-            <Breadcrumb.Crumb onClick={clickSpy2}>
+            <Breadcrumb.Crumb value={testValue} onClick={clickSpy2}>
                 Crumb 2
             </Breadcrumb.Crumb>
             <Breadcrumb.Crumb>
@@ -43,5 +44,5 @@ test('Clicking on a clickable breadcrumb part should call a handler', () => {
     expect(clickSpy1).toBeCalled();
 
     breadcrumb.find('Crumb').at(1).simulate('click');
-    expect(clickSpy2).toBeCalled();
+    expect(clickSpy2).toHaveBeenCalledWith(testValue);
 });
