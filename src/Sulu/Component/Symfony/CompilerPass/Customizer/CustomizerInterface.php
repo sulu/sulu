@@ -16,5 +16,5 @@ use Symfony\Component\DependencyInjection\Definition;
 
 interface CustomizerInterface
 {
-    public function customize(Definition $definition, ContainerBuilder $container): void;
+    public function customize(Definition $definition, ContainerBuilder $container);
 }

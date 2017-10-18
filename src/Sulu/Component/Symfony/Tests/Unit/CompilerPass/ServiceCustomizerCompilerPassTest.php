@@ -30,7 +30,7 @@ class ServiceCustomizerCompilerPassTest extends \PHPUnit_Framework_TestCase
         $customizer = $this->prophesize(CustomizerInterface::class);
 
         $compilerPass = new ServiceCustomizerCompilerPass('service1');
-        $compilerPass->add($customizer->reveal());
+        $compilerPass->with($customizer->reveal());
 
         $compilerPass->process($container->reveal());
 
@@ -46,7 +46,7 @@ class ServiceCustomizerCompilerPassTest extends \PHPUnit_Framework_TestCase
         $customizer = $this->prophesize(CustomizerInterface::class);
 
         $compilerPass = new ServiceCustomizerCompilerPass('service1');
-        $compilerPass->add($customizer->reveal());
+        $compilerPass->with($customizer->reveal());
 
         $compilerPass->process($container->reveal());
 

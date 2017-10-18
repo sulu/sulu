@@ -26,7 +26,7 @@ class ReplaceClassCustomizer implements CustomizerInterface
         $this->customClass = $customClass;
     }
 
-    public function customize(Definition $definition, ContainerBuilder $container): void
+    public function customize(Definition $definition, ContainerBuilder $container)
     {
         $definition->setClass($this->customClass);
     }

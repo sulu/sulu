@@ -99,9 +99,8 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = $this->get(
-            'sulu_core.list_builder.field_descriptor_factory'
-        )->getFieldDescriptorForClass(Contact::class);
+        $this->fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptorForClass(Contact::class);
 
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = [];
@@ -109,33 +108,67 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             [
                 new DoctrineFieldDescriptor(
-                    'firstName', 'firstName', $this->container->getParameter('sulu.model.contact.class')
+                    'firstName',
+                    'firstName',
+                    $this->container->getParameter('sulu.model.contact.class')
                 ),
                 new DoctrineFieldDescriptor(
-                    'lastName', 'lastName', $this->container->getParameter('sulu.model.contact.class')
+                    'lastName',
+                    'lastName',
+                    $this->container->getParameter('sulu.model.contact.class')
                 ),
-            ], 'fullName', 'public.name', ' ', false, true, 'string', '', '', false
+            ],
+            'fullName',
+            'public.name',
+            ' ',
+            false,
+            true,
+            'string',
+            '',
+            '',
+            false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
-            'position', 'position', self::$positionEntityName, 'contact.contacts.position', [
+            'position',
+            'position',
+            self::$positionEntityName,
+            'contact.contacts.position',
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
-                    self::$positionEntityName, self::$accountContactEntityName . '.position'
+                    self::$positionEntityName,
+                    self::$accountContactEntityName . '.position'
                 ),
-            ], false, true, 'string', '', '', false
+            ],
+            false,
+            true,
+            'string',
+            '',
+            '',
+            false
         );
 
         // FIXME use field descriptor with expression when implemented
         $this->accountContactFieldDescriptors['isMainContact'] = new DoctrineFieldDescriptor(
-            'main', 'isMainContact', self::$accountContactEntityName, 'contact.contacts.main-contact', [
+            'main',
+            'isMainContact',
+            self::$accountContactEntityName,
+            'contact.contacts.main-contact',
+            [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
                     $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
                 ),
-            ], false, true, 'radio', '', '', false
+            ],
+            false,
+            true,
+            'radio',
+            '',
+            '',
+            false
         );
     }
 
@@ -469,7 +502,8 @@ class ContactController extends RestController implements ClassResourceInterface
         foreach ($contacts as $key => $contact) {
             if (array_key_exists('avatar', $contact)
                 && $contact['avatar']
-                && array_key_exists($contact['avatar'], $avatars)) {
+                && array_key_exists($contact['avatar'], $avatars)
+            ) {
                 $contacts[$key]['avatar'] = $avatars[$contact['avatar']];
             }
         }

@@ -54,8 +54,8 @@ class SuluCoreBundle extends Bundle
 
         $container->addCompilerPass(
             ServiceCustomizerCompilerPass::customize('fos_rest.serializer.exception_normalizer.jms')
-                ->add(new ReplaceClassCustomizer(ExceptionSerializerSubscriber::class))
-                ->add(new AddArgumentCustomizer('%kernel.environment%'))
+                ->with(new ReplaceClassCustomizer(ExceptionSerializerSubscriber::class))
+                ->with(new AddArgumentCustomizer('%kernel.environment%'))
         );
     }
 }

@@ -26,7 +26,7 @@ class AddArgumentCustomizer implements CustomizerInterface
         $this->argument = $argument;
     }
 
-    public function customize(Definition $definition, ContainerBuilder $container): void
+    public function customize(Definition $definition, ContainerBuilder $container)
     {
         $definition->addArgument($this->argument);
     }

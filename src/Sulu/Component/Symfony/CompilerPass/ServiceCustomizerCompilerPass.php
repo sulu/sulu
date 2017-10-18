@@ -37,7 +37,7 @@ class ServiceCustomizerCompilerPass implements CompilerPassInterface
         $this->serviceId = $serviceId;
     }
 
-    public function add(CustomizerInterface $customizer)
+    public function with(CustomizerInterface $customizer)
     {
         $this->customizer[] = $customizer;
 
