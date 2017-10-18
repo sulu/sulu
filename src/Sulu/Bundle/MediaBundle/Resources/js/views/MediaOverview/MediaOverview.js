@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {translate} from 'sulu-admin-bundle/services';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import MediaContainer, {CollectionInfoStore} from '../../containers/MediaContainer';
+import {CollectionInfoStore, MediaContainer} from '../../containers/MediaContainer';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const MEDIA_RESOURCE_KEY = 'media';
@@ -13,7 +13,8 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
 class MediaOverview extends React.PureComponent<ViewProps> {
-    page: observable = observable();
+    mediaPage: observable = observable();
+    collectionPage: observable = observable();
     locale: observable = observable();
     @observable collectionId: ?string | number;
     @observable mediaStore: DatagridStore;
@@ -24,8 +25,10 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     componentWillMount() {
         const {router} = this.props;
 
-        router.bind('page', this.page, '1');
-        router.bind('locale', this.locale);
+        this.mediaPage.set(1);
+
+        router.bindQuery('collectionPage', this.collectionPage, '1');
+        router.bindQuery('locale', this.locale);
 
         this.disposer = autorun(this.createStores);
     }
@@ -57,8 +60,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
         if (collectionId !== this.collectionId || !this.collectionStore) {
             this.setCollectionId(collectionId);
-            this.createMediaStore(collectionId, this.page, this.locale);
-            this.createCollectionStore(collectionId, this.page, this.locale);
+            this.createMediaStore(collectionId, this.mediaPage, this.locale);
+            this.createCollectionStore(collectionId, this.collectionPage, this.locale);
             this.createCollectionInfoStore(collectionId, this.locale);
         }
     };
@@ -130,7 +133,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
         return (
             <div>
                 <MediaContainer
-                    page={this.page}
+                    page={this.collectionPage}
                     locale={this.locale}
                     mediaView="mediaCardOverview"
                     mediaStore={this.mediaStore}
@@ -146,6 +149,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 export default withToolbar(MediaOverview, function() {
     const router = this.props.router;
     const {parentCollectionId} = this.collectionInfoStore;
+    const loading = this.collectionStore.loading || this.mediaStore.loading;
 
     const {
         route: {
@@ -170,11 +174,18 @@ export default withToolbar(MediaOverview, function() {
 
     return {
         locale,
-        disableAll: this.collectionStore.loading,
+        disableAll: loading,
         backButton: (this.collectionId)
             ? {
                 onClick: () => {
-                    router.restore(COLLECTION_ROUTE, {id: this.parentId, locale: this.locale.get()});
+                    router.restore(
+                        COLLECTION_ROUTE,
+                        {
+                            id: this.parentId,
+                            locale: this.locale.get(),
+                            collectionPage: '1',
+                        }
+                    );
                 },
             }
             : undefined,

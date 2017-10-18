@@ -4,5 +4,7 @@
     "sulu_admin.objects": "Objekte",
     "sulu_admin.all_media": "Alle Medien",
     "sulu_admin.copy_url": "URL kopieren",
-    "sulu_admin.download_masterfile": "Download master file"
+    "sulu_admin.download_masterfile": "Download master file",
+    "sulu_media.copy_url": "URL kopieren",
+    "sulu_media.download_masterfile": "Download master file"
 }

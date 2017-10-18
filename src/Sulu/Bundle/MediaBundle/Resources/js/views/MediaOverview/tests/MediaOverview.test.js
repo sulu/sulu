@@ -47,3 +47,29 @@ test('Should navigate to defined route on back button click', () => {
     toolbarConfig.backButton.onClick();
     expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
 });
+
+test('Unbind all query params and destroy all stores on unmount', () => {
+    const MediaOverview = require('../MediaOverview').default;
+    const router = {
+        bindQuery: jest.fn(),
+        unbindQuery: jest.fn(),
+        attributes: {},
+    };
+
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    const mediaOverviewInstance = mediaOverview.instance();
+    const page = router.bindQuery.mock.calls[0][1];
+    const locale = router.bindQuery.mock.calls[1][1];
+
+    expect(page.get()).toBe(undefined);
+    expect(locale.get()).toBe(undefined);
+    expect(router.bindQuery).toBeCalledWith('collectionPage', page, '1');
+    expect(router.bindQuery).toBeCalledWith('locale', locale);
+
+    mediaOverview.unmount();
+    expect(mediaOverviewInstance.mediaStore.destroy).toBeCalled();
+    expect(mediaOverviewInstance.collectionStore.destroy).toBeCalled();
+    expect(mediaOverviewInstance.collectionInfoStore.destroy).toBeCalled();
+    expect(router.unbindQuery).toBeCalledWith('collectionPage');
+    expect(router.unbindQuery).toBeCalledWith('locale');
+});

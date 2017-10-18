@@ -39,10 +39,10 @@ export default class MediaCardAdapter extends React.Component<Props> {
         return {
             imageSizes,
             onDirectDownload: this.handleDirectDownload,
-            downloadCopyText: translate('sulu_admin.copy_url'),
+            downloadCopyText: translate('sulu_media.copy_url'),
             directDownload: {
                 url: baseURL + item.url,
-                label: translate('sulu_admin.download_masterfile'),
+                label: translate('sulu_media.download_masterfile'),
             },
         };
     }

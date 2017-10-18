@@ -6,6 +6,7 @@ import type {BreadcrumbItem, BreadcrumbItems} from '../types';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 export default class CollectionInfoStore {
+    @observable loading: boolean = false;
     @observable breadcrumb: ?observable = [];
     @observable parentCollectionId: ?observable;
     disposer: () => void;
@@ -28,12 +29,18 @@ export default class CollectionInfoStore {
         this.breadcrumb = breadcrumb;
     }
 
+    @action setLoading(loading: boolean) {
+        this.loading = loading;
+    }
+
     load(collectionId: ?string | number, locale: string) {
         if (!collectionId) {
             this.setBreadcrumb(null);
 
             return;
         }
+
+        this.setLoading(true);
 
         return ResourceRequester.get(
             COLLECTIONS_RESOURCE_KEY,
@@ -58,6 +65,7 @@ export default class CollectionInfoStore {
                     : [currentCollection]
             );
             this.setParentCollectionId((parent) ? parent.id : null);
+            this.setLoading(false);
         });
     }
 
