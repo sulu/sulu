@@ -105,7 +105,8 @@ class ContentRouteProvider implements RouteProviderInterface
         $resourceLocator = $attributes->getAttribute('resourceLocator');
         $prefix = $attributes->getAttribute('resourceLocatorPrefix');
 
-        $htmlRedirect = $request->getPathInfo() !== $prefix . $resourceLocator
+        $pathInfo = $this->decodePathInfo($request->getPathInfo());
+        $htmlRedirect = $pathInfo !== $prefix . $resourceLocator
                         && in_array($request->getRequestFormat(), ['htm', 'html']);
 
         if ($htmlRedirect
@@ -157,10 +158,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
                 $collection->add(
                     $document->getStructureType() . '_' . $document->getUuid(),
-                    $this->getRedirectRoute(
-                        $request,
-                        $redirectUrl
-                    )
+                    $this->getRedirectRoute($request, $redirectUrl)
                 );
             } elseif ($document->getRedirectType() === RedirectType::EXTERNAL) {
                 $collection->add(
@@ -195,10 +193,7 @@ class ContentRouteProvider implements RouteProviderInterface
             // old url resource was moved
             $collection->add(
                 $exc->getNewResourceLocatorUuid() . '_' . uniqid(),
-                $this->getRedirectRoute(
-                    $request,
-                    $prefix . $exc->getNewResourceLocator()
-                )
+                $this->getRedirectRoute($request, $prefix . $exc->getNewResourceLocator())
             );
         } catch (RepositoryException $exc) {
             // just do not add any routes to the collection
@@ -241,7 +236,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
     /**
      * @param Request $request
-     * @param $url
+     * @param string $url
      *
      * @return Route
      */
@@ -249,7 +244,11 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         // redirect to linked page
         return new Route(
-            $request->getPathInfo(), ['_controller' => 'SuluWebsiteBundle:Redirect:redirect', 'url' => $url]
+            $this->decodePathInfo($request->getPathInfo()),
+            [
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+                'url' => $url,
+            ]
         );
     }
 
@@ -262,11 +261,25 @@ class ContentRouteProvider implements RouteProviderInterface
     protected function getStructureRoute(Request $request, PageBridge $content)
     {
         return new Route(
-            $request->getPathInfo(), [
+            $this->decodePathInfo($request->getPathInfo()),
+            [
                 '_controller' => $content->getController(),
                 'structure' => $content,
                 'partial' => $request->get('partial', 'false') === 'true',
             ]
         );
+    }
+
+    /**
+     * Server encodes the url and symfony does not encode it
+     * Symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91.
+     *
+     * @param $pathInfo
+     *
+     * @return string
+     */
+    private function decodePathInfo($pathInfo)
+    {
+        return rawurldecode($pathInfo);
     }
 }
