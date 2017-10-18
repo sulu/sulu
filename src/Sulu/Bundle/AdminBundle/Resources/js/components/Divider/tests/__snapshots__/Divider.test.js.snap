@@ -10,6 +10,6 @@ exports[`Render a Divider with text 1`] = `
 
 exports[`Render an empty Divider 1`] = `
 <div
-  class="divider noText"
+  class="divider"
 />
 `;

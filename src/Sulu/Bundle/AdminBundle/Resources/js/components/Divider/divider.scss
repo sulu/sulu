@@ -25,7 +25,7 @@ $dividerBackgroundColor: $silver;
         margin-left: 80px;
     }
 
-    &.no-text {
+    &:empty {
         &::before,
         &::after {
             margin: 0;
