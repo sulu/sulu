@@ -102,7 +102,7 @@ class ContentRouteProvider implements RouteProviderInterface
             return $collection;
         }
 
-        $resourceLocator = $attributes->getAttribute('resourceLocator');
+        $resourceLocator = $this->decodePathInfo($attributes->getAttribute('resourceLocator'));
         $prefix = $attributes->getAttribute('resourceLocatorPrefix');
 
         $pathInfo = $this->decodePathInfo($request->getPathInfo());
