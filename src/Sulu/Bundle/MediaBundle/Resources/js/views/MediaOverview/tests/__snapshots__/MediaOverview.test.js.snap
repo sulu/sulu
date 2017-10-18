@@ -117,7 +117,7 @@ exports[`Render a simple MediaOverview 1`] = `
       </div>
     </section>
     <div
-      class="divider noText"
+      class="divider"
     />
     <section>
       <div

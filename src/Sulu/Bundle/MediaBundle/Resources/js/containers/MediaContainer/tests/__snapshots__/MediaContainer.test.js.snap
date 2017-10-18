@@ -116,7 +116,7 @@ exports[`Render the MediaContainer 1`] = `
     </div>
   </section>
   <div
-    class="divider noText"
+    class="divider"
   />
   <section>
     <div
