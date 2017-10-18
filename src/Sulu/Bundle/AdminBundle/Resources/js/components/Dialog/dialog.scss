@@ -1,0 +1,76 @@
+@import '../../containers/Application/colors.scss';
+
+$contentBackgroundColor: $concrete;
+$footerBackgroundColor: $white;
+$borderRadius: 3px;
+
+$titleColor: $black;
+$contentColor: $dustyGray;
+
+$confirmBackground: $shakespeare;
+$confirmColor: $white;
+
+$transitionDuration: 300ms;
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > * {
+        opacity: 0;
+        transition: opacity $transitionDuration;
+    }
+}
+
+.dialog {
+    width: 500px;
+    position: relative;
+    opacity: 0;
+    transition: top $transitionDuration, opacity $transitionDuration;
+    z-index: 1;
+    pointer-events: none;
+
+    & > * {
+        pointer-events: auto;
+    }
+}
+
+.is-open {
+    & > * {
+        opacity: 1;
+    }
+}
+
+.content {
+    border-radius: $borderRadius;
+    background: $contentBackgroundColor;
+    overflow: hidden;
+
+    header {
+        color: $titleColor;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        padding: 30px;
+    }
+
+    article {
+        color: $contentColor;
+        overflow: auto;
+        padding: 0 30px 30px 30px;
+        text-align: center;
+    }
+
+    footer {
+        background: $footerBackgroundColor;
+        padding: 30px;
+        display: flex;
+        justify-content: space-between;
+    }
+}

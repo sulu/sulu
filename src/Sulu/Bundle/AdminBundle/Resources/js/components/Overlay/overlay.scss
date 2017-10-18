@@ -33,6 +33,7 @@ $transitionDuration: 300ms;
 }
 
 .overlay {
+    border-radius: 0 0 $borderRadius $borderRadius;
     position: relative;
     top: -100%;
     opacity: 0;

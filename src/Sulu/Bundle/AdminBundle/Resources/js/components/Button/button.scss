@@ -1,0 +1,35 @@
+@import '../../containers/Application/colors.scss';
+
+$borderRadius: 3px;
+$fontSize: 12px;
+
+$confirmBackground: $shakespeare;
+$confirmColor: $white;
+
+$cancelBorder: $silver;
+$cancelBackground: $wildSand;
+$cancelColor: $black;
+
+.button {
+    box-sizing: border-box;
+    font-size: $fontSize;
+    border: 1px solid;
+    border-radius: $borderRadius;
+    line-height: 30px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;
+    padding: 0 40px;
+}
+
+.confirm {
+    border-color: $confirmBackground;
+    background: $confirmBackground;
+    color: $confirmColor;
+}
+
+.cancel {
+    border-color: $cancelBorder;
+    background: $cancelBackground;
+    color: $cancelColor;
+}

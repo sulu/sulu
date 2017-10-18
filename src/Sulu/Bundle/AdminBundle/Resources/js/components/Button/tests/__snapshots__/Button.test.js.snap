@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button should render 1`] = `
+<button
+  class="button confirm"
+/>
+`;
+
+exports[`Button should render with class names 1`] = `
+<button
+  class="button"
+/>
+`;
+
+exports[`Button should render with onClick handler, role and tabindex 1`] = `
+<button
+  class="button"
+/>
+`;
