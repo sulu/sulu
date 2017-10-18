@@ -6,8 +6,8 @@ import tabsStyles from './tabs.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Tab>>,
-    selectedIndex: number,
-    onSelect: (tabIndex: string | number) => void,
+    selectedIndex: ?number,
+    onSelect: (tabIndex: number) => void,
 };
 
 export default class Tabs extends React.PureComponent<Props> {
@@ -31,8 +31,10 @@ export default class Tabs extends React.PureComponent<Props> {
         });
     }
 
-    handleSelectionChange = (selectedTabIndex: number) => {
-        this.props.onSelect(selectedTabIndex);
+    handleSelectionChange = (selectedTabIndex: ?number) => {
+        if (selectedTabIndex) {
+            this.props.onSelect(selectedTabIndex);
+        }
     };
 
     render() {

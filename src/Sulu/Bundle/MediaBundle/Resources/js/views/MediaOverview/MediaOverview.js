@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import {translate, ResourceRequester} from 'sulu-admin-bundle/services';
 import {withToolbar, Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
+import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -93,7 +94,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     render() {
         return (
-            <div>
+            <div className={mediaOverviewStyles.mediaOverview}>
                 <h1>{this.getTitle()}</h1>
                 <Datagrid
                     store={this.collectionStore}

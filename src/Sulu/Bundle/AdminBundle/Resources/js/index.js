@@ -13,6 +13,7 @@ import {fieldRegistry} from './containers/Form';
 import {viewRegistry} from './containers/ViewRenderer';
 import {datagridAdapterRegistry, TableAdapter, FolderAdapter} from './containers/Datagrid';
 import Form from './views/Form';
+import ResourceTabs from './views/ResourceTabs';
 import List from './views/List';
 import {bundlesReadyPromise, bundleReady} from './services/Bundles';
 
@@ -21,8 +22,9 @@ useStrict(true);
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
 
-viewRegistry.add('sulu_admin.list', List);
 viewRegistry.add('sulu_admin.form', Form);
+viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
+viewRegistry.add('sulu_admin.list', List);
 datagridAdapterRegistry.add('table', TableAdapter);
 datagridAdapterRegistry.add('folder', FolderAdapter);
 

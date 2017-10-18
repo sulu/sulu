@@ -5,6 +5,7 @@ import FormStore from '../../containers/Form/stores/FormStore';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
+import formStyles from './form.scss';
 
 const schema = {
     title: {
@@ -53,7 +54,7 @@ class Form extends React.PureComponent<ViewProps> {
 
     render() {
         return (
-            <div>
+            <div className={formStyles.form}>
                 <FormContainer
                     ref={this.setFormRef}
                     store={this.formStore}

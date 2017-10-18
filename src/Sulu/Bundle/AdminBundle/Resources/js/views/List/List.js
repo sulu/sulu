@@ -8,6 +8,7 @@ import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
+import listStyles from './list.scss';
 
 @observer
 class List extends React.PureComponent<ViewProps> {
@@ -76,7 +77,7 @@ class List extends React.PureComponent<ViewProps> {
         } = this.props.router;
 
         return (
-            <div>
+            <div className={listStyles.list}>
                 {title && <h1>{translate(title)}</h1>}
                 <Datagrid
                     store={this.datagridStore}
