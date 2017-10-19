@@ -1,7 +1,7 @@
 // @flow
 import {autorun} from 'mobx';
-import React from 'react';
 import type {ComponentType} from 'react';
+import React from 'react';
 import {buildHocDisplayName} from '../../services/react';
 import type {ToolbarConfig} from './types';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
@@ -11,23 +11,29 @@ export default function withToolbar(
     toolbar: () => ToolbarConfig,
     toolbarStoreKey: string = DEFAULT_STORE_KEY
 ) {
-    const WithToolbarComponent = class extends React.Component<*> {
-        disposer: Function;
+    const WithToolbarComponent = class extends Component {
+        toolbarDisposer: Function;
 
-        setToolbarConfig = (component: React$Element<*>) => {
-            this.disposer = autorun(() => {
-                if (component) {
-                    toolbarStorePool.setToolbarConfig(toolbarStoreKey, toolbar.call(component));
-                }
+        componentWillMount() {
+            if (super.componentWillMount) {
+                super.componentWillMount();
+            }
+
+            this.toolbarDisposer = autorun(() => {
+                toolbarStorePool.setToolbarConfig(toolbarStoreKey, toolbar.call(this));
             });
-        };
+        }
 
         componentWillUnmount() {
-            this.disposer();
+            if (super.componentWillUnmount) {
+                super.componentWillUnmount();
+            }
+
+            this.toolbarDisposer();
         }
 
         render() {
-            return <Component ref={this.setToolbarConfig} {...this.props} />;
+            return super.render();
         }
     };
 
