@@ -11,6 +11,7 @@
 /tests/app/logs
 /tests/Resources/cache
 /vendor
+/web
 
 # Composer
 /composer.lock
