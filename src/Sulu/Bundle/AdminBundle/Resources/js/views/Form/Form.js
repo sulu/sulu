@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {default as FormContainer} from '../../containers/Form';
-import FormStore from '../../containers/Form/stores/FormStore';
+import ResourceStore from '../../stores/ResourceStore';
 import {translate} from '../../services/Translator';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -20,7 +20,7 @@ const schema = {
 
 class Form extends React.PureComponent<ViewProps> {
     form: ?FormContainer;
-    formStore: FormStore;
+    resourceStore: ResourceStore;
 
     componentWillMount() {
         const {router} = this.props;
@@ -34,18 +34,18 @@ class Form extends React.PureComponent<ViewProps> {
                 id,
             },
         } = router;
-        this.formStore = new FormStore(resourceKey, id);
-        this.formStore.changeSchema(schema);
-        router.bindQuery('locale', this.formStore.locale);
+        this.resourceStore = new ResourceStore(resourceKey, id);
+        this.resourceStore.changeSchema(schema);
+        router.bindQuery('locale', this.resourceStore.locale);
     }
 
     componentWillUnmount() {
-        this.formStore.destroy();
-        this.props.router.unbindQuery('locale', this.formStore.locale);
+        this.resourceStore.destroy();
+        this.props.router.unbindQuery('locale', this.resourceStore.locale);
     }
 
     handleSubmit = () => {
-        this.formStore.save();
+        this.resourceStore.save();
     };
 
     setFormRef = (form) => {
@@ -57,7 +57,7 @@ class Form extends React.PureComponent<ViewProps> {
             <div className={formStyles.form}>
                 <FormContainer
                     ref={this.setFormRef}
-                    store={this.formStore}
+                    store={this.resourceStore}
                     onSubmit={this.handleSubmit}
                     schema={schema}
                 />
@@ -73,15 +73,15 @@ export default withToolbar(Form, function() {
     const backButton = backRoute
         ? {
             onClick: () => {
-                router.navigate(backRoute, {}, {locale: this.formStore.locale.get()});
+                router.navigate(backRoute, {}, {locale: this.resourceStore.locale.get()});
             },
         }
         : undefined;
     const locale = locales
         ? {
-            value: this.formStore.locale.get(),
+            value: this.resourceStore.locale.get(),
             onChange: (locale) => {
-                this.formStore.setLocale(locale);
+                this.resourceStore.setLocale(locale);
             },
             options: locales.map((locale) => ({
                 value: locale,
@@ -98,8 +98,8 @@ export default withToolbar(Form, function() {
                 type: 'button',
                 value: translate('sulu_admin.save'),
                 icon: 'floppy-o',
-                disabled: !this.formStore.dirty,
-                loading: this.formStore.saving,
+                disabled: !this.resourceStore.dirty,
+                loading: this.resourceStore.saving,
                 onClick: () => {
                     this.form.submit();
                 },
