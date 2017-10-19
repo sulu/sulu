@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $dividerBackgroundColor: $silver;
+$dividerMargin: 40px;
 
 .divider {
     display: flex;
@@ -18,11 +19,11 @@ $dividerBackgroundColor: $silver;
     }
 
     &::before {
-        margin-right: 80px;
+        margin-right: $dividerMargin;
     }
 
     &::after {
-        margin-left: 80px;
+        margin-left: $dividerMargin;
     }
 
     &:empty {
