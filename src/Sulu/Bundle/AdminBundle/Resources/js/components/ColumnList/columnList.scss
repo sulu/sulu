@@ -1,0 +1,100 @@
+@import '../../containers/Application/colors.scss';
+
+$headerTextColor: $white;
+$headerCellBackgroundColor: $blueZodiac;
+$headerButtonCellTextColor: rgba($silverChalice, .25);
+$headerButtonCellBorderColor: rgba($silverChalice, .25);
+$cellTextColor: $blueZodiac;
+$cellTextColorActive: $white;
+$cellBackgroundColor: $white;
+$cellBorderColor: $cellBackgroundColor;
+$cellBorderColorActive: $shakespeare;
+$cellBackgroundColorActive: $shakespeare;
+$buttonCellBorderColor: $white;
+$emptyMessageColor: $silver;
+$rowHeight: 40px;
+
+.container {
+    overflow: scroll;
+}
+
+.column-list {
+    align-items: baseline;
+    display: inline-flex;
+}
+
+.column-container {
+    height: 60vh;
+}
+
+.column {
+    background: $white;
+    border-right: 1px solid $silver;
+    vertical-align: top;
+    width: 270px;
+    height: calc(60vh - 50px);
+    overflow: hidden;
+}
+
+.column-container:first-child {
+    .column {
+        border-radius: 3px 0 0 3px;
+    }
+}
+
+.column-container:last-child {
+    .column {
+        border-radius: 0 3px 3px 0;
+        border-right: none;
+    }
+}
+
+.column-container {
+    height: 60vh;
+
+    &.is-active {
+        .column {
+            border-radius: 0;
+        }
+    }
+}
+
+.item {
+    padding: 11px 30px 11px 6px;
+
+    &.is-selected {
+        background: $alabaster;
+        font-weight: bold;
+    }
+
+    &.has-children {
+
+    }
+
+    &:hover {
+        background: $blueZodiac;
+        color: $white;
+    }
+
+    .icon {
+        float: right;
+        font-weight: normal;
+    }
+}
+
+.buttons {
+    padding-right: 16px;
+}
+
+.button {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.item:hover {
+    .button {
+        visibility: visible;
+    }
+}

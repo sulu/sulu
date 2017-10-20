@@ -1,0 +1,49 @@
+@import '../../containers/Application/colors.scss';
+
+$headerTextColor: $white;
+$headerCellBackgroundColor: $blueZodiac;
+$headerButtonCellTextColor: rgba($silverChalice, .25);
+$headerButtonCellBorderColor: rgba($silverChalice, .25);
+$cellTextColor: $blueZodiac;
+$cellTextColorActive: $white;
+$cellBackgroundColor: $white;
+$cellBorderColor: $cellBackgroundColor;
+$cellBorderColorActive: $shakespeare;
+$cellBackgroundColorActive: $shakespeare;
+$buttonCellBorderColor: $white;
+$emptyMessageColor: $silver;
+$rowHeight: 40px;
+
+.container {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    visibility: hidden;
+
+    &.is-active {
+        visibility: visible;
+    }
+}
+
+.item {
+    flex: 1;
+    text-align: center;
+    padding: 9px 0 6px;
+    background: $silver;
+    cursor: pointer;
+
+    &:first-child {
+        border-radius: 3px 0 0 0;
+    }
+
+    &:nth-child(2) {
+        background: $shakespeare;
+        border-left: 1px solid $concrete;
+        border-right: 1px solid $concrete;
+        color: $white;
+    }
+
+    &:last-child {
+        border-radius: 0 3px 0 0;
+    }
+}

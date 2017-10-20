@@ -4,7 +4,6 @@
 /src/Sulu/Bundle/*/Tests/app/logs
 /src/Sulu/Bundle/*/vendor
 /src/Sulu/Bundle/TestBundle/Resources/app/cache
-/src/Sulu/Bundle/TestBundle/Resources/app/cache
 /src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache
 /tests/app/cache
 /tests/app/data
@@ -34,6 +33,9 @@ Thumbs.db
 **/node_modules
 **/package-lock.json
 npm-debug.log
+
+# Styleguid
+/styleguide
 
 # IDEs
 .idea
