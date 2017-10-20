@@ -4,8 +4,8 @@ import type {ElementRef} from 'react';
 import React from 'react';
 import Loader from '../../components/Loader';
 import ResourceStore from '../../stores/ResourceStore';
+import type {Schema} from '../../stores/ResourceStore/types';
 import Renderer from './Renderer';
-import type {Schema} from './types';
 
 type Props = {
     schema: Schema,

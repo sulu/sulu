@@ -1,7 +1,7 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
-import type {Schema} from '../types';
+import type {Schema} from './types';
 
 export default class ResourceStore {
     resourceKey: string;
