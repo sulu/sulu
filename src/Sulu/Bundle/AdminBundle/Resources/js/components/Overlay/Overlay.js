@@ -5,7 +5,7 @@ import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import type {Node} from 'react';
 import React from 'react';
-import Portal from 'react-portal';
+import Portal from '../Portal';
 import Icon from '../Icon';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
@@ -26,7 +26,7 @@ type Props = {
 const CLOSE_ICON = 'times';
 
 @observer
-export default class Overlay extends React.PureComponent<Props> {
+export default class Overlay extends React.Component<Props> {
     static defaultProps = {
         open: false,
         actions: [],
@@ -96,7 +96,7 @@ export default class Overlay extends React.PureComponent<Props> {
         );
 
         return (
-            <Portal isOpened={open || this.openHasChanged}>
+            <Portal open={open || this.openHasChanged}>
                 <div
                     className={containerClass}
                     onTransitionEnd={this.handleTransitionEnd}

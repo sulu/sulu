@@ -1,7 +1,7 @@
 // @flow
 import classNames from 'classnames';
-import Portal from 'react-portal';
 import React from 'react';
+import Portal from '../Portal';
 import backdropStyles from './backdrop.scss';
 
 type Props = {
@@ -43,6 +43,6 @@ export default class Backdrop extends React.PureComponent<Props> {
             return backdrop;
         }
 
-        return <Portal isOpened={open}>{backdrop}</Portal>;
+        return <Portal open={open}>{backdrop}</Portal>;
     }
 }

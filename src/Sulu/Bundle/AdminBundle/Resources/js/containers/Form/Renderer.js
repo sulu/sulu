@@ -14,7 +14,7 @@ type Props = {
 };
 
 @observer
-export default class Renderer extends React.PureComponent<Props> {
+export default class Renderer extends React.Component<Props> {
     submitButton: ElementRef<'button'>;
 
     /** @public */

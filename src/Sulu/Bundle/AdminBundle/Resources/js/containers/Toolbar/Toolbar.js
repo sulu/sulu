@@ -38,7 +38,7 @@ function getItemComponentByType(itemConfig) {
 }
 
 @observer
-export default class Toolbar extends React.PureComponent<*> {
+export default class Toolbar extends React.Component<*> {
     props: ToolbarProps;
 
     toolbarStore: ToolbarStore;

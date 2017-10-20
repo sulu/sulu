@@ -17,7 +17,7 @@ const schema = {
     },
 };
 
-class Form extends React.PureComponent<ViewProps> {
+class Form extends React.Component<ViewProps> {
     form: ?FormContainer;
     formStore: FormStore;
 

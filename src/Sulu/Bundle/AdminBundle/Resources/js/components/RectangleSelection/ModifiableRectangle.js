@@ -16,7 +16,7 @@ type Props = {
 };
 
 @observer
-export default class ModifiableRectangle extends React.PureComponent<Props> {
+export default class ModifiableRectangle extends React.Component<Props> {
     static defaultProps = {
         left: 0,
         top: 0,

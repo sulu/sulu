@@ -15,7 +15,7 @@ type Props = {
 };
 
 @observer
-export default class Datagrid extends React.PureComponent<Props> {
+export default class Datagrid extends React.Component<Props> {
     componentWillMount() {
         this.validateViews();
     }

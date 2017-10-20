@@ -10,7 +10,7 @@ const COLLECTION_ROUTE = 'sulu_media.overview';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 @observer
-class MediaOverview extends React.PureComponent<ViewProps> {
+class MediaOverview extends React.Component<ViewProps> {
     page: observable = observable();
     locale: observable = observable();
     @observable title: string;

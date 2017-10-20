@@ -10,7 +10,7 @@ import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 
 @observer
-class List extends React.PureComponent<ViewProps> {
+class List extends React.Component<ViewProps> {
     page: observable = observable();
     locale: observable = observable();
     datagridStore: DatagridStore;
