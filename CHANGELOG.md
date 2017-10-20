@@ -1,6 +1,11 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX     #3573 [RouteBundle]             Added rawurldecode to decode path-info before searching for route
+    * HOTFIX     #3573 [ContentBundle]           Added rawurldecode to decode path-info before searching for route
+    * HOTFIX     #3573 [CustomUrlBundle]         Added rawurldecode to decode path-info before searching for route
+
 * 1.6.6 (2017-10-12)
     * ENHANCEMENT #3557 [ContentBundle]           Added option to decorate index name for document types
     * HOTFIX      #3555 [ContentBundle]           Fixed "awkward" state of documents after copy-locale

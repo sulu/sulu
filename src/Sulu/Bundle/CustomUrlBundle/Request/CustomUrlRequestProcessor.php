@@ -64,7 +64,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
      */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $url = rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/');
+        $url = $this->decodeUrl(rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/'));
         if (substr($url, -5, 5) === '.html') {
             $url = substr($url, 0, -5);
         }
@@ -116,7 +116,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
     {
         $webspace = $portalInformation->getWebspace();
         $routeDocument = $this->customUrlManager->findRouteByUrl(
-            $url,
+            rawurldecode($url),
             $webspace->getKey()
         );
 
@@ -128,7 +128,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         }
 
         $customUrlDocument = $this->customUrlManager->findByUrl(
-            $url,
+            rawurldecode($url),
             $webspace->getKey(),
             $routeDocument->getTargetDocument()->getTargetLocale()
         );
@@ -165,5 +165,18 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
                 $customUrlDocument->getDomainParts()
             ),
         ];
+    }
+
+    /**
+     * Server encodes the url and symfony does not encode it
+     * Symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91.
+     *
+     * @param $pathInfo
+     *
+     * @return string
+     */
+    private function decodeUrl($pathInfo)
+    {
+        return rawurldecode($pathInfo);
     }
 }

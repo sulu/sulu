@@ -32,14 +32,15 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
     public function dataProvider()
     {
         return [
-            ['sulu.io', '/test', 'sulu.io/test', false],
-            ['sulu.io', '/test.html', 'sulu.io/test', false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, true],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, false, true],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::PUBLISHED],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::TEST],
+            ['sulu.io', 'test', 'sulu.io/test', false],
+            ['sulu.io', 'täst', 'sulu.io/täst', false],
+            ['sulu.io', 'test.html', 'sulu.io/test', false],
+            ['sulu.io', 'test.html', 'sulu.io/test', true, true],
+            ['sulu.io', 'test.html', 'sulu.io/test', true, false, false],
+            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, false],
+            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, false, true],
+            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::PUBLISHED],
+            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::TEST],
         ];
     }
 
@@ -67,10 +68,10 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
 
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn($host);
-        $request->getRequestUri()->willReturn($requestedUri);
-        $request->getPathInfo()->willReturn($requestedUri);
+        $request->getRequestUri()->willReturn('/' . rawurlencode($requestedUri));
+        $request->getPathInfo()->willReturn('/' . rawurlencode($requestedUri));
         $request->getScheme()->willReturn('http');
-        $request->getUri()->willReturn('http://' . $host . $requestedUri);
+        $request->getUri()->willReturn('http://' . $host . '/' . rawurlencode($requestedUri));
         $request->reveal()->query = new ParameterBag();
         $request->reveal()->request = new ParameterBag();
 
