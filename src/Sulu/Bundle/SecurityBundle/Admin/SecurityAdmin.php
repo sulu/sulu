@@ -83,12 +83,9 @@ class SecurityAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            new Route(
-                'sulu_security.list',
-                '/roles',
-                'sulu_admin.list',
-                ['title' => 'sulu_security.roles', 'resourceKey' => 'roles']
-            ),
+            (new Route('sulu_security.list', '/roles', 'sulu_admin.list'))
+                ->addOption('title', 'sulu_security.roles')
+                ->addOption('resourceKey', 'roles'),
         ];
     }
 

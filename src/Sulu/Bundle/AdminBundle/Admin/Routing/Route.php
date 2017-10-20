@@ -34,13 +34,31 @@ class Route
     /**
      * @var array
      */
-    private $options;
+    private $options = [];
 
-    public function __construct(string $name, string $path, string $view, array $options = [])
+    /**
+     * @var string
+     */
+    private $parent;
+
+    public function __construct(string $name, string $path, string $view)
     {
         $this->name = $name;
         $this->path = $path;
         $this->view = $view;
-        $this->options = $options;
+    }
+
+    public function addOption(string $key, $value): self
+    {
+        $this->options[$key] = $value;
+
+        return $this;
+    }
+
+    public function setParent(string $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 }

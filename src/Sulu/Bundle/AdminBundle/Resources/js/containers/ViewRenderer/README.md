@@ -1,7 +1,8 @@
 The `ViewRenderer` is a simple component, which loads the registered view from its `ViewRegistry`, and renders it as a
-React component and passes it the `Router` service, which is passed in as a property.
+React component and passes it the [`Router` service](#router), which is passed in as a property.
 
-Registering a component in the `ViewRegistry` and rendering it using the `ViewRenderer` is shown in the following example:
+Registering a component in the `ViewRegistry` and rendering it using the `ViewRenderer` is shown in the following
+example:
 
 ```
 const viewRegistry = require('./registries/ViewRegistry').default;
@@ -17,11 +18,55 @@ const Component = ({router}) => (
 viewRegistry.add('view', Component);
 
 // instead of this mocked Router you would usually use a real one
+const route = {
+    view: 'view',
+};
 const router = {
     attributes: {
         content: 'Some trivial content!',
     },
+    route: route,
 };
 
-<ViewRenderer name="view" router={router} />
+<ViewRenderer route={route} router={router} />
+```
+
+The `ViewRegistry` can also handle the parent and children relation ships built on top of routes. It will nest the
+route's views in each other, whereby the parent route's view gets the children route's view via the children property.
+In order to get the corresponding route to the view, the route is passed via the `route` property.
+
+```
+const viewRegistry = require('./registries/ViewRegistry').default;
+viewRegistry.clear();
+
+const Parent = ({route, children}) => (
+    <div>
+        <h1>{route.name}</h1>
+        {children}
+    </div>
+);
+
+const Child = ({route}) => (
+    <h2>{route.name}</h2>
+);
+
+viewRegistry.add('parent', Parent);
+viewRegistry.add('child', Child);
+
+const parentRoute = {
+    name: 'Parent',
+    view: 'parent',
+};
+
+const childRoute = {
+    name: 'Child',
+    parent: parentRoute,
+    view: 'child',
+};
+
+const router = {
+    route: childRoute,
+};
+
+<ViewRenderer router={router} />
 ```

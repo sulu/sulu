@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render the datagrid with the correct resourceKey 1`] = `
-<div>
+<div
+  class="list"
+>
   <section>
     <div
       class="content"
@@ -147,7 +149,9 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
 `;
 
 exports[`Should render the datagrid with the pencil icon if a editRoute has been passed 1`] = `
-<div>
+<div
+  class="list"
+>
   <section>
     <div
       class="content"
@@ -323,7 +327,9 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
 `;
 
 exports[`Should render the list with a title 1`] = `
-<div>
+<div
+  class="list"
+>
   <h1>
     Snippets
   </h1>

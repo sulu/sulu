@@ -1,9 +1,9 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
-import ResourceRequester from '../../../services/ResourceRequester';
-import type {Schema} from '../types';
+import ResourceRequester from '../../services/ResourceRequester';
+import type {Schema} from './types';
 
-export default class FormStore {
+export default class ResourceStore {
     resourceKey: string;
     id: string;
     locale = observable();

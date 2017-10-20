@@ -161,7 +161,7 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
     public function testConfigurationAction()
     {
         $data = [
-            new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list', ['type' => 'snippets']),
+            new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
         ];
         $this->adminPool->getRoutes()->willReturn($data);
 

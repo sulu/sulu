@@ -17,7 +17,9 @@ exports[`Should render field types based on schema 1`] = `
 <form
   class="form"
 >
-  <div>
+  <div
+    class="field"
+  >
     <label
       class="label"
     >
@@ -27,7 +29,9 @@ exports[`Should render field types based on schema 1`] = `
       type="text"
     />
   </div>
-  <div>
+  <div
+    class="field"
+  >
     <label
       class="label"
     >

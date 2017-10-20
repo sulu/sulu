@@ -2,9 +2,9 @@
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
+import type {Schema} from '../../stores/ResourceStore/types';
 import Field from './Field';
 import rendererStyles from './renderer.scss';
-import type {Schema} from './types';
 
 type Props = {
     data: Object,

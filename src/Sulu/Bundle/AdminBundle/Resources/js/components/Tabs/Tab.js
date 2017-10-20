@@ -5,9 +5,9 @@ import tabStyles from './tab.scss';
 
 type Props = {
     children: string,
-    index: number,
+    index?: number,
     selected: boolean,
-    onClick?: (index: number) => void,
+    onClick?: (index: ?number) => void,
 };
 
 export default class Tab extends React.PureComponent<Props> {

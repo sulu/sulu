@@ -56,7 +56,7 @@ test('Should navigate to defined route on back button click', () => {
         attributes: {},
     };
     const form = mount(<Form router={router} />).get(0);
-    form.formStore.setLocale('de');
+    form.resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
@@ -101,11 +101,11 @@ test('Should change locale in form store via locale chooser', () => {
         attributes: {},
     };
     const form = mount(<Form router={router} />).get(0);
-    form.formStore.locale.set('de');
+    form.resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.locale.onChange('en');
-    expect(form.formStore.locale.get()).toBe('en');
+    expect(form.resourceStore.locale.get()).toBe('en');
 });
 
 test('Should show locales from router options in toolbar', () => {
@@ -151,7 +151,7 @@ test('Should not show a locale chooser if no locales are passed in router option
     expect(toolbarConfig.locale).toBe(undefined);
 });
 
-test('Should initialize the FormStore with a schema', () => {
+test('Should initialize the ResourceStore with a schema', () => {
     const Form = require('../Form').default;
 
     const router = {
@@ -168,9 +168,9 @@ test('Should initialize the FormStore with a schema', () => {
     };
 
     const form = mount(<Form router={router} />).get(0);
-    expect(form.formStore.resourceKey).toBe('snippets');
-    expect(form.formStore.id).toBe(12);
-    expect(form.formStore.data).toEqual({
+    expect(form.resourceStore.resourceKey).toBe('snippets');
+    expect(form.resourceStore.id).toBe(12);
+    expect(form.resourceStore.data).toEqual({
         title: null,
         slogan: null,
     });
@@ -199,7 +199,7 @@ test('Should render save button disabled only if form is not dirty', () => {
 
     expect(getSaveItem().disabled).toBe(true);
 
-    form.formStore.dirty = true;
+    form.resourceStore.dirty = true;
     expect(getSaveItem().disabled).toBe(false);
 });
 
@@ -222,10 +222,10 @@ test('Should save form when submitted', () => {
         },
     };
     const form = mount(<Form router={router} />);
-    const formStore = form.get(0).formStore;
-    formStore.locale.set('en');
-    formStore.data = {value: 'Value'};
-    formStore.loading = false;
+    const resourceStore = form.get(0).resourceStore;
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
     form.find('Form').at(1).simulate('submit');
 
     expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
@@ -279,7 +279,7 @@ test('Should render save button loading only if form is not saving', () => {
 
     expect(getSaveItem().loading).toBe(false);
 
-    form.formStore.saving = true;
+    form.resourceStore.saving = true;
     expect(getSaveItem().loading).toBe(true);
 });
 

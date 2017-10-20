@@ -3,13 +3,13 @@ import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
 import Loader from '../../components/Loader';
-import FormStore from './stores/FormStore';
+import ResourceStore from '../../stores/ResourceStore';
+import type {Schema} from '../../stores/ResourceStore/types';
 import Renderer from './Renderer';
-import type {Schema} from './types';
 
 type Props = {
     schema: Schema,
-    store: FormStore,
+    store: ResourceStore,
     onSubmit: () => void,
 };
 
