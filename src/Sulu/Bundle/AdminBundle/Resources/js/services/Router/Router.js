@@ -117,7 +117,7 @@ export default class Router {
             const value = observableValue.get();
             if (value == this.queryBindDefaults.get(key)) {
                 searchParameters.delete(key);
-                break;
+                continue;
             }
 
             searchParameters.set(key, value);
