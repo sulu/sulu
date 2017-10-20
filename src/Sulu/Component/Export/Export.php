@@ -11,11 +11,18 @@
 
 namespace Sulu\Component\Export;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\Export\Manager\ExportManagerInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Base export for sulu documents.
- */
+*/
 class Export
 {
     /**
@@ -44,6 +51,11 @@ class Export
     protected $format = '1.2.xliff';
 
     /**
+     * @var ExportManagerInterface
+     */
+    protected $exportManager;
+
+    /**
      * Creates and returns a property-array.
      *
      * @param PropertyMetadata $property
@@ -66,7 +78,6 @@ class Export
      *
      * @param BlockMetadata $property
      * @param PropertyValue $propertyValue
-     * @param $format
      *
      * @return array
      */
@@ -137,7 +148,6 @@ class Export
      *
      * @param PropertyMetadata[] $properties
      * @param $propertyValues
-     * @param $format
      *
      * @return array
      */
