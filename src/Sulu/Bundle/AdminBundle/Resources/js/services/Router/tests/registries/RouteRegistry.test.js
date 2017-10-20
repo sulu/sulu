@@ -10,7 +10,7 @@ test('Clear routes from RouteRegistry', () => {
         {
             name:'route',
             view: 'view',
-            pattern: '/route',
+            path: '/route',
         },
     ]);
 
@@ -24,7 +24,7 @@ test('Get routes from RouteRegistry', () => {
     const route1 = {
         name: 'route1',
         view: 'view1',
-        pattern: '/route/1',
+        path: '/route/1',
         parameters: {
             test: 'value',
         },
@@ -32,7 +32,7 @@ test('Get routes from RouteRegistry', () => {
     const route2 = {
         name: 'route2',
         view: 'view2',
-        pattern: '/route/2',
+        path: '/route/2',
         parameters: {
             test2: 'value2',
         },
@@ -44,7 +44,7 @@ test('Get routes from RouteRegistry', () => {
         route1: {
             name: 'route1',
             view: 'view1',
-            pattern: '/route/1',
+            path: '/route/1',
             parameters: {
                 test: 'value',
             },
@@ -54,7 +54,7 @@ test('Get routes from RouteRegistry', () => {
         route2: {
             name: 'route2',
             view: 'view2',
-            pattern: '/route/2',
+            path: '/route/2',
             parameters: {
                 test2: 'value2',
             },
@@ -68,7 +68,7 @@ test('Add a route collection to the RouteRegistry', () => {
     const route1 = {
         name: 'route1',
         view: 'view1',
-        pattern: '/route/1',
+        path: '/route/1',
         parameters: {
             test: 'value',
         },
@@ -77,7 +77,7 @@ test('Add a route collection to the RouteRegistry', () => {
     const route2 = {
         name: 'route2',
         view: 'view2',
-        pattern: '/route/2',
+        path: '/route/2',
         parameters: {
             test2: 'value2',
         },
@@ -88,7 +88,7 @@ test('Add a route collection to the RouteRegistry', () => {
     expect(routeRegistry.get('route1')).toEqual({
         name: 'route1',
         view: 'view1',
-        pattern: '/route/1',
+        path: '/route/1',
         parameters: {
             test: 'value',
         },
@@ -98,7 +98,7 @@ test('Add a route collection to the RouteRegistry', () => {
     expect(routeRegistry.get('route2')).toEqual({
         name: 'route2',
         view: 'view2',
-        pattern: '/route/2',
+        path: '/route/2',
         parameters: {
             test2: 'value2',
         },
@@ -111,7 +111,7 @@ test('Add route with existing key should throw', () => {
     const route = {
         name: 'test_route',
         view: 'view',
-        pattern: '/route',
+        path: '/route',
     };
 
     routeRegistry.addCollection([route]);
