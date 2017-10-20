@@ -328,17 +328,41 @@ test('Bound query parameter should update state in router', () => {
         },
     });
 
-    const value = observable(1);
+    const page = observable(1);
 
     const history = createHistory();
     const router = new Router(history);
 
     router.navigate('list', {}, {page: 1});
-    router.bindQuery('page', value);
+    router.bindQuery('page', page);
     expect(router.query.page).toBe('1');
 
-    value.set(2);
+    page.set(2);
     expect(router.query.page).toBe('2');
+});
+
+test('Bound query parameter should update state in router with other default query parameters', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const page = observable();
+    const locale = observable('en');
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('page', page, '1');
+    router.bindQuery('locale', locale);
+    router.navigate('list');
+
+    locale.set('de');
+    expect(history.location.search).toBe('?locale=de');
+    expect(router.query.locale).toBe('de');
 });
 
 test('Unbind query should remove query binding', () => {
@@ -350,8 +374,22 @@ test('Unbind query should remove query binding', () => {
     router.bindQuery('remove', value);
     expect(router.queryBinds.has('remove')).toBe(true);
 
-    router.unbindQuery('remove');
+    router.unbindQuery('remove', value);
     expect(router.queryBinds.has('remove')).toBe(false);
+});
+
+test('Unbind query should not remove query binding if it is assigned to a new observable', () => {
+    const history = createHistory();
+    const router = new Router(history);
+
+    const value = observable();
+    router.bindQuery('remove', value);
+    expect(router.queryBinds.get('remove')).toBe(value);
+
+    const newValue = observable();
+    router.bindQuery('remove', newValue);
+    router.unbindQuery('remove', value);
+    expect(router.queryBinds.get('remove')).toBe(newValue);
 });
 
 test('Do not add parameter to URL if undefined', () => {

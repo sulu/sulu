@@ -31,8 +31,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     componentWillUnmount() {
         const {router} = this.props;
         this.disposer();
-        router.unbindQuery('locale');
-        router.unbindQuery('page');
+        router.unbindQuery('locale', this.page);
+        router.unbindQuery('page', this.locale);
         this.collectionStore.destroy();
     }
 

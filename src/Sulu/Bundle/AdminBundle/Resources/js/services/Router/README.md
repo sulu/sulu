@@ -81,4 +81,6 @@ router.bindQuery('value', value, 'default');
 value.get(); // returns something
 
 value.set('anything'); // will navigate to /page?value=anything
+
+router.unbindQuery('value', value); // unbind to avoid leaking listeners
 ```
