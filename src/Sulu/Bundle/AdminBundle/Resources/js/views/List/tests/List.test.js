@@ -149,8 +149,8 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
     expect(router.bindQuery).toBeCalledWith('locale', locale);
 
     list.unmount();
-    expect(router.unbindQuery).toBeCalledWith('page');
-    expect(router.unbindQuery).toBeCalledWith('locale');
+    expect(router.unbindQuery).toBeCalledWith('page', page);
+    expect(router.unbindQuery).toBeCalledWith('locale', locale);
 });
 
 test('Should unbind the query parameter and destroy the store on unmount without locale', () => {
@@ -173,7 +173,7 @@ test('Should unbind the query parameter and destroy the store on unmount without
     expect(router.bindQuery).not.toBeCalledWith('locale');
 
     list.unmount();
-    expect(router.unbindQuery).toBeCalledWith('page');
+    expect(router.unbindQuery).toBeCalledWith('page', page);
     expect(router.unbindQuery).not.toBeCalledWith('locale');
 });
 

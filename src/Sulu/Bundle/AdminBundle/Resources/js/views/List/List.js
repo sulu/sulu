@@ -54,9 +54,9 @@ class List extends React.PureComponent<ViewProps> {
             },
         } = router;
         this.datagridStore.destroy();
-        router.unbindQuery('page');
+        router.unbindQuery('page', this.page);
         if (locales) {
-            router.unbindQuery('locale');
+            router.unbindQuery('locale', this.locale);
         }
     }
 

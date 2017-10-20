@@ -51,7 +51,11 @@ export default class Router {
         this.queryBindDefaults.set(key, defaultValue);
     }
 
-    @action unbindQuery(key: string) {
+    @action unbindQuery(key: string, value: observable) {
+        if (this.queryBinds.get(key) !== value) {
+            return;
+        }
+
         this.queryBinds.delete(key);
         this.queryBindDefaults.delete(key);
     }

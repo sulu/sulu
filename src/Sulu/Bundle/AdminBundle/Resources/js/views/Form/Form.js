@@ -40,7 +40,7 @@ class Form extends React.PureComponent<ViewProps> {
 
     componentWillUnmount() {
         this.formStore.destroy();
-        this.props.router.unbindQuery('locale');
+        this.props.router.unbindQuery('locale', this.formStore.locale);
     }
 
     handleSubmit = () => {

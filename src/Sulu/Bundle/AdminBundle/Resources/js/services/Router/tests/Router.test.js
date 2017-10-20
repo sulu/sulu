@@ -374,8 +374,22 @@ test('Unbind query should remove query binding', () => {
     router.bindQuery('remove', value);
     expect(router.queryBinds.has('remove')).toBe(true);
 
-    router.unbindQuery('remove');
+    router.unbindQuery('remove', value);
     expect(router.queryBinds.has('remove')).toBe(false);
+});
+
+test('Unbind query should not remove query binding if it is assigned to a new observable', () => {
+    const history = createHistory();
+    const router = new Router(history);
+
+    const value = observable();
+    router.bindQuery('remove', value);
+    expect(router.queryBinds.get('remove')).toBe(value);
+
+    const newValue = observable();
+    router.bindQuery('remove', newValue);
+    router.unbindQuery('remove', value);
+    expect(router.queryBinds.get('remove')).toBe(newValue);
 });
 
 test('Do not add parameter to URL if undefined', () => {
