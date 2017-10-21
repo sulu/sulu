@@ -8,41 +8,35 @@ const Item = ColumnList.Item;
 const buttons = [
     {
         icon: 'heart',
-        onClick: (rowId) => {
-            state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
-            const newRows = state.rows;
-    
-            setState({
-                rows: newRows,
-            })
+        onClick: (id) => {
+            alert('Clicked heart button for item with id: ' + id);
         }, 
     },
     {
         icon: 'pencil',
-        onClick: (rowId) => {
-            state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
-            const newRows = state.rows;
-    
-            setState({
-                rows: newRows,
-            })
+        onClick: (id) => {
+            alert('Clicked pencil button for item with id: ' + id);
         }, 
     },
 ];
 
-<ColumnList buttons={buttons}>
+const handleOnItemClick = (id) => {
+    alert('Item with id: ' + id + ' clicked');
+};
+
+<ColumnList buttons={buttons} onItemClick={handleOnItemClick}>
     <Column>
-        <Item selected="true">Item 1</Item>
-        <Item hasChildren="true">Item 1</Item>
-        <Item>Item 1</Item>
+        <Item id="1" selected="true">Item 1</Item>
+        <Item id="2" hasChildren="true">Item 1</Item>
+        <Item id="3">Item 1</Item>
     </Column>
     <Column>
-        <Item>Item 1</Item>
-        <Item hasChildren="true">Item 1</Item>
+        <Item id="1-1">Item 1</Item>
+        <Item id="1-2" hasChildren="true">Item 1</Item>
     </Column>
     <Column>
-        <Item>Item 1</Item>
-        <Item>Item 1</Item>
+        <Item id="1-1-1">Item 1</Item>
+        <Item id="1-1-2">Item 1</Item>
     </Column>
 </ColumnList>
 ```

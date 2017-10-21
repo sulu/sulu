@@ -6,13 +6,21 @@ import type {ButtonConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
+    id: string | number,
     children: string,
     selected: boolean,
     hasChildren: boolean,
     buttons?: Array<ButtonConfig>,
+    onClick: (id: string | number) => void,
 };
 
 export default class Item extends React.PureComponent<Props> {
+    handleOnClick = () => {
+        if (this.props.onClick) {
+            this.props.onClick(this.props.id);
+        }
+    };
+
     createButtons = () => {
         const {buttons} = this.props;
 
@@ -22,7 +30,9 @@ export default class Item extends React.PureComponent<Props> {
 
         return buttons.map((button: ButtonConfig, index: number) => {
             const key = `button-${index}`;
-            const handleClick = button.onClick;
+            const handleClick = () => {
+                button.onClick(this.props.id);
+            };
 
             return (
                 <Icon className={columnListStyles.button} key={key} name={button.icon} onClick={handleClick} />
@@ -42,7 +52,7 @@ export default class Item extends React.PureComponent<Props> {
         );
 
         return (
-            <div className={itemClass}>
+            <div onClick={this.handleOnClick} className={itemClass}>
                 <span className={columnListStyles.buttons}>
                     {this.createButtons()}
                 </span>

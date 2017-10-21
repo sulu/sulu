@@ -11,6 +11,7 @@ import columnListStyles from './columnList.scss';
 type Props = {
     children: ChildrenArray<Element<typeof Column>>,
     buttons?: Array<ButtonConfig>,
+    onItemClick: (id: string | number) => void,
 };
 
 @observer
@@ -34,6 +35,7 @@ export default class ColumnList extends React.PureComponent<Props> {
                     buttons: this.props.buttons,
                     active: this.activeColumnIndex === index,
                     onActive: this.handleOnActive,
+                    onItemClick: this.props.onItemClick,
                 }
             );
         });

@@ -13,6 +13,7 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     active: boolean,
     onActive: (index: number) => void,
+    onItemClick: (id: string | number) => void,
 };
 
 export default class ColumnList extends React.PureComponent<Props> {
@@ -22,6 +23,7 @@ export default class ColumnList extends React.PureComponent<Props> {
                 column,
                 {
                     buttons: this.props.buttons,
+                    onClick: this.props.onItemClick,
                 }
             );
         });
