@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
+import type {Element} from 'react';
 import Router from '../../services/Router';
+import type {Route} from '../../services/Router';
 import viewRegistry from './registries/ViewRegistry';
 
 type Props = {
@@ -8,33 +10,25 @@ type Props = {
 };
 
 export default class ViewRenderer extends React.PureComponent<Props> {
-    render() {
+    renderView(route: Route, child: Element<*> | null = null) {
         const {router} = this.props;
-        const viewConfigs = [];
+        const {view} = route;
 
-        let route = router.route;
-        while (route) {
-            viewConfigs.push({
-                view: route.view,
-                props: {
-                    router: router,
-                    route,
-                },
-            });
-            route = route.parent;
+        const View = viewRegistry.get(view);
+        if (!View) {
+            throw new Error('View "' + view + '" has not been found');
         }
 
-        let NestedView = null;
-        for (const viewConfig of viewConfigs) {
-            const {view, props} = viewConfig;
-            const View = viewRegistry.get(view);
-            if (!View) {
-                throw new Error('View "' + view + '" has not been found');
-            }
+        const element = <View router={router} route={route}>{child}</View>;
 
-            NestedView = <View {...props}>{NestedView}</View>;
+        if (!route.parent) {
+            return element;
         }
 
-        return NestedView;
+        return this.renderView(route.parent, element);
+    }
+
+    render() {
+        return this.renderView(this.props.router.route);
     }
 }

@@ -29,7 +29,7 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
                         );
                     })}
                 </Tabs>
-                {this.props.children}
+                {children}
             </div>
         );
     }
