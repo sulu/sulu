@@ -3,131 +3,127 @@
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <div>
   <div
-    class="adapter"
+    class="tableContainer"
   >
-    <div
-      class="tableContainer"
+    <table
+      class="table"
     >
-      <table
-        class="table"
+      <thead
+        class="header"
       >
-        <thead
-          class="header"
+        <tr>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="pencil"
+                class="fa fa-pencil"
+              />
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              title
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <tr>
-            <th
-              class="headerButtonCell headerCell"
-            >
-              <span>
-                <span
-                  aria-label="pencil"
-                  class="fa fa-pencil"
-                />
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox light"
-                  >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                title
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="row"
+          <td
+            class="buttonCell cell"
           >
-            <td
-              class="buttonCell cell"
-            >
-              <button>
-                <span
-                  aria-label="pencil"
-                  class="fa fa-pencil"
-                />
-              </button>
-            </td>
-            <td
-              class="cell small"
-            >
-              <label
-                class="label"
-              >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="1"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 1
-            </td>
-          </tr>
-          <tr
-            class="row"
+            <button>
+              <span
+                aria-label="pencil"
+                class="fa fa-pencil"
+              />
+            </button>
+          </td>
+          <td
+            class="cell small"
           >
-            <td
-              class="buttonCell cell"
+            <label
+              class="label"
             >
-              <button>
-                <span
-                  aria-label="pencil"
-                  class="fa fa-pencil"
-                />
-              </button>
-            </td>
-            <td
-              class="cell small"
-            >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="2"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
+                <input
+                  type="checkbox"
+                  value="1"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 1
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <button>
+              <span
+                aria-label="pencil"
+                class="fa fa-pencil"
+              />
+            </button>
+          </td>
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              Title 2
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <span
+                class="switch checkbox dark"
+              >
+                <input
+                  type="checkbox"
+                  value="2"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 2
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 `;
@@ -135,118 +131,114 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 exports[`Render data with schema 1`] = `
 <div>
   <div
-    class="adapter"
+    class="tableContainer"
   >
-    <div
-      class="tableContainer"
+    <table
+      class="table"
     >
-      <table
-        class="table"
+      <thead
+        class="header"
       >
-        <thead
-          class="header"
+        <tr>
+          <th
+            class="headerCell"
+          >
+            <span>
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              title
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              description
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <tr>
-            <th
-              class="headerCell"
-            >
-              <span>
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox light"
-                  >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                title
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                description
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="row"
+          <td
+            class="cell small"
           >
-            <td
-              class="cell small"
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="1"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 1
-            </td>
-            <td
-              class="cell"
-            >
-              Description 1
-            </td>
-          </tr>
-          <tr
-            class="row"
+                <input
+                  type="checkbox"
+                  value="1"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
           >
-            <td
-              class="cell small"
+            Title 1
+          </td>
+          <td
+            class="cell"
+          >
+            Description 1
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="2"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 2
-            </td>
-            <td
-              class="cell"
-            >
-              Description 2
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <input
+                  type="checkbox"
+                  value="2"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 2
+          </td>
+          <td
+            class="cell"
+          >
+            Description 2
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 `;
@@ -254,161 +246,157 @@ exports[`Render data with schema 1`] = `
 exports[`Render data with schema and selections 1`] = `
 <div>
   <div
-    class="adapter"
+    class="tableContainer"
   >
-    <div
-      class="tableContainer"
+    <table
+      class="table"
     >
-      <table
-        class="table"
+      <thead
+        class="header"
       >
-        <thead
-          class="header"
-        >
-          <tr>
-            <th
-              class="headerCell"
-            >
-              <span>
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox light"
-                  >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                title
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                description
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="row"
+        <tr>
+          <th
+            class="headerCell"
           >
-            <td
-              class="cell small"
-            >
+            <span>
               <label
                 class="label"
               >
                 <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    checked=""
-                    type="checkbox"
-                    value="1"
-                  />
-                  <span>
-                    <span
-                      aria-label="check"
-                      class="fa fa-check"
-                    />
-                  </span>
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 1
-            </td>
-            <td
-              class="cell"
-            >
-              Description 1
-            </td>
-          </tr>
-          <tr
-            class="row"
-          >
-            <td
-              class="cell small"
-            >
-              <label
-                class="label"
-              >
-                <span
-                  class="switch checkbox dark"
+                  class="switch checkbox light"
                 >
                   <input
                     type="checkbox"
-                    value="2"
                   />
                   <span />
                 </span>
               </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 2
-            </td>
-            <td
-              class="cell"
-            >
-              Description 2
-            </td>
-          </tr>
-          <tr
-            class="row"
+            </span>
+          </th>
+          <th
+            class="headerCell"
           >
-            <td
-              class="cell small"
+            <span>
+              title
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              description
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    checked=""
-                    type="checkbox"
-                    value="3"
+                <input
+                  checked=""
+                  type="checkbox"
+                  value="1"
+                />
+                <span>
+                  <span
+                    aria-label="check"
+                    class="fa fa-check"
                   />
-                  <span>
-                    <span
-                      aria-label="check"
-                      class="fa fa-check"
-                    />
-                  </span>
                 </span>
-              </label>
-            </td>
-            <td
-              class="cell"
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 1
+          </td>
+          <td
+            class="cell"
+          >
+            Description 1
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              Title 3
-            </td>
-            <td
-              class="cell"
+              <span
+                class="switch checkbox dark"
+              >
+                <input
+                  type="checkbox"
+                  value="2"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 2
+          </td>
+          <td
+            class="cell"
+          >
+            Description 2
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              Description 3
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <span
+                class="switch checkbox dark"
+              >
+                <input
+                  checked=""
+                  type="checkbox"
+                  value="3"
+                />
+                <span>
+                  <span
+                    aria-label="check"
+                    class="fa fa-check"
+                  />
+                </span>
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 3
+          </td>
+          <td
+            class="cell"
+          >
+            Description 3
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 `;
@@ -416,118 +404,114 @@ exports[`Render data with schema and selections 1`] = `
 exports[`Render data with schema in different order 1`] = `
 <div>
   <div
-    class="adapter"
+    class="tableContainer"
   >
-    <div
-      class="tableContainer"
+    <table
+      class="table"
     >
-      <table
-        class="table"
+      <thead
+        class="header"
       >
-        <thead
-          class="header"
+        <tr>
+          <th
+            class="headerCell"
+          >
+            <span>
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              description
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              title
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <tr>
-            <th
-              class="headerCell"
-            >
-              <span>
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox light"
-                  >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                description
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                title
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="row"
+          <td
+            class="cell small"
           >
-            <td
-              class="cell small"
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="1"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Description 1
-            </td>
-            <td
-              class="cell"
-            >
-              Title 1
-            </td>
-          </tr>
-          <tr
-            class="row"
+                <input
+                  type="checkbox"
+                  value="1"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
           >
-            <td
-              class="cell small"
+            Description 1
+          </td>
+          <td
+            class="cell"
+          >
+            Title 1
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="2"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Description 2
-            </td>
-            <td
-              class="cell"
-            >
-              Title 2
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <input
+                  type="checkbox"
+                  value="2"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Description 2
+          </td>
+          <td
+            class="cell"
+          >
+            Title 2
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 `;
@@ -535,101 +519,97 @@ exports[`Render data with schema in different order 1`] = `
 exports[`Render data with schema not containing all fields 1`] = `
 <div>
   <div
-    class="adapter"
+    class="tableContainer"
   >
-    <div
-      class="tableContainer"
+    <table
+      class="table"
     >
-      <table
-        class="table"
+      <thead
+        class="header"
       >
-        <thead
-          class="header"
+        <tr>
+          <th
+            class="headerCell"
+          >
+            <span>
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              title
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <tr>
-            <th
-              class="headerCell"
-            >
-              <span>
-                <label
-                  class="label"
-                >
-                  <span
-                    class="switch checkbox light"
-                  >
-                    <input
-                      type="checkbox"
-                    />
-                    <span />
-                  </span>
-                </label>
-              </span>
-            </th>
-            <th
-              class="headerCell"
-            >
-              <span>
-                title
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="row"
+          <td
+            class="cell small"
           >
-            <td
-              class="cell small"
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="1"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 1
-            </td>
-          </tr>
-          <tr
-            class="row"
+                <input
+                  type="checkbox"
+                  value="1"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
           >
-            <td
-              class="cell small"
+            Title 1
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <label
+              class="label"
             >
-              <label
-                class="label"
+              <span
+                class="switch checkbox dark"
               >
-                <span
-                  class="switch checkbox dark"
-                >
-                  <input
-                    type="checkbox"
-                    value="2"
-                  />
-                  <span />
-                </span>
-              </label>
-            </td>
-            <td
-              class="cell"
-            >
-              Title 2
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <input
+                  type="checkbox"
+                  value="2"
+                />
+                <span />
+              </span>
+            </label>
+          </td>
+          <td
+            class="cell"
+          >
+            Title 2
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 `;

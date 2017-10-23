@@ -18,6 +18,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function() {
     this.deselect = jest.fn();
     this.selectEntirePage = jest.fn();
     this.deselectEntirePage = jest.fn();
+    this.setAppendRequestData = jest.fn();
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -39,7 +40,10 @@ jest.mock('../../../services/Translator', () => ({
 
 beforeEach(() => {
     datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    datagridAdapterRegistry.get.mockReturnValue({
+        Adapter: TableAdapter,
+        paginationType: 'default',
+    });
 });
 
 test('Change page in DatagridStore on pagination click', () => {

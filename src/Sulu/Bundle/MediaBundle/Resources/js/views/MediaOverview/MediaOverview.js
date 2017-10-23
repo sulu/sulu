@@ -6,6 +6,7 @@ import {translate} from 'sulu-admin-bundle/services';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {CollectionInfoStore, MediaContainer} from '../../containers/MediaContainer';
+import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const MEDIA_RESOURCE_KEY = 'media';
@@ -106,6 +107,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
             'thumbnails',
         ].join(',');
 
+        page.set(1);
+
         if (collectionId) {
             options.collection = collectionId;
         }
@@ -120,7 +123,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
                 page,
                 locale,
             },
-            options
+            options,
+            true
         );
     }
 
@@ -131,7 +135,7 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
     render() {
         return (
-            <div>
+            <div className={mediaOverviewStyles.mediaOverview}>
                 <MediaContainer
                     page={this.collectionPage}
                     locale={this.locale}

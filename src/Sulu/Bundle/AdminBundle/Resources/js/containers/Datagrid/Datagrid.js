@@ -3,8 +3,13 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import equal from 'fast-deep-equal';
 import Loader from '../../components/Loader';
+import PaginationDecorator from './PaginationDecorator';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
+import datagridStyles from './datagrid.scss';
+import type {AdapterConfig} from './types';
+
+const INFINITE_SCROLL_TYPE = 'infiniteScroll';
 
 type Props = {
     onItemClick?: (itemId: string | number) => void,
@@ -35,8 +40,14 @@ export default class Datagrid extends React.PureComponent<Props> {
         });
     }
 
-    getAdapter(name: string = this.props.views[0]) {
+    getAdapterConfig(name: string = this.props.views[0]): AdapterConfig {
         return datagridAdapterRegistry.get(name);
+    }
+
+    hasScrollPagination() {
+        const {paginationType} = this.getAdapterConfig();
+
+        return paginationType === INFINITE_SCROLL_TYPE;
     }
 
     handlePageChange = (page: number) => {
@@ -60,25 +71,31 @@ export default class Datagrid extends React.PureComponent<Props> {
         } = this.props;
         const page = store.getPage();
         const pageCount = store.pageCount;
-        const Adapter = this.getAdapter();
-
+        const {
+            Adapter,
+            paginationType,
+        } = this.getAdapterConfig();
         return (
-            <section>
-                {this.props.store.loading
+            <div className={datagridStyles.content}>
+                {this.props.store.loading && !this.props.store.appendRequestData
                     ? <Loader />
-                    : <Adapter
-                        data={store.data}
-                        selections={store.selections}
-                        schema={store.getFields()}
-                        currentPage={page}
-                        pageCount={pageCount}
-                        onPageChange={this.handlePageChange}
-                        onItemClick={onItemClick}
-                        onItemSelectionChange={this.handleItemSelectionChange}
-                        onAllSelectionChange={this.handleAllSelectionChange}
-                    />
+                    : <PaginationDecorator
+                        type={paginationType}
+                        total={pageCount}
+                        current={page}
+                        onChange={this.handlePageChange}
+                    >
+                        <Adapter
+                            data={store.data}
+                            selections={store.selections}
+                            schema={store.getFields()}
+                            onItemClick={onItemClick}
+                            onItemSelectionChange={this.handleItemSelectionChange}
+                            onAllSelectionChange={this.handleAllSelectionChange}
+                        />
+                    </PaginationDecorator>
                 }
-            </section>
+            </div>
         );
     }
 }

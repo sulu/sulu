@@ -13,12 +13,19 @@ export default class DatagridStore {
     resourceKey: string;
     options: Object;
     observableOptions: ObservableOptions;
+    appendRequestData: boolean;
 
-    constructor(resourceKey: string, observableOptions: ObservableOptions, options: Object = {}) {
+    constructor(
+        resourceKey: string,
+        observableOptions: ObservableOptions,
+        options: Object = {},
+        appendRequestData: boolean = false
+    ) {
         this.resourceKey = resourceKey;
         this.observableOptions = observableOptions;
         this.options = options;
         this.disposer = autorun(this.sendRequest);
+        this.appendRequestData = appendRequestData;
     }
 
     getFields() {
@@ -40,6 +47,7 @@ export default class DatagridStore {
         }
 
         this.setLoading(true);
+
         ResourceRequester.getList(this.resourceKey, {
             ...observableOptions,
             ...this.options,
@@ -47,7 +55,14 @@ export default class DatagridStore {
     };
 
     @action handleResponse = (response: Object) => {
-        this.data = response._embedded[this.resourceKey];
+        const data = response._embedded[this.resourceKey];
+
+        if (this.appendRequestData) {
+            this.data = [...this.data, ...data];
+        } else {
+            this.data = data;
+        }
+
         this.pageCount = response.pages;
         this.setLoading(false);
     };

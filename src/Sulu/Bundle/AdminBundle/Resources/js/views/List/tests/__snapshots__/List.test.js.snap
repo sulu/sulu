@@ -4,11 +4,11 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
 <div
   class="list"
 >
-  <section>
-    <div>
-      <div
-        class="adapter"
-      >
+  <div
+    class="content"
+  >
+    <section>
+      <div>
         <div
           class="tableContainer"
         >
@@ -149,8 +149,8 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
           </a>
         </div>
       </nav>
-    </div>
-  </section>
+    </section>
+  </div>
 </div>
 `;
 
@@ -158,11 +158,11 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
 <div
   class="list"
 >
-  <section>
-    <div>
-      <div
-        class="adapter"
-      >
+  <div
+    class="content"
+  >
+    <section>
+      <div>
         <div
           class="tableContainer"
         >
@@ -333,8 +333,8 @@ exports[`Should render the datagrid with the pencil icon if a editRoute has been
           </a>
         </div>
       </nav>
-    </div>
-  </section>
+    </section>
+  </div>
 </div>
 `;
 
@@ -345,11 +345,11 @@ exports[`Should render the list with a title 1`] = `
   <h1>
     Snippets
   </h1>
-  <section>
-    <div>
-      <div
-        class="adapter"
-      >
+  <div
+    class="content"
+  >
+    <section>
+      <div>
         <div
           class="tableContainer"
         >
@@ -490,7 +490,7 @@ exports[`Should render the list with a title 1`] = `
           </a>
         </div>
       </nav>
-    </div>
-  </section>
+    </section>
+  </div>
 </div>
 `;

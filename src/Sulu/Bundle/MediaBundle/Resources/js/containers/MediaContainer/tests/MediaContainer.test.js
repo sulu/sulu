@@ -67,6 +67,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
+            this.setAppendRequestData = jest.fn();
         }),
     };
 });
@@ -127,8 +128,14 @@ beforeEach(() => {
 
     datagridAdapterRegistry.has.mockReturnValue(true);
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        folder: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-        mediaCardOverview: MediaCardOverviewAdapter,
+        folder: {
+            Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+            paginationType: 'default',
+        },
+        mediaCardOverview: {
+            Adapter: MediaCardOverviewAdapter,
+            paginationType: 'infiniteScroll',
+        },
     });
 });
 

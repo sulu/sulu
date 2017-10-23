@@ -2,73 +2,69 @@
 
 exports[`Render a basic Folder list with data 1`] = `
 <div>
-  <div
-    class="adapter"
+  <ul
+    class="folderList"
   >
-    <ul
-      class="folderList"
-    >
-      <li>
+    <li>
+      <div
+        class="folder"
+        role="button"
+        tabindex="0"
+      >
         <div
-          class="folder"
-          role="button"
-          tabindex="0"
+          class="iconContainer"
         >
-          <div
-            class="iconContainer"
+          <span
+            aria-label="folder-o"
+            class="fa fa-folder-o"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
           >
-            <span
-              aria-label="folder-o"
-              class="fa fa-folder-o"
-            />
-          </div>
+            Title 1
+          </h5>
           <div
-            class="description"
+            class="info"
           >
-            <h5
-              class="title"
-            >
-              Title 1
-            </h5>
-            <div
-              class="info"
-            >
-              1 Object
-            </div>
+            1 Object
           </div>
         </div>
-      </li>
-      <li>
+      </div>
+    </li>
+    <li>
+      <div
+        class="folder"
+        role="button"
+        tabindex="0"
+      >
         <div
-          class="folder"
-          role="button"
-          tabindex="0"
+          class="iconContainer"
         >
-          <div
-            class="iconContainer"
+          <span
+            aria-label="folder-o"
+            class="fa fa-folder-o"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
           >
-            <span
-              aria-label="folder-o"
-              class="fa fa-folder-o"
-            />
-          </div>
+            Title 2
+          </h5>
           <div
-            class="description"
+            class="info"
           >
-            <h5
-              class="title"
-            >
-              Title 2
-            </h5>
-            <div
-              class="info"
-            >
-              0 Objects
-            </div>
+            0 Objects
           </div>
         </div>
-      </li>
-    </ul>
-  </div>
+      </div>
+    </li>
+  </ul>
 </div>
 `;

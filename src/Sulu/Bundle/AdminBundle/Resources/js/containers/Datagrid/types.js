@@ -14,12 +14,20 @@ export type DatagridAdapterProps = {
     data: Array<DataItem>,
     schema: Schema,
     selections: Array<number | string>,
-    pageCount: number,
-    currentPage: ?number,
-    onPageChange: (page: number) => void,
     onItemClick?: (rowId: string | number) => void,
     onItemSelectionChange?: (rowId: string | number, selected?: boolean) => void,
     onAllSelectionChange?: (selected?: boolean) => void,
+};
+
+export type PaginationTypes = 'default' | 'infiniteScroll';
+
+export type AdapterConfig = {
+    Adapter: DatagridAdapter,
+    paginationType: PaginationTypes,
+};
+
+export type AdapterConfigs = {
+    [string]: AdapterConfig,
 };
 
 export type DatagridAdapter = ComponentType<DatagridAdapterProps>;

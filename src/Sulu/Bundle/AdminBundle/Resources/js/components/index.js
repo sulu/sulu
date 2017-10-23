@@ -5,6 +5,7 @@ import Checkbox from './Checkbox';
 import CroppedText from './CroppedText';
 import Divider from './Divider';
 import Icon from './Icon';
+import InfiniteScroller from './InfiniteScroller';
 import Menu from './Menu';
 import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
@@ -17,6 +18,7 @@ export {
     CroppedText,
     Divider,
     Icon,
+    InfiniteScroller,
     Menu,
     Masonry,
     MultiItemSelection,
