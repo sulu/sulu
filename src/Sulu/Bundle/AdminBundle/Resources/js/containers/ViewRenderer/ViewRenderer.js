@@ -19,7 +19,11 @@ export default class ViewRenderer extends React.PureComponent<Props> {
             throw new Error('View "' + view + '" has not been found');
         }
 
-        const element = <View router={router} route={route}>{(props) => React.cloneElement(child, props)}</View>;
+        const element = (
+            <View router={router} route={route}>
+                {(props) => child ? React.cloneElement(child, props) : null}
+            </View>
+        );
 
         if (!route.parent) {
             return element;

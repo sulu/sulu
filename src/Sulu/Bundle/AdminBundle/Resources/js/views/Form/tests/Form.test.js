@@ -42,7 +42,9 @@ beforeEach(() => {
 test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('test', 1);
 
     const router = {
         navigate: jest.fn(),
@@ -55,8 +57,8 @@ test('Should navigate to defined route on back button click', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
-    form.resourceStore.setLocale('de');
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
@@ -66,7 +68,9 @@ test('Should navigate to defined route on back button click', () => {
 test('Should not render back button when no editLink is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('test', 1);
 
     const router = {
         navigate: jest.fn(),
@@ -78,7 +82,7 @@ test('Should not render back button when no editLink is configured', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
 
     const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.backButton).toBe(undefined);
@@ -87,7 +91,9 @@ test('Should not render back button when no editLink is configured', () => {
 test('Should change locale in form store via locale chooser', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('test', 1);
 
     const router = {
         navigate: jest.fn(),
@@ -100,18 +106,20 @@ test('Should change locale in form store via locale chooser', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
-    form.resourceStore.locale.set('de');
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.locale.onChange('en');
-    expect(form.resourceStore.locale.get()).toBe('en');
+    expect(resourceStore.locale.get()).toBe('en');
 });
 
 test('Should show locales from router options in toolbar', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('test', 1);
 
     const router = {
         navigate: jest.fn(),
@@ -123,7 +131,7 @@ test('Should show locales from router options in toolbar', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
 
     const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.locale.options).toEqual([
@@ -135,7 +143,9 @@ test('Should show locales from router options in toolbar', () => {
 test('Should not show a locale chooser if no locales are passed in router options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('test', 1);
 
     const router = {
         navigate: jest.fn(),
@@ -145,7 +155,7 @@ test('Should not show a locale chooser if no locales are passed in router option
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
 
     const toolbarConfig = toolbarFunction.call(form);
     expect(toolbarConfig.locale).toBe(undefined);
@@ -153,12 +163,13 @@ test('Should not show a locale chooser if no locales are passed in router option
 
 test('Should initialize the ResourceStore with a schema', () => {
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
         bindQuery: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
                 locales: [],
             },
         },
@@ -167,10 +178,10 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    const form = mount(<Form router={router} />).get(0);
-    expect(form.resourceStore.resourceKey).toBe('snippets');
-    expect(form.resourceStore.id).toBe(12);
-    expect(form.resourceStore.data).toEqual({
+    mount(<Form router={router} resourceStore={resourceStore} />).get(0);
+    expect(resourceStore.resourceKey).toBe('snippets');
+    expect(resourceStore.id).toBe(12);
+    expect(resourceStore.data).toEqual({
         title: null,
         slogan: null,
     });
@@ -183,7 +194,9 @@ test('Should render save button disabled only if form is not dirty', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
         bindQuery: jest.fn(),
@@ -195,11 +208,11 @@ test('Should render save button disabled only if form is not dirty', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
 
     expect(getSaveItem().disabled).toBe(true);
 
-    form.resourceStore.dirty = true;
+    resourceStore.dirty = true;
     expect(getSaveItem().disabled).toBe(false);
 });
 
@@ -207,13 +220,14 @@ test('Should save form when submitted', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 8);
 
     const router = {
         bindQuery: jest.fn(),
         navigate: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
                 locales: [],
             },
         },
@@ -221,8 +235,7 @@ test('Should save form when submitted', () => {
             id: 8,
         },
     };
-    const form = mount(<Form router={router} />);
-    const resourceStore = form.get(0).resourceStore;
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
@@ -233,6 +246,8 @@ test('Should save form when submitted', () => {
 
 test('Should pass store, schema and onSubmit handler to FormContainer', () => {
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
         bindQuery: jest.fn(),
@@ -245,7 +260,7 @@ test('Should pass store, schema and onSubmit handler to FormContainer', () => {
         attributes: {},
     };
 
-    const form = shallow(<Form router={router} />);
+    const form = shallow(<Form router={router} resourceStore={resourceStore} />);
     const formContainer = form.find('Form');
 
     expect(formContainer.prop('store').data).toEqual({
@@ -264,6 +279,8 @@ test('Should render save button loading only if form is not saving', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const toolbarFunction = withToolbar.mock.calls[0][1];
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
         bindQuery: jest.fn(),
@@ -275,16 +292,18 @@ test('Should render save button loading only if form is not saving', () => {
         },
         attributes: {},
     };
-    const form = mount(<Form router={router} />).get(0);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />).get(0);
 
     expect(getSaveItem().loading).toBe(false);
 
-    form.resourceStore.saving = true;
+    resourceStore.saving = true;
     expect(getSaveItem().loading).toBe(true);
 });
 
 test('Should unbind the query parameter and destroy the store on unmount', () => {
     const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
     const router = {
         bindQuery: jest.fn(),
         unbindQuery: jest.fn(),
@@ -297,7 +316,7 @@ test('Should unbind the query parameter and destroy the store on unmount', () =>
         attributes: {},
     };
 
-    const form = mount(<Form router={router} />);
+    const form = mount(<Form router={router} resourceStore={resourceStore} />);
     const locale = form.find('Form').at(1).prop('store').locale;
 
     expect(router.bindQuery).toBeCalledWith('locale', locale);
