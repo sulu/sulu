@@ -196,7 +196,9 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $view = $this->view($tag)->setContext($context->setGroups(['partialTag']));
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
-                'A tag with the name "' . $exc->getName() . '"already exists!', 'name', ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME
+                'A tag with the name "' . $exc->getName() . '"already exists!',
+                'name',
+                ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME
             );
             $view = $this->view($cvExistsException->toArray(), 400);
         } catch (RestException $exc) {
@@ -232,7 +234,9 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $view = $this->view($tag)->setContext($context->setGroups(['partialTag']));
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
-                'A tag with the name "' . $exc->getName() . '"already exists!', 'name', ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME
+                'A tag with the name "' . $exc->getName() . '"already exists!',
+                'name',
+                ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME
             );
             $view = $this->view($cvExistsException->toArray(), 400);
         } catch (TagNotFoundException $exc) {
@@ -324,7 +328,9 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $view = $this->view($tags)->setContext($context->setGroups(['partialTag']));
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
-                'A tag with the name "' . $exc->getName() . '"already exists!', 'name', ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME
+                'A tag with the name "' . $exc->getName() . '"already exists!',
+                'name',
+                ConstraintViolationException::EXCEPTION_CODE_NON_UNIQUE_NAME
             );
             $view = $this->view($cvExistsException->toArray(), 400);
         }

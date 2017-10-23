@@ -50,12 +50,12 @@ class NodeControllerTest extends SuluTestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-
-        $this->importer = new PHPCRImporter($this->session, $this->liveSession);
 
         $this->initOrm();
         $this->initPhpcr();

@@ -23,7 +23,7 @@
         "doctrine/doctrine-cache-bundle": "~1.1",
         "friendsofsymfony/http-cache": "~1.4",
         "jms/serializer-bundle": "^1.4",
-        "friendsofsymfony/rest-bundle": "^2.2",
+        "friendsofsymfony/rest-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1 || ~0.7.0",
         "massive/search-bundle": "0.16.*",
