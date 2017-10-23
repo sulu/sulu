@@ -34,7 +34,7 @@ test('InfiniteScroller should call onLoad if the the bottom of the content is re
         <div id="scrollable">
             <InfiniteScroller
                 total={10}
-                startPage={1}
+                current={1}
                 onLoad={loadSpy}
             >
                 <div />
@@ -72,7 +72,7 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
         <div id="scrollable">
             <InfiniteScroller
                 total={10}
-                startPage={1}
+                current={1}
                 onLoad={loadSpy}
             >
                 <div />
