@@ -143,6 +143,11 @@ class UserBlameSubscriber implements EventSubscriber
 
             if (null === $user) {
                 $user = $this->getUser($token);
+
+                if (!$user instanceof UserInterface) {
+                    // if no sulu user is available avoid looping through all entities
+                    return;
+                }
             }
 
             $meta = $manager->getClassMetadata(get_class($blameEntity));
@@ -214,10 +219,7 @@ class UserBlameSubscriber implements EventSubscriber
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
-            throw new \RuntimeException(sprintf(
-                'Expected user object to be an instance of (Sulu) UserInterface. Got "%s"',
-                is_object($user) ? get_class($user) : gettype($user)
-            ));
+            return;
         }
 
         return $user;
