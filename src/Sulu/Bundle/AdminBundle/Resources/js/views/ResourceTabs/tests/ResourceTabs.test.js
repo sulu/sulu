@@ -33,7 +33,7 @@ test('Should render the child components after the tabs', () => {
     };
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs route={route}><Child /></ResourceTabs>)).toMatchSnapshot();
+    expect(render(<ResourceTabs route={route}>{() => (<Child />)}</ResourceTabs>)).toMatchSnapshot();
 });
 
 test('Should mark the currently active child route as selected tab', () => {
@@ -59,7 +59,8 @@ test('Should mark the currently active child route as selected tab', () => {
 
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs route={route}><Child route={childRoute2} /></ResourceTabs>)).toMatchSnapshot();
+    expect(render(<ResourceTabs route={route}>{() => (<Child route={childRoute2} />)}</ResourceTabs>))
+        .toMatchSnapshot();
 });
 
 test('Should navigate to child route if tab is clicked', () => {
@@ -92,7 +93,7 @@ test('Should navigate to child route if tab is clicked', () => {
     };
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs router={router} route={route}><Child /></ResourceTabs>);
+    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => (<Child />)}</ResourceTabs>);
 
     resourceTabs.find('Tab button').at(1).simulate('click');
 

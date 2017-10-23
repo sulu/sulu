@@ -69,7 +69,7 @@ test('Render view with parents should nest rendered views', () => {
                         <div>
                             <h2>Form</h2>
                             {props.route.name}
-                            {props.children}
+                            {props.children()}
                         </div>
                     );
                 };
@@ -79,7 +79,62 @@ test('Render view with parents should nest rendered views', () => {
                         <div>
                             <h1>App</h1>
                             {props.route.name}
-                            {props.children}
+                            {props.children()}
+                        </div>
+                    );
+                };
+        }
+    });
+
+    expect(render(<ViewRenderer router={router} />)).toMatchSnapshot();
+});
+
+test('Render view with parents should nest rendered views and correctly pass children arguments', () => {
+    const router = {
+        route: {
+            name: 'sulu_admin.form_tab',
+            view: 'form_tab',
+            parent: {
+                name: 'sulu_admin.form',
+                view: 'form',
+                parent: {
+                    name: 'sulu_admin.app',
+                    view: 'app',
+                },
+            },
+        },
+    };
+
+    viewRegistry.get.mockImplementation((view) => {
+        switch (view) {
+            case 'form_tab':
+                return function FormTab(props) {
+                    return (
+                        <div>
+                            <h3>Form Tab</h3>
+                            <p>{props.route.name}</p>
+                            <p>{props.form}</p>
+                        </div>
+                    );
+                };
+            case 'form':
+                return function Form(props) {
+                    return (
+                        <div>
+                            <h2>Form</h2>
+                            <p>{props.route.name}</p>
+                            <p>{props.app}</p>
+                            {props.children({form: 'Form'})}
+                        </div>
+                    );
+                };
+            case 'app':
+                return function App(props) {
+                    return (
+                        <div>
+                            <h1>App</h1>
+                            <p>{props.route.name}</p>
+                            {props.children({app: 'App'})}
                         </div>
                     );
                 };

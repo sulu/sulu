@@ -12,9 +12,10 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
 
     render() {
         const {children, route} = this.props;
+        const ChildComponent = children();
 
-        const selectedRouteIndex = children
-            ? route.children.findIndex((childRoute) => childRoute === children.props.route)
+        const selectedRouteIndex = ChildComponent
+            ? route.children.findIndex((childRoute) => childRoute === ChildComponent.props.route)
             : undefined;
 
         return (
@@ -29,7 +30,7 @@ export default class ResourceTabs extends React.PureComponent<ViewProps> {
                         );
                     })}
                 </Tabs>
-                {children}
+                {ChildComponent}
             </div>
         );
     }
