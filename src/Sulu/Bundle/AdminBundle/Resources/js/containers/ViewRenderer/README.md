@@ -32,8 +32,9 @@ const router = {
 ```
 
 The `ViewRegistry` can also handle the parent and children relation ships built on top of routes. It will nest the
-route's views in each other, whereby the parent route's view gets the children route's view via the children property.
-In order to get the corresponding route to the view, the route is passed via the `route` property.
+route's views in each other, whereby the parent route's view gets the children route's view via the `children`
+property. The `children` property is a function, which returns the corresponding view. It takes an object as only
+argument, which will be merged with the passed `route` and `router` props from the view.
 
 ```
 const viewRegistry = require('./registries/ViewRegistry').default;
@@ -42,12 +43,13 @@ viewRegistry.clear();
 const Parent = ({route, children}) => (
     <div>
         <h1>{route.name}</h1>
-        {children}
+        {children({value: 'bla'})}
     </div>
 );
 
-const Child = ({route}) => (
+const Child = ({route, value}) => (
     <h2>{route.name}</h2>
+    <p>{value}</p>
 );
 
 viewRegistry.add('parent', Parent);
