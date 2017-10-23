@@ -22,6 +22,7 @@ use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -195,6 +196,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
 
             if (in_array($field, $expectedFields)) {
                 $prophecy->shouldBeCalled();
+
                 continue;
             }
 
@@ -209,5 +211,41 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->subscriber->onFlush($this->onFlushEvent->reveal());
+    }
+
+    /**
+     * @param $changeset The changeset for the entity
+     *
+     * @dataProvider provideLifecycle
+     */
+    public function testOnFlushOtherUser($changeset)
+    {
+        $symfonyUser = $this->prophesize(SymfonyUserInterface::class);
+        $token = $this->prophesize(TokenInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorage::class);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+        $token->getUser()->willReturn($symfonyUser->reveal());
+        $subscriber = new UserBlameSubscriber($tokenStorage->reveal(), User::class);
+
+        $entity = $this->userBlameObject->reveal();
+        $this->unitOfWork->getScheduledEntityInsertions()->willReturn([
+            $entity,
+        ]);
+        $this->unitOfWork->getScheduledEntityUpdates()->willReturn([]);
+
+        $this->entityManager->getClassMetadata(get_class($entity))->willReturn($this->classMetadata);
+        $this->unitOfWork->getEntityChangeSet($this->userBlameObject->reveal())->willReturn($changeset);
+
+        foreach (['creator', 'changer'] as $field) {
+            $prophecy = $this->classMetadata->setFieldValue(
+                $this->userBlameObject->reveal(),
+                $field,
+                $symfonyUser->reveal()
+            );
+
+            $prophecy->shouldNotBeCalled();
+        }
+
+        $subscriber->onFlush($this->onFlushEvent->reveal());
     }
 }

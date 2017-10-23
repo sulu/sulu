@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.5.8 (unreleased)
-    * HOTFIX      #3584 [SuluPresistanceBUndle] Fixed exception of blame for none sulu users
+    * HOTFIX      #3584 [PersistanceBundle]     Fixed exception of blame for none sulu users
 
 * 1.5.7 (2017-10-12)
     * HOTFIX      #3551 [SecurityBundle]        Fixed permissions for user with no role
