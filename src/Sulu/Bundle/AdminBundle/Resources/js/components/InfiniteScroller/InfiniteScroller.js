@@ -36,7 +36,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
             return window.document.body;
         }
 
-        if (this.isScrollAble(parentContainer)) {
+        if (this.isScrollable(parentContainer)) {
             return parentContainer;
         }
 
@@ -45,7 +45,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
     // We have to check for the overflow property inside the styling to detect if the container is scrollable
     // otherwise (using scrollHeight) we would have issues with async content loads leading to wrong container sizes. 
-    isScrollAble(el: ElementRef<*>): boolean {
+    isScrollable(el: ElementRef<*>): boolean {
         const overflowY = window.getComputedStyle(el)['overflow-y'];
 
         return overflowY === 'auto' || overflowY === 'scroll';
