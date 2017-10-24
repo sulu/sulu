@@ -1,5 +1,4 @@
 The `ColumnList` component consists out of three parts: `ColumnList`, `Column` and `Item`. 
-All of them has to be imported in order to build a table.
 
 ```
 const Column = ColumnList.Column;
