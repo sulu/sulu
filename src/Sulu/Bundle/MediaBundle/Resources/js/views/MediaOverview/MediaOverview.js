@@ -28,8 +28,8 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
         this.mediaPage.set(1);
 
-        router.bindQuery('collectionPage', this.collectionPage, '1');
-        router.bindQuery('locale', this.locale);
+        router.bind('collectionPage', this.collectionPage, '1');
+        router.bind('locale', this.locale);
 
         this.disposer = autorun(this.createStores);
     }
@@ -37,12 +37,12 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     componentWillUnmount() {
         const {router} = this.props;
 
-        this.disposer();
-        router.unbind('locale', this.page);
-        router.unbind('page', this.locale);
+        router.unbind('collectionPage', this.collectionPage);
+        router.unbind('locale', this.locale);
         this.mediaStore.destroy();
         this.collectionStore.destroy();
         this.collectionInfoStore.destroy();
+        this.disposer();
     }
 
     getCollectionId() {

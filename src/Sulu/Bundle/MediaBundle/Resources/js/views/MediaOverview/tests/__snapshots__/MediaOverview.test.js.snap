@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a simple MediaOverview 1`] = `
-<div>
+<div
+  class="mediaOverview"
+>
   <div>
     <ul
       class="breadcrumb"
