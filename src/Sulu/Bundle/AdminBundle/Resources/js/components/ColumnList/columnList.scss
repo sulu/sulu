@@ -15,16 +15,6 @@ $columnBorderColor: $silver;
     display: inline-flex;
 }
 
-.column-container {
-    height: $columnHeight;
-
-    &.is-active {
-        .column {
-            border-radius: 0;
-        }
-    }
-}
-
 .column {
     background: $columnBackgroundColor;
     border-right: 1px solid $columnBorderColor;
@@ -33,7 +23,6 @@ $columnBorderColor: $silver;
     height: calc($columnHeight - 50px);
     overflow: hidden;
 }
-
 .column-container:first-child {
     .column {
         border-radius: 3px 0 0 3px;
@@ -44,5 +33,15 @@ $columnBorderColor: $silver;
     .column {
         border-radius: 0 3px 3px 0;
         border-right: none;
+    }
+}
+
+.column-container {
+    height: $columnHeight;
+
+    &.is-active {
+        .column {
+            border-radius: 0;
+        }
     }
 }
