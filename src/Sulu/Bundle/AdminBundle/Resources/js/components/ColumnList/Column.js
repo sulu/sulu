@@ -4,7 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Item from './Item';
 import Toolbar from './Toolbar';
-import type {ButtonConfig} from './types';
+import type {ButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
@@ -14,9 +14,10 @@ type Props = {
     active: boolean,
     onActive: (index: number) => void,
     onItemClick: (id: string | number) => void,
+    toolbarItemConfigs: Array<ToolbarItemConfig>,
 };
 
-export default class ColumnList extends React.PureComponent<Props> {
+export default class ColumnList extends React.Component<Props> {
     cloneItems = (originalItems: ChildrenArray<Element<typeof Item>>) => {
         return React.Children.map(originalItems, (column) => {
             return React.cloneElement(
@@ -38,7 +39,7 @@ export default class ColumnList extends React.PureComponent<Props> {
     };
 
     render() {
-        const {children, active} = this.props;
+        const {children, active, index, toolbarItemConfigs} = this.props;
 
         const columnContainerClass = classNames(
             columnListStyles.columnContainer,
@@ -49,7 +50,7 @@ export default class ColumnList extends React.PureComponent<Props> {
 
         return (
             <div onMouseEnter={this.handleMouseEnter} className={columnContainerClass}>
-                <Toolbar active={active} />
+                <Toolbar active={active} index={index} toolbarItemConfigs={toolbarItemConfigs} />
                 <div className={columnListStyles.column}>
                     {this.cloneItems(children)}
                 </div>

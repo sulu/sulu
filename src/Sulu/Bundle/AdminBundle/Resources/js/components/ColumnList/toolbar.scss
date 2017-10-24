@@ -1,18 +1,8 @@
 @import '../../containers/Application/colors.scss';
 
-$headerTextColor: $white;
-$headerCellBackgroundColor: $blueZodiac;
-$headerButtonCellTextColor: rgba($silverChalice, .25);
-$headerButtonCellBorderColor: rgba($silverChalice, .25);
-$cellTextColor: $blueZodiac;
-$cellTextColorActive: $white;
-$cellBackgroundColor: $white;
-$cellBorderColor: $cellBackgroundColor;
-$cellBorderColorActive: $shakespeare;
-$cellBackgroundColorActive: $shakespeare;
-$buttonCellBorderColor: $white;
-$emptyMessageColor: $silver;
-$rowHeight: 40px;
+$itemBackgroundColor: $silver;
+$itemBackgroundColorSkinBlue: $shakespeare;
+$itemBorderColorSkinBlue: $concrete;
 
 .container {
     width: 100%;
@@ -28,8 +18,8 @@ $rowHeight: 40px;
 .item {
     flex: 1;
     text-align: center;
-    padding: 9px 0 6px;
-    background: $silver;
+    padding: 5px 0 5px 0;
+    background: $itemBackgroundColor;
     cursor: pointer;
 
     &:first-child {
@@ -37,9 +27,9 @@ $rowHeight: 40px;
     }
 
     &:nth-child(2) {
-        background: $shakespeare;
-        border-left: 1px solid $concrete;
-        border-right: 1px solid $concrete;
+        background: $itemBackgroundColorSkinBlue;
+        border-left: 1px solid $itemBorderColorSkinBlue;
+        border-right: 1px solid $itemBorderColorSkinBlue;
         color: $white;
     }
 

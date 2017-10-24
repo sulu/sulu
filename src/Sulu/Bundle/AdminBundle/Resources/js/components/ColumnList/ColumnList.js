@@ -5,17 +5,18 @@ import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Column from './Column';
 import Item from './Item';
-import type {ButtonConfig} from './types';
+import type {ButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Column>>,
     buttons?: Array<ButtonConfig>,
+    toolbarItemConfigs: Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
 };
 
 @observer
-export default class ColumnList extends React.PureComponent<Props> {
+export default class ColumnList extends React.Component<Props> {
     static Column = Column;
 
     static Item = Item;
@@ -36,6 +37,7 @@ export default class ColumnList extends React.PureComponent<Props> {
                     active: this.activeColumnIndex === index,
                     onActive: this.handleOnActive,
                     onItemClick: this.props.onItemClick,
+                    toolbarItemConfigs: this.props.toolbarItemConfigs,
                 }
             );
         });

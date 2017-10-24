@@ -1,18 +1,10 @@
 @import '../../containers/Application/colors.scss';
 
-$headerTextColor: $white;
-$headerCellBackgroundColor: $blueZodiac;
-$headerButtonCellTextColor: rgba($silverChalice, .25);
-$headerButtonCellBorderColor: rgba($silverChalice, .25);
-$cellTextColor: $blueZodiac;
-$cellTextColorActive: $white;
-$cellBackgroundColor: $white;
-$cellBorderColor: $cellBackgroundColor;
-$cellBorderColorActive: $shakespeare;
-$cellBackgroundColorActive: $shakespeare;
-$buttonCellBorderColor: $white;
-$emptyMessageColor: $silver;
-$rowHeight: 40px;
+$columnHeight: 60vh;
+$columnWidth: 270px;
+
+$columnBackgroundColor: $white;
+$columnBorderColor: $silver;
 
 .container {
     overflow: scroll;
@@ -24,15 +16,21 @@ $rowHeight: 40px;
 }
 
 .column-container {
-    height: 60vh;
+    height: $columnHeight;
+
+    &.is-active {
+        .column {
+            border-radius: 0;
+        }
+    }
 }
 
 .column {
-    background: $white;
-    border-right: 1px solid $silver;
+    background: $columnBackgroundColor;
+    border-right: 1px solid $columnBorderColor;
     vertical-align: top;
-    width: 270px;
-    height: calc(60vh - 50px);
+    width: $columnWidth;
+    height: calc($columnHeight - 50px);
     overflow: hidden;
 }
 
@@ -46,55 +44,5 @@ $rowHeight: 40px;
     .column {
         border-radius: 0 3px 3px 0;
         border-right: none;
-    }
-}
-
-.column-container {
-    height: 60vh;
-
-    &.is-active {
-        .column {
-            border-radius: 0;
-        }
-    }
-}
-
-.item {
-    padding: 11px 30px 11px 6px;
-
-    &.is-selected {
-        background: $alabaster;
-        font-weight: bold;
-    }
-
-    &.has-children {
-
-    }
-
-    &:hover {
-        background: $blueZodiac;
-        color: $white;
-    }
-
-    .icon {
-        float: right;
-        font-weight: normal;
-    }
-}
-
-.buttons {
-    padding-right: 16px;
-}
-
-.button {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    visibility: hidden;
-}
-
-.item:hover {
-    .button {
-        visibility: visible;
     }
 }

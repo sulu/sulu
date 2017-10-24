@@ -1,0 +1,41 @@
+@import '../../containers/Application/colors.scss';
+
+$itemBackgroundColorSelected: $alabaster;
+$itemBackgroundColorHover: $blueZodiac;
+
+.item {
+    padding: 11px 30px 11px 6px;
+    cursor: pointer;
+
+    &.is-selected {
+        background: $itemBackgroundColorSelected;
+        font-weight: bold;
+    }
+
+    &:hover {
+        background: $itemBackgroundColorHover;
+        color: $white;
+    }
+
+    .icon {
+        float: right;
+        font-weight: normal;
+    }
+}
+
+.buttons {
+    padding-right: 16px;
+}
+
+.button {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.item:hover {
+    .button {
+        visibility: visible;
+    }
+}

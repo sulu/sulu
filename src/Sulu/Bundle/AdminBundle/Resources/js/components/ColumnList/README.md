@@ -24,7 +24,42 @@ const handleOnItemClick = (id) => {
     alert('Item with id: ' + id + ' clicked');
 };
 
-<ColumnList buttons={buttons} onItemClick={handleOnItemClick}>
+const toolbarItemConfigs = [
+    {
+        icon: 'plus',
+        type: 'simple',
+        onClick: (index) => {
+            alert('Clicked plus button for item with index: ' + index);
+        },
+    },
+    {
+        icon: 'search',
+        type: 'simple',
+        onClick: (index) => {
+            alert('Clicked search button for column with index: ' + index);
+        },
+    },
+    {
+        icon: 'gear',
+        type: 'dropdown',
+        options: [
+            {
+                label: 'Option1 ',
+                onClick: (index) => {
+                    alert('Clicked option1 for column with index: ' + index);
+                },
+            },
+            {
+                label: 'Option2 ',
+                onClick: (index) => {
+                    alert('Clicked option1 for column with index: ' + index);
+                },
+            },
+        ],
+    },
+];
+
+<ColumnList buttons={buttons} onItemClick={handleOnItemClick} toolbarItemConfigs={toolbarItemConfigs}>
     <Column>
         <Item id="1" selected="true">Item 1</Item>
         <Item id="2" hasChildren="true">Item 1</Item>

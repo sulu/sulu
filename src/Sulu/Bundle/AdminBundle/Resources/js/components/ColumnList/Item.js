@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import type {ButtonConfig} from './types';
-import columnListStyles from './columnList.scss';
+import itemStyles from './item.scss';
 
 type Props = {
     id: string | number,
@@ -14,7 +14,7 @@ type Props = {
     onClick: (id: string | number) => void,
 };
 
-export default class Item extends React.PureComponent<Props> {
+export default class Item extends React.Component<Props> {
     handleOnClick = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.id);
@@ -35,7 +35,7 @@ export default class Item extends React.PureComponent<Props> {
             };
 
             return (
-                <Icon className={columnListStyles.button} key={key} name={button.icon} onClick={handleClick} />
+                <Icon className={itemStyles.button} key={key} name={button.icon} onClick={handleClick} />
             );
         });
     };
@@ -44,21 +44,21 @@ export default class Item extends React.PureComponent<Props> {
         const {children, selected, hasChildren} = this.props;
 
         const itemClass = classNames(
-            columnListStyles.item,
+            itemStyles.item,
             {
-                [columnListStyles.isSelected]: selected,
-                [columnListStyles.hasChildren]: hasChildren,
+                [itemStyles.isSelected]: selected,
+                [itemStyles.hasChildren]: hasChildren,
             }
         );
 
         return (
             <div onClick={this.handleOnClick} className={itemClass}>
-                <span className={columnListStyles.buttons}>
+                <span className={itemStyles.buttons}>
                     {this.createButtons()}
                 </span>
-                <span className={columnListStyles.text}>{children}</span>
+                <span className={itemStyles.text}>{children}</span>
                 {hasChildren &&
-                    <Icon className={columnListStyles.icon} name="chevron-right" />
+                    <Icon className={itemStyles.icon} name="chevron-right" />
                 }
             </div>
         );
