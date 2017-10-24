@@ -43,7 +43,6 @@ test('Render a basic Masonry view with MediaCards', () => {
             icon="pencil"
             schema={{}}
             selections={[]}
-            showDownloadDropdown={true}
         />
     );
 

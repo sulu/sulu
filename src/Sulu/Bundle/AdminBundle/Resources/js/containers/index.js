@@ -4,6 +4,7 @@ import type {DatagridAdapterProps} from './Datagrid';
 import {viewRegistry} from './ViewRenderer';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
+import {fieldRegistry} from './Form';
 
 export type {
     DatagridAdapterProps,
@@ -11,10 +12,11 @@ export type {
 };
 
 export {
-    viewRegistry,
-    withToolbar,
     Datagrid,
     DatagridStore,
     AbstractAdapter,
     datagridAdapterRegistry,
+    fieldRegistry,
+    viewRegistry,
+    withToolbar,
 };

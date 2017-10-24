@@ -10,6 +10,7 @@ import metadataStore from './stores/MetadataStore';
 type Props = {
     store: ResourceStore,
     onSubmit: () => void,
+    locale: string,
 };
 
 @observer

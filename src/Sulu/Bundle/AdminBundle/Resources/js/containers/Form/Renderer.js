@@ -11,6 +11,7 @@ type Props = {
     schema: Schema,
     onSubmit: () => void,
     onChange: (string, mixed) => void,
+    locale: string,
 };
 
 @observer
@@ -32,7 +33,12 @@ export default class Renderer extends React.PureComponent<Props> {
     };
 
     render() {
-        const {data, schema, onChange} = this.props;
+        const {
+            data,
+            locale,
+            schema,
+            onChange,
+        } = this.props;
         const schemaKeys = Object.keys(schema);
 
         return (
@@ -44,6 +50,7 @@ export default class Renderer extends React.PureComponent<Props> {
                         schema={schema[schemaKey]}
                         onChange={onChange}
                         value={data[schemaKey]}
+                        locale={locale}
                     />
                 ))}
                 <button ref={this.setSubmitButtonRef} type="submit" className={rendererStyles.submit}>Submit</button>

@@ -1,0 +1,8 @@
+@import 'sulu-admin-bundle/containers/Application/variables.scss';
+
+.media-overlay {
+    width: 1170px;
+    height: 650px;
+    overflow-y: auto;
+    padding: $viewPadding;
+}

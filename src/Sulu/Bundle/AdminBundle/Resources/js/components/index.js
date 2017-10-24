@@ -9,6 +9,7 @@ import InfiniteScroller from './InfiniteScroller';
 import Menu from './Menu';
 import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
+import Overlay from './Overlay';
 import Popover from './Popover';
 
 export {
@@ -22,5 +23,6 @@ export {
     Menu,
     Masonry,
     MultiItemSelection,
+    Overlay,
     Popover,
 };

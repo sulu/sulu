@@ -9,6 +9,7 @@ type Props = {
     value?: mixed,
     schema: SchemaEntry,
     onChange: (string, mixed) => void,
+    locale: string,
 };
 
 export default class Field extends React.PureComponent<Props> {
@@ -19,14 +20,22 @@ export default class Field extends React.PureComponent<Props> {
     };
 
     render() {
-        const {schema, value} = this.props;
+        const {
+            value,
+            locale,
+            schema,
+        } = this.props;
         const {label, type} = schema;
         const FieldType = fieldRegistry.get(type);
 
         return (
             <div className={fieldStyles.field}>
                 <label className={fieldStyles.label}>{label}</label>
-                <FieldType onChange={this.handleChange} value={value} />
+                <FieldType
+                    onChange={this.handleChange}
+                    value={value}
+                    locale={locale}
+                />
             </div>
         );
     }

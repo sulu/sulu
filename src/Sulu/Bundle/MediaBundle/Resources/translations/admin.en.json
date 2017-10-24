@@ -1,5 +1,7 @@
 {
     "sulu_media.all_media": "All media",
     "sulu_media.copy_url": "Copy URL",
-    "sulu_media.download_masterfile": "Download master file"
+    "sulu_media.download_masterfile": "Download master file",
+    "sulu_media.select_media": "Select media",
+    "sulu_media.reset_selection": "Reset selection"
 }
