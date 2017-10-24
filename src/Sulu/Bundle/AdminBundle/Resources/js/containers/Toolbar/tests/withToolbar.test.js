@@ -1,9 +1,9 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
 import React from 'react';
+import {observable} from 'mobx';
+import {mount, render} from 'enzyme';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/ToolbarStorePool';
 import withToolbar from '../withToolbar';
-import {observable} from 'mobx';
 
 jest.mock('../stores/ToolbarStorePool', () => ({
     setToolbarConfig: jest.fn(),
@@ -63,10 +63,9 @@ test('Call life-cycle events of rendered component', () => {
         render = jest.fn();
     };
 
-    const ComponentWithToolbar = withToolbar(Component, () => {
-    });
+    const ComponentWithToolbar = withToolbar(Component, () => {});
 
-    let component = mount(<ComponentWithToolbar/>);
+    let component = mount(<ComponentWithToolbar />);
     expect(component.instance().componentWillMount).toBeCalled();
     expect(component.instance().render).toBeCalled();
 
@@ -85,17 +84,34 @@ test('Recall toolbar-function when changing observable', () => {
     };
 
     const ComponentWithToolbar = withToolbar(Component, function() {
-        return {disableAll: this.test}
+        return {disableAll: this.test};
     });
 
-    let component = mount(<ComponentWithToolbar/>);
+    let component = mount(<ComponentWithToolbar />);
 
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
-        disableAll: true
+        disableAll: true,
     });
 
     component.instance().test = false;
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
-        disableAll: false
+        disableAll: false,
     });
+});
+
+test('Throw error when component has property toolbarDisposer', () => {
+    const Component = class Component extends React.Component {
+        toolbarDisposer = true;
+
+        render() {
+            return <h1>Test</h1>;
+        }
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, function() {
+        return {disableAll: this.test};
+    });
+
+    expect(() => mount(<ComponentWithToolbar />))
+        .toThrowError('Component passed to withToolbar cannot declare a property called "toolbarDisposer".');
 });
