@@ -66,7 +66,7 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
     );
 
     mediaCard.find('MediaCard .media').simulate('click');
-    expect(clickSpy).toHaveBeenCalledWith(itemId);
+    expect(clickSpy).toHaveBeenCalledWith(itemId, true);
 
     mediaCard.find('MediaCard .description').simulate('click');
     expect(selectionSpy).toHaveBeenCalledWith(itemId, true);

@@ -13,7 +13,6 @@ export default class MediaCardOverviewAdapter extends React.Component<DatagridAd
             <MediaCardAdapter
                 {...this.props}
                 icon={EDIT_ICON}
-                showDownloadDropdown={true}
             />
         );
     }

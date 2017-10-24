@@ -10,7 +10,6 @@ const THUMBNAIL_SIZE = 'sulu-260x';
 
 type Props = DatagridAdapterProps & {
     icon: string,
-    showDownloadDropdown: boolean,
 };
 
 @observer
@@ -57,7 +56,6 @@ export default class MediaCardAdapter extends React.Component<Props> {
             icon,
             selections,
             onItemClick,
-            showDownloadDropdown,
             onItemSelectionChange,
         } = this.props;
 
@@ -65,7 +63,7 @@ export default class MediaCardAdapter extends React.Component<Props> {
             <Masonry>
                 {data.map((item: Object) => {
                     const meta = `${item.mimeType} ${MediaCardAdapter.formatFileSize(item.size)}`;
-                    const downloadDropdownProps = (showDownloadDropdown) ? this.getDownloadDropdownProps(item) : {};
+                    const downloadDropdownProps = this.getDownloadDropdownProps(item);
 
                     return (
                         // TODO: Don't access properties like "title" directly.

@@ -125,7 +125,7 @@ exports[`Render the MediaContainer 1`] = `
           class="masonry"
         >
           <li
-            style="margin-bottom:20px;"
+            style="margin-bottom:30px;"
           >
             <div
               class="mediaCard"
@@ -220,7 +220,7 @@ exports[`Render the MediaContainer 1`] = `
             </div>
           </li>
           <li
-            style="margin-bottom:20px;"
+            style="margin-bottom:30px;"
           >
             <div
               class="mediaCard"
