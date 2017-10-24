@@ -4,7 +4,7 @@ React component and passes it the [`Router` service](#router), which is passed i
 Registering a component in the `ViewRegistry` and rendering it using the `ViewRenderer` is shown in the following
 example:
 
-```
+```javascript
 const viewRegistry = require('./registries/ViewRegistry').default;
 viewRegistry.clear(); // Just to make sure the ViewRegistry is empty, not needed in a real world application
 
@@ -36,7 +36,7 @@ route's views in each other, whereby the parent route's view gets the children r
 property. The `children` property is a function, which returns the corresponding view. It takes an object as only
 argument, which will be merged with the passed `route` and `router` props from the view.
 
-```
+```javascript
 const viewRegistry = require('./registries/ViewRegistry').default;
 viewRegistry.clear();
 
@@ -48,8 +48,10 @@ const Parent = ({route, children}) => (
 );
 
 const Child = ({route, value}) => (
-    <h2>{route.name}</h2>
-    <p>{value}</p>
+    <div>
+        <h2>{route.name}</h2>
+        <p>{value}</p>
+    </div>
 );
 
 viewRegistry.add('parent', Parent);
