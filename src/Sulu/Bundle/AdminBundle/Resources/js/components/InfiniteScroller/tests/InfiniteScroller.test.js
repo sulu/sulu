@@ -11,7 +11,7 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
     });
 
     const loadSpy = jest.fn();
-    const infiniteScroller = mount(
+    const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
                 onLoad={loadSpy}
@@ -21,7 +21,7 @@ test('InfiniteScroller traverses the dom upwards until it finds a scroll contain
         </div>
     );
 
-    expect(infiniteScroller.find('InfiniteScroller').get(0).scrollContainer.id).toBe('scrollable');
+    expect(infiniteScrollerWrapper.find('InfiniteScroller').get(0).scrollContainer.id).toBe('scrollable');
 });
 
 test('InfiniteScroller should call onLoad if the the bottom of the content is reached', (done) => {
@@ -30,7 +30,7 @@ test('InfiniteScroller should call onLoad if the the bottom of the content is re
     });
 
     const loadSpy = jest.fn();
-    const infiniteScroller = mount(
+    const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
                 total={10}
@@ -42,18 +42,19 @@ test('InfiniteScroller should call onLoad if the the bottom of the content is re
         </div>
     );
 
-    infiniteScroller.find('InfiniteScroller').get(0).scrollContainer = {
+    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').get(0);
+
+    infiniteScroller.scrollContainer = {
         getBoundingClientRect: () => ({
             bottom: 260,
         }),
     };
-    infiniteScroller.find('InfiniteScroller').get(0).elementRef = {
+    infiniteScroller.elementRef = {
         getBoundingClientRect: () => ({
             bottom: 300,
         }),
     };
-    infiniteScroller.find('InfiniteScroller').get(0).unbindScrollListener = jest.fn();
-    infiniteScroller.find('InfiniteScroller').get(0).scrollListener();
+    infiniteScroller.scrollListener();
 
     setTimeout(() => {
         expect(loadSpy).toBeCalledWith(2);
@@ -68,7 +69,7 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
 
     const loadSpy = jest.fn();
     const removeEventListenerSpy = jest.fn();
-    const infiniteScroller = mount(
+    const infiniteScrollerWrapper = mount(
         <div id="scrollable">
             <InfiniteScroller
                 total={10}
@@ -80,10 +81,13 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
         </div>
     );
 
-    infiniteScroller.find('InfiniteScroller').get(0).scrollContainer = {
+    const infiniteScroller = infiniteScrollerWrapper.find('InfiniteScroller').get(0);
+
+    infiniteScroller.scrollContainer = {
         removeEventListener: removeEventListenerSpy,
     };
 
-    infiniteScroller.unmount();
-    expect(removeEventListenerSpy).toBeCalled();
+    infiniteScrollerWrapper.unmount();
+    expect(removeEventListenerSpy).toBeCalledWith('resize', infiniteScroller.scrollListener, false);
+    expect(removeEventListenerSpy).toBeCalledWith('scroll', infiniteScroller.scrollListener, false);
 });
