@@ -1,11 +1,11 @@
 @import '../../containers/Application/colors.scss';
 
-$crumbTextColor: $silver;
-$crumbTextColorActive: $black;
+$itemTextColor: $silver;
+$itemTextColorActive: $black;
 
-.crumb {
+.item {
     font-size: 30px;
-    color: $crumbTextColor;
+    color: $itemTextColor;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -13,7 +13,7 @@ $crumbTextColorActive: $black;
 
     &:hover,
     &:disabled {
-        color: $crumbTextColorActive;
+        color: $itemTextColorActive;
     }
 
     &:disabled {

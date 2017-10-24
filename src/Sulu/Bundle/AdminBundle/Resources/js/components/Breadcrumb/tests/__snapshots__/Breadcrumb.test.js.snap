@@ -6,7 +6,7 @@ exports[`Render a Breadcrumb 1`] = `
 >
   <li>
     <button
-      class="crumb"
+      class="item"
     >
       Crumb 1
     </button>
@@ -17,7 +17,7 @@ exports[`Render a Breadcrumb 1`] = `
   </li>
   <li>
     <button
-      class="crumb"
+      class="item"
     >
       Crumb 2
     </button>
@@ -28,7 +28,7 @@ exports[`Render a Breadcrumb 1`] = `
   </li>
   <li>
     <button
-      class="crumb"
+      class="item"
       disabled=""
     >
       Crumb 3

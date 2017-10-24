@@ -4,45 +4,40 @@ import React from 'react';
 import Breadcrumb from '../Breadcrumb';
 
 test('Render a Breadcrumb', () => {
-    const clickSpy1 = jest.fn();
-    const clickSpy2 = jest.fn();
+    const clickSpy = jest.fn();
     const breadcrumb = render(
-        <Breadcrumb>
-            <Breadcrumb.Crumb onClick={clickSpy1}>
+        <Breadcrumb onItemClick={clickSpy}>
+            <Breadcrumb.Item>
                 Crumb 1
-            </Breadcrumb.Crumb>
-            <Breadcrumb.Crumb onClick={clickSpy2}>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
                 Crumb 2
-            </Breadcrumb.Crumb>
-            <Breadcrumb.Crumb>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
                 Crumb 3
-            </Breadcrumb.Crumb>
+            </Breadcrumb.Item>
         </Breadcrumb>
     );
     expect(breadcrumb).toMatchSnapshot();
 });
 
 test('Clicking on a clickable breadcrumb part should call a handler', () => {
-    const clickSpy1 = jest.fn();
-    const clickSpy2 = jest.fn();
+    const clickSpy = jest.fn();
     const testValue = 2;
     const breadcrumb = mount(
-        <Breadcrumb>
-            <Breadcrumb.Crumb onClick={clickSpy1}>
+        <Breadcrumb onItemClick={clickSpy}>
+            <Breadcrumb.Item>
                 Crumb 1
-            </Breadcrumb.Crumb>
-            <Breadcrumb.Crumb value={testValue} onClick={clickSpy2}>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item value={testValue}>
                 Crumb 2
-            </Breadcrumb.Crumb>
-            <Breadcrumb.Crumb>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
                 Crumb 3
-            </Breadcrumb.Crumb>
+            </Breadcrumb.Item>
         </Breadcrumb>
     );
 
-    breadcrumb.find('Crumb').at(0).simulate('click');
-    expect(clickSpy1).toBeCalled();
-
-    breadcrumb.find('Crumb').at(1).simulate('click');
-    expect(clickSpy2).toHaveBeenCalledWith(testValue);
+    breadcrumb.find('Item').at(1).simulate('click');
+    expect(clickSpy).toHaveBeenCalledWith(testValue);
 });

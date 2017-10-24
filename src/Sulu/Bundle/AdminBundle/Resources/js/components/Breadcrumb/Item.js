@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import crumbStyles from './crumb.scss';
+import itemStyles from './item.scss';
 
 type Props = {
     onClick?: (value?: string | number) => void,
@@ -8,7 +8,7 @@ type Props = {
     value?: string | number,
 };
 
-export default class Crumb extends React.PureComponent<Props> {
+export default class Item extends React.PureComponent<Props> {
     handleClick = () => {
         const {
             value,
@@ -30,7 +30,7 @@ export default class Crumb extends React.PureComponent<Props> {
             <button
                 onClick={this.handleClick}
                 disabled={!onClick}
-                className={crumbStyles.crumb}
+                className={itemStyles.item}
             >
                 {children}
             </button>
