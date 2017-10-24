@@ -16,8 +16,10 @@ export default class Breadcrumb extends React.PureComponent<Props> {
     static Item = Item;
 
     createItems(originalItems: ChildrenArray<Element<typeof Item>>) {
+        const childrenCount = React.Children.count(originalItems);
+
         return React.Children.map(originalItems, (item, index) => {
-            const lastItem = (index === React.Children.count(originalItems) - 1);
+            const lastItem = (index === childrenCount - 1);
 
             return (
                 <li>
