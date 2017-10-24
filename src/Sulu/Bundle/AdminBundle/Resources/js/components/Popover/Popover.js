@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import Portal from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import type {Node, ElementRef} from 'react';
 import {afterElementsRendered} from '../../services/DOM';
+import Portal from '../Portal';
 import Backdrop from '../Backdrop';
 import type {PopoverDimensions} from './types';
 import PopoverPositioner from './PopoverPositioner';
@@ -22,7 +22,7 @@ type Props = {
 };
 
 @observer
-export default class Popover extends React.PureComponent<Props> {
+export default class Popover extends React.Component<Props> {
     static defaultProps = {
         open: false,
         horizontalOffset: 0,
@@ -143,7 +143,7 @@ export default class Popover extends React.PureComponent<Props> {
 
         return (
             <div>
-                <Portal isOpened={open}>
+                <Portal open={open}>
                     <div className={popoverStyles.container}>
                         {children &&
                             children(this.setPopoverChildRef, styles)

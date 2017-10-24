@@ -9,7 +9,7 @@ import OptionList from './OptionList';
 import selectStyles from './select.scss';
 
 @observer
-export default class Select extends React.PureComponent<SelectProps> {
+export default class Select extends React.Component<SelectProps> {
     @observable open: boolean = false;
 
     @action close = () => {

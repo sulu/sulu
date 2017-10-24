@@ -20,7 +20,7 @@ type Props = {
 };
 
 @observer
-export class ImageRectangleSelection extends React.PureComponent<Props> {
+export class ImageRectangleSelection extends React.Component<Props> {
     image: Image;
     rounding = new RoundingNormalizer();
     @observable imageLoaded = false;

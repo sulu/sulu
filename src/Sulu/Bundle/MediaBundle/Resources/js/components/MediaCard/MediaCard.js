@@ -34,7 +34,7 @@ type Props = {
 };
 
 @observer
-export default class MediaCard extends React.PureComponent<Props> {
+export default class MediaCard extends React.Component<Props> {
     static defaultProps = {
         selected: false,
         showCover: false,
