@@ -2,6 +2,7 @@
 import {mount, render} from 'enzyme';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';
+import ResourceStore from '../../../stores/ResourceStore';
 
 jest.mock('../../../services/Translator', () => ({
     translate: function(key) {
@@ -14,8 +15,13 @@ jest.mock('../../../services/Translator', () => ({
     },
 }));
 
+jest.mock('../../../stores/ResourceStore');
+
 test('Should render the child components after the tabs', () => {
     const route = {
+        options: {
+            resourceKey: 'test',
+        },
         children: [
             {
                 name: 'Tab 1',
@@ -31,9 +37,16 @@ test('Should render the child components after the tabs', () => {
             },
         ],
     };
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route,
+    };
+
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs route={route}><Child /></ResourceTabs>)).toMatchSnapshot();
+    expect(render(<ResourceTabs router={router} route={route}>{() => (<Child />)}</ResourceTabs>)).toMatchSnapshot();
 });
 
 test('Should mark the currently active child route as selected tab', () => {
@@ -51,15 +64,26 @@ test('Should mark the currently active child route as selected tab', () => {
     };
 
     const route = {
+        options: {
+            resourceKey: 'test',
+        },
         children: [
             childRoute1,
             childRoute2,
         ],
     };
 
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route,
+    };
+
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs route={route}><Child route={childRoute2} /></ResourceTabs>)).toMatchSnapshot();
+    expect(render(<ResourceTabs router={router} route={route}>{() => (<Child route={childRoute2} />)}</ResourceTabs>))
+        .toMatchSnapshot();
 });
 
 test('Should navigate to child route if tab is clicked', () => {
@@ -72,6 +96,9 @@ test('Should navigate to child route if tab is clicked', () => {
         options: {},
     };
     const route = {
+        options: {
+            resourceKey: 'test',
+        },
         children: [
             childRoute1,
             childRoute2,
@@ -87,14 +114,59 @@ test('Should navigate to child route if tab is clicked', () => {
 
     const router = {
         navigate: jest.fn(),
+        route,
         attributes,
         query,
     };
 
     const Child = () => (<h1>Child</h1>);
-    const resourceTabs = mount(<ResourceTabs router={router} route={route}><Child /></ResourceTabs>);
+    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => (<Child />)}</ResourceTabs>);
 
     resourceTabs.find('Tab button').at(1).simulate('click');
 
     expect(router.navigate).toBeCalledWith('route2', attributes, query);
+});
+
+test('Should create a ResourceStore on mount and destroy it on unmount', () => {
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+        },
+    };
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    const resourceTabs = mount(<ResourceTabs router={router} route={route}>{() => null}</ResourceTabs>);
+    const resourceStoreConstructorCall = ResourceStore.mock.calls;
+    expect(resourceStoreConstructorCall[0]).toEqual(['snippets', 5]);
+
+    resourceTabs.unmount();
+    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+});
+
+test('Should pass the ResourceStore to child components', () => {
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+        },
+    };
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    const ChildComponent = jest.fn(() => null);
+    const resourceTabs = mount(
+        <ResourceTabs router={router} route={route}>{(props) => (<ChildComponent {...props} />)}</ResourceTabs>
+    ).get(0);
+
+    expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
 });
