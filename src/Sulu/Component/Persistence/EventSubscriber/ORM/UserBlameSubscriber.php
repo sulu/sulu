@@ -12,7 +12,6 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -42,11 +41,6 @@ class UserBlameSubscriber implements EventSubscriber
      * @var string
      */
     private $userClass;
-
-    /**
-     * @var object[]
-     */
-    private $blameQueue = [];
 
     /**
      * @param TokenStorage $tokenStorage
@@ -183,28 +177,6 @@ class UserBlameSubscriber implements EventSubscriber
                 $unitOfWork->recomputeSingleEntityChangeSet($meta, $blameEntity);
             }
         }
-
-        $this->blameQueue = [];
-    }
-
-    /**
-     * Record the creating and changing user on the
-     * entity based on the logged-in user.
-     *
-     * If the creator is null, then the creator will be
-     * set. The changer will always be overwritten.
-     *
-     * @param LifecycleEventArgs $event
-     */
-    private function handleUserBlame(LifecycleEventArgs $event)
-    {
-        $entity = $event->getObject();
-
-        if (!$entity instanceof UserBlameInterface) {
-            return;
-        }
-
-        $this->blameQueue[] = $entity;
     }
 
     /**
