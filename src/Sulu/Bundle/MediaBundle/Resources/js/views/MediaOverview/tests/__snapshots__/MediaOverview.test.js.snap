@@ -17,9 +17,7 @@ exports[`Render a simple MediaOverview 1`] = `
         </button>
       </li>
     </ul>
-    <div
-      class="content"
-    >
+    <div>
       <section>
         <div>
           <ul
@@ -121,9 +119,7 @@ exports[`Render a simple MediaOverview 1`] = `
     <div
       class="divider"
     />
-    <div
-      class="content"
-    >
+    <div>
       <section>
         <div
           class="test"

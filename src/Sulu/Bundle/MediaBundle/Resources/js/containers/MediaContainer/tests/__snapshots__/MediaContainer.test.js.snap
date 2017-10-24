@@ -14,9 +14,7 @@ exports[`Render the MediaContainer 1`] = `
       </button>
     </li>
   </ul>
-  <div
-    class="content"
-  >
+  <div>
     <section>
       <div>
         <ul
@@ -118,9 +116,7 @@ exports[`Render the MediaContainer 1`] = `
   <div
     class="divider"
   />
-  <div
-    class="content"
-  >
+  <div>
     <section>
       <div
         class="test"

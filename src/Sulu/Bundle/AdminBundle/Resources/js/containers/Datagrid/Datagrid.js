@@ -6,7 +6,6 @@ import Loader from '../../components/Loader';
 import PaginationDecorator from './PaginationDecorator';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
-import datagridStyles from './datagrid.scss';
 import type {AdapterConfig} from './types';
 
 const INFINITE_SCROLL_TYPE = 'infiniteScroll';
@@ -76,7 +75,7 @@ export default class Datagrid extends React.PureComponent<Props> {
             paginationType,
         } = this.getAdapterConfig();
         return (
-            <div className={datagridStyles.content}>
+            <div>
                 {this.props.store.loading && !this.props.store.appendRequestData
                     ? <Loader />
                     : <PaginationDecorator
