@@ -67,7 +67,7 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
     });
 
     const loadSpy = jest.fn();
-    const unbindSpy = jest.fn();
+    const removeEventListenerSpy = jest.fn();
     const infiniteScroller = mount(
         <div id="scrollable">
             <InfiniteScroller
@@ -80,8 +80,10 @@ test('InfiniteScroller should unbind scroll and resize event on unmount', () => 
         </div>
     );
 
-    infiniteScroller.find('InfiniteScroller').get(0).unbindScrollListener = unbindSpy;
-    infiniteScroller.unmount();
+    infiniteScroller.find('InfiniteScroller').get(0).scrollContainer = {
+        removeEventListener: removeEventListenerSpy,
+    };
 
-    expect(unbindSpy).toBeCalled();
+    infiniteScroller.unmount();
+    expect(removeEventListenerSpy).toBeCalled();
 });
