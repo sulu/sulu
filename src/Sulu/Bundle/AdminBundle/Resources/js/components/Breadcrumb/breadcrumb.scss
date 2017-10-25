@@ -1,0 +1,20 @@
+@import '../../containers/Application/colors.scss';
+
+$breadcrumbTextColor: $silver;
+
+.breadcrumb {
+    margin: 0 0 30px;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    color: $breadcrumbTextColor;
+
+    & > li {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.arrow {
+    padding: 0 20px;
+}

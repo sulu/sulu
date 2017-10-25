@@ -1,0 +1,22 @@
+@import '../../containers/Application/colors.scss';
+
+$itemTextColor: $silver;
+$itemTextColorActive: $black;
+
+.item {
+    font-size: 30px;
+    color: $itemTextColor;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover,
+    &:disabled {
+        color: $itemTextColorActive;
+    }
+
+    &:disabled {
+        cursor: default;
+    }
+}
