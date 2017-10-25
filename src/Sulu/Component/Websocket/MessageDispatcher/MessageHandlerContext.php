@@ -69,30 +69,6 @@ class MessageHandlerContext implements ConnectionContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getSession()
-    {
-        return $this->context->getSession();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken($firewall)
-    {
-        return $this->context->getToken($firewall);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUser($firewall)
-    {
-        return $this->context->getUser($firewall);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->context->getId();

@@ -11,11 +11,7 @@
 
 namespace Sulu\Component\Websocket\ConnectionContext;
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\QueryString;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Represents a client websocket-session.
@@ -25,7 +21,7 @@ interface ConnectionContextInterface
     /**
      * Returns query of the upgrade request.
      *
-     * @return QueryString
+     * @return array
      */
     public function getQuery();
 
@@ -35,31 +31,6 @@ interface ConnectionContextInterface
      * @return RequestInterface
      */
     public function getRequest();
-
-    /**
-     * Returns session of the upgrade request.
-     *
-     * @return SessionInterface
-     */
-    public function getSession();
-
-    /**
-     * Returns token for given firewall.
-     *
-     * @param string $firewall
-     *
-     * @return TokenInterface|null
-     */
-    public function getToken($firewall);
-
-    /**
-     * Returns user for given firewall.
-     *
-     * @param string $firewall
-     *
-     * @return UserInterface|null
-     */
-    public function getUser($firewall);
 
     /**
      * Returns unique id for session.

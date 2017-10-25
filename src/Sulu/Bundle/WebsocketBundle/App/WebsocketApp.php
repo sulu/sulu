@@ -35,7 +35,7 @@ use Symfony\Component\Routing\RouteCollection;
 class WebsocketApp
 {
     /**
-     * @var \Symfony\Component\Routing\RouteCollection
+     * @var RouteCollection
      */
     public $routes;
 
@@ -87,8 +87,7 @@ class WebsocketApp
         $this->httpHost = $httpHost;
         $this->port = $port;
 
-        $socket = new Reactor($loop);
-        $socket->listen($port, $address);
+        $socket = new Reactor(sprintf('%s:%s', $address, $port), $loop);
 
         $this->routes = new RouteCollection();
         $this->_server = new IoServer(

@@ -11,11 +11,9 @@
 
 namespace Sulu\Component\Websocket\ConnectionContext;
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\QueryString;
+use Psr\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Simple websocket context.
@@ -28,14 +26,9 @@ class ConnectionContext implements ConnectionContextInterface
     private $request = null;
 
     /**
-     * @var QueryString
+     * @var array
      */
     private $query = null;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session = null;
 
     /**
      * @var ParameterBag
@@ -49,24 +42,50 @@ class ConnectionContext implements ConnectionContextInterface
 
     public function __construct(ConnectionInterface $conn)
     {
-        if (isset($conn->WebSocket)) {
-            $this->request = $conn->WebSocket->request;
-            $this->query = $this->request->getUrl(true)->getQuery();
+        $this->id = uniqid('', true);
+        $this->parameters = new ParameterBag();
+
+        if (!isset($conn->httpRequest)) {
+            if (isset($conn->resourceId)) {
+                $this->id = $conn->resourceId;
+            }
+
+            return;
         }
 
-        if (isset($conn->Session)) {
-            $this->session = $conn->Session;
-        }
+        $this->request = $conn->httpRequest;
+        parse_str($this->request->getUri()->getQuery(), $this->query);
 
         $sessionName = ini_get('session.name');
 
-        if (isset($this->request) && isset($this->request->getCookies()[$sessionName])) {
-            $this->id = $this->request->getCookies()[$sessionName];
-        } elseif (isset($conn->resourceId)) {
-            $this->id = $conn->resourceId;
+        $cookies = $this->parseCookies($this->request->getHeader('cookie')[0]);
+        if (array_key_exists($sessionName, $cookies)) {
+            $this->id = $cookies[$sessionName];
+        }
+    }
+
+    /**
+     * Parses given cookie-line.
+     *
+     * @param string $cookieLine
+     *
+     * @return array
+     */
+    private function parseCookies($cookieLine)
+    {
+        $pieces = array_filter(array_map('trim', explode(';', $cookieLine)));
+
+        $cookies = [];
+        foreach ($pieces as $piece) {
+            if (empty($piece) || !strpos($piece, '=')) {
+                continue;
+            }
+
+            $pieceParts = explode('=', $piece);
+            $cookies[$pieceParts[0]] = $pieceParts[1];
         }
 
-        $this->parameters = new ParameterBag();
+        return $cookies;
     }
 
     /**
@@ -83,38 +102,6 @@ class ConnectionContext implements ConnectionContextInterface
     public function getRequest()
     {
         return $this->request;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken($firewall)
-    {
-        if ($this->session !== null) {
-            return unserialize($this->session->get('_security_' . $firewall));
-        }
-
-        return;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUser($firewall)
-    {
-        if (null !== ($token = $this->getToken($firewall))) {
-            return $token->getUser();
-        }
-
-        return;
     }
 
     /**
