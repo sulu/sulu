@@ -18,6 +18,7 @@ use Sulu\Bundle\RouteBundle\Entity\Route as SuluRoute;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,8 +100,15 @@ class RouteProvider implements RouteProviderInterface
         $path = $request->getPathInfo();
         $prefix = $this->requestAnalyzer->getResourceLocatorPrefix();
 
+        /** @var RequestAttributes $attributes */
+        $attributes = $request->get('_sulu');
+
         if (!empty($prefix) && strpos($path, $prefix) === 0) {
             $path = PathHelper::relativizePath($path, $prefix);
+        }
+
+        if ($attributes->getAttribute('format')) {
+            $path = substr($path, 0, strpos($path, $attributes->getAttribute('format')) - 1);
         }
 
         $route = $this->findRouteByPath($path, $request->getLocale());
@@ -200,6 +208,13 @@ class RouteProvider implements RouteProviderInterface
     protected function createRoute(RouteInterface $route, Request $request)
     {
         $routePath = $this->requestAnalyzer->getResourceLocatorPrefix() . $route->getPath();
+
+        /** @var RequestAttributes $attributes */
+        $attributes = $request->get('_sulu');
+
+        if($attributes && $route->getPath() !== $attributes->getAttribute('requestUri')) {
+            $routePath = $attributes->getAttribute('requestUri');
+        }
 
         if ($route->isHistory()) {
             return new Route(
