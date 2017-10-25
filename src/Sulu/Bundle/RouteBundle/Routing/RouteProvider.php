@@ -215,7 +215,7 @@ class RouteProvider implements RouteProviderInterface
         /** @var RequestAttributes $attributes */
         $attributes = $request->get('_sulu');
 
-        if($attributes && $route->getPath() !== $attributes->getAttribute('requestUri')) {
+        if ($attributes && $route->getPath() !== $attributes->getAttribute('requestUri')) {
             $routePath = $attributes->getAttribute('requestUri');
         }
 
