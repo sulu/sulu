@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render disabled next link if current page is last page 1`] = `
+<nav
+  class="pagination"
+>
+  <span
+    class="display"
+  >
+    Page: 5 of 5
+  </span>
+  <a
+    class="previous enabled"
+  >
+    <span
+      aria-label="angle-left"
+      class="fa fa-angle-left"
+    />
+  </a>
+  <a
+    class="next"
+  >
+    <span
+      aria-label="angle-right"
+      class="fa fa-angle-right"
+    />
+  </a>
+</nav>
+`;
+
+exports[`Render disabled previous link current page is first page 1`] = `
+<nav
+  class="pagination"
+>
+  <span
+    class="display"
+  >
+    Page: 1 of 5
+  </span>
+  <a
+    class="previous"
+  >
+    <span
+      aria-label="angle-left"
+      class="fa fa-angle-left"
+    />
+  </a>
+  <a
+    class="next enabled"
+  >
+    <span
+      aria-label="angle-right"
+      class="fa fa-angle-right"
+    />
+  </a>
+</nav>
+`;
+
+exports[`Render pagination with page numbers 1`] = `
+<nav
+  class="pagination"
+>
+  <span
+    class="display"
+  >
+    Page: 5 of 10
+  </span>
+  <a
+    class="previous enabled"
+  >
+    <span
+      aria-label="angle-left"
+      class="fa fa-angle-left"
+    />
+  </a>
+  <a
+    class="next enabled"
+  >
+    <span
+      aria-label="angle-right"
+      class="fa fa-angle-right"
+    />
+  </a>
+</nav>
+`;

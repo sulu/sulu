@@ -1,0 +1,112 @@
+@import '../../containers/Application/colors.scss';
+
+$primaryBackground: $concrete;
+$secondaryBackground: $white;
+$borderRadius: 3px;
+
+$headerHeight: 60px;
+$footerHeight: 90px;
+
+$titleColor: $black;
+
+$iconFontSize: 14px;
+$iconSize: ($iconFontSize + 10px);
+
+$confirmBackground: $shakespeare;
+$confirmColor: $white;
+
+$transitionDuration: 300ms;
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+
+    & > * {
+        opacity: 0;
+        transition: opacity $transitionDuration;
+    }
+}
+
+.overlay {
+    position: relative;
+    top: -100%;
+    opacity: 0;
+    transition: top $transitionDuration, opacity $transitionDuration;
+    z-index: 1;
+    pointer-events: none;
+
+    & > * {
+        pointer-events: auto;
+    }
+}
+
+.is-down {
+    & > * {
+        opacity: 1;
+    }
+
+    .overlay {
+        top: 0;
+    }
+}
+
+.content {
+    border-radius: 0 0 $borderRadius $borderRadius;
+    overflow: hidden;
+    box-shadow: 0 10px 18px 0 rgba($mineShaft, .5);
+
+    header {
+        background: $secondaryBackground;
+        height: $headerHeight;
+        color: $titleColor;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        line-height: $headerHeight;
+    }
+
+    article {
+        max-height: calc(100vh - $headerHeight - $footerHeight);
+        overflow: auto;
+        background: $primaryBackground;
+    }
+
+    footer {
+        background: $secondaryBackground;
+        height: $footerHeight;
+        padding: 0 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .icon {
+        position: absolute;
+        top: calc(($headerHeight - $iconSize) / 2);
+        right: 30px;
+        font-size: $iconFontSize;
+        width: $iconSize;
+        height: $iconSize;
+        line-height: $iconSize;
+        text-align: center;
+        cursor: pointer;
+    }
+}
+
+.confirm-button {
+    background: $confirmBackground;
+    color: $confirmColor;
+    font-size: 12px;
+    border: none;
+    border-radius: $borderRadius;
+    line-height: 30px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;
+    padding: 0 40px;
+}

@@ -1,0 +1,54 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$itemTextColor: $black;
+$itemTextColorActive: $shakespeare;
+
+.item {
+    display: block;
+
+    button {
+        cursor: pointer;
+        border: 0;
+        color: $itemTextColor;
+        background: transparent;
+
+        &:hover {
+            color: $itemTextColorActive;
+
+            .copy-text {
+                opacity: 1;
+            }
+        }
+    }
+
+    &.copying {
+        button {
+            animation: blink .2s step-start 0s 2;
+        }
+    }
+}
+
+.item-content {
+    min-width: 200px;
+    padding: 5px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.copy-text {
+    opacity: 0;
+}
+
+@keyframes blink {
+    0% {
+        color: $itemTextColorActive;
+    }
+
+    50% {
+        color: $itemTextColor;
+    }
+
+    100% {
+        color: $itemTextColorActive;
+    }
+}

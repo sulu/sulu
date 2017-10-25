@@ -1,0 +1,16 @@
+@import '../../containers/Application/colors.scss';
+
+$backdropBackground: rgba($dustyGray, .9);
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+
+    &.visible {
+        background: $backdropBackground;
+    }
+}

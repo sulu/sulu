@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render view returned from ViewRegistry 1`] = `
+<h1>
+  Test
+</h1>
+`;
+
+exports[`Render view returned from ViewRegistry with passed router 1`] = `
+<h1>
+  Test attribute
+</h1>
+`;
+
+exports[`Render view with parents should nest rendered views 1`] = `
+<div>
+  <h1>
+    App
+  </h1>
+  sulu_admin.app
+  <div>
+    <h2>
+      Form
+    </h2>
+    sulu_admin.form
+    <div>
+      <h3>
+        Form Tab
+      </h3>
+      sulu_admin.form_tab
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render view with parents should nest rendered views and correctly pass children arguments 1`] = `
+<div>
+  <h1>
+    App
+  </h1>
+  <p>
+    sulu_admin.app
+  </p>
+  <div>
+    <h2>
+      Form
+    </h2>
+    <p>
+      sulu_admin.form
+    </p>
+    <p>
+      App
+    </p>
+    <div>
+      <h3>
+        Form Tab
+      </h3>
+      <p>
+        sulu_admin.form_tab
+      </p>
+      <p>
+        Form
+      </p>
+    </div>
+  </div>
+</div>
+`;

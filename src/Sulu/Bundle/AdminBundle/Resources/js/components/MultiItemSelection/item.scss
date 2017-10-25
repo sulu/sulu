@@ -1,0 +1,44 @@
+@import '../../containers/Application/colors.scss';
+
+$itemBackgroundColor: $white;
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    background-color: $itemBackgroundColor;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    margin: 0 2px;
+    font-size: 12px;
+}
+
+.remove-button {
+    border: 0;
+    padding: 0 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    width: 40px;
+    border: 0;
+    cursor: grab;
+    padding-left: 20px;
+}
+
+.index {
+    padding-left: 2px;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 12px;
+}

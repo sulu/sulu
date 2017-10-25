@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render the items from the ToolbarStore 1`] = `
+<header
+  class="toolbar"
+>
+  <nav
+    class="controlsContainer"
+  >
+    <div
+      class="controls"
+    >
+      <ul
+        class="items"
+      >
+        <li>
+          <button
+            class="button"
+            disabled=""
+          >
+            <span
+              aria-label="trash-o"
+              class="icon fa fa-trash-o"
+            />
+          </button>
+        </li>
+        <li>
+          <div
+            class="dropdown"
+          >
+            <button
+              class="button"
+              value="Save"
+            >
+              <span
+                aria-label="floppy-more"
+                class="icon fa fa-floppy-more"
+              />
+              <span
+                class="label"
+              >
+                Save
+              </span>
+              <span
+                aria-label="chevron-down"
+                class="dropdownIcon fa fa-chevron-down"
+              />
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="controls"
+    />
+  </nav>
+</header>
+`;

@@ -1,0 +1,10 @@
+@import '../../containers/Application/colors.scss';
+
+$dividerBackgroundColor: $frenchGray;
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: $dividerBackgroundColor;
+    margin: 5px 0;
+}

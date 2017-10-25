@@ -1,0 +1,41 @@
+@import '../../containers/Application/colors.scss';
+
+$folderBackgroundColor: $white;
+$folderBorderColor: $silver;
+$metaFontColor: $silverChalice;
+
+.folder {
+    width: 240px;
+    height: 80px;
+    display: flex;
+    padding: 10px;
+    border: 1px solid $folderBorderColor;
+    border-radius: 3px;
+    cursor: pointer;
+    background: $folderBackgroundColor;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+.title {
+    overflow: hidden;
+    max-height: 35px;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0 0 5px;
+}
+
+.info {
+    font-size: 10px;
+    color: $metaFontColor;
+}
+
+.icon-container {
+    padding: 10px;
+    font-size: 26px;
+}

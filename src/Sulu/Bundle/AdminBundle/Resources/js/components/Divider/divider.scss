@@ -1,0 +1,35 @@
+@import '../../containers/Application/colors.scss';
+
+$dividerBackgroundColor: $silver;
+$dividerMargin: 40px;
+
+.divider {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin: 60px 0;
+
+    &::before,
+    &::after {
+        content: "";
+        display: inline-block;
+        flex: 1;
+        height: 1px;
+        background: $dividerBackgroundColor;
+    }
+
+    &::before {
+        margin-right: $dividerMargin;
+    }
+
+    &::after {
+        margin-left: $dividerMargin;
+    }
+
+    &:empty {
+        &::before,
+        &::after {
+            margin: 0;
+        }
+    }
+}

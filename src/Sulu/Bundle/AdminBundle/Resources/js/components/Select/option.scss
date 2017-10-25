@@ -1,0 +1,55 @@
+@import '../../containers/Application/colors.scss';
+
+$hoverColor: $shakespeare;
+$fontColor: $blueZodiac;
+$fontSize: 12px;
+
+.option {
+    width: 100%;
+    position: relative;
+    padding: 0 20px 0 30px;
+    color: $fontColor;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-size: $fontSize;
+    outline: 0;
+
+    &:not(:disabled):hover {
+        color: $hoverColor;
+    }
+
+    &:disabled {
+        color: rgba($fontColor, .3);
+        cursor: default;
+    }
+
+    &.selected {
+        font-weight: bold;
+    }
+}
+
+.option.icon {
+    line-height: 20px;
+
+    &.selected .icon {
+        position: absolute;
+        left: 10px;
+        line-height: 20px;
+        vertical-align: middle;
+    }
+}
+
+.option.checkbox {
+    line-height: 25px;
+    padding-left: 35px;
+
+    .input {
+        position: absolute;
+        left: 10px;
+        top: 4px;
+        line-height: 20px;
+        vertical-align: middle;
+    }
+}

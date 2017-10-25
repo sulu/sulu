@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render disabled select 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="button"
+    disabled=""
+    value="Chose an option"
+  >
+    <span
+      class="label"
+    >
+      Chose an option
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render loading select 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="button"
+    value="Chose an option"
+  >
+    <div
+      class="spinner loader"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+    <span
+      class="label"
+    >
+      Chose an option
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render select 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="button"
+    value="Chose an option"
+  >
+    <span
+      class="label"
+    >
+      Chose an option
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render select with a different size 1`] = `
+<div
+  class="select small"
+>
+  <button
+    class="button small"
+    value="Chose an option"
+  >
+    <span
+      class="label"
+    >
+      Chose an option
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render select with a prepended icon 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="button"
+    value="Chose an option"
+  >
+    <span
+      aria-label="floppy-o"
+      class="icon fa fa-floppy-o"
+    />
+    <span
+      class="label"
+    >
+      Chose an option
+    </span>
+    <span
+      aria-label="chevron-down"
+      class="dropdownIcon fa fa-chevron-down"
+    />
+  </button>
+</div>
+`;

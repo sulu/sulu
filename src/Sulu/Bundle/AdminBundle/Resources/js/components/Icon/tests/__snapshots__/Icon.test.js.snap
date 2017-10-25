@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon should render 1`] = `
+<span
+  aria-label="save"
+  class="fa fa-save"
+/>
+`;
+
+exports[`Icon should render with class names 1`] = `
+<span
+  aria-label="edit"
+  class="test fa fa-edit"
+/>
+`;
+
+exports[`Icon should render with onClick handler, role and tabindex 1`] = `
+<span
+  aria-label="save"
+  class="test fa fa-save"
+  role="button"
+  tabindex="0"
+/>
+`;

@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
@@ -21,12 +23,16 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
 class AdminController
 {
+    const TRANSLATION_DOMAIN = 'admin';
+
     /**
      * @var AuthorizationCheckerInterface
      */
@@ -58,9 +64,24 @@ class AdminController
     private $serializer;
 
     /**
+     * @var ViewHandlerInterface
+     */
+    private $viewHandler;
+
+    /**
      * @var EngineInterface
      */
     private $engine;
+
+    /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    /**
+     * @var TranslatorBagInterface
+     */
+    private $translator;
 
     /**
      * @var string
@@ -97,11 +118,6 @@ class AdminController
      */
     private $fallbackLocale;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         UrlGeneratorInterface $urlGenerator,
@@ -109,8 +125,10 @@ class AdminController
         AdminPool $adminPool,
         JsConfigPool $jsConfigPool,
         SerializerInterface $serializer,
+        ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         LocalizationManagerInterface $localizationManager,
+        TranslatorBagInterface $translator,
         $environment,
         $adminName,
         array $locales,
@@ -125,7 +143,10 @@ class AdminController
         $this->adminPool = $adminPool;
         $this->jsConfigPool = $jsConfigPool;
         $this->serializer = $serializer;
+        $this->viewHandler = $viewHandler;
         $this->engine = $engine;
+        $this->localizationManager = $localizationManager;
+        $this->translator = $translator;
         $this->environment = $environment;
         $this->adminName = $adminName;
         $this->locales = $locales;
@@ -133,13 +154,14 @@ class AdminController
         $this->translatedLocales = $translatedLocales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
-        $this->localizationManager = $localizationManager;
     }
 
     /**
      * Renders admin ui.
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated Should be replaced with indexV2Action
      */
     public function indexAction()
     {
@@ -176,6 +198,37 @@ class AdminController
                 'config' => $jsConfig,
             ]
         );
+    }
+
+    public function indexV2Action()
+    {
+        return $this->engine->renderResponse('SuluAdminBundle:Admin:main.html.twig');
+    }
+
+    /**
+     * Returns all the configuration for the admin interface.
+     */
+    public function configV2Action(): Response
+    {
+        $view = View::create([
+            'routes' => $this->adminPool->getRoutes(),
+        ]);
+        $view->setFormat('json');
+
+        return $this->viewHandler->handle($view);
+    }
+
+    public function translationsAction(Request $request): Response
+    {
+        $catalogue = $this->translator->getCatalogue($request->query->get('locale'));
+        $fallbackCatalogue = $catalogue->getFallbackCatalogue();
+
+        $translations = $catalogue->all(static::TRANSLATION_DOMAIN);
+        if ($fallbackCatalogue) {
+            $translations = array_replace($fallbackCatalogue->all(static::TRANSLATION_DOMAIN), $translations);
+        }
+
+        return new JsonResponse($translations);
     }
 
     /**

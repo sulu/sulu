@@ -1,0 +1,46 @@
+@import '../../containers/Application/colors.scss';
+
+$borderColor: $silver;
+$iconColor: $dustyGray;
+$iconBorderPadding: 5px;
+$placeholderColor: $dustyGray;
+$borderWidth: 1px;
+$borderRadius: 3px;
+$inputHeight: 30px;
+$inputColor: $black;
+$inputFontSize: 12px;
+
+.input {
+    border: $borderWidth solid $borderColor;
+    border-radius: $borderRadius;
+    display: inline-flex;
+    align-items: center;
+    height: $inputHeight;
+    width: 100%;
+
+    input {
+        flex-grow: 1;
+        border: none;
+        border-radius: $borderRadius;
+        line-height: calc($inputHeight - 2 * $borderWidth);
+        height: calc($inputHeight - 2 * $borderWidth);
+        padding-left: 10px;
+        font-size: $inputFontSize;
+        color: $inputColor;
+
+        &::placeholder {
+            color: $placeholderColor;
+            font-size: $inputFontSize;
+        }
+    }
+}
+
+.icon {
+    display: block;
+    font-size: 14px;
+    flex-grow: 0;
+    color: $iconColor;
+    padding: 0 10px;
+    border-right: $borderWidth solid $borderColor;
+    line-height: calc($inputHeight - 2 * $iconBorderPadding);
+}

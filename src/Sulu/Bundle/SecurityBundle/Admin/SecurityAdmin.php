@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -76,6 +77,15 @@ class SecurityAdmin extends Admin
                     ],
                 ],
             ],
+        ];
+    }
+
+    public function getRoutes(): array
+    {
+        return [
+            (new Route('sulu_security.list', '/roles', 'sulu_admin.list'))
+                ->addOption('title', 'sulu_security.roles')
+                ->addOption('resourceKey', 'roles'),
         ];
     }
 

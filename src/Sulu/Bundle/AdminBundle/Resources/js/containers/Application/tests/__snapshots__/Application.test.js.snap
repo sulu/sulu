@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Application should not fail if current route does not exist 1`] = `
+<div>
+  <header
+    class="toolbar"
+  >
+    <nav
+      class="controlsContainer"
+    >
+      <div
+        class="controls"
+      >
+        <button
+          class="button primary"
+        >
+          <span
+            aria-label="bars"
+            class="icon fa fa-bars"
+          />
+        </button>
+      </div>
+      <div
+        class="controls"
+      />
+    </nav>
+  </header>
+  <main
+    class="main"
+  />
+  <aside />
+</div>
+`;
+
+exports[`Application should render based on current route 1`] = `
+<div>
+  <header
+    class="toolbar"
+  >
+    <nav
+      class="controlsContainer"
+    >
+      <div
+        class="controls"
+      >
+        <button
+          class="button primary"
+        >
+          <span
+            aria-label="bars"
+            class="icon fa fa-bars"
+          />
+        </button>
+      </div>
+      <div
+        class="controls"
+      />
+    </nav>
+  </header>
+  <main
+    class="main"
+  >
+    <div>
+      <h1>
+        Test
+      </h1>
+      <h2>
+        test
+      </h2>
+    </div>
+  </main>
+  <aside />
+</div>
+`;

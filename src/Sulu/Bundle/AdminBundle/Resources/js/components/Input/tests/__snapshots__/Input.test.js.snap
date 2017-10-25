@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input should render 1`] = `
+<label
+  class="input"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render null value as empty string 1`] = `
+<label
+  class="input"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with icon 1`] = `
+<label
+  class="input"
+>
+  <span
+    aria-label="my-icon"
+    class="icon fa fa-my-icon"
+  />
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with placeholder 1`] = `
+<label
+  class="input"
+>
+  <input
+    placeholder="My placeholder"
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with type 1`] = `
+<label
+  class="input"
+>
+  <input
+    type="password"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with value 1`] = `
+<label
+  class="input"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;

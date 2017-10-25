@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in dark skin 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch checkbox dark"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render in light skin 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch checkbox light"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;

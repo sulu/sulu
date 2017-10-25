@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -49,6 +50,15 @@ class TagAdmin extends Admin
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    public function getRoutes(): array
+    {
+        return [
+            (new Route('sulu_tag.list', '/tags', 'sulu_admin.list'))
+                ->addOption('title', 'sulu_tag.tags')
+                ->addOption('resourceKey', 'tags'),
+        ];
     }
 
     /**

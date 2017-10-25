@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in checked state 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch"
+  >
+    <input
+      checked=""
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render in unchecked state 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render with class 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch my-class"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render with name 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch"
+  >
+    <input
+      name="my-name"
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render with radio type 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch my-class"
+  >
+    <input
+      type="radio"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`The component should render without a label container 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch"
+  >
+    <input
+      name="my-name"
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;

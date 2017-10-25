@@ -1,0 +1,30 @@
+@import 'normalize.css/normalize.css';
+@import './colors.scss';
+
+$bodyBackgroundColor: $wildSand;
+$h1TextColor: $blueZodiac;
+
+*,
+*::after,
+*::before {
+    outline: none;
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: $bodyBackgroundColor;
+    font-family: Helvetica, Arial, sans-serif;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+h1 {
+    color: $h1TextColor;
+    margin: 0 0 30px;
+}

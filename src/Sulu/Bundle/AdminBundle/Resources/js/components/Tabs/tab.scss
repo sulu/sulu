@@ -1,0 +1,53 @@
+@import '../../containers/Application/colors.scss';
+
+$tabTextColor: $black;
+$tabUnderlineBackgroundColor: $black;
+$buttonHorizontalPadding: 20px;
+
+.tab {
+    position: relative;
+
+    &::after {
+        content: "";
+        width: calc(100% - $buttonHorizontalPadding * 2);
+        height: 2px;
+        background-color: $tabUnderlineBackgroundColor;
+        position: absolute;
+        left: 20px;
+        bottom: 0;
+        transform: scaleX(0);
+        transition: transform .15s ease-in-out;
+    }
+
+    button {
+        height: 40px;
+        cursor: pointer;
+        padding: 10px $buttonHorizontalPadding;
+        color: $tabTextColor;
+        background-color: transparent;
+        font-size: 12px;
+        border: 0;
+
+        /* Needed because we want to prevent the jump on font-weight changes */
+        &::after {
+            display: block;
+            content: attr(title);
+            font-weight: bold;
+            height: 1px;
+            color: transparent;
+            overflow: hidden;
+            visibility: hidden;
+        }
+    }
+
+    &.selected {
+        button {
+            font-weight: bold;
+            cursor: default;
+        }
+
+        &::after {
+            transform: scaleX(1);
+        }
+    }
+}

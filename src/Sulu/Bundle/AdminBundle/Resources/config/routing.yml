@@ -1,3 +1,18 @@
+sulu_admin_v2:
+    path:  /v2
+    defaults:
+        _controller: sulu_admin.admin_controller:indexV2Action
+
+sulu_admin_v2.config:
+    path: /v2/config
+    defaults:
+        _controller: sulu_admin.admin_controller:configV2Action
+
+sulu_admin_v2.translation:
+    path: /v2/translations
+    defaults:
+        _controller: sulu_admin.admin_controller:translationsAction
+
 sulu_admin:
     path:  /
     defaults:

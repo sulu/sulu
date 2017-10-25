@@ -1,0 +1,28 @@
+@import '../../containers/Application/colors.scss';
+
+$labelTextColor: $scorpion;
+$contentBackgroundColor: $alto;
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 3px 3px 0 0;
+
+    &.empty-list {
+        border-radius: 3px;
+    }
+}
+
+.label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    background-color: $contentBackgroundColor;
+    font-size: 12px;
+    color: $labelTextColor;
+    padding: 0 20px;
+}

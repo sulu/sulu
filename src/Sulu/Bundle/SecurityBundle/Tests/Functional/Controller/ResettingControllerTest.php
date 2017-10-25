@@ -425,7 +425,7 @@ class ResettingControllerTest extends SuluTestCase
         ]);
 
         return [
-            'subject' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.subject'),
+            'subject' => 'Reset your Sulu password',
             'body' => trim($body),
             'sender' => $sender ? $sender : 'no-reply@' . $client->getRequest()->getHost(),
         ];

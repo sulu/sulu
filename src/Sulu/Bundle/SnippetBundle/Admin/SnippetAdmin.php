@@ -12,9 +12,11 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -77,6 +79,42 @@ class SnippetAdmin extends Admin
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes(): array
+    {
+        $snippetLocales = array_values(
+            array_map(
+                function(Localization $localization) {
+                    return $localization->getLocale();
+                },
+                $this->webspaceManager->getAllLocalizations()
+            )
+        );
+
+        return [
+            (new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list'))
+                ->addOption('title', 'sulu_snippet.snippets')
+                ->addOption('resourceKey', 'snippets')
+                ->addOption('editRoute', 'sulu_snippet.form.detail')
+                ->addOption('locales', $snippetLocales),
+            (new Route('sulu_snippet.form', '/snippets/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'snippets'),
+            (new Route('sulu_snippet.form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_snippet.details')
+                ->addOption('backRoute', 'sulu_snippet.list')
+                ->addOption('locales', $snippetLocales)
+                ->setParent('sulu_snippet.form'),
+            (new Route('sulu_snippet.form.taxonomies', '/taxonomies', 'sulu_admin.list'))
+                ->addOption('resourceKey', 'snippets')
+                ->addOption('tabTitle', 'sulu_snippet.taxonomies')
+                ->addOption('backRoute', 'sulu_snippet.list')
+                ->addOption('locales', $snippetLocales)
+                ->setParent('sulu_snippet.form'),
+        ];
     }
 
     /**

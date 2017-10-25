@@ -397,16 +397,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
     * Returns user.
     */
-   private function getUser()
-   {
-       $token = $this->tokenStorage->getToken();
+    private function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
 
-       if (null === $token) {
-           throw new \InvalidArgumentException('No user is set');
-       }
+        if (null === $token) {
+            throw new \InvalidArgumentException('No user is set');
+        }
 
-       return $token->getUser();
-   }
+        return $token->getUser();
+    }
 
     /**
      * Decorate snippet for HATEOAS.
@@ -440,6 +440,14 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     public function getLocale(Request $request)
     {
+        if ($request->query->has('locale')) {
+            return $request->query->get('locale');
+        }
+
+        if ($request->query->has('language')) {
+            @trigger_error('The usage of the "language" parameter in the SnippetController is deprecated. Please use "locale" instead.', E_USER_DEPRECATED);
+        }
+
         return $request->query->get('language', null);
     }
 

@@ -2,9 +2,7 @@ Tests/app/cache
 Tests/app/logs
 Tests/app/data
 composer.lock
-vendor
 
-/node_modules/
 /composer.phar
 /composer.lock
 /.sass-cache/

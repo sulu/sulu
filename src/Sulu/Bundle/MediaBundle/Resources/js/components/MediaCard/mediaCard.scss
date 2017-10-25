@@ -1,0 +1,140 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$mediaCardBorderColor: $alto;
+$headerBackgroundColor: $white;
+$metaInfoTextColor: $silverChalice;
+$coverBackgroundColor: rgba($black, .5);
+$coverIconTextColor: $white;
+$mediaCardBorderRadius: 3px;
+$downloadButtonBackgroundColor: $headerBackgroundColor;
+$downloadButtonBackgroundColorActive: $shakespeare;
+$downloadButtonTextColor: $alto;
+$downloadButtonTextColorActive: $white;
+$downloadButtonBorderColorActive: $shakespeare;
+
+.media-card {
+    width: 260px;
+
+    &:hover,
+    &.selected {
+        .checkbox {
+            margin-left: 0;
+        }
+    }
+}
+
+.header {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+}
+
+.header-click-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.description {
+    width: 100%;
+    padding: 20px;
+    border-bottom: 1px solid $mediaCardBorderColor;
+    border-radius: $mediaCardBorderRadius 0 0 0;
+    background-color: $headerBackgroundColor;
+
+    .no-download-list & {
+        border-radius: $mediaCardBorderRadius $mediaCardBorderRadius 0 0;
+    }
+}
+
+.download-button {
+    width: 32px;
+    height: 100%;
+    border: 0;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: $downloadButtonBackgroundColor;
+    color: $downloadButtonTextColor;
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    border-color: $mediaCardBorderColor;
+    border-radius: 0 $mediaCardBorderRadius 0 0;
+
+    &:hover,
+    &.active {
+        background-color: $downloadButtonBackgroundColorActive;
+        color: $downloadButtonTextColorActive;
+        border-color: $downloadButtonBackgroundColorActive;
+    }
+}
+
+.checkbox {
+    margin-left: -26px;
+    transition: margin-left .15s linear;
+}
+
+.title {
+    pointer-events: none; /* We don't want the label/title to trigger an "onClick" event */
+    position: relative;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.title-text {
+    width: 160px;
+}
+
+.meta {
+    color: $metaInfoTextColor;
+    font-size: 10px;
+}
+
+.media {
+    position: relative;
+    cursor: pointer;
+    background-image: url("./checkerBackground.gif");
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        display: block;
+        transform: scale(1);
+        transition: transform .2s linear;
+        border-radius: 0 0 $mediaCardBorderRadius $mediaCardBorderRadius;
+    }
+
+    &:hover,
+    .show-cover & {
+        .cover {
+            opacity: 1;
+        }
+
+        img {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-color: $coverBackgroundColor;
+    transition: opacity .2s linear;
+}
+
+.media-icon {
+    display: flex;
+    color: $coverIconTextColor;
+    font-size: 20px;
+}

@@ -1,0 +1,45 @@
+@import '../../containers/Application/colors.scss';
+
+$radius: 8px;
+$primaryColor: $blueZodiac;
+$secondaryColor: $white;
+
+.radio {
+    width: calc(2 * $radius);
+    height: calc(2 * $radius);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input + span {
+        border-radius: 50%;
+    }
+}
+
+.radio.dark {
+    border: 1px solid $primaryColor;
+
+    input + span {
+        width: calc(2 * $radius - 2px);
+        height: calc(2 * $radius - 2px);
+    }
+
+    input:checked + span {
+        border: 3px solid $primaryColor;
+    }
+}
+
+.radio.light {
+    border: 2px solid $secondaryColor;
+
+    input + span {
+        width: calc(2 * $radius - 4px);
+        height: calc(2 * $radius - 4px);
+    }
+
+    input:checked + span {
+        border: 1px solid $secondaryColor;
+        background: $primaryColor;
+    }
+}

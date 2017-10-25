@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CroppedText should render 1`] = `
+<div
+  aria-label="This is a text which will get cropped."
+  class="croppedText"
+  title="This is a text which will get cropped."
+>
+  <div
+    aria-hidden="true"
+    class="front"
+  >
+    This is a text whic
+  </div>
+  <div
+    aria-hidden="true"
+    class="back"
+  >
+    <span>
+      h will get cropped.
+    </span>
+  </div>
+  <div
+    class="whole"
+  >
+    This is a text which will get cropped.
+  </div>
+</div>
+`;

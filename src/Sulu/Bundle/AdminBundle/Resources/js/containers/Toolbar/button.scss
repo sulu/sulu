@@ -1,0 +1,92 @@
+@import '../Application/colors.scss';
+
+$buttonTextColor: $blueZodiac;
+$buttonTextColorActive: $shakespeare;
+$buttonTextColorDisabled: $silver;
+$buttonActiveBackgroundColor: $wildSand;
+$primaryTextColor: $white;
+$primaryBackgroundColor: $shakespeare;
+
+.button {
+    display: block;
+    min-width: 60px;
+    position: relative;
+    padding: 0 20px;
+    border: none;
+    height: 60px;
+    background-color: transparent;
+    color: $buttonTextColor;
+    font-size: 12px;
+    cursor: pointer;
+
+    &:disabled {
+        color: $buttonTextColorDisabled;
+        cursor: default;
+    }
+
+    &:not(:disabled) {
+        &:hover,
+        &.active {
+            color: $buttonTextColorActive;
+            background-color: $buttonActiveBackgroundColor;
+        }
+
+        &.active {
+            z-index: 2;
+        }
+    }
+
+    &.small {
+        padding: 0;
+
+        .dropdown-icon {
+            position: absolute;
+            left: 50%;
+            bottom: 8px;
+            margin-left: -6px;
+            padding: 0;
+        }
+    }
+
+    &.primary,
+    &.primary:hover {
+        color: $primaryTextColor;
+        background-color: $primaryBackgroundColor;
+    }
+}
+
+.icon {
+    vertical-align: middle;
+    font-size: 20px;
+
+    & + .label {
+        padding: 0 0 0 10px;
+    }
+
+    .loader ~ & {
+        visibility: hidden;
+    }
+}
+
+.label {
+    vertical-align: middle;
+
+    .loader ~ & {
+        visibility: hidden;
+    }
+}
+
+.dropdown-icon {
+    padding: 0 0 0 10px;
+
+    .loader ~ & {
+        visibility: hidden;
+    }
+}
+
+.loader {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+}

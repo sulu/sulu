@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pass props to rendered component 1`] = `
+<h1>
+  Test
+</h1>
+`;
