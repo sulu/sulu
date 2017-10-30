@@ -51,7 +51,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             $defaultSession = $config['default_session'];
         }
 
-        if (!$preview && $context === SuluKernel::CONTEXT_WEBSITE) {
+        if (!$preview && SuluKernel::CONTEXT_WEBSITE === $context) {
             $defaultSession = $liveSession;
         }
 
@@ -171,13 +171,13 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $container->setParameter(
             'sulu_document_manager.show_drafts',
-            $container->getParameter('sulu.context') === SuluKernel::CONTEXT_ADMIN
+            SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
             || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
         );
 
         $container->setParameter(
             'sulu_document_manager.show_drafts',
-            $container->getParameter('sulu.context') === SuluKernel::CONTEXT_ADMIN
+            SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
             || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
         );
     }

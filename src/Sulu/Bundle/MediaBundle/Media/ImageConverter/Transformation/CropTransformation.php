@@ -31,7 +31,7 @@ class CropTransformation implements TransformationInterface
             'CropTransformation is deprecated since version 1.4. Use the scale config instead',
             E_USER_DEPRECATED
         );
-        $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
+        $retina = isset($parameters['retina']) && 'false' != $parameters['retina'] ? 2 : 1;
         $x = isset($parameters['x']) ? intval($parameters['x']) * $retina : 0;
         $y = isset($parameters['y']) ? intval($parameters['y']) * $retina : 0;
         $width = isset($parameters['w']) ? intval($parameters['w']) : 0;

@@ -20,7 +20,7 @@ class Navigation
 
     public function __construct(NavigationItem $root = null)
     {
-        if ($root == null) {
+        if (null == $root) {
             $root = new NavigationItem('');
         }
         $this->root = $root;

@@ -65,7 +65,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     {
         $webspaceSitemapInformation = $this->getWebspaceSitemap($webspaceKey);
         $sitemap = $this->generateByLocals($webspaceKey, [$locale], $flat);
-        if (count($sitemap) === 1 && !$flat) {
+        if (1 === count($sitemap) && !$flat) {
             $sitemap = $sitemap[0];
         }
         $webspaceSitemapInformation->setSitemap(

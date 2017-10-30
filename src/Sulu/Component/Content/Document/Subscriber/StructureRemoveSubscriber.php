@@ -129,7 +129,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
             $referrer = $reference->getParent();
             $metadata = $this->metadataFactory->getMetadataForPhpcrNode($referrer);
 
-            if ($metadata->getClass() === RouteDocument::class) {
+            if (RouteDocument::class === $metadata->getClass()) {
                 continue;
             }
 

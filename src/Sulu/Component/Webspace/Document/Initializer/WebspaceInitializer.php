@@ -101,6 +101,7 @@ class WebspaceInitializer implements InitializerInterface
         foreach ($webspaceLocales as $webspaceLocale) {
             if (in_array($webspaceLocale, $existingLocales)) {
                 $output->writeln(sprintf('  [ ] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
+
                 continue;
             }
 
@@ -124,6 +125,7 @@ class WebspaceInitializer implements InitializerInterface
             $this->documentManager->publish($homeDocument, $webspaceLocale);
 
             $routePath = $routesPath . '/' . $webspaceLocale;
+
             try {
                 $routeDocument = $this->documentManager->find($routePath);
             } catch (DocumentNotFoundException $e) {

@@ -133,7 +133,7 @@ class MediaControllerTest extends SuluTestCase
             }
         }
 
-        if ($counter != 0) {
+        if (0 != $counter) {
             rmdir($directory);
         }
     }
@@ -237,15 +237,15 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = new Media();
 
-        if ($type === 'image') {
+        if ('image' === $type) {
             $media->setType($this->imageType);
             $extension = 'jpeg';
             $mimeType = 'image/jpg';
-        } elseif ($type === 'audio') {
+        } elseif ('audio' === $type) {
             $media->setType($this->audioType);
             $extension = 'mp3';
             $mimeType = 'audio/mp3';
-        } elseif ($type === 'video') {
+        } elseif ('video' === $type) {
             $media->setType($this->videoType);
             $extension = 'mp4';
             $mimeType = 'video/mp4';

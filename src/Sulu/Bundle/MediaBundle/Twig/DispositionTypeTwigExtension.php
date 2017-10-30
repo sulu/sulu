@@ -43,9 +43,9 @@ class DispositionTypeTwigExtension extends \Twig_Extension
     {
         $url = $media->getUrl();
 
-        if ($dispositionType === ResponseHeaderBag::DISPOSITION_INLINE) {
+        if (ResponseHeaderBag::DISPOSITION_INLINE === $dispositionType) {
             $url .= (false === strpos($url, '?') ? '?inline=1' : '&inline=1');
-        } elseif ($dispositionType === ResponseHeaderBag::DISPOSITION_ATTACHMENT) {
+        } elseif (ResponseHeaderBag::DISPOSITION_ATTACHMENT === $dispositionType) {
             $url .= (false === strpos($url, '?') ? '?inline=0' : '&inline=0');
         }
 

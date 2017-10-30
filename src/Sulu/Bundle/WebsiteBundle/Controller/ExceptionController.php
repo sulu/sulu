@@ -83,13 +83,13 @@ class ExceptionController
         if ($webspace = $this->requestAnalyzer->getWebspace()) {
             $template = $webspace->getTemplate('error-' . $code);
 
-            if ($template === null) {
+            if (null === $template) {
                 $template = $webspace->getTemplate('error');
             }
         }
 
         $showException = $request->attributes->get('showException', $this->debug);
-        if ($showException || $request->getRequestFormat() !== 'html' || $template === null) {
+        if ($showException || 'html' !== $request->getRequestFormat() || null === $template) {
             return $this->exceptionController->showAction($request, $exception, $logger);
         }
 

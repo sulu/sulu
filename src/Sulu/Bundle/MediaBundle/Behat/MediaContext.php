@@ -160,7 +160,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
 
         $fields = $this->getSession()->getPage()->findAll('css', 'input[type="file"]');
 
-        if (count($fields) == 0) {
+        if (0 == count($fields)) {
             throw new ElementNotFoundException($this->getSession(), 'drop-zone upload field');
         }
 

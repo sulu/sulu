@@ -67,6 +67,7 @@ class ContentInitializer implements InitializerInterface
         ] as $prefix => $uri) {
             if (in_array($prefix, $existingPrefixes)) {
                 $output->writeln(sprintf('  [ ] %s:%s', $prefix, $uri));
+
                 continue;
             }
 

@@ -59,7 +59,7 @@ class RecoverCommand extends ContainerAwareCommand
         $success = false;
 
         // fix nested tree
-        if ($verify !== true) {
+        if (true !== $verify) {
             $output->writeln(sprintf('<comment>%s errors were found.</comment>', count($verify)));
 
             if ($force) {
@@ -110,7 +110,7 @@ class RecoverCommand extends ContainerAwareCommand
             $output->writeln(sprintf('Call this command with <info>--force</info> option to perform recovery.'));
         }
 
-        if ($success === true) {
+        if (true === $success) {
             $output->writeln('<info>Recovery complete<info>');
         }
     }

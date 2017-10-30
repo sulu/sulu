@@ -73,11 +73,11 @@ class LocaleSubscriber implements EventSubscriberInterface
 
         $localizationState = $this->documentInspector->getLocalizationState($document);
 
-        if ($localizationState === LocalizationState::GHOST) {
+        if (LocalizationState::GHOST === $localizationState) {
             $visitor->addData('type', ['name' => 'ghost', 'value' => $document->getLocale()]);
         }
 
-        if ($localizationState === LocalizationState::SHADOW) {
+        if (LocalizationState::SHADOW === $localizationState) {
             $visitor->addData('type', ['name' => 'shadow', 'value' => $document->getLocale()]);
         }
     }

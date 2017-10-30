@@ -67,7 +67,7 @@ class Memoize implements MemoizeInterface
     public function memoizeById($id, $arguments, $compute, $lifeTime = null)
     {
         // determine lifetime
-        if ($lifeTime === null) {
+        if (null === $lifeTime) {
             $lifeTime = $this->defaultLifeTime;
         }
 

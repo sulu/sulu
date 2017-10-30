@@ -78,7 +78,7 @@ class Scaler implements ScalerInterface
         // if image is smaller keep ratio
         // e.g. when a square image is requested (200x200) and the original image is smaller (150x100)
         //      it still returns a squared image (100x100)
-        if ($mode === ImageInterface::THUMBNAIL_OUTBOUND && $forceRatio) {
+        if (ImageInterface::THUMBNAIL_OUTBOUND === $mode && $forceRatio) {
             if ($newWidth > $size->getWidth()) {
                 list($newHeight, $newWidth) = $this->getSizeInSameRatio(
                     $newHeight,

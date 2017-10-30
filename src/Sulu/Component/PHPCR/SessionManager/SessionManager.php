@@ -58,7 +58,7 @@ class SessionManager implements SessionManagerInterface
             $webspaceKey,
             $this->nodeNames['route'],
             $languageCode,
-            ($segment !== null ? '/' . $segment : '')
+            (null !== $segment ? '/' . $segment : '')
         );
 
         return $path;

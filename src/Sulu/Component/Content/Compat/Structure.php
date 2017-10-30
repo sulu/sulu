@@ -457,7 +457,7 @@ abstract class Structure implements StructureInterface
     {
         $result = $this->findProperty($name);
 
-        if ($result !== null) {
+        if (null !== $result) {
             return $result;
         } elseif (isset($this->properties[$name])) {
             return $this->properties[$name];
@@ -479,7 +479,7 @@ abstract class Structure implements StructureInterface
     public function getPropertyByTagName($tagName, $highest = true)
     {
         if (array_key_exists($tagName, $this->tags)) {
-            return $this->tags[$tagName][$highest === true ? 'highest' : 'lowest'];
+            return $this->tags[$tagName][true === $highest ? 'highest' : 'lowest'];
         } else {
             throw new NoSuchPropertyException($tagName);
         }
@@ -536,7 +536,7 @@ abstract class Structure implements StructureInterface
      */
     public function hasProperty($name)
     {
-        return $this->findProperty($name) !== null;
+        return null !== $this->findProperty($name);
     }
 
     /**
@@ -596,7 +596,7 @@ abstract class Structure implements StructureInterface
      */
     public function getPublishedState()
     {
-        return $this->nodeState === StructureInterface::STATE_PUBLISHED;
+        return StructureInterface::STATE_PUBLISHED === $this->nodeState;
     }
 
     /**
@@ -684,7 +684,7 @@ abstract class Structure implements StructureInterface
      */
     public function getProperties($flatten = false)
     {
-        if ($flatten === false) {
+        if (false === $flatten) {
             return $this->properties;
         } else {
             $result = [];
@@ -764,8 +764,8 @@ abstract class Structure implements StructureInterface
     public function getNodeName()
     {
         if (
-            $this->getNodeType() === self::NODE_TYPE_INTERNAL_LINK &&
-            $this->getInternalLinkContent() !== null &&
+            self::NODE_TYPE_INTERNAL_LINK === $this->getNodeType() &&
+            null !== $this->getInternalLinkContent() &&
             $this->getInternalLinkContent()->hasProperty('title')
         ) {
             return $this->internalLinkContent->getPropertyValue('title');
@@ -843,7 +843,7 @@ abstract class Structure implements StructureInterface
      */
     public function __isset($property)
     {
-        if ($this->findProperty($property) !== null) {
+        if (null !== $this->findProperty($property)) {
             return true;
         } else {
             return isset($this->$property);
@@ -876,13 +876,13 @@ abstract class Structure implements StructureInterface
                 'changed' => $this->changed,
             ];
 
-            if ($this->type !== null) {
+            if (null !== $this->type) {
                 $result['type'] = $this->getType()->toArray();
             }
 
-            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+            if (self::NODE_TYPE_INTERNAL_LINK === $this->nodeType) {
                 $result['linked'] = 'internal';
-            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+            } elseif (self::NODE_TYPE_EXTERNAL_LINK === $this->nodeType) {
                 $result['linked'] = 'external';
             }
 
@@ -900,13 +900,13 @@ abstract class Structure implements StructureInterface
                 'title' => $this->getProperty('title')->toArray(),
             ];
 
-            if ($this->type !== null) {
+            if (null !== $this->type) {
                 $result['type'] = $this->getType()->toArray();
             }
 
-            if ($this->nodeType === self::NODE_TYPE_INTERNAL_LINK) {
+            if (self::NODE_TYPE_INTERNAL_LINK === $this->nodeType) {
                 $result['linked'] = 'internal';
-            } elseif ($this->nodeType === self::NODE_TYPE_EXTERNAL_LINK) {
+            } elseif (self::NODE_TYPE_EXTERNAL_LINK === $this->nodeType) {
                 $result['linked'] = 'external';
             }
 

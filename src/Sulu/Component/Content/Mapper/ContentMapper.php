@@ -178,7 +178,7 @@ class ContentMapper implements ContentMapperInterface
             ]
         );
 
-        if ($document === null) {
+        if (null === $document) {
             throw new TranslatedNodeNotFoundException($uuid, $locale);
         }
 
@@ -245,7 +245,7 @@ class ContentMapper implements ContentMapperInterface
 
         if ($flat) {
             foreach ($children as $child) {
-                if ($depth === null || $depth > 1) {
+                if (null === $depth || $depth > 1) {
                     $childChildren = $this->loadByParent(
                         $child->getUuid(),
                         $webspaceKey,
@@ -642,7 +642,7 @@ class ContentMapper implements ContentMapperInterface
             foreach ($queryResult->getRows() as $row) {
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
-                if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
+                if (null === $maxDepth || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
                     $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished);
 
                     if (false === $item || in_array($item, $result)) {
@@ -686,7 +686,7 @@ class ContentMapper implements ContentMapperInterface
         if ($document instanceof RedirectTypeBehavior) {
             $redirectType = $document->getRedirectType();
 
-            if ($redirectType === RedirectType::INTERNAL) {
+            if (RedirectType::INTERNAL === $redirectType) {
                 $target = $document->getRedirectTarget();
 
                 if ($target) {
@@ -697,7 +697,7 @@ class ContentMapper implements ContentMapperInterface
                 }
             }
 
-            if ($redirectType === RedirectType::EXTERNAL) {
+            if (RedirectType::EXTERNAL === $redirectType) {
                 $url = $document->getRedirectExternal();
             }
         }
@@ -713,7 +713,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // if page is not piblished ignore it
-        if ($onlyPublished && $nodeState !== WorkflowStage::PUBLISHED) {
+        if ($onlyPublished && WorkflowStage::PUBLISHED !== $nodeState) {
             return false;
         }
 
@@ -742,7 +742,7 @@ class ContentMapper implements ContentMapperInterface
             'changed' => $document->getChanged(),
             'changer' => $document->getChanger(),
             'created' => $document->getCreated(),
-            'publishedState' => $nodeState === WorkflowStage::PUBLISHED,
+            'publishedState' => WorkflowStage::PUBLISHED === $nodeState,
             'published' => $document->getPublished(),
             'creator' => $document->getCreator(),
             'title' => $originalDocument->getTitle(),
@@ -797,7 +797,7 @@ class ContentMapper implements ContentMapperInterface
             if (!isset($target[$field['name']])) {
                 $target[$field['name']] = '';
             }
-            if (($data = $this->getFieldData(
+            if (null !== ($data = $this->getFieldData(
                     $field,
                     $row,
                     $node,
@@ -805,7 +805,7 @@ class ContentMapper implements ContentMapperInterface
                     $templateKey,
                     $webspaceKey,
                     $locale
-                )) !== null
+                ))
             ) {
                 $target[$field['name']] = $data;
             }
@@ -913,7 +913,7 @@ class ContentMapper implements ContentMapperInterface
 
     private function optionsShouldExcludeDocument($document, array $options = null)
     {
-        if ($options === null) {
+        if (null === $options) {
             return false;
         }
 
@@ -927,11 +927,11 @@ class ContentMapper implements ContentMapperInterface
 
         $state = $this->inspector->getLocalizationState($document);
 
-        if ($options['exclude_ghost'] && $state == LocalizationState::GHOST) {
+        if ($options['exclude_ghost'] && LocalizationState::GHOST == $state) {
             return true;
         }
 
-        if ($options['exclude_ghost'] && $options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
+        if ($options['exclude_ghost'] && $options['exclude_shadow'] && LocalizationState::SHADOW == $state) {
             return true;
         }
 

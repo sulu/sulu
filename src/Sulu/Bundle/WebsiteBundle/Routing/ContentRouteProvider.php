@@ -95,9 +95,9 @@ class ContentRouteProvider implements RouteProviderInterface
         $matchType = $attributes->getAttribute('matchType');
 
         // no portal information without localization supported
-        if ($attributes->getAttribute('localization') === null
-            && $matchType !== RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
-            && $matchType !== RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+        if (null === $attributes->getAttribute('localization')
+            && RequestAnalyzerInterface::MATCH_TYPE_PARTIAL !== $matchType
+            && RequestAnalyzerInterface::MATCH_TYPE_REDIRECT !== $matchType
         ) {
             return $collection;
         }
@@ -110,8 +110,8 @@ class ContentRouteProvider implements RouteProviderInterface
                         && in_array($request->getRequestFormat(), ['htm', 'html']);
 
         if ($htmlRedirect
-            || $matchType == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
-            || $matchType == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+            || RequestAnalyzerInterface::MATCH_TYPE_REDIRECT == $matchType
+            || RequestAnalyzerInterface::MATCH_TYPE_PARTIAL == $matchType
         ) {
             return $collection;
         }
@@ -148,7 +148,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 // redirect page to page without slash at the end
                 $url = $prefix . rtrim($resourceLocator, '/');
                 $collection->add('redirect_' . uniqid(), $this->getRedirectRoute($request, $url));
-            } elseif ($document->getRedirectType() === RedirectType::INTERNAL) {
+            } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
                 // redirect internal link
                 $redirectUrl = $prefix . $document->getRedirectTarget()->getResourceSegment();
 
@@ -160,7 +160,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     $document->getStructureType() . '_' . $document->getUuid(),
                     $this->getRedirectRoute($request, $redirectUrl)
                 );
-            } elseif ($document->getRedirectType() === RedirectType::EXTERNAL) {
+            } elseif (RedirectType::EXTERNAL === $document->getRedirectType()) {
                 $collection->add(
                     $document->getStructureType() . '_' . $document->getUuid(),
                     $this->getRedirectRoute($request, $document->getRedirectExternal())
@@ -231,7 +231,7 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private function checkResourceLocator($resourceLocator, $resourceLocatorPrefix)
     {
-        return !($resourceLocator === '/' && $resourceLocatorPrefix);
+        return !('/' === $resourceLocator && $resourceLocatorPrefix);
     }
 
     /**
@@ -265,7 +265,7 @@ class ContentRouteProvider implements RouteProviderInterface
             [
                 '_controller' => $content->getController(),
                 'structure' => $content,
-                'partial' => $request->get('partial', 'false') === 'true',
+                'partial' => 'true' === $request->get('partial', 'false'),
             ]
         );
     }

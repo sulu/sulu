@@ -41,7 +41,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
             return false;
         }
 
-        return $internalNode->nodeValue === 'true';
+        return 'true' === $internalNode->nodeValue;
     }
 
     /**
@@ -69,29 +69,29 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
         $scale = null;
 
         $formatScaleNode = $this->xpath->query('x:scale', $formatNode)->item(0);
-        if ($formatScaleNode !== null) {
+        if (null !== $formatScaleNode) {
             $xNode = $this->xpath->query('@x', $formatScaleNode)->item(0);
             $yNode = $this->xpath->query('@y', $formatScaleNode)->item(0);
             $modeNode = $this->xpath->query('@mode', $formatScaleNode)->item(0);
             $retinaNode = $this->xpath->query('@retina', $formatScaleNode)->item(0);
             $forceRatioNode = $this->xpath->query('@forceRatio', $formatScaleNode)->item(0);
-            if ($xNode === null && $yNode === null) {
+            if (null === $xNode && null === $yNode) {
                 throw new MissingScaleDimensionException();
             }
 
             $forceRatio = static::SCALE_FORCE_RATIO_DEFAULT;
             $retina = static::SCALE_RETINA_DEFAULT;
-            if ($forceRatioNode !== null && $forceRatioNode->nodeValue === 'false') {
+            if (null !== $forceRatioNode && 'false' === $forceRatioNode->nodeValue) {
                 $forceRatio = false;
             }
-            if ($retinaNode !== null && $retinaNode->nodeValue === 'true') {
+            if (null !== $retinaNode && 'true' === $retinaNode->nodeValue) {
                 $retina = false;
             }
 
             $scale = [
-                'x' => ($xNode !== null) ? intval($xNode->nodeValue) : null,
-                'y' => ($yNode !== null) ? intval($yNode->nodeValue) : null,
-                'mode' => ($modeNode !== null) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
+                'x' => (null !== $xNode) ? intval($xNode->nodeValue) : null,
+                'y' => (null !== $yNode) ? intval($yNode->nodeValue) : null,
+                'mode' => (null !== $modeNode) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
                 'retina' => $retina,
                 'forceRatio' => $forceRatio,
             ];

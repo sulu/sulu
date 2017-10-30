@@ -579,6 +579,7 @@ if (el !== null) {
 EOT;
 
             $script = sprintf($script, $parentSelector, $propertyName, $name, $value);
+
             try {
                 $this->getSession()->executeScript($script);
 

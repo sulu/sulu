@@ -2370,7 +2370,7 @@ class ContactControllerTest extends SuluTestCase
     public function sortAddressesPrimaryLast()
     {
         return function ($a, $b) {
-            if ($a->primaryAddress === true && $b->primaryAddress === false) {
+            if (true === $a->primaryAddress && false === $b->primaryAddress) {
                 return true;
             }
 

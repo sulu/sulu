@@ -73,7 +73,7 @@ class ResettingController extends Controller
         try {
             /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
-            if ($generateNewKey === true) {
+            if (true === $generateNewKey) {
                 $this->generateTokenForUser($user);
             }
             $email = $this->getEmail($user);
@@ -150,7 +150,7 @@ class ResettingController extends Controller
         $constraint = new EmailConstraint();
         $result = $this->get('validator')->validate($email, $constraint);
 
-        return count($result) === 0;
+        return 0 === count($result);
     }
 
     /**
@@ -215,7 +215,7 @@ class ResettingController extends Controller
      */
     private function getEmail(UserInterface $user)
     {
-        if ($user->getEmail() !== null) {
+        if (null !== $user->getEmail()) {
             return $user->getEmail();
         }
 
@@ -322,7 +322,7 @@ class ResettingController extends Controller
      */
     private function sendTokenEmail(UserInterface $user, $from, $to)
     {
-        if ($user->getPasswordResetToken() === null) {
+        if (null === $user->getPasswordResetToken()) {
             throw new NoTokenFoundException($user);
         }
 
@@ -354,7 +354,7 @@ class ResettingController extends Controller
      */
     private function changePassword(UserInterface $user, $password)
     {
-        if ($password === '') {
+        if ('' === $password) {
             throw new MissingPasswordException();
         }
         $em = $this->getDoctrine()->getManager();
@@ -373,7 +373,7 @@ class ResettingController extends Controller
     private function generateTokenForUser(UserInterface $user)
     {
         // if a token was already requested within the request interval time frame
-        if ($user->getPasswordResetToken() !== null
+        if (null !== $user->getPasswordResetToken()
             && $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())) {
             throw new TokenAlreadyRequestedException(self::getRequestInterval());
         }
@@ -398,7 +398,7 @@ class ResettingController extends Controller
      */
     private function dateIsInRequestFrame(\DateTime $date)
     {
-        if ($date === null) {
+        if (null === $date) {
             return false;
         }
 

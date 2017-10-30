@@ -96,7 +96,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
         if (
             false === $reflection->isSubclassOf(FileVersionMeta::class)
-            && $metadata->getName() !== FileVersionMeta::class) {
+            && FileVersionMeta::class !== $metadata->getName()) {
             return;
         }
 

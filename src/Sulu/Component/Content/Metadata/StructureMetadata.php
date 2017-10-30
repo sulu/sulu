@@ -116,6 +116,7 @@ class StructureMetadata extends ItemMetadata
         foreach ($this->children as $child) {
             if ($child instanceof SectionMetadata) {
                 $properties = array_merge($properties, $child->getChildren());
+
                 continue;
             }
 

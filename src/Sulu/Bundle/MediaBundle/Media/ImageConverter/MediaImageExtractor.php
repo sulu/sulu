@@ -56,15 +56,15 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         $finfo = new \finfo();
         $mimeType = $finfo->buffer($content, FILEINFO_MIME_TYPE);
 
-        if ($mimeType === 'application/pdf') {
+        if ('application/pdf' === $mimeType) {
             return $this->convertPdfToImage($content);
         }
 
-        if ($mimeType === 'image/vnd.adobe.photoshop') {
+        if ('image/vnd.adobe.photoshop' === $mimeType) {
             return $this->convertPsdToImage($content);
         }
 
-        if ($mimeType === 'image/svg+xml') {
+        if ('image/svg+xml' === $mimeType) {
             return $this->convertSvgToImage($content);
         }
 
@@ -129,6 +129,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             return $image->get('png');
         } catch (RuntimeException $e) {
             unlink($temporaryFilePath);
+
             throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
     }

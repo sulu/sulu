@@ -109,7 +109,7 @@ class PropertyParameter implements \JsonSerializable
      */
     public function hasTitle($languageCode)
     {
-        return $this->metadata->get('title', $languageCode) !== null;
+        return null !== $this->metadata->get('title', $languageCode);
     }
 
     /**

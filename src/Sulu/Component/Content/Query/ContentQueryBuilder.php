@@ -131,14 +131,14 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
 
             $customSelect = $this->buildSelect($webspaceKey, $locale, $additionalFields);
-            if ($customSelect !== '') {
+            if ('' !== $customSelect) {
                 $select[] = $customSelect;
             }
 
             if ($this->published) {
                 $where .= sprintf(
                     '%s ((page.[%s] = %s OR page.[%s] = %s)',
-                    $where !== '' ? 'OR ' : '',
+                    '' !== $where ? 'OR ' : '',
                     $this->getPropertyName('state'),
                     Structure::STATE_PUBLISHED,
                     $this->getPropertyName('shadow-on'),
@@ -147,8 +147,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
 
             $customWhere = $this->buildWhere($webspaceKey, $locale);
-            if ($customWhere !== null && $customWhere !== '') {
-                $where = $where . ($where !== '' ? ' AND ' : '') . $customWhere;
+            if (null !== $customWhere && '' !== $customWhere) {
+                $where = $where . ('' !== $where ? ' AND ' : '') . $customWhere;
             }
 
             if ($this->published) {
@@ -242,7 +242,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $urlProperty = $structure->getPropertyByTagName('sulu.rlp');
             $name = $this->getTranslatedProperty($urlProperty, $locale)->getName();
 
-            if ($urlProperty->getContentTypeName() !== 'resource_locator' && !in_array($name, $names)) {
+            if ('resource_locator' !== $urlProperty->getContentTypeName() && !in_array($name, $names)) {
                 $names[] = $name;
                 $result .= ', ' . $this->buildSelector($name);
             }

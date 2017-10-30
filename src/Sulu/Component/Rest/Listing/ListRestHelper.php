@@ -128,7 +128,7 @@ class ListRestHelper
         $page = $this->getRequest()->get('page', 1);
         $limit = $this->getRequest()->get('limit');
 
-        return ($limit != null) ? $limit * ($page - 1) : null;
+        return (null != $limit) ? $limit * ($page - 1) : null;
     }
 
     /**
@@ -179,7 +179,7 @@ class ListRestHelper
     {
         $fields = $this->getRequest()->get('fields');
 
-        return ($fields != null) ? explode(',', $fields) : null;
+        return (null != $fields) ? explode(',', $fields) : null;
     }
 
     /**
@@ -201,7 +201,7 @@ class ListRestHelper
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return ($searchFields != null) ? explode(',', $searchFields) : [];
+        return (null != $searchFields) ? explode(',', $searchFields) : [];
     }
 
     /**

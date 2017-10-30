@@ -2646,7 +2646,7 @@ class ContentMapperTest extends SuluTestCase
         }
 
         $this->documentManager->persist($document, $locale, $persistOptions);
-        if ($state == WorkflowStage::PUBLISHED) {
+        if (WorkflowStage::PUBLISHED == $state) {
             $this->documentManager->publish($document, $locale);
         }
         $this->documentManager->flush();

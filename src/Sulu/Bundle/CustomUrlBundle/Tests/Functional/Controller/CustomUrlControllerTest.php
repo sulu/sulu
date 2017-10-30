@@ -121,14 +121,14 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode($statusCode, $response);
 
-        if ($statusCode !== 200) {
+        if (200 !== $statusCode) {
             $this->assertEquals($restErrorCode, $responseData['code']);
 
             return;
         }
 
         foreach ($data as $key => $value) {
-            if ($key === 'targetDocument') {
+            if ('targetDocument' === $key) {
                 $this->assertEquals($value['uuid'], $responseData[$key]['id'], $key);
             } else {
                 $this->assertEquals($value, $responseData[$key], $key);
@@ -520,14 +520,14 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode($statusCode, $response);
 
-        if ($statusCode !== 200) {
+        if (200 !== $statusCode) {
             $this->assertEquals($restErrorCode, $responseData['code']);
 
             return;
         }
 
         foreach ($data as $key => $value) {
-            if ($key === 'targetDocument') {
+            if ('targetDocument' === $key) {
                 $this->assertEquals($value['uuid'], $responseData[$key]['id'], $key);
             } else {
                 $this->assertEquals($value, $responseData[$key], $key);
@@ -602,7 +602,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         foreach ($data as $key => $value) {
-            if ($key === 'targetDocument') {
+            if ('targetDocument' === $key) {
                 $this->assertEquals($value['uuid'], $responseData[$key]['id'], $key);
             } else {
                 $this->assertEquals($value, $responseData[$key], $key);

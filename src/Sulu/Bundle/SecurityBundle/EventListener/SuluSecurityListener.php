@@ -63,7 +63,7 @@ class SuluSecurityListener
                 $permission = PermissionTypes::VIEW;
                 break;
             case 'POST':
-                if ($controllerDefinition[1] == 'postAction') { // means that the ClassResourceInterface has to be used
+                if ('postAction' == $controllerDefinition[1]) { // means that the ClassResourceInterface has to be used
                     $permission = PermissionTypes::ADD;
                 } else {
                     $permission = PermissionTypes::EDIT;
@@ -93,7 +93,7 @@ class SuluSecurityListener
             $securityContext = $controller->getSecurityContext();
         }
 
-        if ($securityContext !== null) {
+        if (null !== $securityContext) {
             $this->securityChecker->checkPermission(
                 new SecurityCondition($securityContext, $locale, $objectType, $objectId),
                 $permission
