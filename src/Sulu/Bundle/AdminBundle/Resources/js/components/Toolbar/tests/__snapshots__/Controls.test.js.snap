@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render controls 1`] = `
+<div
+  class="controls"
+/>
+`;
+
+exports[`Render controls with children 1`] = `
+<div
+  class="controls"
+>
+  <button
+    class="button"
+  >
+    <span
+      class="label"
+    >
+      Test
+    </span>
+  </button>
+</div>
+`;

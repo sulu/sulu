@@ -2,9 +2,7 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import Icon from '../../components/Icon';
-import Button from './Button';
-import Dropdown from './Dropdown';
-import Select from './Select';
+import Toolbar from '../../components/Toolbar';
 import ToolbarStore from './stores/ToolbarStore';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
@@ -20,25 +18,25 @@ const ToolbarItemTypes = {
     Dropdown: 'dropdown',
 };
 
-function getItemComponentByType(itemConfig) {
+function getItemComponentByType(itemConfig, key) {
     let item;
 
     switch (itemConfig.type) {
         case ToolbarItemTypes.Select:
-            item = (<Select {...itemConfig} />);
+            item = (<Toolbar.Select {...itemConfig} key={key} />);
             break;
         case ToolbarItemTypes.Dropdown:
-            item = (<Dropdown {...itemConfig} />);
+            item = (<Toolbar.Dropdown {...itemConfig} key={key} />);
             break;
         default:
-            item = (<Button {...itemConfig} />);
+            item = (<Toolbar.Button {...itemConfig} key={key} />);
     }
 
     return item;
 }
 
 @observer
-export default class Toolbar extends React.PureComponent<*> {
+export default class ToolbarContainer extends React.PureComponent<*> {
     props: ToolbarProps;
 
     toolbarStore: ToolbarStore;
@@ -85,53 +83,49 @@ export default class Toolbar extends React.PureComponent<*> {
         }
 
         return (
-            <header className={toolbarStyles.toolbar}>
-                <nav className={toolbarStyles.controlsContainer}>
-                    <div className={toolbarStyles.controls}>
-                        {onNavigationButtonClick &&
-                            <Button
-                                onClick={this.handleNavigationButtonClick}
-                                skin="primary"
-                                icon={NAVIGATION_BUTTON_ICON}
+            <Toolbar>
+                <Toolbar.Controls>
+                    {onNavigationButtonClick &&
+                    <Toolbar.Button
+                        onClick={this.handleNavigationButtonClick}
+                        skin="primary"
+                        icon={NAVIGATION_BUTTON_ICON}
+                    />
+                    }
+                    {this.toolbarStore.hasBackButtonConfig() &&
+                    <Toolbar.Button
+                        {...backButtonConfig}
+                        icon={BACK_BUTTON_ICON}
+                    />
+                    }
+                    {this.toolbarStore.hasItemsConfig() &&
+                    <Toolbar.Items>
+                        {itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
+                    </Toolbar.Items>
+                    }
+                </Toolbar.Controls>
+                <Toolbar.Controls>
+                    {this.toolbarStore.hasIconsConfig() &&
+                    <div className={toolbarStyles.icons}>
+                        {this.toolbarStore.getIconsConfig().map((icon) => (
+                            <Icon
+                                key={icon}
+                                name={icon}
+                                className={toolbarStyles.icon}
                             />
-                        }
-                        {this.toolbarStore.hasBackButtonConfig() &&
-                            <Button {...backButtonConfig} icon={BACK_BUTTON_ICON} />
-                        }
-                        {this.toolbarStore.hasItemsConfig() &&
-                            <ul className={toolbarStyles.items}>
-                                {
-                                    itemsConfig.map((itemConfig, index) => {
-                                        const item = getItemComponentByType(itemConfig);
-
-                                        return (
-                                            <li key={index}>
-                                                {item}
-                                            </li>
-                                        );
-                                    })
-                                }
-                            </ul>
-                        }
+                        ))}
                     </div>
-                    <div className={toolbarStyles.controls}>
-                        {this.toolbarStore.hasIconsConfig() &&
-                            <div className={toolbarStyles.icons}>
-                                {
-                                    this.toolbarStore.getIconsConfig().map((icon) => (
-                                        <Icon key={icon} name={icon} className={toolbarStyles.icon} />
-                                    ))
-                                }
-                            </div>
-                        }
-                        {this.toolbarStore.hasLocaleConfig() &&
-                            <div className={toolbarStyles.locale}>
-                                <Select size={LOCALE_SELECT_SIZE} {...this.toolbarStore.getLocaleConfig()} />
-                            </div>
-                        }
+                    }
+                    {this.toolbarStore.hasLocaleConfig() &&
+                    <div className={toolbarStyles.locale}>
+                        <Toolbar.Select
+                            size={LOCALE_SELECT_SIZE}
+                            {...this.toolbarStore.getLocaleConfig()}
+                        />
                     </div>
-                </nav>
-            </header>
+                    }
+                </Toolbar.Controls>
+            </Toolbar>
         );
     }
 }

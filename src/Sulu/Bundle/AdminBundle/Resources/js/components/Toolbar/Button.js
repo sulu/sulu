@@ -1,8 +1,8 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import Icon from '../../components/Icon';
-import Loader from '../../components/Loader';
+import Icon from '../Icon';
+import Loader from '../Loader';
 import type {Button as ButtonProps} from './types';
 import buttonStyles from './button.scss';
 
