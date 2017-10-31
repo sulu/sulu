@@ -1,5 +1,5 @@
-The `Toolbar` is a powerful component to interact with the data inside of a view and provide different actions. It comes
-with built-in support for the sub-components `Button`, `Select` and `Dropdown`.
+The `Toolbar` component serves as container for `Controls`. The `Controls` component groups components which provide
+the user interaction like `Button`, `Select` or `Dropdown`.
 
 ```
 const Toolbar = require('./Toolbar').default;
@@ -12,8 +12,8 @@ const Toolbar = require('./Toolbar').default;
 </Toolbar>
 ```
 
-The space inside of the `Toolbar` will be divided fairly for all the `Controls` children. To group items inside of the
-`Controls` component you can group the items by using the `Items` component.
+The space inside of the `Toolbar` will be divided fairly for all the `Controls` children. Inside of the `Controls`
+component you can group the items by using the `Items` component.
 
 ```
 const Toolbar = require('./Toolbar').default;
