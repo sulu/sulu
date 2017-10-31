@@ -545,7 +545,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         if (!$path) {
             $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
         }
-        if ($parent !== null) {
+        if (null !== $parent) {
             $path = $parent->getPath() . '/' . $title;
             $document->setParent($parent);
         }

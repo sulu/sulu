@@ -87,7 +87,7 @@ class MediaDataProvider extends BaseDataProvider
             return;
         }
 
-        if ($datasource === 'root') {
+        if ('root' === $datasource) {
             $title = 'smart-content.media.all-collections';
 
             return new DatasourceItem('root', $title, $title);

@@ -52,7 +52,7 @@ class BlockPropertyWrapper implements PropertyInterface
     {
         return $this->block->getName() . '-' .
         $this->property->getName() .
-        ($this->index !== null ? '#' . $this->index : '');
+        (null !== $this->index ? '#' . $this->index : '');
     }
 
     /**

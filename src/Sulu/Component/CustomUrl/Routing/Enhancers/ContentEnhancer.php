@@ -57,7 +57,7 @@ class ContentEnhancer extends AbstractEnhancer
      */
     protected function supports(CustomUrlBehavior $customUrl)
     {
-        return !$customUrl->isRedirect() && $customUrl->getTargetDocument() !== null;
+        return !$customUrl->isRedirect() && null !== $customUrl->getTargetDocument();
     }
 
     /**

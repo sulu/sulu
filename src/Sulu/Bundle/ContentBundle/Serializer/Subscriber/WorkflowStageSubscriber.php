@@ -52,6 +52,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
         }
 
         $visitor = $event->getVisitor();
-        $visitor->addData('publishedState', $document->getWorkflowStage() === WorkflowStage::PUBLISHED);
+        $visitor->addData('publishedState', WorkflowStage::PUBLISHED === $document->getWorkflowStage());
     }
 }

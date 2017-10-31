@@ -214,7 +214,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         }
 
         $settingOptions = [];
-        if ($this->format === '1.2.xliff') {
+        if ('1.2.xliff' === $this->format) {
             $settingOptions = ['translate' => false];
         }
 

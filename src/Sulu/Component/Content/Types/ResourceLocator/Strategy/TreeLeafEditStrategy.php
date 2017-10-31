@@ -30,7 +30,7 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLo
     {
         $divider = strrpos($resourceSegment, '/');
 
-        if ($divider === false) {
+        if (false === $divider) {
             return $resourceSegment;
         }
 
@@ -81,6 +81,7 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLo
                 || !($currentResourceLocator = $childDocument->getResourceSegment())
             ) {
                 $this->adaptResourceLocators($childDocument, $userId);
+
                 continue;
             }
 

@@ -54,10 +54,10 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
 
         $redirectType = $document->getRedirectType();
 
-        if ($redirectType == RedirectType::INTERNAL && $document->getRedirectTarget() !== null) {
+        if (RedirectType::INTERNAL == $redirectType && null !== $document->getRedirectTarget()) {
             $visitor->addData('linked', 'internal');
             $visitor->addData('internal_link', $document->getRedirectTarget()->getUuid());
-        } elseif ($redirectType == RedirectType::EXTERNAL) {
+        } elseif (RedirectType::EXTERNAL == $redirectType) {
             $visitor->addData('linked', 'external');
             $visitor->addData('external', $document->getRedirectExternal());
         } else {

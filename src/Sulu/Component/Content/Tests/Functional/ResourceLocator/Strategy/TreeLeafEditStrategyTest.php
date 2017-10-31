@@ -251,6 +251,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
 
         $secret = $this->documentManager->find($secret->getUuid(), 'en');
         $this->assertEquals('/alphabet/secret', $secret->getResourceSegment());
+
         try {
             $this->resourceLocatorStrategy->loadByResourceLocator($secret->getResourceSegment(), 'sulu_io', 'en');
             $this->fail('resource locator found for unpublished page');

@@ -63,15 +63,15 @@ class CustomUrlAdmin extends Admin
     public function getSecurityContexts()
     {
         $webspaceContexts = [];
-         /* @var Webspace $webspace */
-         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-             $webspaceContexts[self::getCustomUrlSecurityContext($webspace->getKey())] = [
+        /* @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $webspaceContexts[self::getCustomUrlSecurityContext($webspace->getKey())] = [
                  PermissionTypes::VIEW,
                  PermissionTypes::ADD,
                  PermissionTypes::EDIT,
                  PermissionTypes::DELETE,
              ];
-         }
+        }
 
         return [
              'Sulu' => [

@@ -92,7 +92,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
         // when no fields are supplied at all OR webspaces are requested as field.
         $fieldsParam = $request->get('fields');
         $fields = explode(',', $fieldsParam);
-        if ($fieldsParam === null || array_search('webspaceKeys', $fields) !== false) {
+        if (null === $fieldsParam || false !== array_search('webspaceKeys', $fields)) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
         }
 

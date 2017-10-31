@@ -50,10 +50,10 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, Co
                 /** @var $child \DOMNode */
                 foreach ($element->childNodes as $child) {
                     if (isset($child->nodeName)) {
-                        if ($child->nodeName == 'id') {
+                        if ('id' == $child->nodeName) {
                             $typeId = $child->nodeValue;
                         }
-                        if ($child->nodeName == 'name') {
+                        if ('name' == $child->nodeName) {
                             $typeName = $child->nodeValue;
                         }
                     }

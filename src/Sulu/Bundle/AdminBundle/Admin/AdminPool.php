@@ -68,7 +68,7 @@ class AdminPool
         /** @var Navigation $navigation */
         $navigation = null;
         $this->iterateAdmins(function(Admin $admin) use (&$navigation) {
-            if ($navigation === null) {
+            if (null === $navigation) {
                 $navigation = $admin->getNavigation();
 
                 return;

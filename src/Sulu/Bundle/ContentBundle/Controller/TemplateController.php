@@ -53,7 +53,7 @@ class TemplateController extends Controller
 
         $type = $request->get('type', Structure::TYPE_PAGE);
 
-        if ($type === Structure::TYPE_PAGE) {
+        if (Structure::TYPE_PAGE === $type) {
             $structureProvider = $this->get('sulu.content.webspace_structure_provider');
             $structures = $structureProvider->getStructures($request->get('webspace'));
         } else {
@@ -63,7 +63,7 @@ class TemplateController extends Controller
 
         $templates = [];
         foreach ($structures as $structure) {
-            if (false === $structure->getInternal() || $internal !== false) {
+            if (false === $structure->getInternal() || false !== $internal) {
                 $templates[] = [
                     'internal' => $structure->getInternal(),
                     'template' => $structure->getKey(),
@@ -98,8 +98,8 @@ class TemplateController extends Controller
         $webspace = $request->get('webspace');
         $type = $request->get('type', 'page');
 
-        if ($key === null) {
-            if ($type === 'page') {
+        if (null === $key) {
+            if ('page' === $type) {
                 $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
                 $key = $webspaceManager->findWebspaceByKey($webspace)->getDefaultTemplate($type);
                 $fireEvent = true;

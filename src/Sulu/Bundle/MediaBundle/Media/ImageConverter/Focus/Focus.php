@@ -55,13 +55,13 @@ class Focus implements FocusInterface
      */
     public function focus(ImageInterface $image, $x, $y, $width, $height)
     {
-        $x = ($x !== null) ? $x : static::FOCUS_CENTER;
-        $y = ($y !== null) ? $y : static::FOCUS_MIDDLE;
+        $x = (null !== $x) ? $x : static::FOCUS_CENTER;
+        $y = (null !== $y) ? $y : static::FOCUS_MIDDLE;
         $imageSize = $image->getSize();
 
         $currentRatio = $imageSize->getWidth() / $imageSize->getHeight();
         $targetRatio = $currentRatio;
-        if ($width !== null && $height !== null) {
+        if (null !== $width && null !== $height) {
             $targetRatio = $width / $height;
         }
 

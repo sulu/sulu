@@ -29,12 +29,12 @@ class XmlUtil
     public static function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
     {
         $result = $xpath->query($path, $context);
-        if ($result->length === 0) {
+        if (0 === $result->length) {
             return $default;
         }
 
         $item = $result->item(0);
-        if ($item === null) {
+        if (null === $item) {
             return $default;
         }
 
@@ -55,7 +55,7 @@ class XmlUtil
     {
         $value = self::getValueFromXPath($path, $xpath, $context, $default);
 
-        if ($value === null) {
+        if (null === $value) {
             return;
         }
 

@@ -60,7 +60,7 @@ class ContactTwigExtension extends \Twig_Extension
         }
 
         $contact = $this->contactRepository->find($id);
-        if ($contact === null) {
+        if (null === $contact) {
             return;
         }
 

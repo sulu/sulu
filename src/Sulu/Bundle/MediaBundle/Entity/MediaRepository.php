@@ -138,7 +138,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ) = $this->extractFilterVars($filter);
 
         // if empty array of ids is requested return empty array of medias
-        if ($ids !== null && count($ids) === 0) {
+        if (null !== $ids && 0 === count($ids)) {
             return [];
         }
 
@@ -188,14 +188,14 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->addSelect('creatorContact')
             ->addSelect('changerContact');
 
-        if ($ids !== null) {
+        if (null !== $ids) {
             $queryBuilder->andWhere('media.id IN (:mediaIds)');
             $queryBuilder->setParameter('mediaIds', $ids);
         }
 
         $queryBuilder->addOrderBy($orderBy, $orderSort);
 
-        if ($user !== null && $permission !== null) {
+        if (null !== $user && null !== $permission) {
             $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
         }
 

@@ -137,7 +137,7 @@ EOT
         if (!$overwrite) {
             $destStructure = $this->contentMapper->load($structure->getUuid(), $webspaceKey, $destLocale, true);
 
-            if (!($destStructure->getType() && $destStructure->getType()->getName() === 'ghost')) {
+            if (!($destStructure->getType() && 'ghost' === $destStructure->getType()->getName())) {
                 $this->output->writeln(
                     '<info>Processing aborted: </info>' .
                     $structure->getPath() . ' <comment>(use overwrite option to force)</comment>'
@@ -147,7 +147,7 @@ EOT
             }
         }
 
-        if ($structure->getType() && $structure->getType()->getName() === 'ghost') {
+        if ($structure->getType() && 'ghost' === $structure->getType()->getName()) {
             $this->output->writeln(
                 '<info>Processing aborted: </info>' .
                 $structure->getPath() . ' <comment>(source language does not exist)</comment>'

@@ -86,7 +86,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
         $output = new StreamOutput(fopen('php://memory', 'w', false));
         $exitCode = $application->run($input, $output);
 
-        if ($exitCode !== 0) {
+        if (0 !== $exitCode) {
             rewind($output->getStream());
             $output = stream_get_contents($output->getStream());
 

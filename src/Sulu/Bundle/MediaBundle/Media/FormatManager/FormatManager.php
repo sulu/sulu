@@ -92,7 +92,7 @@ class FormatManager implements FormatManagerInterface
         $this->mediaRepository = $mediaRepository;
         $this->formatCache = $formatCache;
         $this->converter = $converter;
-        $this->saveImage = $saveImage == 'true' ? true : false;
+        $this->saveImage = 'true' == $saveImage ? true : false;
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;

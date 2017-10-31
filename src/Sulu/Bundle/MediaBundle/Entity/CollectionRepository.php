@@ -53,7 +53,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $query->setParameter('id', $id);
         $result = $query->getResult();
 
-        if (count($result) === 0) {
+        if (0 === count($result)) {
             return;
         }
 
@@ -87,18 +87,18 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id IN (:ids)')
             ->setParameter('ids', $ids);
 
-        if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
+        if (null !== $sortBy && is_array($sortBy) && count($sortBy) > 0) {
             foreach ($sortBy as $column => $order) {
                 $queryBuilder->addOrderBy(
                     'collectionMeta.' . $column,
-                    (strtolower($order) === 'asc' ? 'ASC' : 'DESC')
+                    ('asc' === strtolower($order) ? 'ASC' : 'DESC')
                 );
             }
         }
 
         $queryBuilder->addOrderBy('collection.id', 'ASC');
 
-        if ($user !== null && $permission != null) {
+        if (null !== $user && null != $permission) {
             $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
         }
 
@@ -179,29 +179,29 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->addSelect('parent')
                 ->addSelect('children');
 
-            if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
+            if (null !== $sortBy && is_array($sortBy) && count($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
-                    $qb->addOrderBy('collectionMeta.' . $column, strtolower($order) === 'asc' ? 'ASC' : 'DESC');
+                    $qb->addOrderBy('collectionMeta.' . $column, 'asc' === strtolower($order) ? 'ASC' : 'DESC');
                 }
             }
             $qb->addOrderBy('collection.id', 'ASC');
 
-            if ($parent !== null) {
+            if (null !== $parent) {
                 $qb->andWhere('parent.id = :parent');
                 $qb->setParameter('parent', $parent);
-            } elseif ($depth !== null) {
+            } elseif (null !== $depth) {
                 // the combination of depth and parent needs a bigger refactoring of this query.
                 $qb->andWhere('collection.depth <= :depth');
                 $qb->setParameter('depth', intval($depth));
             }
-            if ($search !== null) {
+            if (null !== $search) {
                 $qb->andWhere('collectionMeta.title LIKE :search');
                 $qb->setParameter('search', '%' . $search . '%');
             }
-            if ($offset !== null) {
+            if (null !== $offset) {
                 $qb->setFirstResult($offset);
             }
-            if ($limit !== null) {
+            if (null !== $limit) {
                 $qb->setMaxResults($limit);
             }
 
@@ -324,17 +324,17 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->select($select)
             ->where('collection.depth <= :depth');
 
-        $collectionDepth = $collection !== null ? $collection->getDepth() : 0;
+        $collectionDepth = null !== $collection ? $collection->getDepth() : 0;
         $queryBuilder->setParameter('depth', $collectionDepth + $depth);
 
-        if ($collection !== null) {
+        if (null !== $collection) {
             $queryBuilder->andWhere('collection.lft BETWEEN :lft AND :rgt AND collection.id != :id');
             $queryBuilder->setParameter('lft', $collection->getLft());
             $queryBuilder->setParameter('rgt', $collection->getRgt());
             $queryBuilder->setParameter('id', $collection->getId());
         }
 
-        if (array_key_exists('search', $filter) && $filter['search'] !== null ||
+        if (array_key_exists('search', $filter) && null !== $filter['search'] ||
             array_key_exists('locale', $filter) ||
             count($sortBy) > 0
         ) {
@@ -342,7 +342,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $queryBuilder->leftJoin('collection.defaultMeta', 'defaultMeta');
         }
 
-        if (array_key_exists('search', $filter) && $filter['search'] !== null) {
+        if (array_key_exists('search', $filter) && null !== $filter['search']) {
             $queryBuilder->andWhere('collectionMeta.title LIKE :search OR defaultMeta.locale != :locale');
             $queryBuilder->setParameter('search', '%' . $filter['search'] . '%');
         }
@@ -362,7 +362,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             foreach ($sortBy as $column => $order) {
                 $queryBuilder->addOrderBy(
                     'collectionMeta.' . $column,
-                    (strtolower($order) === 'asc' ? 'ASC' : 'DESC')
+                    ('asc' === strtolower($order) ? 'ASC' : 'DESC')
                 );
             }
         }

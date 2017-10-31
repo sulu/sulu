@@ -21,9 +21,9 @@ class TemplateResolver implements TemplateResolverInterface
      */
     public function resolve($nodeType, $templateKey)
     {
-        if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
+        if (Structure::NODE_TYPE_EXTERNAL_LINK === $nodeType) {
             $templateKey = 'external-link';
-        } elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
+        } elseif (Structure::NODE_TYPE_INTERNAL_LINK === $nodeType) {
             $templateKey = 'internal-link';
         }
 

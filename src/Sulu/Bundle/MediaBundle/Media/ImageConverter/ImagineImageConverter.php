@@ -145,7 +145,7 @@ class ImagineImageConverter implements ImageConverterInterface
         $image->strip();
 
         // Set Interlacing to plane for smaller image size.
-        if (count($image->layers()) == 1) {
+        if (1 == count($image->layers())) {
             $image->interlace(ImageInterface::INTERLACE_PLANE);
         }
 
@@ -272,7 +272,7 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     private function toRGB(ImageInterface $image)
     {
-        if ($image->palette()->name() == 'cmyk') {
+        if ('cmyk' == $image->palette()->name()) {
             $image->usePalette(new RGB());
         }
 
@@ -334,7 +334,7 @@ class ImagineImageConverter implements ImageConverterInterface
             foreach ($image->layers() as $layer) {
                 $countLayer += 1;
                 $layer = call_user_func($modifier, $layer);
-                if ($countLayer === 1) {
+                if (1 === $countLayer) {
                     $temporaryImage = $layer; // use first layer as main image
                 } else {
                     $temporaryImage->layers()->add($layer);
@@ -376,7 +376,7 @@ class ImagineImageConverter implements ImageConverterInterface
     private function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
     {
         $options = [];
-        if (count($image->layers()) > 1 && $imageExtension == 'gif') {
+        if (count($image->layers()) > 1 && 'gif' == $imageExtension) {
             $options['animated'] = true;
         }
 

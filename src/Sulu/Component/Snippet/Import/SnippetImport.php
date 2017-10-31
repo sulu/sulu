@@ -80,7 +80,7 @@ class SnippetImport extends Import
         $this->structureManager = $structureManager;
         $this->importManager = $importManager; // only import/import
         $this->legacyPropertyFactory = $legacyPropertyFactory;
-         // only import/import
+        // only import/import
         $this->logger = $logger;
         $this->add($xliff12, '1.2.xliff');
     }
@@ -226,7 +226,7 @@ class SnippetImport extends Import
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
 
         // Check title is set in xliff-file.
-        if ($this->getParser($format)->getPropertyData('title', $data) === '') {
+        if ('' === $this->getParser($format)->getPropertyData('title', $data)) {
             $this->addException(sprintf('Snippet(%s) has not set any title', $document->getUuid()), 'ignore');
 
             return false;

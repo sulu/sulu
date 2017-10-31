@@ -235,7 +235,7 @@ class FilterManager implements FilterManagerInterface
             }
         }
 
-        if (array_key_exists('private', $data) && $data['private'] === true) {
+        if (array_key_exists('private', $data) && true === $data['private']) {
             $filter->setPrivate($data['private']);
             $filter->setUser($user);
         } else {
@@ -354,7 +354,7 @@ class FilterManager implements FilterManagerInterface
     protected function getValueForCondition($value, $type)
     {
         // check if date and not a relative value like -1 week
-        if ($type === DataTypes::DATETIME_TYPE && !preg_match('/[A-Za-z]{3,}/', $value)) {
+        if (DataTypes::DATETIME_TYPE === $type && !preg_match('/[A-Za-z]{3,}/', $value)) {
             return (new \DateTime($value))->format(\DateTime::ISO8601);
         }
 
@@ -448,7 +448,7 @@ class FilterManager implements FilterManagerInterface
     protected function checkDataSet(array $data, $key, $create)
     {
         $keyExists = array_key_exists($key, $data);
-        if (($create && !($keyExists && $data[$key] !== null)) || (!$keyExists || $data[$key] === null)) {
+        if (($create && !($keyExists && null !== $data[$key])) || (!$keyExists || null === $data[$key])) {
             throw new MissingFilterAttributeException($key);
         }
 
@@ -553,7 +553,7 @@ class FilterManager implements FilterManagerInterface
     public function isFeatureEnabled($context, $feature)
     {
         if ($this->hasContext($context) &&
-            array_search($feature, $this->getFeaturesForContext($context)) !== false
+            false !== array_search($feature, $this->getFeaturesForContext($context))
         ) {
             return true;
         }

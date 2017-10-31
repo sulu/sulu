@@ -64,7 +64,7 @@ class CustomerManager implements CustomerManagerInterface
      */
     public function findByIds($ids)
     {
-        if (count($ids) === 0) {
+        if (0 === count($ids)) {
             return [];
         }
 
@@ -94,7 +94,7 @@ class CustomerManager implements CustomerManagerInterface
      */
     private function findAccountsByIds($ids)
     {
-        if (count($ids) === 0) {
+        if (0 === count($ids)) {
             return [];
         }
 
@@ -118,7 +118,7 @@ class CustomerManager implements CustomerManagerInterface
      */
     private function findContactsByIds($ids)
     {
-        if (count($ids) === 0) {
+        if (0 === count($ids)) {
             return [];
         }
 

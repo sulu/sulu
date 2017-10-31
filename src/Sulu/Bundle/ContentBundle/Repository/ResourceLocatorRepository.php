@@ -126,7 +126,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     private function getBasePath($uuid = null, $default = 1)
     {
-        if ($uuid !== null) {
+        if (null !== $uuid) {
             return str_replace('{uuid}', $uuid, $this->apiBasePath[2]);
         } else {
             return $this->apiBasePath[$default];

@@ -83,7 +83,7 @@ class RequestAnalyzerTranslator implements TranslatorInterface
 
     private function initialize()
     {
-        if ($this->initialized || $this->requestAnalyzer->getCurrentLocalization() === null) {
+        if ($this->initialized || null === $this->requestAnalyzer->getCurrentLocalization()) {
             return;
         }
 

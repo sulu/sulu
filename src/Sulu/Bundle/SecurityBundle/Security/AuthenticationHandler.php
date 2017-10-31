@@ -58,7 +58,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     {
         // get url to redirect (or return in the JSON-response)
         if ($this->session->get('_security.admin.target_path')
-            && strpos($this->session->get('_security.admin.target_path'), '#') !== false
+            && false !== strpos($this->session->get('_security.admin.target_path'), '#')
         ) {
             $url = $this->session->get('_security.admin.target_path');
         } else {

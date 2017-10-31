@@ -52,11 +52,11 @@ class SnippetResolver implements SnippetResolverInterface
             if (!array_key_exists($uuid, $this->snippetCache)) {
                 $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
 
-                if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
+                if (!$snippet->getHasTranslation() && null !== $shadowLocale) {
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $shadowLocale);
                 }
 
-                $snippet->setIsShadow($shadowLocale !== null);
+                $snippet->setIsShadow(null !== $shadowLocale);
                 $snippet->setShadowBaseLanguage($shadowLocale);
 
                 $resolved = $this->structureResolver->resolve($snippet);

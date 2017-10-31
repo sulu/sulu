@@ -42,7 +42,7 @@ class RestHelper implements RestHelperInterface
         $listBuilder->setFieldDescriptors($fieldDescriptors);
 
         $fields = $this->listRestHelper->getFields();
-        if ($fields != null) {
+        if (null != $fields) {
             foreach ($fields as $field) {
                 if (!array_key_exists($field, $fieldDescriptors)) {
                     continue;
@@ -55,7 +55,7 @@ class RestHelper implements RestHelperInterface
         }
 
         $searchFields = $this->listRestHelper->getSearchFields();
-        if ($searchFields != null) {
+        if (null != $searchFields) {
             foreach ($searchFields as $searchField) {
                 $listBuilder->addSearchField($fieldDescriptors[$searchField]);
             }
@@ -64,7 +64,7 @@ class RestHelper implements RestHelperInterface
         }
 
         $sortBy = $this->listRestHelper->getSortColumn();
-        if ($sortBy != null) {
+        if (null != $sortBy) {
             $listBuilder->sort($fieldDescriptors[$sortBy], $this->listRestHelper->getSortOrder());
         }
     }

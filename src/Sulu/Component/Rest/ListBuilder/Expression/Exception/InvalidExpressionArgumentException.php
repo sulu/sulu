@@ -40,7 +40,7 @@ class InvalidExpressionArgumentException extends ExpressionException
         $this->expression = $expression;
         $this->argument = $argument;
         $message = 'The "' . $expression . '"-expression requires a valid "' . $argument . '"-argument';
-        if ($customMessage != null) {
+        if (null != $customMessage) {
             $message .= $customMessage;
         }
         parent::__construct($message, 0);

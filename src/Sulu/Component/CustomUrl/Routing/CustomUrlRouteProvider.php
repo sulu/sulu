@@ -41,11 +41,8 @@ class CustomUrlRouteProvider implements RouteProviderInterface
      */
     private $environment;
 
-    public function __construct(
-        RequestAnalyzerInterface $requestAnalyzer,
-        PathBuilder $pathBuilder,
-        $environment
-    ) {
+    public function __construct(RequestAnalyzerInterface $requestAnalyzer, PathBuilder $pathBuilder, $environment)
+    {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->pathBuilder = $pathBuilder;
         $this->environment = $environment;
@@ -80,11 +77,11 @@ class CustomUrlRouteProvider implements RouteProviderInterface
             $customUrlDocument = $routeDocument->getTargetDocument();
         }
 
-        if ($customUrlDocument === null
-            || $customUrlDocument->isPublished() === false
+        if (null === $customUrlDocument
+            || false === $customUrlDocument->isPublished()
             || (
-                $customUrlDocument->getTargetDocument() !== null
-                && $customUrlDocument->getTargetDocument()->getWorkflowStage() !== WorkflowStage::PUBLISHED
+                null !== $customUrlDocument->getTargetDocument()
+                && WorkflowStage::PUBLISHED !== $customUrlDocument->getTargetDocument()->getWorkflowStage()
             )
         ) {
             return $collection;
@@ -93,7 +90,7 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         $collection->add(
             uniqid('custom_url_route_', true),
             new Route(
-                $request->getPathInfo(),
+                $this->decodePathInfo($request->getPathInfo()),
                 [
                     '_custom_url' => $customUrlDocument,
                     '_webspace' => $this->requestAnalyzer->getWebspace(),
@@ -147,7 +144,7 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         $collection->add(
             uniqid('custom_url_route_', true),
             new Route(
-                $request->getPathInfo(),
+                $this->decodePathInfo($request->getPathInfo()),
                 [
                     '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                     '_finalized' => true,
@@ -169,5 +166,18 @@ class CustomUrlRouteProvider implements RouteProviderInterface
     private function getRoutesPath($webspaceKey)
     {
         return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom_urls%', '%custom_urls_routes%']);
+    }
+
+    /**
+     * Server encodes the url and symfony does not encode it
+     * Symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91.
+     *
+     * @param $pathInfo
+     *
+     * @return string
+     */
+    private function decodePathInfo($pathInfo)
+    {
+        return rawurldecode($pathInfo);
     }
 }

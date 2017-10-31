@@ -94,12 +94,12 @@ class StructureSubscriber implements EventSubscriberInterface
                 )
             );
 
-            if (array_search('defaultPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
+            if (false !== array_search('defaultPage', $context->attributes->get('groups')->getOrElse([]))) {
                 $this->addStructureProperties($structureMetadata, $document, $visitor);
             }
 
             // create bread crumbs
-            if (array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
+            if (false !== array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([]))) {
                 $this->addBreadcrumb($document, $visitor);
             }
         }
@@ -120,7 +120,7 @@ class StructureSubscriber implements EventSubscriberInterface
         $structure = $document->getStructure();
         $data = $structure->toArray();
         foreach ($structureMetadata->getProperties() as $name => $property) {
-            if ($name === 'title' || !array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
+            if ('title' === $name || !array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
                 continue;
             }
 

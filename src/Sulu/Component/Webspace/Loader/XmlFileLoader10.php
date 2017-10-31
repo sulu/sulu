@@ -257,14 +257,14 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
         $defaultNode = $localizationNode->attributes->getNamedItem('default');
         if ($defaultNode) {
-            $localization->setDefault($defaultNode->nodeValue == 'true');
+            $localization->setDefault('true' == $defaultNode->nodeValue);
         } else {
             $localization->setDefault(false);
         }
 
         $xDefaultNode = $localizationNode->attributes->getNamedItem('x-default');
         if ($xDefaultNode) {
-            $localization->setXDefault($xDefaultNode->nodeValue == 'true');
+            $localization->setXDefault('true' == $xDefaultNode->nodeValue);
         } else {
             $localization->setXDefault(false);
         }
@@ -317,7 +317,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
             $defaultNode = $segmentNode->attributes->getNamedItem('default');
             if ($defaultNode) {
-                $segment->setDefault($defaultNode->nodeValue == 'true');
+                $segment->setDefault('true' == $defaultNode->nodeValue);
             } else {
                 $segment->setDefault(false);
             }
@@ -362,7 +362,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         }
 
         $nodes = $this->xpath->query('/x:webspace/x:theme');
-        if ($nodes->length === 0) {
+        if (0 === $nodes->length) {
             return;
         }
 
@@ -387,10 +387,10 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
             /* @var \DOMNode $errorTemplateNode */
             $template = $errorTemplateNode->nodeValue;
-            if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
+            if (null !== ($codeNode = $errorTemplateNode->attributes->getNamedItem('code'))) {
                 $webspace->addTemplate('error-' . $codeNode->nodeValue, $template);
-            } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
-                $default = $defaultNode->nodeValue === 'true';
+            } elseif (null !== ($defaultNode = $errorTemplateNode->attributes->getNamedItem('default'))) {
+                $default = 'true' === $defaultNode->nodeValue;
                 if (!$default) {
                     throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
                 }
@@ -428,7 +428,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             $type = $node->attributes->getNamedItem('type')->nodeValue;
 
             $webspace->addDefaultTemplate($type, $template);
-            if ($type === 'homepage') {
+            if ('homepage' === $type) {
                 $webspace->addDefaultTemplate('home', $template);
             }
         }
@@ -596,18 +596,18 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      */
     protected function checkUrlNode(\DOMNode $urlNode)
     {
-        $hasLocalization = ($urlNode->attributes->getNamedItem('localization') != null)
-            || (strpos($urlNode->nodeValue, '{localization}') !== false);
+        $hasLocalization = (null != $urlNode->attributes->getNamedItem('localization'))
+            || (false !== strpos($urlNode->nodeValue, '{localization}'));
 
-        $hasLanguage = ($urlNode->attributes->getNamedItem('language') != null)
-            || (strpos($urlNode->nodeValue, '{language}') !== false)
+        $hasLanguage = (null != $urlNode->attributes->getNamedItem('language'))
+            || (false !== strpos($urlNode->nodeValue, '{language}'))
             || $hasLocalization;
 
-        $hasSegment = (count($this->webspace->getSegments()) == 0)
-            || ($urlNode->attributes->getNamedItem('segment') != null)
-            || (strpos($urlNode->nodeValue, '{segment}') !== false);
+        $hasSegment = (0 == count($this->webspace->getSegments()))
+            || (null != $urlNode->attributes->getNamedItem('segment'))
+            || (false !== strpos($urlNode->nodeValue, '{segment}'));
 
-        $hasRedirect = ($urlNode->attributes->getNamedItem('redirect') != null);
+        $hasRedirect = (null != $urlNode->attributes->getNamedItem('redirect'));
 
         return ($hasLanguage && $hasSegment) || $hasRedirect;
     }

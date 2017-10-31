@@ -58,7 +58,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         try {
             $result = $this->dispatch($from, $context, $msg);
 
-            if ($result !== null) {
+            if (null !== $result) {
                 $from->send($result);
             }
         } catch (\Exception $e) {

@@ -127,7 +127,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             $segmentKey
         );
 
-        if ($result !== null) {
+        if (null !== $result) {
             return $result;
         }
 
@@ -269,7 +269,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
                 $resourceLocator
             );
-            if ($resourceLocator !== '') {
+            if ('' !== $resourceLocator) {
                 // get requested resource locator route node
                 $route = $this->sessionManager->getSession()->getNode($path);
             } else {
@@ -344,7 +344,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        if (!is_string($path) || trim($path, '/') == '') {
+        if (!is_string($path) || '' == trim($path, '/')) {
             throw new \InvalidArgumentException(
                 sprintf('The path to delete must be a non-empty string, "%s" given.', $path)
             );
@@ -431,7 +431,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     {
         $basePath = $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey);
 
-        return '/' . ltrim($basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
+        return '/' . ltrim($basePath, '/') . ('' !== $relPath ? '/' . ltrim($relPath, '/') : '');
     }
 
     /**

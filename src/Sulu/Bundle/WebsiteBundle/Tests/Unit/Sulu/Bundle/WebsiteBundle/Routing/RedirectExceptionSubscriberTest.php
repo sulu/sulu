@@ -111,7 +111,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === '/de/test';
+                    return '/de/test' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -134,7 +134,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === '/de/test';
+                    return '/de/test' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -201,7 +201,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === 'http://sulu.lo';
+                    return 'http://sulu.lo' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -237,7 +237,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === 'http://sulu.lo';
+                    return 'http://sulu.lo' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -277,7 +277,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === 'http://sulu.lo/de';
+                    return 'http://sulu.lo/de' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -318,7 +318,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->router->matchRequest(
             Argument::that(
                 function (Request $request) {
-                    return $request->getUri() === 'http://sulu.lo/de-at';
+                    return 'http://sulu.lo/de-at' === $request->getUri();
                 }
             )
         )->willReturn(
@@ -328,7 +328,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === 'http://sulu.lo/de-at';
+                    return 'http://sulu.lo/de-at' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -402,7 +402,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === 'http://sulu.lo';
+                    return 'http://sulu.lo' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();
@@ -433,7 +433,7 @@ class RedirectExceptionSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->event->setResponse(
             Argument::that(
                 function (RedirectResponse $response) {
-                    return $response->getTargetUrl() === 'http://sulu.lo/de-at';
+                    return 'http://sulu.lo/de-at' === $response->getTargetUrl();
                 }
             )
         )->shouldBeCalled();

@@ -133,7 +133,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
     {
         $structureName = $structureMetadata->getName();
         foreach ($structureMetadata->getProperties() as $property) {
-            if ($property->getType() === 'date') {
+            if ('date' === $property->getType()) {
                 $properties[$structureName][] = $property->getName();
             } elseif ($property instanceof BlockMetadata) {
                 $this->findDateBlockProperties($property, $structureName, $properties);
@@ -152,7 +152,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($property->getComponents() as $component) {
             foreach ($component->getChildren() as $childProperty) {
-                if ($childProperty->getType() === 'date') {
+                if ('date' === $childProperty->getType()) {
                     $properties[$structureName][] = $property->getName();
                 }
             }

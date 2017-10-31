@@ -76,7 +76,7 @@ class AppendAnalyticsListener
     {
         if ($this->preview
             || 0 !== strpos($event->getResponse()->headers->get('Content-Type'), 'text/html')
-            || $this->requestAnalyzer->getPortalInformation() === null
+            || null === $this->requestAnalyzer->getPortalInformation()
         ) {
             return;
         }

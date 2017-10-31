@@ -885,13 +885,13 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->targetGroupStore->getTargetGroupId()->willReturn(1);
         $this->contentDataProvider->resolveResourceItems(
             Argument::that(function($value) {
-                return $value['targetGroupId'] === 1;
+                return 1 === $value['targetGroupId'];
             }),
             Argument::cetera()
         )->willReturn(new DataProviderResult([], false));
 
         $property->setValue(Argument::that(function($value) {
-            return $value['targetGroupId'] === 1;
+            return 1 === $value['targetGroupId'];
         }))->shouldBeCalled();
 
         $smartContent->getContentData($property->reveal());

@@ -121,7 +121,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     protected function createConjunctionExpression(array $expressions, $conjunction)
     {
         // create the appropriate expression
-        if (strtoupper($conjunction) === ListBuilderInterface::CONJUNCTION_AND) {
+        if (ListBuilderInterface::CONJUNCTION_AND === strtoupper($conjunction)) {
             return $this->listBuilder->createAndExpression($expressions);
         }
 
@@ -145,7 +145,7 @@ class FilterListBuilder implements FilterListBuilderInterface
             throw new ConditionFieldNotFoundException($condition->getField());
         }
 
-        if (count($conditionGroup->getConditions()) === 1) {
+        if (1 === count($conditionGroup->getConditions())) {
             $this->createExpression($condition, $fieldDescriptor);
         } elseif (count($conditionGroup->getConditions()) > 1) {
             // TODO implement if needed
@@ -164,7 +164,7 @@ class FilterListBuilder implements FilterListBuilderInterface
         $value = $this->getValue($condition);
 
         // relative date for cases like "within a week" or "within this month"
-        if ($condition->getOperator() === 'between' && $condition->getType() === DataTypes::DATETIME_TYPE) {
+        if ('between' === $condition->getOperator() && DataTypes::DATETIME_TYPE === $condition->getType()) {
             $this->expressions[] = $this->listBuilder->createBetweenExpression($fieldDescriptor, [$value, new \Datetime()]);
         } else {
             $this->expressions[] = $this->listBuilder->createWhereExpression(
@@ -199,6 +199,7 @@ class FilterListBuilder implements FilterListBuilderInterface
                 if (is_numeric($value)) {
                     return floatval($value);
                 }
+
                 throw new ConditionTypeMismatchException($condition->getId(), $value, $type);
             case DataTypes::BOOLEAN_TYPE:
                 return $this->getBoolean($value);
@@ -222,6 +223,6 @@ class FilterListBuilder implements FilterListBuilderInterface
      */
     protected function getBoolean($value)
     {
-        return $value === 'true' || $value === 1 || $value === true ? true : false;
+        return 'true' === $value || 1 === $value || true === $value ? true : false;
     }
 }

@@ -81,7 +81,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
         $result = array_filter(
             $values,
             function ($val) {
-                return $val || $val === 0 || $val === false;
+                return $val || 0 === $val || false === $val;
             }
         );
 

@@ -123,6 +123,7 @@ class StructureProvider implements ProviderInterface
         $indexMeta->setLocaleField($this->factory->createMetadataField('originalLocale'));
 
         $indexName = 'page';
+        $decorate = false;
 
         // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
@@ -134,20 +135,12 @@ class StructureProvider implements ProviderInterface
             }
 
             $indexName = $mapping['index'];
+            if ($mapping['decorate_index']) {
+                $decorate = true;
+            }
         }
 
-        if ($indexName === 'page') {
-            $indexMeta->setIndexName(
-                new Expression(
-                    sprintf(
-                        '"page_"~object.getWebspaceName()~(object.getWorkflowStage() == %s ? "_published" : "")',
-                        WorkflowStage::PUBLISHED
-                    )
-                )
-            );
-        } else {
-            $indexMeta->setIndexName(new Value($indexName));
-        }
+        $indexMeta->setIndexName($this->createIndexNameField($documentMetadata, $indexName, $decorate));
 
         foreach ($structure->getProperties() as $property) {
             if ($property instanceof BlockMetadata) {
@@ -161,7 +154,7 @@ class StructureProvider implements ProviderInterface
                         $tag = $componentProperty->getTag('sulu.search.field');
                         $tagAttributes = $tag['attributes'];
 
-                        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+                        if (!isset($tagAttributes['index']) || 'false' !== $tagAttributes['index']) {
                             $propertyMapping->addFieldMapping(
                                 $property->getName() . '.' . $componentProperty->getName(),
                                 [
@@ -384,7 +377,7 @@ EOT;
             return;
         }
 
-        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+        if (!isset($tagAttributes['index']) || 'false' !== $tagAttributes['index']) {
             $metadata->addFieldMapping(
                 $property->getName(),
                 [
@@ -433,5 +426,22 @@ EOT;
                 'indexed' => false,
             ]
         );
+    }
+
+    private function createIndexNameField(Metadata $documentMetadata, $indexName, $decorate)
+    {
+        if (!$decorate) {
+            return new Value($indexName);
+        }
+
+        $expression = '"' . $indexName . '"';
+        if ($documentMetadata->getReflectionClass()->isSubclassOf(WebspaceBehavior::class)) {
+            $expression .= '~"_"~object.getWebspaceName()';
+        }
+        if ($documentMetadata->getReflectionClass()->isSubclassOf(WorkflowStageBehavior::class)) {
+            $expression .= '~(object.getWorkflowStage() == ' . WorkflowStage::PUBLISHED . ' ? "_published" : "")';
+        }
+
+        return new Expression($expression);
     }
 }

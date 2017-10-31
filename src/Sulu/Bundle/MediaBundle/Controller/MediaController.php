@@ -87,7 +87,7 @@ class MediaController extends AbstractMediaController implements
                     $media = $mediaManager->getById($id, $locale);
                     $collection = $media->getEntity()->getCollection();
 
-                    if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                    if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
                         $this->getSecurityChecker()->checkPermission(
                             'sulu.media.system_collections',
                             PermissionTypes::VIEW
@@ -193,7 +193,7 @@ class MediaController extends AbstractMediaController implements
         $collectionId = $request->get('collection');
         if ($collectionId) {
             $collectionType = $this->getCollectionRepository()->findCollectionTypeById($collectionId);
-            if ($collectionType === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+            if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collectionType) {
                 $this->getSecurityChecker()->checkPermission(
                     'sulu.media.system_collections',
                     PermissionTypes::VIEW
@@ -300,6 +300,7 @@ class MediaController extends AbstractMediaController implements
                 $this->getMediaManager()->delete($id, true);
             } catch (MediaNotFoundException $e) {
                 $entityName = $this->getParameter('sulu.model.media.class');
+
                 throw new EntityNotFoundException($entityName, $id); // will throw 404 Entity not found
             } catch (MediaException $e) {
                 throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
@@ -384,7 +385,7 @@ class MediaController extends AbstractMediaController implements
     {
         try {
             $mediaManager = $this->getMediaManager();
-            $data = $this->getData($request, $id === null);
+            $data = $this->getData($request, null === $id);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
             $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());

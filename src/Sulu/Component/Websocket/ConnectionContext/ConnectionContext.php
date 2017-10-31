@@ -98,7 +98,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getToken($firewall)
     {
-        if ($this->session !== null) {
+        if (null !== $this->session) {
             return unserialize($this->session->get('_security_' . $firewall));
         }
 

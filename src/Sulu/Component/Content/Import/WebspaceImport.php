@@ -148,7 +148,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
         foreach ($parsedDataList as $parsedData) {
             // mapping data
-            if ($exportSuluVersion === '1.2') {
+            if ('1.2' === $exportSuluVersion) {
                 $parsedData['structureType'] = $parsedData['data']['template']['value'];
             }
 
@@ -156,6 +156,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             // !$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid
             if ($uuid && (!isset($parsedData['uuid']) || $uuid !== $parsedData['uuid'])) {
                 $progress->advance();
+
                 continue;
             }
 
@@ -200,6 +201,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         try {
             if (!isset($parsedData['uuid']) || !isset($parsedData['structureType']) || !isset($parsedData['data'])) {
                 $this->addException('uuid, structureType or data for import not found.', 'ignore');
+
                 throw new \Exception('uuid, structureType or data for import not found.');
             }
 
@@ -208,7 +210,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             $data = $parsedData['data'];
             $documentType = Structure::TYPE_PAGE;
 
-            if ($this->getParser($format)->getPropertyData('url', $data) === '/') {
+            if ('/' === $this->getParser($format)->getPropertyData('url', $data)) {
                 $documentType = 'home'; // TODO no constant
             }
 
@@ -297,7 +299,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
 
-        if ($this->getParser($format)->getPropertyData('title', $data) === '') {
+        if ('' === $this->getParser($format)->getPropertyData('title', $data)) {
             $this->addException(sprintf('Document(%s) has not set any title', $document->getUuid()), 'ignore');
 
             return false;
@@ -313,7 +315,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
             // don't generate a new url when one exists
             $doImport = true;
-            if ($property->getContentTypeName() == 'resource_locator') {
+            if ('resource_locator' == $property->getContentTypeName()) {
                 $doImport = false;
 
                 if (!$document->getResourceSegment()) {

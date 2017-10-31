@@ -133,7 +133,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function getAction(Request $request, $uuid)
     {
-        if ($request->get('fields') !== null) {
+        if (null !== $request->get('fields')) {
             return $this->getContent($request, $uuid);
         }
 
@@ -300,7 +300,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
 
         try {
-            if ($uuid !== null && $uuid !== '') {
+            if (null !== $uuid && '' !== $uuid) {
                 $result = $this->getRepository()->getNodesTree(
                     $uuid,
                     $webspace,
@@ -308,7 +308,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $excludeGhosts,
                     $excludeShadows
                 );
-            } elseif ($webspace !== null) {
+            } elseif (null !== $webspace) {
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
             } else {
                 $result = $this->getRepository()->getWebspaceNodes($language);
@@ -382,7 +382,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function cgetAction(Request $request)
     {
-        if ($request->get('fields') !== null) {
+        if (null !== $request->get('fields')) {
             return $this->cgetContent($request);
         }
 
@@ -406,9 +406,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
         $ids = $this->getRequestParameter($request, 'ids');
 
-        if ($tree === true) {
+        if (true === $tree) {
             return $this->getTreeForUuid($request, $this->getRequestParameter($request, 'id', false, null));
-        } elseif ($ids !== null) {
+        } elseif (null !== $ids) {
             return $this->getNodesByIds($request, $ids);
         }
 
@@ -420,7 +420,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $depth = $request->get('depth', 1);
         $depth = intval($depth);
         $flat = $request->get('flat', 'true');
-        $flat = ($flat === 'true');
+        $flat = ('true' === $flat);
 
         // TODO pagination
         $result = $this->getRepository()->getNodes(
@@ -565,7 +565,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $webspaceKey,
             true,
             true,
-            $exclude !== null ? [$exclude] : []
+            null !== $exclude ? [$exclude] : []
         );
 
         return $this->handleView($this->view($content));
@@ -781,7 +781,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             }
 
             // prepare view
-            $view = $this->view($data, $data !== null ? 200 : 204);
+            $view = $this->view($data, null !== $data ? 200 : 204);
             $view->setSerializationContext(SerializationContext::create()->setGroups(['defaultPage']));
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
@@ -844,7 +844,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         if (null !== ($uuid = $request->get('uuid'))) {
             $id = $uuid;
-        } elseif (null !== ($parent = $request->get('parent')) && $request->getMethod() !== Request::METHOD_GET) {
+        } elseif (null !== ($parent = $request->get('parent')) && Request::METHOD_GET !== $request->getMethod()) {
             // the user is always allowed to get the children of a node
             // so the security check only applies for requests not being GETs
             $id = $parent;

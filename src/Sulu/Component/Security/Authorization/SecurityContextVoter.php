@@ -52,7 +52,7 @@ class SecurityContextVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        return $class === SecurityCondition::class || is_subclass_of($class, SecurityCondition::class);
+        return SecurityCondition::class === $class || is_subclass_of($class, SecurityCondition::class);
     }
 
     /**
@@ -70,6 +70,9 @@ class SecurityContextVoter implements VoterInterface
         }
 
         $userPermissions = $this->accessControlManager->getUserPermissions($object, $user);
+        if (0 === count($userPermissions)) {
+            return VoterInterface::ACCESS_DENIED;
+        }
 
         // only if all attributes are granted the access is granted
         foreach ($attributes as $attribute) {

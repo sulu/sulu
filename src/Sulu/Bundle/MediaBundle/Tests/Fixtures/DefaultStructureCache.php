@@ -114,7 +114,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Metadata
         $this->addChild($prop1);
 
         // section content
-                $section1 = new SectionProperty(
+        $section1 = new SectionProperty(
             'content',
                         [
                 'title' => [

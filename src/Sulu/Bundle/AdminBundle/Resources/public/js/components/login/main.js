@@ -53,7 +53,8 @@ define([], function() {
                 0: 'sulu.login.mail.user-not-found',
                 1003: 'sulu.login.mail.already-sent',
                 1005: 'sulu.login.token-does-not-exist',
-                1007: 'sulu.login.mail.limit-reached'
+                1007: 'sulu.login.mail.limit-reached',
+                1009: 'sulu.login.mail.user-not-found'
             }
         },
 
