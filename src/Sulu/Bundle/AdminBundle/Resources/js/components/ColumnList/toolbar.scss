@@ -26,14 +26,14 @@ $itemBorderColorSkinBlue: $concrete;
         border-radius: 3px 0 0 0;
     }
 
-    &:nth-child(2) {
+    &:last-child {
+        border-radius: 0 3px 0 0;
+    }
+
+    &.skin-blue {
         background: $itemBackgroundColorSkinBlue;
         border-left: 1px solid $itemBorderColorSkinBlue;
         border-right: 1px solid $itemBorderColorSkinBlue;
         color: $white;
-    }
-
-    &:last-child {
-        border-radius: 0 3px 0 0;
     }
 }

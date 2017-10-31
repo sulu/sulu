@@ -15,18 +15,19 @@ export type DropdownOptionConfig = {
     disabled?: boolean,
 };
 
-export type DropdownProps = {
+type ToolbarItemBase = {
     index: number,
     icon: string,
-    options: Array<DropdownOptionConfig>,
     disabled?: boolean,
+    skin?: 'blue',
 };
 
-export type SimpleProps = {
-    index: number,
-    icon: string,
+export type DropdownProps = ToolbarItemBase & {
+    options: Array<DropdownOptionConfig>,
+};
+
+export type SimpleProps = ToolbarItemBase & {
     onClick: (index: string | number) => void,
-    disabled?: boolean,
 };
 
 export type DropdownConfig = DropdownProps & { type: typeof toolbarItemTypes.Dropdown };

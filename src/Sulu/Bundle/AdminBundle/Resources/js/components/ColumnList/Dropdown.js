@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import type {Element, ElementRef} from 'react';
+import classNames from 'classnames';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../Icon';
@@ -42,10 +43,17 @@ export default class Dropdown extends React.Component<DropdownProps> {
     };
 
     render = () => {
-        const {icon, options} = this.props;
+        const {icon, options, skin} = this.props;
+
+        const className = classNames(
+            toolbarStyles.item,
+            {
+                [toolbarStyles.skinBlue]: skin === 'blue',
+            }
+        );
 
         return (
-            <div onClick={this.handleOnOptionClick} className={toolbarStyles.item}>
+            <div onClick={this.handleOnOptionClick} className={className}>
                 <Icon name={icon} />
                 <Popover
                     open={this.popOverOpen}

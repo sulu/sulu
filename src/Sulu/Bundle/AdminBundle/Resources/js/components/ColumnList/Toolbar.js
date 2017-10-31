@@ -21,13 +21,13 @@ export default class Toolbar extends React.Component<Props> {
             let item;
             switch (toolbarItemConfig.type) {
                 case toolbarItemTypes.Dropdown:
-                    item = <Dropdown key={index} index={this.props.index} {...toolbarItemConfig} />
+                    item = <Dropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
                     break;
                 case toolbarItemTypes.Simple:
-                    item = <Simple key={index} index={this.props.index} {...toolbarItemConfig} />
+                    item = <Simple key={index} index={this.props.index} {...toolbarItemConfig} />;
                     break;
                 default:
-                    break;
+                    throw new Error('Unknown toolbar item type given: "' + toolbarItemConfig.type + '"');
             }
 
             items.push(item);

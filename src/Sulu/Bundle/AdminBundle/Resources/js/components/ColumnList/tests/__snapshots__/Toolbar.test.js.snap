@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render with active 1`] = `
+<div
+  class="container isActive"
+>
+  <div
+    class="item"
+  >
+    <span
+      aria-label="plus"
+      class="fa fa-plus"
+    />
+  </div>
+  <div
+    class="item"
+  >
+    <span
+      aria-label="search"
+      class="fa fa-search"
+    />
+  </div>
+  <div
+    class="item"
+  >
+    <span
+      aria-label="gear"
+      class="fa fa-gear"
+    />
+  </div>
+</div>
+`;
+
+exports[`The component should render with active false 1`] = `
+<div
+  class="container"
+>
+  <div
+    class="item"
+  >
+    <span
+      aria-label="plus"
+      class="fa fa-plus"
+    />
+  </div>
+  <div
+    class="item"
+  >
+    <span
+      aria-label="search"
+      class="fa fa-search"
+    />
+  </div>
+  <div
+    class="item"
+  >
+    <span
+      aria-label="gear"
+      class="fa fa-gear"
+    />
+  </div>
+</div>
+`;

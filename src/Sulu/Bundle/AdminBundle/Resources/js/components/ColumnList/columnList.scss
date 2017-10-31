@@ -23,6 +23,7 @@ $columnBorderColor: $silver;
     height: calc($columnHeight - 50px);
     overflow: hidden;
 }
+
 .column-container:first-child {
     .column {
         border-radius: 3px 0 0 3px;

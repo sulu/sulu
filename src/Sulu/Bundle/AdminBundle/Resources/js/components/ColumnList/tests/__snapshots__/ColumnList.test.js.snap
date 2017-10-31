@@ -1,0 +1,303 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<div
+  class="container"
+>
+  <div
+    class="columnList"
+  >
+    <div
+      class="columnContainer isActive"
+    >
+      <div
+        class="container isActive"
+      >
+        <div
+          class="item"
+        >
+          <span
+            aria-label="plus"
+            class="fa fa-plus"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            aria-label="search"
+            class="fa fa-search"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            aria-label="gear"
+            class="fa fa-gear"
+          />
+        </div>
+      </div>
+      <div
+        class="column"
+      >
+        <div
+          class="item isSelected"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+        </div>
+        <div
+          class="item hasChildren"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+          <span
+            aria-label="chevron-right"
+            class="icon fa fa-chevron-right"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="columnContainer"
+    >
+      <div
+        class="container"
+      >
+        <div
+          class="item"
+        >
+          <span
+            aria-label="plus"
+            class="fa fa-plus"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            aria-label="search"
+            class="fa fa-search"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            aria-label="gear"
+            class="fa fa-gear"
+          />
+        </div>
+      </div>
+      <div
+        class="column"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+        </div>
+        <div
+          class="item hasChildren"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+          <span
+            aria-label="chevron-right"
+            class="icon fa fa-chevron-right"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="columnContainer"
+    >
+      <div
+        class="container"
+      >
+        <div
+          class="item"
+        >
+          <span
+            aria-label="plus"
+            class="fa fa-plus"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            aria-label="search"
+            class="fa fa-search"
+          />
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            aria-label="gear"
+            class="fa fa-gear"
+          />
+        </div>
+      </div>
+      <div
+        class="column"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+        </div>
+        <div
+          class="item"
+        >
+          <span
+            class="buttons"
+          >
+            <span
+              aria-label="heart"
+              class="button fa fa-heart"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="pencil"
+              class="button fa fa-pencil"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          <span
+            class="text"
+          >
+            Item 1
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
