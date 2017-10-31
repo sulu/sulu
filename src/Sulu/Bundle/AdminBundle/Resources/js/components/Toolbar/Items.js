@@ -1,7 +1,6 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
-import {observer} from 'mobx-react';
 import Button from './Button';
 import Dropdown from './Dropdown';
 import Select from './Select';
@@ -12,7 +11,6 @@ type Props = {
     children: ChildrenArray<Children>,
 };
 
-@observer
 export default class Items extends React.PureComponent<Props> {
     render() {
         const {
