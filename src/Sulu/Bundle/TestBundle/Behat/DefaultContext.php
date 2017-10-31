@@ -215,7 +215,7 @@ EOT;
     {
         $active = (int) $this->getSession()->evaluateScript('$.active');
 
-        if ($active === 0) {
+        if (0 === $active) {
             $this->getSession()->wait(1000, '$.active > 0');
         }
 
@@ -234,7 +234,7 @@ EOT;
         $this->spin(function (RawMinkContext $context) use ($selector) {
             $element = $context->getSession()->getPage()->find('css', $selector);
 
-            if ($element === null) {
+            if (null === $element) {
                 throw new \Exception('Element not found');
             }
 

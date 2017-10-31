@@ -126,7 +126,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         $this->width = $width;
         $this->minWidth = $minWidth;
         $this->editable = $editable;
-        $this->translation = $translation == null ? $name : $translation;
+        $this->translation = null == $translation ? $name : $translation;
         $this->class = $cssClass;
     }
 

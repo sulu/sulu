@@ -258,7 +258,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $mapping = $container->getParameter('sulu_document_manager.mapping');
 
         foreach ($mapping as $key => $item) {
-            if ($item['alias'] === 'page' || $item['alias'] === 'home') {
+            if ('page' === $item['alias'] || 'home' === $item['alias']) {
                 $mapping[$key]['set_default_author'] = $config['default_author'];
             }
         }

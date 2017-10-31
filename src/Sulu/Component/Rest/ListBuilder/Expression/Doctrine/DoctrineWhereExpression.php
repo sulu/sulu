@@ -59,9 +59,9 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
     {
         $paramName = $this->getFieldName() . $this->getUniqueId();
 
-        if ($this->getValue() === null) {
+        if (null === $this->getValue()) {
             return $this->field->getSelect() . ' ' . $this->convertNullComparator($this->getComparator());
-        } elseif ($this->getComparator() === 'LIKE') {
+        } elseif ('LIKE' === $this->getComparator()) {
             $queryBuilder->setParameter($paramName, '%' . $this->getValue() . '%');
         } elseif (in_array($this->getComparator(), ['and', 'or']) && is_array($this->getValue())) {
             $statement = [];

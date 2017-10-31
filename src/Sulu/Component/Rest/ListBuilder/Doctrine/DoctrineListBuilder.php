@@ -127,7 +127,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $numResults = count($result);
         if ($numResults > 1) {
             return $numResults;
-        } elseif ($numResults == 1) {
+        } elseif (1 == $numResults) {
             $result = array_values($result[0]);
 
             return (int) $result[0];
@@ -190,7 +190,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $select = $this->getSelectAs($this->idField);
 
         $subQueryBuilder = $this->createSubQueryBuilder($select);
-        if ($this->limit != null) {
+        if (null != $this->limit) {
             $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
 
@@ -226,7 +226,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function assignSortFields($queryBuilder)
     {
         // if no sort has been assigned add order by id ASC as default
-        if (count($this->sortFields) === 0) {
+        if (0 === count($this->sortFields)) {
             $queryBuilder->addOrderBy($this->idField->getSelect(), 'ASC');
         }
 
@@ -299,7 +299,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->getUniqueExpressionFieldDescriptors($this->expressions)
         );
 
-        if ($onlyReturnFilterFields !== true) {
+        if (true !== $onlyReturnFilterFields) {
             $fields = array_merge($fields, $this->selectFields);
         }
 
@@ -359,15 +359,15 @@ class DoctrineListBuilder extends AbstractListBuilder
         foreach ($this->getAllFields() as $key => $field) {
             // if field is in any conditional clause -> add join
             if (($field instanceof DoctrineFieldDescriptor || $field instanceof DoctrineJoinDescriptor) &&
-                array_search($field->getEntityName(), $necessaryEntityNames) !== false
+                false !== array_search($field->getEntityName(), $necessaryEntityNames)
                 && $field->getEntityName() !== $this->entityName
             ) {
                 $addJoins = array_merge($addJoins, $field->getJoins());
             } else {
                 // include inner joins
                 foreach ($field->getJoins() as $entityName => $join) {
-                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER &&
-                        array_search($entityName, $necessaryEntityNames) === false
+                    if (DoctrineJoinDescriptor::JOIN_METHOD_INNER !== $join->getJoinMethod() &&
+                        false === array_search($entityName, $necessaryEntityNames)
                     ) {
                         break;
                     }
@@ -438,7 +438,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $this->assignGroupBy($this->queryBuilder);
 
-        if ($this->search !== null) {
+        if (null !== $this->search) {
             $searchParts = [];
             foreach ($this->searchFields as $searchField) {
                 $searchParts[] = $searchField->getSearch();
@@ -459,7 +459,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
     {
-        if ($joins === null) {
+        if (null === $joins) {
             $joins = $this->getJoins();
         }
 
@@ -550,7 +550,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function getUniqueExpressionFieldDescriptors(array $expressions)
     {
-        if (count($this->expressionFields) === 0) {
+        if (0 === count($this->expressionFields)) {
             $descriptors = [];
             $uniqueNames = array_unique($this->getAllFieldNames($expressions));
             foreach ($uniqueNames as $uniqueName) {

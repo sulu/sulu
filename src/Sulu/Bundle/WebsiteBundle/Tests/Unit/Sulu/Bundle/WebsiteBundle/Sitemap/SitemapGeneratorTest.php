@@ -127,7 +127,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     protected function prepareWebspaceManager()
     {
-        if ($this->webspaceManager !== null) {
+        if (null !== $this->webspaceManager) {
             return;
         }
 
@@ -466,7 +466,7 @@ class ExcerptStructureExtension extends AbstractExtension
         // lazy load excerpt structure to avoid redeclaration of classes
         // should be done before parent::setLanguageCode because it uses the $thi<->properties
         // which will be set in initExcerptStructure
-        if ($this->excerptStructure === null) {
+        if (null === $this->excerptStructure) {
             $this->excerptStructure = $this->initExcerptStructure();
         }
 

@@ -106,7 +106,7 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $segmentKey
     ) {
         $value = $property->getValue();
-        $node->setProperty($property->getName(), ($value === null ? [] : $value));
+        $node->setProperty($property->getName(), (null === $value ? [] : $value));
     }
 
     /**
@@ -132,7 +132,7 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $value = $property->getValue();
         $locale = $property->getStructure()->getLanguageCode();
 
-        if ($value === null || !is_array($value) || count($value) === 0) {
+        if (null === $value || !is_array($value) || 0 === count($value)) {
             return [];
         }
 

@@ -54,7 +54,7 @@ class ListRepository extends EntityRepository
         $searchFields = $this->helper->getSearchFields();
 
         // if search string is set, but search fields are not, take all fields into account
-        if (!is_null($searchPattern) && $searchPattern != '' && (is_null($searchFields) || count($searchFields) == 0)) {
+        if (!is_null($searchPattern) && '' != $searchPattern && (is_null($searchFields) || 0 == count($searchFields))) {
             $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
         }
 
@@ -90,7 +90,7 @@ class ListRepository extends EntityRepository
             $query->setFirstResult($this->helper->getOffset())
                 ->setMaxResults($this->helper->getLimit());
         }
-        if ($searchPattern != null && $searchPattern != '') {
+        if (null != $searchPattern && '' != $searchPattern) {
             if (count($searchFields) > 0) {
                 if (count($textFields) > 0) {
                     $query->setParameter('search', '%' . $searchPattern . '%');
@@ -113,7 +113,7 @@ class ListRepository extends EntityRepository
         if (count($filters = $queryBuilder->getRelationalFilters()) > 0) {
             $filteredResults = [];
             // check if fields do contain id, else skip
-            if (count($fields = $this->helper->getFields()) > 0 && array_search('id', $fields) !== false) {
+            if (count($fields = $this->helper->getFields()) > 0 && false !== array_search('id', $fields)) {
                 $ids = [];
                 foreach ($results as $result) {
                     $id = $result['id'];

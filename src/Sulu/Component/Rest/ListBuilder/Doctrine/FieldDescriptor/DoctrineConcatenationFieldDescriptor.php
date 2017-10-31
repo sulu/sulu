@@ -58,7 +58,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
         $concat = null;
 
         foreach ($this->fieldDescriptors as $fieldDescriptor) {
-            if ($concat == null) {
+            if (null == $concat) {
                 $concat = $fieldDescriptor->getSelect();
             } else {
                 $concat = 'CONCAT(' . $concat . ', CONCAT(\'' . $this->glue . '\', ' . $fieldDescriptor->getSelect() . '))';

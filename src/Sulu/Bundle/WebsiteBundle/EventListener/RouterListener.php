@@ -57,7 +57,7 @@ class RouterListener implements EventSubscriberInterface
         // Would be nice to also only call this if the _requestAnalyzer attribute is set, but it's set on the next line
         $this->requestAnalyzer->analyze($request);
         $this->baseRouteListener->onKernelRequest($event);
-        if ($request->attributes->get(static::REQUEST_ANALYZER, true) !== false) {
+        if (false !== $request->attributes->get(static::REQUEST_ANALYZER, true)) {
             $this->requestAnalyzer->validate($request);
         }
     }

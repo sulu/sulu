@@ -40,7 +40,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->prophesize(ContentQueryBuilderInterface::class);
 
-        if ($initValue !== null) {
+        if (null !== $initValue) {
             $mock->init($initValue)->shouldBeCalled();
         }
 

@@ -176,7 +176,7 @@ class ListQueryBuilder
     {
         $selectFromDQL = $this->getSelectFrom($prefix);
         $whereDQL = $this->getWhere($prefix);
-        if ($this->countQuery != true) {
+        if (true != $this->countQuery) {
             $orderDQL = $this->getOrderBy($prefix);
         } else {
             $orderDQL = '';
@@ -209,21 +209,21 @@ class ListQueryBuilder
 
         // select and where fields
         $fieldsWhere = array_merge(
-            ($this->fields != null) ? $this->fields : [],
+            (null != $this->fields) ? $this->fields : [],
             array_keys($this->where)
         );
 
         $fieldsWhere = array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
 
-        if ($fieldsWhere != null && count($fieldsWhere) >= 0) {
+        if (null != $fieldsWhere && count($fieldsWhere) >= 0) {
             foreach ($fieldsWhere as $field) {
                 $this->performSelectFromField($field, $prefix);
             }
         }
         // if no field is selected take prefix
-        if ($this->countQuery === true) {
+        if (true === $this->countQuery) {
             $this->select = $this->replaceSelect;
-        } elseif (strlen($this->select) == 0) {
+        } elseif (0 == strlen($this->select)) {
             $this->select = $prefix;
         }
 
@@ -319,7 +319,7 @@ class ListQueryBuilder
         while ($i <= count($fieldParts) - 2) {
             if (!in_array($fieldParts[$i], $this->prefixes)) {
                 $result .= $this->generateJoin(
-                    ($i == 0) ? $prefix : $fieldParts[$i - 1],
+                    (0 == $i) ? $prefix : $fieldParts[$i - 1],
                     $fieldParts[$i],
                     $fieldParts[$i]
                 );
@@ -405,7 +405,7 @@ class ListQueryBuilder
             foreach ($fields as $key) {
                 $keys = explode('_', $key);
                 $prefixActual = $prefix;
-                if (count($keys) == 1) {
+                if (1 == count($keys)) {
                     $col = $keys[0];
                 } else {
                     $i = count($keys);
@@ -436,7 +436,7 @@ class ListQueryBuilder
             }
 
             if (!empty($searches)) {
-                if ($result != '') {
+                if ('' != $result) {
                     $result .= ' AND ';
                 }
                 $result .= '(' . implode(' OR ', $searches) . ')';
@@ -459,7 +459,7 @@ class ListQueryBuilder
     {
         $result = '';
         // If sorting is defined
-        if ($this->sorting != null && count($this->sorting) > 0) {
+        if (null != $this->sorting && count($this->sorting) > 0) {
             $orderBy = '';
             // TODO OrderBy relations translations_value
             foreach ($this->sorting as $col => $dir) {

@@ -61,7 +61,7 @@ class NominatimGeolocator implements GeolocatorInterface
             ]
         );
 
-        if ($response->getStatusCode() != 200) {
+        if (200 != $response->getStatusCode()) {
             throw new HttpException(
                 $response->getStatusCode(),
                 sprintf(

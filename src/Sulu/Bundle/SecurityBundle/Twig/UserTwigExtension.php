@@ -60,7 +60,7 @@ class UserTwigExtension extends \Twig_Extension
         }
 
         $user = $this->userRepository->findUserById($id);
-        if ($user === null) {
+        if (null === $user) {
             return;
         }
 

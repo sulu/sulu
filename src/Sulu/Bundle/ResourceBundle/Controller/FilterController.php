@@ -86,7 +86,7 @@ class FilterController extends RestController implements ClassResourceInterface
                 throw new MissingFeatureException($context, 'filters');
             }
 
-            if ($request->get('flat') == 'true') {
+            if ('true' == $request->get('flat')) {
                 $list = $this->getListRepresentation($request);
             } else {
                 $list = new CollectionRepresentation(

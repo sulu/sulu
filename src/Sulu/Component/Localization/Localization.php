@@ -211,7 +211,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         @trigger_error(__METHOD__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', E_USER_DEPRECATED);
 
         $localization = $this->getLanguage();
-        if ($this->getCountry() != null) {
+        if (null != $this->getCountry()) {
             $localization .= $delimiter . $this->getCountry();
         }
 
@@ -345,7 +345,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        if ($this->getChildren() !== null && count($this->getChildren()) > 0) {
+        if (null !== $this->getChildren() && count($this->getChildren()) > 0) {
             foreach ($this->getChildren() as $child) {
                 $localizations[] = $child;
                 $localizations = array_merge($localizations, $child->getAllLocalizations());

@@ -56,7 +56,7 @@ class AdminPool
         $navigation = null;
         foreach ($this->pool as $admin) {
             /* @var Admin $admin */
-            if ($navigation == null) {
+            if (null == $navigation) {
                 $navigation = $admin->getNavigation();
             } else {
                 $navigation = $navigation->merge($admin->getNavigation());

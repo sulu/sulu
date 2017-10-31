@@ -105,7 +105,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     {
         $queryBuilder = $this->getCategoryQuery();
 
-        if ($parentId === null) {
+        if (null === $parentId) {
             $queryBuilder->andWhere('category.parent IS NULL');
         } else {
             $queryBuilder->andWhere('categoryParent.id = :parentId');
@@ -113,7 +113,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
 
         $query = $queryBuilder->getQuery();
 
-        if ($parentId !== null) {
+        if (null !== $parentId) {
             $query->setParameter('parentId', $parentId);
         }
 
@@ -127,7 +127,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     {
         $queryBuilder = $this->getCategoryQuery();
 
-        if ($parentKey === null) {
+        if (null === $parentKey) {
             $queryBuilder->andWhere('category.parent IS NULL');
         } else {
             $queryBuilder->andWhere('categoryParent.key = :parentKey');
@@ -135,7 +135,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
 
         $query = $queryBuilder->getQuery();
 
-        if ($parentKey !== null) {
+        if (null !== $parentKey) {
             $query->setParameter('parentKey', $parentKey);
         }
 
@@ -220,10 +220,10 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         $queryBuilder = $this->getCategoryQuery();
         $queryBuilder->andWhere('category.parent IS NULL');
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $queryBuilder->andWhere('categoryParent.id = :parentId');
         }
-        if ($depth !== null) {
+        if (null !== $depth) {
             $queryBuilder->andWhere('category.depth = :depth');
         }
 
@@ -233,10 +233,10 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         }
 
         $query = $queryBuilder->getQuery();
-        if ($parent !== null) {
+        if (null !== $parent) {
             $query->setParameter('parentId', $parent);
         }
-        if ($depth !== null) {
+        if (null !== $depth) {
             $query->setParameter('depth', $depth);
         }
 

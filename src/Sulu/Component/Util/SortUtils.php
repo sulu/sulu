@@ -90,7 +90,7 @@ final class SortUtils
             }
         });
 
-        if (strtoupper($direction) == 'DESC') {
+        if ('DESC' == strtoupper($direction)) {
             $values = array_reverse($values);
         }
 

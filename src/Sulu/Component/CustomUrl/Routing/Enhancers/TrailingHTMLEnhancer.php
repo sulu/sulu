@@ -29,7 +29,7 @@ class TrailingHTMLEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
-        if (substr($request->getRequestUri(), -5, 5) !== '.html') {
+        if ('.html' !== substr($request->getRequestUri(), -5, 5)) {
             return [];
         }
 

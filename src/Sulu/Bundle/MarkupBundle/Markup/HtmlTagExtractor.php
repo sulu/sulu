@@ -84,7 +84,7 @@ class HtmlTagExtractor implements TagExtractorInterface
         for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
             $value = $matches['value'][$i];
 
-            if ($value === 'true' || $value === 'false') {
+            if ('true' === $value || 'false' === $value) {
                 $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
             }
 

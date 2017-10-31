@@ -82,7 +82,7 @@ class Category extends ApiEntityWrapper
      */
     public function getName()
     {
-        if (($translation = $this->getTranslation(true)) === null) {
+        if (null === ($translation = $this->getTranslation(true))) {
             return;
         }
 
@@ -100,7 +100,7 @@ class Category extends ApiEntityWrapper
      */
     public function getDescription()
     {
-        if (($translation = $this->getTranslation(true)) === null) {
+        if (null === ($translation = $this->getTranslation(true))) {
             return;
         }
 
@@ -118,7 +118,7 @@ class Category extends ApiEntityWrapper
      */
     public function getMediasRawData()
     {
-        if (($translation = $this->getTranslation(true)) === null) {
+        if (null === ($translation = $this->getTranslation(true))) {
             return ['ids' => []];
         }
 
@@ -137,7 +137,7 @@ class Category extends ApiEntityWrapper
      */
     public function getMedias()
     {
-        if (($translation = $this->getTranslation(true)) === null) {
+        if (null === ($translation = $this->getTranslation(true))) {
             return [];
         }
 
@@ -160,7 +160,7 @@ class Category extends ApiEntityWrapper
      */
     public function getLocale()
     {
-        if (($translation = $this->getTranslation(true)) === null) {
+        if (null === ($translation = $this->getTranslation(true))) {
             return;
         }
 
@@ -179,7 +179,7 @@ class Category extends ApiEntityWrapper
     public function getMeta()
     {
         $arrReturn = [];
-        if ($this->entity->getMeta() !== null) {
+        if (null !== $this->entity->getMeta()) {
             foreach ($this->entity->getMeta() as $meta) {
                 if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
                     array_push(
@@ -307,7 +307,7 @@ class Category extends ApiEntityWrapper
         $translationEntity->setTranslation($translation->getTranslation());
         $translationEntity->setLocale($translation->getLocale());
 
-        if ($this->getId() === null && $this->getDefaultLocale() === null) {
+        if (null === $this->getId() && null === $this->getDefaultLocale()) {
             // new entity and new translation
             // save first locale as default
             $this->entity->setDefaultLocale($translationEntity->getLocale());
@@ -430,7 +430,7 @@ class Category extends ApiEntityWrapper
      */
     private function getSingleMetaById($meta, $id)
     {
-        if ($id !== null) {
+        if (null !== $id) {
             foreach ($meta as $singleMeta) {
                 if ($singleMeta->getId() === $id) {
                     return $singleMeta;
@@ -470,7 +470,7 @@ class Category extends ApiEntityWrapper
     {
         $translation = $this->getTranslationByLocale($this->locale);
 
-        if (true === $withDefault && null === $translation && $this->getDefaultLocale() !== null) {
+        if (true === $withDefault && null === $translation && null !== $this->getDefaultLocale()) {
             return $this->getTranslationByLocale($this->getDefaultLocale());
         }
 
@@ -486,7 +486,7 @@ class Category extends ApiEntityWrapper
      */
     private function getTranslationByLocale($locale)
     {
-        if ($locale !== null) {
+        if (null !== $locale) {
             foreach ($this->entity->getTranslations() as $translation) {
                 if ($translation->getLocale() == $locale) {
                     return $translation;

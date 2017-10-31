@@ -119,7 +119,7 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function getData()
     {
-        if ($this->data === null) {
+        if (null === $this->data) {
             $this->data = $this->loadData();
         }
 
@@ -132,7 +132,7 @@ class InternalLinksContainer implements ArrayableInterface
     private function loadData()
     {
         $result = [];
-        if ($this->ids !== null && count($this->ids) > 0) {
+        if (null !== $this->ids && count($this->ids) > 0) {
             $this->contentQueryBuilder->init(
                 [
                     'ids' => $this->ids,
@@ -182,7 +182,7 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function __isset($name)
     {
-        return $name == 'data';
+        return 'data' == $name;
     }
 
     /**

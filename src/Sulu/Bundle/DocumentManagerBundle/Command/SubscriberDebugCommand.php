@@ -80,7 +80,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
 
     private function resolvePriority($value, $targetMethodName)
     {
-        if (count($value) == 1) {
+        if (1 == count($value)) {
             return 0;
         }
 

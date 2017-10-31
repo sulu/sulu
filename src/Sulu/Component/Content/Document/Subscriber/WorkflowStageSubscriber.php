@@ -253,7 +253,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
         $publishDate = $document->getPublished();
 
-        if (!$publishDate && $workflowStage === WorkflowStage::PUBLISHED) {
+        if (!$publishDate && WorkflowStage::PUBLISHED === $workflowStage) {
             $publishDate = new \DateTime();
             $accessor->set(self::PUBLISHED_FIELD, $publishDate);
         }

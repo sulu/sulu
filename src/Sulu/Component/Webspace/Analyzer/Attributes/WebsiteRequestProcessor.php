@@ -74,7 +74,7 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
             $this->environment
         );
 
-        if (count($portalInformations) === 0) {
+        if (0 === count($portalInformations)) {
             return new RequestAttributes();
         }
 

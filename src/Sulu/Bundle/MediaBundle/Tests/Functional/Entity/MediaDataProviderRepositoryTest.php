@@ -123,7 +123,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $collectionMeta->setCollection($collection);
         $collection->addMeta($collectionMeta);
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $collection->setParent($this->collections[$parent]);
             $this->collections[$parent]->addChildren($collection);
         }
@@ -543,7 +543,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
 
         // if data-source isset replace the index with the id
-        if (array_key_exists('dataSource', $filters) && $filters['dataSource'] !== 'root') {
+        if (array_key_exists('dataSource', $filters) && 'root' !== $filters['dataSource']) {
             $filters['dataSource'] = $this->collections[$filters['dataSource']]->getId();
         }
 
@@ -617,7 +617,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             'includeSubFolders' => true,
         ];
 
-        if ($targetGroupIndex !== null) {
+        if (null !== $targetGroupIndex) {
             $filters['targetGroupId'] = $targetGroups[$targetGroupIndex]->getId();
         }
 

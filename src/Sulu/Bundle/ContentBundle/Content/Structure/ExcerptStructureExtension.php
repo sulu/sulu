@@ -230,7 +230,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     private function getExcerptStructure($locale = null)
     {
-        if ($locale === null) {
+        if (null === $locale) {
             $locale = $this->languageCode;
         }
 

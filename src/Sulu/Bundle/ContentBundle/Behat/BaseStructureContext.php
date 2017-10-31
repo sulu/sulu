@@ -80,7 +80,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
             $parentUuid = null;
 
             if ($structureData['parent']) {
-                $parentPath = $type === 'page' ? '/cmf/sulu_io/contents' : '/cmf/snippets';
+                $parentPath = 'page' === $type ? '/cmf/sulu_io/contents' : '/cmf/snippets';
                 $parentNode = $this->getPhpcrSession()->getNode($parentPath . $structureData['parent']);
                 $parentUuid = $parentNode->getIdentifier();
             }
@@ -104,7 +104,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
             }
 
             $persistOptions = [];
-            if ($type === 'page') {
+            if ('page' === $type) {
                 if ($parentUuid) {
                     $document->setParent($this->getDocumentManager()->find($parentUuid, 'de'));
                 } else {
@@ -160,7 +160,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
 
         $paths = $paths[$type];
 
-        if (count($paths) == 0) {
+        if (0 == count($paths)) {
             throw new \Exception(sprintf(
                 'No "%s" paths configured in container parameter "sulu.content.structure.paths',
                 $type

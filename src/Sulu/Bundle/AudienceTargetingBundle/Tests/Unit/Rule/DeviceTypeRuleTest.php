@@ -44,9 +44,9 @@ class DeviceTypeRuleTest extends \PHPUnit_Framework_TestCase
      */
     public function testEvaluate($deviceType, $options, $result)
     {
-        $this->deviceDetector->isDesktop()->willReturn($deviceType === DeviceTypeRule::DESKTOP);
-        $this->deviceDetector->isTablet()->willReturn($deviceType === DeviceTypeRule::TABLET);
-        $this->deviceDetector->isSmartphone()->willReturn($deviceType === DeviceTypeRule::SMARTPHONE);
+        $this->deviceDetector->isDesktop()->willReturn(DeviceTypeRule::DESKTOP === $deviceType);
+        $this->deviceDetector->isTablet()->willReturn(DeviceTypeRule::TABLET === $deviceType);
+        $this->deviceDetector->isSmartphone()->willReturn(DeviceTypeRule::SMARTPHONE === $deviceType);
 
         $this->assertSame($result, $this->deviceTypeRule->evaluate($options));
     }

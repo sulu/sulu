@@ -93,7 +93,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
         $namespace = substr($namespaces, $start);
 
         $end = strpos($namespace, ' ');
-        if ($end !== false) {
+        if (false !== $end) {
             $namespace = substr($namespace, 0, $end);
         }
 
@@ -182,7 +182,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      */
     protected function getParametersFromNode($node, $parameterName = 'parameter')
     {
-        if ($node === null) {
+        if (null === $node) {
             return [];
         }
 

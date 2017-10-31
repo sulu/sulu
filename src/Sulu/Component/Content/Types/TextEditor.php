@@ -71,7 +71,7 @@ class TextEditor extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        if ($value !== null) {
+        if (null !== $value) {
             $node->setProperty($property->getName(),
                 $this->removeValidation(
                     $this->removeIllegalCharacters($value)

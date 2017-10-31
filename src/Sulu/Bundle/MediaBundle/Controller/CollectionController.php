@@ -124,10 +124,10 @@ class CollectionController extends RestController implements ClassResourceInterf
                         $depth,
                         $breadcrumb,
                         $filter,
-                        $sortBy !== null ? [$sortBy => $sortOrder] : []
+                        null !== $sortBy ? [$sortBy => $sortOrder] : []
                     );
 
-                    if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                    if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
                         $this->get('sulu_security.security_checker')->checkPermission(
                             'sulu.media.system_collections',
                             PermissionTypes::VIEW
@@ -177,7 +177,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     ],
                     $limit,
                     $offset,
-                    $sortBy !== null ? [$sortBy => $sortOrder] : []
+                    null !== $sortBy ? [$sortBy => $sortOrder] : []
                 );
             } else {
                 $collections = $collectionManager->getTree(
@@ -186,7 +186,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $limit,
                     $search,
                     $depth,
-                    $sortBy !== null ? [$sortBy => $sortOrder] : [],
+                    null !== $sortBy ? [$sortBy => $sortOrder] : [],
                     $securityChecker->hasPermission('sulu.media.system_collections', 'view')
                 );
             }
@@ -350,8 +350,8 @@ class CollectionController extends RestController implements ClassResourceInterf
         $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
         $parent = $request->get('parent');
 
-        if (($id !== null && $systemCollectionManager->isSystemCollection(intval($id))) ||
-            ($parent !== null && $systemCollectionManager->isSystemCollection(intval($parent)))
+        if ((null !== $id && $systemCollectionManager->isSystemCollection(intval($id))) ||
+            (null !== $parent && $systemCollectionManager->isSystemCollection(intval($parent)))
         ) {
             throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
         }
@@ -391,7 +391,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $page = $request->get('page', 1);
 
-        return ($limit !== null) ? $limit * ($page - 1) : 0;
+        return (null !== $limit) ? $limit * ($page - 1) : 0;
     }
 
     /**

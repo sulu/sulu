@@ -73,8 +73,8 @@ class SecuritySubscriber implements EventSubscriberInterface
         if (!($document instanceof SecurityBehavior
             && $document instanceof LocaleBehavior
             && $document instanceof WebspaceBehavior
-            && $this->tokenStorage !== null
-            && $this->tokenStorage->getToken() !== null
+            && null !== $this->tokenStorage
+            && null !== $this->tokenStorage->getToken()
             && $this->tokenStorage->getToken()->getUser() instanceof UserInterface)
         ) {
             return;

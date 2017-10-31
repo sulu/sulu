@@ -102,6 +102,7 @@ abstract class WebsiteController extends Controller
 
         $level = ob_get_level();
         ob_start();
+
         try {
             $rendered = $template->renderBlock($block, $attributes);
             ob_end_clean();

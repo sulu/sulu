@@ -195,6 +195,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
 
             if (in_array($field, $expectedFields)) {
                 $prophecy->shouldBeCalled();
+
                 continue;
             }
 

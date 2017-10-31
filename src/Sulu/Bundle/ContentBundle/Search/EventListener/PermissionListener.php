@@ -39,7 +39,7 @@ class PermissionListener
 
     public function onPermissionUpdate(PermissionUpdateEvent $permissionUpdateEvent)
     {
-        if ($permissionUpdateEvent->getType() !== SecurityBehavior::class) {
+        if (SecurityBehavior::class !== $permissionUpdateEvent->getType()) {
             return;
         }
 

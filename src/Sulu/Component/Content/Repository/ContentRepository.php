@@ -128,7 +128,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $rows = $queryBuilder->execute();
 
-        if (count(iterator_to_array($rows->getRows())) !== 1) {
+        if (1 !== count(iterator_to_array($rows->getRows()))) {
             throw new ItemNotFoundException();
         }
 
@@ -236,7 +236,7 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        if (count($uuids) === 0) {
+        if (0 === count($uuids)) {
             return [];
         }
 
@@ -362,7 +362,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $rows = $queryBuilder->execute();
 
-        if (count(iterator_to_array($rows->getRows())) !== 1) {
+        if (1 !== count(iterator_to_array($rows->getRows()))) {
             throw new ItemNotFoundException();
         }
 
@@ -603,7 +603,7 @@ class ContentRepository implements ContentRepositoryInterface
                 return;
             }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
-        } elseif ($ghostLocale !== null && $ghostLocale !== $originalLocale) {
+        } elseif (null !== $ghostLocale && $ghostLocale !== $originalLocale) {
             if (!$mapping->shouldHydrateGhost()) {
                 return;
             }
@@ -612,9 +612,9 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         if (
-            $row->getValue('nodeType') === RedirectType::INTERNAL
+            RedirectType::INTERNAL === $row->getValue('nodeType')
             && $mapping->followInternalLink()
-            && $row->getValue('internalLink') !== ''
+            && '' !== $row->getValue('internalLink')
             && $row->getValue('internalLink') !== $row->getValue('uuid')
         ) {
             // TODO collect all internal link contents and query once
@@ -782,7 +782,7 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function resolveUrl(Row $row, $locale)
     {
-        if ($this->resolveProperty($row, $locale . 'State', $locale) !== WorkflowStage::PUBLISHED) {
+        if (WorkflowStage::PUBLISHED !== $this->resolveProperty($row, $locale . 'State', $locale)) {
             return;
         }
 

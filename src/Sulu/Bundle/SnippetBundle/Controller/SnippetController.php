@@ -317,7 +317,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             // prepare view
             $view = View::create(
                 $this->decorateSnippet($snippet->toArray(), $locale),
-                $snippet !== null ? 200 : 204
+                null !== $snippet ? 200 : 204
             );
         } catch (RestException $exc) {
             $view = View::create($exc->toArray(), 400);
@@ -397,16 +397,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
     * Returns user.
     */
-   private function getUser()
-   {
-       $token = $this->tokenStorage->getToken();
+    private function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
 
-       if (null === $token) {
-           throw new \InvalidArgumentException('No user is set');
-       }
+        if (null === $token) {
+            throw new \InvalidArgumentException('No user is set');
+        }
 
-       return $token->getUser();
-   }
+        return $token->getUser();
+    }
 
     /**
      * Decorate snippet for HATEOAS.

@@ -78,7 +78,7 @@ class ListRestHelper implements ListRestHelperInterface
     public function getLimit()
     {
         $default = 10;
-        if ($this->getRequest()->getRequestFormat() === 'csv') {
+        if ('csv' === $this->getRequest()->getRequestFormat()) {
             $default = null;
         }
 
@@ -96,7 +96,7 @@ class ListRestHelper implements ListRestHelperInterface
         $page = $this->getRequest()->get('page', 1);
         $limit = $this->getLimit();
 
-        return ($limit != null) ? $limit * ($page - 1) : null;
+        return (null != $limit) ? $limit * ($page - 1) : null;
     }
 
     /**
@@ -119,7 +119,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $fields = $this->getRequest()->get('fields');
 
-        return ($fields != null) ? explode(',', $fields) : null;
+        return (null != $fields) ? explode(',', $fields) : null;
     }
 
     /**
@@ -141,6 +141,6 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return ($searchFields != null) ? explode(',', $searchFields) : [];
+        return (null != $searchFields) ? explode(',', $searchFields) : [];
     }
 }

@@ -52,7 +52,7 @@ class SecurityContextVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        return $class === SecurityCondition::class || is_subclass_of($class, SecurityCondition::class);
+        return SecurityCondition::class === $class || is_subclass_of($class, SecurityCondition::class);
     }
 
     /**

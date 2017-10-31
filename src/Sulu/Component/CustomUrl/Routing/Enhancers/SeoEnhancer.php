@@ -63,6 +63,6 @@ class SeoEnhancer extends AbstractEnhancer
      */
     protected function supports(CustomUrlBehavior $customUrl)
     {
-        return $customUrl->getTargetDocument() !== null;
+        return null !== $customUrl->getTargetDocument();
     }
 }

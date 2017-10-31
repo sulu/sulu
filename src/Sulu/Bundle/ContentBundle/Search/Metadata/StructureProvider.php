@@ -154,7 +154,7 @@ class StructureProvider implements ProviderInterface
                         $tag = $componentProperty->getTag('sulu.search.field');
                         $tagAttributes = $tag['attributes'];
 
-                        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+                        if (!isset($tagAttributes['index']) || 'false' !== $tagAttributes['index']) {
                             $propertyMapping->addFieldMapping(
                                 $property->getName() . '.' . $componentProperty->getName(),
                                 [
@@ -377,7 +377,7 @@ EOT;
             return;
         }
 
-        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+        if (!isset($tagAttributes['index']) || 'false' !== $tagAttributes['index']) {
             $metadata->addFieldMapping(
                 $property->getName(),
                 [

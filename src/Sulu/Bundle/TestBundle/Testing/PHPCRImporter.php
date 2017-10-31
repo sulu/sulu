@@ -51,7 +51,7 @@ class PHPCRImporter
             do {
                 $path = '/' . XmlUtil::getValueFromXPath('@sv:name', $xpath, $parent) . $path;
                 $parent = $parent->parentNode;
-            } while (XmlUtil::getValueFromXPath('@sv:name', $xpath, $parent) !== 'contents');
+            } while ('contents' !== XmlUtil::getValueFromXPath('@sv:name', $xpath, $parent));
 
             $data[] = [
                 'id' => XmlUtil::getValueFromXPath('sv:property[@sv:name="jcr:uuid"]/sv:value', $xpath, $node),

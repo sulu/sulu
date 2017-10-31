@@ -70,7 +70,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
     {
         foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
             $action = $this->xpath->query('x:action', $commandNode)->item(0)->nodeValue;
-            if ($action === 'scale' || $action === 'resize') {
+            if ('scale' === $action || 'resize' === $action) {
                 $xNode = $this->xpath->query('x:parameters/x:parameter[@name = "x"]', $commandNode)->item(0);
                 $yNode = $this->xpath->query('x:parameters/x:parameter[@name = "y"]', $commandNode)->item(0);
                 $modeNode = $this->xpath->query('x:parameters/x:parameter[@name = "mode"]', $commandNode)->item(0);
@@ -84,27 +84,27 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
                 $yValue = null;
                 $forceRatio = static::SCALE_FORCE_RATIO_DEFAULT;
                 $retina = static::SCALE_RETINA_DEFAULT;
-                if ($xNode !== null && $xNode->nodeValue !== '') {
+                if (null !== $xNode && '' !== $xNode->nodeValue) {
                     $xValue = intval($xNode->nodeValue);
                 }
-                if ($yNode !== null && $yNode->nodeValue !== '') {
+                if (null !== $yNode && '' !== $yNode->nodeValue) {
                     $yValue = intval($yNode->nodeValue);
                 }
-                if ($xValue === null && $yValue === null) {
+                if (null === $xValue && null === $yValue) {
                     throw new MissingScaleDimensionException();
                 }
 
-                if ($forceRatioNode !== null && $forceRatioNode->nodeValue === 'false') {
+                if (null !== $forceRatioNode && 'false' === $forceRatioNode->nodeValue) {
                     $forceRatio = false;
                 }
-                if ($retinaNode !== null && $retinaNode->nodeValue === 'true') {
+                if (null !== $retinaNode && 'true' === $retinaNode->nodeValue) {
                     $retina = true;
                 }
 
                 return [
                     'x' => $xValue,
                     'y' => $yValue,
-                    'mode' => ($modeNode !== null) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
+                    'mode' => (null !== $modeNode) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
                     'retina' => $retina,
                     'forceRatio' => $forceRatio,
                 ];
@@ -123,7 +123,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
 
         foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
             $action = $this->xpath->query('x:action', $commandNode)->item(0)->nodeValue;
-            if ($action === 'scale' || $action === 'resize') {
+            if ('scale' === $action || 'resize' === $action) {
                 continue;
             }
 

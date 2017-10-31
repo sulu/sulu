@@ -118,7 +118,7 @@ class CollectionManager implements CollectionManagerInterface
     public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [])
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
-        if ($collectionEntity === null) {
+        if (null === $collectionEntity) {
             throw new CollectionNotFoundException($id);
         }
         $filter['locale'] = $locale;
@@ -187,7 +187,7 @@ class CollectionManager implements CollectionManagerInterface
 
             $collections[$collection->getId()] = $apiEntity;
 
-            if ($collection->getParent() !== null) {
+            if (null !== $collection->getParent()) {
                 $collections[$collection->getParent()->getId()]->addChild($apiEntity);
             } else {
                 $result[] = $apiEntity;
@@ -222,7 +222,7 @@ class CollectionManager implements CollectionManagerInterface
 
         $collections = [];
         foreach ($entities as $entity) {
-            if ($entity->getParent() === null) {
+            if (null === $entity->getParent()) {
                 $collections[] = $this->getApiEntity($entity, $locale, $entities);
             }
         }
@@ -362,7 +362,7 @@ class CollectionManager implements CollectionManagerInterface
      */
     public function getFieldDescriptors()
     {
-        if ($this->fieldDescriptors === null) {
+        if (null === $this->fieldDescriptors) {
             $this->initializeFieldDescriptors();
         }
 
@@ -542,12 +542,12 @@ class CollectionManager implements CollectionManagerInterface
         try {
             $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
-            if ($collectionEntity === null) {
+            if (null === $collectionEntity) {
                 throw new CollectionNotFoundException($id);
             }
 
             $destinationEntity = null;
-            if ($destinationId !== null) {
+            if (null !== $destinationId) {
                 $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
             }
 
@@ -630,7 +630,7 @@ class CollectionManager implements CollectionManagerInterface
             if ($meta->getLocale() == $locale) {
                 $title = $meta->getTitle();
                 break;
-            } elseif ($key == 0) { // fallback title
+            } elseif (0 == $key) { // fallback title
                 $title = $meta->getTitle();
             }
         }
@@ -673,20 +673,20 @@ class CollectionManager implements CollectionManagerInterface
 
         $children = [];
 
-        if ($entities !== null) {
+        if (null !== $entities) {
             foreach ($entities as $possibleChild) {
-                if (($parent = $possibleChild->getParent()) !== null && $parent->getId() === $entity->getId()) {
+                if (null !== ($parent = $possibleChild->getParent()) && $parent->getId() === $entity->getId()) {
                     $children[] = $this->getApiEntity($possibleChild, $locale, $entities);
                 }
             }
         }
 
         $apiEntity->setChildren($children);
-        if ($entity->getParent() !== null) {
+        if (null !== $entity->getParent()) {
             $apiEntity->setParent($this->getApiEntity($entity->getParent(), $locale));
         }
 
-        if ($breadcrumbEntities !== null) {
+        if (null !== $breadcrumbEntities) {
             $breadcrumbApiEntities = [];
             foreach ($breadcrumbEntities as $entity) {
                 $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);

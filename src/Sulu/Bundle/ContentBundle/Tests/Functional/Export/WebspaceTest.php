@@ -257,10 +257,10 @@ class WebspaceTest extends SuluTestCase
 
             foreach ($page as $name => $property) {
                 if (
-                    strpos($name, 'seo') === false
-                    && strpos($name, 'excerpt') === false
+                    false === strpos($name, 'seo')
+                    && false === strpos($name, 'excerpt')
                 ) {
-                    if ($name === 'block') {
+                    if ('block' === $name) {
                         $blockChildren = [];
                         foreach ($property as $block) {
                             $blockPropertyData = [];
@@ -436,11 +436,11 @@ class WebspaceTest extends SuluTestCase
             'options' => $options,
         ];
 
-        if ($forceValue || $value !== null) {
+        if ($forceValue || null !== $value) {
             $data['value'] = $value;
         }
 
-        if ($children !== null) {
+        if (null !== $children) {
             $data['value'] = $children;
         }
 
@@ -492,7 +492,7 @@ class WebspaceTest extends SuluTestCase
             $document->setShadowLocaleEnabled($isShadow);
         }
 
-        if ($state === null) {
+        if (null === $state) {
             $state = WorkflowStage::PUBLISHED;
         }
         $document->setWorkflowStage($state);
