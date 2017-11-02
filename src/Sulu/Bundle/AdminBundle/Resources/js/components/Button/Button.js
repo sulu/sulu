@@ -5,7 +5,7 @@ import buttonStyles from './button.scss';
 
 type Props = {
     children: string,
-    type: 'confirm' | 'cancel',
+    type: 'primary' | 'secondary',
     onClick: () => void,
 };
 
@@ -20,12 +20,7 @@ export default class Button extends React.PureComponent<Props> {
             type,
         } = this.props;
 
-        const buttonClass = classNames(
-            buttonStyles.button,
-            {
-                [buttonStyles[type]]: type,
-            }
-        );
+        const buttonClass = classNames(buttonStyles.button, buttonStyles[type]);
 
         return (
             <button className={buttonClass} onClick={this.handleClick}>

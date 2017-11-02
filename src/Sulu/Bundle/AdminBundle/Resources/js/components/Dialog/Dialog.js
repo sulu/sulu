@@ -94,10 +94,10 @@ export default class Dialog extends React.PureComponent<Props> {
                                 {children}
                             </article>
                             <footer>
-                                <Button type="cancel" onClick={onCancel}>
+                                <Button type="secondary" onClick={onCancel}>
                                     {cancelText}
                                 </Button>
-                                <Button type="confirm" onClick={onConfirm}>
+                                <Button type="primary" onClick={onConfirm}>
                                     {confirmText}
                                 </Button>
                             </footer>

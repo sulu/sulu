@@ -91,7 +91,13 @@ export default class Datagrid extends React.PureComponent<Props> {
                         />
                     }
                 </div>
-                {pagination}
+                {!!page && !!pageCount &&
+                    <Pagination
+                        current={page}
+                        total={pageCount}
+                        onChange={this.handleChangePage}
+                    />
+                }
             </section>
         );
     }

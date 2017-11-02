@@ -1,4 +1,4 @@
-The `Button` component let's display a button.
+The `Button` component displays a button.
 
 ```
 const onClick = () => {
@@ -6,13 +6,11 @@ const onClick = () => {
     alert('Clicked this nice button, congrats!');
 };
 
-<div>
-    <Button
-        type="confirm"
-        onClick={onClick}>
-        Click me dude
-    </Button>
-</div>
+<Button
+    type="primary"
+    onClick={onClick}>
+    Click me dude
+</Button>
 ```
 
 ```
@@ -21,11 +19,9 @@ const onClick = () => {
     alert('Clicked this nice button, congrats!');
 };
 
-<div>
-    <Button
-        type="cancel"
-        onClick={onClick}>
-        Click me dude
-    </Button>
-</div>
+<Button
+    type="secondary"
+    onClick={onClick}>
+    Click me dude
+</Button>
 ```
