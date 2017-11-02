@@ -41,7 +41,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 'type' => 'google',
                 'content' => 'UA123-123',
                 'domains' => [
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']
+                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
                 ],
             ]
         );
