@@ -96,7 +96,7 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         $this->twig->render(Argument::containingString($expectedExceptionFormat), Argument::any())->shouldBeCalled();
         $this->loader->exists(Argument::any())->willReturn($templateAvailable);
 
-        if ($retrievedFormat === 'html') {
+        if ('html' === $retrievedFormat) {
             $this->parameterResolver->resolve(Argument::cetera())->shouldBeCalled()->willReturn([]);
         } else {
             $this->parameterResolver->resolve(Argument::cetera())->shouldNotBeCalled();

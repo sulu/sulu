@@ -176,7 +176,7 @@ class UserManager implements UserManagerInterface
             }
 
             // check if username is already in database and the current user is not the user with this username
-            if (!$patch || $username !== null) {
+            if (!$patch || null !== $username) {
                 if ($user->getUsername() != $username &&
                     !$this->isUsernameUnique($username)
                 ) {
@@ -186,7 +186,7 @@ class UserManager implements UserManagerInterface
             }
 
             // check if password is valid
-            if (!$patch || $password !== null) {
+            if (!$patch || null !== $password) {
                 if ($this->isValidPassword($password)) {
                     $user->setSalt($this->generateSalt());
                     $user->setPassword(
@@ -195,37 +195,38 @@ class UserManager implements UserManagerInterface
                 }
             }
 
-            if (!$patch || $this->getProperty($data, 'userRoles') !== null) {
+            if (!$patch || null !== $this->getProperty($data, 'userRoles')) {
                 if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', []))) {
                     throw new \Exception('Could not update dependencies!');
                 }
             }
 
-            if (!$patch || $this->getProperty($data, 'userGroups') !== null) {
+            if (!$patch || null !== $this->getProperty($data, 'userGroups')) {
                 if (!$this->processUserGroups($user, $this->getProperty($data, 'userGroups', []))) {
                     throw new \Exception('Could not update dependencies!');
                 }
             }
 
-            if (!$patch || $contact !== null) {
+            if (!$patch || null !== $contact) {
                 $user->setContact($this->getContact($contact['id']));
             }
 
-            if (!$patch || $locale !== null) {
+            if (!$patch || null !== $locale) {
                 $user->setLocale($locale);
             }
 
-            if ($enabled !== null) {
+            if (null !== $enabled) {
                 $user->setEnabled($enabled);
             }
 
-            if ($locked !== null) {
+            if (null !== $locked) {
                 $user->setLocked($locked);
             }
         } catch (\Exception $re) {
             if (isset($user)) {
                 $this->em->remove($user);
             }
+
             throw $re;
         }
 
@@ -475,7 +476,7 @@ class UserManager implements UserManagerInterface
             }
         }
 
-        if ($alreadyContains === false) {
+        if (false === $alreadyContains) {
             $userRole = new UserRole();
             $userRole->setUser($user);
             $userRole->setRole($role);
@@ -628,20 +629,20 @@ class UserManager implements UserManagerInterface
     {
         if ($contact) {
             // if no email passed try to use the contact's first email
-            if ($email === null &&
+            if (null === $email &&
                 array_key_exists('emails', $contact) && count($contact['emails']) > 0 &&
                 $this->isEmailUnique($contact['emails'][0]['email'])
             ) {
                 $email = $contact['emails'][0]['email'];
             }
-            if ($email !== null) {
+            if (null !== $email) {
                 if (!$this->isEmailUnique($email)) {
                     throw new EmailNotUniqueException($email);
                 }
                 $user->setEmail($email);
             }
         } else {
-            if ($email !== null) {
+            if (null !== $email) {
                 if ($email !== $user->getEmail() &&
                     !$this->isEmailUnique($email)
                 ) {

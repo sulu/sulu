@@ -150,13 +150,13 @@ trait DataProviderRepositoryTrait
             $query->setParameter($name, $value);
         }
 
-        if ($page !== null && $pageSize > 0) {
+        if (null !== $page && $pageSize > 0) {
             $pageOffset = ($page - 1) * $pageSize;
             $restLimit = $limit - $pageOffset;
 
             // if limitation is smaller than the page size then use the rest limit else use page size plus 1 to
             // determine has next page
-            $maxResults = ($limit !== null && $pageSize > $restLimit ? $restLimit : ($pageSize + 1));
+            $maxResults = (null !== $limit && $pageSize > $restLimit ? $restLimit : ($pageSize + 1));
 
             if ($maxResults <= 0) {
                 return [];
@@ -164,7 +164,7 @@ trait DataProviderRepositoryTrait
 
             $query->setMaxResults($maxResults);
             $query->setFirstResult($pageOffset);
-        } elseif ($limit !== null) {
+        } elseif (null !== $limit) {
             $query->setMaxResults($limit);
         }
 
@@ -185,7 +185,7 @@ trait DataProviderRepositoryTrait
      */
     private function getBoolean($value)
     {
-        if ($value === true || $value === 'true') {
+        if (true === $value || 'true' === $value) {
             return true;
         } else {
             return false;

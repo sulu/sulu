@@ -161,12 +161,12 @@ class AdminControllerTest extends \PHPUnit_Framework_TestCase
     public function testConfigurationAction()
     {
         $data = [
-            new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list', ['type' => 'snippets']),
+            new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
         ];
         $this->adminPool->getRoutes()->willReturn($data);
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($data) {
-            return $view->getFormat() === 'json' && $view->getData() === ['routes' => $data];
+            return 'json' === $view->getFormat() && $view->getData() === ['routes' => $data];
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configV2Action();

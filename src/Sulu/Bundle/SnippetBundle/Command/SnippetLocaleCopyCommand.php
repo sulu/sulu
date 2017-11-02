@@ -136,7 +136,7 @@ EOT
         if (!$overwrite) {
             $destStructure = $this->contentMapper->load($document->getUuid(), null, $destLocale, true);
 
-            if (!($destStructure->getType() && $destStructure->getType()->getName() === 'ghost')) {
+            if (!($destStructure->getType() && 'ghost' === $destStructure->getType()->getName())) {
                 $this->output->writeln(
                     '<info>Processing aborted: </info>' .
                     $document->getNodeName() . ' <comment>(use overwrite option to force)</comment>'

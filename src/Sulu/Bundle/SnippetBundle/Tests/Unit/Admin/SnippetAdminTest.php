@@ -61,19 +61,31 @@ class SnippetAdminTest extends \PHPUnit_Framework_TestCase
         $routes = $snippetAdmin->getRoutes();
         $listRoute = $routes[0];
         $formRoute = $routes[1];
+        $detailRoute = $routes[2];
+        $taxonomiesRoute = $routes[3];
 
         $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
         $this->assertAttributeSame([
             'title' => 'sulu_snippet.snippets',
             'resourceKey' => 'snippets',
-            'editRoute' => 'sulu_snippet.form',
+            'editRoute' => 'sulu_snippet.form.detail',
             'locales' => array_keys($locales),
         ], 'options', $listRoute);
         $this->assertAttributeEquals('sulu_snippet.form', 'name', $formRoute);
+        $this->assertAttributeEquals('sulu_snippet.form.detail', 'name', $detailRoute);
+        $this->assertAttributeEquals('sulu_snippet.form', 'parent', $detailRoute);
         $this->assertAttributeSame([
-            'resourceKey' => 'snippets',
+            'tabTitle' => 'sulu_snippet.details',
             'backRoute' => 'sulu_snippet.list',
             'locales' => array_keys($locales),
-        ], 'options', $formRoute);
+        ], 'options', $detailRoute);
+        $this->assertAttributeEquals('sulu_snippet.form.taxonomies', 'name', $taxonomiesRoute);
+        $this->assertAttributeEquals('sulu_snippet.form', 'parent', $taxonomiesRoute);
+        $this->assertAttributeSame([
+            'resourceKey' => 'snippets',
+            'tabTitle' => 'sulu_snippet.taxonomies',
+            'backRoute' => 'sulu_snippet.list',
+            'locales' => array_keys($locales),
+        ], 'options', $taxonomiesRoute);
     }
 }

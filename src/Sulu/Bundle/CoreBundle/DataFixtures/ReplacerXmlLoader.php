@@ -35,7 +35,7 @@ class ReplacerXmlLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        return pathinfo($resource, PATHINFO_EXTENSION) === 'xml';
+        return 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
     private function parseXml($path)

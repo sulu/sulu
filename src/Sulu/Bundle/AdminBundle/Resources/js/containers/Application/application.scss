@@ -1,6 +1,6 @@
+@import '../Toolbar/toolbar.scss';
+
 .main {
-    /* 100% of the window height - the toolbar height */
-    height: calc(100vh - 60px);
-    padding: 60px;
+    height: calc(100vh - $toolbarHeight);
     overflow-y: auto;
 }

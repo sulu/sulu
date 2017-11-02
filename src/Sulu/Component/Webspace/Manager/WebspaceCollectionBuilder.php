@@ -151,7 +151,7 @@ class WebspaceCollectionBuilder
             $urlAddress = $url->getUrl();
             $urlRedirect = $url->getRedirect();
             $urlAnalyticsKey = $url->getAnalyticsKey();
-            if ($urlRedirect == null) {
+            if (null == $urlRedirect) {
                 $this->buildUrls($portal, $environment, $url, $segments, $urlAddress, $urlAnalyticsKey);
             } else {
                 // create the redirect
@@ -401,7 +401,7 @@ class WebspaceCollectionBuilder
             // only valid if there is no full match already
             !array_key_exists($urlResult, $this->portalInformations[$environment->getType()])
             // check if last character is no dot
-            && substr($urlResult, -1) != '.';
+            && '.' != substr($urlResult, -1);
     }
 
     /**

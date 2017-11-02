@@ -50,7 +50,7 @@ class SuluVersionPass implements CompilerPassInterface
 
         $composer = json_decode($composerFile->getContents(), true);
         foreach ($composer['packages'] as $package) {
-            if ($package['name'] === 'sulu/sulu') {
+            if ('sulu/sulu' === $package['name']) {
                 return $package['version'];
             }
         }

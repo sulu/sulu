@@ -1,7 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
 import React from 'react';
-import toolbarStorePool from '../stores/ToolbarStorePool';
+import {observable} from 'mobx';
+import {mount, render} from 'enzyme';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/ToolbarStorePool';
 import withToolbar from '../withToolbar';
 
 jest.mock('../stores/ToolbarStorePool', () => ({
@@ -9,7 +10,12 @@ jest.mock('../stores/ToolbarStorePool', () => ({
 }));
 
 test('Pass props to rendered component', () => {
-    const Component = (props) => (<h1>{props.title}</h1>);
+    const Component = class Component extends React.Component {
+        render() {
+            return <h1>{this.props.title}</h1>;
+        }
+    };
+
     const ComponentWithToolbar = withToolbar(Component, () => {});
 
     expect(render(<ComponentWithToolbar title="Test" />)).toMatchSnapshot();
@@ -32,7 +38,7 @@ test('Bind toolbar method to component instance', () => {
                 {
                     label: 'Save',
                     icon: 'save',
-                    disabled: true,
+                    disabled: this.test,
                 },
             ],
         };
@@ -48,4 +54,64 @@ test('Bind toolbar method to component instance', () => {
             },
         ],
     });
+});
+
+test('Call life-cycle events of rendered component', () => {
+    const Component = class Component extends React.Component {
+        componentWillMount = jest.fn();
+        componentWillUnmount = jest.fn();
+        render = jest.fn();
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, () => {});
+
+    let component = mount(<ComponentWithToolbar />);
+    expect(component.instance().componentWillMount).toBeCalled();
+    expect(component.instance().render).toBeCalled();
+
+    const componentWillUnmount = component.instance().componentWillUnmount;
+    component.unmount();
+    expect(componentWillUnmount).toBeCalled();
+});
+
+test('Recall toolbar-function when changing observable', () => {
+    const Component = class Component extends React.Component {
+        @observable test = true;
+
+        render() {
+            return <h1>Test</h1>;
+        }
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, function() {
+        return {disableAll: this.test};
+    });
+
+    let component = mount(<ComponentWithToolbar />);
+
+    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
+        disableAll: true,
+    });
+
+    component.instance().test = false;
+    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith(DEFAULT_STORE_KEY, {
+        disableAll: false,
+    });
+});
+
+test('Throw error when component has property toolbarDisposer', () => {
+    const Component = class Component extends React.Component {
+        toolbarDisposer = true;
+
+        render() {
+            return <h1>Test</h1>;
+        }
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, function() {
+        return {disableAll: this.test};
+    });
+
+    expect(() => mount(<ComponentWithToolbar />))
+        .toThrowError('Component passed to withToolbar cannot declare a property called "toolbarDisposer".');
 });

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a Divider with text 1`] = `
+<div
+  class="divider"
+>
+  Test
+</div>
+`;
+
+exports[`Render an empty Divider 1`] = `
+<div
+  class="divider"
+/>
+`;

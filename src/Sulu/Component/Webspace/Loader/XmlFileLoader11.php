@@ -54,7 +54,7 @@ class XmlFileLoader11 extends XmlFileLoader10
             $type = $node->attributes->getNamedItem('type')->nodeValue;
 
             $webspace->addDefaultTemplate($type, $template);
-            if ($type === 'homepage') {
+            if ('homepage' === $type) {
                 $webspace->addDefaultTemplate('home', $template);
             }
         }

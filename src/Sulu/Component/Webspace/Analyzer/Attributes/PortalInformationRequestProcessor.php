@@ -46,7 +46,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         $attributes['webspace'] = $portalInformation->getWebspace();
         $attributes['portal'] = $portalInformation->getPortal();
 
-        if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
+        if (RequestAnalyzerInterface::MATCH_TYPE_REDIRECT === $portalInformation->getType()) {
             return new RequestAttributes($attributes);
         }
 

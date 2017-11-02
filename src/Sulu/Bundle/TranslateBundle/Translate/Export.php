@@ -210,7 +210,7 @@ class Export
      */
     public function getPath()
     {
-        return ($this->path != null) ? $this->path : getcwd();
+        return (null != $this->path) ? $this->path : getcwd();
     }
 
     /**
@@ -290,7 +290,7 @@ class Export
      */
     private function newFileDumper()
     {
-        if ($this->getFormat() === self::XLIFF) {
+        if (self::XLIFF === $this->getFormat()) {
             return new XliffFileDumper();
         }
 

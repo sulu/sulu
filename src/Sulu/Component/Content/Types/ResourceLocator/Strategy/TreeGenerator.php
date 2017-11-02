@@ -22,7 +22,7 @@ class TreeGenerator implements ResourceLocatorGeneratorInterface
     public function generate($title, $parentPath = null)
     {
         // if parent has no resource create a new tree
-        if ($parentPath == null) {
+        if (null == $parentPath) {
             return '/' . $title;
         }
 

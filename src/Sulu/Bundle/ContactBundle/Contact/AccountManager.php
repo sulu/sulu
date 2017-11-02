@@ -192,7 +192,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     public function getByIds($ids, $locale)
     {
-        if (!is_array($ids) || count($ids) === 0) {
+        if (!is_array($ids) || 0 === count($ids)) {
             return [];
         }
 

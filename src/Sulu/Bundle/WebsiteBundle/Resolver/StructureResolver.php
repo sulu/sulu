@@ -67,6 +67,7 @@ class StructureResolver implements StructureResolverInterface
             $data['urls'] = $structure->getUrls();
             $data['published'] = $structure->getPublished();
             $data['shadowBaseLocale'] = $structure->getShadowBaseLanguage();
+            $data['webspaceKey'] = $structure->getWebspaceKey();
 
             foreach ($data['extension'] as $name => $value) {
                 $extension = $this->extensionManager->getExtension($structure->getKey(), $name);

@@ -87,7 +87,7 @@ EOT
         $dryRun = $input->getOption('dry-run');
 
         $path = $this->sessionManager->getRoutePath($webspaceKey, $locale);
-        $relativePath = ($basePath !== null ? '/' . ltrim($basePath, '/') : '/');
+        $relativePath = (null !== $basePath ? '/' . ltrim($basePath, '/') : '/');
         $fullPath = rtrim($path . $relativePath, '/');
 
         $this->cleanSession($output, $this->defaultSession, $fullPath, $dryRun);
@@ -150,7 +150,7 @@ EOT
             return;
         }
 
-        if ($dryRun === false) {
+        if (false === $dryRun) {
             $node->remove();
         }
         $output->writeln('<info>Processing: </info>/' . $path);

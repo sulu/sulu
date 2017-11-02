@@ -253,7 +253,7 @@ class TagManager implements TagManagerInterface
 
         foreach ($tagIds as $tagId) {
             $tag = $this->findById($tagId);
-            if ($tag !== null) {
+            if (null !== $tag) {
                 $resolvedTags[] = $tag->getName();
             }
         }
@@ -274,7 +274,7 @@ class TagManager implements TagManagerInterface
 
         foreach ($tagNames as $tagName) {
             $tag = $this->findByName($tagName);
-            if ($tag !== null) {
+            if (null !== $tag) {
                 $resolvedTags[] = $tag->getId();
             }
         }

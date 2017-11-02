@@ -246,7 +246,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         if (null !== $reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) {
             $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
 
-            if ($nodeList->length === 0) {
+            if (0 === $nodeList->length) {
                 throw new \Exception(sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
             }
 
@@ -283,7 +283,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         if (null !== $reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) {
             $nodeList = $xpath->query(sprintf('/x:class/orm:joins[@name="%s"]', $reference));
 
-            if ($nodeList->length === 0) {
+            if (0 === $nodeList->length) {
                 throw new \Exception(sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));
             }
 

@@ -31704,12 +31704,17 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         addIconsToCellContent: function(content, column, $cell, record) {
             var iconStr;
-            this.sandbox.util.foreach(this.icons, function(icon, index) {
-                if (icon.column === column.attribute && (!icon.disableCallback || icon.disableCallback(record))) {
-                    iconStr = this.sandbox.util.template(templates.icon)({
-                        icon: icon.icon,
-                        align: icon.align,
-                        cssClass: icon.cssClass,
+            this.sandbox.util.foreach(this.icons, function(iconItem, index) {
+                var icon = iconItem.icon;
+                if (typeof icon === 'function') {
+                    icon = icon(record);
+                }
+
+                if (iconItem.column === column.attribute && (!iconItem.disableCallback || iconItem.disableCallback(record))) {
+                    iconStr = this.sandbox.util.template(templates.icon, {
+                        icon: icon,
+                        align: iconItem.align,
+                        cssClass: iconItem.cssClass,
                         index: index
                     });
                     if (typeof content === 'object') {
@@ -31717,7 +31722,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     } else if (typeof content === 'string') {
                         content += iconStr;
                     }
-                    if (icon.actionIcon === true) {
+                    if (iconItem.actionIcon === true) {
                         this.sandbox.dom.addClass($cell, constants.actionClass);
                     }
                 }
@@ -40210,8 +40215,7 @@ define('__component__$dependent-select@husky',[],function() {
         },
 
     // renders selects at a certain depth
-        renderSelect = function(data, depth, preselect) {
-
+        renderSelect = function(data, depth, preselect, firstCall) {
             depth = typeof depth !== 'undefined' ? depth : 0;
 
             if (!this.options.container || !this.options.container[depth]) {
@@ -40224,13 +40228,12 @@ define('__component__$dependent-select@husky',[],function() {
             // get child
                 $child = findStopAndCreateNewChild.call(this, this.options.container[depth]);
 
-            // create callback
-
-            selectionCallback = function(id) {
+            // create callbacks
+            selectionCallback = function(id, firstCall) {
                 // if there are more selects left
                 if (this.options.container.length > depth && !!data[0].items) {
                     var items = getDataById.call(this, data, id).items;
-                    renderSelect.call(this, items, depth + 1);
+                    renderSelect.call(this, items, depth + 1, null, firstCall);
                 }
                 // trigger events
                 this.sandbox.emit(ITEM_SELECTED.call(this), id, depth);
@@ -40256,13 +40259,22 @@ define('__component__$dependent-select@husky',[],function() {
                 singleSelect: true,
                 instanceName: depth,
                 data: data,
-                selectCallback: selectionCallback,
+                selectCallback: function(id) {
+                    selectionCallback(id, false)
+                }.bind(this),
+                preselectCallback: function(id) {
+                    selectionCallback(id, true)
+                }.bind(this),
                 deselectCallback: deselectionCallback,
                 isNative: this.options.isNative,
                 preSelectedElements: !!preselect ? [preselect] : [],
                 deselectField: this.options.deselectField,
                 defaultLabel: this.sandbox.dom.isArray(this.options.defaultLabels) ? this.options.defaultLabels[depth] : this.options.defaultLabels
             }, options);
+
+            if (!firstCall) {
+                options.preSelectedElements = [];
+            }
 
             // start select component
             this.sandbox.start([
@@ -40295,7 +40307,7 @@ define('__component__$dependent-select@husky',[],function() {
 
         render: function(data) {
             // create items array
-            renderSelect.call(this, data, 0, this.options.preselect);
+            renderSelect.call(this, data, 0, this.options.preselect, true);
             renderEmptySelect.call(this, !!this.options.preselect ? this.options.preselect.length : 0);
 
             // initialization finished
@@ -40760,12 +40772,13 @@ define('__component__$select@husky',[], function() {
             checkboxVisible = checkboxVisible !== false;
             var $item,
                 template = (this.options.isNative) ? this.template.optionElement : this.template.menuElement,
-                idString = (id !== null && typeof id !== 'undefined') ? id.toString() : this.sandbox.util.uniqueId();
+                idString = (id !== null && typeof id !== 'undefined') ? id.toString() : this.sandbox.util.uniqueId(),
+                originalValue = value;
 
             value = this.sandbox.util.escapeHtml(value);
 
             if (this.options.preSelectedElements.indexOf(idString) >= 0 ||
-                this.options.preSelectedElements.indexOf(value) >= 0
+                this.options.preSelectedElements.indexOf(originalValue) >= 0
             ) {
                 this.setToolTip(value);
                 $item = this.sandbox.dom.createElement(this.sandbox.util.template(
@@ -40786,9 +40799,9 @@ define('__component__$select@husky',[], function() {
                 this.selectedElementsValues.push(value);
 
                 if (this.options.emitValues === true) {
-                    this.triggerPreSelect(idString);
-                } else {
                     this.triggerPreSelect(value);
+                } else {
+                    this.triggerPreSelect(idString);
                 }
             } else {
                 $item = this.sandbox.dom.createElement(
@@ -46119,7 +46132,7 @@ define('__component__$dropzone@husky',[], function() {
                         this.on('error', function(file, message) {
                             this.removeFile(file);
 
-                            if (file.size / 1024 > that.options.maxFilesize || file.xhr.status === 413) {
+                            if (file.size / 1024 > that.options.maxFilesize || (file.xhr && file.xhr.status === 413)) {
                                 that.sandbox.emit(
                                     ERROR_FILE_TO_BIG.call(this),
                                     that.getMessage.call(that, that.options.fileTooBigKey, file),

@@ -111,6 +111,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
             if (isset($this->{$snippetVarName})) {
                 $snippet = $this->{$snippetVarName};
                 $uuids[] = $snippet->getUuid();
+
                 continue;
             }
 

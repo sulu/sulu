@@ -59,6 +59,7 @@ class MessageDispatcher implements MessageDispatcherInterface
         }
 
         $error = false;
+
         try {
             $message = $this->handlers[$name]->handle($conn, $message, $context);
         } catch (MessageHandlerException $ex) {

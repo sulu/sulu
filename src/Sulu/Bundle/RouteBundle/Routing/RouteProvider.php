@@ -95,11 +95,14 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request)
     {
+        // server encodes the url and symfony does not encode it
+        // symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91
+        $path = rawurldecode($request->getPathInfo());
+
         $collection = new RouteCollection();
-        $path = $request->getPathInfo();
         $prefix = $this->requestAnalyzer->getResourceLocatorPrefix();
 
-        if (!empty($prefix) && strpos($path, $prefix) === 0) {
+        if (!empty($prefix) && 0 === strpos($path, $prefix)) {
             $path = PathHelper::relativizePath($path, $prefix);
         }
 
@@ -155,7 +158,7 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRouteByName($name)
     {
-        if (strpos($name, self::ROUTE_PREFIX) !== 0) {
+        if (0 !== strpos($name, self::ROUTE_PREFIX)) {
             throw new RouteNotFoundException();
         }
 

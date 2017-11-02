@@ -392,7 +392,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSystemCollection($data, $key, $expected, $exception = null)
     {
-        if ($exception !== null) {
+        if (null !== $exception) {
             $this->setExpectedException($exception);
         }
 
@@ -414,7 +414,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
         );
         $result = $manager->getSystemCollection($key);
 
-        if ($exception === null) {
+        if (null === $exception) {
             $this->assertEquals($expected, $result);
         }
     }
@@ -510,7 +510,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
             'locale' => $locale,
         ];
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $data['parent'] = $parent;
         }
 
@@ -536,7 +536,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
             'locale' => $locale,
         ];
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $data['parent'] = $parent;
         }
 

@@ -159,6 +159,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     public function postEnableUserAction($id, Request $request)
     {
         $action = $request->get('action');
+
         try {
             switch ($action) {
                 case 'enable':
@@ -265,16 +266,16 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     private function checkArguments(Request $request)
     {
-        if ($request->get('username') == null) {
+        if (null == $request->get('username')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
         }
-        if ($request->get('password') === null) {
+        if (null === $request->get('password')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'password');
         }
-        if ($request->get('locale') == null) {
+        if (null == $request->get('locale')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'locale');
         }
-        if ($request->get('contact') == null) {
+        if (null == $request->get('contact')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'contact');
         }
     }
@@ -290,7 +291,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     public function cgetAction(Request $request)
     {
         $view = null;
-        if ($request->get('flat') == 'true') {
+        if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -313,7 +314,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         } else {
             $contactId = $request->get('contactId');
 
-            if ($contactId != null) {
+            if (null != $contactId) {
                 $entities = [];
                 $entities[] = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.user.class')

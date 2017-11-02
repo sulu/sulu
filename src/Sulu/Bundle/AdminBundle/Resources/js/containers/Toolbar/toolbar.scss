@@ -7,8 +7,10 @@ $itemsContainerBorderColor: $gallery;
 
 $itemsContainerBorder: 1px $itemsContainerBorderColor solid;
 
+$toolbarHeight: 60px;
+
 .toolbar {
-    height: 60px;
+    height: $toolbarHeight;
     margin: 0;
     background: $toolbarBackgroundColor;
     box-shadow: 2px 6px 12px 0 rgba($shadowColor, .5);
@@ -45,7 +47,7 @@ $itemsContainerBorder: 1px $itemsContainerBorderColor solid;
 
 .icons {
     padding: 0 20px;
-    line-height: 60px;
+    line-height: $toolbarHeight;
     vertical-align: top;
 }
 

@@ -22,7 +22,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-class RouteProviderTest extends \PHPUnit_Framework_TestCase
+class CustomUrlRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function dataProvider()
     {
@@ -34,6 +34,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
             ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, false],
             ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, WorkflowStage::PUBLISHED],
             ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, WorkflowStage::TEST],
+            ['sulu.io', '/käße.html', 'sulu.io/kaese', true, false, true, true, WorkflowStage::TEST],
         ];
     }
 
@@ -66,7 +67,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $request->getHost()->willReturn($host);
         $request->getRequestUri()->willReturn($requestedUri);
-        $request->getPathInfo()->willReturn($requestedUri);
+        $request->getPathInfo()->willReturn(rawurlencode($requestedUri));
         $request->getScheme()->willReturn('http');
 
         if (!$exists) {
@@ -114,7 +115,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $collection = $provider->getRouteCollectionForRequest($request->reveal());
 
-        if (!$exists || !$published || $workflowStage === WorkflowStage::TEST) {
+        if (!$exists || !$published || WorkflowStage::TEST === $workflowStage) {
             $this->assertCount(0, $collection);
 
             return;

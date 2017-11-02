@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render correct label with correct field type 1`] = `
-<div>
+<div
+  class="field"
+>
   <label
     class="label"
   >
@@ -14,7 +16,9 @@ exports[`Render correct label with correct field type 1`] = `
 `;
 
 exports[`Render correct label with correct field type 2`] = `
-<div>
+<div
+  class="field"
+>
   <label
     class="label"
   >

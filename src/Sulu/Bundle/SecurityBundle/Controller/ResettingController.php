@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\Exception\UserNotInSystemException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailTemplateException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
@@ -19,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,7 +64,7 @@ class ResettingController extends Controller
      * a link to the resetting route.
      *
      * @param Request $request
-     * @param bool    $generateNewKey If true a new token will be generated before sending the mail
+     * @param bool $generateNewKey If true a new token will be generated before sending the mail
      *
      * @return JsonResponse
      */
@@ -71,7 +73,7 @@ class ResettingController extends Controller
         try {
             /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
-            if ($generateNewKey === true) {
+            if (true === $generateNewKey) {
                 $this->generateTokenForUser($user);
             }
             $email = $this->getEmail($user);
@@ -86,6 +88,8 @@ class ResettingController extends Controller
         } catch (TokenEmailsLimitReachedException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (EmailTemplateException $ex) {
+            $response = new JsonResponse($ex->toArray(), 400);
+        } catch (UserNotInSystemException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -146,7 +150,7 @@ class ResettingController extends Controller
         $constraint = new EmailConstraint();
         $result = $this->get('validator')->validate($email, $constraint);
 
-        return count($result) === 0;
+        return 0 === count($result);
     }
 
     /**
@@ -193,11 +197,11 @@ class ResettingController extends Controller
         return trim(
             $this->renderView(
                 $template,
-                    [
-                        'user' => $user,
-                        'reset_url' => $resetUrl,
-                        'translation_domain' => $translationDomain,
-                    ]
+                [
+                    'user' => $user,
+                    'reset_url' => $resetUrl,
+                    'translation_domain' => $translationDomain,
+                ]
             )
         );
     }
@@ -211,7 +215,7 @@ class ResettingController extends Controller
      */
     private function getEmail(UserInterface $user)
     {
-        if ($user->getEmail() !== null) {
+        if (null !== $user->getEmail()) {
             return $user->getEmail();
         }
 
@@ -226,14 +230,21 @@ class ResettingController extends Controller
      * @return UserInterface
      *
      * @throws EntityNotFoundException
+     * @throws UserNotInSystemException
      */
     private function findUser($identifier)
     {
         try {
-            return $this->getUserRepository()->findUserByIdentifier($identifier);
+            $user = $this->getUserRepository()->findUserByIdentifier($identifier);
         } catch (NoResultException $exc) {
             throw new EntityNotFoundException($this->getUserRepository()->getClassName(), $identifier);
         }
+
+        if (!$this->hasSystem($user)) {
+            throw new UserNotInSystemException($this->getSystem(), $identifier);
+        }
+
+        return $user;
     }
 
     /**
@@ -303,15 +314,15 @@ class ResettingController extends Controller
      * Sends the password-reset-token of a user to an email-adress.
      *
      * @param UserInterface $user
-     * @param string        $from From-Email-Address
-     * @param string        $to   To-Email-Address
+     * @param string $from From-Email-Address
+     * @param string $to To-Email-Address
      *
      * @throws NoTokenFoundException
      * @throws TokenEmailsLimitReachedException
      */
     private function sendTokenEmail(UserInterface $user, $from, $to)
     {
-        if ($user->getPasswordResetToken() === null) {
+        if (null === $user->getPasswordResetToken()) {
             throw new NoTokenFoundException($user);
         }
 
@@ -322,13 +333,9 @@ class ResettingController extends Controller
         }
         $mailer = $this->get('mailer');
         $em = $this->getDoctrine()->getManager();
-        $message = $mailer->createMessage()
-            ->setSubject(
+        $message = $mailer->createMessage()->setSubject(
                 $this->getSubject()
-            )
-            ->setFrom($from)
-            ->setTo($to)
-            ->setBody(
+            )->setFrom($from)->setTo($to)->setBody(
                 $this->getMessage($user)
             );
         $mailer->send($message);
@@ -341,13 +348,13 @@ class ResettingController extends Controller
      * Changes the password of a user.
      *
      * @param UserInterface $user
-     * @param string        $password
+     * @param string $password
      *
      * @throws MissingPasswordException
      */
     private function changePassword(UserInterface $user, $password)
     {
-        if ($password === '') {
+        if ('' === $password) {
             throw new MissingPasswordException();
         }
         $em = $this->getDoctrine()->getManager();
@@ -366,9 +373,8 @@ class ResettingController extends Controller
     private function generateTokenForUser(UserInterface $user)
     {
         // if a token was already requested within the request interval time frame
-        if ($user->getPasswordResetToken() !== null &&
-            $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())
-        ) {
+        if (null !== $user->getPasswordResetToken()
+            && $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())) {
             throw new TokenAlreadyRequestedException(self::getRequestInterval());
         }
         $em = $this->getDoctrine()->getManager();
@@ -392,7 +398,7 @@ class ResettingController extends Controller
      */
     private function dateIsInRequestFrame(\DateTime $date)
     {
-        if ($date === null) {
+        if (null === $date) {
             return false;
         }
 
@@ -431,8 +437,8 @@ class ResettingController extends Controller
      * Returns an encoded password gor a given one.
      *
      * @param UserInterface $user
-     * @param string        $password
-     * @param string        $salt
+     * @param string $password
+     * @param string $salt
      *
      * @return mixed
      */
@@ -449,5 +455,34 @@ class ResettingController extends Controller
     private function getUserRepository()
     {
         return $this->get('sulu.repository.user');
+    }
+
+    /**
+     * Check if given user has sulu-system.
+     *
+     * @param SuluUserInterface $user
+     *
+     * @return bool
+     */
+    private function hasSystem(SuluUserInterface $user)
+    {
+        $system = $this->getSystem();
+        foreach ($user->getRoleObjects() as $role) {
+            if ($role->getSystem() === $system) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns system name.
+     *
+     * @return string
+     */
+    private function getSystem()
+    {
+        return $this->container->getParameter('sulu_security.system');
     }
 }

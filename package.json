@@ -2,6 +2,7 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "scripts": {
+        "build": "webpack -p",
         "lint:js": "eslint .",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",
@@ -14,6 +15,7 @@
         "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js"
     },
     "devDependencies": {
+        "autoprefixer": "^7.1.5",
         "babel-core": "^6.25.0",
         "babel-eslint": "^7.2.3",
         "babel-loader": "^7.1.1",
@@ -31,6 +33,7 @@
         "eslint-plugin-flowtype": "^2.34.0",
         "eslint-plugin-import": "^2.7.0",
         "eslint-plugin-react": "^7.0.1",
+        "extract-text-webpack-plugin": "^3.0.1",
         "file-loader": "^0.11.2",
         "flow-bin": "^0.54.0",
         "glob": "^7.1.2",
@@ -38,6 +41,7 @@
         "jest": "^21.1.0",
         "mobx": "^3.2.2",
         "null-loader": "^0.1.1",
+        "postcss-calc": "^6.0.1",
         "postcss-hexrgba": "^1.0.0",
         "postcss-import": "^10.0.0",
         "postcss-loader": "^2.0.6",
@@ -48,7 +52,9 @@
         "react-test-renderer": "^15.6.1",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0",
-        "webpack": "^3.5.6"
+        "webpack": "^3.5.6",
+        "webpack-clean-obsolete-chunks": "^0.2.0",
+        "webpack-manifest-plugin": "^1.3.2"
     },
     "jest": {
         "moduleNameMapper": {

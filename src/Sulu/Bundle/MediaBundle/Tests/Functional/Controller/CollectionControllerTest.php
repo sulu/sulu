@@ -85,7 +85,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         $amount = 1; // 1 root collection
 
-        if ($depth > 0 || $depth === null) {
+        if ($depth > 0 || null === $depth) {
             $amount += $this->iterateOverSystemCollections($this->systemCollectionConfig, $depth);
         }
 
@@ -104,7 +104,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         $amount = count($config);
 
-        if ($depth > 0 || $depth === null) {
+        if ($depth > 0 || null === $depth) {
             foreach ($config as $child) {
                 if (array_key_exists('collections', $child)) {
                     $amount += $this->iterateOverSystemCollections($child['collections'], $depth - 1);

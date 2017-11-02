@@ -239,6 +239,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
 
         // get current resource-locator and history resource-locators
         $resourceLocators = [];
+
         try {
             $resourceLocators[] = $resourceLocatorStrategy->loadByContentUuid($uuid, $webspace, $locale);
         } catch (ResourceLocatorNotFoundException $e) {

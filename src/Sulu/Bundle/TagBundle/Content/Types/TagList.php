@@ -63,7 +63,7 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         $segmentKey
     ) {
         $tagIds = [];
-        $tags = $property->getValue() === null ? [] : $property->getValue();
+        $tags = null === $property->getValue() ? [] : $property->getValue();
 
         foreach ($tags as $tag) {
             $tagIds[] = $this->tagManager->findOrCreateByName($tag, $userId)->getId();

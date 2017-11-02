@@ -137,7 +137,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $query = [];
         $request = [];
         $currentRequest = $this->requestStack->getCurrentRequest();
-        if ($currentRequest !== null) {
+        if (null !== $currentRequest) {
             $query = $currentRequest->query->all();
             $request = $currentRequest->request->all();
         }

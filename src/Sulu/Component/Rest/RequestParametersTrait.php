@@ -35,7 +35,7 @@ trait RequestParametersTrait
     protected function getRequestParameter(Request $request, $name, $force = false, $default = null)
     {
         $value = $request->get($name, $default);
-        if ($force && $value === null) {
+        if ($force && null === $value) {
             throw new MissingParameterException(get_class($this), $name);
         }
 
@@ -58,11 +58,11 @@ trait RequestParametersTrait
     protected function getBooleanRequestParameter($request, $name, $force = false, $default = null)
     {
         $value = $this->getRequestParameter($request, $name, $force, $default);
-        if ($value === 'true' || $value === true) {
+        if ('true' === $value || true === $value) {
             $value = true;
-        } elseif ($value === 'false' || $value === false) {
+        } elseif ('false' === $value || false === $value) {
             $value = false;
-        } elseif ($force && $value !== true && $value !== false) {
+        } elseif ($force && true !== $value && false !== $value) {
             throw new ParameterDataTypeException(get_class($this), $name);
         } else {
             $value = $default;

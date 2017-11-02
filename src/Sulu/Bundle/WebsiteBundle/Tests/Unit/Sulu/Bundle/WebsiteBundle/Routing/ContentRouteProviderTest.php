@@ -37,6 +37,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -192,6 +193,72 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $routes);
         $this->assertEquals($pageBridge->reveal(), $defaults['structure']);
         $this->assertEquals(false, $defaults['partial']);
+    }
+
+    public function testGetCollectionForRequestWithUmlauts()
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $attributes->getAttribute('localization', null)->willReturn($localization);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocator', null)->willReturn('/käße');
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('/käße', 'webspace', 'de')->willReturn('some-uuid');
+
+        $document = $this->prophesize(TitleBehavior::class)->willImplement(RedirectTypeBehavior::class)->willImplement(
+                StructureBehavior::class
+            )->willImplement(UuidBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $document->getRedirectType()->willReturn(RedirectType::NONE);
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn(
+            $document->reveal()
+        );
+
+        $metadata = new Metadata();
+        $metadata->setAlias('page');
+        $structureMetadata = new StructureMetadata();
+        $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
+        $this->documentInspector->getStructureMetadata($document->reveal())->willReturn($structureMetadata);
+
+        $pageBridge = $this->prophesize(PageBridge::class);
+        $pageBridge->getController()->willReturn('::Controller');
+        $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
+
+        $request = new Request(
+            [],
+            [],
+            ['_sulu' => $attributes->reveal()],
+            [],
+            [],
+            ['REQUEST_URI' => rawurlencode('/de/käße')]
+        );
+
+        $pageBridge->setDocument($document->reveal())->shouldBeCalled();
+
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+
+        /** @var Route $route */
+        $route = $routes->getIterator()->current();
+        $defaults = $route->getDefaults();
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals($pageBridge->reveal(), $defaults['structure']);
+        $this->assertEquals(false, $defaults['partial']);
+        $this->assertEquals('/de/käße', $route->getPath());
     }
 
     public function testGetCollectionForRequestWithMissingStructure()

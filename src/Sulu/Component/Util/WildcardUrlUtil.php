@@ -67,7 +67,7 @@ final class WildcardUrlUtil
         if (preg_match($regexp, $url, $matches)) {
             for ($i = 0, $countStar = substr_count($portalUrl, '*'); $i < $countStar; ++$i) {
                 $pos = strpos($portalUrl, '*');
-                if ($pos !== false) {
+                if (false !== $pos) {
                     $portalUrl = substr_replace($portalUrl, $matches[$i + 1], $pos, 1);
                 }
             }

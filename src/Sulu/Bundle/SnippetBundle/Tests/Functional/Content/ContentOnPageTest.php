@@ -134,7 +134,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         $this->assertEquals($templateKey, $page->getKey());
 
         foreach ($data as $key => $value) {
-            if ($key === 'hotels') {
+            if ('hotels' === $key) {
                 continue;
             }
 

@@ -103,7 +103,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->forAll(
                 function ($index, $entry) {
-                    if ($entry->getMain() === true) {
+                    if (true === $entry->getMain()) {
                         $entry->setMain(false);
 
                         return false;
@@ -142,7 +142,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 function ($index, $entity) {
                     $mainEntity = $entity;
 
-                    return $entity->getMain() === true;
+                    return true === $entity->getMain();
                 }
             );
         }
@@ -578,7 +578,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
             }
             if ($force) {
                 // return main or first address
-                if ($main === null && $addresses->first()) {
+                if (null === $main && $addresses->first()) {
                     return $addresses->first()->getAddress();
                 }
             }
@@ -667,7 +667,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // process details
-        if ($this->getProperty($data, 'bankAccounts') !== null) {
+        if (null !== $this->getProperty($data, 'bankAccounts')) {
             $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
         }
     }
@@ -1423,11 +1423,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected function getBooleanValue($value)
     {
         if (is_string($value)) {
-            return $value === 'true' ? true : false;
+            return 'true' === $value ? true : false;
         } elseif (is_bool($value)) {
             return $value;
         } elseif (is_numeric($value)) {
-            return $value === 1 ? true : false;
+            return 1 === $value ? true : false;
         }
     }
 

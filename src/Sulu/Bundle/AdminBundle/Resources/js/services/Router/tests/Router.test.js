@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import 'url-search-params-polyfill';
 import createHistory from 'history/createMemoryHistory';
-import {observable, isObservable} from 'mobx';
+import {extendObservable, observable, isObservable} from 'mobx';
 import Router from '../Router';
 import routeRegistry from '../registries/RouteRegistry';
 
@@ -328,17 +328,41 @@ test('Bound query parameter should update state in router', () => {
         },
     });
 
-    const value = observable(1);
+    const page = observable(1);
 
     const history = createHistory();
     const router = new Router(history);
 
     router.navigate('list', {}, {page: 1});
-    router.bindQuery('page', value);
+    router.bindQuery('page', page);
     expect(router.query.page).toBe('1');
 
-    value.set(2);
+    page.set(2);
     expect(router.query.page).toBe('2');
+});
+
+test('Bound query parameter should update state in router with other default query parameters', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+        },
+    });
+
+    const page = observable();
+    const locale = observable('en');
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.bindQuery('page', page, '1');
+    router.bindQuery('locale', locale);
+    router.navigate('list');
+
+    locale.set('de');
+    expect(history.location.search).toBe('?locale=de');
+    expect(router.query.locale).toBe('de');
 });
 
 test('Unbind query should remove query binding', () => {
@@ -350,8 +374,22 @@ test('Unbind query should remove query binding', () => {
     router.bindQuery('remove', value);
     expect(router.queryBinds.has('remove')).toBe(true);
 
-    router.unbindQuery('remove');
+    router.unbindQuery('remove', value);
     expect(router.queryBinds.has('remove')).toBe(false);
+});
+
+test('Unbind query should not remove query binding if it is assigned to a new observable', () => {
+    const history = createHistory();
+    const router = new Router(history);
+
+    const value = observable();
+    router.bindQuery('remove', value);
+    expect(router.queryBinds.get('remove')).toBe(value);
+
+    const newValue = observable();
+    router.bindQuery('remove', newValue);
+    router.unbindQuery('remove', value);
+    expect(router.queryBinds.get('remove')).toBe(newValue);
 });
 
 test('Do not add parameter to URL if undefined', () => {
@@ -468,4 +506,114 @@ test('Bound query should be set to initial passed value from URL', () => {
 
     expect(value.get()).toBe('2');
     expect(history.location.search).toBe('?page=2');
+});
+
+test('Navigate to child route using state', () => {
+    const formRoute = extendObservable({
+        name: 'sulu_snippet.form',
+        view: 'sulu_admin.tab',
+        path: '/snippets/:uuid',
+        options: {
+            resourceKey: 'snippet',
+        },
+    });
+
+    const detailRoute = extendObservable({
+        name: 'sulu_snippet.form.detail',
+        parent: formRoute,
+        view: 'sulu_admin.form',
+        path: '/detail',
+        options: {
+            tabTitle: 'Detail',
+        },
+    });
+
+    const taxonomyRoute = extendObservable({
+        name: 'sulu_snippet.form.taxonomy',
+        parent: formRoute,
+        view: 'sulu_admin.form',
+        path: '/taxonomy',
+        options: {
+            tabTitle: 'Taxonomies',
+        },
+    });
+
+    formRoute.children = [detailRoute, taxonomyRoute];
+
+    routeRegistry.getAll.mockReturnValue({
+        'sulu_snippet.form': formRoute,
+        'sulu_snippet.form.detail': detailRoute,
+        'sulu_snippet.form.taxonomy': taxonomyRoute,
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('sulu_snippet.form.detail', {uuid: 'some-uuid'});
+
+    expect(router.route.view).toBe('sulu_admin.form');
+    expect(router.route.options.tabTitle).toBe('Detail');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(history.location.pathname).toBe('/snippets/some-uuid/detail');
+
+    expect(router.route.parent.view).toBe('sulu_admin.tab');
+    expect(router.route.parent.options.resourceKey).toBe('snippet');
+    expect(router.route.parent.children).toHaveLength(2);
+    expect(router.route.parent.children[0]).toBe(router.route);
+    expect(router.route.parent.children[1].options.tabTitle).toBe('Taxonomies');
+});
+
+test('Navigate to child route using URL', () => {
+    const formRoute = extendObservable({
+        name: 'sulu_snippet.form',
+        view: 'sulu_admin.tab',
+        path: '/snippets/:uuid',
+        options: {
+            resourceKey: 'snippet',
+        },
+    });
+
+    const detailRoute = extendObservable({
+        name: 'sulu_snippet.form.detail',
+        parent: formRoute,
+        view: 'sulu_admin.form',
+        path: '/detail',
+        options: {
+            tabTitle: 'Detail',
+        },
+    });
+
+    const taxonomyRoute = extendObservable({
+        name: 'sulu_snippet.form.taxonomy',
+        parent: formRoute,
+        view: 'sulu_admin.form',
+        path: '/taxonomy',
+        options: {
+            tabTitle: 'Taxonomies',
+        },
+    });
+
+    formRoute.children = [detailRoute, taxonomyRoute];
+
+    routeRegistry.getAll.mockReturnValue({
+        'sulu_snippet.form': formRoute,
+        'sulu_snippet.form.detail': detailRoute,
+        'sulu_snippet.form.taxonomy': taxonomyRoute,
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    history.push('/snippets/some-uuid/detail');
+
+    expect(router.route.view).toBe('sulu_admin.form');
+    expect(router.route.options.tabTitle).toBe('Detail');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(history.location.pathname).toBe('/snippets/some-uuid/detail');
+
+    expect(router.route.parent.view).toBe('sulu_admin.tab');
+    expect(router.route.parent.options.resourceKey).toBe('snippet');
+    expect(router.route.parent.children).toHaveLength(2);
+    expect(router.route.parent.children[0]).toBe(router.route);
+    expect(router.route.parent.children[1].options.tabTitle).toBe('Taxonomies');
 });

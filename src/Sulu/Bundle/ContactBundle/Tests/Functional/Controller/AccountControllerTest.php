@@ -1383,7 +1383,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
-        if ($response->addresses[0]->street === 'Bahnhofstraße') {
+        if ('Bahnhofstraße' === $response->addresses[0]->street) {
             $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
@@ -1484,7 +1484,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
-        if ($response->addresses[0]->street === 'Bahnhofstraße') {
+        if ('Bahnhofstraße' === $response->addresses[0]->street) {
             $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
@@ -2263,7 +2263,7 @@ class AccountControllerTest extends SuluTestCase
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        if ($response->addresses[0]->number == 1) {
+        if (1 == $response->addresses[0]->number) {
             $this->assertEquals(false, $response->addresses[0]->primaryAddress);
             $this->assertEquals(true, $response->addresses[1]->primaryAddress);
         } else {
@@ -2410,7 +2410,7 @@ class AccountControllerTest extends SuluTestCase
     public function sortAddressesPrimaryLast()
     {
         return function ($a, $b) {
-            if ($a->primaryAddress === true && $b->primaryAddress === false) {
+            if (true === $a->primaryAddress && false === $b->primaryAddress) {
                 return true;
             }
 

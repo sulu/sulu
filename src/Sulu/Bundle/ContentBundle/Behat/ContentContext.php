@@ -151,7 +151,7 @@ EOT;
      */
     public function iExpectThePageStateToBe($state)
     {
-        if ($state === 'Published') {
+        if ('Published' === $state) {
             $this->assertSelector('[data-id=\'statePublished\']:visible');
             $this->assertSelectorIsHidden('[data-id=\'stateTest\']');
         } else {

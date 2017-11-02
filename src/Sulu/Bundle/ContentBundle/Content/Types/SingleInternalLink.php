@@ -57,7 +57,7 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
     ) {
         $value = $property->getValue();
 
-        if ($node->getIdentifier() !== null && $value === $node->getIdentifier()) {
+        if (null !== $node->getIdentifier() && $value === $node->getIdentifier()) {
             throw new \InvalidArgumentException('Internal link node cannot reference itself');
         }
 

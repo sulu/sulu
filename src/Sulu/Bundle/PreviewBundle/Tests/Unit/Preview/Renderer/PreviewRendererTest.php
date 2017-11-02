@@ -153,8 +153,8 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->httpKernel->handle(
             Argument::that(
                 function (Request $request) use ($scheme) {
-                    return $request->getHost() === 'sulu.io'
-                        && $request->getPort() === 8080
+                    return 'sulu.io' === $request->getHost()
+                        && 8080 === $request->getPort()
                         && $request->getScheme() === $scheme;
                 }
             ),

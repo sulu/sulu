@@ -117,7 +117,7 @@ class NavigationItem implements \Iterator
         $this->name = $name;
         $this->disabled = false;
 
-        if ($parent != null) {
+        if (null != $parent) {
             $parent->addChild($this);
         }
     }
@@ -455,11 +455,11 @@ class NavigationItem implements \Iterator
         // Add all children from this item
         foreach ($this->getChildren() as $child) {
             /* @var NavigationItem $child */
-            $new->addChild($child->merge(($other != null) ? $other->findChildren($child) : null));
+            $new->addChild($child->merge((null != $other) ? $other->findChildren($child) : null));
         }
 
         // Add all children from the other item
-        if ($other != null) {
+        if (null != $other) {
             foreach ($other->getChildren() as $child) {
                 /** @var NavigationItem $child */
                 if (!$new->find($child)) {
@@ -543,10 +543,10 @@ class NavigationItem implements \Iterator
             'eventArguments' => $this->getEventArguments(),
             'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
-            'id' => ($this->getId() != null) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
+            'id' => (null != $this->getId()) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
         ];
 
-        if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
+        if (null != $this->getHeaderIcon() || null != $this->getHeaderTitle()) {
             $array['header'] = [
                 'title' => $this->getHeaderTitle(),
                 'logo' => $this->getHeaderIcon(),

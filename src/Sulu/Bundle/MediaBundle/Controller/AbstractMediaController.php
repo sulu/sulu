@@ -71,7 +71,7 @@ class AbstractMediaController extends RestController
         $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
 
         if ($uploadedFile) {
-            if (strpos($uploadedFile->getClientOriginalName(), '.') === false) {
+            if (false === strpos($uploadedFile->getClientOriginalName(), '.')) {
                 return $uploadedFile->getClientOriginalName();
             }
 

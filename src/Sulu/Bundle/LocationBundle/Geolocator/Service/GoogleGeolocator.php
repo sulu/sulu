@@ -62,7 +62,7 @@ class GoogleGeolocator implements GeolocatorInterface
             ]
         );
 
-        if ($response->getStatusCode() !== 200) {
+        if (200 !== $response->getStatusCode()) {
             throw new HttpException(
                 $response->getStatusCode(),
                 sprintf(
@@ -75,7 +75,7 @@ class GoogleGeolocator implements GeolocatorInterface
 
         $googleResponse = json_decode($response->getBody(), true);
         $response = new GeolocatorResponse();
-        if ($googleResponse['status'] != 'OK') {
+        if ('OK' != $googleResponse['status']) {
             return $response;
         }
 

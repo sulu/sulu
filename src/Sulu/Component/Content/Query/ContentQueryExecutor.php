@@ -86,7 +86,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         foreach ($queryResult as $row) {
             $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
-            if ($depth === null || $depth < 0 || ($depth > 0 && $pageDepth <= $depth)) {
+            if (null === $depth || $depth < 0 || ($depth > 0 && $pageDepth <= $depth)) {
                 $paths[] = $row->getPath('page');
             }
         }

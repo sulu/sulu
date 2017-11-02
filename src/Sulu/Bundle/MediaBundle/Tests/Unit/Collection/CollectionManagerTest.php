@@ -83,7 +83,7 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
         $entity->getMeta()->willReturn([$entityMeta->reveal()]);
         $entity->getId()->willReturn($id);
 
-        if ($parent !== null) {
+        if (null !== $parent) {
             $parentEntity = $this->prophesize(Collection::class);
             $parentEntity->getId()->willReturn($parent);
             $entity->getParent()->willReturn($parentEntity->reveal());

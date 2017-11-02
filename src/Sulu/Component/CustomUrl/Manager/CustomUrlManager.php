@@ -127,7 +127,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         $routeDocument = $this->findRouteByUrl($url, $webspaceKey, $locale);
 
-        if ($routeDocument === null) {
+        if (null === $routeDocument) {
             return;
         }
 
@@ -290,7 +290,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
             }
 
             $value = $data[$fieldName];
-            if (array_key_exists('type', $mapping) && $mapping['type'] === 'reference') {
+            if (array_key_exists('type', $mapping) && 'reference' === $mapping['type']) {
                 $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => true]);
             }
 

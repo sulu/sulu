@@ -251,8 +251,8 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
 
         if ($this->preview
-            || strpos($response->headers->get('Content-Type'), 'text/html') !== 0
-            || $request->getMethod() !== Request::METHOD_GET
+            || 0 !== strpos($response->headers->get('Content-Type'), 'text/html')
+            || Request::METHOD_GET !== $request->getMethod()
         ) {
             return;
         }

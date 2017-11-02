@@ -279,11 +279,11 @@ class SnippetDataProvider implements DataProviderInterface
         $loadLimit = $limit;
         $offset = null;
 
-        if ($pageSize !== null) {
+        if (null !== $pageSize) {
             $offset = ($page - 1) * $pageSize;
 
             $position = $pageSize * $page;
-            if ($limit !== null && $position >= $limit) {
+            if (null !== $limit && $position >= $limit) {
                 $pageSize = $limit - $offset;
                 $loadLimit = $pageSize;
             } else {
@@ -302,7 +302,7 @@ class SnippetDataProvider implements DataProviderInterface
         );
 
         $hasNextPage = false;
-        if ($pageSize !== null) {
+        if (null !== $pageSize) {
             $hasNextPage = (count($items) > $pageSize);
             $items = array_splice($items, 0, $pageSize);
         }

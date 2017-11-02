@@ -91,7 +91,7 @@ class LocalizationFinder implements LocalizationFinderInterface
 
             // try to load parent and stop if there is no parent
             $localization = $localization->getParent();
-        } while ($localization != null);
+        } while (null != $localization);
 
         return;
     }

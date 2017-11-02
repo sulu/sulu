@@ -26,7 +26,7 @@ abstract class AbstractEnhancer implements RouteEnhancerInterface
      */
     public function enhance(array $defaults, Request $request)
     {
-        if ((array_key_exists('_finalized', $defaults) && $defaults['_finalized'] === true)
+        if ((array_key_exists('_finalized', $defaults) && true === $defaults['_finalized'])
             || !$this->supports($defaults['_custom_url'])
         ) {
             return $defaults;

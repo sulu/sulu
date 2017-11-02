@@ -540,14 +540,14 @@ class MediaManager implements MediaManagerInterface
     {
         foreach ($data as $attribute => $value) {
             if ($value ||
-                ($attribute === 'tags' && $value !== null) ||
-                ($attribute === 'size' && $value !== null) ||
-                ($attribute === 'description' && $value !== null) ||
-                ($attribute === 'copyright' && $value !== null) ||
-                ($attribute === 'credits' && $value !== null) ||
-                ($attribute === 'categories' && $value !== null) ||
-                ($attribute === 'focusPointX' && $value !== null) ||
-                ($attribute === 'focusPointY' && $value !== null)
+                ('tags' === $attribute && null !== $value) ||
+                ('size' === $attribute && null !== $value) ||
+                ('description' === $attribute && null !== $value) ||
+                ('copyright' === $attribute && null !== $value) ||
+                ('credits' === $attribute && null !== $value) ||
+                ('categories' === $attribute && null !== $value) ||
+                ('focusPointX' === $attribute && null !== $value) ||
+                ('focusPointY' === $attribute && null !== $value)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -732,7 +732,7 @@ class MediaManager implements MediaManagerInterface
         try {
             $mediaEntity = $this->mediaRepository->findMediaById($id);
 
-            if ($mediaEntity === null) {
+            if (null === $mediaEntity) {
                 throw new MediaNotFoundException($id);
             }
 
@@ -805,7 +805,7 @@ class MediaManager implements MediaManagerInterface
         /** @var \Sulu\Bundle\MediaBundle\Entity\MediaInterface $previewImage */
         $previewImage = $media->getEntity()->getPreviewImage();
 
-        if ($previewImage !== null) {
+        if (null !== $previewImage) {
             /** @var FileVersion $latestVersion */
             $latestVersion = null;
 
@@ -817,7 +817,7 @@ class MediaManager implements MediaManagerInterface
                 break;
             }
 
-            if ($latestVersion !== null) {
+            if (null !== $latestVersion) {
                 $media->setFormats(
                     $this->formatManager->getFormats(
                         $previewImage->getId(),
@@ -857,7 +857,7 @@ class MediaManager implements MediaManagerInterface
 
         // set properties
         $properties = $media->getFileVersion()->getProperties();
-        if ($properties !== null) {
+        if (null !== $properties) {
             $media->setProperties($properties);
         }
 
@@ -926,7 +926,7 @@ class MediaManager implements MediaManagerInterface
      */
     private function getNormalizedFileName($originalFileName)
     {
-        if (strpos($originalFileName, '.') !== false) {
+        if (false !== strpos($originalFileName, '.')) {
             $pathParts = pathinfo($originalFileName);
             $fileName = $this->pathCleaner->cleanup($pathParts['filename']);
             $fileName .= '.' . $pathParts['extension'];

@@ -184,7 +184,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         $this->requestAnalyzer->analyze($request);
 
         try {
-            return $this->router->matchRequest($request) !== null;
+            return null !== $this->router->matchRequest($request);
         } catch (ResourceNotFoundException $exception) {
             return false;
         }
@@ -217,7 +217,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         if (isset($redirectInfo['path'])
             && (// if requested url not starting with redirectUrl it need to be added
                 !isset($requestInfo['path'])
-                || strpos($requestInfo['path'], $redirectInfo['path'] . '/') !== 0)
+                || 0 !== strpos($requestInfo['path'], $redirectInfo['path'] . '/'))
         ) {
             $url .= $redirectInfo['path'];
         }

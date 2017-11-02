@@ -27,7 +27,7 @@ class InternalLinkEnhancer implements RouteEnhancerInterface
     public function enhance(array $defaults, Request $request)
     {
         if (!array_key_exists('_structure', $defaults)
-            || $defaults['_structure']->getNodeType() !== Structure::NODE_TYPE_INTERNAL_LINK
+            || Structure::NODE_TYPE_INTERNAL_LINK !== $defaults['_structure']->getNodeType()
         ) {
             return $defaults;
         }
