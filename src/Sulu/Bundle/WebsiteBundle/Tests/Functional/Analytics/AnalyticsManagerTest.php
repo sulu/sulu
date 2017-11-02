@@ -40,7 +40,9 @@ class AnalyticsManagerTest extends BaseFunctional
                 'title' => 'test-1',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']],
+                'domains' => [
+                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']
+                ],
             ]
         );
         $this->entities[] = $this->create(
@@ -92,18 +94,18 @@ class AnalyticsManagerTest extends BaseFunctional
 
     public function testFindAll()
     {
-        $result = $this->analyticsManager->findAll('sulu_io');
+        $result = $this->analyticsManager->findAll('sulu_io', 'prod');
         $this->assertCount(4, $result);
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
         $this->assertEquals('test-3', $result[2]->getTitle());
         $this->assertEquals('test-4', $result[3]->getTitle());
 
-        $result = $this->analyticsManager->findAll('test_io');
+        $result = $this->analyticsManager->findAll('test_io', 'prod');
         $this->assertCount(1, $result);
         $this->assertEquals('test piwik', $result[0]->getTitle());
 
-        $result = $this->analyticsManager->findAll('test');
+        $result = $this->analyticsManager->findAll('test', 'prod');
         $this->assertEmpty($result);
     }
 
@@ -124,17 +126,25 @@ class AnalyticsManagerTest extends BaseFunctional
     public function dataProvider()
     {
         return [
-            ['sulu_io', ['title' => 'test-1', 'type' => 'google']],
-            ['sulu_io', ['title' => 'test-1', 'type' => 'google', 'content' => 'test-1', 'allDomains' => true]],
-            ['sulu_io', ['title' => 'test-1', 'type' => 'google', 'content' => 'test-1', 'allDomains' => false]],
-            ['test_io', ['title' => 'test-1', 'type' => 'google', 'content' => 'test-1', 'allDomains' => false]],
+            [
+                'sulu_io',
+                [
+                    'title' => 'test-1',
+                    'type' => 'google',
+                    'content' => 'test-1',
+                    'allDomains' => true,
+                ],
+                'prod',
+            ],
             [
                 'test_io',
                 [
                     'title' => 'test-1',
                     'type' => 'google',
-                    'domains' => [],
+                    'content' => 'test-1',
+                    'allDomains' => true,
                 ],
+                'prod',
             ],
             [
                 'test_io',
@@ -143,6 +153,7 @@ class AnalyticsManagerTest extends BaseFunctional
                     'type' => 'google',
                     'domains' => [['url' => 'www.sulu.io', 'environment' => 'prod']],
                 ],
+                'prod',
             ],
             [
                 'test_io',
@@ -154,6 +165,7 @@ class AnalyticsManagerTest extends BaseFunctional
                         ['url' => 'www.sulu.io/{localization}', 'environment' => 'dev'],
                     ],
                 ],
+                'prod',
             ],
         ];
     }
@@ -161,7 +173,7 @@ class AnalyticsManagerTest extends BaseFunctional
     /**
      * @dataProvider dataProvider
      */
-    public function testCreate($webspaceKey, array $data)
+    public function testCreate($webspaceKey, array $data, $env)
     {
         $result = $this->analyticsManager->create($webspaceKey, $data);
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -182,7 +194,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertCount(
             1,
             array_filter(
-                $this->analyticsManager->findAll($webspaceKey),
+                $this->analyticsManager->findAll($webspaceKey, $env),
                 function (Analytics $analytics) use ($result) {
                     return $analytics->getId() === $result->getId();
                 }
@@ -193,7 +205,7 @@ class AnalyticsManagerTest extends BaseFunctional
     /**
      * @dataProvider dataProvider
      */
-    public function testUpdate($webspaceKey, array $data)
+    public function testUpdate($webspaceKey, array $data, $env)
     {
         $result = $this->analyticsManager->update($this->entities[0]->getId(), $data);
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -214,7 +226,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertCount(
             1,
             array_filter(
-                $this->analyticsManager->findAll('sulu_io'),
+                $this->analyticsManager->findAll('sulu_io', $env),
                 function (Analytics $analytics) use ($result) {
                     return $analytics->getTitle() === $result->getTitle();
                 }
@@ -285,7 +297,7 @@ class AnalyticsManagerTest extends BaseFunctional
 
         $this->assertEmpty(
             array_filter(
-                $this->analyticsManager->findAll('sulu_io'),
+                $this->analyticsManager->findAll('sulu_io', 'prod'),
                 function (Analytics $analytics) {
                     return $analytics->getId() === $this->entities[0]->getId();
                 }
@@ -301,7 +313,7 @@ class AnalyticsManagerTest extends BaseFunctional
 
         $this->assertEmpty(
             array_filter(
-                $this->analyticsManager->findAll('sulu_io'),
+                $this->analyticsManager->findAll('sulu_io', 'prod'),
                 function (Analytics $analytics) use ($ids) {
                     return in_array($analytics->getId(), $ids);
                 }

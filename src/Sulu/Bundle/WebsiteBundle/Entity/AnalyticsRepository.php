@@ -32,7 +32,7 @@ class AnalyticsRepository extends EntityRepository
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
             ->where('a.webspaceKey = :webspaceKey')
-            ->andWhere('domains.environment = :environment')
+            ->andWhere('a.allDomains = TRUE OR domains.environment = :environment')
             ->orderBy('a.id', 'ASC');
 
         $query = $queryBuilder->getQuery();

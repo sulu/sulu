@@ -19,13 +19,13 @@ use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 interface AnalyticsManagerInterface
 {
     /**
-     * Returns all analytics for given webspace.
+     * Returns all analytics for given webspace and environment.
      *
-     * @param string $webspaceKey
+     * @param string $environment
      *
      * @return Analytics[]
      */
-    public function findAll($webspaceKey);
+    public function findAll($webspaceKey, $environment);
 
     /**
      * Returns key by id.

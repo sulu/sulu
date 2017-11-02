@@ -37,7 +37,10 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function cgetAction(Request $request, $webspaceKey)
     {
-        $entities = $this->get('sulu_website.analytics.manager')->findAll($webspaceKey);
+        $entities = $this->get('sulu_website.analytics.manager')->findAll(
+            $webspaceKey,
+            $this->getParameter('kernel.environment')
+        );
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($entities, self::RESULT_KEY),

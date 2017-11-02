@@ -52,13 +52,13 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticsRepository->findByWebspaceKey('sulu_io');
+        $result = $this->analyticsRepository->findByWebspaceKeyAndEnvironment('sulu_io', 'prod');
         $this->assertCount(2, $result);
 
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
 
-        $result = $this->analyticsRepository->findByWebspaceKey('test_io');
+        $result = $this->analyticsRepository->findByWebspaceKeyAndEnvironment('test_io', 'prod');
         $this->assertEmpty($result);
     }
 
