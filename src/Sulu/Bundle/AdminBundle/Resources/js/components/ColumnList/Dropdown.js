@@ -47,9 +47,7 @@ export default class Dropdown extends React.Component<DropdownProps> {
 
         const className = classNames(
             toolbarStyles.item,
-            {
-                [toolbarStyles.skinBlue]: skin === 'blue',
-            }
+            toolbarStyles[skin]
         );
 
         return (

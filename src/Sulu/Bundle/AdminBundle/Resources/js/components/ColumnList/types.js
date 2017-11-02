@@ -19,7 +19,7 @@ type ToolbarItemBase = {
     index: number,
     icon: string,
     disabled?: boolean,
-    skin?: 'blue',
+    skin?: 'primary' | 'secondary',
 };
 
 export type DropdownProps = ToolbarItemBase & {

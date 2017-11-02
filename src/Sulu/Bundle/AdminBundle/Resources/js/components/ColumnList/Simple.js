@@ -6,6 +6,10 @@ import type {SimpleProps} from './types';
 import toolbarStyles from './toolbar.scss';
 
 export default class Simple extends React.Component<SimpleProps> {
+    static defaultProps = {
+        skin: 'default',
+    };
+
     handleClick = () => {
         this.props.onClick(this.props.index);
     };
@@ -15,9 +19,7 @@ export default class Simple extends React.Component<SimpleProps> {
 
         const className = classNames(
             toolbarStyles.item,
-            {
-                [toolbarStyles.skinBlue]: 'blue' === skin,
-            }
+            toolbarStyles[skin]
         );
 
         return (

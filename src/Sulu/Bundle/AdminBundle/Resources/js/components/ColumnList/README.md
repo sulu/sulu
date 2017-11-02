@@ -34,7 +34,7 @@ const toolbarItemConfigs = [
     {
         icon: 'search',
         type: 'simple',
-        skin: 'blue',
+        skin: 'secondary',
         onClick: (index) => {
             alert('Clicked search button for column with index: ' + index);
         },
