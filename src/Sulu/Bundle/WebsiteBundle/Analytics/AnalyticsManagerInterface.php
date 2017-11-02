@@ -21,11 +21,11 @@ interface AnalyticsManagerInterface
     /**
      * Returns all analytics for given webspace and environment.
      *
-     * @param string $environment
+     * @param string $webspaceKey
      *
      * @return Analytics[]
      */
-    public function findAll($webspaceKey, $environment);
+    public function findAll($webspaceKey);
 
     /**
      * Returns key by id.

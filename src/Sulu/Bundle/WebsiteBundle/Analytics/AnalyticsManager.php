@@ -38,26 +38,34 @@ class AnalyticsManager implements AnalyticsManagerInterface
     private $domainRepository;
 
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param AnalyticsRepository $analyticsRepository
      * @param DomainRepository $domainRepository
+     * @param string $environment
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         AnalyticsRepository $analyticsRepository,
-        DomainRepository $domainRepository
+        DomainRepository $domainRepository,
+        $environment
     ) {
         $this->entityManager = $entityManager;
         $this->analyticsRepository = $analyticsRepository;
         $this->domainRepository = $domainRepository;
+        $this->environment = $environment;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findAll($webspaceKey, $environment)
+    public function findAll($webspaceKey)
     {
-        return $this->analyticsRepository->findByWebspaceKeyAndEnvironment($webspaceKey, $environment);
+        return $this->analyticsRepository->findByWebspaceKeyAndEnvironment($webspaceKey, $this->environment);
     }
 
     /**
