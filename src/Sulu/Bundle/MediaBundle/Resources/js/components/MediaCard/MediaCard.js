@@ -15,7 +15,7 @@ type Props = {
     selected: boolean,
     /** Called when the image at the bottom part of this element was clicked */
     onClick?: (id: string | number) => void,
-    /** Called when the header or the checkbox was clicked to select/deselect this item */    
+    /** Called when the header or the checkbox was clicked to select/deselect this item */
     onSelectionChange?: (id: string | number, selected: boolean) => void,
     /** The title which will be displayed in the header besides the checkbox */
     title: string,
