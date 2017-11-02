@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX     #3598 [SecurityBundle]          Fixed misleading security warning message
     * HOTFIX     #3573 [RouteBundle]             Added rawurldecode to decode path-info before searching for route
     * HOTFIX     #3573 [ContentBundle]           Added rawurldecode to decode path-info before searching for route
     * HOTFIX     #3573 [CustomUrlBundle]         Added rawurldecode to decode path-info before searching for route

@@ -124,7 +124,7 @@
             </trans-unit>
             <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
                 <source>security.warning</source>
-                <target>To see the changes of the security settings the system has to be reloaded.</target>
+                <target>To see the changes of the security settings the browser has to be reloaded.</target>
             </trans-unit>
             <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
                 <source>sulu-security.role.removed</source>
