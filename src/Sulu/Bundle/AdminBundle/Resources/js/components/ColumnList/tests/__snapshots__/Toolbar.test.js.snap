@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should render with active 1`] = `
+exports[`The Toolbar component should render with active 1`] = `
 <div
   class="toolbar active"
 >
@@ -31,7 +31,7 @@ exports[`The component should render with active 1`] = `
 </div>
 `;
 
-exports[`The component should render with active false 1`] = `
+exports[`The Toolbar component should render with active 2`] = `
 <div
   class="toolbar"
 >
