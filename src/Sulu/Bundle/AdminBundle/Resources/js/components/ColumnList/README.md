@@ -23,7 +23,7 @@ const handleOnItemClick = (id) => {
     alert('Item with id: ' + id + ' clicked');
 };
 
-const toolbarItemConfigs = [
+const toolbarItems = [
     {
         icon: 'plus',
         type: 'simple',
@@ -59,19 +59,21 @@ const toolbarItemConfigs = [
     },
 ];
 
-<ColumnList buttons={buttons} onItemClick={handleOnItemClick} toolbarItemConfigs={toolbarItemConfigs}>
-    <Column>
-        <Item id="1" selected="true">Item 1</Item>
-        <Item id="2" hasChildren="true">Item 1</Item>
-        <Item id="3">Item 1</Item>
-    </Column>
-    <Column>
-        <Item id="1-1">Item 1</Item>
-        <Item id="1-2" hasChildren="true">Item 1</Item>
-    </Column>
-    <Column>
-        <Item id="1-1-1">Item 1</Item>
-        <Item id="1-1-2">Item 1</Item>
-    </Column>
-</ColumnList>
+<div style={{height: '60vh'}}>
+    <ColumnList buttons={buttons} onItemClick={handleOnItemClick} toolbarItems={toolbarItems}>
+        <Column>
+            <Item id="1" selected="true">Item 1</Item>
+            <Item id="2" hasChildren="true">Item 1</Item>
+            <Item id="3">Item 1</Item>
+        </Column>
+        <Column>
+            <Item id="1-1">Item 1</Item>
+            <Item id="1-2" hasChildren="true">Item 1</Item>
+        </Column>
+        <Column>
+            <Item id="1-1-1">Item 1</Item>
+            <Item id="1-1-2">Item 1</Item>
+        </Column>
+    </ColumnList>
+</div>
 ```

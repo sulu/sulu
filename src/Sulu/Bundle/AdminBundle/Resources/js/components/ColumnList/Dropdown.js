@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {Element, ElementRef} from 'react';
+import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -13,33 +13,33 @@ import toolbarStyles from './toolbar.scss';
 
 @observer
 export default class Dropdown extends React.Component<DropdownProps> {
-    @observable popOverOpen: boolean = false;
-    @observable popOverAnchorElement: ?ElementRef<*>;
-
-    handleOnOptionClick = (event: Event) => {
-        this.popOverAnchorElement = event.currentTarget;
-        this.popOverOpen = true;
+    static defaultProps = {
+        skin: 'primary',
     };
 
-    handlePopOverClose = () => {
-        this.popOverOpen = false;
+    @observable popoverOpen: boolean = false;
+    @observable popoverAnchorElement: ?ElementRef<*>;
+
+    handleOptionClick = (event: SyntheticEvent<HTMLOptionElement>) => {
+        this.popoverAnchorElement = event.currentTarget;
+        this.popoverOpen = true;
+    };
+
+    handlePopoverClose = () => {
+        this.popoverOpen = false;
     };
 
     renderMenuOptions = (dropdownOptionConfigs: Array<DropdownOptionConfig>) => {
-        let options : Array<Element<typeof Select.Option>> = [];
-
-        dropdownOptionConfigs.map((dropdownOptionConfig: DropdownOptionConfig, index: number) => {
+        return dropdownOptionConfigs.map((dropdownOptionConfig: DropdownOptionConfig, index: number) => {
             const key = `option-${index}`;
-            const handleClick = () => {
-                dropdownOptionConfig.onClick(this.props.index);
-            };
+            const handleClick = dropdownOptionConfig.onClick;
 
-            options.push(
-                <Select.Option key={key} onClick={handleClick}>{dropdownOptionConfig.label}</Select.Option>
+            return (
+                <Select.Option key={key} value={this.props.index} onClick={handleClick}>
+                    {dropdownOptionConfig.label}
+                </Select.Option>
             );
         });
-
-        return options;
     };
 
     render = () => {
@@ -51,12 +51,12 @@ export default class Dropdown extends React.Component<DropdownProps> {
         );
 
         return (
-            <div onClick={this.handleOnOptionClick} className={className}>
+            <div onClick={this.handleOptionClick} className={className}>
                 <Icon name={icon} />
                 <Popover
-                    open={this.popOverOpen}
-                    anchorElement={this.popOverAnchorElement}
-                    onClose={this.handlePopOverClose}
+                    open={this.popoverOpen}
+                    anchorElement={this.popoverAnchorElement}
+                    onClose={this.handlePopoverClose}
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (

@@ -12,9 +12,9 @@ type Props = {
     selected: boolean,
     disabled: boolean,
     focus: boolean,
-    value: string,
+    value: string | number,
     children: string,
-    onClick?: (value: string) => void,
+    onClick?: (value: string | number) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
     selectedVisualization: OptionSelectedVisualization,
 };

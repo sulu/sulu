@@ -1,20 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should render 1`] = `
+exports[`The ColumnList component should render 1`] = `
 <div
-  class="container"
+  class="columnListContainer"
 >
   <div
     class="columnList"
   >
     <div
-      class="columnContainer isActive"
+      class="columnContainer active"
     >
       <div
-        class="container isActive"
+        class="toolbar active"
       >
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="plus"
@@ -22,7 +22,7 @@ exports[`The component should render 1`] = `
           />
         </div>
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="search"
@@ -30,7 +30,7 @@ exports[`The component should render 1`] = `
           />
         </div>
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="gear"
@@ -126,10 +126,10 @@ exports[`The component should render 1`] = `
       class="columnContainer"
     >
       <div
-        class="container"
+        class="toolbar"
       >
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="plus"
@@ -137,7 +137,7 @@ exports[`The component should render 1`] = `
           />
         </div>
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="search"
@@ -145,7 +145,7 @@ exports[`The component should render 1`] = `
           />
         </div>
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="gear"
@@ -216,10 +216,10 @@ exports[`The component should render 1`] = `
       class="columnContainer"
     >
       <div
-        class="container"
+        class="toolbar"
       >
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="plus"
@@ -227,7 +227,7 @@ exports[`The component should render 1`] = `
           />
         </div>
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="search"
@@ -235,7 +235,7 @@ exports[`The component should render 1`] = `
           />
         </div>
         <div
-          class="item"
+          class="item primary"
         >
           <span
             aria-label="gear"

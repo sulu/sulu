@@ -10,45 +10,36 @@ import toolbarStyles from './toolbar.scss';
 type Props = {
     index: number,
     active: boolean,
-    toolbarItemConfigs: Array<ToolbarItemConfig>,
+    toolbarItems: Array<ToolbarItemConfig>,
 };
 
 export default class Toolbar extends React.Component<Props> {
-    renderToolbarItems = (toolbarItemConfigs: Array<ToolbarItemConfig>) => {
-        let items = [];
-
-        toolbarItemConfigs.map((toolbarItemConfig: ToolbarItemConfig, index: number) => {
-            let item;
+    renderToolbarItems = (toolbarItems: Array<ToolbarItemConfig>) => {
+        return toolbarItems.map((toolbarItemConfig: ToolbarItemConfig, index: number) => {
             switch (toolbarItemConfig.type) {
                 case toolbarItemTypes.Dropdown:
-                    item = <Dropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
-                    break;
+                    return <Dropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
                 case toolbarItemTypes.Simple:
-                    item = <Simple key={index} index={this.props.index} {...toolbarItemConfig} />;
-                    break;
+                    return <Simple key={index} index={this.props.index} {...toolbarItemConfig} />;
                 default:
                     throw new Error('Unknown toolbar item type given: "' + toolbarItemConfig.type + '"');
             }
-
-            items.push(item);
         });
-
-        return items;
     };
 
     render() {
-        const {active, toolbarItemConfigs} = this.props;
+        const {active, toolbarItems} = this.props;
 
         const containerClass = classNames(
-            toolbarStyles.container,
+            toolbarStyles.toolbar,
             {
-                [toolbarStyles.isActive]: active,
+                [toolbarStyles.active]: active,
             }
         );
 
         return (
             <div className={containerClass}>
-                {this.renderToolbarItems(toolbarItemConfigs)}
+                {this.renderToolbarItems(toolbarItems)}
             </div>
         );
     }

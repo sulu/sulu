@@ -5,10 +5,10 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 
 type Props = SelectProps & {
-    values: Array<string>,
+    values: Array<string | number>,
     noneSelectedText: string,
     allSelectedText: string,
-    onChange: (values: Array<string>) => void,
+    onChange: (values: Array<string | number>) => void,
 };
 
 export default class MultiSelect extends React.PureComponent<Props> {
@@ -53,7 +53,7 @@ export default class MultiSelect extends React.PureComponent<Props> {
         return this.props.values.includes(option.props.value);
     };
 
-    handleSelect = (value: string) => {
+    handleSelect = (value: string | number) => {
         const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
 

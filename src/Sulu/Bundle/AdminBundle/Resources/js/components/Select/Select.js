@@ -16,7 +16,7 @@ const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
 
 type Props = SelectProps & {
-    onSelect: (values: string) => void,
+    onSelect: (values: string | number) => void,
     displayValue: string,
     closeOnSelect: boolean,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
@@ -91,7 +91,7 @@ export default class Select extends React.PureComponent<Props> {
         });
     }
 
-    handleOptionClick = (value: string) => {
+    handleOptionClick = (value: string | number) => {
         this.props.onSelect(value);
 
         if (this.props.closeOnSelect) {

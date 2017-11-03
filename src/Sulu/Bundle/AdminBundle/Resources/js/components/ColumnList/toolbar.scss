@@ -1,16 +1,17 @@
 @import '../../containers/Application/colors.scss';
 
-$itemBackgroundColor: $silver;
-$itemBackgroundColorSkinBlue: $shakespeare;
-$itemBorderColorSkinBlue: $concrete;
+$itemBackgroundColorPrimary: $silver;
+$itemBackgroundColorSecondary: $shakespeare;
+$itemBorderColorSecondary: $concrete;
 
-.container {
+.toolbar {
+    height: 30px;
     width: 100%;
     display: inline-flex;
     justify-content: space-between;
     visibility: hidden;
 
-    &.is-active {
+    &.active {
         visibility: visible;
     }
 }
@@ -18,8 +19,7 @@ $itemBorderColorSkinBlue: $concrete;
 .item {
     flex: 1;
     text-align: center;
-    padding: 5px 0 5px 0;
-    background: $itemBackgroundColor;
+    padding: 5px 0;
     cursor: pointer;
 
     &:first-child {
@@ -30,10 +30,14 @@ $itemBorderColorSkinBlue: $concrete;
         border-radius: 0 3px 0 0;
     }
 
-    &.skin-blue {
-        background: $itemBackgroundColorSkinBlue;
-        border-left: 1px solid $itemBorderColorSkinBlue;
-        border-right: 1px solid $itemBorderColorSkinBlue;
+    &.primary {
+        background: $itemBackgroundColorPrimary;
+    }
+
+    &.secondary {
+        background: $itemBackgroundColorSecondary;
+        border-left: 1px solid $itemBorderColorSecondary;
+        border-right: 1px solid $itemBorderColorSecondary;
         color: $white;
     }
 }

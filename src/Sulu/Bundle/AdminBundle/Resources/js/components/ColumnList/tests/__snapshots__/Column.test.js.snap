@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should render 1`] = `
+exports[`The Column component should render 1`] = `
 <div
-  class="columnContainer isActive"
+  class="columnContainer active"
 >
   <div
-    class="container isActive"
+    class="toolbar active"
   >
     <div
-      class="item"
+      class="item primary"
     >
       <span
         aria-label="plus"
@@ -16,7 +16,7 @@ exports[`The component should render 1`] = `
       />
     </div>
     <div
-      class="item"
+      class="item primary"
     >
       <span
         aria-label="search"
@@ -24,7 +24,7 @@ exports[`The component should render 1`] = `
       />
     </div>
     <div
-      class="item"
+      class="item primary"
     >
       <span
         aria-label="gear"
@@ -38,15 +38,15 @@ exports[`The component should render 1`] = `
 </div>
 `;
 
-exports[`The component should render 2`] = `
+exports[`The Column component should render 2`] = `
 <div
-  class="columnContainer isActive"
+  class="columnContainer"
 >
   <div
-    class="container isActive"
+    class="toolbar"
   >
     <div
-      class="item"
+      class="item primary"
     >
       <span
         aria-label="plus"
@@ -54,7 +54,7 @@ exports[`The component should render 2`] = `
       />
     </div>
     <div
-      class="item"
+      class="item primary"
     >
       <span
         aria-label="search"
@@ -62,7 +62,7 @@ exports[`The component should render 2`] = `
       />
     </div>
     <div
-      class="item"
+      class="item primary"
     >
       <span
         aria-label="gear"

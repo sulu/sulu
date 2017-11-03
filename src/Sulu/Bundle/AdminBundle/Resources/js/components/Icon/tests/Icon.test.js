@@ -18,7 +18,9 @@ test('Icon should render with onClick handler, role and tabindex', () => {
 
 test('Icon should call the callback on click', () => {
     const onClick = jest.fn();
+    const stopPropagation = jest.fn();
     const icon = shallow(<Icon className="test" name="edit" onClick={onClick} />);
-    icon.simulate('click', { stopPropagation() {} });
+    icon.simulate('click', { stopPropagation });
     expect(onClick).toBeCalled();
+    expect(stopPropagation).toBeCalled();
 });

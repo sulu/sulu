@@ -14,7 +14,7 @@ type Props = {
     active: boolean,
     onActive: (index: number) => void,
     onItemClick: (id: string | number) => void,
-    toolbarItemConfigs: Array<ToolbarItemConfig>,
+    toolbarItems: Array<ToolbarItemConfig>,
 };
 
 export default class ColumnList extends React.Component<Props> {
@@ -31,26 +31,28 @@ export default class ColumnList extends React.Component<Props> {
     };
 
     handleMouseEnter = () => {
-        if (!this.props.onActive) {
+        const {onActive} = this.props;
+
+        if (!onActive) {
             return;
         }
 
-        this.props.onActive(this.props.index);
+        onActive(this.props.index);
     };
 
     render() {
-        const {children, active, index, toolbarItemConfigs} = this.props;
+        const {children, active, index, toolbarItems} = this.props;
 
         const columnContainerClass = classNames(
             columnListStyles.columnContainer,
             {
-                [columnListStyles.isActive]: active,
+                [columnListStyles.active]: active,
             }
         );
 
         return (
             <div onMouseEnter={this.handleMouseEnter} className={columnContainerClass}>
-                <Toolbar active={active} index={index} toolbarItemConfigs={toolbarItemConfigs} />
+                <Toolbar active={active} index={index} toolbarItems={toolbarItems} />
                 <div className={columnListStyles.column}>
                     {this.cloneItems(children)}
                 </div>

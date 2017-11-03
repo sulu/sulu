@@ -7,7 +7,7 @@ import toolbarStyles from './toolbar.scss';
 
 export default class Simple extends React.Component<SimpleProps> {
     static defaultProps = {
-        skin: 'default',
+        skin: 'primary',
     };
 
     handleClick = () => {

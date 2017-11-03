@@ -2,6 +2,7 @@
 
 $itemBackgroundColorSelected: $alabaster;
 $itemBackgroundColorHover: $blueZodiac;
+$itemColorHover: $white;
 
 .item {
     padding: 11px 30px 11px 6px;
@@ -14,7 +15,7 @@ $itemBackgroundColorHover: $blueZodiac;
 
     &:hover {
         background: $itemBackgroundColorHover;
-        color: $white;
+        color: $itemColorHover;
     }
 
     .icon {

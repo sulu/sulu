@@ -6,7 +6,7 @@ import Column from '../Column';
 import Item from '../Item';
 import Toolbar from '../Toolbar';
 
-test('The component should render', () => {
+test('The ColumnList component should render', () => {
     const onItemClick = () => {};
 
     const buttonsConfig = [
@@ -20,7 +20,7 @@ test('The component should render', () => {
         },
     ];
 
-    const toolbarItemConfigs = [
+    const toolbarItems = [
         {
             icon: 'plus',
             type: 'simple',
@@ -51,7 +51,7 @@ test('The component should render', () => {
         <ColumnList
             buttons={buttonsConfig}
             onItemClick={onItemClick}
-            toolbarItemConfigs={toolbarItemConfigs}
+            toolbarItems={toolbarItems}
         >
             <Column>
                 <Item id="1" selected="true">Item 1</Item>
@@ -71,9 +71,7 @@ test('The component should render', () => {
     expect(columnList.render()).toMatchSnapshot();
 });
 
-test('The component should trigger the item callback', () => {
-    const body = document.body;
-
+test('The ColumnList component should trigger the item callback', () => {
     const onItemClick = jest.fn();
 
     const buttonsConfig = [
@@ -87,7 +85,7 @@ test('The component should trigger the item callback', () => {
         },
     ];
 
-    const toolbarItemConfigs = [
+    const toolbarItems = [
         {
             icon: 'plus',
             type: 'simple',
@@ -118,7 +116,7 @@ test('The component should trigger the item callback', () => {
         <ColumnList
             buttons={buttonsConfig}
             onItemClick={onItemClick}
-            toolbarItemConfigs={toolbarItemConfigs}
+            toolbarItems={toolbarItems}
         >
             <Column>
                 <Item id="1" selected="true">Item 1</Item>
@@ -148,13 +146,9 @@ test('The component should trigger the item callback', () => {
     expect(onItemClick.mock.calls[0][0]).toBe('1');
     expect(onItemClick.mock.calls[1][0]).toBe('3');
     expect(onItemClick.mock.calls[2][0]).toBe('1-1');
-
-    expect(body.innerHTML).toBe('');
 });
 
-test('The component should handle which toolbar is active on mouse enter event', () => {
-    const body = document.body;
-
+test('The ColumnList component should handle which toolbar is active on mouse enter event', () => {
     const onItemClick = jest.fn();
 
     const buttonsConfig = [
@@ -168,7 +162,7 @@ test('The component should handle which toolbar is active on mouse enter event',
         },
     ];
 
-    const toolbarItemConfigs = [
+    const toolbarItems = [
         {
             icon: 'plus',
             type: 'simple',
@@ -199,7 +193,7 @@ test('The component should handle which toolbar is active on mouse enter event',
         <ColumnList
             buttons={buttonsConfig}
             onItemClick={onItemClick}
-            toolbarItemConfigs={toolbarItemConfigs}
+            toolbarItems={toolbarItems}
         >
             <Column>
                 <Item id="1" selected="true">Item 1</Item>
@@ -235,6 +229,4 @@ test('The component should handle which toolbar is active on mouse enter event',
     expect(columnList.find(Column).at(0).props().active).toBe(true);
     expect(columnList.find(Column).at(1).props().active).toBe(false);
     expect(columnList.find(Column).at(2).props().active).toBe(false);
-
-    expect(body.innerHTML).toBe('');
 });

@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default class Item extends React.Component<Props> {
-    handleOnClick = () => {
+    handleClick = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.id);
         }
@@ -52,7 +52,7 @@ export default class Item extends React.Component<Props> {
         );
 
         return (
-            <div onClick={this.handleOnClick} className={itemClass}>
+            <div onClick={this.handleClick} className={itemClass}>
                 <span className={itemStyles.buttons}>
                     {this.createButtons()}
                 </span>

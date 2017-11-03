@@ -11,7 +11,7 @@ import columnListStyles from './columnList.scss';
 type Props = {
     children: ChildrenArray<Element<typeof Column>>,
     buttons?: Array<ButtonConfig>,
-    toolbarItemConfigs: Array<ToolbarItemConfig>,
+    toolbarItems: Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
 };
 
@@ -28,6 +28,8 @@ export default class ColumnList extends React.Component<Props> {
     };
 
     cloneColumns = (originalColumns: ChildrenArray<Element<typeof Column>>) => {
+        const {onItemClick, toolbarItems} = this.props;
+
         return React.Children.map(originalColumns, (column, index) => {
             return React.cloneElement(
                 column,
@@ -36,8 +38,8 @@ export default class ColumnList extends React.Component<Props> {
                     buttons: this.props.buttons,
                     active: this.activeColumnIndex === index,
                     onActive: this.handleOnActive,
-                    onItemClick: this.props.onItemClick,
-                    toolbarItemConfigs: this.props.toolbarItemConfigs,
+                    onItemClick: onItemClick,
+                    toolbarItems: toolbarItems,
                 }
             );
         });
@@ -47,7 +49,7 @@ export default class ColumnList extends React.Component<Props> {
         const {children} = this.props;
 
         return (
-            <div className={columnListStyles.container}>
+            <div className={columnListStyles.columnListContainer}>
                 <div className={columnListStyles.columnList}>
                     {this.cloneColumns(children)}
                 </div>

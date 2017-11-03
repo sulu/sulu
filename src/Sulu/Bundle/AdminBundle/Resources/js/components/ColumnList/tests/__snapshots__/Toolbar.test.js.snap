@@ -2,10 +2,10 @@
 
 exports[`The component should render with active 1`] = `
 <div
-  class="container isActive"
+  class="toolbar active"
 >
   <div
-    class="item"
+    class="item primary"
   >
     <span
       aria-label="plus"
@@ -13,7 +13,7 @@ exports[`The component should render with active 1`] = `
     />
   </div>
   <div
-    class="item"
+    class="item primary"
   >
     <span
       aria-label="search"
@@ -21,7 +21,7 @@ exports[`The component should render with active 1`] = `
     />
   </div>
   <div
-    class="item"
+    class="item primary"
   >
     <span
       aria-label="gear"
@@ -33,10 +33,10 @@ exports[`The component should render with active 1`] = `
 
 exports[`The component should render with active false 1`] = `
 <div
-  class="container"
+  class="toolbar"
 >
   <div
-    class="item"
+    class="item primary"
   >
     <span
       aria-label="plus"
@@ -44,7 +44,7 @@ exports[`The component should render with active false 1`] = `
     />
   </div>
   <div
-    class="item"
+    class="item primary"
   >
     <span
       aria-label="search"
@@ -52,7 +52,7 @@ exports[`The component should render with active false 1`] = `
     />
   </div>
   <div
-    class="item"
+    class="item primary"
   >
     <span
       aria-label="gear"

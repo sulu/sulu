@@ -4,7 +4,7 @@ import {mount} from 'enzyme';
 import Toolbar from '../Toolbar';
 
 test('The component should render with active', () => {
-    const toolbarItemConfigs = [
+    const toolbarItems = [
         {
             icon: 'plus',
             type: 'simple',
@@ -32,14 +32,14 @@ test('The component should render with active', () => {
     ];
 
     const toolbar = mount(
-        <Toolbar active={true} index={0} toolbarItemConfigs={toolbarItemConfigs} />
+        <Toolbar active={true} index={0} toolbarItems={toolbarItems} />
     );
 
     expect(toolbar.render()).toMatchSnapshot();
 });
 
 test('The component should render with active false', () => {
-    const toolbarItemConfigs = [
+    const toolbarItems = [
         {
             icon: 'plus',
             type: 'simple',
@@ -67,14 +67,14 @@ test('The component should render with active false', () => {
     ];
 
     const toolbarActive = mount(
-        <Toolbar active={false} index={0} toolbarItemConfigs={toolbarItemConfigs} />
+        <Toolbar active={false} index={0} toolbarItems={toolbarItems} />
     );
 
     expect(toolbarActive.render()).toMatchSnapshot();
 });
 
 test('The component should throw an exception when an unknown toolbar item type is given', () => {
-    const toolbarItemConfigs = [
+    const toolbarItems = [
         {
             icon: 'plus',
             type: 'xxx-not-valid',
@@ -83,6 +83,6 @@ test('The component should throw an exception when an unknown toolbar item type 
     ];
 
     expect(() => {
-        mount(<Toolbar active={false} index={0} toolbarItemConfigs={toolbarItemConfigs} />);
-    }).toThrow();
+        mount(<Toolbar active={false} index={0} toolbarItems={toolbarItems} />);
+    }).toThrow(/xxx-not-valid/);
 });
