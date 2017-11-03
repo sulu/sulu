@@ -38,6 +38,7 @@ matrix:
 
 before_script:
   - if [[ $PHP = true ]]; then bin/travis/before_script_php.sh; fi
+  - if [[ $JS = true ]]; then npm install; fi
 
 script:
   - if [[ $PHP = true ]]; then time ./bin/runtests -i -a $TEST_FLAGS; fi
