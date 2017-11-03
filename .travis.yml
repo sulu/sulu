@@ -32,13 +32,12 @@ matrix:
         - SYMFONY__PHPCR__TRANSPORT=jackrabbit
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
-    - node_js: "node"
+    - node_js: "8"
       env:
         - JS=true
 
 before_script:
   - if [[ $PHP = true ]]; then bin/travis/before_script_php.sh; fi
-  - if [[ $JS = true ]]; then nvm install node; npm install -g npm; npm install; fi
 
 script:
   - if [[ $PHP = true ]]; then time ./bin/runtests -i -a $TEST_FLAGS; fi

@@ -12,7 +12,7 @@ $confirmColor: $white;
 
 $transitionDuration: 300ms;
 
-.container {
+.dialog-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -41,7 +41,7 @@ $transitionDuration: 300ms;
     }
 }
 
-.is-open {
+.open {
     & > * {
         opacity: 1;
     }

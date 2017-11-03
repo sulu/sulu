@@ -73,9 +73,9 @@ export default class Dialog extends React.PureComponent<Props> {
             confirmText,
         } = this.props;
         const containerClass = classNames(
-            dialogStyles.container,
+            dialogStyles.dialogContainer,
             {
-                [dialogStyles.isOpen]: this.visible,
+                [dialogStyles.open]: this.visible,
             }
         );
 
