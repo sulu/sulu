@@ -5,7 +5,7 @@ export type RouteConfig = {
     view: string,
     path: string,
     options: Object,
-    attributeDefaults: Object,
+    attributeDefaults: AttributeMap,
 };
 
 export type Route = {
@@ -15,7 +15,9 @@ export type Route = {
     view: string,
     path: string,
     options: Object,
-    attributeDefaults: Object,
+    attributeDefaults: AttributeMap,
 };
+
+export type AttributeMap = {[string]: string};
 
 export type RouteMap = {[string]: Route};

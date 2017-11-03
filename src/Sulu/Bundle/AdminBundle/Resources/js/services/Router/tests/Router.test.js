@@ -825,3 +825,170 @@ test('Navigate to child route using URL', () => {
     expect(parent.children[0]).toBe(router.route);
     expect(parent.children[1].options.tabTitle).toBe('Taxonomies');
 });
+
+test('Navigating should store the old route information', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+        snippet: {
+            name: 'snippet',
+            view: 'form',
+            path: '/snippets/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('page', {uuid: 'page-uuid', locale: 'en'});
+    router.navigate('snippet', {uuid: 'snippet-uuid', locale: 'de'});
+    router.navigate('page', {uuid: 'other-page-uuid', locale: 'de'});
+    router.navigate('page', {uuid: 'another-page-uuid', locale: 'de'});
+
+    expect(router.attributesHistory['page']).toEqual([
+        {
+            uuid: 'page-uuid',
+            locale: 'en',
+        },
+        {
+            uuid: 'other-page-uuid',
+            locale: 'de',
+        },
+    ]);
+
+    expect(router.attributesHistory['snippet']).toEqual([
+        {
+            uuid: 'snippet-uuid',
+            locale: 'de',
+        },
+    ]);
+});
+
+test('Restore should navigate to the given route with the stored data', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+        snippet: {
+            name: 'snippet',
+            view: 'form',
+            path: '/snippets/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('snippet', {uuid: 'snippet-uuid', locale: 'de'});
+    router.navigate('page', {uuid: 'another-page-uuid', locale: 'de'});
+
+    expect(router.route.name).toEqual('page');
+
+    router.restore('snippet');
+    expect(router.route.name).toEqual('snippet');
+    expect(router.attributes).toEqual({uuid: 'snippet-uuid', locale: 'de'});
+});
+
+test('Restore should navigate to the given route with passed data being merged', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+        snippet: {
+            name: 'snippet',
+            view: 'form',
+            path: '/snippets/:uuid/:test',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('snippet', {uuid: 'uuid', test: 'other-test', locale: 'en', parameter: 'other-value'});
+    router.navigate('snippet', {uuid: 'snippet-uuid', test: 'test', locale: 'de', parameter: 'value'});
+    router.navigate('page', {uuid: 'other-page-uuid', locale: 'de'});
+
+    expect(router.route.name).toEqual('page');
+
+    router.restore('snippet', {test: 'new-test', locale: 'en'});
+    expect(router.route.name).toEqual('snippet');
+    expect(router.attributes).toEqual({uuid: 'snippet-uuid', test: 'new-test', locale: 'en', parameter: 'value'});
+});
+
+test('Restore should just navigate if no history is available', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.restore('page', {uuid: 'page-uuid', locale: 'de'});
+
+    expect(router.route.name).toEqual('page');
+    expect(router.attributes).toEqual({uuid: 'page-uuid', locale: 'de'});
+});
+
+test('Restore should not create a new history entry', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('page', {uuid: 'page-uuid', locale: 'de'});
+    router.navigate('page', {uuid: 'other-page-uuid', locale: 'de'});
+    router.navigate('page', {uuid: 'another-page-uuid', locale: 'de'});
+    expect(router.attributesHistory['page']).toHaveLength(2);
+
+    router.restore('page');
+    expect(router.attributesHistory['page']).toHaveLength(1);
+});

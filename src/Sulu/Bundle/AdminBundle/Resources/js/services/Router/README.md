@@ -79,6 +79,25 @@ router.navigate('sulu_contact.form', {id: 7, admin: true}); // redirects to #/co
 router.navigate('sulu_contact.form.detail', {id: 2, admin: true}); // redirects to #/contacts/2/detail?admin=true
 ```
 
+Instead of `navigate` you can also use the `restore` function. `restore` takes the same parameters, but the difference
+is that the attributes and query parameter will be merged with the previous values of this route. So this is especially
+useful when implementing functionality like a `back` button, since using it will e.g. bring you back to the same page
+of a paginated list.
+
+```javascript static
+// navigates to #/contacts?page=3
+router.navigate('sulu_contact.list', {page: 3, locale: 'en'});
+
+// navigates to #/contacts/7/detail?locale=en
+router.navigate('sulu_contact.form.detail', {id: 7, locale: 'en'});
+
+// navigates to #/contacts/7/detail?locale=de
+router.navigate('sulu_contact.form.detail', {id: 7, locale: 'de'});
+
+// navigates to #/contacts?page=3&locale=de
+router.restore('sulu_contact.list', locale: 'de'});
+```
+
 Something especially useful is the ability to bind any observable to a query parameter of the router. The `bind` method
 takes the name of a route attribute in the URL, the observable and a default value. The default value will be set if
 the value in the URL is not defined. Any change in the URL will be immediately reflected in that observable and the

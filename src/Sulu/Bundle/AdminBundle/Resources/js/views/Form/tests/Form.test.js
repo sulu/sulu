@@ -47,7 +47,7 @@ test('Should navigate to defined route on back button click', () => {
     const resourceStore = new ResourceStore('test', 1);
 
     const router = {
-        navigate: jest.fn(),
+        restore: jest.fn(),
         bind: jest.fn(),
         route: {
             options: {
@@ -62,7 +62,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(form);
     toolbarConfig.backButton.onClick();
-    expect(router.navigate).toBeCalledWith('test_route', {locale: 'de'});
+    expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
 });
 
 test('Should not render back button when no editLink is configured', () => {

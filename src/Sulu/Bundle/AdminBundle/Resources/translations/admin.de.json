@@ -3,5 +3,7 @@
     "sulu_admin.delete": "Löschen",
     "sulu_admin.of": "von",
     "sulu_admin.page": "Seite",
-    "sulu_admin.save": "Speichern"
+    "sulu_admin.save": "Speichern",
+    "sulu_admin.object": "Objekt",
+    "sulu_admin.objects": "Objekte"
 }

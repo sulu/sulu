@@ -3,7 +3,7 @@ import {action, autorun, computed, observable, toJS} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
-import type {Route} from './types';
+import type {Route, AttributeMap} from './types';
 import routeRegistry from './registries/RouteRegistry';
 
 export default class Router {
@@ -12,6 +12,7 @@ export default class Router {
     @observable attributes: Object = {};
     @observable bindings: Map<string, observable> = new Map();
     bindingDefaults: Map<string, ?string> = new Map();
+    attributesHistory: {[string]: Array<AttributeMap>} = {};
 
     constructor(history: Object) {
         this.history = history;
@@ -85,7 +86,7 @@ export default class Router {
         }
     }
 
-    @action navigate(name: string, attributes: Object = {}) {
+    @action navigate(name: string, attributes: Object = {}, createHistory: boolean = true) {
         const route = routeRegistry.get(name);
 
         if (this.route
@@ -94,6 +95,10 @@ export default class Router {
             && equal(this.attributes, attributes)
         ) {
             return;
+        }
+
+        if (createHistory) {
+            this.createAttributesHistory();
         }
 
         this.route = route;
@@ -107,6 +112,17 @@ export default class Router {
                 observableValue.set(value);
             }
         }
+    }
+
+    restore(name: string, attributes: Object = {}) {
+        if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
+            this.navigate(name, attributes);
+            return;
+        }
+
+        const attributesHistory = this.attributesHistory[name].pop();
+
+        this.navigate(name, {...attributesHistory, ...attributes}, false);
     }
 
     @computed get url(): string {
@@ -148,6 +164,18 @@ export default class Router {
         const queryString = searchParameters.toString();
 
         return url + (queryString ? '?' + queryString : '');
+    }
+
+    createAttributesHistory() {
+        if (!this.route) {
+            return;
+        }
+
+        if (!(this.route.name in this.attributesHistory)) {
+            this.attributesHistory[this.route.name] = [];
+        }
+
+        this.attributesHistory[this.route.name].push(toJS(this.attributes));
     }
 
     static getRoutePath(route: Route) {
