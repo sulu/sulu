@@ -34,7 +34,7 @@ matrix:
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
 
-    - language: javascript
+    - language: node_js
       node_js: "8"
       script: bin/travis/script_js.sh
 
