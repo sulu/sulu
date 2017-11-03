@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import Dropdown from './Dropdown';
 import Simple from './Simple';
 import type {ToolbarItemConfig} from './types';
-import {toolbarItemTypes} from './types';
 import toolbarStyles from './toolbar.scss';
 
 type Props = {
@@ -17,9 +16,9 @@ export default class Toolbar extends React.Component<Props> {
     renderToolbarItems = (toolbarItems: Array<ToolbarItemConfig>) => {
         return toolbarItems.map((toolbarItemConfig: ToolbarItemConfig, index: number) => {
             switch (toolbarItemConfig.type) {
-                case toolbarItemTypes.Dropdown:
+                case 'dropdown':
                     return <Dropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
-                case toolbarItemTypes.Simple:
+                case 'simple':
                     return <Simple key={index} index={this.props.index} {...toolbarItemConfig} />;
                 default:
                     throw new Error('Unknown toolbar item type given: "' + toolbarItemConfig.type + '"');
