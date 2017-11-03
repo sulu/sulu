@@ -64,18 +64,6 @@ export default class Datagrid extends React.PureComponent<Props> {
         const pageCount = store.pageCount;
         const Adapter = this.getAdapter();
 
-        let pagination = null;
-
-        if (page && pageCount) {
-            pagination = (
-                <Pagination
-                    current={page}
-                    total={pageCount}
-                    onChange={this.handleChangePage}
-                />
-            );
-        }
-
         return (
             <section>
                 <div className={datagridStyles.content}>
