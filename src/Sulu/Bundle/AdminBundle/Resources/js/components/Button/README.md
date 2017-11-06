@@ -7,7 +7,7 @@ const onClick = () => {
 };
 
 <Button
-    type="primary"
+    skin="primary"
     onClick={onClick}>
     Click me dude
 </Button>
@@ -20,7 +20,7 @@ const onClick = () => {
 };
 
 <Button
-    type="secondary"
+    skin="secondary"
     onClick={onClick}>
     Click me dude
 </Button>

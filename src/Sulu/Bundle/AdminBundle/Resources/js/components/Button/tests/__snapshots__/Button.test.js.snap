@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Button should render with type primary 1`] = `
+exports[`Button should render with skin primary 1`] = `
 <button
   class="button primary"
 />
 `;
 
-exports[`Button should render with type secondary 1`] = `
+exports[`Button should render with skin secondary 1`] = `
 <button
   class="button secondary"
 />

@@ -65,7 +65,7 @@ test('The component should call the callback when the confirm button is clicked'
     );
 
     expect(onConfirm).not.toBeCalled();
-    view.find('Button[type="primary"]').simulate('click');
+    view.find('Button[skin="primary"]').simulate('click');
     expect(onConfirm).toBeCalled();
 });
 
@@ -86,6 +86,6 @@ test('The component should call the callback when the cancel button is clicked',
     );
 
     expect(onCancel).not.toBeCalled();
-    view.find('Button[type="secondary"]').simulate('click');
+    view.find('Button[skin="secondary"]').simulate('click');
     expect(onCancel).toBeCalled();
 });
