@@ -15,6 +15,10 @@
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 
             <argument type="string">SuluWebsiteBundle:Analytics</argument>
+
+            <call method="setEnvironment">
+                <argument>%kernel.environment%</argument>
+            </call>
         </service>
 
         <service id="sulu_website.domains.repository"
@@ -29,7 +33,6 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_website.analytics.repository"/>
             <argument type="service" id="sulu_website.domains.repository"/>
-            <argument type="string">%kernel.environment%</argument>
         </service>
 
         <service id="sulu_website.analytics.response_listener"

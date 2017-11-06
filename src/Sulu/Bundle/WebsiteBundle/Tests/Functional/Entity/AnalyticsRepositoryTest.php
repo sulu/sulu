@@ -39,7 +39,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
                 'title' => 'test-1',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']],
+                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'test']],
             ]
         );
         $this->create(
@@ -48,17 +48,17 @@ class AnalyticsRepositoryTest extends BaseFunctional
                 'title' => 'test-2',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']],
+                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'test']],
             ]
         );
 
-        $result = $this->analyticsRepository->findByWebspaceKeyAndEnvironment('sulu_io', 'prod');
+        $result = $this->analyticsRepository->findByWebspaceKey('sulu_io');
         $this->assertCount(2, $result);
 
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
 
-        $result = $this->analyticsRepository->findByWebspaceKeyAndEnvironment('test_io', 'prod');
+        $result = $this->analyticsRepository->findByWebspaceKey('test_io');
         $this->assertEmpty($result);
     }
 

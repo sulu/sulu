@@ -19,14 +19,26 @@ use Doctrine\ORM\EntityRepository;
 class AnalyticsRepository extends EntityRepository
 {
     /**
+     * @var string
+     */
+    protected $environment;
+
+    /**
+     * @param string $environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
      * Returns list of analytics filterd by webspace key and environment.
      *
      * @param string $webspaceKey
-     * @param string $environment
      *
      * @return Analytics[]
      */
-    public function findByWebspaceKeyAndEnvironment($webspaceKey, $environment)
+    public function findByWebspaceKey($webspaceKey)
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
@@ -37,7 +49,7 @@ class AnalyticsRepository extends EntityRepository
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('webspaceKey', $webspaceKey);
-        $query->setParameter('environment', $environment);
+        $query->setParameter('environment', $this->environment);
 
         return $query->getResult();
     }
