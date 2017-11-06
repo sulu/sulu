@@ -39,7 +39,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
                 'title' => 'test-1',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']],
+                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'test']],
             ]
         );
         $this->create(
@@ -48,7 +48,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
                 'title' => 'test-2',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']],
+                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'test']],
             ]
         );
 

@@ -37,6 +37,11 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     private $domainRepository;
 
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param AnalyticsRepository $analyticsRepository
+     * @param DomainRepository $domainRepository
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         AnalyticsRepository $analyticsRepository,

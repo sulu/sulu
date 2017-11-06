@@ -19,7 +19,7 @@ use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 interface AnalyticsManagerInterface
 {
     /**
-     * Returns all analytics for given webspace.
+     * Returns all analytics for given webspace and environment.
      *
      * @param string $webspaceKey
      *

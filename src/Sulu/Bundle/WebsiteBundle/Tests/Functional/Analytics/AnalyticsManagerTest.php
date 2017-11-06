@@ -40,7 +40,9 @@ class AnalyticsManagerTest extends BaseFunctional
                 'title' => 'test-1',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'prod']],
+                'domains' => [
+                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'test'],
+                ],
             ]
         );
         $this->entities[] = $this->create(
@@ -50,8 +52,8 @@ class AnalyticsManagerTest extends BaseFunctional
                 'type' => 'piwik',
                 'content' => '123',
                 'domains' => [
-                    ['url' => 'www.test.io', 'environment' => 'dev'],
-                    ['url' => '{country}.test.io', 'environment' => 'prod'],
+                    ['url' => 'www.test.io', 'environment' => 'prod'],
+                    ['url' => '{country}.test.io', 'environment' => 'test'],
                 ],
             ]
         );
@@ -63,7 +65,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 'content' => '<div/>',
                 'domains' => [
                     ['url' => 'www.google.at', 'environment' => 'stage'],
-                    ['url' => '{localization}.google.at', 'environment' => 'prod'],
+                    ['url' => '{localization}.google.at', 'environment' => 'test'],
                 ],
             ]
         );
@@ -73,7 +75,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 'title' => 'test-4',
                 'type' => 'google_tag_manager',
                 'content' => 'GTM-XXXX',
-                'domains' => [['url' => 'www.sulu.io', 'environment' => 'prod']],
+                'domains' => [['url' => 'www.sulu.io', 'environment' => 'test']],
             ]
         );
         $this->entities[] = $this->create(
@@ -83,8 +85,8 @@ class AnalyticsManagerTest extends BaseFunctional
                 'type' => 'piwik',
                 'content' => '123',
                 'domains' => [
-                    ['url' => 'www.test.io', 'environment' => 'dev'],
-                    ['url' => '{country}.test.io', 'environment' => 'prod'],
+                    ['url' => 'www.test.io', 'environment' => 'prod'],
+                    ['url' => '{country}.test.io', 'environment' => 'test'],
                 ],
             ]
         );
@@ -118,22 +120,19 @@ class AnalyticsManagerTest extends BaseFunctional
         $domains = $result->getDomains();
         $this->assertCount(1, $domains);
         $this->assertEquals('www.sulu.io/{localization}', $domains[0]->getUrl());
-        $this->assertEquals('prod', $domains[0]->getEnvironment());
+        $this->assertEquals('test', $domains[0]->getEnvironment());
     }
 
     public function dataProvider()
     {
         return [
-            ['sulu_io', ['title' => 'test-1', 'type' => 'google']],
-            ['sulu_io', ['title' => 'test-1', 'type' => 'google', 'content' => 'test-1', 'allDomains' => true]],
-            ['sulu_io', ['title' => 'test-1', 'type' => 'google', 'content' => 'test-1', 'allDomains' => false]],
-            ['test_io', ['title' => 'test-1', 'type' => 'google', 'content' => 'test-1', 'allDomains' => false]],
             [
-                'test_io',
+                'sulu_io',
                 [
                     'title' => 'test-1',
                     'type' => 'google',
-                    'domains' => [],
+                    'content' => 'test-1',
+                    'allDomains' => true,
                 ],
             ],
             [
@@ -141,7 +140,16 @@ class AnalyticsManagerTest extends BaseFunctional
                 [
                     'title' => 'test-1',
                     'type' => 'google',
-                    'domains' => [['url' => 'www.sulu.io', 'environment' => 'prod']],
+                    'content' => 'test-1',
+                    'allDomains' => true,
+                ],
+            ],
+            [
+                'test_io',
+                [
+                    'title' => 'test-1',
+                    'type' => 'google',
+                    'domains' => [['url' => 'www.sulu.io', 'environment' => 'test']],
                 ],
             ],
             [
@@ -150,8 +158,8 @@ class AnalyticsManagerTest extends BaseFunctional
                     'title' => 'test-1',
                     'type' => 'google',
                     'domains' => [
-                        ['url' => 'www.sulu.io', 'environment' => 'prod'],
-                        ['url' => 'www.sulu.io/{localization}', 'environment' => 'dev'],
+                        ['url' => 'www.sulu.io', 'environment' => 'test'],
+                        ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
                     ],
                 ],
             ],
@@ -232,7 +240,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 'domains' => [
                     ['url' => 'www.sulu.at', 'environment' => 'prod'],
                     ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'dev'],
+                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'test'],
                 ],
             ]
         );
@@ -241,7 +249,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'prod']));
         $this->assertCount(
             1,
-            $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'dev'])
+            $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'test'])
         );
         $this->assertCount(
             1,
@@ -260,7 +268,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 'domains' => [
                     ['url' => 'www.sulu.at', 'environment' => 'prod'],
                     ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'dev'],
+                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'test'],
                 ],
             ]
         );
@@ -269,7 +277,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'prod']));
         $this->assertCount(
             1,
-            $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'dev'])
+            $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'test'])
         );
         $this->assertCount(
             1,

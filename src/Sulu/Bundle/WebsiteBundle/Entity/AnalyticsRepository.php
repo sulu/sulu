@@ -19,9 +19,22 @@ use Doctrine\ORM\EntityRepository;
 class AnalyticsRepository extends EntityRepository
 {
     /**
-     * Returns list of analytics.
+     * @var string
+     */
+    protected $environment;
+
+    /**
+     * @param string $environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * Returns list of analytics filterd by webspace key and environment.
      *
-     * @param $webspaceKey
+     * @param string $webspaceKey
      *
      * @return Analytics[]
      */
@@ -31,10 +44,12 @@ class AnalyticsRepository extends EntityRepository
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
             ->where('a.webspaceKey = :webspaceKey')
+            ->andWhere('a.allDomains = TRUE OR domains.environment = :environment')
             ->orderBy('a.id', 'ASC');
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('webspaceKey', $webspaceKey);
+        $query->setParameter('environment', $this->environment);
 
         return $query->getResult();
     }
