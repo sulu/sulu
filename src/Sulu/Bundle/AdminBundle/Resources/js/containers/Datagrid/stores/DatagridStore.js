@@ -127,6 +127,7 @@ export default class DatagridStore {
         }
 
         this.selections.push(id);
+        this.selectionHandler(id, true);
     }
 
     @action selectEntirePage() {
@@ -142,6 +143,7 @@ export default class DatagridStore {
         }
 
         this.selections.splice(index, 1);
+        this.selectionHandler(id, false);
     }
 
     @action deselectEntirePage() {

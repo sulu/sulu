@@ -45,6 +45,7 @@ export default class OptionList extends React.PureComponent<Props> {
 
         return (
             <div>
+                <Backdrop open={true} local={true} onClick={this.handleBackdropClick} visible={false} />
                 <ul className={optionListClass}>
                     {
                         options.map((option, index: number) => {
@@ -64,7 +65,6 @@ export default class OptionList extends React.PureComponent<Props> {
                         })
                     }
                 </ul>
-                <Backdrop open={true} onClick={this.handleBackdropClick} visible={false} />
             </div>
         );
     }

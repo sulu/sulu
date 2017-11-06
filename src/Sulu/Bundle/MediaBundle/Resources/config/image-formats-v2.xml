@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formats xmlns="http://schemas.sulu.io/media/formats"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://schemas.sulu.io/media/formats http://schemas.sulu.io/media/formats-1.1.xsd">
+
+    <format key="sulu-25x25" internal="true">
+        <meta>
+            <title lang="en">Small thumbnail (Sulu-V2)</title>
+            <title lang="de">Kleines Thumbnail (Sulu-V2)</title>
+            <title lang="fr">Image miniature (Sulu-V2)</title>
+            <title lang="nl">Kleine thumbnail (Sulu-V2)</title>
+        </meta>
+        <scale x="25" y="25"/>
+    </format>
+</formats>

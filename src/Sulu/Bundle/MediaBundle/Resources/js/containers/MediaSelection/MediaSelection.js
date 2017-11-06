@@ -5,7 +5,10 @@ import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay, MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/services';
-import {CollectionInfoStore, MediaContainer} from '../MediaContainer';
+import MediaCollection from '../../containers/MediaCollection';
+import CollectionStore from '../../stores/CollectionStore';
+import MediaSelectionStore from './stores/MediaSelectionStore';
+import MediaSelectionItem from './MediaSelectionItem';
 import mediaSelectionStyles from './mediaSelection.scss';
 
 const ADD_ICON = 'plus';
@@ -20,15 +23,24 @@ type Props = {
 
 @observer
 export default class MediaSelection extends React.PureComponent<Props> {
-    locale: observable = observable();
     mediaPage: observable = observable();
     collectionPage: observable = observable();
     @observable collectionId: ?string | number;
-    @observable mediaStore: DatagridStore;
-    @observable collectionStore: DatagridStore;
-    collectionInfoStore: CollectionInfoStore;
+    @observable mediaDatagridStore: DatagridStore;
+    @observable collectionDatagridStore: DatagridStore;
+    collectionStore: CollectionStore;
+    mediaSelectionStore: MediaSelectionStore;
     @observable overlayOpen: boolean = false;
-    disposer: () => void;
+    overlayDisposer: () => void;
+
+    componentWillMount() {
+        const {
+            value,
+            locale,
+        } = this.props;
+
+        this.mediaSelectionStore = new MediaSelectionStore(value, locale);
+    }
 
     @action openMediaOverlay() {
         this.overlayOpen = true;
@@ -36,10 +48,8 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     @action closeMediaOverlay() {
         this.overlayOpen = false;
-    }
 
-    @action setLocale(locale: string) {
-        this.locale.set(locale);
+        this.overlayDisposer();
     }
 
     @action setMediaPage(page: number) {
@@ -55,22 +65,20 @@ export default class MediaSelection extends React.PureComponent<Props> {
     }
 
     createStores = () => {
-        // TODO: locale should be dynamic
-        this.setLocale(this.props.locale);
         this.setMediaPage(1);
         this.setCollectionPage(1);
 
-        this.createMediaStore(this.collectionId, this.mediaPage, this.locale);
-        this.createCollectionStore(this.collectionId, this.collectionPage, this.locale);
-        this.createCollectionInfoStore(this.collectionId, this.locale);
+        this.createCollectionStore(this.collectionId, this.props.locale);
+        this.createMediaDatagridStore(this.collectionId, this.mediaPage, this.props.locale);
+        this.createCollectionDatagridStore(this.collectionId, this.collectionPage, this.props.locale);
     };
 
-    @action createCollectionStore(collectionId: ?observable, page: observable, locale: string) {
-        if (this.collectionStore) {
-            this.collectionStore.destroy();
+    @action createCollectionDatagridStore(collectionId: ?observable, page: observable, locale: string) {
+        if (this.collectionDatagridStore) {
+            this.collectionDatagridStore.destroy();
         }
 
-        this.collectionStore = new DatagridStore(
+        this.collectionDatagridStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
             {
                 page,
@@ -80,16 +88,17 @@ export default class MediaSelection extends React.PureComponent<Props> {
         );
     }
 
-    createCollectionInfoStore = (collectionId: ?observable, locale: string) => {
-        if (this.collectionInfoStore) {
-            this.collectionInfoStore.destroy();
+    createCollectionStore = (collectionId: ?observable, locale: string) => {
+        if (this.collectionStore) {
+            this.collectionStore.destroy();
         }
 
-        this.collectionInfoStore = new CollectionInfoStore(collectionId, locale);
+        this.collectionStore = new CollectionStore(collectionId, locale);
     };
 
-    @action createMediaStore(collectionId: ?observable, page: observable, locale: string) {
+    @action createMediaDatagridStore(collectionId: ?observable, page: observable, locale: string) {
         const options = {};
+
         options.fields = [
             'id',
             'type',
@@ -107,32 +116,52 @@ export default class MediaSelection extends React.PureComponent<Props> {
             options.collection = collectionId;
         }
 
-        if (this.mediaStore) {
-            this.mediaStore.destroy();
+        if (this.mediaSelectionStore.selectedMediaIds.length) {
+            options.exclude = this.mediaSelectionStore.selectedMediaIds.join(',');
         }
 
-        this.mediaStore = new DatagridStore(
+        if (this.mediaDatagridStore) {
+            this.mediaDatagridStore.destroy();
+        }
+
+        this.mediaDatagridStore = new DatagridStore(
             MEDIA_RESOURCE_KEY,
             {
                 page,
                 locale,
             },
             options,
-            true
+            true,
+            this.handleMediaSelection,
+            this.mediaSelectionStore.selectedMediaIds
         );
     }
 
-    handleMediaRemove = (itemId: string | number) => {
+    handleMediaSelection = (mediaId: string | number, selected: boolean) => {
+        if (selected) {
+            const selectedMediaItem = this.mediaDatagridStore.data.find((media) => media.id === mediaId);
 
+            if (selectedMediaItem) {
+                this.mediaSelectionStore.add(selectedMediaItem);
+            }
+        } else {
+            this.mediaSelectionStore.removeById(mediaId);
+        }
     };
 
-    handleMediaSorted = () => {
+    handleMediaRemove = (mediaId: string | number) => {
+        this.mediaSelectionStore.removeById(mediaId);
+        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+    };
 
+    handleMediaSorted = (oldItemIndex: number, newItemIndex: number) => {
+        this.mediaSelectionStore.move(oldItemIndex, newItemIndex);
+        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
     };
 
     handleOverlayOpen = () => {
         this.openMediaOverlay();
-        this.disposer = autorun(this.createStores);
+        this.overlayDisposer = autorun(this.createStores);
     };
 
     handleOverlayClose = () => {
@@ -144,18 +173,20 @@ export default class MediaSelection extends React.PureComponent<Props> {
     };
 
     handleOverlayConfirm = () => {
-
+        this.props.onChange(this.mediaSelectionStore.selectedMediaIds);
+        this.closeMediaOverlay();
     };
 
-    handleSelectionReset = () => {
-
+    handleFieldsReset = () => {
+        // reset fields
     };
 
     render() {
+        const {locale} = this.props;
         const actions = [
             {
                 title: translate('sulu_media.reset_selection'),
-                onClick: this.handleSelectionReset,
+                onClick: this.handleFieldsReset,
             },
         ];
 
@@ -170,6 +201,25 @@ export default class MediaSelection extends React.PureComponent<Props> {
                     }}
                     onItemsSorted={this.handleMediaSorted}
                 >
+                    {this.mediaSelectionStore.selectedMedia.map((selectedMedia, index) => {
+                        const {
+                            id,
+                            title,
+                            thumbnail,
+                        } = selectedMedia;
+
+                        return (
+                            <MultiItemSelection.Item
+                                key={id}
+                                id={id}
+                                index={index + 1}
+                            >
+                                <MediaSelectionItem thumbnail={thumbnail}>
+                                    {title}
+                                </MediaSelectionItem>
+                            </MultiItemSelection.Item>
+                        );
+                    })}
                 </MultiItemSelection>
                 <Overlay
                     open={this.overlayOpen}
@@ -180,13 +230,13 @@ export default class MediaSelection extends React.PureComponent<Props> {
                     actions={actions}
                 >
                     <div className={mediaSelectionStyles.mediaOverlay}>
-                        <MediaContainer
+                        <MediaCollection
                             page={this.collectionPage}
-                            locale={this.locale}
+                            locale={locale}
                             mediaView="media_card_selection"
-                            mediaStore={this.mediaStore}
+                            mediaDatagridStore={this.mediaDatagridStore}
+                            collectionDatagridStore={this.collectionDatagridStore}
                             collectionStore={this.collectionStore}
-                            collectionInfoStore={this.collectionInfoStore}
                             onCollectionNavigate={this.handleOverlayCollectionNavigate}
                         />
                     </div>

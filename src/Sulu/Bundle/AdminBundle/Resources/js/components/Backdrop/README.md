@@ -2,7 +2,7 @@ The `Backdrop` component serves as a simple solution to create a backdrop for ov
 
 Here is a basic example of the component. The open state of the backdrop is controlled by the `open` property.
 
-```
+```javascript
 intialState = {open: false};
 
 <div>
@@ -13,7 +13,7 @@ intialState = {open: false};
 
 This time the `visible` property is set to false, therefore the backdrop is invisible.
 
-```
+```javascript
 intialState = {open: false};
 
 <div>

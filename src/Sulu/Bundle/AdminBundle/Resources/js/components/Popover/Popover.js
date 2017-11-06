@@ -143,6 +143,7 @@ export default class Popover extends React.PureComponent<Props> {
 
         return (
             <div>
+                <Backdrop visible={false} open={open} onClick={this.handleBackdropClick} />
                 <Portal isOpened={open}>
                     <div className={popoverStyles.container}>
                         {children &&
@@ -150,7 +151,6 @@ export default class Popover extends React.PureComponent<Props> {
                         }
                     </div>
                 </Portal>
-                <Backdrop visible={false} open={open} onClick={this.handleBackdropClick} />
             </div>
         );
     }
