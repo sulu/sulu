@@ -7,7 +7,7 @@ exports[`Render the MediaContainer 1`] = `
   >
     <li>
       <button
-        class="crumb"
+        class="item"
         disabled=""
       >
         All Media
@@ -118,9 +118,7 @@ exports[`Render the MediaContainer 1`] = `
   />
   <div>
     <section>
-      <div
-        class="test"
-      >
+      <div>
         <div
           class="masonry"
         >

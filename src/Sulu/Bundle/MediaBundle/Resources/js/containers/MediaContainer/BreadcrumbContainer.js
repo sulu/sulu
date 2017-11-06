@@ -16,34 +16,34 @@ export default class BreadcrumbContainer extends React.PureComponent<Props> {
 
     render() {
         const {breadcrumb} = this.props;
-        const Crumb = Breadcrumb.Crumb;
-        const rootCrumbTitle = translate('sulu_media.all_media');
+        const Item = Breadcrumb.Item;
+        const rootItemTitle = translate('sulu_media.all_media');
 
         if (!breadcrumb || !breadcrumb.length) {
             return (
                 <Breadcrumb>
-                    <Crumb>{rootCrumbTitle}</Crumb>
+                    <Item>{rootItemTitle}</Item>
                 </Breadcrumb>
             );
         } else if (breadcrumb.length === 1) {
-            const firstCrumb = breadcrumb[0];
+            const firstItem = breadcrumb[0];
 
             return (
-                <Breadcrumb>
-                    <Crumb onClick={this.handleNavigate}>{rootCrumbTitle}</Crumb>
-                    <Crumb>{firstCrumb.title}</Crumb>
+                <Breadcrumb onItemClick={this.handleNavigate}>
+                    <Item>{rootItemTitle}</Item>
+                    <Item>{firstItem.title}</Item>
                 </Breadcrumb>
             );
         }
 
-        const lastCrumb = breadcrumb[breadcrumb.length -1];
-        const penultimateCrumb = breadcrumb[breadcrumb.length -2];
+        const lastItem = breadcrumb[breadcrumb.length -1];
+        const penultimateItem = breadcrumb[breadcrumb.length -2];
 
         return (
-            <Breadcrumb>
-                <Crumb onClick={this.handleNavigate}>{rootCrumbTitle}</Crumb>
-                <Crumb value={penultimateCrumb.id} onClick={this.handleNavigate}>...</Crumb>
-                <Crumb>{lastCrumb.title}</Crumb>
+            <Breadcrumb onItemClick={this.handleNavigate}>
+                <Item>{rootItemTitle}</Item>
+                <Item value={penultimateItem.id}>...</Item>
+                <Item>{lastItem.title}</Item>
             </Breadcrumb>
         );
     }

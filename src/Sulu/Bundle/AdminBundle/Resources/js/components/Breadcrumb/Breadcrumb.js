@@ -9,7 +9,7 @@ const ARROW_RIGHT = 'chevron-right';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,
-    onItemClick: (value?: string | number) => void,
+    onItemClick?: (value?: string | number) => void,
 };
 
 export default class Breadcrumb extends React.PureComponent<Props> {
@@ -36,7 +36,11 @@ export default class Breadcrumb extends React.PureComponent<Props> {
     }
 
     handleItemClick = (value?: string | number) => {
-        this.props.onItemClick(value);
+        const {onItemClick} = this.props;
+
+        if (onItemClick) {
+            onItemClick(value);
+        }
     };
 
     render() {
