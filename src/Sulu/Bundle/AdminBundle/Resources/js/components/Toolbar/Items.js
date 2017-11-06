@@ -1,14 +1,11 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
+import type {ChildrenArray} from 'react';
 import React from 'react';
-import Button from './Button';
-import Dropdown from './Dropdown';
-import Select from './Select';
+import type {Item} from './types';
 import toolbarStyles from './toolbar.scss';
 
-type Children = Element<typeof Button> | Element<typeof Dropdown> | Element<typeof Select>
 type Props = {
-    children: ChildrenArray<Children>,
+    children: ChildrenArray<Item>,
 };
 
 export default class Items extends React.PureComponent<Props> {

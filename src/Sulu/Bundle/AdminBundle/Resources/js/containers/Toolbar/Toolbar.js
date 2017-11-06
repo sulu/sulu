@@ -2,7 +2,7 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import Icon from '../../components/Icon';
-import Toolbar from '../../components/Toolbar';
+import ToolbarComponent from '../../components/Toolbar';
 import ToolbarStore from './stores/ToolbarStore';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
@@ -23,20 +23,20 @@ function getItemComponentByType(itemConfig, key) {
 
     switch (itemConfig.type) {
         case ToolbarItemTypes.Select:
-            item = (<Toolbar.Select {...itemConfig} key={key} />);
+            item = (<ToolbarComponent.Select {...itemConfig} key={key} />);
             break;
         case ToolbarItemTypes.Dropdown:
-            item = (<Toolbar.Dropdown {...itemConfig} key={key} />);
+            item = (<ToolbarComponent.Dropdown {...itemConfig} key={key} />);
             break;
         default:
-            item = (<Toolbar.Button {...itemConfig} key={key} />);
+            item = (<ToolbarComponent.Button {...itemConfig} key={key} />);
     }
 
     return item;
 }
 
 @observer
-export default class ToolbarContainer extends React.PureComponent<*> {
+export default class Toolbar extends React.PureComponent<*> {
     props: ToolbarProps;
 
     toolbarStore: ToolbarStore;
@@ -83,28 +83,28 @@ export default class ToolbarContainer extends React.PureComponent<*> {
         }
 
         return (
-            <Toolbar>
-                <Toolbar.Controls>
+            <ToolbarComponent>
+                <ToolbarComponent.Controls>
                     {onNavigationButtonClick &&
-                    <Toolbar.Button
+                    <ToolbarComponent.Button
                         onClick={this.handleNavigationButtonClick}
                         skin="primary"
                         icon={NAVIGATION_BUTTON_ICON}
                     />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
-                    <Toolbar.Button
+                    <ToolbarComponent.Button
                         {...backButtonConfig}
                         icon={BACK_BUTTON_ICON}
                     />
                     }
                     {this.toolbarStore.hasItemsConfig() &&
-                    <Toolbar.Items>
+                    <ToolbarComponent.Items>
                         {itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
-                    </Toolbar.Items>
+                    </ToolbarComponent.Items>
                     }
-                </Toolbar.Controls>
-                <Toolbar.Controls>
+                </ToolbarComponent.Controls>
+                <ToolbarComponent.Controls>
                     {this.toolbarStore.hasIconsConfig() &&
                     <div className={toolbarStyles.icons}>
                         {this.toolbarStore.getIconsConfig().map((icon) => (
@@ -118,14 +118,14 @@ export default class ToolbarContainer extends React.PureComponent<*> {
                     }
                     {this.toolbarStore.hasLocaleConfig() &&
                     <div className={toolbarStyles.locale}>
-                        <Toolbar.Select
+                        <ToolbarComponent.Select
                             size={LOCALE_SELECT_SIZE}
                             {...this.toolbarStore.getLocaleConfig()}
                         />
                     </div>
                     }
-                </Toolbar.Controls>
-            </Toolbar>
+                </ToolbarComponent.Controls>
+            </ToolbarComponent>
         );
     }
 }
