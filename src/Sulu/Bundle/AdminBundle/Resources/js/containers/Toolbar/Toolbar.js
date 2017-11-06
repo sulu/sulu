@@ -108,23 +108,21 @@ export default class Toolbar extends React.Component<*> {
                 </ToolbarComponent.Controls>
                 <ToolbarComponent.Controls>
                     {this.toolbarStore.hasIconsConfig() &&
-                    <div className={toolbarStyles.icons}>
+                    <ToolbarComponent.Icons>
                         {this.toolbarStore.getIconsConfig().map((icon) => (
                             <Icon
                                 key={icon}
                                 name={icon}
-                                className={toolbarStyles.icon}
                             />
                         ))}
-                    </div>
+                    </ToolbarComponent.Icons>
                     }
                     {this.toolbarStore.hasLocaleConfig() &&
-                    <div className={toolbarStyles.locale}>
-                        <ToolbarComponent.Select
-                            size={LOCALE_SELECT_SIZE}
-                            {...this.toolbarStore.getLocaleConfig()}
-                        />
-                    </div>
+                    <ToolbarComponent.Select
+                        size={LOCALE_SELECT_SIZE}
+                        className={toolbarStyles.locale}
+                        {...this.toolbarStore.getLocaleConfig()}
+                    />
                     }
                 </ToolbarComponent.Controls>
             </ToolbarComponent>

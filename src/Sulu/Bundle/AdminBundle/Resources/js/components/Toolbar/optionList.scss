@@ -1,7 +1,12 @@
 @import '../../containers/Application/colors.scss';
 
-$optionListBackgroundColor: $wildSand;
+$optionListBackgroundLightColor: $wildSand;
 $optionListShadowColor: $silver;
+
+.light {
+    box-shadow: 2px 6px 12px 0 rgba($optionListShadowColor, .5);
+    background-color: $optionListBackgroundLightColor;
+}
 
 .option-list {
     list-style: none;
@@ -12,8 +17,6 @@ $optionListShadowColor: $silver;
     margin: 0;
     padding: 0;
     white-space: nowrap;
-    box-shadow: 2px 6px 12px 0 rgba($optionListShadowColor, .5);
-    background-color: $optionListBackgroundColor;
 
     &.is-open {
         display: block;

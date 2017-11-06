@@ -1,24 +1,10 @@
 @import '../Application/colors.scss';
-@import '../../components/Toolbar/variables.scss';
+@import '../../components/Toolbar/toolbar.scss';
+@import '../../components/Toolbar/items.scss';
 
 .icons,
 .locale {
     display: inline-block;
-}
-
-.icons {
-    padding: 0 20px;
-    line-height: $toolbarHeight;
-    vertical-align: top;
-}
-
-.icon {
-    display: inline-block;
-    padding: 0 20px 0 0;
-
-    &:last-child {
-        padding: 0;
-    }
 }
 
 .locale {

@@ -55,10 +55,14 @@ export default class Select extends React.Component<SelectProps> {
             options,
             disabled,
             loading,
+            className,
+            skin,
         } = this.props;
         const buttonValue = this.selectedOption ? this.selectedOption.label : label;
         const selectClass = classNames(
+            className,
             selectStyles.select,
+            selectStyles[skin],
             (size) ? selectStyles[size] : null
         );
 
@@ -66,6 +70,7 @@ export default class Select extends React.Component<SelectProps> {
             <div className={selectClass}>
                 <Button
                     icon={icon}
+                    skin={skin}
                     size={size}
                     disabled={disabled}
                     value={buttonValue}
@@ -76,6 +81,7 @@ export default class Select extends React.Component<SelectProps> {
                 />
                 {this.open &&
                     <OptionList
+                        skin={skin}
                         size={size}
                         value={value}
                         options={options}

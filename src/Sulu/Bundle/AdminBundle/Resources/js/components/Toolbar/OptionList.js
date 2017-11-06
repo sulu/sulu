@@ -35,9 +35,11 @@ export default class OptionList extends React.PureComponent<Props> {
             size,
             value,
             options,
+            skin,
         } = this.props;
         const optionListClass = classNames(
             optionListStyles.optionList,
+            optionListStyles[skin],
             {
                 [optionListStyles[size]]: size,
             }
@@ -54,6 +56,7 @@ export default class OptionList extends React.PureComponent<Props> {
                             return (
                                 <Option
                                     key={index}
+                                    skin={skin}
                                     size={size}
                                     value={option}
                                     label={option.label}

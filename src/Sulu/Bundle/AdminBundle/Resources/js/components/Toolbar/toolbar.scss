@@ -1,27 +1,25 @@
-@import './variables.scss';
+@import '../../containers/Application/colors.scss';
+
+$toolbarHeight: 60px;
+
+$toolbarBackgroundColor: $white;
+$shadowColor: $silver;
 
 .toolbar {
     display: flex;
     justify-content: space-between;
     height: $toolbarHeight;
     margin: 0;
+}
+
+.light {
     background: $toolbarBackgroundColor;
     box-shadow: 2px 6px 12px 0 rgba($shadowColor, .5);
 }
 
-.items {
-    display: inline-block;
-    list-style: none;
+.toolbar {
+    height: $toolbarHeight;
     margin: 0;
-    padding: 0;
-    border-left: $itemsContainerBorder;
-    border-right: $itemsContainerBorder;
-    vertical-align: top;
-    background-color: $itemsBackgroundColor;
-
-    & > li {
-        display: inline-block;
-    }
 }
 
 .controls {

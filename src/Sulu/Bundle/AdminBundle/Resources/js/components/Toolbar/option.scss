@@ -1,13 +1,28 @@
 @import '../../containers/Application/colors.scss';
 
-$optionTextColor: $blueZodiac;
-$optionTextColorDisabled: $silver;
-$optionTextColorActive: $shakespeare;
+$optionTextLightColor: $blueZodiac;
+$optionTextLightColorDisabled: $silver;
+$optionTextLightColorActive: $shakespeare;
+
+.light {
+    color: $optionTextLightColor;
+
+    button {
+        &:hover,
+        &:active,
+        &:focus {
+            color: $optionTextLightColorActive;
+        }
+
+        &:disabled {
+            color: $optionTextLightColorDisabled;
+        }
+    }
+}
 
 .option {
     position: relative;
     font-size: 12px;
-    color: $optionTextColor;
 
     &.is-selected {
         font-weight: bold;
@@ -34,12 +49,10 @@ $optionTextColorActive: $shakespeare;
         &:active,
         &:focus {
             cursor: pointer;
-            color: $optionTextColorActive;
         }
 
         &:disabled {
             cursor: default;
-            color: $optionTextColorDisabled;
         }
     }
 

@@ -1,0 +1,25 @@
+@import '../../containers/Application/colors.scss';
+
+$itemsBackgroundLightColor: $alabaster;
+$itemsContainerBorderLightColor: $gallery;
+
+$itemsContainerBorder: 1px $itemsContainerBorderLightColor solid;
+
+.light {
+    border-left: $itemsContainerBorder;
+    border-right: $itemsContainerBorder;
+    vertical-align: top;
+    background-color: $itemsBackgroundLightColor;
+}
+
+.items {
+    display: inline-block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+
+    & > li {
+        display: inline-block;
+    }
+}
