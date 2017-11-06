@@ -1,4 +1,4 @@
-The `Backdrop` component serves as a simple solution to create a backdrop for overlays`
+The `Backdrop` component serves as a simple solution to create a backdrop for overlays.
 
 Here is a basic example of the component. The open state of the backdrop is controlled by the `open` property.
 

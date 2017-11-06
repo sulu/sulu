@@ -1,0 +1,34 @@
+@import '../../containers/Application/colors.scss';
+
+$borderRadius: 3px;
+$fontSize: 12px;
+
+$primaryBackground: $shakespeare;
+$primaryColor: $white;
+
+$secondaryBorder: $silver;
+$secondaryBackground: $wildSand;
+$secondaryColor: $black;
+
+.button {
+    font-size: $fontSize;
+    border: 1px solid;
+    border-radius: $borderRadius;
+    line-height: 30px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;
+    padding: 0 40px;
+}
+
+.primary {
+    border-color: $primaryBackground;
+    background: $primaryBackground;
+    color: $primaryColor;
+}
+
+.secondary {
+    border-color: $secondaryBorder;
+    background: $secondaryBackground;
+    color: $secondaryColor;
+}

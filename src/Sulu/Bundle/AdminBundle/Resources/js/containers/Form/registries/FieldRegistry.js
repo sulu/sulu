@@ -21,6 +21,10 @@ class FieldRegistry {
     }
 
     get(name: string) {
+        if (!(name in this.fields)) {
+            throw new Error('There is no field with key "' + name + '" registered');
+        }
+
         return this.fields[name];
     }
 }

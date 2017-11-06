@@ -30,3 +30,13 @@ test('Add field with existing key should throw', () => {
     fieldRegistry.add('test1', component1);
     expect(() => fieldRegistry.add('test1', 'test1 react component')).toThrow(/test1/);
 });
+
+test('Get field with existing key', () => {
+    const component1 = () => (<h1>Test1</h1>);
+    fieldRegistry.add('test1', component1);
+    expect(fieldRegistry.get('test1')).toBe(component1);
+});
+
+test('Get field of not existing key', () => {
+    expect(() => fieldRegistry.get('XXX')).toThrow();
+});

@@ -1,9 +1,5 @@
 sudo: false
 
-language: php
-
-php: 7.1
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -15,16 +11,21 @@ env:
     - SYMFONY__PHPCR__TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
     - SYMFONY__DATABASE__DRIVER=pdo_mysql
-    - PHP=false
-    - JS=false
 
 matrix:
   include:
-    - env:
-        - PHP=true
+    - language: php
+      php: 7.1
+      before_script: bin/travis/before_script_php.sh
+      script: ./bin/runtests -i -a $TEST_FLAGS
+      env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction"
-    - env:
-        - PHP=true
+
+    - language: php
+      php: 7.1
+      before_script: bin/travis/before_script_php.sh
+      script: ./bin/runtests -i -a $TEST_FLAGS
+      env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
         - SYMFONY__DATABASE__USER=postgres
@@ -32,17 +33,10 @@ matrix:
         - SYMFONY__PHPCR__TRANSPORT=jackrabbit
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
-    - node_js: "node"
-      env:
-        - JS=true
 
-before_script:
-  - if [[ $PHP = true ]]; then bin/travis/before_script_php.sh; fi
-  - if [[ $JS = true ]]; then nvm install node; npm install -g npm; npm install; fi
-
-script:
-  - if [[ $PHP = true ]]; then time ./bin/runtests -i -a $TEST_FLAGS; fi
-  - if [[ $JS = true ]]; then bin/travis/script_js.sh; fi
+    - language: node_js
+      node_js: "8"
+      script: bin/travis/script_js.sh
 
 notifications:
   slack:

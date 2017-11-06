@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should not render in body when closed 1`] = `null`;
+
+exports[`The component should render in body when open 1`] = `null`;
+
+exports[`The component should render in body when open 2`] = `
+"<div>
+  <div data-reactroot=\\"\\" class=\\"dialogContainer\\">
+    <div class=\\"dialog\\">
+      <section class=\\"content\\">
+        <header>My dialog title</header>
+        <article>My dialog content</article>
+        <footer>
+          <button class=\\"button secondary\\">Cancel</button>
+          <button class=\\"button primary\\">Confirm</button>
+        </footer>
+      </section>
+    </div>
+    <div class=\\"backdrop visible\\"></div>
+  </div>
+</div>"
+`;
