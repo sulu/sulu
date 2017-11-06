@@ -5,10 +5,15 @@ $itemBackgroundColorHover: $blueZodiac;
 $itemColorHover: $white;
 
 .item {
-    padding: 11px 30px 11px 6px;
+    padding: 9px 30px 9px 6px;
     cursor: pointer;
 
-    &.is-selected {
+    .text {
+        font-size: 12px;
+        line-height: 22px;
+    }
+
+    &.selected {
         background: $itemBackgroundColorSelected;
         font-weight: bold;
     }
@@ -18,7 +23,7 @@ $itemColorHover: $white;
         color: $itemColorHover;
     }
 
-    .icon {
+    .children {
         float: right;
         font-weight: normal;
     }
@@ -29,9 +34,8 @@ $itemColorHover: $white;
 }
 
 .button {
-    width: 20px;
     height: 20px;
-    cursor: pointer;
+    width: 20px;
     visibility: hidden;
 }
 

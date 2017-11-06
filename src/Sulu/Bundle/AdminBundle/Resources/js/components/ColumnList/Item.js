@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import ItemButton from './ItemButton';
 import Icon from '../Icon';
-import type {ButtonConfig} from './types';
+import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
     children: string,
     selected: boolean,
     hasChildren: boolean,
-    buttons?: Array<ButtonConfig>,
+    buttons?: Array<ItemButtonConfig>,
     onClick: (id: string | number) => void,
 };
 
@@ -22,20 +23,17 @@ export default class Item extends React.Component<Props> {
     };
 
     createButtons = () => {
-        const {buttons} = this.props;
+        const {buttons, id} = this.props;
 
         if (!buttons) {
             return null;
         }
 
-        return buttons.map((button: ButtonConfig, index: number) => {
+        return buttons.map((button: ItemButtonConfig, index: number) => {
             const key = `button-${index}`;
-            const handleClick = () => {
-                button.onClick(this.props.id);
-            };
 
             return (
-                <Icon className={itemStyles.button} key={key} name={button.icon} onClick={handleClick} />
+                <ItemButton id={id} key={key} config={button} />
             );
         });
     };
@@ -46,8 +44,7 @@ export default class Item extends React.Component<Props> {
         const itemClass = classNames(
             itemStyles.item,
             {
-                [itemStyles.isSelected]: selected,
-                [itemStyles.hasChildren]: hasChildren,
+                [itemStyles.selected]: selected,
             }
         );
 
@@ -58,7 +55,7 @@ export default class Item extends React.Component<Props> {
                 </span>
                 <span className={itemStyles.text}>{children}</span>
                 {hasChildren &&
-                    <Icon className={itemStyles.icon} name="chevron-right" />
+                    <Icon className={itemStyles.children} name="chevron-right" />
                 }
             </div>
         );

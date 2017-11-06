@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, mount} from 'enzyme';
 import ColumnList from '../ColumnList';
 import Column from '../Column';
 import Item from '../Item';
@@ -68,7 +68,7 @@ test('The ColumnList component should render', () => {
             </Column>
         </ColumnList>
     );
-    expect(columnList.render()).toMatchSnapshot();
+    expect(columnList).toMatchSnapshot();
 });
 
 test('The ColumnList component should trigger the item callback', () => {

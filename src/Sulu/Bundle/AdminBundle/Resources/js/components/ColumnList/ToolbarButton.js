@@ -2,10 +2,10 @@
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
-import type {SimpleProps} from './types';
+import type {ToolbarButton as ToolbarButtonProps} from './types';
 import toolbarStyles from './toolbar.scss';
 
-export default class Simple extends React.Component<SimpleProps> {
+export default class ToolbarButton extends React.Component<ToolbarButtonProps> {
     static defaultProps = {
         skin: 'primary',
     };

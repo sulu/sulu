@@ -1,30 +1,30 @@
 // @flow
-export type ButtonConfig = {
+export type ItemButtonConfig = {
     icon: string,
     onClick: (string | number) => void,
 };
 
-export type DropdownOptionConfig = {
+export type ToolbarDropdownOptionConfig = {
     label: string,
     onClick: (index: string | number) => void,
 };
 
-type ToolbarItemBase = {
+type ToolbarBase = {
     index: number,
     icon: string,
     skin?: 'primary' | 'secondary',
 };
 
-export type DropdownProps = ToolbarItemBase & {
-    options: Array<DropdownOptionConfig>,
+export type ToolbarDropdown = ToolbarBase & {
+    options: Array<ToolbarDropdownOptionConfig>,
 };
 
-export type SimpleProps = ToolbarItemBase & {
+export type ToolbarButton = ToolbarBase & {
     onClick: (index: string | number) => void,
 };
 
-export type DropdownConfig = DropdownProps & { type: 'dropdown' };
+export type ToolbarDropdownConfig = ToolbarDropdown & { type: 'dropdown' };
 
-export type SimpleConfig = SimpleProps & { type: 'simple'};
+export type ToolbarButtonConfig = ToolbarButton & { type: 'simple'};
 
-export type ToolbarItemConfig = DropdownConfig | SimpleConfig;
+export type ToolbarItemConfig = ToolbarDropdownConfig | ToolbarButtonConfig;

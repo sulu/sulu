@@ -6,13 +6,12 @@ import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../Icon';
 import Popover from '../Popover';
-import Menu from '../Menu';
-import Select from '../Select';
-import type {DropdownOptionConfig, DropdownProps} from './types';
+import ToolbarDropdownList from './ToolbarDropdownList';
+import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 import toolbarStyles from './toolbar.scss';
 
 @observer
-export default class Dropdown extends React.Component<DropdownProps> {
+export default class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
     static defaultProps = {
         skin: 'primary',
     };
@@ -29,21 +28,8 @@ export default class Dropdown extends React.Component<DropdownProps> {
         this.popoverOpen = false;
     };
 
-    renderMenuOptions = (dropdownOptionConfigs: Array<DropdownOptionConfig>) => {
-        return dropdownOptionConfigs.map((dropdownOptionConfig: DropdownOptionConfig, index: number) => {
-            const key = `option-${index}`;
-            const handleClick = dropdownOptionConfig.onClick;
-
-            return (
-                <Select.Option key={key} value={this.props.index} onClick={handleClick}>
-                    {dropdownOptionConfig.label}
-                </Select.Option>
-            );
-        });
-    };
-
     render = () => {
-        const {icon, options, skin} = this.props;
+        const {icon, options, skin, index} = this.props;
 
         const className = classNames(
             toolbarStyles.item,
@@ -60,12 +46,16 @@ export default class Dropdown extends React.Component<DropdownProps> {
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
-                            <Menu
+                            <div
                                 style={popoverStyle}
-                                menuRef={setPopoverElementRef}
+                                ref={setPopoverElementRef}
                             >
-                                {this.renderMenuOptions(options)}
-                            </Menu>
+                                <ToolbarDropdownList
+                                    index={index}
+                                    style={popoverStyle}
+                                    options={options}
+                                />
+                            </div>
                         )
                     }
                 </Popover>

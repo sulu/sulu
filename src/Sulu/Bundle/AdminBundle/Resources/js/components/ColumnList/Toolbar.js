@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import Dropdown from './Dropdown';
-import Simple from './Simple';
+import ToolbarDropdown from './ToolbarDropdown';
+import ToolbarButton from './ToolbarButton';
 import type {ToolbarItemConfig} from './types';
 import toolbarStyles from './toolbar.scss';
 
@@ -17,9 +17,9 @@ export default class Toolbar extends React.Component<Props> {
         return toolbarItems.map((toolbarItemConfig: ToolbarItemConfig, index: number) => {
             switch (toolbarItemConfig.type) {
                 case 'dropdown':
-                    return <Dropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
+                    return <ToolbarDropdown key={index} index={this.props.index} {...toolbarItemConfig} />;
                 case 'simple':
-                    return <Simple key={index} index={this.props.index} {...toolbarItemConfig} />;
+                    return <ToolbarButton key={index} index={this.props.index} {...toolbarItemConfig} />;
                 default:
                     throw new Error('Unknown toolbar item type given: "' + toolbarItemConfig.type + '"');
             }

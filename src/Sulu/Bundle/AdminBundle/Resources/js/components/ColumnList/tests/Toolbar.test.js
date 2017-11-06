@@ -2,8 +2,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Toolbar from '../Toolbar';
+import ToolbarDropdown from '../ToolbarDropdown';
 
 test('The Toolbar component should render with active', () => {
+    const body = document.body;
     const toolbarItems = [
         {
             icon: 'plus',
@@ -20,11 +22,11 @@ test('The Toolbar component should render with active', () => {
             type: 'dropdown',
             options: [
                 {
-                    label: 'Option1 ',
+                    label: 'Option1',
                     onClick: () => {},
                 },
                 {
-                    label: 'Option2 ',
+                    label: 'Option2',
                     onClick: () => {},
                 },
             ],
@@ -36,6 +38,13 @@ test('The Toolbar component should render with active', () => {
     );
 
     expect(toolbar.render()).toMatchSnapshot();
+    expect(toolbar.find(ToolbarDropdown).length).toBe(1);
+
+    // check for opened dropdown in body
+    expect(body.innerHTML).toBe('');
+    toolbar.find(ToolbarDropdown).simulate('click');
+    expect(body.innerHTML).not.toBe('');
+    expect(body.innerHTML).toMatchSnapshot();
 
     const toolbarActive = mount(
         <Toolbar active={false} index={0} toolbarItems={toolbarItems} />
