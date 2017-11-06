@@ -20,7 +20,9 @@ export default class ToolbarDropdownList extends React.Component<Props> {
 
         return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, index: number) => {
             const key = `option-${index}`;
-            const handleClick = dropdownOptionConfig.onClick;
+            const handleClick = () => {
+                dropdownOptionConfig.onClick(this.props.index);
+            };
 
             return (
                 <li

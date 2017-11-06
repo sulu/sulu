@@ -52,7 +52,7 @@ const toolbarItems = [
             {
                 label: 'Option2 ',
                 onClick: (index) => {
-                    alert('Clicked option1 for column with index: ' + index);
+                    alert('Clicked option2 for column with index: ' + index);
                 },
             },
         ],
