@@ -171,7 +171,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param Localization $child
      */
-    public function addChild(Localization $child)
+    public function addChild(self $child)
     {
         $this->children[] = $child;
     }
@@ -258,7 +258,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param Localization $parent
      */
-    public function setParent(Localization $parent)
+    public function setParent(self $parent)
     {
         $this->parent = $parent;
     }
