@@ -1,9 +1,13 @@
 @import '../../containers/Application/colors.scss';
 
 $buttonTextLightColor: $blueZodiac;
+$buttonTextDarkColor: $concrete;
 $buttonTextLightColorActive: $shakespeare;
+$buttonTextDarkColorActive: $white;
 $buttonTextLightColorDisabled: $silver;
+$buttonTextDarkColorDisabled: $scorpion;
 $buttonActiveBackgroundLightColor: $wildSand;
+$buttonActiveBackgroundDarkColor: $mirage;
 $primaryTextColor: $white;
 $primaryBackgroundColor: $shakespeare;
 
@@ -19,6 +23,28 @@ $primaryBackgroundColor: $shakespeare;
         &.active {
             color: $buttonTextLightColorActive;
             background-color: $buttonActiveBackgroundLightColor;
+        }
+    }
+
+    &.primary,
+    &.primary:hover {
+        color: $primaryTextColor;
+        background-color: $primaryBackgroundColor;
+    }
+}
+
+.dark {
+    color: $buttonTextDarkColor;
+
+    &:disabled {
+        color: $buttonTextDarkColorDisabled;
+    }
+
+    &:not(:disabled) {
+        &:hover,
+        &.active {
+            color: $buttonTextDarkColorActive;
+            background-color: $buttonActiveBackgroundDarkColor;
         }
     }
 

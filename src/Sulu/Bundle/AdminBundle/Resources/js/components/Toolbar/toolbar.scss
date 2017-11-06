@@ -2,7 +2,8 @@
 
 $toolbarHeight: 60px;
 
-$toolbarBackgroundColor: $white;
+$toolbarBackgroundLightColor: $white;
+$toolbarBackgroundDarkColor: $blueZodiac;
 $shadowColor: $silver;
 
 .toolbar {
@@ -13,13 +14,18 @@ $shadowColor: $silver;
 }
 
 .light {
-    background: $toolbarBackgroundColor;
-    box-shadow: 2px 6px 12px 0 rgba($shadowColor, .5);
+    background: $toolbarBackgroundLightColor;
+}
+
+.dark {
+    background: $toolbarBackgroundDarkColor;
 }
 
 .toolbar {
     height: $toolbarHeight;
     margin: 0;
+
+    box-shadow: 2px 6px 12px 0 rgba($shadowColor, .5);
 }
 
 .controls {

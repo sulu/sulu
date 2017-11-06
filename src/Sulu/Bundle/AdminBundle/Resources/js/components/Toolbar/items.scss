@@ -1,15 +1,23 @@
 @import '../../containers/Application/colors.scss';
 
 $itemsBackgroundLightColor: $alabaster;
+$itemsBackgroundDarkColor: transparent;
 $itemsContainerBorderLightColor: $gallery;
+$itemsContainerBorderDarkColor: rgba($silverChalice, .25);
 
-$itemsContainerBorder: 1px $itemsContainerBorderLightColor solid;
+$itemsContainerBorderLight: 1px $itemsContainerBorderLightColor solid;
+$itemsContainerBorderDark: 1px $itemsContainerBorderDarkColor solid;
 
 .light {
-    border-left: $itemsContainerBorder;
-    border-right: $itemsContainerBorder;
-    vertical-align: top;
     background-color: $itemsBackgroundLightColor;
+    border-left: $itemsContainerBorderLight;
+    border-right: $itemsContainerBorderLight;
+}
+
+.dark {
+    background-color: $itemsBackgroundDarkColor;
+    border-left: $itemsContainerBorderDark;
+    border-right: $itemsContainerBorderDark;
 }
 
 .items {

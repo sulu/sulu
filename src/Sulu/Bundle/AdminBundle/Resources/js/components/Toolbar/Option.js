@@ -24,6 +24,7 @@ export default class Option extends React.PureComponent<Props> {
 
     render() {
         const {
+            skin,
             size,
             label,
             selected,
@@ -31,6 +32,7 @@ export default class Option extends React.PureComponent<Props> {
         } = this.props;
         const optionClass = classNames(
             optionStyles.option,
+            optionStyles[skin],
             {
                 [optionStyles[size]]: size,
                 [optionStyles.isSelected]: selected,
