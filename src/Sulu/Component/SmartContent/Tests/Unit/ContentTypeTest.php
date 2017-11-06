@@ -296,9 +296,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             true,
             ['getValue', 'getParams']
         );
-        $structure = $this->getMockForAbstractClass(
-            StructureInterface::class
-        );
+        $structure = $this->prophesize(StructureInterface::class);
 
         $config = ['dataSource' => 'some-uuid'];
         $parameter = ['max_per_page' => new PropertyParameter('max_per_page', '5')];
@@ -311,7 +309,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue($parameter));
         $property->expects($this->exactly(3))->method('getStructure')
-            ->will($this->returnValue($structure));
+            ->will($this->returnValue($structure->reveal()));
 
         $this->contentDataProvider->resolveResourceItems(
             [
@@ -362,13 +360,15 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'deep_link' => new PropertyParameter('deep_link', ''),
                 'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
-            ['webspaceKey' => null, 'locale' => null],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             null,
             1,
             5
-        )->willReturn(new DataProviderResult([1, 2, 3, 4, 5, 6], true, [1, 2, 3, 4, 5, 6]));
+        )->willReturn(new DataProviderResult([1, 2, 3, 4, 5, 6], true));
 
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
+        $structure->getUuid()->willReturn('123-123-123');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
@@ -426,9 +426,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             true,
             ['getValue', 'getParams']
         );
-        $structure = $this->getMockForAbstractClass(
-            StructureInterface::class
-        );
+        $structure = $this->prophesize(StructureInterface::class);
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
@@ -440,7 +438,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', '5')]));
         $property->expects($this->exactly(3))->method('getStructure')
-            ->will($this->returnValue($structure));
+            ->will($this->returnValue($structure->reveal()));
 
         $this->contentDataProvider->resolveResourceItems(
             [
@@ -489,13 +487,15 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'deep_link' => new PropertyParameter('deep_link', ''),
                 'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
-            ['webspaceKey' => null, 'locale' => null],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             null,
             1,
             5
-        )->willReturn(new DataProviderResult([1, 2, 3, 4, 5], true, [1, 2, 3, 4, 5]));
+        )->willReturn(new DataProviderResult([1, 2, 3, 4, 5], true));
 
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
+        $structure->getUuid()->willReturn('123-123-123');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
 
         $contentData = $smartContent->getContentData($property);
 
@@ -554,7 +554,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             true,
             ['getValue', 'getParams']
         );
-        $structure = $this->getMockForAbstractClass(StructureInterface::class);
+        $structure = $this->prophesize(StructureInterface::class);
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
@@ -610,20 +610,22 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'deep_link' => new PropertyParameter('deep_link', ''),
                 'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
-            ['webspaceKey' => null, 'locale' => null],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
             $page,
             $pageSize
-        )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
+        )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($config));
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
         $property->expects($this->exactly(3))->method('getStructure')
-            ->will($this->returnValue($structure));
+            ->will($this->returnValue($structure->reveal()));
 
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
+        $structure->getUuid()->willReturn($uuid);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
 
         $contentData = $smartContent->getContentData($property);
         $this->assertEquals($expectedData, $contentData);
@@ -663,9 +665,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             true,
             ['getValue', 'getParams']
         );
-        $structure = $this->getMockForAbstractClass(
-            StructureInterface::class
-        );
+        $structure = $this->prophesize(StructureInterface::class);
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
@@ -723,11 +723,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'deep_link' => new PropertyParameter('deep_link', null),
                 'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
-            ['webspaceKey' => null, 'locale' => null],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
             $page < 1 ? 1 : ($page > PHP_INT_MAX ? PHP_INT_MAX : $page),
             $pageSize
-        )->willReturn(new DataProviderResult($expectedData, $hasNextPage, $expectedData));
+        )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
         $property->expects($this->at(1))->method('getValue')
             ->willReturn($config);
@@ -737,9 +737,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
         $property->expects($this->exactly(3))->method('getStructure')
-            ->will($this->returnValue($structure));
+            ->will($this->returnValue($structure->reveal()));
 
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
+        $structure->getUuid()->willReturn($uuid);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
 
         $viewData = $smartContent->getViewData($property);
         $this->assertEquals(
@@ -778,9 +780,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             true,
             ['getValue', 'getParams']
         );
-        $structure = $this->getMockForAbstractClass(
-            StructureInterface::class
-        );
+        $structure = $this->prophesize(StructureInterface::class);
 
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($value));
@@ -789,7 +789,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue([]));
 
         $property->expects($this->any())->method('getStructure')
-            ->will($this->returnValue($structure));
+            ->will($this->returnValue($structure->reveal()));
 
         $this->contentDataProvider->resolveResourceItems(
             [
@@ -837,7 +837,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'deep_link' => new PropertyParameter('deep_link', null),
                 'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
-            ['webspaceKey' => null, 'locale' => null],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             null
         )->willReturn(
             new DataProviderResult(
@@ -849,12 +849,13 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                     ['uuid' => 5],
                     ['uuid' => 6],
                 ],
-                true,
-                [1, 2, 3, 4, 5, 6]
+                true
             )
         );
 
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
+        $structure->getUuid()->willReturn('123-123-123');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
 
         return $property;
     }
