@@ -50,7 +50,7 @@ exports[`The ColumnList component should render 1`] = `
     <div
       className="columnList"
     >
-      <ColumnList
+      <Column
         active={true}
         buttons={
           Array [
@@ -464,8 +464,8 @@ exports[`The ColumnList component should render 1`] = `
             </Item>
           </div>
         </div>
-      </ColumnList>
-      <ColumnList
+      </Column>
+      <Column
         active={false}
         buttons={
           Array [
@@ -801,8 +801,8 @@ exports[`The ColumnList component should render 1`] = `
             </Item>
           </div>
         </div>
-      </ColumnList>
-      <ColumnList
+      </Column>
+      <Column
         active={false}
         buttons={
           Array [
@@ -1128,7 +1128,7 @@ exports[`The ColumnList component should render 1`] = `
             </Item>
           </div>
         </div>
-      </ColumnList>
+      </Column>
     </div>
   </div>
 </ColumnList>

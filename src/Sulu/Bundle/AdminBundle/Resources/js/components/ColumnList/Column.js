@@ -17,7 +17,7 @@ type Props = {
     toolbarItems: Array<ToolbarItemConfig>,
 };
 
-export default class ColumnList extends React.Component<Props> {
+export default class Column extends React.Component<Props> {
     cloneItems = (originalItems: ChildrenArray<Element<typeof Item>>) => {
         return React.Children.map(originalItems, (column) => {
             return React.cloneElement(
