@@ -239,7 +239,7 @@ class NavigationItem implements \Iterator
      *
      * @param NavigationItem $child
      */
-    public function addChild(NavigationItem $child)
+    public function addChild(self $child)
     {
         $this->children[] = $child;
     }
@@ -390,7 +390,7 @@ class NavigationItem implements \Iterator
      *
      * @return bool True if the NavigationItems are equal, otherwise false
      */
-    public function equalsChildless(NavigationItem $other)
+    public function equalsChildless(self $other)
     {
         return $this->getName() == $other->getName();
     }
@@ -427,7 +427,7 @@ class NavigationItem implements \Iterator
      *
      * @return NavigationItem|null Null if the NavigationItem is not found, otherwise the found NavigationItem
      */
-    public function findChildren(NavigationItem $navigationItem)
+    public function findChildren(self $navigationItem)
     {
         foreach ($this->getChildren() as $child) {
             /** @var NavigationItem $child */
@@ -447,7 +447,7 @@ class NavigationItem implements \Iterator
      *
      * @return NavigationItem
      */
-    public function merge(NavigationItem $other = null)
+    public function merge(self $other = null)
     {
         // Create new item
         $new = $this->copyChildless();

@@ -50,7 +50,7 @@ class RequestAttributes
      *
      * @return RequestAttributes
      */
-    public function merge(RequestAttributes $requestAttributes)
+    public function merge(self $requestAttributes)
     {
         return new self(array_merge($requestAttributes->attributes, $this->attributes));
     }

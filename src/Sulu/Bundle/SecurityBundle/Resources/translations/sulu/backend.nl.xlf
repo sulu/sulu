@@ -124,7 +124,7 @@
             </trans-unit>
             <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
                 <source>security.warning</source>
-                <target>Om de gewijzigde veiligheidsinstellingen te zien moet het systeem opnieuw geladen worden.</target>
+                <target>Om de gewijzigde veiligheidsinstellingen te zien moet de browser opnieuw geladen worden.</target>
             </trans-unit>
 
             <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">

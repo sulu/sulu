@@ -119,7 +119,7 @@ interface RouteInterface
      *
      * @return RouteInterface
      */
-    public function setTarget(RouteInterface $target = null);
+    public function setTarget(self $target = null);
 
     /**
      * Remove target.
@@ -142,5 +142,5 @@ interface RouteInterface
      *
      * @return RouteInterface
      */
-    public function addHistory(RouteInterface $history);
+    public function addHistory(self $history);
 }

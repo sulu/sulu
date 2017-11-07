@@ -26,7 +26,7 @@ class ContactLocale extends ApiWrapper
     /**
      * @param ContactLocale $contactLocale
      */
-    public function __construct(ContactLocale $contactLocale)
+    public function __construct(self $contactLocale)
     {
         $this->entity = $contactLocale;
     }
