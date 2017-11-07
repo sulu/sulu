@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import Button from '../Button';
 import type {Action} from './types';
 import actionsStyles from './actions.scss';
 
@@ -19,13 +20,13 @@ export default class Actions extends React.PureComponent<Props> {
                 {actions.map((action, index) => {
                     const handleButtonClick = action.onClick;
                     return (
-                        <button
+                        <Button
                             key={index}
-                            className={actionsStyles.action}
                             onClick={handleButtonClick}
+                            skin="link"
                         >
                             {action.title}
-                        </button>
+                        </Button>
                     );
                 })}
             </div>

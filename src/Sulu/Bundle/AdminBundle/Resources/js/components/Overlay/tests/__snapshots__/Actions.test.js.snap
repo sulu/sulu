@@ -5,12 +5,12 @@ exports[`The component should render 1`] = `
   class="actions"
 >
   <button
-    class="action"
+    class="link"
   >
     Action 1
   </button>
   <button
-    class="action"
+    class="link"
   >
     Action 2
   </button>

@@ -25,3 +25,16 @@ const onClick = () => {
     Click me dude
 </Button>
 ```
+
+```
+const onClick = () => {
+    /* do click things */
+    alert('Clicked this nice button, congrats!');
+};
+
+<Button
+    skin="link"
+    onClick={onClick}>
+    Click me dude
+</Button>
+```

@@ -18,7 +18,7 @@ test('The component should call the corresponding callback when an action is cli
         {title: 'Action 2', onClick: jest.fn()},
     ];
     const component = shallow(<Actions actions={actions} />);
-    component.find('button').first().simulate('click');
+    component.find('Button').first().simulate('click');
     expect(actions[0].onClick).toBeCalled();
     expect(actions[1].onClick).not.toBeCalled();
 });

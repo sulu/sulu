@@ -7,6 +7,7 @@ import type {Node} from 'react';
 import React from 'react';
 import Portal from 'react-portal';
 import Icon from '../Icon';
+import Button from '../Button';
 import {afterElementsRendered} from '../../services/DOM';
 import Backdrop from '../Backdrop';
 import type {Action} from './types';
@@ -114,9 +115,9 @@ export default class Overlay extends React.PureComponent<Props> {
                             <article>{children}</article>
                             <footer>
                                 <Actions actions={actions} />
-                                <button className={overlayStyles.confirmButton} onClick={onConfirm}>
+                                <Button skin="primary" onClick={onConfirm}>
                                     {confirmText}
-                                </button>
+                                </Button>
                             </footer>
                         </section>
                     </div>

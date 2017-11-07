@@ -11,6 +11,10 @@ test('Button should render with skin secondary', () => {
     expect(render(<Button skin="secondary" />)).toMatchSnapshot();
 });
 
+test('Button should render with skin link', () => {
+    expect(render(<Button skin="link" />)).toMatchSnapshot();
+});
+
 test('Button should call the callback on click', () => {
     const onClick = jest.fn();
     const button = shallow(<Button skin="primary" onClick={onClick} />);

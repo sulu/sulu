@@ -97,16 +97,3 @@ $transitionDuration: 300ms;
         cursor: pointer;
     }
 }
-
-.confirm-button {
-    background: $confirmBackground;
-    color: $confirmColor;
-    font-size: 12px;
-    border: none;
-    border-radius: $borderRadius;
-    line-height: 30px;
-    cursor: pointer;
-    text-align: center;
-    min-width: 140px;
-    padding: 0 40px;
-}

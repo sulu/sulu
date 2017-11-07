@@ -10,7 +10,11 @@ $secondaryBorder: $silver;
 $secondaryBackground: $wildSand;
 $secondaryColor: $black;
 
-.button {
+$linkFontSize: 14px;
+$linkColor: $black;
+
+.primary,
+.secondary {
     font-size: $fontSize;
     border: 1px solid;
     border-radius: $borderRadius;
@@ -31,4 +35,15 @@ $secondaryColor: $black;
     border-color: $secondaryBorder;
     background: $secondaryBackground;
     color: $secondaryColor;
+}
+
+.link {
+    padding: 0;
+    margin: 0 10px 0 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: $linkFontSize;
+    color: $linkColor;
 }
