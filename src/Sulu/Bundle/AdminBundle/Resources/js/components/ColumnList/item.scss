@@ -8,9 +8,12 @@ $itemColorHover: $white;
     padding: 9px 30px 9px 6px;
     cursor: pointer;
 
+    span {
+        line-height: 24px;
+    }
+
     .text {
         font-size: 12px;
-        line-height: 22px;
     }
 
     &.selected {
