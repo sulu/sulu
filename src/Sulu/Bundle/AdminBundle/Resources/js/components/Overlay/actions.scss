@@ -1,20 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
-$actionFontSize: 14px;
-$actionColor: $black;
 $height: 90px;
 
 .actions {
     line-height: $height;
-}
-
-.action {
-    padding: 0;
-    margin: 0 10px 0 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: $actionFontSize;
-    color: $actionColor;
 }

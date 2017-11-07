@@ -17,7 +17,7 @@ exports[`The component should render in body when open 2`] = `
         </article>
         <footer>
           <!-- react-empty: 10 -->
-          <button class=\\"confirmButton\\">Apply</button>
+          <button class=\\"button primary\\">Apply</button>
         </footer>
       </section>
     </div>
@@ -41,10 +41,10 @@ exports[`The component should render in body with actions when open 2`] = `
         </article>
         <footer>
           <div class=\\"actions\\">
-            <button class=\\"action\\">Action 1</button>
-            <button class=\\"action\\">Action 2</button>
+            <button class=\\"link\\">Action 1</button>
+            <button class=\\"link\\">Action 2</button>
           </div>
-          <button class=\\"confirmButton\\">Apply</button>
+          <button class=\\"button primary\\">Apply</button>
         </footer>
       </section>
     </div>

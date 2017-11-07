@@ -136,6 +136,6 @@ test('The component should call the callback when the confirm button is clicked'
     );
 
     expect(onConfirm).not.toBeCalled();
-    view.find('.confirmButton').simulate('click');
+    view.find('Button').simulate('click');
     expect(onConfirm).toBeCalled();
 });

@@ -5,7 +5,7 @@ import buttonStyles from './button.scss';
 
 type Props = {
     children: string,
-    skin: 'primary' | 'secondary',
+    skin: 'primary' | 'secondary' | 'link',
     onClick: () => void,
 };
 
@@ -20,7 +20,11 @@ export default class Button extends React.PureComponent<Props> {
             skin,
         } = this.props;
 
-        const buttonClass = classNames(buttonStyles.button, buttonStyles[skin]);
+        let buttonClass = buttonStyles.link;
+
+        if ('link' !== skin) {
+            buttonClass = classNames(buttonStyles.button, buttonStyles[skin]);
+        }
 
         return (
             <button className={buttonClass} onClick={this.handleClick}>
