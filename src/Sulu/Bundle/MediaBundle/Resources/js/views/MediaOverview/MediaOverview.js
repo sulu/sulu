@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {translate} from 'sulu-admin-bundle/services';
 import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import {CollectionInfoStore, MediaContainer} from '../../containers/MediaContainer';
+import {CollectionInfoStore, MediaCollection} from '../../containers/MediaCollection';
 import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
@@ -136,10 +136,10 @@ class MediaOverview extends React.PureComponent<ViewProps> {
     render() {
         return (
             <div className={mediaOverviewStyles.mediaOverview}>
-                <MediaContainer
+                <MediaCollection
                     page={this.collectionPage}
                     locale={this.locale}
-                    mediaView="mediaCardOverview"
+                    mediaViews={['mediaCardOverview']}
                     mediaStore={this.mediaStore}
                     collectionStore={this.collectionStore}
                     collectionInfoStore={this.collectionInfoStore}
@@ -152,7 +152,6 @@ class MediaOverview extends React.PureComponent<ViewProps> {
 
 export default withToolbar(MediaOverview, function() {
     const router = this.props.router;
-    const {parentCollectionId} = this.collectionInfoStore;
     const loading = this.collectionStore.loading || this.mediaStore.loading;
 
     const {
@@ -185,7 +184,9 @@ export default withToolbar(MediaOverview, function() {
                     router.restore(
                         COLLECTION_ROUTE,
                         {
-                            id: this.parentId,
+                            id: this.collectionInfoStore.parentId,
+                        },
+                        {
                             locale: this.locale.get(),
                             collectionPage: '1',
                         }

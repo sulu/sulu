@@ -26,19 +26,17 @@ export default class FolderAdapter extends React.Component<DatagridAdapterProps>
         } = this.props;
 
         return (
-            <div>
-                <FolderList onFolderClick={onItemClick}>
-                    {data.map((item: Object) => (
-                        // TODO: Don't access properties like "title" directly.
-                        <FolderList.Folder
-                            key={item.id}
-                            id={item.id}
-                            title={item.title}
-                            info={FolderAdapter.getInfoText(item)}
-                        />
-                    ))}
-                </FolderList>
-            </div>
+            <FolderList onFolderClick={onItemClick}>
+                {data.map((item: Object) => (
+                    // TODO: Don't access properties like "title" directly.
+                    <FolderList.Folder
+                        key={item.id}
+                        id={item.id}
+                        title={item.title}
+                        info={FolderAdapter.getInfoText(item)}
+                    />
+                ))}
+            </FolderList>
         );
     }
 }

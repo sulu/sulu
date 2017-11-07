@@ -5,12 +5,12 @@ import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 import CollectionInfoStore from './stores/CollectionInfoStore';
-import BreadcrumbContainer from './BreadcrumbContainer';
+import BreadcrumbBuilder from './BreadcrumbBuilder';
 
 type Props = {
     page: observable,
     locale: observable,
-    mediaView: string,
+    mediaViews: Array<string>,
     mediaStore: DatagridStore,
     collectionStore: DatagridStore,
     collectionInfoStore: CollectionInfoStore,
@@ -18,7 +18,11 @@ type Props = {
 };
 
 @observer
-export default class MediaContainer extends React.PureComponent<Props> {
+export default class MediaCollection extends React.PureComponent<Props> {
+    static defaultProps = {
+        mediaViews: [],
+    };
+
     handleCollectionClick = (collectionId: string | number) => {
         this.props.onCollectionNavigate(collectionId);
     };
@@ -29,18 +33,17 @@ export default class MediaContainer extends React.PureComponent<Props> {
 
     render() {
         const {
-            mediaView,
+            mediaViews,
             mediaStore,
             collectionStore,
             collectionInfoStore,
         } = this.props;
-        const {breadcrumb} = collectionInfoStore;
 
         return (
             <div>
                 {!collectionInfoStore.loading &&
-                    <BreadcrumbContainer
-                        breadcrumb={breadcrumb}
+                    <BreadcrumbBuilder
+                        breadcrumb={collectionInfoStore.breadcrumb}
                         onNavigate={this.handleBreadcrumbNavigate}
                     />
                 }
@@ -51,7 +54,7 @@ export default class MediaContainer extends React.PureComponent<Props> {
                 />
                 <Divider />
                 <Datagrid
-                    views={[mediaView]}
+                    views={mediaViews}
                     store={mediaStore}
                 />
             </div>

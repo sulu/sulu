@@ -2,7 +2,7 @@
 import React from 'react';
 import {render} from 'enzyme';
 import {observable} from 'mobx';
-import MediaContainer from '../MediaContainer';
+import MediaCollection from '../MediaCollection';
 import MediaCardOverviewAdapter from '../../Datagrid/adapters/MediaCardOverviewAdapter';
 
 const MEDIA_RESOURCE_KEY = 'media';
@@ -130,7 +130,7 @@ beforeEach(() => {
     datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
         folder: {
             Adapter: require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-            paginationType: 'default',
+            paginationType: 'pagination',
         },
         mediaCardOverview: {
             Adapter: MediaCardOverviewAdapter,
@@ -139,7 +139,7 @@ beforeEach(() => {
     });
 });
 
-test('Render the MediaContainer', () => {
+test('Render the MediaCollection', () => {
     const page = observable();
     const locale = observable();
     const collectionNavigateSpy = jest.fn();
@@ -155,16 +155,16 @@ test('Render the MediaContainer', () => {
     const CollectionInfoStore = require('../stores/CollectionInfoStore');
     const collectionInfoStore = new CollectionInfoStore(1, locale);
 
-    const mediaContainer = render(
-        <MediaContainer
+    const mediaCollection = render(
+        <MediaCollection
             page={page}
             locale={locale}
-            mediaView="mediaCardOverview"
+            mediaViews={['mediaCardOverview']}
             mediaStore={mediaStore}
             collectionStore={collectionStore}
             collectionInfoStore={collectionInfoStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
-    expect(mediaContainer).toMatchSnapshot();
+    expect(mediaCollection).toMatchSnapshot();
 });

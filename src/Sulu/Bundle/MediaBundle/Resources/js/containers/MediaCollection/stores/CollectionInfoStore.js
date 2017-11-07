@@ -1,14 +1,17 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import type {BreadcrumbItem, BreadcrumbItems} from '../types';
+import type {BreadcrumbItem, BreadcrumbItems, Collection} from '../types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 export default class CollectionInfoStore {
     @observable loading: boolean = false;
-    @observable breadcrumb: ?observable = [];
-    @observable parentCollectionId: ?observable;
+    @observable collection: Collection = {
+        parentId: null,
+        breadcrumb: null,
+    };
+    @observable parentCollectionId: ?string | number;
     disposer: () => void;
 
     constructor(collectionId: ?string | number, locale: string) {
@@ -21,21 +24,21 @@ export default class CollectionInfoStore {
         this.disposer();
     }
 
-    @action setParentCollectionId(id: ?string | number) {
-        this.parentCollectionId = id;
+    @computed get parentId(): ?string | number {
+        return this.collection.parentId;
     }
 
-    @action setBreadcrumb(breadcrumb: ?BreadcrumbItems = []) {
-        this.breadcrumb = breadcrumb;
+    @computed get breadcrumb(): ?BreadcrumbItems {
+        return this.collection.breadcrumb;
     }
 
     @action setLoading(loading: boolean) {
         this.loading = loading;
     }
 
-    load(collectionId: ?string | number, locale: string) {
+    @action load(collectionId: ?string | number, locale: string) {
         if (!collectionId) {
-            this.setBreadcrumb(null);
+            this.collection.breadcrumb = null;
 
             return;
         }
@@ -59,12 +62,9 @@ export default class CollectionInfoStore {
             } = collectionInfo;
             const currentCollection = this.getCurrentCollectionItem(collectionInfo);
 
-            this.setBreadcrumb(
-                (breadcrumb)
-                    ? [...breadcrumb, currentCollection]
-                    : [currentCollection]
-            );
-            this.setParentCollectionId((parent) ? parent.id : null);
+            this.collection.parentId = (parent) ? parent.id : null;
+            this.collection.breadcrumb = (breadcrumb) ? [...breadcrumb, currentCollection] : [currentCollection];
+
             this.setLoading(false);
         });
     }
@@ -74,18 +74,5 @@ export default class CollectionInfoStore {
             id: data.id,
             title: data.title,
         };
-    }
-
-    prepareBreadcrumbData(data: ?Array<Object>): ?BreadcrumbItems {
-        if (data && data.length) {
-            return data.map((entry) => {
-                return {
-                    id: entry.id,
-                    title: entry.title,
-                };
-            });
-        }
-
-        return null;
     }
 }

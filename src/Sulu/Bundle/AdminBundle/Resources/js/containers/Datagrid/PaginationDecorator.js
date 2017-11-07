@@ -3,9 +3,11 @@ import React from 'react';
 import type {Element} from 'react';
 import Pagination from '../../components/Pagination';
 import InfiniteScroller from '../../components/InfiniteScroller';
+import type {PaginationType} from './types';
+import paginationDecoratorStyles from './paginationDecorator.scss';
 
 type Props = {
-    type: 'default' | 'infiniteScroll',
+    type: PaginationType,
     total: number,
     current: ?number,
     children: Element<*>,
@@ -14,7 +16,7 @@ type Props = {
 
 export default class PaginationDecorator extends React.PureComponent<Props> {
     static defaultProps = {
-        type: 'default',
+        type: 'pagination',
     };
 
     createInfiniteScrollWrapper() {
@@ -39,7 +41,7 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
         );
     }
 
-    createDefaultPaginationWrapper() {
+    createPaginationWrapper() {
         const {
             total,
             current,
@@ -50,11 +52,13 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
             <section>
                 {children}
                 {!!current && !!total &&
-                    <Pagination
-                        total={total}
-                        current={current}
-                        onChange={this.handlePageChange}
-                    />
+                    <div className={paginationDecoratorStyles.paginationContainer}>
+                        <Pagination
+                            total={total}
+                            current={current}
+                            onChange={this.handlePageChange}
+                        />
+                    </div>
                 }
             </section>
         );
@@ -73,6 +77,6 @@ export default class PaginationDecorator extends React.PureComponent<Props> {
             return this.createInfiniteScrollWrapper();
         }
 
-        return this.createDefaultPaginationWrapper();
+        return this.createPaginationWrapper();
     }
 }

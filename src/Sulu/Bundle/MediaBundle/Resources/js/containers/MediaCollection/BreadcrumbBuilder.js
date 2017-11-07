@@ -9,7 +9,7 @@ type Props = {
     onNavigate: (collectionId?: string | number) => void,
 };
 
-export default class BreadcrumbContainer extends React.PureComponent<Props> {
+export default class BreadcrumbBuilder extends React.PureComponent<Props> {
     handleNavigate = (collectionId?: string | number) => {
         this.props.onNavigate(collectionId);
     };

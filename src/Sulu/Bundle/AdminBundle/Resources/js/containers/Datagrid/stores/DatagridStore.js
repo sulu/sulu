@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, intercept, observable} from 'mobx';
 import type {ObservableOptions} from '../types';
 import ResourceRequester from '../../../services/ResourceRequester';
 import metadataStore from './MetadataStore';
@@ -14,6 +14,8 @@ export default class DatagridStore {
     options: Object;
     observableOptions: ObservableOptions;
     appendRequestData: boolean;
+    localeInterceptDisposer: () => void;
+    dataObserveDisposer: () => void;
 
     constructor(
         resourceKey: string,
@@ -26,7 +28,18 @@ export default class DatagridStore {
         this.options = options;
         this.disposer = autorun(this.sendRequest);
         this.appendRequestData = appendRequestData;
+
+        if (this.appendRequestData) {
+            this.localeInterceptDisposer = intercept(this.observableOptions.locale, this.localeInterceptor);
+        }
     }
+
+    localeInterceptor = (change: observable) => {
+        if (this.observableOptions.locale !== change.newValue) {
+            this.data = [];
+            return change;
+        }
+    };
 
     getFields() {
         return metadataStore.getFields(this.resourceKey);
@@ -119,5 +132,9 @@ export default class DatagridStore {
 
     destroy() {
         this.disposer();
+
+        if (this.localeInterceptDisposer) {
+            this.localeInterceptDisposer();
+        }
     }
 }

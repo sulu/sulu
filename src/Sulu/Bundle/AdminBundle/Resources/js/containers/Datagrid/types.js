@@ -19,11 +19,11 @@ export type DatagridAdapterProps = {
     onAllSelectionChange?: (selected?: boolean) => void,
 };
 
-export type PaginationTypes = 'default' | 'infiniteScroll';
+export type PaginationType = 'pagination' | 'infiniteScroll';
 
 export type AdapterConfig = {
     Adapter: DatagridAdapter,
-    paginationType: PaginationTypes,
+    paginationType: PaginationType,
 };
 
 export type AdapterConfigs = {

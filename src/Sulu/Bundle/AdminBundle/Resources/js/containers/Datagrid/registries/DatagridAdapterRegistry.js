@@ -3,7 +3,7 @@ import type {
     AdapterConfigs,
     AdapterConfig,
     DatagridAdapter,
-    PaginationTypes,
+    PaginationType,
 } from '../types';
 
 class DatagridAdapterRegistry {
@@ -21,7 +21,7 @@ class DatagridAdapterRegistry {
         return !!this.adapters[name];
     }
 
-    add(name: string, Adapter: DatagridAdapter, paginationType: PaginationTypes = 'default') {
+    add(name: string, Adapter: DatagridAdapter, paginationType: PaginationType = 'pagination') {
         if (name in this.adapters) {
             throw new Error('The key "' + name + '" has already been used for another datagrid adapter');
         }

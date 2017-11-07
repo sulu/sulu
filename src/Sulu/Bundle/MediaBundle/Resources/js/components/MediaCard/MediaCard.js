@@ -30,13 +30,11 @@ type Props = {
     image: string,
     /** List of available image sizes */
     imageSizes: Array<{url: string, label: string}>,
-    /** Item in the "DownloadList" which will open the defined url to download the image */
-    directDownload?: {
-        url: string,
-        label: string,
-    },
-    /** Called when the "directDownload"-item was clicked */
-    onDirectDownload?: (url: string) => void,
+    /** For the `Item` in the "DownloadList" which will open the defined url to download the image */
+    downloadUrl: string,
+    downloadText: string,
+    /** Called when the "Download"-item was clicked */
+    onDownload?: (url: string) => void,
     /** Info text which is shown, when a download link is hovered */
     downloadCopyText: string,
     /** When true the cover is permanently shown */
@@ -100,11 +98,11 @@ export default class MediaCard extends React.PureComponent<Props> {
         this.closeDownloadList();
     };
 
-    handleDirectDownload = (url: string) => {
-        const {onDirectDownload} = this.props;
+    handleDownload = (url: string) => {
+        const {onDownload} = this.props;
 
-        if (onDirectDownload) {
-            onDirectDownload(url);
+        if (onDownload) {
+            onDownload(url);
             this.closeDownloadList();
         }
     };
@@ -119,7 +117,8 @@ export default class MediaCard extends React.PureComponent<Props> {
             selected,
             showCover,
             imageSizes,
-            directDownload,
+            downloadUrl,
+            downloadText,
             downloadCopyText,
         } = this.props;
         const mediaCardClass = classNames(
@@ -159,7 +158,7 @@ export default class MediaCard extends React.PureComponent<Props> {
                             {meta}
                         </div>
                     </div>
-                    {(!!imageSizes.length && !!directDownload) &&
+                    {(!!imageSizes.length && !!downloadUrl && !!downloadText) &&
                         <div>
                             <button
                                 ref={this.setDownloadButtonRef}
@@ -174,8 +173,9 @@ export default class MediaCard extends React.PureComponent<Props> {
                                 copyText={downloadCopyText}
                                 buttonRef={this.downloadButtonRef}
                                 imageSizes={imageSizes}
-                                directDownload={directDownload}
-                                onDirectDownload={this.handleDirectDownload}
+                                downloadUrl={downloadUrl}
+                                downloadText={downloadText}
+                                onDownload={this.handleDownload}
                             />
                         </div>
                     }

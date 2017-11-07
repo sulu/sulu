@@ -6,3 +6,8 @@ export type BreadcrumbItem = {
 }
 
 export type BreadcrumbItems = Array<BreadcrumbItem>;
+
+export type Collection =  {
+    parentId: ?string | number,
+    breadcrumb: ?BreadcrumbItems,
+};

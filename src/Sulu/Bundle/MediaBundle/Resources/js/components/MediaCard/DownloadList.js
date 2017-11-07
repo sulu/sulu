@@ -11,11 +11,9 @@ type Props = {
     copyText: string,
     buttonRef: ElementRef<'button'>,
     imageSizes: Array<{url: string, label: string}>,
-    directDownload: {
-        url: string,
-        label: string,
-    },
-    onDirectDownload: (url: string) => void,
+    downloadUrl: string,
+    downloadText: string,
+    onDownload: (url: string) => void,
 };
 
 export default class DownloadList extends React.PureComponent<Props> {
@@ -23,15 +21,16 @@ export default class DownloadList extends React.PureComponent<Props> {
         const {
             copyText,
             imageSizes,
-            directDownload,
+            downloadUrl,
+            downloadText,
         } = this.props;
         const directDownloadItem = (
             <DownloadListItem
                 key="downloadlist-direct-download-item"
-                url={directDownload.url}
+                url={downloadUrl}
                 onClick={this.handleItemDownload}
             >
-                {directDownload.label}
+                {downloadText}
             </DownloadListItem>
         );
         const divider = <Menu.Divider key="downloadlist-divider" />;
@@ -39,8 +38,9 @@ export default class DownloadList extends React.PureComponent<Props> {
             <DownloadListItem
                 key={index}
                 url={imageSize.url}
-                onCopy={this.handleItemCopy}
+                onClick={this.handleItemCopy}
                 copyText={copyText}
+                copyUrlOnClick={true}
             >
                 {imageSize.label}
             </DownloadListItem>
@@ -57,8 +57,10 @@ export default class DownloadList extends React.PureComponent<Props> {
         this.props.onClose();
     };
 
-    handleItemDownload = (url: string) => {
-        this.props.onDirectDownload(url);
+    handleItemDownload = (url?: string) => {
+        if (url) {
+            this.props.onDownload(url);
+        }
     };
 
     handleItemCopy = () => {

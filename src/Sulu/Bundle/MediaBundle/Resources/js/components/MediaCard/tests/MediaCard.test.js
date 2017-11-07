@@ -15,10 +15,6 @@ test('Render a simple MediaCard component', () => {
 });
 
 test('Render a MediaCard with download list', () => {
-    const directDownload = {
-        url: 'http://lorempixel.com/300/200',
-        label: 'Direct download',
-    };
     const imageSizes = [
         {
             url: 'http://lorempixel.com/300/200',
@@ -40,7 +36,8 @@ test('Render a MediaCard with download list', () => {
             meta="Test/Test"
             imageSizes={imageSizes}
             downloadCopyText="Copy URL"
-            directDownload={directDownload}
+            downloadUrl="http://lorempixel.com/300/200"
+            downloadText="Direct download"
             image="http://lorempixel.com/300/200"
         />
     );

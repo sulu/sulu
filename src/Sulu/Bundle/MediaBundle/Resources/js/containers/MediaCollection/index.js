@@ -1,8 +1,8 @@
 // @flow
-import MediaContainer from './MediaContainer';
+import MediaCollection from './MediaCollection';
 import CollectionInfoStore from './stores/CollectionInfoStore';
 
 export {
-    MediaContainer,
+    MediaCollection,
     CollectionInfoStore,
 };
