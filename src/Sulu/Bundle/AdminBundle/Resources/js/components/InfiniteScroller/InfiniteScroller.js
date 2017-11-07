@@ -36,7 +36,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
     }
 
     getScrollContainer(parentContainer: ElementRef<*>) {
-        if (!parentContainer) {
+        if (parentContainer === window.document.body) {
             return window.document.body;
         }
 

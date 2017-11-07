@@ -43,6 +43,9 @@ exports[`The component should open the popover when the display value is clicked
 
 exports[`The component should open the popover when the display value is clicked 2`] = `
 "<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>
+<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
       <li>
@@ -66,9 +69,6 @@ exports[`The component should open the popover when the display value is clicked
       </li>
     </ul>
   </div>
-</div>
-<div>
-  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
 </div>"
 `;
 

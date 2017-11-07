@@ -2,6 +2,9 @@
 
 exports[`Render a MediaCard with download list 1`] = `
 "<div>
+  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
+</div>
+<div>
   <div data-reactroot=\\"\\" class=\\"container\\">
     <ul class=\\"menu\\" style=\\"top: 10px; max-height: 0px; position: fixed; pointer-events: auto; left: 10px;\\">
       <li class=\\"item\\">
@@ -23,9 +26,6 @@ exports[`Render a MediaCard with download list 1`] = `
       </li>
     </ul>
   </div>
-</div>
-<div>
-  <div data-reactroot=\\"\\" class=\\"backdrop\\"></div>
 </div>"
 `;
 

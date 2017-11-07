@@ -7,6 +7,7 @@ exports[`Clicking the left and right button inside the header should call the ri
   >
     <button
       class="button left"
+      type="button"
     >
       <span
         aria-label="plus"
@@ -20,6 +21,7 @@ exports[`Clicking the left and right button inside the header should call the ri
     </div>
     <button
       class="button right"
+      type="button"
     >
       <span
         aria-label="gear"

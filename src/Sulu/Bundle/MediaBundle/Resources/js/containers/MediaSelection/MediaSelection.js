@@ -44,6 +44,8 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     @action openMediaOverlay() {
         this.overlayOpen = true;
+
+        this.overlayDisposer = autorun(this.createStores);
     }
 
     @action closeMediaOverlay() {
@@ -161,7 +163,6 @@ export default class MediaSelection extends React.PureComponent<Props> {
 
     handleOverlayOpen = () => {
         this.openMediaOverlay();
-        this.overlayDisposer = autorun(this.createStores);
     };
 
     handleOverlayClose = () => {
