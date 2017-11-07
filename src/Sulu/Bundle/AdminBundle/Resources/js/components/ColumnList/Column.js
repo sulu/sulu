@@ -4,13 +4,13 @@ import React from 'react';
 import classNames from 'classnames';
 import Item from './Item';
 import Toolbar from './Toolbar';
-import type {ButtonConfig, ToolbarItemConfig} from './types';
+import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
     index: number,
     children: ChildrenArray<Element<typeof Item>>,
-    buttons?: Array<ButtonConfig>,
+    buttons?: Array<ItemButtonConfig>,
     active: boolean,
     onActive: (index: number) => void,
     onItemClick: (id: string | number) => void,

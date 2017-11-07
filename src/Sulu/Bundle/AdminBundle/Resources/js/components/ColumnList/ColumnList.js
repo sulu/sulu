@@ -5,12 +5,12 @@ import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Column from './Column';
 import Item from './Item';
-import type {ButtonConfig, ToolbarItemConfig} from './types';
+import type {ItemButtonConfig, ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Column>>,
-    buttons?: Array<ButtonConfig>,
+    buttons?: Array<ItemButtonConfig>,
     toolbarItems: Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
 };

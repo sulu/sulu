@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import ItemButton from './ItemButton';
 import Icon from '../Icon';
+import ItemButton from './ItemButton';
 import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
