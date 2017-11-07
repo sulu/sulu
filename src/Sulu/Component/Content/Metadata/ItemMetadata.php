@@ -126,7 +126,7 @@ abstract class ItemMetadata
      *
      * @param ItemMetadata $child
      */
-    public function addChild(ItemMetadata $child)
+    public function addChild(self $child)
     {
         if (isset($this->children[$child->name])) {
             throw new \InvalidArgumentException(sprintf(

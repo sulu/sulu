@@ -153,7 +153,7 @@ class Collection extends ApiWrapper
      *
      * @param Collection $child
      */
-    public function addChild(Collection $child)
+    public function addChild(self $child)
     {
         $this->children[] = $child;
     }

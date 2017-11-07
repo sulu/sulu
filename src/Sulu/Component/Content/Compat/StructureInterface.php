@@ -330,5 +330,5 @@ interface StructureInterface extends \JsonSerializable
      *
      * @param StructureInterface $structure
      */
-    public function copyFrom(StructureInterface $structure);
+    public function copyFrom(self $structure);
 }
