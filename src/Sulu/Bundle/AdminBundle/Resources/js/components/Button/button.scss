@@ -13,7 +13,8 @@ $secondaryColor: $black;
 $linkFontSize: 14px;
 $linkColor: $black;
 
-.primary, .secondary {
+.primary,
+.secondary {
     font-size: $fontSize;
     border: 1px solid;
     border-radius: $borderRadius;
