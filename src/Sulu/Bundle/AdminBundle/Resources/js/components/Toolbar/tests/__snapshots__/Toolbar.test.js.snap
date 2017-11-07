@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render controls 1`] = `
+<header
+  class="toolbar"
+>
+  <nav
+    class="controlsContainer"
+  >
+    <div
+      class="controls"
+    >
+      <button
+        class="button"
+      >
+        <span
+          class="label"
+        >
+          Test
+        </span>
+      </button>
+    </div>
+    <div
+      class="controls"
+    >
+      <button
+        class="button"
+      >
+        <span
+          class="label"
+        >
+          Test
+        </span>
+      </button>
+    </div>
+  </nav>
+</header>
+`;

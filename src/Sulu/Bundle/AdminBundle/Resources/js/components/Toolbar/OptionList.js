@@ -1,7 +1,7 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import Backdrop from '../../components/Backdrop';
+import Backdrop from '../Backdrop';
 import Option from './Option';
 import optionListStyles from './optionList.scss';
 

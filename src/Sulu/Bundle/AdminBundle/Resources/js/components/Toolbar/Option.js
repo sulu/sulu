@@ -1,7 +1,7 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import Icon from '../../components/Icon';
+import Icon from '../Icon';
 import optionStyles from './option.scss';
 
 const ICON_CHECKMARK = 'check';

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render items 1`] = `
+<ul
+  class="items"
+/>
+`;
+
+exports[`Render items with children 1`] = `
+<ul
+  class="items"
+>
+  <li>
+    <button
+      class="button"
+    >
+      <span
+        class="label"
+      >
+        Test
+      </span>
+    </button>
+  </li>
+</ul>
+`;
